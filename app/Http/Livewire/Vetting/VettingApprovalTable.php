@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Vetting;
 
+use App\Enum\VettingStatus;
 use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,15 +17,16 @@ class VettingApprovalTable extends DataTableComponent
     use  ReturnFilterTrait, WithSearch;
 
     protected $model     = TaxReturn::class;
-    protected $listeners = ['filterData' => 'filterData', '$refresh'];
 
-    public $data = [];
+    public $vettingStatus;
 
-    public function mount()
+    public function mount($vettingStatus)
     {
-        // if (!Gate::allows('return-bfo-excise-duty-return-view')) {
-        //     abort(403);
-        // }
+        if (!Gate::allows('tax-returns-vetting-view')) {
+            abort(403);
+        }
+
+        $this->vettingStatus = $vettingStatus;
     }
 
     public function configure(): void
@@ -37,20 +39,9 @@ class VettingApprovalTable extends DataTableComponent
         ]);
     }
 
-    public function filterData($data)
-    {
-        $this->data = $data;
-        $this->emit('$refresh');
-    }
-
     public function builder(): Builder
     {
-        $filter      = (new TaxReturn())->newQuery();
-        $returnTable = TaxReturn::getTableName();
-
-        $filter = $this->dataFilter($filter, $this->data, $returnTable);
-    
-        return $filter->with('business', 'location', 'taxtype', 'financialMonth');
+        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')->where('vetting_status', $this->vettingStatus)->orderBy('created_at', 'asc');
     }
 
     public function columns(): array
@@ -87,10 +78,10 @@ class VettingApprovalTable extends DataTableComponent
                 ->view('vetting.includes.status')
                 ->searchable()
                 ->sortable(),
-            Column::make('Date', 'created_at')
+            Column::make('Filed On', 'created_at')
                 ->sortable()
                 ->format(function ($value, $row) {
-                    return Carbon::create($value)->format('M d, Y');
+                    return Carbon::create($value)->format('M d, Y H:i');
                 })
                 ->searchable(),
             Column::make('Action', 'id')->view('vetting.includes.actions'),

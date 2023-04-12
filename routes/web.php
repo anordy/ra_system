@@ -421,9 +421,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     Route::name('tax_vettings.')->prefix('tax_vettings')->group(function () {
         Route::get('/approvals', [TaxReturnVettingController::class, 'index'])->name('approvals');
+        Route::get('/corrected', [TaxReturnVettingController::class, 'corrected'])->name('corrected');
+        Route::get('/on-correction', [TaxReturnVettingController::class, 'onCorrection'])->name('on.correction');
+        Route::get('/vetted', [TaxReturnVettingController::class, 'vetted'])->name('vetted');
         Route::get('/view/{return_id}', [TaxReturnVettingController::class, 'show'])->name('show');
-        // Route::resource('/assessments', TaxReturnVettingController::class);
-        // Route::resource('/vetted', TaxReturnVettingController::class);
+
     });
 
     Route::name('tax_auditing.')->prefix('tax_auditing')->group(function () {

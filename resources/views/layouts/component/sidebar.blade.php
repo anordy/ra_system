@@ -266,25 +266,28 @@
                 </ul>
             </li>
         @endcan
-        {{-- @can('return-vetting') --}}
+        @can('tax-returns-vetting')
             <li class="{{ request()->is('tax_vetting*') ? 'active' : '' }}">
                 <a href="#tax_vetting" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     Returns Vetting
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('tax_vettings*') ? 'show' : '' }}"
                     id="tax_vetting">
-                    <li class="{{ request()->is('vettings/approvals*') ? 'active' : '' }}">
-                        <a href="{{ route('tax_vettings.approvals') }}">Approvals</a>
+                    <li class="{{ request()->is('tax_vettings/approvals*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_vettings.approvals') }}">Filed Returns</a>
                     </li>
-                    {{-- <li class="{{ request()->is('vetting/assessments*') ? 'active' : '' }}">
-                        <a href="{{ route('vetting.assessments.index') }}">Assessments</a>
+                    <li class="{{ request()->is('tax_vettings/corrected*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_vettings.corrected') }}">Corrected Returns</a>
                     </li>
-                    <li class="{{ request()->is('vetting/verified*') ? 'active' : '' }}">
-                        <a href="{{ route('vetting.verified.index') }}">Approved Returns</a>
-                    </li> --}}
+                    <li class="{{ request()->is('tax_vettings/on-correction*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_vettings.on.correction') }}">Returns On Correction</a>
+                    </li>
+                    <li class="{{ request()->is('tax_vettings/vetted*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_vettings.vetted') }}">Vetted Returns</a>
+                    </li>
                 </ul>
             </li>
-        {{-- @endcan --}}
+        @endcan
         @can('tax-auditing')
             <li class="{{ request()->is('tax_auditing*') ? 'active' : '' }}">
                 <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">

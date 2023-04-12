@@ -2,26 +2,57 @@
 
 namespace App\Http\Controllers\Vetting;
 
-use Illuminate\Http\Request;
+use App\Models\Returns\TaxReturn;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Verification\TaxVerification;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\TaxReturn;
 
 class TaxReturnVettingController extends Controller
 {
     public function index() {
-        return view('vetting.index');
+        if (!Gate::allows('tax-returns-vetting-view')) {
+            abort(403);
+        }
+
+        return view('vetting.submitted');
+    }
+
+    public function corrected() {
+        if (!Gate::allows('tax-returns-vetting-view')) {
+            abort(403);
+        }
+
+        return view('vetting.corrected');
+    }
+
+    public function onCorrection() {
+        if (!Gate::allows('tax-returns-vetting-view')) {
+            abort(403);
+        }
+
+        return view('vetting.on-correction');
+    }
+
+    public function vetted() {
+        if (!Gate::allows('tax-returns-vetting-view')) {
+            abort(403);
+        }
+
+        return view('vetting.vetted');
     }
 
     public function show($return_id) {
+
+        if (!Gate::allows('tax-returns-vetting-view')) {
+            abort(403);
+        }
 
         $tax_return = TaxReturn::findOrFail(decrypt($return_id));
 

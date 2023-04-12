@@ -9,34 +9,18 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
+use App\Traits\TaxReturnHistory;
 use App\Traits\TaxVerificationTrait;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class TaxReturnsVettingApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait, TaxVerificationTrait;
+    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, TaxVerificationTrait, TaxReturnHistory;
 
     public $modelId;
     public $modelName;
     public $comments;
 
-    public $teamLeader;
-    public $teamMember;
-
-    public $principalAmount;
-    public $interestAmount;
-    public $penaltyAmount;
-    public $assessmentReport;
-    public $taxTypes;
-    public $taxType;
-
-    public $hasAssessment;
-
-    public $staffs = [];
-    public $subRoles = [];
-
-    public $task;
     public $return;
 
     public function mount($modelName, $modelId)
@@ -68,16 +52,17 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->return->save();
                 $this->return->return->save();
 
-                DB::commit();
-    
+
                 // Trigger verification
                 $this->triggerTaxVerifications($this->return->return, auth()->user());
-    
+
+                DB::commit();
+
                 // Generate control number
                 $this->generateReturnControlNumber($this->return);
-    
+
                 // TODO: Trigger claim for VAT
-    
+
                 $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
                 DB::rollBack();
@@ -94,19 +79,27 @@ class TaxReturnsVettingApprovalProcessing extends Component
             'comments' => 'required|string|strip_tag',
         ]);
 
-        try {
-            if ($this->checkTransition('application_filled_incorrect')) {
+        if ($this->checkTransition('application_filled_incorrect')) {
+
+            DB::beginTransaction();
+            try {
                 $this->subject->vetting_status = VettingStatus::CORRECTION;
                 $this->subject->return->vetting_status = VettingStatus::CORRECTION;
                 $this->subject->return->save();
+
+
+                $this->saveHistory($this->subject);
+                $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+                
+                DB::commit();
+
+                $this->flash('success', 'Application sent for correction', [], redirect()->back()->getTargetUrl());
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
-            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-        } catch (Exception $e) {
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
-            return;
         }
-        $this->flash('success', 'Application sent for correction', [], redirect()->back()->getTargetUrl());
     }
 
 
