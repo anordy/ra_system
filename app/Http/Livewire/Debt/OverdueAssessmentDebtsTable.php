@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Debt;
 
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use App\Enum\ReturnCategory;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 class OverdueAssessmentDebtsTable extends DataTableComponent
 {
 
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
     public function builder(): Builder
     {

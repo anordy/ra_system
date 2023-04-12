@@ -6,6 +6,7 @@ use App\Models\Waiver;
 use App\Models\WaiverObjection;
 use App\Models\WaiverObjectionStatus;
 use App\Models\WaiverStatus;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Livewire\WithFileUploads;
@@ -14,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class WaiverObjectionApprovalTable extends DataTableComponent
 {
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
     public function builder(): Builder
     {

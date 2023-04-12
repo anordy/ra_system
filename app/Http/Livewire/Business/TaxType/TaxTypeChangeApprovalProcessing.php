@@ -62,6 +62,7 @@ class TaxTypeChangeApprovalProcessing extends Component
         if ($property === 'to_tax_type_id') { 
             $taxType = TaxType::findOrFail($this->to_tax_type_id);
             if ($taxType->code == TaxType::VAT) {
+                $this->subVatOptions = SubVat::all();
                 $this->showSubVatOptions = true;
             } else {
                 $this->showSubVatOptions = false;

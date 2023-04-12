@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Reports\Assessment\Previews;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
 use App\Traits\AssessmentReportTrait;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -12,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class AssessmentPreviewTable extends DataTableComponent
 {
-    use CustomAlert, AssessmentReportTrait;
+    use CustomAlert, AssessmentReportTrait, WithSearch;
 
     public $parameters;
 

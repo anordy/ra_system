@@ -4,12 +4,15 @@ namespace App\Http\Livewire\Claims;
 
 use App\Models\Claims\TaxClaim;
 use App\Models\WaiverObjection;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class CreditsTable extends DataTableComponent
 {
+    use WithSearch;
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');

@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Reports\Debts\Previews;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Traits\DebtReportTrait;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -13,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class DebtWaiverReportPreviewTable extends DataTableComponent
 {
-    use CustomAlert, DebtReportTrait;
+    use CustomAlert, DebtReportTrait, WithSearch;
 
     public $parameters;
 

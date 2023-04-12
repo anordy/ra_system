@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Assesments;
 use App\Enum\BillStatus;
 use App\Models\Disputes\Dispute;
 use App\Models\WorkflowTask;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
@@ -13,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class DisputeApprovalTable extends DataTableComponent
 {
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
     public $model = WorkflowTask::class;
 

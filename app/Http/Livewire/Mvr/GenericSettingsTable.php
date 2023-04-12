@@ -10,6 +10,7 @@ use App\Models\MvrColor;
 use App\Models\MvrFee;
 use App\Models\MvrModel;
 use App\Models\MvrTransferFee;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
@@ -18,7 +19,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class GenericSettingsTable extends DataTableComponent
 {
-	use CustomAlert;
+	use CustomAlert, WithSearch;
     public $model;
     public $setting_title = '';
 

@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Country;
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class CountryTable extends DataTableComponent
 {
-    use CustomAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait, WithSearch;
 
     protected $model = Country::class;
     public function configure(): void

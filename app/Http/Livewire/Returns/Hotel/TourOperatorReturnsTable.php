@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\Hotel;
 
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class TourOperatorReturnsTable extends DataTableComponent
 {
-    use  ReturnFilterTrait;
+    use  ReturnFilterTrait, WithSearch;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $status;

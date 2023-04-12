@@ -6,13 +6,14 @@ use App\Models\Business;
 use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use App\Traits\WithSearch;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class RegistrationsTable extends DataTableComponent
 {
 
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
     public $rejected = false;
     public $pending = false;

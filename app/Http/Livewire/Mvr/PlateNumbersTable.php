@@ -7,6 +7,7 @@ use App\Models\MvrMotorVehicleRegistration;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatus;
 use App\Models\TaxAgentStatus;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
@@ -16,7 +17,7 @@ use App\Models\TaxAgent;
 
 class PlateNumbersTable extends DataTableComponent
 {
-	use CustomAlert;
+	use CustomAlert, WithSearch;
 
     public $plate_number_status_id;
 

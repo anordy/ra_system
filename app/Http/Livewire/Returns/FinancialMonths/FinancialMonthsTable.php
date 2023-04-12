@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Returns\FinancialMonths;
 
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -12,6 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class FinancialMonthsTable extends DataTableComponent
 {
+    use WithSearch;
     public $today;
     public function configure(): void
     {

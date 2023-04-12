@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\ISIC1;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\CustomAlert;
@@ -11,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ISIC1Table extends DataTableComponent
 {
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
     protected $model = ISIC1::class;
     public function configure(): void

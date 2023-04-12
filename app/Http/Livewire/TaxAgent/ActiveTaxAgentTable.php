@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\TaxAgent;
 
 use App\Models\TaxAgentStatus;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -11,6 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class ActiveTaxAgentTable extends DataTableComponent
 {
+    use WithSearch;
 	//    protected $model = TaxAgent::class;
 
 	public function builder(): Builder

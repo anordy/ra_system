@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\BusinessCategory;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\CustomAlert;
@@ -11,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class BusinessCatTable extends DataTableComponent
 {
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
     protected $model = BusinessCategory::class;
     public function configure(): void

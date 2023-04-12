@@ -7,6 +7,7 @@ use App\Enum\TaxVerificationStatus;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Verification\TaxVerification;
 use App\Traits\ReturnFilterTrait;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
@@ -15,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VerificationAssessmentTable extends DataTableComponent
 {
-    use CustomAlert, ReturnFilterTrait;
+    use CustomAlert, ReturnFilterTrait, WithSearch;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     

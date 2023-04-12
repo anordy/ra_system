@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\BfoExciseDuty;
 
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Gate;
 
 class BfoExciseDutyTable extends DataTableComponent
 {
-    use  ReturnFilterTrait;
+    use  ReturnFilterTrait, WithSearch;
 
     protected $model     = BfoReturn::class;
     protected $listeners = ['filterData' => 'filterData', '$refresh'];

@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Traits\AuditTrait;
 use App\Traits\DualControlActivityTrait;
+use App\Traits\WithSearch;
 use Exception;
 use id;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,7 +24,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class UsersTable extends DataTableComponent
 {
-    use CustomAlert, AuditTrait, ThrottlesLogins, DualControlActivityTrait;
+    use CustomAlert, AuditTrait, ThrottlesLogins, DualControlActivityTrait, WithSearch;
 
     protected $model = User::class;
     public function configure(): void

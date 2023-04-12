@@ -13,6 +13,7 @@ use App\Models\MvrRequestStatus;
 use App\Models\MvrWrittenOff;
 use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -21,7 +22,7 @@ use App\Models\TaxAgent;
 
 class WrittenOffMotorVehiclesTable extends DataTableComponent
 {
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
 
     public function builder(): Builder

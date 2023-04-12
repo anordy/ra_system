@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Bank;
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
+use App\Traits\WithSearch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Gate;
 
 class EducationLevelTable extends DataTableComponent
 {
-    use CustomAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait, WithSearch;
 
     protected $model = EducationLevel::class;
     public function configure(): void

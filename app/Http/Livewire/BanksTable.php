@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Bank;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\CustomAlert;
@@ -11,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class BanksTable extends DataTableComponent
 {
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
     protected $model = Bank::class;
     public function configure(): void

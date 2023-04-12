@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Workflow;
 
 use App\Models\Workflow;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\CustomAlert;
@@ -11,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class WorkflowConfigTable extends DataTableComponent
 {
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
     public function builder(): Builder
     {

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Settings\InterestRate;
 
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
+use App\Traits\WithSearch;
 use Exception;
 use App\Models\InterestRate;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class InterestRatesTable extends DataTableComponent
 {
-    use CustomAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait, WithSearch;
 
     public function builder(): Builder
     {
