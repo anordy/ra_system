@@ -27,7 +27,7 @@ class PetroleumConfigSeeder extends Seeder
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
                 'currency' => 'TZS',
-                'rate' => 350,
+                'rate' => 300,
                 'rate_usd' => 0,
                 'active' => true,
             ],

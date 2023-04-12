@@ -31,6 +31,10 @@ use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalMail;
 use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedMail;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
 use App\Jobs\DualControl\User\UserInformationUpdateMAIL;
+use App\Jobs\Extension\SendExtensionApprovedMail;
+use App\Jobs\Extension\SendExtensionRejectedMail;
+use App\Jobs\Installment\SendInstallmentApprovedMail;
+use App\Jobs\Installment\SendInstallmentRejectedMail;
 use App\Jobs\SendOTPEmail;
 use App\Jobs\SendTaxAgentApprovalEmail;
 use App\Jobs\SendKYCRegistrationEmail;
@@ -215,6 +219,14 @@ class SendMailFired
             TooManyLoginAttempts::dispatch($event->tokenId);
         } else if ($event->service === 'failed-verification'){
             SendFailedVerificationMail::dispatch($event->tokenId);
+        } else if ($event->service === SendExtensionApprovedMail::SERVICE){
+            SendExtensionApprovedMail::dispatch($event->tokenId);
+        } else if ($event->service === SendExtensionRejectedMail::SERVICE){
+            SendExtensionRejectedMail::dispatch($event->tokenId);
+        } else if ($event->service === SendInstallmentApprovedMail::SERVICE){
+            SendInstallmentApprovedMail::dispatch($event->tokenId);
+        } else if ($event->service === SendInstallmentRejectedMail::SERVICE){
+            SendInstallmentRejectedMail::dispatch($event->tokenId);
         }
     }
 }

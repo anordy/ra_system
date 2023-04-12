@@ -62,6 +62,7 @@ class UserSeeder extends Seeder
             'status' => true,
             'is_first_login' => false,
             'is_approved' => 1,
+            'pass_expired_on' => Carbon::now()->addYear()
         ]);
 
         User::updateOrCreate([
@@ -76,6 +77,7 @@ class UserSeeder extends Seeder
             'status' => true,
             'is_first_login' => false,
             'is_approved' => 1,
+            'pass_expired_on' => Carbon::now()->addYear()
         ]);
 
         User::updateOrCreate([
@@ -90,6 +92,7 @@ class UserSeeder extends Seeder
             'status' => true,
             'is_first_login' => false,
             'is_approved' => 1,
+            'pass_expired_on' => Carbon::now()->addYear()
         ]);
 
     }

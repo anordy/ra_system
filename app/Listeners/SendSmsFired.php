@@ -3,47 +3,51 @@
 namespace App\Listeners;
 
 use App\Events\SendSms;
-use App\Jobs\SendKYCRegistrationSMS;
-use App\Models\KYC;
-use App\Models\UserOtp;
-use App\Jobs\SendOTPSMS;
-use App\Models\Business;
-use App\Models\Taxpayer;
-use App\Models\WaResponsiblePerson;
 use App\Jobs\Audit\SendSmsToTaxPayer;
-use App\Jobs\Debt\SendDebtBalanceSMS;
-use App\Jobs\SendTaxAgentApprovalSMS;
-use App\Jobs\Taxpayer\SendKycRejectSMS;
-use App\Jobs\Taxpayer\SendRegistrationSMS;
-use App\Jobs\Business\Taxtype\SendTaxTypeSMS;
-use App\Jobs\TaxClearance\RequestFeedbackJob;
-use App\Jobs\Business\SendBusinessApprovedSMS;
-use App\Jobs\Configuration\SendPenaltyRateSMS;
-use App\Jobs\Configuration\SendInterestRateSMS;
-use App\Jobs\Business\SendBusinessCorrectionSMS;
-use App\Jobs\Configuration\SendFinancialYearSMS;
-use App\Jobs\Configuration\SendFinancialMonthSMS;
-use App\Jobs\SendWithholdingAgentRegistrationSMS;
 use App\Jobs\Business\Branch\SendBranchApprovalSMS;
+use App\Jobs\Business\Branch\SendBranchCorrectionSMS;
+use App\Jobs\Business\SendBusinessApprovedSMS;
+use App\Jobs\Business\SendBusinessClosureApprovedSMS;
+use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
+use App\Jobs\Business\SendBusinessClosureRejectedSMS;
+use App\Jobs\Business\SendBusinessCorrectionSMS;
+use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
+use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
+use App\Jobs\Business\SendBusinessDeregisterRejectedSMS;
+use App\Jobs\Business\Taxtype\SendTaxTypeSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateRejectedSMS;
+use App\Jobs\Configuration\SendExchangeRateSMS;
+use App\Jobs\Configuration\SendFinancialMonthSMS;
+use App\Jobs\Configuration\SendFinancialYearSMS;
+use App\Jobs\Configuration\SendInterestRateSMS;
+use App\Jobs\Configuration\SendPenaltyRateSMS;
+use App\Jobs\Debt\SendDebtBalanceSMS;
 use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalSMS;
 use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedSMS;
-use App\Jobs\Business\Branch\SendBranchCorrectionSMS;
-use App\Jobs\Business\SendBusinessClosureApprovedSMS;
-use App\Jobs\Business\SendBusinessClosureRejectedSMS;
-use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
-use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
-use App\Jobs\Business\SendBusinessDeregisterRejectedSMS;
-use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
-use App\Jobs\Business\Updates\SendBusinessUpdateApprovalSMS;
-use App\Jobs\Business\Updates\SendBusinessUpdateRejectedSMS;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
-use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionSMS;
-use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
-use App\Jobs\Configuration\SendExchangeRateSMS;
 use App\Jobs\DualControl\User\UserInformationUpdateSMS;
+use App\Jobs\Extension\SendExtensionApprovedSMS;
+use App\Jobs\Extension\SendExtensionRejectedSMS;
+use App\Jobs\Installment\SendInstallmentApprovedSMS;
+use App\Jobs\Installment\SendInstallmentRejectedSMS;
+use App\Jobs\SendKYCRegistrationSMS;
+use App\Jobs\SendOTPSMS;
+use App\Jobs\SendTaxAgentApprovalSMS;
+use App\Jobs\SendWithholdingAgentRegistrationSMS;
 use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackSMS;
+use App\Jobs\TaxClearance\RequestFeedbackJob;
+use App\Jobs\Taxpayer\SendKycRejectSMS;
+use App\Jobs\Taxpayer\SendRegistrationSMS;
 use App\Jobs\Taxpayer\TaxpayerAmendmentNotificationSMS;
 use App\Jobs\User\SendRegistrationSMS as UserSendRegistrationSMS;
+use App\Models\Business;
+use App\Models\KYC;
+use App\Models\Taxpayer;
+use App\Models\UserOtp;
+use App\Models\WaResponsiblePerson;
 
 class SendSmsFired
 {
@@ -191,6 +195,14 @@ class SendSmsFired
             UserSendRegistrationSMS::dispatch($event->tokenId);
         } else if ($event->service === 'taxpayer-amendment-notification') {
             TaxpayerAmendmentNotificationSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendExtensionApprovedSMS::SERVICE){
+            SendExtensionApprovedSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendExtensionRejectedSMS::SERVICE){
+            SendExtensionRejectedSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendInstallmentApprovedSMS::SERVICE){
+            SendInstallmentApprovedSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendInstallmentRejectedSMS::SERVICE){
+            SendInstallmentRejectedSMS::dispatch($event->tokenId);
         }
     }
 }
