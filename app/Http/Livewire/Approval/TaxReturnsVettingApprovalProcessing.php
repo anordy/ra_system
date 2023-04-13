@@ -3,7 +3,13 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\VettingStatus;
+use App\Models\Returns\Vat\VatReturn;
+use App\Models\Role;
+use App\Models\Taxpayer;
+use App\Models\User;
+use App\Notifications\DatabaseNotification;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxClaimsTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +21,7 @@ use Livewire\Component;
 
 class TaxReturnsVettingApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, TaxVerificationTrait, TaxReturnHistory;
+    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, TaxVerificationTrait, TaxReturnHistory, TaxClaimsTrait;
 
     public $modelId;
     public $modelName;
@@ -26,7 +32,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId   = decrypt($modelId);
+        $this->modelId = decrypt($modelId);
         $this->return = $modelName::findOrFail($this->modelId);
 
         $this->registerWorkflow($modelName, $this->modelId);
@@ -62,6 +68,29 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->generateReturnControlNumber($this->return);
 
                 // TODO: Trigger claim for VAT
+                //triggering claim
+                if ($this->return->return_type == VatReturn::class) {
+                    if ($this->return->total_amount_due < 0) {
+                        $claim = $this->triggerClaim(abs($this->return->total_amount_due), $this->return->currency, $this->return);
+
+                        $this->return->claim_status = 'claim';
+                        $this->return->save();
+
+                        $taxpayer = Taxpayer::query()->where('id', $this->return->filed_by_id)->first();
+                        $taxpayer = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+                        $role = Role::query()->where('name', 'Administrator')->first();
+                        $admins = User::query()->where('role_id', $role->id)->get();
+                        foreach ($admins as $admin) {
+                            $admin->notify(new DatabaseNotification(
+                                $subject = 'TAX CLAIMING',
+                                $message = 'You have a new request for tax claim from ' . $taxpayer . '',
+                                $href = 'claims.show',
+                                $hrefText = 'View',
+                                $hrefParameters = $claim->id,
+                            ));
+                        }
+                    }
+                }
 
                 $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
@@ -90,7 +119,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
 
                 $this->saveHistory($this->subject);
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-                
+
                 DB::commit();
 
                 $this->flash('success', 'Application sent for correction', [], redirect()->back()->getTargetUrl());
