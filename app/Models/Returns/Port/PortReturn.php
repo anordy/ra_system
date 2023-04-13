@@ -95,4 +95,8 @@ class PortReturn extends Model
         return $this->morphOne(TaxReturn::class, 'return');
     }
 
+    public function items(){
+        return $this->hasMany(PortReturnItem::class, 'return_id');
+    }
+
 }

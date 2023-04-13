@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Vetting;
 
+use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\TaxReturn;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -58,6 +59,9 @@ class TaxReturnVettingController extends Controller
 
         $return = $tax_return->return;
 
+        $returnHistories = $tax_return->editReturnHistories;
+
+
         if ($return instanceof PetroleumReturn) {
             $viewRender = 'returns.petroleum.filing.details';
 
@@ -83,7 +87,11 @@ class TaxReturnVettingController extends Controller
             $viewRender = 'returns.excise-duty.mno.details';
 
         }
+        elseif ($return instanceof BfoReturn) {
+            $viewRender = 'returns.excise-duty.bfo.details';
 
-        return view('vetting.show', compact('return', 'viewRender', 'tax_return'));
+        }
+
+        return view('vetting.show', compact('return', 'viewRender', 'tax_return', 'returnHistories'));
     }
 }

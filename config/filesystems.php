@@ -31,12 +31,13 @@ return [
     'disks' => [
 
         'local' => [
-            'driver' => 'sftp',
-            'host' => secEnv('SFTP_HOST'),
-            'username' => secEnv('SFTP_USERNAME'),
-            'password' => secEnv('SFTP_PASSWORD'),
-            'port' => secEnv('SFTP_PORT', 22),
-            'root' => secEnv('SFTP_ROOT'),
+            'driver' => 'local',
+            'root' => storage_path('app'),
+        ],
+
+        'local-admin' => [
+            'driver' => 'local',
+            'root' => storage_path('./../../zrb_admin/storage/app'),
         ],
 
         'public' => [

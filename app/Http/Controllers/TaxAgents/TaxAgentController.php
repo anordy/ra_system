@@ -76,17 +76,12 @@ class TaxAgentController extends Controller
         $superStart = $this->sup($start);
         $superEnd = $this->sup($end);
 
-        $code = 'Name: ' . $taxagent->taxpayer->fullName . ", " .
-            'Location: ' . $taxagent->district->name . ', ' . $taxagent->region->name . ", " .
-            'Period: ' . $diff . ' ' . $word .
-            'From: ' . "{$start_date}" . ", " .
-            'To: ' . "{$end_date}" . ", " .
-            'https://portalzidras.zanrevenue.org';
+        $url = route('qrcode-check.taxagents.certificate', encrypt($id));
 
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
-            ->data($code)
+            ->data($url)
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(207)

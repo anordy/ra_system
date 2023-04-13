@@ -30,6 +30,10 @@ class MmTransferReturn extends Model
         return $this->hasMany(MmTransferReturnItem::class, 'return_id');
     }
 
+    public function items(){
+        return $this->hasMany(MmTransferReturnItem::class, 'return_id');
+    }
+
     public function verification(){
         return $this->morphOne(TaxVerification::class, 'tax_return');
     }

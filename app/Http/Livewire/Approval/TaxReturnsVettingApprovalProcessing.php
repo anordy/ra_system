@@ -2,22 +2,30 @@
 
 namespace App\Http\Livewire\Approval;
 
+use Exception;
+use App\Events\SendSms;
+use Livewire\Component;
+use App\Events\SendMail;
 use App\Enum\VettingStatus;
+use App\Jobs\Vetting\SendToCorrectionReturnMail;
+use App\Jobs\Vetting\SendToCorrectionReturnSMS;
+use App\Jobs\Vetting\SendVettedReturnMail;
+use App\Jobs\Vetting\SendVettedReturnSMS;
+use App\Traits\CustomAlert;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\Role;
 use App\Models\Taxpayer;
 use App\Models\User;
 use App\Notifications\DatabaseNotification;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxReturnHistory;
 use App\Traits\TaxClaimsTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Traits\CustomAlert;
-use App\Traits\TaxReturnHistory;
 use App\Traits\TaxVerificationTrait;
-use Livewire\Component;
+use App\Traits\WorkflowProcesssingTrait;
 
 class TaxReturnsVettingApprovalProcessing extends Component
 {
@@ -32,7 +40,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = decrypt($modelId);
+        $this->modelId   = decrypt($modelId);
         $this->return = $modelName::findOrFail($this->modelId);
 
         $this->registerWorkflow($modelName, $this->modelId);
@@ -58,11 +66,13 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->return->save();
                 $this->return->return->save();
 
-
                 // Trigger verification
                 $this->triggerTaxVerifications($this->return->return, auth()->user());
 
                 DB::commit();
+
+                event(new SendSms(SendVettedReturnSMS::SERVICE, $this->return));
+                event(new SendMail(SendVettedReturnMail::SERVICE, $this->return));
 
                 // Generate control number
                 $this->generateReturnControlNumber($this->return);
@@ -116,11 +126,13 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->subject->return->vetting_status = VettingStatus::CORRECTION;
                 $this->subject->return->save();
 
-
                 $this->saveHistory($this->subject);
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-
+                
                 DB::commit();
+
+                event(new SendSms(SendToCorrectionReturnSMS::SERVICE, $this->return));
+                event(new SendMail(SendToCorrectionReturnMail::SERVICE, $this->return));
 
                 $this->flash('success', 'Application sent for correction', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {

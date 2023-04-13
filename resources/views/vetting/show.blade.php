@@ -14,14 +14,19 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
-                aria-selected="false">Approval Details</a>
+               aria-selected="false">Approval Details</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history"
+               aria-selected="false">
+                Return Edit History
+            </a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if (view()->exists($viewRender))
                 @php echo view($viewRender, compact('return'))->render() @endphp
-
                 <livewire:approval.tax-returns-vetting-approval-processing modelName="{{ get_class($tax_return) }}" modelId="{{ encrypt($tax_return->id) }}"></livewire:approval.tax-returns-vetting-approval-processing>
             @else
                 <div class="card">
@@ -98,7 +103,6 @@
             </div>
 
         </div>
-     
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">
                 <div class="card-body">
@@ -106,6 +110,9 @@
                         modelId="{{ encrypt($tax_return->id) }}" />
                 </div>
             </div>
+        </div>
+        <div class="tab-pane fade card p-2" id="history" role="tabpanel" aria-labelledby="history-tab">
+            @include('vetting.includes.return-histories')
         </div>
     </div>
 
