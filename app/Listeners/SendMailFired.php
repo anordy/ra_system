@@ -50,6 +50,8 @@ use App\Jobs\TaxVerification\SendAssessmentReportEmailToTaxPayer;
 use App\Jobs\User\SendRegistrationEmail;
 use App\Jobs\User\TooManyLoginAttempts;
 use App\Jobs\Verification\SendFailedVerificationMail;
+use App\Jobs\Vetting\SendToCorrectionReturnMail;
+use App\Jobs\Vetting\SendVettedReturnMail;
 use App\Models\Business;
 use App\Models\KYC;
 use App\Models\Taxpayer;
@@ -227,6 +229,10 @@ class SendMailFired
             SendInstallmentApprovedMail::dispatch($event->tokenId);
         } else if ($event->service === SendInstallmentRejectedMail::SERVICE){
             SendInstallmentRejectedMail::dispatch($event->tokenId);
+        } else if ($event->service === SendVettedReturnMail::SERVICE){
+            SendVettedReturnMail::dispatch($event->tokenId);
+        } else if ($event->service === SendToCorrectionReturnMail::SERVICE){
+            SendToCorrectionReturnMail::dispatch($event->tokenId);
         }
     }
 }
