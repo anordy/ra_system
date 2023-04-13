@@ -18,9 +18,23 @@
     @foreach ($return->items as $item)
         <tr>
             <td>{{ $item->config->name }}</td>
-            <td>{{ number_format($item->value, 2) }}</td>
-            <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd }}</td>
-            <td>{{ number_format($item->vat, 2) }}</td>
+            @if($item->config->code == 'WITHH')
+                <td class="bg-secondary"></td>
+            @else
+                <td>{{ number_format($item->value, 2) }}</td>
+            @endif
+            @if($item->config->rate_applicable)
+                <td>
+                    {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd }}
+                </td>
+            @else
+                <td class="bg-secondary"></td>
+            @endif
+            @if($item->config->is_summable)
+                <td>{{ number_format($item->vat, 2) }}</td>
+            @else
+                <td class="bg-secondary"></td>
+            @endif
         </tr>
     @endforeach
     </tbody>
