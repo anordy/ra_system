@@ -18,7 +18,7 @@
     </span>
 @else
     <span class="badge badge-success py-1 px-2"
-          style="border-radius: 1rem; background: #a3a3a3; color: #404040; font-size: 85%">
+          style="border-radius: 1rem; background: #404040; color: #FFFFFF; font-size: 85%">
         <i class="bi bi-check-circle-fill mr-1"></i>
         {{ $row->vetting_status }}
     </span>
