@@ -2,29 +2,39 @@
 
 namespace App\Services\Workflow\Subscriber;
 
-use App\Enum\DisputeStatus;
-use App\Enum\ReturnApplicationStatus;
-use App\Enum\TaxAuditStatus;
-use App\Enum\TaxClearanceStatus;
-use App\Enum\TaxInvestigationStatus;
-use App\Enum\TaxVerificationStatus;
-use App\Events\SendMail;
-use App\Events\SendSms;
-use App\Models\Role;
-use App\Models\TaxAgentStatus;
-use App\Models\Taxpayer;
-use App\Models\User;
-use App\Models\Workflow;
-use App\Models\WorkflowTask;
-use App\Models\WorkflowTaskOperator;
-use App\Notifications\DatabaseNotification;
-use App\Services\Workflow\Event\Event;
-use App\Services\Workflow\Event\GuardEvent;
-use Carbon\Carbon;
 use Exception;
+use Carbon\Carbon;
+use App\Models\Role;
+use App\Models\User;
+use App\Events\SendSms;
+use App\Events\SendMail;
+use App\Models\Taxpayer;
+use App\Models\Workflow;
+use App\Enum\DisputeStatus;
+use App\Enum\TaxAuditStatus;
+use App\Models\WorkflowTask;
+use App\Models\TaxAgentStatus;
+use App\Enum\TaxClearanceStatus;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use App\Enum\TaxVerificationStatus;
+use App\Enum\TaxInvestigationStatus;
+use App\Models\WorkflowTaskOperator;
+use App\Enum\ReturnApplicationStatus;
+use App\Models\Returns\BFO\BfoReturn;
+use App\Models\Returns\EmTransactionReturn;
+use App\Models\Returns\Vat\VatReturn;
+use App\Services\Workflow\Event\Event;
+use App\Models\Returns\Port\PortReturn;
+use App\Models\Returns\MmTransferReturn;
+use App\Notifications\DatabaseNotification;
+use App\Services\Workflow\Event\GuardEvent;
+use App\Models\Returns\ExciseDuty\MnoReturn;
+use App\Models\Returns\LumpSum\LumpSumReturn;
+use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Returns\StampDuty\StampDutyReturn;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WorkflowSubscriber implements EventSubscriberInterface
 {
@@ -310,6 +320,30 @@ class WorkflowSubscriber implements EventSubscriberInterface
             } elseif ($placeName == 'kyc_details_amendment_verification') {
                 $hrefClient = 'kycs-amendment.index';
                 $hrefAdmin = 'kycs-amendment.index';
+            } elseif ($placeName == 'TAX_RETURN_VETTING') {
+                $return = $subject->return;
+                if ($return instanceof PetroleumReturn) {
+                    $hrefClient = 'returns.petroleum.index';
+                    $hrefAdmin = 'returns.petroleum.index';
+                } elseif ($return instanceof StampDutyReturn) {
+                    $hrefClient = 'returns.stamp-duty.index';
+                    $hrefAdmin = 'returns.stamp-duty.index';
+                } elseif ($return instanceof VatReturn) {
+                    $hrefClient = 'returns.vat-return.index';
+                    $hrefAdmin = 'returns.vat-return.index';
+                } elseif ($return instanceof MmTransferReturn) {
+                    $hrefClient = 'returns.mm-transfer.show-returns';
+                    $hrefAdmin = 'returns.mobile-money-transfer.index ';
+                } elseif ($return instanceof MnoReturn) {
+                    $hrefClient = 'returns.excise-duty.mno';
+                    $hrefAdmin = 'returns.excise-duty.mno';
+                } elseif ($return instanceof BfoReturn) {
+                    $hrefClient = 'returns.excise-duty.show-returns';
+                    $hrefAdmin = 'returns.bfo-excise-duty.index';
+                } elseif ($return instanceof EmTransactionReturn) {
+                    $hrefClient = 'returns.em-transaction.show-returns';
+                    $hrefAdmin = 'returns.em-transaction.index';
+                }
             }
 
             if ($placeName == 'TAX_RETURN_VERIFICATION') {
@@ -342,6 +376,17 @@ class WorkflowSubscriber implements EventSubscriberInterface
                         $event->getSubject()->taxpayer->notify(new DatabaseNotification(
                             $notificationName,
                             'Your request has been rejected .',
+                            $hrefClient ?? null,
+                            'View',
+                            null,
+                            'taxpayer',
+                        ));
+                    }
+                } elseif (key($placesCurrent) == 'correct_application') {
+                    if ($event->getSubject()->taxpayer || $placeName == 'TAX_RETURN_VETTING') {
+                        $event->getSubject()->taxpayer->notify(new DatabaseNotification(
+                            $notificationName,
+                            'Your return required correction .',
                             $hrefClient ?? null,
                             'View',
                             null,
