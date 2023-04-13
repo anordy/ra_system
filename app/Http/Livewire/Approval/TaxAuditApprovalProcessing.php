@@ -149,13 +149,13 @@ class TaxAuditApprovalProcessing extends Component
 
             if ($this->preliminaryReport != $this->subject->preliminary_report) {
                 $this->validate([
-                    'preliminaryReport' => 'required|mimes:pdf|max:1024'
+                    'preliminaryReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
                 ]);
             }
 
             if ($this->workingReport != $this->subject->working_report) {
                 $this->validate([
-                    'workingReport' => 'required|mimes:pdf|max:1024'
+                    'workingReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
                 ]);
             }
         }
@@ -173,13 +173,13 @@ class TaxAuditApprovalProcessing extends Component
 
             if ($this->exitMinutes != $this->subject->exit_minutes) {
                 $this->validate([
-                    'exitMinutes' => 'required|mimes:pdf|max:1024'
+                    'exitMinutes' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
                 ]);
             }
 
             if ($this->finalReport != $this->subject->final_report) {
                 $this->validate([
-                    'finalReport' => 'required|mimes:pdf|max:1024'
+                    'finalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
                 ]);
             }
         };

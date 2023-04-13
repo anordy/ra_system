@@ -69,7 +69,7 @@ class ApplicationDetailsStep extends StepComponent
     public function nextStep()
     {
         if ($this->type=='duplicate' && empty($this->loss_report_path)){
-            $this->rules = array_merge(['loss_report'=>'required|mimes:pdf'],$this->rules);
+            $this->rules = array_merge(['loss_report'=>'required|mimes:pdf|max_file_name_length:' . config('constants.file_name_length')],$this->rules);
         }elseif($this->type=='fresh' && empty($this->certificate)){
             $this->alert('error', 'Please upload certificate of competence!');
             return;

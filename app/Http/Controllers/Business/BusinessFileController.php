@@ -65,10 +65,10 @@ class BusinessFileController extends Controller
             abort(403);
         }
 
-        $url = route('qrcode-check.business.certificate', $locationId, $taxTypeId);
+        $taxTypeId = decrypt($taxTypeId);
+        $url = route('qrcode-check.business.certificate', $locationId,$taxTypeId);
 
         $locationId = decrypt($locationId);
-        $taxTypeId = decrypt($taxTypeId);
         $location = BusinessLocation::with('business', 'business.taxpayer')->findOrFail($locationId);
         $tax = TaxType::findOrFail($taxTypeId);
         $taxType = BusinessTaxType::where('business_id', $location->business->id)->where('tax_type_id', $taxTypeId)->firstOrFail();

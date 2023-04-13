@@ -94,7 +94,7 @@ class ReliefRegistrations extends Component
             'items.*.quantity' => 'required|numeric',
             // 'items.*.unit' => 'required',
             'items.*.costPerItem' => 'required|numeric',
-            'attachments.*.file' => 'nullable|required_with:attachments.*.name|mimes:pdf',
+            'attachments.*.file' => 'nullable|required_with:attachments.*.name|mimes:pdf|max_file_name_length:' . config('constants.file_name_length'),
             'attachments.*.name' => 'nullable|required_with:attachments.*.file',
 
         ];

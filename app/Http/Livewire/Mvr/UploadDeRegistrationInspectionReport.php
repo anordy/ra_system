@@ -52,7 +52,7 @@ class UploadDeRegistrationInspectionReport extends Component
     protected function rules()
     {
         return [
-            'inspection_report'=>'required|mimes:pdf',
+            'inspection_report'=>'required|mimes:pdf|max_file_name_length:' . config('constants.file_name_length'),
             'inspection_date'=>'required|date',
         ];
     }

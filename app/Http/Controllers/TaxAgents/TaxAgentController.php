@@ -76,13 +76,6 @@ class TaxAgentController extends Controller
         $superStart = $this->sup($start);
         $superEnd = $this->sup($end);
 
-        // $code = 'Name: ' . $taxagent->taxpayer->fullName . ", " .
-        //     'Location: ' . $taxagent->district->name . ', ' . $taxagent->region->name . ", " .
-        //     'Period: ' . $diff . ' ' . $word .
-        //     'From: ' . "{$start_date}" . ", " .
-        //     'To: ' . "{$end_date}" . ", " .
-        //     'https://portalzidras.zanrevenue.org';
-
         $url = route('qrcode-check.taxagents.certificate', encrypt($id));
 
         $result = Builder::create()
