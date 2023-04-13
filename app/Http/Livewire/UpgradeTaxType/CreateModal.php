@@ -13,12 +13,12 @@ use App\Traits\UpgradeTaxTypeTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class CreateModal extends Component
 {
-    use LivewireAlert, UpgradeTaxTypeTrait;
+    use CustomAlert, UpgradeTaxTypeTrait;
     public $effective_date;
     public $currency;
     public $return;
@@ -107,7 +107,7 @@ class CreateModal extends Component
         {
             DB::rollBack();
             Log::error($exception);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help!!!');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help!!!');
             redirect()->back()->getTargetUrl();
         }
     }

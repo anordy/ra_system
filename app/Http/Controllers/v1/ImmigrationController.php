@@ -6,11 +6,11 @@ namespace App\Http\Controllers\v1;
 use App\Http\Controllers\Controller;
 use App\Services\Api\ApiAuthenticationService;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class ImmigrationController extends Controller
 {
-    use LivewireAlert;
+    use CustomAlert;
     /**
      * Create a new controller instance.
      *
@@ -59,7 +59,7 @@ class ImmigrationController extends Controller
             if (curl_errno($curl)) {
                 $err = curl_error($curl);
                 Log::error($err);
-                return $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                return $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
             curl_close($curl);
             return json_decode($response, true);

@@ -5,16 +5,17 @@ namespace App\Http\Livewire\Extension;
 use App\Enum\ExtensionRequestStatus;
 use App\Models\Business;
 use App\Models\Extension\ExtensionRequest;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ExtensionsTable extends DataTableComponent
 {
 
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
 
     public $rejected;
 

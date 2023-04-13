@@ -3,14 +3,15 @@
 namespace App\Http\Livewire\Installment;
 
 use App\Models\Installment\InstallmentItem;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class InstallmentItemsTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
 
     public $installment;
 

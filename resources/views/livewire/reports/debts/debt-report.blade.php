@@ -20,6 +20,27 @@
                 </div>
             @enderror
         </div>  
+
+        <div class="col-md-4 form-group">
+            <label for="filter_type" class="d-flex justify-content-between'">
+                <span>
+                    Filter Type
+                </span>
+            </label>
+            <select name="filter_type" id="filter_type" wire:model="filter_type"
+                class="form-control {{ $errors->has('filter_type') ? 'is-invalid' : '' }}">
+                <option>Choose Filter Type</option>
+                <option value="custom">Custom Date Range</option>
+                <option value="yearly">Yearly or Periodically</option>
+            </select>
+            @error('filter_type')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div> 
+
+        @if ($filter_type == 'yearly')
         <div class="col-md-4 form-group">
             <label for="start_month" class="d-flex justify-content-between'">
                 <span>
@@ -140,6 +161,34 @@
                     @enderror
                 </div>
             @endif
+          
+        @endif 
+        @endif
+
+
+        @if ($filter_type == 'custom')
+        <div class="col-md-4 form-group">
+            <label class="d-flex justify-content-between'">
+                <span>Start Date</span>
+            </label>
+            <input type="date" class="form-control" wire:model="range_start" max="{{ $range_end }}">
+            @error('range_start')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="col-md-4 form-group">
+            <label class="d-flex justify-content-between'">
+                <span>End Date</span>
+            </label>
+            <input type="date" class="form-control" wire:model="range_end" min="{{ $range_start }}" max="{{ $today }}">
+            @error('range_end')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
         @endif
 
     </div>

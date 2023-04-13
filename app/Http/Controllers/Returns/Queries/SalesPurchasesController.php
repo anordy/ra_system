@@ -13,11 +13,11 @@ use App\Traits\SalesTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class SalesPurchasesController extends Controller
 {
-    use PurchasesTrait, SalesTrait, LivewireAlert;
+    use PurchasesTrait, SalesTrait, CustomAlert;
 
     public function index()
     {

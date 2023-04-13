@@ -15,13 +15,13 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class TaxClearenceApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait, PaymentsTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait, PaymentsTrait, CustomAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -72,7 +72,7 @@ class TaxClearenceApprovalProcessing extends Component
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
                 return;
             }
 
@@ -108,7 +108,7 @@ class TaxClearenceApprovalProcessing extends Component
 
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -120,7 +120,7 @@ class TaxClearenceApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

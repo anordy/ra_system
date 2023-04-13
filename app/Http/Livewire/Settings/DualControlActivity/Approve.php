@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class Approve extends Component
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $dual_control_id;
 
@@ -32,7 +32,7 @@ class Approve extends Component
         if (!empty($req)) {
 
             if ($req->create_by_id == Auth::id()) {
-                $this->alert('error', 'You are not allowed to complete this action', ['timer' => 8000]);
+                $this->customAlert('error', 'You are not allowed to complete this action', ['timer' => 8000]);
                 return;
             }
 
@@ -42,12 +42,12 @@ class Approve extends Component
                 $this->updateControllable($req, DualControl::APPROVE);
                 $this->updateHistory($req->controllable_type, $req->controllable_type_id, $this->dual_control_id, 'approve', 'ok');
                 DB::commit();
-                $this->alert('success', 'Approved Successfully');
+                $this->customAlert('success', 'Approved Successfully');
                 return redirect()->route('system.dual-control-activities.index');
             } catch (\Throwable $exception) {
                 DB::rollBack();
                 Log::error($exception);
-                $this->alert('error', 'Something went wrong. Please contact an admin');
+                $this->customAlert('error', 'Something went wrong. Please contact an admin');
                 return redirect()->route('system.dual-control-activities.show', [encrypt($this->dual_control_id)]);
 
             }
@@ -61,7 +61,7 @@ class Approve extends Component
 
     public function confirmPopUpModal($action)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -85,7 +85,7 @@ class Approve extends Component
         if (!empty($req)) {
 
             if ($req->create_by_id == Auth::id()) {
-                $this->alert('error', 'You are not allowed to complete this action', ['timer' => 8000]);
+                $this->customAlert('error', 'You are not allowed to complete this action', ['timer' => 8000]);
                 return;
             }
 
@@ -95,12 +95,12 @@ class Approve extends Component
                 $this->updateControllable($req, DualControl::REJECT);
                 $this->updateHistory($req->controllable_type, $req->controllable_type_id, $this->dual_control_id, 'reject', 'not ok');
                 DB::commit();
-                $this->alert('success', 'Rejected Successfully');
+                $this->customAlert('success', 'Rejected Successfully');
                 return redirect()->route('system.dual-control-activities.index');
             } catch (\Throwable $exception) {
                 DB::rollBack();
                 Log::error($exception);
-                $this->alert('error', 'Something went wrong. Please contact an admin');
+                $this->customAlert('error', 'Something went wrong. Please contact an admin');
                 return redirect()->route('system.dual-control-activities.show', [encrypt($this->dual_control_id)]);
             }
         }

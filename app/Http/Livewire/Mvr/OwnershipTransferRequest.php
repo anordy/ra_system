@@ -13,14 +13,14 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class OwnershipTransferRequest extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $motor_vehicle_id;
     public $category_id;
@@ -96,7 +96,7 @@ class OwnershipTransferRequest extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

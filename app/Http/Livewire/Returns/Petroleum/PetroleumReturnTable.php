@@ -4,15 +4,16 @@ namespace App\Http\Livewire\Returns\Petroleum;
 
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Traits\ReturnFilterTrait;
+use App\Traits\WithSearch;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class PetroleumReturnTable extends DataTableComponent
 {
-    use LivewireAlert, ReturnFilterTrait;
+    use CustomAlert, ReturnFilterTrait, WithSearch;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
 

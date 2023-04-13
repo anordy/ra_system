@@ -2,29 +2,32 @@
 
 namespace App\Http\Livewire\Approval;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\TaxType;
-use Livewire\Component;
-use App\Enum\PaymentMethod;
-use App\Jobs\Bill\CancelBill;
-use App\Traits\PaymentsTrait;
-use Livewire\WithFileUploads;
 use App\Enum\ApplicationStatus;
+use App\Enum\InstallmentRequestStatus;
 use App\Enum\InstallmentStatus;
-use App\Models\Returns\TaxReturn;
+use App\Enum\PaymentMethod;
+use App\Events\SendMail;
+use App\Events\SendSms;
+use App\Jobs\Bill\CancelBill;
+use App\Jobs\Installment\SendInstallmentApprovedMail;
+use App\Jobs\Installment\SendInstallmentApprovedSMS;
+use App\Jobs\Installment\SendInstallmentRejectedMail;
+use App\Jobs\Installment\SendInstallmentRejectedSMS;
+use App\Models\Installment\Installment;
+use App\Models\TaxType;
+use App\Traits\CustomAlert;
+use App\Traits\PaymentsTrait;
+use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Enum\ExtensionRequestStatus;
-use App\Models\Returns\ReturnStatus;
-use App\Enum\InstallmentRequestStatus;
-use App\Models\Installment\Installment;
-use App\Traits\WorkflowProcesssingTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class InstallmentRequestApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait;
 
     public $modelId;
     public $modelName;
@@ -89,7 +92,7 @@ class InstallmentRequestApprovalProcessing extends Component
                 }
 
                 // Create installment record
-                Installment::create([
+                $installment = Installment::create([
                     'installable_type' => $this->subject->installable_type,
                     'installable_id' => $this->subject->installable_id,
                     'location_id' => $this->subject->location_id,
@@ -105,15 +108,20 @@ class InstallmentRequestApprovalProcessing extends Component
                 ]);
 
                 $this->subject->save();
+
+                // Dispatch notification via email and mobile phone
+                event(new SendSms(SendInstallmentApprovedSMS::SERVICE, $installment));
+                event(new SendMail(SendInstallmentApprovedMail::SERVICE, $installment));
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             DB::commit();
+
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact support for assistance.');
+            $this->customAlert('error', 'Something went wrong, please contact support for assistance.');
             return;
         }
 
@@ -134,12 +142,16 @@ class InstallmentRequestApprovalProcessing extends Component
                 $this->subject->save();
             }
 
+            // Dispatch notification via email and mobile phone
+            event(new SendSms(SendInstallmentRejectedSMS::SERVICE, $this->subject));
+            event(new SendMail(SendInstallmentRejectedMail::SERVICE, $this->subject));
+
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -152,7 +164,7 @@ class InstallmentRequestApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

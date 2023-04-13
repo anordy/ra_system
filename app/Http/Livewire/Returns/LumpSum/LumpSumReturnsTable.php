@@ -6,13 +6,13 @@ use App\Models\Returns\LumpSum\LumpSumReturn;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\ReturnFilterTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LumpSumReturnsTable extends DataTableComponent
 {
-    use LivewireAlert, ReturnFilterTrait;
+    use CustomAlert, ReturnFilterTrait;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
 

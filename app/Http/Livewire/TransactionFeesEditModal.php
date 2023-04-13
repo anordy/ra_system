@@ -11,12 +11,12 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class TransactionFeesEditModal extends Component
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $data;
     public $min_amount;
@@ -77,7 +77,7 @@ class TransactionFeesEditModal extends Component
             $this->flash('success', 'Fee updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            $this->alert('error', 'Something went wrong');
+            $this->customAlert('error', 'Something went wrong');
         }
     }
 

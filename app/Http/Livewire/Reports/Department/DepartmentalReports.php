@@ -15,14 +15,14 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 
 class DepartmentalReports extends Component
 {
-    use LivewireAlert, DailyPaymentTrait, ManagerialReportTrait;
+    use CustomAlert, DailyPaymentTrait, ManagerialReportTrait;
 
     public $today;
     public $range_start;
@@ -161,7 +161,7 @@ class DepartmentalReports extends Component
                 fn () => print($pdf->output()), $fileName
             );
         }catch(Exception $e){
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             Log::error($e);
         }
     }
@@ -170,7 +170,7 @@ class DepartmentalReports extends Component
     {
         $fileName = 'departmental_report_' . now()->format('d-m-Y') . '.xlsx';
         $title = 'Managerial Departmental Report';
-        $this->alert('success', 'Exporting Excel File');
+        $this->customAlert('success', 'Exporting Excel File');
         return Excel::download(new DepartmentalReportExport($this->report, $title, $this->nonRevenueTaxTypes, $this->domesticTaxTypes, [
             'range_start' => $this->range_start,
             'range_end' => $this->range_end,

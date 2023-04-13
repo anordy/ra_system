@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class AddModal extends Component
 {
-    use LivewireAlert, DualControlActivityTrait, VerificationTrait;
+    use CustomAlert, DualControlActivityTrait, VerificationTrait;
 
     public $app_name;
     public $app_url;
@@ -56,12 +56,12 @@ class AddModal extends Component
             }
             $this->triggerDualControl(get_class($api_user), $api_user->id, DualControl::ADD, 'adding new user for API '.$this->app_name);
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.api-users.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.api-users.index');
         }
     }

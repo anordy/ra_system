@@ -5,12 +5,14 @@ namespace App\Http\Livewire\Relief;
 use App\Models\Relief\Relief;
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ReliefList extends DataTableComponent
 {
+    use WithSearch;
 
     //create builder function
     public function builder(): builder

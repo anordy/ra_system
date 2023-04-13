@@ -17,12 +17,12 @@ use App\Models\WithholdingAgent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 
 class WithholdingAgentRegistration extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $regions = [];
     public $districts = [];
@@ -125,7 +125,7 @@ class WithholdingAgentRegistration extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -139,7 +139,7 @@ class WithholdingAgentRegistration extends Component
             $business = Business::where('ztn_number', $this->ztnNumber)->first();
 
             if (!$business) {
-                $this->alert('warning', "Business with ZTN No {$this->ztnNumber} not found");
+                $this->customAlert('warning', "Business with ZTN No {$this->ztnNumber} not found");
                 return;
             }
 

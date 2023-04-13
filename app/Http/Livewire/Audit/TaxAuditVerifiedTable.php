@@ -4,16 +4,17 @@ namespace App\Http\Livewire\Audit;
 
 use App\Enum\TaxAuditStatus;
 use App\Models\TaxAudit\TaxAudit;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxAuditVerifiedTable extends DataTableComponent
 {
 
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
 
     public $model = TaxAudit::class;
 

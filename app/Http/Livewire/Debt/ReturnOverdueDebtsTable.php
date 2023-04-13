@@ -4,16 +4,17 @@ namespace App\Http\Livewire\Debt;
 
 use App\Enum\ReturnCategory;
 use App\Models\Returns\TaxReturn;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class ReturnOverdueDebtsTable extends DataTableComponent
 {
 
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
 
     public function builder(): Builder
     {

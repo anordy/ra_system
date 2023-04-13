@@ -12,12 +12,12 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ZrbBankAccountAddModal extends Component
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
     public $account_name;
     public $bank_id;
     public $account_number;
@@ -76,12 +76,12 @@ class ZrbBankAccountAddModal extends Component
             
             $this->triggerDualControl(get_class($zrbBankAccount), $zrbBankAccount->id, DualControl::ADD, 'adding ZRA bank account');
             DB::commit();
-            $this->alert('success', 'Record added successfully');
+            $this->customAlert('success', 'Record added successfully');
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact our administrator for assistance?');
+            $this->customAlert('error', 'Something went wrong, please contact our administrator for assistance?');
         }
     }
 

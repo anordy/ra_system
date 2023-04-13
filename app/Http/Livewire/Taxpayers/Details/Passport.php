@@ -10,12 +10,12 @@ use App\Events\SendMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use App\Http\Controllers\v1\ImmigrationController;
 
 class Passport extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $kyc;
     public $is_verified_triggered = false;
@@ -41,7 +41,7 @@ class Passport extends Component
             $this->passport = $immigration_controller->getPassportData($this->kyc->passport_no, $this->kyc->permit_number);
         } catch (Exception $e) {
             Log::error($e);
-            return $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            return $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -59,7 +59,7 @@ class Passport extends Component
             abort(403);
         }
 
-        $this->alert('warning', 'Are you sure you want to approve taxpayers details ?', [
+        $this->customAlert('warning', 'Are you sure you want to approve taxpayers details ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -77,7 +77,7 @@ class Passport extends Component
             abort(403);
         }
 
-        $this->alert('warning', 'Are you sure you want to reject this KYC ?', [
+        $this->customAlert('warning', 'Are you sure you want to reject this KYC ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -99,11 +99,11 @@ class Passport extends Component
                 'last_name' => $this->convertStringToCamelCase($this->passport['data']['SurName']),
                 'passport_verified_at' => Carbon::now()->toDateTimeString(),
             ]);
-            $this->alert('success', 'Taxpayers details has been approved successful!');
+            $this->customAlert('success', 'Taxpayers details has been approved successful!');
             return redirect()->route('taxpayers.enroll-fingerprint', [encrypt($this->kyc->id)]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help!');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
         }
     }
 
@@ -122,12 +122,12 @@ class Passport extends Component
             DB::commit();
             event(new SendMail('kyc-reject', $kyc));
             event(new SendSms('kyc-reject', $kyc));
-            $this->alert('success', 'KYC has been rejected!');
+            $this->customAlert('success', 'KYC has been rejected!');
             return redirect()->route('taxpayers.registrations.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help!');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
         }
     }
 

@@ -7,14 +7,14 @@ use App\Models\BusinessTempClosure;
 use App\Models\WorkflowTask;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ClosureApprovalProgressTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
 
     protected $listeners = [

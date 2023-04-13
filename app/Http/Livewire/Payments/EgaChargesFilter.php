@@ -6,13 +6,13 @@ use App\Exports\EgaChargesExport;
 use App\Models\ZmEgaCharge;
 use App\Traits\PaymentReportTrait;
 use Carbon\Carbon;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class EgaChargesFilter extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
     use PaymentReportTrait;
 
     public $range_start;
@@ -58,7 +58,7 @@ class EgaChargesFilter extends Component
         $title = 'Ega Charges';
         $records = $this->getEgaChargesQuery($this->range_start,$this->range_end,$this->currency,$this->payment_status,$this->charges_type)->get();
         $parameters = $this->parameters;
-        $this->alert('success', 'Exporting Excel File');
+        $this->customAlert('success', 'Exporting Excel File');
         return Excel::download(new EgaChargesExport($records,$title,$parameters), $fileName);
 
     }

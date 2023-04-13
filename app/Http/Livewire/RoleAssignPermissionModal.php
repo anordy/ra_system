@@ -11,12 +11,12 @@ use App\Models\Permission;
 use App\Traits\AuditTrait;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class RoleAssignPermissionModal extends Component
 {
 
-    use LivewireAlert, AuditTrait;
+    use CustomAlert, AuditTrait;
     public $modules;
     public $role;
     public $permissions;
@@ -48,7 +48,7 @@ class RoleAssignPermissionModal extends Component
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

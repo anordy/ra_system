@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class EnrollFingerprint extends Component
 {
-    use KYCTrait, LivewireAlert, VerificationTrait;
+    use KYCTrait, CustomAlert, VerificationTrait;
 
     public $kyc;
     public $error;
@@ -66,7 +66,7 @@ class EnrollFingerprint extends Component
 
     public function confirmPopUpModal($action)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -90,7 +90,7 @@ class EnrollFingerprint extends Component
                 ->get();
 
             if (count($biometrics) != 4) {
-                $this->alert('error', 'Enroll four fingers');
+                $this->customAlert('error', 'Enroll four fingers');
                 return;
             }
         }
@@ -98,13 +98,13 @@ class EnrollFingerprint extends Component
         // If id is zanid or nida & zanid check if zan id has been verified
         if ($this->kyc->identification->name == IDType::ZANID || $this->kyc->identification->name == IDType::NIDA_ZANID) {
             if ($kyc->is_citizen == '1' && isNullOrEmpty($kyc->zanid_verified_at)) {
-                $this->alert('error', 'User ZANID not verified by authorities');
+                $this->customAlert('error', 'User ZANID not verified by authorities');
                 return;
             }
         } else if ($this->kyc->identification->name == IDType::PASSPORT) {
             // TODO: Allow this when immigration api has been integrated
             // if($kyc->is_citizen == '0' && (isNullOrEmpty($kyc->passport_verified_at))) {
-            //     $this->alert('error', 'User Passport Number not verified by authorities');
+            //     $this->customAlert('error', 'User Passport Number not verified by authorities');
             //     return;
             // }
         } else if ($this->kyc->identification->name == IDType::NIDA) {
@@ -178,7 +178,7 @@ class EnrollFingerprint extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance');
+            $this->customAlert('error', 'Something went wrong, Could you please contact our administrator for assistance');
             return;
         }
     }

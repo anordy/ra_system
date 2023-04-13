@@ -5,14 +5,14 @@ namespace App\Http\Livewire\Installment;
 use App\Enum\InstallmentRequestStatus;
 use App\Models\Installment\InstallmentRequest;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class InstallmentRequestsTable extends DataTableComponent
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $pending;
     public $rejected;

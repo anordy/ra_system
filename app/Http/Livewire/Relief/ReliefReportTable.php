@@ -5,14 +5,15 @@ namespace App\Http\Livewire\Relief;
 // use Livewire\Component;
 // use App\Models\LandLease;
 use App\Models\Relief\Relief;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ReliefReportTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
 
     public $dates = [];
     public $parameters = [];

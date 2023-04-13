@@ -6,15 +6,16 @@ use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxAudit\TaxAuditLocation;
 use App\Models\TaxAudit\TaxAuditTaxType;
 use App\Models\WorkflowTask;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxAuditApprovalTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
 
     public $model = WorkflowTask::class;
 

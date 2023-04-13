@@ -4,13 +4,13 @@ namespace App\Http\Livewire\Payments;
 
 use App\Models\ZmReconTran;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ReconTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
     public $recon_id;
 
     public function mount($recon_id)

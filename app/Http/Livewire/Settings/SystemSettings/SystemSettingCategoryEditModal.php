@@ -8,12 +8,12 @@ use App\Traits\DualControlActivityTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class SystemSettingCategoryEditModal extends Component
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $systemSettingCategory;
     public $name;
@@ -54,7 +54,7 @@ class SystemSettingCategoryEditModal extends Component
             ];
             $this->triggerDualControl(get_class($this->systemSettingCategory), $this->systemSettingCategory->id, DualControl::EDIT, 'edit system setting category', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 10000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 10000]);
             $this->flash(
                 'success',
                 DualControl::SUCCESS_MESSAGE,
@@ -66,7 +66,7 @@ class SystemSettingCategoryEditModal extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('warning', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 

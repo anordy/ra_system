@@ -5,18 +5,19 @@ namespace App\Http\Livewire\Investigation;
 use App\Enum\TaxInvestigationStatus;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Investigation\TaxInvestigation;
+use App\Traits\WithSearch;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxInvestigationInitiateTable extends DataTableComponent
 {
 
-    use LivewireAlert, WorkflowProcesssingTrait;
+    use CustomAlert, WorkflowProcesssingTrait, WithSearch;
 
     public $model = TaxInvestigation::class;
 
@@ -89,7 +90,7 @@ class TaxInvestigationInitiateTable extends DataTableComponent
 
     public function approve($id)
     {
-        $this->alert('warning', 'Are you sure you want to initiate Approvals ?', [
+        $this->customAlert('warning', 'Are you sure you want to initiate Approvals ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -120,13 +121,13 @@ class TaxInvestigationInitiateTable extends DataTableComponent
             $this->flash('success', 'Approval initiated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
     public function delete($id)
     {
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -155,7 +156,7 @@ class TaxInvestigationInitiateTable extends DataTableComponent
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

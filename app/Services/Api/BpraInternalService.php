@@ -4,11 +4,11 @@ namespace App\Services\Api;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class BpraInternalService
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public function getData($business){
         $shareHolders = []; $directors = []; $listShareHolderShares = [];

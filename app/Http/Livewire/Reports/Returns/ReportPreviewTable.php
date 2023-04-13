@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Reports\Returns;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -13,7 +13,7 @@ use App\Traits\ReturnReportTrait;
 
 class ReportPreviewTable extends DataTableComponent
 {
-    use LivewireAlert, ReturnReportTrait;
+    use CustomAlert, ReturnReportTrait;
 
     public $parameters, $lumpsump;
 

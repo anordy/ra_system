@@ -6,15 +6,16 @@ use App\Enum\BillStatus;
 use App\Enum\PaymentStatus;
 use App\Models\Disputes\Dispute;
 use App\Models\WorkflowTask;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class WaiverApprovalTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
     public $category;
 
     public function mount($category)

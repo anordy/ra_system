@@ -9,13 +9,13 @@ use App\Exports\Debts\DemandNoticeReportExport;
 use App\Exports\Debts\InstallmentReportExport;
 use App\Models\FinancialYear;
 use App\Traits\DebtReportTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DebtReport extends Component
 {
-    use LivewireAlert, DebtReportTrait;
+    use CustomAlert, DebtReportTrait;
 
     public $optionYears;
     public $optionPeriods;
@@ -37,22 +37,31 @@ class DebtReport extends Component
     public $payment_report_type;
     public $startMonth;
     public $endMonth;
+    public $range_start;
+    public $range_end;
+    public $today;
+    public $filter_type = 'custom';
 
     protected function rules()
     {
         return [
-            'report_type' => 'required|strip_tag',
-            'year' => 'required|strip_tag',
-            'period' => 'required|strip_tag',
-            'period' => $this->year != 'all' ? 'required' : '',
+            'report_type' => 'required',
+            'filter_type' => 'required',
+            'year' => 'nullable',
+            'period' => $this->year != 'all' ? 'required_if:filter_type,yearly' : '',
             'month' => $this->period == 'Monthly' ? 'required' : '',
             'quater' => $this->period == 'Quarterly' ? 'required' : '',
             'semiAnnual' => $this->period == 'Semi-Annual' ? 'required' : '',
+            'range_start' => 'required',
+            'range_end' => 'required',
         ];
     }
 
     public function mount()
     {
+        $this->today = date('Y-m-d');
+        $this->range_start = $this->today;
+        $this->range_end = $this->today;
         $this->optionYears = FinancialYear::pluck('code');
         $this->optionReportTypes = ["Returns", "Assessments", "Waiver", "Installment", "Demand-Notice"];
         $this->optionPeriods = ["Monthly", "Quarterly", "Semi-Annual", "Annual"];
@@ -77,7 +86,7 @@ class DebtReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
 
@@ -94,7 +103,7 @@ class DebtReport extends Component
             $fileName = "{$report_type}-{$parameters['year']}.xlsx";
             $title = "Debt Report for {$report_type}-{$parameters['year']}";
         }
-        $this->alert('success', 'Exporting Excel File');
+        $this->customAlert('success', 'Exporting Excel File');
 
         if ($parameters['report_type'] == 'Assessments') {
             return Excel::download(new AssessmentDebtReportExport($records, $title, $parameters), $fileName);
@@ -115,10 +124,10 @@ class DebtReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
-        $this->alert('success', 'Exporting Pdf File');
+        $this->customAlert('success', 'Exporting Pdf File');
         return redirect()->route('reports.debts.download.pdf', encrypt(json_encode($parameters)));
     }
 
@@ -128,7 +137,7 @@ class DebtReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters)->get();
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
         return redirect()->route('reports.debts.preview', encrypt(json_encode($this->getParameters())));
@@ -144,6 +153,8 @@ class DebtReport extends Component
             'quater' => $this->quater,
             'semiAnnual' => $this->semiAnnual,
             'dates' => $this->getStartEndDate(),
+            'range_start' => $this->range_start,
+            'range_end' =>  $this->range_end,
         ];
     }
 

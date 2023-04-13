@@ -5,13 +5,14 @@ namespace App\Http\Livewire\Returns\Port;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\TaxType;
 use App\Traits\ReturnFilterTrait;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class SeaportReturnTable extends DataTableComponent
 {
-    use  ReturnFilterTrait;
+    use  ReturnFilterTrait, WithSearch;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $data         = [];

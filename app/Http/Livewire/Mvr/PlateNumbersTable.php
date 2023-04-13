@@ -7,16 +7,17 @@ use App\Models\MvrMotorVehicleRegistration;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatus;
 use App\Models\TaxAgentStatus;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\TaxAgent;
 
 class PlateNumbersTable extends DataTableComponent
 {
-	use LivewireAlert;
+	use CustomAlert, WithSearch;
 
     public $plate_number_status_id;
 
@@ -89,7 +90,7 @@ class PlateNumbersTable extends DataTableComponent
     }
 
     public function updateToPrinted($id){
-        $this->alert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Printed</span>?', [
+        $this->customAlert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Printed</span>?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -107,7 +108,7 @@ class PlateNumbersTable extends DataTableComponent
     }
 
     public function updateToReceived($id){
-        $this->alert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Received</span>?', [
+        $this->customAlert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Received</span>?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -125,7 +126,7 @@ class PlateNumbersTable extends DataTableComponent
     }
 
     public function updateToCollected($id){
-        $this->alert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Collected</span>?', [
+        $this->customAlert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Collected</span>?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -170,7 +171,7 @@ class PlateNumbersTable extends DataTableComponent
             $this->flash('success', 'Plate Number Status updated', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

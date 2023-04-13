@@ -6,14 +6,14 @@ use App\Exports\BankReconExport;
 use App\Models\BankRecon;
 use App\Traits\ReconReportTrait;
 use Carbon\Carbon;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class BankReconFilter extends Component
 {
     use ReconReportTrait;
-    use LivewireAlert;
+    use CustomAlert;
 
     public $range_start;
     public $range_end;
@@ -75,7 +75,7 @@ class BankReconFilter extends Component
         }
 
         $this->hasData = false;
-        $this->alert('error','No record found');
+        $this->customAlert('error','No record found');
     }
 
     public function exportExcel(){
@@ -93,7 +93,7 @@ class BankReconFilter extends Component
         $fileName = 'bank-recon-report-'.time().'.xlsx';
         $title    = 'For bank recon created between '.Carbon::parse($this->parameters['range_start'])->toDayDateTimeString().' and '.Carbon::parse($this->parameters['range_end'])->toDayDateTimeString();
 
-        $this->alert('success', 'Exporting Excel File...');
+        $this->customAlert('success', 'Exporting Excel File...');
         return Excel::download(new BankReconExport($query->get(), $title), $fileName);
     }
 

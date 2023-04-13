@@ -5,6 +5,7 @@ use App\Enum\ApplicationStep;
 use App\Enum\PaymentMethod;
 use App\Enum\ReturnCategory;
 use App\Enum\ReturnStatus as EnumReturnStatus;
+use App\Enum\VettingStatus;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

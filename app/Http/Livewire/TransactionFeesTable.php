@@ -9,13 +9,13 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TransactionFeesTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     protected $model = TransactionFee::class;
 
@@ -111,7 +111,7 @@ class TransactionFeesTable extends DataTableComponent
             abort(403);
         }
 
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -134,13 +134,13 @@ class TransactionFeesTable extends DataTableComponent
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
        public function approve($id)
     {
-        $this->alert('warning', 'Are you sure you want to approve this fee ?', [
+        $this->customAlert('warning', 'Are you sure you want to approve this fee ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -166,18 +166,18 @@ class TransactionFeesTable extends DataTableComponent
             $fee->save();
             $this->triggerAudit(EgaFee::class, Audit::ACTIVATED, 'ega_fee', $fee->id, ['status' => 0], ['status' => 1]);
             DB::commit();
-            $this->alert('success', 'Ega fee successfully approved');
+            $this->customAlert('success', 'Ega fee successfully approved');
             return redirect()->route('settings.fee-configurations.ega-fee');
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            $this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
     public function reject($id)
     {
-        $this->alert('warning', 'Are you sure you want to reject this fee ?', [
+        $this->customAlert('warning', 'Are you sure you want to reject this fee ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -203,13 +203,13 @@ class TransactionFeesTable extends DataTableComponent
             $fee->save();
             $this->triggerAudit(EkaTatuFee::class, Audit::ACTIVATED, 'ega_fee', $fee->id, ['status' => 0], ['status' => 2]);
             DB::commit();
-            $this->alert('success', 'Ega fee successfully rejected');
+            $this->customAlert('success', 'Ega fee successfully rejected');
             return redirect()->route('settings.fee-configurations.ega-fee');
 
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            $this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

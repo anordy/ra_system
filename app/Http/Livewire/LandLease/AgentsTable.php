@@ -4,14 +4,15 @@ namespace App\Http\Livewire\LandLease;
 
 use App\Models\LandLeaseAgent;
 use App\Models\Taxpayer;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class AgentsTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
 
     public function builder(): Builder
     {

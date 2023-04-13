@@ -25,7 +25,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -33,7 +33,7 @@ use Livewire\WithFileUploads;
 class UploadDeRegistrationInspectionReport extends Component
 {
 
-    use LivewireAlert,WithFileUploads;
+    use CustomAlert,WithFileUploads;
 
 
     public string $request_id;
@@ -52,7 +52,7 @@ class UploadDeRegistrationInspectionReport extends Component
     protected function rules()
     {
         return [
-            'inspection_report'=>'required|mimes:pdf|max_file_name_length:' . config('constants.file_name_length'),
+            'inspection_report'=>'required|mimes:pdf|max:1024|max_file_name_length:100',
             'inspection_date'=>'required|date',
         ];
     }
@@ -73,7 +73,7 @@ class UploadDeRegistrationInspectionReport extends Component
             if (Storage::exists($this->inspection_report_path)) Storage::delete($this->inspection_report_path);
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

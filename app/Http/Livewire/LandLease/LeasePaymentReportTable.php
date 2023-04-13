@@ -7,17 +7,18 @@ use App\Models\LandLease;
 use App\Models\LeasePayment;
 use App\Models\Taxpayer;
 use App\Traits\LeasePaymentReportTrait;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LeasePaymentReportTable extends DataTableComponent
 {
-    use LivewireAlert, LeasePaymentReportTrait;
+    use CustomAlert, LeasePaymentReportTrait, WithSearch;
 
     public $dates = [];
     public $status;

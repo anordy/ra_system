@@ -8,12 +8,12 @@ use App\Traits\ReturnConfigurationTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class EditReturnConfig extends Component
 {
-    use LivewireAlert, ReturnConfigurationTrait, DualControlActivityTrait;
+    use CustomAlert, ReturnConfigurationTrait, DualControlActivityTrait;
 
     public $taxtype_id, $config_id, $model, $currencies, $configs;
     public $name;

@@ -8,13 +8,13 @@ use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class SystemSettingCategoryTable extends DataTableComponent
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public function builder(): Builder
     {
@@ -92,7 +92,7 @@ class SystemSettingCategoryTable extends DataTableComponent
         if (!Gate::allows('setting-system-category-delete')) {
             abort(403);
         }
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -115,7 +115,7 @@ class SystemSettingCategoryTable extends DataTableComponent
             $systemsettingCategory = SystemSettingCategory::findOrFail(decrypt($data->id));
             if (!$systemsettingCategory->system_settings->exists()) {
                 $this->triggerDualControl(get_class($systemsettingCategory), $systemsettingCategory->id, DualControl::DELETE, 'deleting system settings category');
-                $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+                $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
                 $this->flash(
                     'success',
                     DualControl::SUCCESS_MESSAGE,
@@ -125,11 +125,11 @@ class SystemSettingCategoryTable extends DataTableComponent
                         ->getTargetUrl(),
                 );
             } else {
-                $this->alert('warning', DualControl::RELATION_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+                $this->customAlert('warning', DualControl::RELATION_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
             }
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

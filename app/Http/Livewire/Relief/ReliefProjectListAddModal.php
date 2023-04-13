@@ -8,14 +8,14 @@ use App\Models\Relief\ReliefSponsor;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class ReliefProjectListAddModal extends Component
 {
 
-    use LivewireAlert, WithFileUploads;
+    use CustomAlert, WithFileUploads;
 
     public $name;
     public $description;
@@ -43,7 +43,7 @@ class ReliefProjectListAddModal extends Component
             'ministry_id' => 'nullable|strip_tag',
             'relief_sponsor_id' => 'nullable|strip_tag',
             'rate' => 'required|numeric|min:0|max:100|strip_tag',
-            'government_notice_path' => 'nullable|mimes:pdf|max_file_name_length:' . config('constants.file_name_length'),
+            'government_notice_path' => 'nullable|mimes:pdf|max:1024|max_file_name_length:100',
         ];
     }
 
@@ -73,7 +73,7 @@ class ReliefProjectListAddModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

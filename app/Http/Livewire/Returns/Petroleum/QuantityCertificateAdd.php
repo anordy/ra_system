@@ -10,14 +10,14 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 
 class QuantityCertificateAdd extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
 
     public $location;
@@ -153,7 +153,7 @@ class QuantityCertificateAdd extends Component
             DB::rollBack();
             Log::error($e);
             report($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

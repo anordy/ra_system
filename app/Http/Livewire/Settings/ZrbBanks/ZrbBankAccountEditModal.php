@@ -11,13 +11,13 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ZrbBankAccountEditModal extends Component
 {
 
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
     public $zrbBankAccount;
     public $account_name;
     public $bank_id;
@@ -97,12 +97,12 @@ class ZrbBankAccountEditModal extends Component
             ];
             $this->triggerDualControl(get_class($this->zrbBankAccount), $this->zrbBankAccount->id, DualControl::EDIT, 'editing ZRA bank account', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>10000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>10000]);
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact our administrator for assistance?');
+            $this->customAlert('error', 'Something went wrong, please contact our administrator for assistance?');
         }
     }
 

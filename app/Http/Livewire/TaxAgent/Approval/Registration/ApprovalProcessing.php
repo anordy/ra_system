@@ -21,12 +21,12 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait;
 
     public $modelId;
     public $modelName;
@@ -49,7 +49,7 @@ class ApprovalProcessing extends Component
     public function approve($transition)
     {
         if ($this->agent == null) {
-            $this->alert('error', 'Tax Consultant does not exist');
+            $this->customAlert('error', 'Tax Consultant does not exist');
             return;
         }
 
@@ -58,7 +58,7 @@ class ApprovalProcessing extends Component
         $duration = TaPaymentConfiguration::select('id', 'category', 'duration', 'is_citizen')
             ->where('category', $type)->where('is_citizen', $this->agent->taxpayer->is_citizen)->first();
         if ($duration == null) {
-            $this->alert('error', 'The duration for consultant registration does not exist');
+            $this->customAlert('error', 'The duration for consultant registration does not exist');
             return;
         }
 
@@ -73,7 +73,7 @@ class ApprovalProcessing extends Component
             $this->agent->generateReferenceNo();
             $taxpayer = Taxpayer::find($this->agent->taxpayer_id);// todo: check if object exists
             if (empty($taxpayer)) {
-                $this->alert('error', 'This taxpayer does not exist');
+                $this->customAlert('error', 'This taxpayer does not exist');
                 return;
             }
 
@@ -97,12 +97,12 @@ class ApprovalProcessing extends Component
         try {
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]) ;
             DB::commit();
-            $this->alert('success', 'Approved successfully');
+            $this->customAlert('success', 'Approved successfully');
             return redirect()->route('taxagents.active-show', encrypt($this->subject->id));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->customAlert('error', 'Something went wrong');
             return;
         }
     }
@@ -121,7 +121,7 @@ class ApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->customAlert('error', 'Something went wrong');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -133,7 +133,7 @@ class ApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

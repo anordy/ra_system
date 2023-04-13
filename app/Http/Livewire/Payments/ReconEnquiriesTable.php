@@ -5,13 +5,13 @@ namespace App\Http\Livewire\Payments;
 use App\Models\ZmRecon;
 use App\Services\ZanMalipo\GepgResponse;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ReconEnquiriesTable extends DataTableComponent
 {
-    use LivewireAlert, GepgResponse;
+    use CustomAlert, GepgResponse;
 
     public function builder(): Builder
     {

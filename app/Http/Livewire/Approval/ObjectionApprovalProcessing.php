@@ -16,13 +16,13 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class ObjectionApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait, PaymentsTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait, PaymentsTrait, CustomAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -111,7 +111,7 @@ class ObjectionApprovalProcessing extends Component
 
             $this->validate(
                 [
-                    'disputeReport' => 'required|mimes:pdf|max_file_name_length:' . config('constants.file_name_length'),
+                    'disputeReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
                 ]
             );
 
@@ -149,7 +149,7 @@ class ObjectionApprovalProcessing extends Component
             } catch (\Exception $e) {
                 DB::rollBack();
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
             }
         }
 
@@ -257,7 +257,7 @@ class ObjectionApprovalProcessing extends Component
                 DB::commit();
             } catch (Exception $e) {
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
 
@@ -267,7 +267,7 @@ class ObjectionApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
             return;
         }
     }
@@ -374,7 +374,7 @@ class ObjectionApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
     }
@@ -385,7 +385,7 @@ class ObjectionApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

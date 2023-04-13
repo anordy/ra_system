@@ -6,13 +6,13 @@ use App\Enum\PaymentStatus;
 use App\Models\TaxType;
 use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class PendingPaymentsTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
 

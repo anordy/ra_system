@@ -6,14 +6,14 @@ use App\Exports\MissingBankReconExport;
 use App\Models\MissingBankRecon;
 use App\Traits\ReconReportTrait;
 use Carbon\Carbon;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MissingBankReconFilter extends Component
 {
     use ReconReportTrait;
-    use LivewireAlert;
+    use CustomAlert;
 
     public $range_start;
     public $range_end;
@@ -74,7 +74,7 @@ class MissingBankReconFilter extends Component
         }
 
         $this->hasData = false;
-        $this->alert('error','No record found');
+        $this->customAlert('error','No record found');
     }
 
     public function exportExcel(){
@@ -92,7 +92,7 @@ class MissingBankReconFilter extends Component
         $fileName = 'missing-bank-recon-report-'.time().'.xlsx';
         $title    = 'For missing bank recons created between '.Carbon::parse($this->parameters['range_start'])->toDayDateTimeString().' and '.Carbon::parse($this->parameters['range_end'])->toDayDateTimeString();
 
-        $this->alert('success', 'Exporting Excel File...');
+        $this->customAlert('success', 'Exporting Excel File...');
         return Excel::download(new MissingBankReconExport($query->get(), $title), $fileName);
     }
 

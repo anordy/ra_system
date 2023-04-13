@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Illuminate\Validation\Rules\Password;
 use ZxcvbnPhp\Zxcvbn;
 
 class UserChangePasswordModal extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $password;
     public $password_confirmation;
@@ -47,7 +47,7 @@ class UserChangePasswordModal extends Component
         } catch (Exception $e) {
             Log::error($e);
 
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

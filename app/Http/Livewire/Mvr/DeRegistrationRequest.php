@@ -10,14 +10,14 @@ use App\Models\Taxpayer;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class DeRegistrationRequest extends Component
 {
 
-    use LivewireAlert,WithFileUploads;
+    use CustomAlert,WithFileUploads;
 
     public $motor_vehicle_id;
     public $reason_id;
@@ -37,7 +37,7 @@ class DeRegistrationRequest extends Component
             'description' => 'required|strip_tag',
             'date_received' => 'required|date',
             'agent_id' => 'required|numeric',
-            'inspection_report'=>'required|mimes:pdf|max_file_name_length:' . config('constants.file_name_length')
+            'inspection_report'=>'required|mimes:pdf|max:1024|max_file_name_length:100'
         ];
     }
 
@@ -71,7 +71,7 @@ class DeRegistrationRequest extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

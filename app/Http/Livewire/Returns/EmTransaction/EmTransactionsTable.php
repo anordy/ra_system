@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\EmTransaction;
 
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Gate;
 
 class EmTransactionsTable extends DataTableComponent
 {
-    use  ReturnFilterTrait;
+    use  ReturnFilterTrait, WithSearch;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $data         = [];

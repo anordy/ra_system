@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Gate;
 
 class ReliefEdit extends Component
 {
-    use LivewireAlert, WithFileUploads;
+    use CustomAlert, WithFileUploads;
 
     //input fields
     public $supplier;
@@ -128,7 +128,7 @@ class ReliefEdit extends Component
             'items.*.name' => 'required',
             'items.*.quantity' => 'required|numeric',
             'items.*.costPerItem' => 'required|numeric',
-            'attachments.*.file' => 'nullable|required_with:attachments.*.name|mimes:pdf|max_file_name_length:' . config('constants.file_name_length'),
+            'attachments.*.file' => 'nullable|required_with:attachments.*.name|mimes:pdf|max:1024|max_file_name_length:100',
             'attachments.*.name' => 'nullable|required_with:attachments.*.file',
         ];
     }
@@ -207,7 +207,7 @@ class ReliefEdit extends Component
         } catch (\Exception$e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
 
     }

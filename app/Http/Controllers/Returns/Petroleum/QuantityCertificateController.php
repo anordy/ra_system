@@ -5,11 +5,11 @@ use PDF;
 use App\Http\Controllers\Controller;
 use App\Models\Returns\Petroleum\QuantityCertificate;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class QuantityCertificateController extends Controller
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public function index()
     {
