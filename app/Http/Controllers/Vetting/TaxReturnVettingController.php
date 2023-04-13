@@ -59,6 +59,9 @@ class TaxReturnVettingController extends Controller
 
         $return = $tax_return->return;
 
+        $returnHistories = $tax_return->editReturnHistories;
+
+
         if ($return instanceof PetroleumReturn) {
             $viewRender = 'returns.petroleum.filing.details';
 
@@ -89,6 +92,6 @@ class TaxReturnVettingController extends Controller
 
         }
 
-        return view('vetting.show', compact('return', 'viewRender', 'tax_return'));
+        return view('vetting.show', compact('return', 'viewRender', 'tax_return', 'returnHistories'));
     }
 }
