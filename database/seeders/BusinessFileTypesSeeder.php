@@ -169,5 +169,45 @@ class BusinessFileTypesSeeder extends Seeder
             'is_required' => false,
             'is_approved' => 1,
         ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'power_of_attorney',
+            'name' => 'Power of Attorney (Instrument)',
+            'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::SOLE,
+            'is_required' => false,
+            'is_approved' => 1,
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'power_of_attorney',
+            'name' => 'Power of Attorney (Instrument)',
+            'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::PARTNERSHIP,
+            'is_required' => false,
+            'is_approved' => 1,
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'power_of_attorney',
+            'name' => 'Power of Attorney (Instrument)',
+            'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => false,
+            'is_approved' => 1,
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'power_of_attorney',
+            'name' => 'Power of Attorney (Instrument)',
+            'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::NGO,
+            'is_required' => false,
+            'is_approved' => 1,
+        ]);
     }
 }
