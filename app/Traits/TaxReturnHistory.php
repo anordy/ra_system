@@ -11,7 +11,6 @@ trait TaxReturnHistory
 
     public function saveHistory($tax_return) 
     {
-        // dd($tax_return);
         try {
             $history = ReturnsTaxReturnHistory::where('tax_return_id', $tax_return->id)->latest()->first();
             
@@ -21,6 +20,10 @@ trait TaxReturnHistory
                 $version = $history->version + 1;
             }
 
+            foreach ($tax_return->return->items as $item) {
+                $item->config = $item->config;
+            }
+
             ReturnsTaxReturnHistory::create([
                 'tax_return_id' => $tax_return->id,
                 'return_info' => json_encode($tax_return),
@@ -28,6 +31,7 @@ trait TaxReturnHistory
                 'return_items' => json_encode($tax_return->return->items),
                 'version' => $version
             ]);
+            
 
         } catch (Exception $e) {
             Log::error($e);
