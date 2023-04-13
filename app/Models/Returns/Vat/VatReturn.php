@@ -2,6 +2,8 @@
 
 namespace App\Models\Returns\Vat;
 
+use App\Models\Claims\TaxClaim;
+use App\Models\Claims\TaxCreditItem;
 use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
@@ -93,6 +95,23 @@ class VatReturn extends Model
     public function suppliers()
     {
         return $this->hasMany(VatReturnSupplierDetail::class, 'vat_return_id');
+    }
+
+    public function hotelDetails(){
+        return $this->hasMany(VatHotelDetail::class, 'vat_return_id');
+    }
+
+    public function zeroRatedDetails(){
+        return $this->hasMany(VatZeroRatedSale::class, 'vat_return_id');
+    }
+
+
+    public function claimable(){
+        return $this->morphOne(TaxClaim::class, 'old_return_id');
+    }
+
+    public function credits(){
+        return $this->hasMany(TaxCreditItem::class, 'return_id');
     }
 
     public function tax_return(){
