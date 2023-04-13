@@ -43,7 +43,7 @@ class ReliefProjectListAddModal extends Component
             'ministry_id' => 'nullable|strip_tag',
             'relief_sponsor_id' => 'nullable|strip_tag',
             'rate' => 'required|numeric|min:0|max:100|strip_tag',
-            'government_notice_path' => 'nullable|mimes:pdf|max:1024',
+            'government_notice_path' => 'nullable|mimes:pdf|max:1024|max_file_name_length:100',
         ];
     }
 

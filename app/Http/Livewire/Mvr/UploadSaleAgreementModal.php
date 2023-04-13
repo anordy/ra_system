@@ -52,7 +52,7 @@ class UploadSaleAgreementModal extends Component
     protected function rules()
     {
         return [
-            'agreement'=>'required|mimes:pdf|max:1024'
+            'agreement'=>'required|mimes:pdf|max:1024|max_file_name_length:100'
         ];
     }
 

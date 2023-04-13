@@ -152,13 +152,13 @@ class TaxInvestigationApprovalProcessing extends Component
 
             if ($this->workingsReport != $this->subject->working_report) {
                 $this->validate([
-                    'workingsReport' => 'required|mimes:pdf|max:1024'
+                    'workingsReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
                 ]);
             }
 
             if ($this->investigationReport != $this->subject->investigation_report) {
                 $this->validate([
-                    'investigationReport' => 'required|mimes:pdf|max:1024'
+                    'investigationReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
                 ]);
             }
         }

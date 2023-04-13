@@ -111,7 +111,7 @@ class ObjectionApprovalProcessing extends Component
 
             $this->validate(
                 [
-                    'disputeReport' => 'required|mimes:pdf|max:1024',
+                    'disputeReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
                 ]
             );
 

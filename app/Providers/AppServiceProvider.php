@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Livewire\DriversLicense\Wizard\LicenseDetailsStep;
 use App\Http\Livewire\DriversLicense\Wizard\ApplicationDetailsStep;
 use App\Http\Livewire\DriversLicense\Wizard\ApplicationInitialStep;
+use App\Rules\MaxFileNameLengthRule;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,6 +44,9 @@ class AppServiceProvider extends ServiceProvider
         Livewire::component('drivers-license.wizard.application-details-step', ApplicationDetailsStep::class);
         Livewire::component('drivers-license.wizard.license-details-step', LicenseDetailsStep::class);
         Validator::extend(StripTag::handle(), StripTag::class);
+        Validator::extend('max_file_name_length', function ($attribute, $value, $parameters, $validator) {
+            return (new MaxFileNameLengthRule($parameters[0]))->passes($attribute, $value);
+        });
 
         $this->app->bind('captcha', function ($app) {
             return new Captcha(

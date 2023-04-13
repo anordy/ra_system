@@ -41,16 +41,12 @@ class WithholdingAgentController extends Controller
     public function certificate($id){
         $whagent = WithholdingAgent::findOrFail(decrypt($id));
 
-        $code = [
-            'Institution Name' => $whagent->institution_name,
-            'Institution Place' => $whagent->institution_place,
-            'Agency No.' => $whagent->wa_number
-        ];
+        $url = route('qrcode-check.withholding-agent.certificate', $id);
 
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
-            ->data(json_encode($code))
+            ->data($url)
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(207)
