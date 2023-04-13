@@ -87,7 +87,7 @@
 
 <body style="font-size: 12px !important;">
     <div class="top align-center">
-        <img src="{{ public_path() }}/images/logo.png" alt="ZRA Logo">
+        <img height="100px" width="100px" style="height: 100px; width: 100px;" src="{{ public_path() }}/images/logo.png" alt="ZRA Logo">
         <span style="margin-top: 8px; display: block">Zanzibar</span>
         <span style="margin-top: 8px; font-weight: bold; font-size: 18px; display: block">ZANZIBAR REVENUE AUTHORITY
         </span>
