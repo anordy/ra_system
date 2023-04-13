@@ -83,4 +83,8 @@ class PetroleumReturn extends Model
     public function tax_return(){
         return $this->morphOne(TaxReturn::class, 'return');
     }
+
+    public function items(){
+        return $this->hasMany(PetroleumReturnItem::class, 'return_id');
+    }
 }
