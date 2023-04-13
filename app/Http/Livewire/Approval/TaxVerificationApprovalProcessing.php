@@ -104,7 +104,7 @@ class TaxVerificationApprovalProcessing extends Component
 
             if ($this->assessmentReport != $this->subject->assessment_report) {
                 $this->validate([
-                    'assessmentReport' => 'required|mimes:pdf|max:1024'
+                    'assessmentReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
                 ]);
             }
         }

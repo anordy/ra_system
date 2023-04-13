@@ -43,6 +43,8 @@ use App\Jobs\Taxpayer\SendKycRejectSMS;
 use App\Jobs\Taxpayer\SendRegistrationSMS;
 use App\Jobs\Taxpayer\TaxpayerAmendmentNotificationSMS;
 use App\Jobs\User\SendRegistrationSMS as UserSendRegistrationSMS;
+use App\Jobs\Vetting\SendToCorrectionReturnSMS;
+use App\Jobs\Vetting\SendVettedReturnSMS;
 use App\Models\Business;
 use App\Models\KYC;
 use App\Models\Taxpayer;
@@ -203,6 +205,10 @@ class SendSmsFired
             SendInstallmentApprovedSMS::dispatch($event->tokenId);
         } else if ($event->service === SendInstallmentRejectedSMS::SERVICE){
             SendInstallmentRejectedSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendVettedReturnSMS::SERVICE){
+            SendVettedReturnSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendToCorrectionReturnSMS::SERVICE){
+            SendVettedReturnSMS::dispatch($event->tokenId);
         }
     }
 }

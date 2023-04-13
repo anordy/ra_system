@@ -128,7 +128,7 @@ class ReliefEdit extends Component
             'items.*.name' => 'required',
             'items.*.quantity' => 'required|numeric',
             'items.*.costPerItem' => 'required|numeric',
-            'attachments.*.file' => 'nullable|required_with:attachments.*.name|mimes:pdf|max:1024',
+            'attachments.*.file' => 'nullable|required_with:attachments.*.name|mimes:pdf|max:1024|max_file_name_length:100',
             'attachments.*.name' => 'nullable|required_with:attachments.*.file',
         ];
     }

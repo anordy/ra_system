@@ -145,6 +145,15 @@ Route::get('/', [HomeController::class, 'index']);
 Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload')->middleware('throttle:captcha');
 Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name('captcha.get')->name('captcha.get')->middleware('throttle:captcha');
 
+//QRcode urls
+Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
+    Route::get('/withholding-agent-certificate/{id}', [QRCodeCheckController::class, 'withholdingAgentCertificate'])->name('withholding-agent.certificate');
+    Route::get('/business-certificate/{locationId}/{taxTypeId}', [QRCodeCheckController::class, 'businessCertificate'])->name('business.certificate');
+    Route::get('/taxagents-certificate/{id}', [QRCodeCheckController::class, 'taxAgentsCertificate'])->name('taxagents.certificate');
+    Route::get('/invoice/{id}', [QRCodeCheckController::class, 'invoice'])->name('invoice');
+    Route::get('/transfer/{billId}', [QRCodeCheckController::class, 'transfer'])->name('transfer');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
     Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
