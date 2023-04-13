@@ -59,7 +59,7 @@
                                         %
                                     @endif
                                 </td>
-                                <td class="text-right">{{ number_format($item->vat_amount,2) }}
+                                <td class="text-right">{{ number_format($item->vat,2) }}
 {{--                                    <strong>{{$return->business->currency->iso}}</strong></td>--}}
                             </tr>
                         @endif
