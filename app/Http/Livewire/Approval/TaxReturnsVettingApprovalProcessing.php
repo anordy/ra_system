@@ -21,11 +21,9 @@ use App\Traits\PaymentsTrait;
 use App\Traits\TaxReturnHistory;
 use App\Traits\TaxClaimsTrait;
 use App\Traits\WorkflowProcesssingTrait;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\TaxVerificationTrait;
-use App\Traits\WorkflowProcesssingTrait;
 
 class TaxReturnsVettingApprovalProcessing extends Component
 {
