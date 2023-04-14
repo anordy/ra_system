@@ -70,9 +70,6 @@ class SMSController extends Controller
             throw new Exception('SMS sending failed');
         }
         curl_close($curl);
-        Log::info($response);
         return $response;
     }
-
-
 }

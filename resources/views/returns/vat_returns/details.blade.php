@@ -326,7 +326,7 @@
                                 @else
                                     <tr>
                                         <td colspan="7" class="text-center py-3">
-                                            {{ __('No details for supplier for this return month') }}.
+                                            {{ __('No details for hotel for this return month') }}.
                                         </td>
                                     </tr>
                                 @endif
@@ -363,7 +363,7 @@
                                 @else
                                     <tr>
                                         <td colspan="7" class="text-center py-3">
-                                            {{ __('No details for supplier for this return month') }}.
+                                            {{ __('No details for zero rated supply for this return month') }}.
                                         </td>
                                     </tr>
                                 @endif

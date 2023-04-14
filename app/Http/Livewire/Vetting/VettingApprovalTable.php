@@ -41,7 +41,7 @@ class VettingApprovalTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')->where('vetting_status', $this->vettingStatus)->orderBy('created_at', 'asc');
+        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')->where('vetting_status', $this->vettingStatus)->orderBy('created_at', 'desc');
     }
 
     public function columns(): array
