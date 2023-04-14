@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Traits\VatReturnTrait;
 use Exception;
 use App\Events\SendSms;
 use Livewire\Component;
@@ -27,7 +28,7 @@ use App\Traits\TaxVerificationTrait;
 
 class TaxReturnsVettingApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, TaxVerificationTrait, TaxReturnHistory, TaxClaimsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, TaxVerificationTrait, TaxReturnHistory, TaxClaimsTrait, VatReturnTrait;
 
     public $modelId;
     public $modelName;
@@ -98,6 +99,11 @@ class TaxReturnsVettingApprovalProcessing extends Component
                             ));
                         }
                     }
+                }
+
+                //saving credit brought forward(claim)
+                if ($this->return->return->credit_brought_forward > 0) {
+                    $this->savingClaimPayment($this->return->return->credit_brought_forward);
                 }
 
                 DB::commit();

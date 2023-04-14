@@ -12,7 +12,7 @@
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="prof-tab" data-toggle="tab" href="#prof" role="tab"
                        aria-controls="contact"
-                       aria-selected="false">Supplier Details</a>
+                       aria-selected="false">Supplier & Cash Sales</a>
                 </li>
 
                 <li class="nav-item" role="presentation">
@@ -226,58 +226,116 @@
                 <div class="tab-pane p-2" id="prof" role="tabpanel" aria-labelledby="prof-tab">
                     <div class="card">
                         <div class="card-body">
-                            <table class="table table-bordered table-sm normal-text">
-                                <thead>
-                                <tr>
-                                    <th>No:</th>
-                                    <th>Taxpayer Zin Number</th>
-                                    <th>Supplier Zin Number</th>
-                                    <th>Tax Invoice Number</th>
-                                    <th>Date Of Invoice</th>
-                                    <th>Customs Entry Number</th>
-                                    <th>Value</th>
-                                    <th>Vat</th>
-                                    <th>Supply Type</th>
-                                </tr>
-                                </thead>
+                            <div class="card">
+                                <div class="card-header">Suppliers Details</div>
 
-                                <tbody>
-                                @if (count($return->suppliers))
-                                    @foreach ($return->suppliers as $index=> $details)
+                                <div class="card-body">
+                                    <table class="table table-bordered table-sm normal-text">
+                                        <thead>
                                         <tr>
-                                            <th>{{$index + 1}}</th>
-                                            <td>{{ $details['taxpayer_zin_number'] }}</td>
-                                            <td>{{ $details['supplier_zin_number'] }}
-
-                                            <td>{{ $details['tax_invoice_number'] }}
-
-                                            <td>{{ date('D, Y-m-d', strtotime($details['date_of_tax_invoice'])) }}
-
-                                            <td>{{ $details['release_number'] }}
-
-                                            </td>
-                                            <td class="text-right">{{ $details['value'] }}
-
-                                            <td class="text-right">{{ $details['vat']}}
-                                            <td class="text-right">
-                                                @if($details['supply_type'] == 'fifteen_percent')
-                                                    15 %
-                                                @else
-                                                    18 %
-                                                @endif
-                                            </td>
+                                            <th>No:</th>
+                                            <th>{{ __('Supplier ZTN Number') }}</th>
+                                            <th>{{ __('Tax Invoice Number') }}</th>
+                                            <th>{{ __('Date Of Invoice') }}</th>
+                                            <th>{{ __('Customs Entry Number') }}</th>
+                                            <th>{{ __('Value') }}</th>
+                                            <th>{{ __('Vat') }}</th>
+                                            <th>{{ __('Supply Type') }}</th>
 
                                         </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td colspan="7" class="text-center py-3">
-                                            No details for supplier for this return month.
-                                        </td>
-                                    </tr>
-                                @endif
-                                </tbody>
-                            </table>
+                                        </thead>
+
+                                        <tbody>
+                                        @if (count($return->suppliers))
+                                            @foreach ($return->suppliers as $index=> $details)
+                                                <tr>
+                                                    <th>{{$index + 1}}</th>
+                                                    <td>{{ $details['supplier_zin_number'] }}
+
+                                                    <td>{{ $details['tax_invoice_number'] }}
+
+                                                    <td>{{ date('D, Y-m-d', strtotime($details['date_of_tax_invoice'])) }}
+
+                                                    <td>{{ $details['release_number'] }}
+
+                                                    </td>
+                                                    <td class="text-right">{{ $details['value'] }}
+
+                                                    <td class="text-right">{{ $details['vat']}}
+
+                                                    <td class="text-right">
+                                                        @if($details['supply_type'] == 'fifteen_percent')
+                                                            15 %
+                                                        @else
+                                                            18 %
+                                                        @endif
+                                                    </td>
+
+                                                </tr>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center py-3">
+                                                    {{ __('No details for supplier for this return month') }}.
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">Cash Sales</div>
+
+                                <div class="card-body">
+                                    <table class="table table-bordered table-sm normal-text">
+                                        <thead>
+                                        <tr>
+                                            <th>No:</th>
+                                            <th>{{ __('Documents') }}</th>
+                                            <th>{{ __('From Number') }}</th>
+                                            <th>{{ __('To Number') }}</th>
+                                            <th>{{ __('Purchases Type') }}</th>
+                                            <th>{{ __('Remarks') }}</th>
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        @if (count($return->cashSales))
+                                            @foreach ($return->cashSales as $index=> $details)
+                                                <tr>
+                                                    <th>{{$index + 1}}</th>
+                                                    <td>{{ $details['documents'] }}</td>
+
+                                                    <td>{{ $details['from_number'] }}</td>
+
+                                                    <td>{{ $details['to_number'] }}</td>
+
+                                                    <td>
+                                                        @if($details['purchases_type'] == 15)
+                                                            15 %
+                                                        @else
+                                                            18 %
+                                                        @endif
+                                                    </td>
+
+                                                    <td>{{ $details['remarks'] }}</td>
+
+                                                </tr>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center py-3">
+                                                    {{ __('No details for supplier for this return month') }}.
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
