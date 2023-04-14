@@ -136,6 +136,7 @@ use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Taxpayers\AmendmentRequestController;
 use App\Http\Controllers\KYC\KycAmendmentRequestController;
+use App\Http\Controllers\QRCodeCheckController;
 use App\Http\Controllers\Vetting\TaxReturnVettingController;
 
 Auth::routes(['register'=>false]);
