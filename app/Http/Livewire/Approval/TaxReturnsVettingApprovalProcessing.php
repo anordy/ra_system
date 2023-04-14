@@ -68,15 +68,9 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 // Trigger verification
                 $this->triggerTaxVerifications($this->return->return, auth()->user());
 
-                DB::commit();
-
-                event(new SendSms(SendVettedReturnSMS::SERVICE, $this->return));
-                event(new SendMail(SendVettedReturnMail::SERVICE, $this->return));
-
                 // Generate control number
                 $this->generateReturnControlNumber($this->return);
 
-                // TODO: Trigger claim for VAT
                 //triggering claim
                 if ($this->return->return_type == VatReturn::class) {
                     if ($this->return->return->claim_status == 'claim') {
@@ -105,6 +99,9 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 }
 
                 DB::commit();
+
+                event(new SendSms(SendVettedReturnSMS::SERVICE, $this->return));
+                event(new SendMail(SendVettedReturnMail::SERVICE, $this->return));
 
                 $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
