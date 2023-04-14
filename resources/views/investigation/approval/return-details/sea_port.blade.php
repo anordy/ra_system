@@ -26,7 +26,6 @@
                     <thead>
                         <tr>
                             <th>Month</th>
-                            {{-- {{ dd($headersPort) }} --}}
                             @foreach ($headersPort as $header)
                                 <th>{{ $header }}</th>
                             @endforeach

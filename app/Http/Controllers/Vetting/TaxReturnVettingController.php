@@ -60,6 +60,9 @@ class TaxReturnVettingController extends Controller
 
         $return = $tax_return->return;
 
+        $returnHistories = $tax_return->editReturnHistories;
+
+
         if ($return instanceof PetroleumReturn) {
             $viewRender = 'returns.petroleum.filing.details';
 
@@ -88,12 +91,17 @@ class TaxReturnVettingController extends Controller
         elseif ($return instanceof BfoReturn) {
             $viewRender = 'returns.excise-duty.bfo.details';
 
+        } elseif ($return instanceof EmTransactionReturn) {
+            $viewRender = 'returns.excise-duty.em-transaction.details';
+
+        } else {
+            abort(404);
         }
         elseif ($return instanceof EmTransactionReturn) {
             $viewRender = 'returns.em-transaction.details';
 
         }
 
-        return view('vetting.show', compact('return', 'viewRender', 'tax_return'));
+        return view('vetting.show', compact('return', 'viewRender', 'tax_return', 'returnHistories'));
     }
 }

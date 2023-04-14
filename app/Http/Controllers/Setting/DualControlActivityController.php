@@ -58,7 +58,6 @@ class DualControlActivityController extends Controller
 
     public function configure()
     {
-//        dd('configuration will be here');
         return view('dual-control-activities.configure');
     }
 
