@@ -28,6 +28,7 @@ class SystemSettingAddModal extends Component
     public $categories;
     public $valueType;
     public $certificateSettings = false;
+    public $settingCategory;
 
     protected $rules = [
         'name' => 'required|strip_tag',
@@ -54,9 +55,15 @@ class SystemSettingAddModal extends Component
     }
 
     public function updated($property){
-        if ($property == 'system_setting_category'){
-            $this->certificateSettings = SystemSettingCategory::CERTIFICATESETTINGS_ID == $this->system_setting_category ? true : false;
+        if ($property == 'system_setting_category') {
+            $object = $this->categories->first(function ($item) use ($property) {
+                return $item->id == $this->system_setting_category;
+            });
+            $this->settingCategory = $object->code;
         }
+    }
+    public function updatedName(){
+        $this->code = str_replace(" ", "-", $this->name);
     }
     public function submit()
     {

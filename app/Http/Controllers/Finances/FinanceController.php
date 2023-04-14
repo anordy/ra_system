@@ -102,7 +102,6 @@ class FinanceController extends Controller
             ->get()
             ->groupBy('location_id');
 
-            // dd($unpaidBusinessVerificateionDebts);
 
         $paidBusinessVerificateionDebts = TaxAssessment::where('payment_status', ReturnStatus::COMPLETE)
             ->where('location_id', $locations)

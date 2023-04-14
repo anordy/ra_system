@@ -7,7 +7,6 @@ return [
     'sms_password' => secEnv('SMS_PASSWORD'),
     'sms_channel' => secEnv('SMS_CHANNEL'),
 
-
     //BoT Exchange Rates
     'botexapi' => 'https://www.bot.go.tz/services/api/exrates',
 

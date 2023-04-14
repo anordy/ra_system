@@ -16,6 +16,11 @@ class SystemSetting extends Model implements Auditable
     const GENERAL_COMMISSIONER_SIGN = 'general-commissioner-sign';
     const GENERAL_COMMISSIONER_NAME = 'general-commissioner-name';
 
+    const INPUT_TIME = 'time';
+    const INPUT_FILE = 'file';
+    const INPUT_RADIO = 'radio';
+    const INPUT_TEXT = 'text';
+
     protected $guarded = [];
     
     public function system_setting_category(){

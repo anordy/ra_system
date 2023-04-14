@@ -140,7 +140,6 @@ class ReturnReport extends Component
     //preview report
     public function preview()
     {
-        // dd($this->getParameters());
         $this->validate();
         if (!$this->checkCheckboxes()) {
             return;

@@ -33,7 +33,6 @@ trait PaymentReportTrait
                 $data = clone $model->where('status', $parameters['status']);
             } elseif ($parameters['status'] == 'pending') {
                 $data = clone $model->where('status', $parameters['status'])->get();
-                dd($data);
             } else {
                 $data = clone $model->whereIn('status', ['pending', 'paid']);
             }
