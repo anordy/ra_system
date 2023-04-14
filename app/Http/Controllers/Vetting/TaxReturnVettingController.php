@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vetting;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\TaxReturn;
 use App\Http\Controllers\Controller;
+use App\Models\Returns\EmTransactionReturn;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\Returns\Port\PortReturn;
@@ -90,6 +91,11 @@ class TaxReturnVettingController extends Controller
         elseif ($return instanceof BfoReturn) {
             $viewRender = 'returns.excise-duty.bfo.details';
 
+        } elseif ($return instanceof EmTransactionReturn) {
+            $viewRender = 'returns.excise-duty.em-transaction.details';
+
+        } else {
+            abort(404);
         }
 
         return view('vetting.show', compact('return', 'viewRender', 'tax_return', 'returnHistories'));
