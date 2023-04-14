@@ -96,56 +96,6 @@ trait VatReturnTrait
         }
     }
 
-    // TODO: This might be entered manually or to be fetched from VFMS (Will Be confirmed)
-    public function withHeld()
-    {
-        foreach ($this->configs as $config) {
-            if (in_array($config['code'], ['VWH'])) {
-                $value = str_replace(',', '', $config['value']);
-                if (is_numeric($value)) {
-                    return round($value, 2);
-                } else {
-                    return 0;
-                }
-            }
-        }
-    }
 
-    public function withHeldAndBroughtForward()
-    {
-        return round($this->creditBroughtForward() - $this->withHeld(), 2);
-    }
-
-    public function taxType($code)
-    {
-        $tax_type = TaxType::query()->where('code', $code)->value('id');
-        return $tax_type;
-    }
-
-    public function gfs_code($code)
-    {
-        $tax_type = TaxType::query()->where('code', $code)->value('gfs_code');
-        return $tax_type;
-    }
-
-    public function compareValues($data, $valueFromUI)
-    {
-        $total = '';
-        foreach ($data as $row) {
-            $total = (int)$total + (int)$row['value_excluding_tax'];
-        }
-
-        if ($valueFromUI != $total) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function convertToNumber($string)
-    {
-        $number = str_replace(',','',$string);
-        return (int)$number;
-    }
 }
 
