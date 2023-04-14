@@ -30,10 +30,8 @@ class NillReturn extends Component
 //        $latestMonth = Carbon::create($month->year->code, $month->number, 1);
 //        $diff = now()->diffInMonths($latestMonth);
 //
-////        dd($this->nilTotal());
 //        if ($diff >= 3)
 //        {
-//            dd('this taxpayer has nil return for three consecutively months');
 //        }
 //        else{
 //            dd('has no nil return');

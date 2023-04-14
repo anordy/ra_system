@@ -68,22 +68,14 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 // Trigger verification
                 $this->triggerTaxVerifications($this->return->return, auth()->user());
 
-                DB::commit();
-
-                event(new SendSms(SendVettedReturnSMS::SERVICE, $this->return));
-                event(new SendMail(SendVettedReturnMail::SERVICE, $this->return));
-
                 // Generate control number
                 $this->generateReturnControlNumber($this->return);
 
-                // TODO: Trigger claim for VAT
                 //triggering claim
                 if ($this->return->return_type == VatReturn::class) {
-                    if ($this->return->return->total_amount_due < 0) {
-                        $claim = $this->triggerClaim(abs($this->return->return->total_amount_due), $this->return->return->currency, $this->return->return);
+                    if ($this->return->return->claim_status == 'claim') {
 
-                        $this->return->return->claim_status = 'claim';
-                        $this->return->return->save();
+                        $claim = $this->triggerClaim(abs($this->return->return->total_amount_due), $this->return->return->currency, $this->return->return);
 
                         $taxpayer = Taxpayer::query()->where('id', $this->return->return->filed_by_id)->first();
                         $taxpayer = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
@@ -107,6 +99,9 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 }
 
                 DB::commit();
+
+                event(new SendSms(SendVettedReturnSMS::SERVICE, $this->return));
+                event(new SendMail(SendVettedReturnMail::SERVICE, $this->return));
 
                 $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {

@@ -53,7 +53,6 @@ trait TaxClaimsTrait {
 
         $oldReturn->claim_status = TaxClaimStatus::CLAIM;
         $oldReturn->save();
-
         $this->registerWorkflow(get_class($claim), $claim->id);
         $this->doTransition('start', ['approved']);
         $claim->status = TaxClaimStatus::PENDING;

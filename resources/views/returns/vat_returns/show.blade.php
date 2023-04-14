@@ -408,7 +408,7 @@
                                                     @foreach ($return->cashSales as $index=> $details)
                                                         <tr>
                                                             <th>{{$index + 1}}</th>
-                                                            <td>{{ $details['documents'] }}</td>
+                                                            <td>{{ $details['document'] }}</td>
 
                                                             <td>{{ $details['from_number'] }}</td>
 

@@ -6,7 +6,7 @@
                 <div>
                     <span class="font-weight-bold text-uppercase">Rejected At</span>
                     <p class="mt-1">
-                        {{$history->created_at->format('d-m-Y h:i:s')}}
+                        {{$history->created_at->format('d-m-Y H:i:s')}}
                     </p>
                 </div>
             </div>
