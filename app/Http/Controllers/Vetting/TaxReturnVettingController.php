@@ -94,14 +94,9 @@ class TaxReturnVettingController extends Controller
         } elseif ($return instanceof EmTransactionReturn) {
             $viewRender = 'returns.excise-duty.em-transaction.details';
 
-        }elseif ($return instanceof EmTransactionReturn) {
-            $viewRender = 'returns.em-transaction.details';
-
-        }
-         else {
+        } else {
             abort(404);
         }
-        
 
         return view('vetting.show', compact('return', 'viewRender', 'tax_return', 'returnHistories'));
     }
