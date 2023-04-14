@@ -12,17 +12,6 @@ use Illuminate\Support\Facades\Gate;
 
 class DisputeController extends Controller
 {
-    //   public function index()
-    // {
-    //     dd('in');
-    //     if (!Gate::allows('dispute-waiver-view')) {
-    //         abort(403);
-    //     }
-
-    //     return view('assesments.dispute.index');
-    // }
-
-
     public function approval($waiverId)
     {
         $dispute = Dispute::findOrFail(decrypt($waiverId));

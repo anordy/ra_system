@@ -28,7 +28,6 @@ trait DepartmentalReportTrait
                 $model->where('tax_returns.' . $column, '>', 0);
             }
 
-            // dd($model->get(['tax_returns.airport_service_charge', 'tax_returns.seaport_service_charge', 'tax_returns.airport_safety_fee', 'tax_returns.seaport_transport_charge', 'tax_returns.road_license_fee']));
         } else {
             //get all returns associsted with main tax types
             $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')
