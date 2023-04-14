@@ -91,17 +91,6 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header text-uppercase font-weight-bold bg-white">
-                    Vetting Details
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                       
-                    </div>
-                </div>
-            </div>
-
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">
