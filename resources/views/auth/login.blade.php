@@ -106,7 +106,7 @@
                 </div>
 
                 <div class="card-body text-center text-white">
-                    ©2022
+                    ©{{ date("Y") }}
                     <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">Zanzibar Revenue Authority</a>.
                     All Rights Reserved.
                 </div>

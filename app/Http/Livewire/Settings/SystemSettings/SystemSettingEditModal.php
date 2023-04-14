@@ -27,6 +27,7 @@ class SystemSettingEditModal extends Component
     public $old_values;
     public $valueType;
     public $certificateSettings = false;
+    public $settingCategory;
 
     protected function rules()
     {
@@ -51,7 +52,7 @@ class SystemSettingEditModal extends Component
 
     public function mount($id)
     {
-        $this->categories = SystemSettingCategory::select('id', 'name')->get();
+        $this->categories = SystemSettingCategory::select('id', 'name', 'code')->get();
         $this->systemSetting = SystemSetting::findOrFail(decrypt($id));
         $this->name = $this->systemSetting->name;
         $this->code = $this->systemSetting->code;
@@ -82,13 +83,21 @@ class SystemSettingEditModal extends Component
             $this->valueType = $this->unit;
         }
 
-        $this->certificateSettings = SystemSettingCategory::CERTIFICATESETTINGS_ID == $this->system_setting_category ? true : false;
+        $property = $this->system_setting_category;
+        $object = $this->categories->first(function ($item) use ($property) {
+            return $item->id == $property;
+        });
+        $this->settingCategory = $object->code;
     }
 
 
     public function updated($property){
         if ($property == 'system_setting_category'){
-            $this->certificateSettings = SystemSettingCategory::CERTIFICATESETTINGS_ID == $this->system_setting_category ? true : false;
+            $value = $this->system_setting_category;
+            $object = $this->categories->first(function ($item) use ($value) {
+                return $item->id == $value;
+            });
+            $this->settingCategory = $object->code;
         }
     }
 
