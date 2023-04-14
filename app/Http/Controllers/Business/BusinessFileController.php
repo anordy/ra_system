@@ -66,7 +66,7 @@ class BusinessFileController extends Controller
         }
 
         $taxTypeId = decrypt($taxTypeId);
-        $url = route('qrcode-check.business.certificate', $locationId,$taxTypeId);
+        $url = route('qrcode-check.business.certificate', ['locationId' => $locationId, 'taxTypeId' => $taxTypeId]);
 
         $locationId = decrypt($locationId);
         $location = BusinessLocation::with('business', 'business.taxpayer')->findOrFail($locationId);
