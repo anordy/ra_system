@@ -26,7 +26,7 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                    @if($certificateSettings)
+                    @if($settingCategory == \App\Models\SystemSettingCategory::CERTIFICATE_SETTINGS)
                         <div class="form-group col-lg-12">
                             <label class="control-label">Value Type</label>
                             <div class="d-flex">
@@ -45,13 +45,23 @@
                             </div>
                         </div>
                     @endif
-                    <div class="form-group col-lg-12">
-                        <label class="control-label">Value</label>
-                        <input type="{{$valueType}}" class="form-control" wire:model.lazy="value" id="value">
-                        @error('value')
+                    @if($settingCategory == \App\Models\SystemSettingCategory::FILING_DEADLINE)
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">Value</label>
+                            <input type="time" class="form-control" wire:model.lazy="value" id="value">
+                            @error('value')
                             <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
+                            @enderror
+                        </div>
+                    @else
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">Value</label>
+                            <input type="text" class="form-control" wire:model.lazy="value" id="value">
+                            @error('value')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    @endif
                     <div class="form-group col-lg-12">
                         <label class="control-label">Code</label>
                         <input type="text" disabled class="form-control" wire:model.defer="code" id="code">

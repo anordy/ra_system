@@ -20,6 +20,7 @@ class SystemSetting extends Model implements Auditable
     const INPUT_FILE = 'file';
     const INPUT_RADIO = 'radio';
     const INPUT_TEXT = 'text';
+    const INPUT_NUMBER = 'number';
 
     protected $guarded = [];
     
