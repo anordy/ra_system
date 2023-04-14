@@ -132,6 +132,9 @@ class TaxReturn extends Model implements PayloadInterface
         return $this->morphOne(DebtPenalty::class, 'debt')->latest();
     }
 
+    public function editReturnHistories(){
+        return $this->hasMany(TaxReturnHistory::class, 'tax_return_id');
+    }
     public static function getPayloadColumns(): array
     {
         return [

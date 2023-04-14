@@ -41,6 +41,18 @@
                                aria-selected="false">Supplier Details</a>
                         </li>
 
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="hotel-tab" data-toggle="tab" href="#hotel" role="tab"
+                               aria-controls="contact"
+                               aria-selected="false">Hotel Details</a>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="zero-tab" data-toggle="tab" href="#zero" role="tab"
+                               aria-controls="contact"
+                               aria-selected="false">Zero Rated Supply Details</a>
+                        </li>
+
 
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" id="training-tab" data-toggle="tab" href="#training" role="tab"
@@ -323,9 +335,10 @@
                                             <th>Supplier Zin Number</th>
                                             <th>Tax Invoice Number</th>
                                             <th>Date Of Invoice</th>
-                                            <th>Release Number</th>
+                                            <th>Customs Entry Number</th>
                                             <th>Value</th>
                                             <th>Vat</th>
+                                            <th>Supply Type</th>
                                         </tr>
                                         </thead>
 
@@ -347,6 +360,13 @@
                                                     <td class="text-right">{{ $details['value'] }}
 
                                                     <td class="text-right">{{ $details['vat']}}
+                                                    <td class="text-right">
+                                                        @if($details['supply_type'] == 'fifteen_percent')
+                                                            15 %
+                                                        @else
+                                                            18 %
+                                                        @endif
+                                                    </td>
 
                                                 </tr>
                                             @endforeach
@@ -354,6 +374,97 @@
                                             <tr>
                                                 <td colspan="7" class="text-center py-3">
                                                     No details for supplier for this return month.
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane p-2" id="hotel" role="tabpanel" aria-labelledby="hotel-tab">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table class="table table-bordered table-sm normal-text">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">{{ __('No:') }}</th>
+                                            <th class="text-center" colspan="3">{{ __('NO. OF PAX') }}</th>
+                                            <th class="text-center" colspan="3">{{ __('REVENUE') }}</th>
+                                            <th class="text-center">{{ __('TOTAL') }}</th>
+                                        </tr>
+                                        <tr>
+                                            <th></th>
+                                            <th class="text-center">{{ __('R') }}</th>
+                                            <th class="text-center">{{ __('NR') }}</th>
+                                            <th class="text-center">{{ __('TOTAL PAX') }}</th>
+                                            <th class="text-center">{{ __('ACCOMMODATION') }}</th>
+                                            <th class="text-center">{{ __('RESTAURANT') }}</th>
+                                            <th class="text-center">{{ __('OTHERS') }}</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        @if (count($return->hotelDetails))
+                                            @foreach ($return->hotelDetails as $index=> $details)
+                                                <tr>
+                                                    <th class="text-center">{{$index + 1}}</th>
+                                                    <td class="text-center">{{ $details['no_of_pax_for_r'] }}
+
+                                                    <td class="text-center">{{ $details['no_of_pax_for_nr'] }}
+
+                                                    <td class="text-center">{{ $details['total_no_of_pax'] }}
+
+                                                    <td class="text-center">{{ $details['total_room_revenue'] }}
+
+                                                    <td class="text-center">{{ $details['revenue_for_food'] + $details['revenue_for_beverage'] }}
+
+                                                    <td class="text-center">{{ $details['other_revenue'] }}</td>                                                    </td>
+                                                    <td class="text-center">{{ $details['total_revenue'] }}
+
+                                                </tr>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center py-3">
+                                                    {{ __('No details for supplier for this return month') }}.
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane p-2" id="zero" role="tabpanel" aria-labelledby="zero-tab">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table class="table table-bordered table-sm normal-text">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">No:</th>
+                                            <th class="text-center">{{ __('Receipt Number') }}</th>
+                                            <th class="text-center">{{ __('Receipt Date') }}</th>
+                                            <th class="text-center">{{ __('Amount') }}</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        @if (count($return->zeroRatedDetails))
+                                            @foreach ($return->zeroRatedDetails as $index=> $details)
+                                                <tr>
+                                                    <th class="text-center">{{$index + 1}}</th>
+                                                    <td class="text-center">{{ $details['receipt_number'] }}
+
+                                                    <td class="text-center">{{ date('D, Y-m-d', strtotime($details['receipt_date'])) }}
+
+                                                    <td class="text-center">{{ $details['amount'] }}</td>
+                                                </tr>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center py-3">
+                                                    {{ __('No details for supplier for this return month') }}.
                                                 </td>
                                             </tr>
                                         @endif

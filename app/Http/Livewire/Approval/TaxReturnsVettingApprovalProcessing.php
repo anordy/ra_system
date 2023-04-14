@@ -12,16 +12,22 @@ use App\Jobs\Vetting\SendToCorrectionReturnSMS;
 use App\Jobs\Vetting\SendVettedReturnMail;
 use App\Jobs\Vetting\SendVettedReturnSMS;
 use App\Traits\CustomAlert;
+use App\Models\Returns\Vat\VatReturn;
+use App\Models\Role;
+use App\Models\Taxpayer;
+use App\Models\User;
+use App\Notifications\DatabaseNotification;
 use App\Traits\PaymentsTrait;
 use App\Traits\TaxReturnHistory;
+use App\Traits\TaxClaimsTrait;
+use App\Traits\WorkflowProcesssingTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\TaxVerificationTrait;
-use App\Traits\WorkflowProcesssingTrait;
 
 class TaxReturnsVettingApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, TaxVerificationTrait, TaxReturnHistory;
+    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, TaxVerificationTrait, TaxReturnHistory, TaxClaimsTrait;
 
     public $modelId;
     public $modelName;
@@ -70,6 +76,31 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->generateReturnControlNumber($this->return);
 
                 // TODO: Trigger claim for VAT
+                //triggering claim
+                if ($this->return->return_type == VatReturn::class) {
+                    if ($this->return->return->total_amount_due < 0) {
+                        $claim = $this->triggerClaim(abs($this->return->return->total_amount_due), $this->return->return->currency, $this->return->return);
+
+                        $this->return->return->claim_status = 'claim';
+                        $this->return->return->save();
+
+                        $taxpayer = Taxpayer::query()->where('id', $this->return->return->filed_by_id)->first();
+                        $taxpayer = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+                        $role = Role::query()->where('name', 'Administrator')->first();
+                        $admins = User::query()->where('role_id', $role->id)->get();
+                        foreach ($admins as $admin) {
+                            $admin->notify(new DatabaseNotification(
+                                $subject = 'TAX CLAIMING',
+                                $message = 'You have a new request for tax claim from ' . $taxpayer . '',
+                                $href = 'claims.show',
+                                $hrefText = 'View',
+                                $hrefParameters = $claim->id,
+                            ));
+                        }
+                    }
+                }
+
+                DB::commit();
 
                 $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
