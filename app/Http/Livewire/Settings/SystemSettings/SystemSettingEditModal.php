@@ -59,8 +59,7 @@ class SystemSettingEditModal extends Component
         $this->unit = $this->systemSetting->unit;
 
         if($this->unit == SystemSetting::INPUT_TIME){
-            $time = Carbon::createFromFormat('H:i', $this->systemSetting->value);
-            $this->value = $time->format('H:i');
+            $this->value = Carbon::createFromFormat('H:i', $this->systemSetting->value)->format('H:i');
         } else {
             $this->value = $this->systemSetting->value;
         }
