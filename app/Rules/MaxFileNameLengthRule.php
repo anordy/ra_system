@@ -22,6 +22,6 @@ class MaxFileNameLengthRule implements Rule
 
     public function message()
     {
-        return 'The :attribute has a file name that is too long. Please change the file name and try again (maximum ' . $this->maxLength . ' characters)';
+        return 'The :attribute Filename is too long. Please change the file name and try again (maximum ' . $this->maxLength . ' characters)';
     }
 }

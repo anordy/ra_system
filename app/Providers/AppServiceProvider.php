@@ -47,6 +47,10 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('max_file_name_length', function ($attribute, $value, $parameters, $validator) {
             return (new MaxFileNameLengthRule($parameters[0]))->passes($attribute, $value);
         });
+        
+        Validator::replacer('max_file_name_length', function ($message, $attribute, $rule, $parameters) {
+            return str_replace([':attribute', ':max_length'], [$attribute, $parameters[0]], 'The :attribute Filename is too long (maximum :max_length characters).');
+        });
 
         $this->app->bind('captcha', function ($app) {
             return new Captcha(

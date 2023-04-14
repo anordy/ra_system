@@ -15,23 +15,23 @@ class LumpSumPaymentSeeder extends Seeder
     public function run()
     {
         LumpSumPayment::updateOrCreate([
-            'id' => 1,
+            'id' => 3,
             'filed_by_id' => 1,
             'BUSINESS_ID' => 1,
             'BUSINESS_LOCATION_ID' => 1,
             'ANNUAL_ESTIMATE' => 1000000,
             'PAYMENT_QUARTERS' => 4,
-            'CURRENCY' => 'tzs',
+            'CURRENCY' => 'TZS',
         ]);
 
         LumpSumPayment::updateOrCreate([
-            'id' => 2,
+            'id' => 4,
             'filed_by_id' => 1,
             'BUSINESS_ID' => 1,
             'BUSINESS_LOCATION_ID' => 2,
             'ANNUAL_ESTIMATE' => 250000,
             'PAYMENT_QUARTERS' => 4,
-            'CURRENCY' => 'tzs',
+            'CURRENCY' => 'TZS',
         ]);
 
     }
