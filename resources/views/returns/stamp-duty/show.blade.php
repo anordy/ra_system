@@ -56,7 +56,11 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Return Category</span>
-                            <p class="my-1"><span class="badge badge-info">{{ $return->return_category }}</span></p>
+                            <p class="my-1"><span class="badge badge-info py-1 px-2 text-uppercase" style="border-radius: 1rem; font-size: 85%">{{ $return->return_category }}</span></p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase" >{{ __('Vetting Status') }}</span>
+                            <p class="my-1"><span class="badge badge-info py-1 px-2 text-uppercase" style="border-radius: 1rem; font-size: 85%">{{ $return->vetting_status }}</span></p>
                         </div>
                     </div>
                     <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>

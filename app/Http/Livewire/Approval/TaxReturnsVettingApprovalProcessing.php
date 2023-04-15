@@ -92,10 +92,9 @@ class TaxReturnsVettingApprovalProcessing extends Component
                         }
                     }
                 }
-
                 //saving credit brought forward(claim)
                 if ($this->return->return->credit_brought_forward > 0) {
-                    $this->savingClaimPayment($this->return->return->credit_brought_forward);
+                    $this->savingClaimPayment($this->return->return->credit_brought_forward,$this->return->return->business_location_id );
                 }
 
                 DB::commit();

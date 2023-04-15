@@ -58,15 +58,28 @@ class StampDutyReturnsTable extends DataTableComponent
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
-            Column::make('Total Tax', 'total_amount_due')
+            Column::make(__('Total Tax'), 'total_amount_due')
                 ->sortable()
+                ->format(function ($value, $row) {
+                    return number_format($value, 2);
+                })
                 ->searchable(),
-            Column::make('Financial Month', 'financialMonth.name')
+            Column::make(__('Total Tax With Penalties'), 'total_amount_due_with_penalties')
+                ->sortable()
+                ->format(function ($value, $row) {
+                    return number_format($value, 2);
+                })
+                ->searchable(),
+            Column::make('Return Month', 'financialMonth.name')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
                     return "{$row->financialMonth->name} {$row->financialMonth->year->code}";
                 }),
+            Column::make(__('Vetting Status'), 'vetting_status')->view('returns.vetting-status'),
+
+            Column::make(__('Application Status'), 'status')->view('returns.stamp-duty.includes.status'),
+
             Column::make('Action', 'id')->view('returns.stamp-duty.includes.actions'),
         ];
     }
