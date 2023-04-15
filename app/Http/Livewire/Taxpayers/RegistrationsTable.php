@@ -43,11 +43,11 @@ class RegistrationsTable extends DataTableComponent
                         ->orWhere('middle_name', 'like', '%' . $searchTerm . '%')
                         ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
                 }),
-            Column::make('Mobile No', 'mobile'),
-            Column::make('Email Address', 'email'),
-            Column::make('Nationality', 'country.nationality'),
-            Column::make('Location', 'region.name'),
-            Column::make('Street', 'street.name'),
+            Column::make('Mobile No', 'mobile')->searchable(),
+            Column::make('Email Address', 'email')->searchable(),
+            Column::make('Nationality', 'country.nationality')->searchable(),
+            Column::make('Location', 'region.name')->searchable(),
+            Column::make('Street', 'street.name')->searchable(),
             Column::make('Action', 'id')->view('taxpayers.registrations.actions')
         ];
     }
