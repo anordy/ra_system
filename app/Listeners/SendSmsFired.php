@@ -208,7 +208,7 @@ class SendSmsFired
         } else if ($event->service === SendVettedReturnSMS::SERVICE){
             SendVettedReturnSMS::dispatch($event->tokenId);
         } else if ($event->service === SendToCorrectionReturnSMS::SERVICE){
-            SendVettedReturnSMS::dispatch($event->tokenId);
+            SendToCorrectionReturnSMS::dispatch($event->tokenId);
         }
     }
 }
