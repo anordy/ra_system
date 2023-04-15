@@ -33,7 +33,7 @@
                         <td>{{ $item->config->name }}</td>
                         <td class="text-right">{{ number_format($item->value, 2) }} <strong>(No.
                                 of bed nights)</strong></td>
-                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
+                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate }}
                             @if($item->config->rate_type =='percentage')
                                 %
                             @else
@@ -50,7 +50,7 @@
                         <td>{{ $item->config->name }}</td>
                         <td class="text-right">{{ number_format($item->value, 2) }}
                             <strong>(Electricity Units)</strong></td>
-                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
+                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate }}
                             @if($item->config->rate_type =='percentage')
                                 %
                             @else
@@ -67,7 +67,7 @@
                     <td>{{ $item->config->name }}</td>
                     <td class="text-right">{{ number_format($item->value, 2) }}
                         <strong>  {{ $item->config->currency}}</strong></td>
-                    <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }}
+                    <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
                         @if($item->config->rate_type =='percentage')
                             %
                         @endif

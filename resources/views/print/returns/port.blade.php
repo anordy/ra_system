@@ -150,7 +150,7 @@
                     @elseif ($item->config->rate_type == 'percentage')
                         {{ $item->config->rate }} %
                     @endif
-                    {{-- {{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }} --}}
+                    {{-- {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }} --}}
                 </td>
                 <td>{{ number_format($item->vat, 2) }}</td>
             </tr>
@@ -202,7 +202,7 @@
                     @elseif ($item->config->rate_type == 'percentage')
                         {{ $item->config->rate }} %
                     @endif
-                    {{-- {{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }} --}}
+                    {{-- {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }} --}}
                 </td>
                 <td>{{ number_format($item->vat, 2) }}</td>
             </tr>
