@@ -39,4 +39,43 @@
 
     </tfoot>
 </table>
+<div class="col-md-12">
+    <h6 class="text-uppercase mt-2 ml-2">Penalties</h6>
+    <hr>
+    <table class="table table-bordered table-sm normal-text">
+        <thead>
+            <tr>
+                <th>Month</th>
+                <th>Tax Amount</th>
+                <th>Late Filing Amount</th>
+                <th>Late Payment Amount</th>
+                <th>Interest Rate</th>
+                <th>Interest Amount</th>
+                <th>Payable Amount</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if(count($return->penalties))
+                @foreach ($return->penalties as $penalty)
+                <tr>
+                    <td>{{ $penalty['financial_month_name'] }}</td>
+                    <td>{{ number_format($penalty['tax_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                    <td>{{ number_format($penalty['late_filing'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                    <td>{{ number_format($penalty['late_payment'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                    <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
+                    <td>{{ number_format($penalty['rate_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                    <td>{{ number_format($penalty['penalty_amount'], 2)}} <strong>{{ $return->currency}}</strong></td>
+                </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="7" class="text-center py-3">
+                        No penalties for this return.
+                    </td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
+</div>
 
