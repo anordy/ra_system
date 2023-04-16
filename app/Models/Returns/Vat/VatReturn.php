@@ -105,6 +105,11 @@ class VatReturn extends Model
         return $this->hasMany(VatZeroRatedSale::class, 'vat_return_id');
     }
 
+    public function vatWithheld(){
+        return $this->hasOne(VatWithheldAttachment::class, 'vat_return_id');
+    }
+
+
     public function cashSales(){
         return $this->hasMany(VatCashSales::class, 'vat_return_id');
     }
