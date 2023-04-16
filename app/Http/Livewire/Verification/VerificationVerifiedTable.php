@@ -14,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VerificationVerifiedTable extends DataTableComponent
 {
-    use CustomAlert,ReturnFilterTrait, WithSearch;
+    use CustomAlert,ReturnFilterTrait;
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     
     public $data = [];

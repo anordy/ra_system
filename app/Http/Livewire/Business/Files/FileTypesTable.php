@@ -12,7 +12,7 @@ use App\Models\BusinessLocation;
 
 class FileTypesTable extends DataTableComponent
 {
-    use WithSearch;
+
 
     protected $model = BusinessLocation::class;
 

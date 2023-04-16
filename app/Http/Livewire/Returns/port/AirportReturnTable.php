@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class AirportReturnTable extends DataTableComponent
 {
-    use ReturnFilterTrait, WithSearch;
+    use ReturnFilterTrait;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $data         = [];

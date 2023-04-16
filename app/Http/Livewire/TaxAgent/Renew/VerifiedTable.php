@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VerifiedTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
 //    protected $model = RenewTaxAgentRequest::class;
 

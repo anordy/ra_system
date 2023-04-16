@@ -19,7 +19,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class GenericSettingsTable extends DataTableComponent
 {
-	use CustomAlert, WithSearch;
+	use CustomAlert;
     public $model;
     public $setting_title = '';
 

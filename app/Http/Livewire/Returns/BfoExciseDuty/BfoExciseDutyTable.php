@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Gate;
 
 class BfoExciseDutyTable extends DataTableComponent
 {
-    use  ReturnFilterTrait, WithSearch;
+    use  ReturnFilterTrait;
 
     protected $model     = BfoReturn::class;
     protected $listeners = ['filterData' => 'filterData', '$refresh'];

@@ -13,7 +13,7 @@ use App\Traits\ReturnReportTrait;
 
 class ReportPreviewTable extends DataTableComponent
 {
-    use CustomAlert, ClaimReportTrait, WithSearch;
+    use CustomAlert, ClaimReportTrait;
 
     public $parameters;
 

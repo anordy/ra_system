@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ClaimsApprovalTable extends DataTableComponent
 {
-    use WithSearch;
+
 
     public $pending;
     public $rejected;

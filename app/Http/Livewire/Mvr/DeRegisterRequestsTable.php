@@ -21,7 +21,7 @@ use App\Models\TaxAgent;
 
 class DeRegisterRequestsTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public $status_id;
 

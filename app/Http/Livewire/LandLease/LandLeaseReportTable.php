@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LandLeaseReportTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public $dates = [];
     public $taxpayer_id;

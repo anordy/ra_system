@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class PendingClosuresTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
 
     protected $listeners = [

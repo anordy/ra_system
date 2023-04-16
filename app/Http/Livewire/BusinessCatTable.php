@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class BusinessCatTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     protected $model = BusinessCategory::class;
     public function configure(): void

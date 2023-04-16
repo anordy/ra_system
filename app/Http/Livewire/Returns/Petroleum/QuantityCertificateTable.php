@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Gate;
 
 class QuantityCertificateTable extends DataTableComponent
 {
-    use WithSearch;
+
     public function mount(){
 
         if (!Gate::allows('certificate-of-quantity-view')) {

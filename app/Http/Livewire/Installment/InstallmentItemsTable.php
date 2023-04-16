@@ -11,7 +11,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class InstallmentItemsTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public $installment;
 

@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class PendingDeregisterBusinessTable extends DataTableComponent
 {
-    use WithSearch;
+
 
     public function builder(): Builder
     {

@@ -16,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class InterestRatesTable extends DataTableComponent
 {
-    use CustomAlert, DualControlActivityTrait, WithSearch;
+    use CustomAlert, DualControlActivityTrait;
 
     public function builder(): Builder
     {

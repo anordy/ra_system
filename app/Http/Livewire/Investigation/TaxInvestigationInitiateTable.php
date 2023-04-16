@@ -17,7 +17,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class TaxInvestigationInitiateTable extends DataTableComponent
 {
 
-    use CustomAlert, WorkflowProcesssingTrait, WithSearch;
+    use CustomAlert, WorkflowProcesssingTrait;
 
     public $model = TaxInvestigation::class;
 

@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class ApprovedDeregisterBusinessTable extends DataTableComponent
 {
-    use WithSearch;
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');

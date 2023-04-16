@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Gate;
 
 class EducationLevelTable extends DataTableComponent
 {
-    use CustomAlert, DualControlActivityTrait, WithSearch;
+    use CustomAlert, DualControlActivityTrait;
 
     protected $model = EducationLevel::class;
     public function configure(): void

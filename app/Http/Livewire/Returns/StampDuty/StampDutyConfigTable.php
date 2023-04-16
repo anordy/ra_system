@@ -10,7 +10,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class StampDutyConfigTable extends DataTableComponent
 {
-    use WithSearch;
+
     public function builder(): Builder
     {
         return StampDutyConfig::latest();
