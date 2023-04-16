@@ -364,6 +364,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('vat-return.')->prefix('vat-return')->group(function () {
             Route::get('/index', [VatReturnController::class, 'index'])->name('index');
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
+            Route::get('/withheld-file/{id}/{type}', [VatReturnController::class, 'getFile'])->name('withheld-file');
         });
 
         Route::name('bfo-excise-duty.')->prefix('bfo-excise-duty')->group(function () {

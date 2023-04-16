@@ -43,13 +43,30 @@
                 <div class="tab-pane p-2 show active" id="academic" role="tabpanel" aria-labelledby="academic-tab">
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-end">
+                            <div class="d-flex justify-content-between">
+
+                                @if(!empty($return->vatWithheld))
+                                    <div>
+                                        <label>{{ __('Withheld Attachment') }}</label>
+                                        <a class="file-item" target="_blank"
+                                           href="{{ route('returns.vat-return.withheld-file', [encrypt($return->id), 'withheld']) }}">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2"
+                                               style="font-size: x-large"></i>
+                                            <div style="font-weight: 500;" class="ml-1">
+                                                View Attachment
+                                            </div>
+                                        </a>
+                                    </div>
+                                @endif
+
                                 <div class="pb-2" style="width: 160px">
-                                    <label>Exemption Method Used</label>
-                                    <input readonly class="form-control" type="text" value="{{ $return->method_used ?? 'No Method Used' }}">
+                                    <label>{{ __('Exemption Method Used') }}</label>
+                                    <input readonly class="form-control" type="text"
+                                           value="{{ $return->method_used ?? 'No Method Used' }}">
                                 </div>
 
                             </div>
+
                             <table class="table table-bordered ">
                                 <thead>
                                 <th style="width: 40%">Item Name</th>
@@ -140,7 +157,8 @@
                                     <td colspan="2" class="table-active"></td>
                                     <th class="text-right">
                                         @if($return->claim_status == \App\Enum\TaxClaimStatus::CLAIM)
-                                            ({{number_format(abs($return->total_output_tax - $return->total_input_tax), 2, '.',',')}})
+                                            ({{number_format(abs($return->total_output_tax - $return->total_input_tax), 2, '.',',')}}
+                                            )
                                         @else
                                             {{number_format($return->total_vat_payable, 2, '.',',')}}
                                         @endif
@@ -376,7 +394,8 @@
 
                                             <td class="text-center">{{ $details['revenue_for_food'] + $details['revenue_for_beverage'] }}
 
-                                            <td class="text-center">{{ $details['other_revenue'] }}</td>                                                    </td>
+                                            <td class="text-center">{{ $details['other_revenue'] }}</td>
+                                            </td>
                                             <td class="text-center">{{ $details['total_revenue'] }}
 
                                         </tr>
