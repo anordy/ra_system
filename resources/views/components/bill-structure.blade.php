@@ -49,4 +49,8 @@
             </tbody>
         </table>
     @endif
+@else
+    <div class="text-center">
+        No Detail
+    </div>
 @endif

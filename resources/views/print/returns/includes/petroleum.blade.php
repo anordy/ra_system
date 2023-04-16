@@ -19,7 +19,7 @@
         <tr>
             <td>{{ $item->config->name ?? 'name' }}</td>
             <td>{{ number_format($item->value, 2) }}</td>
-            <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' : $item->config->rate_usd ?? '' }}
+            <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate . '%' ?? '' : $item->config->rate_usd ?? '' }}
             </td>
             <td>{{ number_format($item->vat, 1) }}</td>
         </tr>

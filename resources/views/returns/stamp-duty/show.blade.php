@@ -84,7 +84,7 @@
                                 @endif
                                 @if($item->config->rate_applicable)
                                     <td>
-                                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd }}
+                                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
                                     </td>
                                 @else
                                     <td class="bg-secondary"></td>

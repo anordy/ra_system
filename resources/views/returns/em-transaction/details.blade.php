@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-body">
-        <h6 class="text-uppercase mt-2 ml-2">Filled Return Details</h6>
+        <h6 class="text-uppercase mt-2 ml-2">Filled Return Details For {{ $return->taxtype->name }}</h6>
         <hr>
         <div class="row">
             <div class="col-md-12">
@@ -16,7 +16,7 @@
                         <tr>
                             <td>{{ $item->config->name ?? 'name' }}</td>
                             <td>{{ number_format($item->value, 2) }}</td>
-                            <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' : $item->config->rate_usd ?? '' }}
+                            <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate . '%' ?? '' : $item->config->rate_usd ?? '' }}
                             </td>
                             <td>{{ number_format($item->vat, 2) }}</td>
                         </tr>

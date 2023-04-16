@@ -49,12 +49,12 @@ class TaxpayersTable extends DataTableComponent
                         ->orWhere('middle_name', 'like', '%' . $searchTerm . '%')
                         ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
                 }),
-            Column::make('Mobile No', 'mobile'),
-            Column::make('Email Address', 'email'),
+            Column::make('Mobile No', 'mobile')->searchable(),
+            Column::make('Email Address', 'email')->searchable(),
             Column::make('Nationality', 'country_id')
-                ->format(fn ($value, $row) => $row->country->nationality ?? ''),
-            Column::make('Location', 'region.name'),
-            Column::make('Street', 'street.name'),
+                ->format(fn ($value, $row) => $row->country->nationality ?? '')->searchable(),
+            Column::make('Location', 'region.name')->searchable(),
+            Column::make('Street', 'street.name')->searchable(),
             Column::make('Action', 'id')->view('taxpayers.actions')
         ];
     }

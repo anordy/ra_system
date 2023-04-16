@@ -88,11 +88,13 @@
                                     </td>
                                     </td>
                                     <td>
-                                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd ?? '-' }}
+                                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency ?? '-' }}
                                     </td>
                                     <td>
                                         @if ($item->vat)
                                             {{ number_format($item->vat, 2) }}
+                                        @else
+                                            0
                                         @endif
                                     </td>
                                 </tr>

@@ -4,10 +4,11 @@ namespace App\Models\Returns\Port;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PortReturnItem extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
        protected $table = 'port_return_items';
 
