@@ -14,11 +14,10 @@ class AddColumnsToVatReturnSupplierDetails extends Migration
     public function up()
     {
         Schema::table('vat_return_supplier_details', function (Blueprint $table) {
-            $table->string('date_of_tax_invoice')->change()->default('None');
-            $table->enum('supply_type',['fifteen_percent', 'eighteen_percent'])->after('vat');
-            $table->unsignedBigInteger('business_location_id')->after('vat_return_id');
-            $table->unsignedBigInteger('financial_month_id')->after('business_location_id');
-            $table->string('vat_registration_number')->after('business_location_id');
+            $table->enum('supply_type',['fifteen_percent', 'eighteen_percent'])->after('vat')->nullable();
+            $table->unsignedBigInteger('business_location_id')->after('vat_return_id')->nullable();
+            $table->unsignedBigInteger('financial_month_id')->after('business_location_id')->nullable();
+            $table->string('vat_registration_number')->after('business_location_id')->nullable();
         });
     }
 

@@ -5,10 +5,11 @@ namespace App\Models\Returns\HotelReturns;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class HotelReturnPenalty extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = [];
     

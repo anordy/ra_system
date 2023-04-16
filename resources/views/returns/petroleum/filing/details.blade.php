@@ -1,6 +1,6 @@
 <div class="card p-0 m-0">
     <div class="card-body">
-        <h6 class="text-uppercase mt-2 ml-2">Filled Return Details</h6>
+        <h6 class="text-uppercase mt-2 ml-2">Filled Return Details For {{ $return->taxtype->name }}</h6>
         <hr>
         <div class="row">
             <div class="col-md-12">
