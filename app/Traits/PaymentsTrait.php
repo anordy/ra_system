@@ -27,6 +27,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\SendZanMalipoSMS;
+
 
 trait PaymentsTrait
 {
@@ -57,6 +59,11 @@ trait PaymentsTrait
                 $bill->zan_status       = 'pending';
                 $bill->control_number   = rand(2000070001000, 2000070009999);
                 $bill->save();
+
+                $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
+                $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+    
+                dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
             DB::commit();
 
@@ -126,6 +133,11 @@ trait PaymentsTrait
             $bill->zan_status       = 'pending';
             $bill->control_number   = rand(2000070001000, 2000070009999);
             $bill->save();
+
+            $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
+            $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+
+            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
 
             $this->flash('success', 'Your return was submitted, you will receive your payment information shortly - test');
         }
@@ -781,6 +793,11 @@ trait PaymentsTrait
             $bill->zan_status = 'pending';
             $bill->control_number = rand(2000070001000, 2000070009999);
             $bill->save();
+
+            $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
+            $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+
+            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
 }
