@@ -65,6 +65,8 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->return->save();
                 $this->return->return->save();
 
+                DB::commit();
+
                 // Trigger verification
                 $this->triggerTaxVerifications($this->return->return, auth()->user());
 
@@ -94,10 +96,8 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 }
                 //saving credit brought forward(claim)
                 if ($this->return->return->credit_brought_forward > 0) {
-                    $this->savingClaimPayment($this->return->return->credit_brought_forward,$this->return->return->business_location_id );
+                    $this->savingClaimPayment($this->return->return->credit_brought_forward, $this->return->return->business_location_id);
                 }
-
-                DB::commit();
 
                 event(new SendSms(SendVettedReturnSMS::SERVICE, $this->return));
                 event(new SendMail(SendVettedReturnMail::SERVICE, $this->return));
@@ -126,10 +126,11 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->subject->return->vetting_status = VettingStatus::CORRECTION;
                 $this->subject->return->save();
 
-                $this->saveHistory($this->subject);
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-                
+
                 DB::commit();
+
+                $this->saveHistory($this->subject);
 
                 event(new SendSms(SendToCorrectionReturnSMS::SERVICE, $this->return));
                 event(new SendMail(SendToCorrectionReturnMail::SERVICE, $this->return));
