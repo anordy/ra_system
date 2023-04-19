@@ -136,6 +136,8 @@ use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Taxpayers\AmendmentRequestController;
 use App\Http\Controllers\KYC\KycAmendmentRequestController;
+use App\Http\Controllers\QRCodeCheckController;
+use App\Http\Controllers\Vetting\TaxReturnVettingController;
 
 Auth::routes(['register'=>false]);
 
@@ -143,6 +145,15 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload')->middleware('throttle:captcha');
 Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name('captcha.get')->name('captcha.get')->middleware('throttle:captcha');
+
+//QRcode urls
+Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
+    Route::get('/withholding-agent-certificate/{id}', [QRCodeCheckController::class, 'withholdingAgentCertificate'])->name('withholding-agent.certificate');
+    Route::get('/business-certificate/{locationId}/{taxTypeId}', [QRCodeCheckController::class, 'businessCertificate'])->name('business.certificate');
+    Route::get('/taxagents-certificate/{id}', [QRCodeCheckController::class, 'taxAgentsCertificate'])->name('taxagents.certificate');
+    Route::get('/invoice/{id}', [QRCodeCheckController::class, 'invoice'])->name('invoice');
+    Route::get('/transfer/{billId}', [QRCodeCheckController::class, 'transfer'])->name('transfer');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
@@ -343,6 +354,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('stamp-duty.')->group(function () {
             Route::get('/stamp-duty', [StampDutyReturnController::class, 'index'])->name('index');
             Route::get('/stamp-duty/{returnId}', [StampDutyReturnController::class, 'show'])->name('show');
+            Route::get('/stamp-duty/withheld-certificate/{return_id}', [StampDutyReturnController::class, 'getWithheldCertificate'])->name('withheld-certificate');
         });
 
         Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
@@ -353,6 +365,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('vat-return.')->prefix('vat-return')->group(function () {
             Route::get('/index', [VatReturnController::class, 'index'])->name('index');
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
+            Route::get('/withheld-file/{id}/{type}', [VatReturnController::class, 'getFile'])->name('withheld-file');
         });
 
         Route::name('bfo-excise-duty.')->prefix('bfo-excise-duty')->group(function () {
@@ -416,6 +429,15 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/assessments', TaxVerificationAssessmentController::class);
         Route::resource('/verified', TaxVerificationVerifiedController::class);
         Route::resource('/files', TaxVerificationFilesController::class);
+    });
+
+    Route::name('tax_vettings.')->prefix('tax_vettings')->group(function () {
+        Route::get('/approvals', [TaxReturnVettingController::class, 'index'])->name('approvals');
+        Route::get('/corrected', [TaxReturnVettingController::class, 'corrected'])->name('corrected');
+        Route::get('/on-correction', [TaxReturnVettingController::class, 'onCorrection'])->name('on.correction');
+        Route::get('/vetted', [TaxReturnVettingController::class, 'vetted'])->name('vetted');
+        Route::get('/view/{return_id}', [TaxReturnVettingController::class, 'show'])->name('show');
+
     });
 
     Route::name('tax_auditing.')->prefix('tax_auditing')->group(function () {

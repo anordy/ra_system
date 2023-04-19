@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\WithholdingAgents;
 
 use App\Models\WithholdingAgent;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Exception;
 use id;

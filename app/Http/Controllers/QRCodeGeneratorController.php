@@ -21,14 +21,12 @@ class QRCodeGeneratorController extends Controller
         $bill = ZmBill::with('user')->findOrFail(decrypt($id));
         $name = $bill->user->full_name ?? '';
 
-        $code = '{"opType":"2","shortCode":"001001","billReference":"' . $bill->control_number . '","amount":"' .
-            $bill->amount . '","billCcy":'.$bill->currency.',"billExprDt":"' . $bill->expire . '","billPayOpt":"1",
-            "billRsv01":"ZANZIBAR REVENUE AUTHORITY|' . $name . '"}';
+        $url = route('qrcode-check.invoice', $id);
 
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true])
-            ->data($code)
+            ->data($url)
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(300)
@@ -57,14 +55,13 @@ class QRCodeGeneratorController extends Controller
         $bill = ZmBill::findOrFail(decrypt($billId));
         $bankAccount = ZrbBankAccount::findOrFail(decrypt($bankAccountId));
         $name = $bill->payer_name;
-        $code = '{"opType":"'.$bill->payment_option.'","shortCode":"001001","billReference":"' . $bill->control_number . '","amount":"' .
-            $bill->amount . '","billCcy":'.$bill->currency.',"billExprDt":"' . $bill->expire . '","billPayOpt":"1",
-            "billRsv01":"ZANZIBAR REVENUE AUTHORITY|' . $name . '"}';
+
+        $url = route('qrcode-check.transfer', $billId);
 
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true])
-            ->data($code)
+            ->data($url)
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(200)

@@ -6,6 +6,7 @@ use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxAudit\TaxAuditLocation;
 use App\Models\TaxAudit\TaxAuditTaxType;
 use App\Models\WorkflowTask;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;

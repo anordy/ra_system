@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Relief;
 // use Livewire\Component;
 // use App\Models\LandLease;
 use App\Models\Relief\Relief;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

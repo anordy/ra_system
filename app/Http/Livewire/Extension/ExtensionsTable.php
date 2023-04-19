@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Extension;
 use App\Enum\ExtensionRequestStatus;
 use App\Models\Business;
 use App\Models\Extension\ExtensionRequest;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\CustomAlert;

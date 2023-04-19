@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Business\Files;
 
 use App\Models\BranchStatus;
 use App\Models\BusinessFileType;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -11,6 +12,8 @@ use App\Models\BusinessLocation;
 
 class FileTypesTable extends DataTableComponent
 {
+
+
     protected $model = BusinessLocation::class;
 
     public function builder(): Builder

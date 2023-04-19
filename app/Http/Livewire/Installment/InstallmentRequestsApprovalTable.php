@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Installment;
 
 use App\Models\Installment\InstallmentRequest;
 use App\Models\WorkflowTask;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

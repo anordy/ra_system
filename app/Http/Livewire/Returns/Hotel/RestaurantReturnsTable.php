@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\Hotel;
 
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;

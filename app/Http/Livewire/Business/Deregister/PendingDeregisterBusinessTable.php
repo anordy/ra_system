@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Business\Deregister;
 use App\Models\BusinessDeregistration;
 use App\Models\BusinessStatus;
 use App\Models\WorkflowTask;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -12,6 +13,8 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class PendingDeregisterBusinessTable extends DataTableComponent
 {
+
+
     public function builder(): Builder
     {
         return WorkflowTask::with('pinstance', 'user')

@@ -7,6 +7,7 @@ use App\Models\MvrMotorVehicleRegistration;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatus;
 use App\Models\TaxAgentStatus;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;

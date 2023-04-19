@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Investigation;
 use App\Enum\TaxInvestigationStatus;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\WorkflowTask;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;

@@ -387,6 +387,9 @@ class PermissionSeeder extends Seeder
 
             # Motor Vehicle
             ['name' => 'motor-vehicle-view', 'sys_module_id' => 26],
+
+            # Tax Returns Vetting
+            ['name' => 'tax-returns-vetting-view', 'sys_module_id' => 27],
         ];
 
         foreach ($data as $row) {

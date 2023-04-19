@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Reports\Business;
 
 use App\Models\Business;
 use App\Traits\RegistrationReportTrait;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

@@ -37,7 +37,7 @@ class DeRegistrationRequest extends Component
             'description' => 'required|strip_tag',
             'date_received' => 'required|date',
             'agent_id' => 'required|numeric',
-            'inspection_report'=>'required|mimes:pdf|max:1024'
+            'inspection_report'=>'required|mimes:pdf|max:1024|max_file_name_length:100'
         ];
     }
 

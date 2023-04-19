@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Reports\Claims\Previews;
 
 use App\Traits\ClaimReportTrait;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

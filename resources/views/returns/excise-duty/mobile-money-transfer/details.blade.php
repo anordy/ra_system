@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-body">
-        <h6 class="text-uppercase mt-2 ml-2">Filled Return Details</h6>
+        <h6 class="text-uppercase mt-2 ml-2">Filled Return Details For {{ $return->taxtype->name }}</h6>
         <hr>
         <div class="row">
             <div class="col-md-12">
@@ -27,7 +27,7 @@
                         <th style="width: 20%"></th>
                         <th style="width: 30%"></th>
                         <th style="width: 25%"></th>
-                        <th style="width: 25%">{{ number_format($return->total_amount_due) }}</th>
+                        <th style="width: 25%">{{ number_format($return->total_amount_due, 2) }}</th>
                     </tr>
 
                     </tfoot>

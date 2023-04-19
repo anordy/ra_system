@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\ISIC4;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\CustomAlert;

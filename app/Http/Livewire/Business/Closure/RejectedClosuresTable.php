@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Business\Closure;
 
 use App\Models\BusinessStatus;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use App\Models\BusinessTempClosure;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,6 +12,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class RejectedClosuresTable extends DataTableComponent
 {
+
 
     public function configure(): void
     {

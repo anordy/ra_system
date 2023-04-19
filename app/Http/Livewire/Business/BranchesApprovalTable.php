@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Business;
 
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -10,6 +11,7 @@ use App\Models\WorkflowTask;
 
 class BranchesApprovalTable extends DataTableComponent
 {
+
 
     public function builder(): Builder
     {
@@ -36,11 +38,11 @@ class BranchesApprovalTable extends DataTableComponent
     {
         return [
             Column::make("Business Name", "pinstance.business_id")
-                ->label(fn ($row) => $row->pinstance->business->name ?? ''),
+                ->label(fn ($row) => $row->pinstance->business->name ?? '')->searchable(),
             Column::make("Business Type", "pinstance.business.business_type")
                 ->label(fn ($row) => strtoupper($row->pinstance->business->business_type ?? '')),
             Column::make("Branch Name", "pinstance.is_headquarter")
-                ->label(fn ($row) =>  $row->is_headquarter === 1 ? "Head Quarters" : ($row->pinstance->name ?? '')),
+                ->label(fn ($row) =>  $row->is_headquarter === 1 ? "Head Quarters" : ($row->pinstance->name ?? ''))->searchable(),
             Column::make("Region", "pinstance.region.name")
                 ->label(fn ($row) => $row->pinstance->region->name ?? '')
                 ->searchable(),

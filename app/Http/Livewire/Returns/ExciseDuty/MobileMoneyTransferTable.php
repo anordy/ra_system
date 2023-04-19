@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\ExciseDuty;
 
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;

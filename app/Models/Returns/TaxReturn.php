@@ -19,11 +19,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Extension\ExtensionRequest;
 use App\Models\Installment\InstallmentRequest;
 use App\Services\Verification\PayloadInterface;
+use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TaxReturn extends Model implements PayloadInterface
 {
-    use HasFactory;
+    use HasFactory, WorkflowTrait;
 
     protected $guarded = [];
 
@@ -131,6 +132,9 @@ class TaxReturn extends Model implements PayloadInterface
         return $this->morphOne(DebtPenalty::class, 'debt')->latest();
     }
 
+    public function editReturnHistories(){
+        return $this->hasMany(TaxReturnHistory::class, 'tax_return_id');
+    }
     public static function getPayloadColumns(): array
     {
         return [

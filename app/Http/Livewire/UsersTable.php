@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Traits\AuditTrait;
 use App\Traits\DualControlActivityTrait;
+use App\Traits\WithSearch;
 use Exception;
 use id;
 use Illuminate\Database\Eloquent\Builder;

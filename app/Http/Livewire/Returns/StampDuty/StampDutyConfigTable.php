@@ -3,12 +3,14 @@
 namespace App\Http\Livewire\Returns\StampDuty;
 
 use App\Models\Returns\StampDuty\StampDutyConfig;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class StampDutyConfigTable extends DataTableComponent
 {
+
     public function builder(): Builder
     {
         return StampDutyConfig::latest();

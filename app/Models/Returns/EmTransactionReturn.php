@@ -34,6 +34,10 @@ class EmTransactionReturn extends Model
         return $this->hasMany(EmTransactionReturnItem::class, 'return_id');
     }
 
+    public function items(){
+        return $this->hasMany(EmTransactionReturnItem::class, 'return_id');
+    }
+
     public function debt(){
         return $this->morphOne(Debt::class, 'debt');
     }

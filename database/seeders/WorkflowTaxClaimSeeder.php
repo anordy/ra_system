@@ -24,7 +24,7 @@ class WorkflowTaxClaimSeeder extends Seeder
         $supports =  ['App\Models\Claims\TaxClaim'];
         $places = [
             'initial' => [
-                'owner' => 'taxpayer',
+                'owner' => 'staff',
                 'operator_type' => 'user',
                 'operators' => []
             ],

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Relief;
 
 use App\Models\Relief\ReliefSponsor;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\CustomAlert;
@@ -12,7 +13,6 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ReliefSponsorTable extends DataTableComponent
 {
-
     use CustomAlert;
 
     public function builder(): Builder

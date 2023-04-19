@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Debt;
 
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use App\Enum\ReturnCategory;
 use Illuminate\Database\Eloquent\Builder;

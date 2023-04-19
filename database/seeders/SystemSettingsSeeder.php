@@ -19,23 +19,32 @@ class SystemSettingsSeeder extends Seeder
         $categories = [
             [
                 'name' => 'Password Policy',
+                'code' => 'password-policy',
                 'description' => 'is a set of rules that determine the complexity and strength of passwords used on our system. The goal of a password policy is to ensure that users choose strong, unique passwords that are difficult for unauthorized individuals to guess or crack.',
                 'is_approved' => 1
             ],
             [
                 'name' => 'Login Settings',
+                'code' => 'login-settings',
                 'description' => 'all settings related to login attempts, lockouts and others.',
                 'is_approved' => 1
             ],
             [
                 'name' => 'Certificate Settings',
+                'code' => 'certificate-settings',
                 'description' => 'all settings related Certificate variables.',
+                'is_approved' => 1
+            ],
+            [
+                'name' => 'Filing Deadline',
+                'code' => 'filing-deadline',
+                'description' => 'all settings related to filing deadline',
                 'is_approved' => 1
             ],
         ];
 
         foreach ($categories as $category) {
-            SystemSettingCategory::updateOrCreate($category);
+            SystemSettingCategory::updateOrCreate(['name' => $category['name']], $category);
         }
 
         $system_settings = [
@@ -82,6 +91,15 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'General Commissioner sign',
                 'value' => '/sign/commissioner.png',
                 'unit' => 'file',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 4,
+                'name' => 'Filing Deadline Time',
+                'code' => 'filing-deadline-time',
+                'description' => 'Filing Deadline Time',
+                'value' => '17:00',
+                'unit' => 'time',
                 'is_approved' => 1
             ],
         ];

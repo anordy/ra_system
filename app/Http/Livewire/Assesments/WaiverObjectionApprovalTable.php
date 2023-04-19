@@ -6,6 +6,7 @@ use App\Models\Waiver;
 use App\Models\WaiverObjection;
 use App\Models\WaiverObjectionStatus;
 use App\Models\WaiverStatus;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Livewire\WithFileUploads;

@@ -5,6 +5,7 @@ namespace App\Http\Livewire\LandLease;
 use App\Models\BusinessLocation;
 use App\Models\LandLease;
 use App\Models\Taxpayer;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

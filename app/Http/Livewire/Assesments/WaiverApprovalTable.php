@@ -6,6 +6,7 @@ use App\Enum\BillStatus;
 use App\Enum\PaymentStatus;
 use App\Models\Disputes\Dispute;
 use App\Models\WorkflowTask;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;

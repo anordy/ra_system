@@ -56,7 +56,11 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Return Category</span>
-                            <p class="my-1"><span class="badge badge-info">{{ $return->return_category }}</span></p>
+                            <p class="my-1"><span class="badge badge-info py-1 px-2 text-uppercase" style="border-radius: 1rem; font-size: 85%">{{ $return->return_category }}</span></p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase" >{{ __('Vetting Status') }}</span>
+                            <p class="my-1"><span class="badge badge-info py-1 px-2 text-uppercase" style="border-radius: 1rem; font-size: 85%">{{ $return->vetting_status }}</span></p>
                         </div>
                     </div>
                     <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
@@ -73,16 +77,23 @@
                         @foreach ($return->items as $item)
                             <tr>
                                 <td>{{ $item->config->name }}</td>
-                                <td>{{ number_format($item->value, 2) }}</td>
+                                @if($item->config->code == 'WITHH')
+                                    <td class="bg-secondary"></td>
+                                @else
+                                    <td>{{ number_format($item->value, 2) }}</td>
+                                @endif
                                 @if($item->config->rate_applicable)
                                     <td>
-                                        {{ $item->config->rate ?? $item->config->rate_usd }}
-                                        {{ $item->config->rate_type === 'percentage' ? '%' : ''}}
+                                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
                                     </td>
                                 @else
                                     <td class="bg-secondary"></td>
                                 @endif
-                                <td>{{ number_format($item->vat, 2) }}</td>
+                                @if($item->config->is_summable)
+                                    <td>{{ number_format($item->vat, 2) }}</td>
+                                @else
+                                    <td class="bg-secondary"></td>
+                                @endif
                             </tr>
                         @endforeach
                         </tbody>
@@ -91,7 +102,7 @@
                             <th style="width: 20%">Total</th>
                             <th style="width: 30%"></th>
                             <th style="width: 25%"></th>
-                            <th style="width: 25%">{{ number_format($return->total_amount_due) }}</th>
+                            <th style="width: 25%">{{ number_format($return->total_amount_due, 2) }}</th>
                         </tr>
                         </tfoot>
                     </table>

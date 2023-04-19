@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Traits\DualControlActivityTrait;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns;
 
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -9,6 +10,7 @@ use App\Models\TaxType;
 
 class ReturnTaxTypesTable extends DataTableComponent
 {
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');

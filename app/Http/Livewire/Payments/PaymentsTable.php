@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Payments;
 
 use App\Enum\PaymentStatus;
 use App\Models\ZmBill;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

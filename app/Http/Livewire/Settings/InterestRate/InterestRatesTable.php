@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Settings\InterestRate;
 
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
+use App\Traits\WithSearch;
 use Exception;
 use App\Models\InterestRate;
 use Illuminate\Support\Facades\Auth;

@@ -149,7 +149,7 @@
             <div class="card-body">
                     @foreach ($selectedTaxTypes as $key => $value)
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-label">Tax Type</label>
                                 <select
@@ -165,7 +165,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-label">Currency</label>
                                 <select
@@ -263,14 +263,20 @@
                             </div>
                         @endif
 
-                        <div class="d-flex align-items-center">
-                            @if ($key > 0)
-                                <button class="btn btn-danger btn-sm"
-                                    wire:click.prevent="removeTaxType({{ $key }})">
-                                    Remove
-                                </button>
-                            @endif
-                        </div>
+                        @if ($key > 0)
+                            <div class="d-flex align-items-center">
+                                <div class="form-group">
+                                    <label class="form-label">Action</label>
+                                    <div>
+                                        <button class="btn btn-danger btn-sm"
+                                                wire:click.prevent="removeTaxType({{ $key }})">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
                     @endforeach
             </div>

@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use App\Traits\WithSearch;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 

@@ -3,12 +3,14 @@
 namespace App\Http\Livewire\Relief;
 
 use App\Models\Relief\ReliefItems;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ReliefItemsTable extends DataTableComponent
 {
+
     public $reliefId;
 
     public function mount($id)

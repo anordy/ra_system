@@ -4,6 +4,7 @@ namespace App\Http\Livewire\RoadInspectionOffence;
 
 use App\Models\RioRegister;
 use App\Models\Taxpayer;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;

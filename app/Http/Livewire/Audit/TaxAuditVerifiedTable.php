@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Audit;
 
 use App\Enum\TaxAuditStatus;
 use App\Models\TaxAudit\TaxAudit;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;

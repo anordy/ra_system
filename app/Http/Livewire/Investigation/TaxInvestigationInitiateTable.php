@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Investigation;
 use App\Enum\TaxInvestigationStatus;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Investigation\TaxInvestigation;
+use App\Traits\WithSearch;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;

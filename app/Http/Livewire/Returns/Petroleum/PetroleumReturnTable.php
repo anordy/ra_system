@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Returns\Petroleum;
 
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Traits\ReturnFilterTrait;
+use App\Traits\WithSearch;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;

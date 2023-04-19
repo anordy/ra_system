@@ -52,7 +52,7 @@ class UploadInspectionReport extends Component
     protected function rules()
     {
         return [
-            'inspection_report'=>'required|mimes:pdf|max:1024',
+            'inspection_report'=>'required|mimes:pdf|max:1024|max_file_name_length:100',
             'inspection_date'=>'required|date|before_or_equal:today',
             'mileage'=>'required|numeric',
         ];

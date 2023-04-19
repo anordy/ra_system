@@ -7,6 +7,7 @@ use App\Models\LandLease;
 use App\Models\LeasePayment;
 use App\Models\Taxpayer;
 use App\Traits\LeasePaymentReportTrait;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Builder;

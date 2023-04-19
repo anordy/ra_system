@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Business;
 
 use App\Models\Returns\TaxReturn;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

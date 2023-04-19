@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\BfoExciseDuty;
 
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

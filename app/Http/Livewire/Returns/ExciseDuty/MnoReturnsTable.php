@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Returns\ExciseDuty;
 
 use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Traits\ReturnFilterTrait;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

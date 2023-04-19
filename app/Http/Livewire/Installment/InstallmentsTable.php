@@ -6,6 +6,7 @@ use App\Enum\InstallmentStatus;
 use App\Models\Business;
 use App\Models\Installment\Installment;
 use App\Models\Installment\InstallmentRequest;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\CustomAlert;

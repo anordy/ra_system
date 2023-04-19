@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Audit;
 
 use App\Enum\TaxAuditStatus;
 use App\Models\TaxAudit\TaxAudit;
+use App\Traits\WithSearch;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -14,6 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxAuditInitiateTable extends DataTableComponent
 {
+
 
     use CustomAlert, WorkflowProcesssingTrait;
 
