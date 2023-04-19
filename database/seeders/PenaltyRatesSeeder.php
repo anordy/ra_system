@@ -15,7 +15,8 @@ class PenaltyRatesSeeder extends Seeder
      */
     public function run()
     {
-        foreach (FinancialYear::all('id') as $financialYear) {
+
+        foreach (FinancialYear::where('code', 2023)->get() as $financialYear) {
             
             $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::LATE_FILLING, 'name' => PenaltyRate::LATE_FILLING_NAME, 'rate' => 0.1, 'is_approved' => 1];
             $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::LATE_PAYMENT_BEFORE, 'name' => PenaltyRate::LATE_PAYMENT_BEFORE_NAME, 'rate' => 0.2, 'is_approved' => 1];

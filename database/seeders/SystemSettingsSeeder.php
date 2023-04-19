@@ -96,7 +96,7 @@ class SystemSettingsSeeder extends Seeder
             [
                 'system_setting_category_id' => 4,
                 'name' => 'Filing Deadline Time',
-                'code' => 'filing-deadline-time',
+                'code' => 'filing-deadline',
                 'description' => 'Filing Deadline Time',
                 'value' => '17:00',
                 'unit' => 'time',

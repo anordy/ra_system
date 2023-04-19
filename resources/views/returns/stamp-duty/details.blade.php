@@ -17,9 +17,17 @@
                     <td>{{ number_format($item->value, 2) }}</td>
                 @endif
                 @if($item->config->rate_applicable)
-                    <td>
-                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
-                    </td>
+                <td>
+                    @if ($item->config->rate_type == 'percentage')
+                        {{ $item->config->rate }} %
+                    @elseif ($item->config->rate_type == 'fixed')
+                        @if ($item->config->currency == 'TZS')
+                            {{ $item->config->rate }} {{ $item->config->currency }}
+                        @elseif ($item->config->currency == 'USD')
+                        {{ $item->config->rate_usd }} {{ $item->config->currency }}
+                        @endif
+                    @endif
+                </td>
                 @else
                     <td class="bg-secondary"></td>
                 @endif

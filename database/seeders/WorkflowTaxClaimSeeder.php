@@ -92,7 +92,9 @@ class WorkflowTaxClaimSeeder extends Seeder
             ],
         ];
 
-        Workflow::updateOrCreate([
+        Workflow::updateOrCreate(
+            ['code' => 'TAX_CLAIM_VERIFICATION'],
+            [
             'code' => 'TAX_CLAIM_VERIFICATION',
             'summary' => 'Tax claim verification.',
             'name' => $name,
