@@ -7,7 +7,7 @@
 @section('content')
     <div class="card">
         <div class="card-header bg-white text-uppercase font-weight-bold">
-            ZRB Bank Account Management
+            ZRA Bank Account Management
             <div class="card-tools">
                 @can('zrb-bank-account-add')
                     @if (approvalLevel(Auth::user()->level_id, 'Maker'))

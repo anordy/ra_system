@@ -38,7 +38,7 @@ class SendToCorrectionReturnSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->tax_return->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Your {$this->tax_return->taxtype->name} for filing month of {$this->tax_return->financialMonth->name} / {$this->tax_return->financialMonth->year->code} for {$this->tax_return->business->name} {$this->tax_return->location->name} have been rejected for correction. Please login to make required corrections";
+        $customer_message = "Your {$this->tax_return->taxtype->name} return for filing month of {$this->tax_return->financialMonth->name} / {$this->tax_return->financialMonth->year->code} for {$this->tax_return->business->name} {$this->tax_return->location->name} has not been approved, pending for corrections. Please login to make necessary corrections";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }
