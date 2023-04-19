@@ -14,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class TaxInvestigationAssessmentTable extends DataTableComponent
 {
 
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public $model = TaxInvestigation::class;
 

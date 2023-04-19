@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ISIC4Table extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     protected $model = ISIC4::class;
     public function configure(): void

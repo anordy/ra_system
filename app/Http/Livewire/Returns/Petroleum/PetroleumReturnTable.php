@@ -13,7 +13,7 @@ use App\Traits\CustomAlert;
 
 class PetroleumReturnTable extends DataTableComponent
 {
-    use CustomAlert, ReturnFilterTrait, WithSearch;
+    use CustomAlert, ReturnFilterTrait;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
 

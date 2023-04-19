@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ReliefReportTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public $dates = [];
     public $parameters = [];

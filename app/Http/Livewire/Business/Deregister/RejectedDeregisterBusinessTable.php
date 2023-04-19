@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class RejectedDeregisterBusinessTable extends DataTableComponent
 {
-    use WithSearch;
+
 
     public function configure(): void
     {

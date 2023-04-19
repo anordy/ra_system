@@ -11,7 +11,7 @@ use App\Models\BusinessLocation;
 
 class BranchesTable extends DataTableComponent
 {
-    use WithSearch;
+
 
     protected $model = BusinessLocation::class;
     public $status;

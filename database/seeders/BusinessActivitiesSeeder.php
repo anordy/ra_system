@@ -24,5 +24,6 @@ class BusinessActivitiesSeeder extends Seeder
         BusinessActivity::updateOrCreate(['name' => 'Accommodation & Restaurant', 'business_type' => BusinessType::HOTEL]);
         BusinessActivity::updateOrCreate(['name' => 'Restaurant & Bar', 'business_type' => BusinessType::HOTEL]);
         BusinessActivity::updateOrCreate(['name' => 'Accommodation, Restaurant & Bar', 'business_type' => BusinessType::HOTEL]);
+        BusinessActivity::updateOrCreate(['name' => 'Other Services', 'business_type' => BusinessType::HOTEL]);
     }
 }

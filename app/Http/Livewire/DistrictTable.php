@@ -16,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class DistrictTable extends DataTableComponent
 {
-    use CustomAlert, DualControlActivityTrait, WithSearch;
+    use CustomAlert, DualControlActivityTrait;
 
     protected $model = District::class;
     public function configure(): void

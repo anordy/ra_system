@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class RegistrationsProgressApprovalTable extends DataTableComponent
 {
 
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public function builder(): Builder
     {

@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxClearanceRequestTable extends DataTableComponent
 {
-    use WithSearch;
+
     public $requested = false;
     public $rejected = false;
     public $approved = false;

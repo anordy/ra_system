@@ -24,7 +24,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class UsersTable extends DataTableComponent
 {
-    use CustomAlert, AuditTrait, ThrottlesLogins, DualControlActivityTrait, WithSearch;
+    use CustomAlert, AuditTrait, ThrottlesLogins, DualControlActivityTrait;
 
     protected $model = User::class;
     public function configure(): void

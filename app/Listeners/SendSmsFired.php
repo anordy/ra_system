@@ -2,54 +2,55 @@
 
 namespace App\Listeners;
 
+use App\Models\KYC;
 use App\Events\SendSms;
+use App\Models\UserOtp;
+use App\Jobs\SendOTPSMS;
+use App\Models\Business;
+use App\Models\Taxpayer;
+use App\Models\WaResponsiblePerson;
+use App\Jobs\SendKYCRegistrationSMS;
 use App\Jobs\Audit\SendSmsToTaxPayer;
-use App\Jobs\Business\Branch\SendBranchApprovalSMS;
-use App\Jobs\Business\Branch\SendBranchCorrectionSMS;
-use App\Jobs\Business\SendBusinessApprovedSMS;
-use App\Jobs\Business\SendBusinessClosureApprovedSMS;
-use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
-use App\Jobs\Business\SendBusinessClosureRejectedSMS;
-use App\Jobs\Business\SendBusinessCorrectionSMS;
-use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
-use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
-use App\Jobs\Business\SendBusinessDeregisterRejectedSMS;
-use App\Jobs\Business\Taxtype\SendTaxTypeSMS;
-use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
-use App\Jobs\Business\Updates\SendBusinessUpdateApprovalSMS;
-use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionSMS;
-use App\Jobs\Business\Updates\SendBusinessUpdateRejectedSMS;
-use App\Jobs\Configuration\SendExchangeRateSMS;
-use App\Jobs\Configuration\SendFinancialMonthSMS;
-use App\Jobs\Configuration\SendFinancialYearSMS;
-use App\Jobs\Configuration\SendInterestRateSMS;
-use App\Jobs\Configuration\SendPenaltyRateSMS;
 use App\Jobs\Debt\SendDebtBalanceSMS;
-use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalSMS;
-use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedSMS;
-use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
-use App\Jobs\DualControl\User\UserInformationUpdateSMS;
+use App\Jobs\SendTaxAgentApprovalSMS;
+use App\Jobs\Taxpayer\SendKycRejectSMS;
+use App\Jobs\Vetting\SendVettedReturnSMS;
+use App\Jobs\Taxpayer\SendRegistrationSMS;
+use App\Jobs\Branch\SendBranchRegisteredSMS;
+use App\Jobs\Business\Taxtype\SendTaxTypeSMS;
+use App\Jobs\TaxClearance\RequestFeedbackJob;
+use App\Jobs\Business\SendBusinessApprovedSMS;
+use App\Jobs\Configuration\SendPenaltyRateSMS;
+use App\Jobs\Configuration\SendExchangeRateSMS;
+use App\Jobs\Configuration\SendInterestRateSMS;
+use App\Jobs\Vetting\SendToCorrectionReturnSMS;
+use App\Jobs\Business\SendBusinessCorrectionSMS;
+use App\Jobs\Configuration\SendFinancialYearSMS;
 use App\Jobs\Extension\SendExtensionApprovedSMS;
 use App\Jobs\Extension\SendExtensionRejectedSMS;
+use App\Jobs\Configuration\SendFinancialMonthSMS;
+use App\Jobs\SendWithholdingAgentRegistrationSMS;
+use App\Jobs\Business\Branch\SendBranchApprovalSMS;
+use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalSMS;
+use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedSMS;
 use App\Jobs\Installment\SendInstallmentApprovedSMS;
 use App\Jobs\Installment\SendInstallmentRejectedSMS;
-use App\Jobs\SendKYCRegistrationSMS;
-use App\Jobs\SendOTPSMS;
-use App\Jobs\SendTaxAgentApprovalSMS;
-use App\Jobs\SendWithholdingAgentRegistrationSMS;
+use App\Jobs\Business\Branch\SendBranchCorrectionSMS;
+use App\Jobs\Business\SendBusinessClosureApprovedSMS;
+use App\Jobs\Business\SendBusinessClosureRejectedSMS;
 use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackSMS;
-use App\Jobs\TaxClearance\RequestFeedbackJob;
-use App\Jobs\Taxpayer\SendKycRejectSMS;
-use App\Jobs\Taxpayer\SendRegistrationSMS;
+use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
+use App\Jobs\DualControl\User\UserInformationUpdateSMS;
 use App\Jobs\Taxpayer\TaxpayerAmendmentNotificationSMS;
+use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
+use App\Jobs\Business\SendBusinessDeregisterRejectedSMS;
+use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateRejectedSMS;
+use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionSMS;
 use App\Jobs\User\SendRegistrationSMS as UserSendRegistrationSMS;
-use App\Jobs\Vetting\SendToCorrectionReturnSMS;
-use App\Jobs\Vetting\SendVettedReturnSMS;
-use App\Models\Business;
-use App\Models\KYC;
-use App\Models\Taxpayer;
-use App\Models\UserOtp;
-use App\Models\WaResponsiblePerson;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
 
 class SendSmsFired
 {
@@ -208,7 +209,9 @@ class SendSmsFired
         } else if ($event->service === SendVettedReturnSMS::SERVICE){
             SendVettedReturnSMS::dispatch($event->tokenId);
         } else if ($event->service === SendToCorrectionReturnSMS::SERVICE){
-            SendVettedReturnSMS::dispatch($event->tokenId);
+            SendToCorrectionReturnSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendBranchRegisteredSMS::SERVICE){
+            SendBranchRegisteredSMS::dispatch($event->tokenId);
         }
     }
 }

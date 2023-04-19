@@ -12,7 +12,7 @@ use App\Models\TaPaymentConfiguration;
 
 class FinancialYearsTable extends DataTableComponent
 {
-    use WithSearch;
+
 
     public function configure(): void
     {

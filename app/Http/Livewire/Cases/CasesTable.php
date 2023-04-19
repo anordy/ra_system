@@ -14,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class CasesTable extends DataTableComponent
 {
-	use CustomAlert, WithSearch;
+	use CustomAlert;
 
     public function builder(): Builder
 	{

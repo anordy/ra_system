@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Gate;
 
 class VettingApprovalTable extends DataTableComponent
 {
-    use  ReturnFilterTrait, WithSearch;
+    use  ReturnFilterTrait;
 
     protected $model     = TaxReturn::class;
 

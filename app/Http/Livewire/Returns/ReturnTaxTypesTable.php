@@ -10,7 +10,7 @@ use App\Models\TaxType;
 
 class ReturnTaxTypesTable extends DataTableComponent
 {
-    use WithSearch;
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');

@@ -144,13 +144,30 @@
                         <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
                             <div class="card">
                                 <div class="card-body">
-                                        <div class="d-flex justify-content-end">
-                                            <div class="pb-2" style="width: 160px">
-                                                <label>Exemption Method Used</label>
-                                                <input readonly class="form-control" type="text" value="{{ $return->method_used ?? 'No Method Used' }}">
-                                            </div>
 
+                                    <div class="d-flex justify-content-between">
+
+                                        @if(!empty($return->vatWithheld))
+                                            <div>
+                                                <label>{{ __('Withheld Attachment') }}</label>
+                                                <a class="file-item" target="_blank"
+                                                   href="{{ route('returns.vat-return.withheld-file', [encrypt($return->id), 'withheld']) }}">
+                                                    <i class="bi bi-file-earmark-pdf-fill px-2"
+                                                       style="font-size: x-large"></i>
+                                                    <div style="font-weight: 500;" class="ml-1">
+                                                        View Attachment
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        @endif
+
+                                        <div class="pb-2" style="width: 160px">
+                                            <label>{{ __('Exemption Method Used') }}</label>
+                                            <input readonly class="form-control" type="text"
+                                                   value="{{ $return->method_used ?? 'No Method Used' }}">
                                         </div>
+
+                                    </div>
                                     <table class="table table-bordered ">
                                         <thead>
                                         <th style="width: 40%">Item Name</th>

@@ -16,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class RolesTable extends DataTableComponent
 {
-    use CustomAlert, DualControlActivityTrait, WithSearch;
+    use CustomAlert, DualControlActivityTrait;
 
     protected $model = Role::class;
     public function configure(): void

@@ -15,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxClearanceRequestApprovalTable extends DataTableComponent
 {
-    use WithSearch;
+
     public function mount()
     {
         if (!Gate::allows('tax-clearance-view')) {

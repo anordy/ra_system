@@ -14,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 class ReturnDebtsTable extends DataTableComponent
 {
 
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public function builder(): Builder
     {

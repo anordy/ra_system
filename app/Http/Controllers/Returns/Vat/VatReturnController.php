@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Returns\Vat;
 
 use App\Http\Controllers\Controller;
 use App\Models\Returns\Vat\VatReturn;
+use App\Models\Returns\Vat\VatWithheldAttachment;
 use App\Traits\PaymentsTrait;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class VatReturnController extends Controller
 {
@@ -43,5 +45,16 @@ class VatReturnController extends Controller
     public function configCreate()
     {
         return view('returns.vat_returns.config.create');
+    }
+
+
+    public function getFile($id, $type){
+        $withheld = VatWithheldAttachment::where('vat_return_id',decrypt($id))->first();
+
+        if ($type == 'withheld') {
+            return Storage::disk('local-admin')->response($withheld->withheld_file);
+        }
+
+        return abort(404);
     }
 }

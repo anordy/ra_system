@@ -354,6 +354,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('stamp-duty.')->group(function () {
             Route::get('/stamp-duty', [StampDutyReturnController::class, 'index'])->name('index');
             Route::get('/stamp-duty/{returnId}', [StampDutyReturnController::class, 'show'])->name('show');
+            Route::get('/stamp-duty/withheld-certificate/{return_id}', [StampDutyReturnController::class, 'getWithheldCertificate'])->name('withheld-certificate');
         });
 
         Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
@@ -364,6 +365,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('vat-return.')->prefix('vat-return')->group(function () {
             Route::get('/index', [VatReturnController::class, 'index'])->name('index');
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
+            Route::get('/withheld-file/{id}/{type}', [VatReturnController::class, 'getFile'])->name('withheld-file');
         });
 
         Route::name('bfo-excise-duty.')->prefix('bfo-excise-duty')->group(function () {

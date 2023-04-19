@@ -14,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class DisputePreviewTable extends DataTableComponent
 {
-    use CustomAlert, DisputeReportTrait, WithSearch;
+    use CustomAlert, DisputeReportTrait;
 
     public $parameters;
 

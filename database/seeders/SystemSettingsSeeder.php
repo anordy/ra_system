@@ -44,7 +44,7 @@ class SystemSettingsSeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            SystemSettingCategory::updateOrCreate($category);
+            SystemSettingCategory::updateOrCreate(['name' => $category['name']], $category);
         }
 
         $system_settings = [

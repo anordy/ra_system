@@ -15,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxAuditInitiateTable extends DataTableComponent
 {
-    use WithSearch;
+
 
     use CustomAlert, WorkflowProcesssingTrait;
 

@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class WaiverApprovalProgressTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
     public $category;
 
         public function mount($category)

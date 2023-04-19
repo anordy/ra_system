@@ -15,7 +15,7 @@ class AddColumnCodeToSystemSettingCategories extends Migration
     {
         Schema::table('system_setting_categories', function (Blueprint $table) {
             //
-            $table->string('code')->after('name')->unique();
+            $table->string('code')->after('name')->unique()->nullable();
         });
     }
 

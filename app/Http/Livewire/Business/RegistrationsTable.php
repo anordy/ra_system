@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class RegistrationsTable extends DataTableComponent
 {
 
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public $rejected = false;
     public $pending = false;

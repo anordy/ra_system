@@ -16,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class CountryTable extends DataTableComponent
 {
-    use CustomAlert, DualControlActivityTrait, WithSearch;
+    use CustomAlert, DualControlActivityTrait;
 
     protected $model = Country::class;
     public function configure(): void

@@ -29,7 +29,7 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class PendingTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
 //    protected $model = RenewTaxAgentRequest::class;
 

@@ -10,7 +10,7 @@ use App\Models\TaPaymentConfiguration;
 
 class FeeConfigurationTable extends DataTableComponent
 {
-    use WithSearch;
+
 //    protected $model = TaPaymentConfiguration::class;
 
     public function configure(): void

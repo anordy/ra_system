@@ -17,7 +17,7 @@ use App\Models\TaxAgent;
 
 class PlateNumbersTable extends DataTableComponent
 {
-	use CustomAlert, WithSearch;
+	use CustomAlert;
 
     public $plate_number_status_id;
 

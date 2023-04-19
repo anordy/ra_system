@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class AssessmentDebtReportPreviewTable extends DataTableComponent
 {
-    use CustomAlert, DebtReportTrait, WithSearch;
+    use CustomAlert, DebtReportTrait;
 
     public $parameters;
 
