@@ -86,6 +86,7 @@ class SystemSettingEditModal extends Component
         $object = $this->categories->first(function ($item) use ($property) {
             return $item->id == $property;
         });
+        $object = SystemSettingCategory::find($this->systemSetting->system_setting_category_id);
         $this->settingCategory = $object->code;
     }
 
