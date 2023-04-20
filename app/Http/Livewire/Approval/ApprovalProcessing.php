@@ -59,6 +59,8 @@ class ApprovalProcessing extends Component
     public $shares;
     public $sub_vat_id;
     public $vat_id;
+    public $defaultSubVatOptions;
+    public $minimumSearchableCharacters = 2;
 
     public function mount($modelName, $modelId)
     {
@@ -92,7 +94,6 @@ class ApprovalProcessing extends Component
         $this->vat_id = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
 
         foreach ($this->subject->taxTypes as $value) {
-            $this->vat_id = $value->id == TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
             $subVat = $value->pivot->sub_vat_id ? SubVat::where('id', $value->pivot->sub_vat_id)->where('is_approved', 1)->firstOrFail('name'): null;
             $this->selectedTaxTypes[] = [
                 'currency'    => $value->pivot->currency ?? '',
@@ -182,6 +183,7 @@ class ApprovalProcessing extends Component
 
             if (in_array($vatId, $this->Ids)) {
                 $this->subVatOptions  = SubVat::select('id', 'name')->where('is_approved', 1)->get();
+                $this->defaultSubVatOptions = $this->subVatOptions;
             }
         }
     }
@@ -199,7 +201,11 @@ class ApprovalProcessing extends Component
 
     public function subCategorySearchUpdate($key, $value){
         $this->selectedTaxTypes[$key]['show_hide_options'] = true;
-        $this->subVatOptions  = SubVat::select('id', 'name')->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($value) . '%')->where('is_approved', 1)->get();
+        if (strlen($value) >= $this->minimumSearchableCharacters){
+            $this->subVatOptions  = SubVat::select('id', 'name')->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($value) . '%')->where('is_approved', 1)->get();
+        } else{
+            $this->subVatOptions  = $this->defaultSubVatOptions;
+        }
     }
 
     public function selectSubVat($key, $subVat){

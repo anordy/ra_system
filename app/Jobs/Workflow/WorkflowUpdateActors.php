@@ -49,7 +49,7 @@ class WorkflowUpdateActors implements ShouldQueue
 
         if (count($place) > 0) {
             $tasks = WorkflowTask::where('workflow_id', $workflow->id)
-                ->where('from_place', $this->place)
+                ->where('to_place', $this->place)
                 ->where('status', 'running')->get();
 
             $operators = [];
