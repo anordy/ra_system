@@ -50,7 +50,7 @@ class Create extends Component
         try {
             if ($value['value'] == "")
             {
-                $this->customAlert('warning', 'Please select currency for to upgrade to new tax type!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+                $this->customAlert('warning', 'Please select currency for to upgrade to new tax type!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
                 return redirect()->back();
 
             }
