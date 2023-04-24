@@ -102,7 +102,7 @@ class AgentsTable extends DataTableComponent
             return redirect()->to(route('mvr.agent'));
         } catch (\Exception $e) {
             report($e);
-            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
