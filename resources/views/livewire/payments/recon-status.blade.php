@@ -17,7 +17,7 @@
             <p class="my-1">{{ $recon->created_at }}</p>
         </div>
         <div class="col-md-3 mb-3">
-            <span class="font-weight-bold text-uppercase">GEPG Status</span>
+            <span class="font-weight-bold text-uppercase">ZanMalipo Status</span>
             <p class="my-1">
                 @if ($recon->ReconcStsCode)
                     {{ $this->getGepgStatus($recon->ReconcStsCode) }}

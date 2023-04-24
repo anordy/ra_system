@@ -91,7 +91,7 @@
                     </div>
                 @endif
                 <div class="col-md-12 mt-3">
-                    <span class="font-weight-bold text-uppercase">Gepg Status:</span>
+                    <span class="font-weight-bold text-uppercase">ZanMalipo Status:</span>
                     <span>
                         {{ $this->getGepgStatus($bill->zan_trx_sts_code) }}
                     </span>
