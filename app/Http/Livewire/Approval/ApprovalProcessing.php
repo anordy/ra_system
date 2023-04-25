@@ -60,7 +60,7 @@ class ApprovalProcessing extends Component
     public $sub_vat_id;
     public $vat_id;
     public $defaultSubVatOptions;
-    public $minimumSearchableCharacters = 2;
+    public $minimumSearchableCharacters = 3;
 
     public function mount($modelName, $modelId)
     {
@@ -202,17 +202,28 @@ class ApprovalProcessing extends Component
     public function subCategorySearchUpdate($key, $value){
         $this->selectedTaxTypes[$key]['show_hide_options'] = true;
         if (strlen($value) >= $this->minimumSearchableCharacters){
-            $this->subVatOptions  = SubVat::select('id', 'name')->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($value) . '%')->where('is_approved', 1)->get();
+            $this->subVatOptions  = SubVat::select('id', 'name')->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$value}%"])->get();
         } else{
             $this->subVatOptions  = $this->defaultSubVatOptions;
         }
     }
 
+    public function checkArrayKey($array, $column, $value, $givenKey) {
+        $keys = array_keys(array_column($array, $column), $value);
+        $checkedKey = (count($keys) > 0) ? $keys[0] : false;
+        return $checkedKey == $givenKey;
+    }
+
     public function selectSubVat($key, $subVat){
+        $sameKey = $this->checkArrayKey($this->selectedTaxTypes, 'sub_vat_id', $subVat['id'], $key);
+        if (in_array($subVat['id'], array_column($this->selectedTaxTypes, 'sub_vat_id')) && !$sameKey){
+            $this->alert('warning', 'Sub Vat is already selected');
+            return;
+        }
+
         $this->selectedTaxTypes[$key]['sub_vat_id'] = $subVat['id'];
         $this->selectedTaxTypes[$key]['sub_vat_name'] = $subVat['name'];
         $this->selectedTaxTypes[$key]['show_hide_options'] = false;
-
     }
 
     public function removeTaxType($index)
