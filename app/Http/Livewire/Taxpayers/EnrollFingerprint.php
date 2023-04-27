@@ -44,6 +44,14 @@ class EnrollFingerprint extends Component
             $this->userVerified = false;
             $this->verifyingUser = true;
         }
+
+        $count = Biometric::where('reference_no', $this->kyc->id)
+            ->where('template', '!=', null)
+            ->count();
+
+        if ($count){
+            $this->selectedStep = 'biometric';
+        }
     }
 
     public function enrolled($hand, $finger)
