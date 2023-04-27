@@ -15,7 +15,7 @@ class QRCodeCheckController extends Controller
 {
     public function withholdingAgentCertificate($id)
     {
-        $whagent = WithholdingAgent::find(decrypt($id));
+        $whagent = WithholdingAgent::find(base64_decode($id));
 
         if (!$whagent) {
             return view('qr-check.error');
@@ -32,7 +32,8 @@ class QRCodeCheckController extends Controller
     
     public function businessCertificate($locationId, $taxTypeId)
     {
-        $locationId = decrypt($locationId);
+        $locationId = base64_decode($locationId);
+        $taxTypeId = base64_decode($taxTypeId);
         $location   = BusinessLocation::with('business', 'business.taxpayer')->find($locationId);
         $tax        = TaxType::find($taxTypeId);
         if (!$location || !$tax) {
@@ -52,7 +53,7 @@ class QRCodeCheckController extends Controller
     
     public function taxAgentsCertificate($id)
     {
-        $id       = decrypt($id);
+        $id       = base64_decode($id);
         $taxagent = TaxAgent::with('taxpayer')->find($id);
         if (!$taxagent) {
             return view('qr-check.error');
@@ -84,7 +85,7 @@ class QRCodeCheckController extends Controller
 
     public function invoice($id)
     {
-        $bill = ZmBill::with('user')->find(decrypt($id));
+        $bill = ZmBill::with('user')->find(base64_decode($id));
         $name = $bill->user->full_name ?? '';
 
         if (!$bill) {
@@ -106,7 +107,7 @@ class QRCodeCheckController extends Controller
 
     public function transfer($billId)
     {
-        $bill = ZmBill::find(decrypt($billId));
+        $bill = ZmBill::find(base64_decode($billId));
         $name = $bill->payer_name;
 
         if (!$bill) {
