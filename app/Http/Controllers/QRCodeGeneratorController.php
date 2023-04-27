@@ -22,7 +22,7 @@ class QRCodeGeneratorController extends Controller
         $bill = ZmBill::with('user')->findOrFail($id);
         $name = $bill->user->full_name ?? '';
         
-        $url = env('taxpayer_url') . route('qrcode-check.invoice',  base64_encode(strval($id)), 0);
+        $url = env('TAXPAYER_URL') . route('qrcode-check.invoice',  base64_encode(strval($id)), 0);
         
         $result = Builder::create()
         ->writer(new PngWriter())
@@ -57,7 +57,7 @@ class QRCodeGeneratorController extends Controller
         $bankAccount = ZrbBankAccount::findOrFail(decrypt($bankAccountId));
         $name = $bill->payer_name;
 
-        $url = env('taxpayer_url') . route('qrcode-check.transfer',  base64_encode(strval($billId)), 0);
+        $url = env('TAXPAYER_URL') . route('qrcode-check.transfer',  base64_encode(strval($billId)), 0);
 
         $result = Builder::create()
             ->writer(new PngWriter())

@@ -74,7 +74,7 @@ class BusinessFileController extends Controller
         
         $certificateNumber = $this->generateCertificateNumber($location, $tax->prefix);
         
-        $url = env('taxpayer_url') . route('qrcode-check.business.certificate', ['locationId' =>  base64_encode(strval($locationId)), 'taxTypeId' =>  base64_encode(strval($taxTypeId))], 0);
+        $url = env('TAXPAYER_URL') . route('qrcode-check.business.certificate', ['locationId' =>  base64_encode(strval($locationId)), 'taxTypeId' =>  base64_encode(strval($taxTypeId))], 0);
         
         $result = Builder::create()
             ->writer(new PngWriter())

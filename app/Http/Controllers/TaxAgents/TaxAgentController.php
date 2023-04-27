@@ -76,7 +76,7 @@ class TaxAgentController extends Controller
         $superStart = $this->sup($start);
         $superEnd = $this->sup($end);
 
-        $url = env('taxpayer_url') . route('qrcode-check.taxagents.certificate',  base64_encode(strval($id)), 0);
+        $url = env('TAXPAYER_URL') . route('qrcode-check.taxagents.certificate',  base64_encode(strval($id)), 0);
 
         $result = Builder::create()
             ->writer(new PngWriter())
