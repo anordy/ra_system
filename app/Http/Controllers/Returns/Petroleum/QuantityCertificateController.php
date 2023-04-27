@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Returns\Petroleum;
 
+use Illuminate\Support\Facades\Auth;
 use PDF;
 use App\Http\Controllers\Controller;
 use App\Models\Returns\Petroleum\QuantityCertificate;
@@ -35,6 +36,10 @@ class QuantityCertificateController extends Controller
 
         if(($certificate->status ?? '') == 'filled'){
             abort(403);
+        }
+
+        if ($certificate->created_by != Auth::id()){
+            return back()->with('error', __('You do not have permission to edit this certificate'));
         }
 
         return view('returns.petroleum.quantity_certificate.edit', compact('id'));

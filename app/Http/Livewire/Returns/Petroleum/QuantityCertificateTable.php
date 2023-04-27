@@ -27,13 +27,13 @@ class QuantityCertificateTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+        $this->additionalSelects = ['created_by'];
     }
 
     public function builder(): Builder
     {
-        return QuantityCertificate::query()->with('business')->where('created_by', auth()->user()->id);
+        return QuantityCertificate::query()->with('business');
     }
-
 
     public function columns(): array
     {

@@ -24,7 +24,7 @@ class ChangePasswordController extends Controller
 
 //        todo: security threat, better put this in middleware
         $request->validate([
-            'password' => 'required|confirmed|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&]/',
+            'password' => 'required|confirmed|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&.+=()<>`{}~|:;-]/',
             'password_confirmation' => 'required',
         ], [
             'password_confirmation.confirmed' => 'password and password confimation must match'
