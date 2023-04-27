@@ -7,7 +7,7 @@
                 <p class="my-1">{{ $bill->control_number ?? '' }}</p>
             </div>
             <div class="col-md-4">
-                <span class="font-weight-bold text-uppercase">GEPG Status</span>
+                <span class="font-weight-bold text-uppercase">ZanMalipo Status</span>
                 <p class="my-1">
                     @if ($bill_change)
                         @if ($bill_change->ack_status && $bill_change->clb_status)

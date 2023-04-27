@@ -572,6 +572,22 @@
                         @endif
                     </div>
                 @endif
+                <div class="col-md-12 mt-3">
+                    <h6 class="mb-0 font-weight-bold" style="flex: 1;">Business Registered By</h6>
+                    <hr class="mt-2 mb-3"/>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Name</span>
+                    <p class="my-1">{{ $business->taxpayer->first_name }} {{ $business->taxpayer->last_name }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Ref No.</span>
+                    <p class="my-1">{{ $business->taxpayer->reference_no }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Mobile No.</span>
+                    <p class="my-1">{{ $business->taxpayer->mobile }}</p>
+                </div>
             </div>
         </div>
 

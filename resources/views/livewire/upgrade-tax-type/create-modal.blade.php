@@ -11,7 +11,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger">
-                        This business has not completed filing all of its returns!!!
+                        This business has not completed filing all of its returns
                     </div>
                 </div>
                 <div class="modal-footer">
