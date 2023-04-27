@@ -93,7 +93,7 @@ trait PaymentsTrait
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
         $description    = "Return payment for {$return->business->name} - {$return->financialMonth->name} {$return->financialMonth->year->code}";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $tax_type->currency;
         $createdby_type = get_class(Auth::user());
         $createdby_id   = Auth::id();
@@ -191,7 +191,7 @@ trait PaymentsTrait
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
         $description    = "Payment for Land Lease with DP number {$leasePayment->landLease->dp_number}";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = 'USD';
         $createdby_type = get_class(Auth::user());
         $createdby_id   = Auth::id();
@@ -331,7 +331,7 @@ trait PaymentsTrait
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
         $description    = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name} on {$debt->financialMonth->name} {$debt->financialMonth->year->code}";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
@@ -430,7 +430,7 @@ trait PaymentsTrait
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
         $description    = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name}";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
@@ -531,7 +531,7 @@ trait PaymentsTrait
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
         $description    = "{$assessment->taxtype->name} dispute waiver for {$assessment->business->name} in {$assessmentLocations}";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $assessment->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
@@ -749,7 +749,7 @@ trait PaymentsTrait
         } else {
             $description = "Return payment for {$return->business->name} - {$return->financialMonth->name} {$return->financialMonth->year->code}";
         }
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = $return->currency;
         $createdby_type = get_class(Auth::user());
         $createdby_id = Auth::id();

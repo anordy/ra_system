@@ -68,7 +68,7 @@ class QuantityCertificateEdit extends Component
         if(is_null($this->certificate)){
             abort(404);
         }
-        $this->ascertained = $this->certificate->ascertained;
+        $this->ascertained = date('Y-m-d', strtotime($this->certificate->ascertained));
         $this->ship = $this->certificate->ship;
         $this->port = $this->certificate->port;
         $this->voyage_no = $this->certificate->voyage_no;
