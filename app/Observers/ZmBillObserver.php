@@ -37,7 +37,14 @@ class ZmBillObserver
      */
     public function updated(ZmBill $zmBill)
     {
-        //
+        try {
+            if (!$this->sign($zmBill)){
+                dispatch(new RepostBillSignature($zmBill));
+            }
+        } catch (Exception $exception){
+            Log::channel('verification')->error('Something went wrong, please contact support for assistance.');
+            dispatch(new RepostBillSignature($zmBill));
+        }
     }
 
     /**
