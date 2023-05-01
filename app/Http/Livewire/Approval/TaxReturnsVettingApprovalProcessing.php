@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\TaxClaimStatus;
 use App\Traits\VatReturnTrait;
 use Exception;
 use App\Events\SendSms;
@@ -35,14 +36,16 @@ class TaxReturnsVettingApprovalProcessing extends Component
     public $comments;
 
     public $return;
+    public $claim_data;
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId   = decrypt($modelId);
+        $this->modelId = decrypt($modelId);
         $this->return = $modelName::findOrFail($this->modelId);
 
         $this->registerWorkflow($modelName, $this->modelId);
+
     }
 
 
@@ -93,8 +96,19 @@ class TaxReturnsVettingApprovalProcessing extends Component
                     }
                 }
                 //saving credit brought forward(claim)
+
                 if ($this->return->return->credit_brought_forward > 0) {
-                    $this->savingClaimPayment($this->return->return->credit_brought_forward,$this->return->return->business_location_id );
+                    $this->claim_data = VatReturn::query()->selectRaw('payment_status, tax_credits.amount, payment_method, installments_count,
+        tax_credits.id as credit_id, tax_claims.old_return_id, tax_claims.old_return_type, tax_claims.currency')
+                        ->leftJoin('tax_claims', 'tax_claims.old_return_id', '=', 'vat_returns.id')
+                        ->leftJoin('tax_credits', 'tax_credits.claim_id', '=', 'tax_claims.id')
+                        ->where('vat_returns.claim_status', '=', TaxClaimStatus::CLAIM)
+                        ->where('vat_returns.business_location_id', $this->return->return->business_location_id)
+                        ->where('tax_claims.status', 'approved')
+                        ->where('tax_credits.payment_status', '!=', 'paid')
+                        ->orderBy('tax_credits.id')->limit(1)
+                        ->first();
+                    $this->savingClaimPayment($this->return->return->credit_brought_forward);
                 }
 
                 DB::commit();
@@ -128,7 +142,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
 
                 $this->saveHistory($this->subject);
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-                
+
                 DB::commit();
 
                 event(new SendSms(SendToCorrectionReturnSMS::SERVICE, $this->return));
