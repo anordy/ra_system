@@ -19,7 +19,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class GenericSettingsTable extends DataTableComponent
 {
-	use CustomAlert, WithSearch;
+	use CustomAlert;
     public $model;
     public $setting_title = '';
 
@@ -103,7 +103,7 @@ class GenericSettingsTable extends DataTableComponent
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 

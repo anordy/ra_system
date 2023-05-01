@@ -15,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class ExtensionsTable extends DataTableComponent
 {
 
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public $rejected;
 

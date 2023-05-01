@@ -15,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class WithholdingAgentsTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public function configure(): void
     {
@@ -112,7 +112,7 @@ class WithholdingAgentsTable extends DataTableComponent
             $this->flash('success', 'Status updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->customAlert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something whent wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

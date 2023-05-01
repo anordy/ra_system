@@ -17,7 +17,7 @@ use App\Models\TaxAgent;
 
 class PlateNumbersTable extends DataTableComponent
 {
-	use CustomAlert, WithSearch;
+	use CustomAlert;
 
     public $plate_number_status_id;
 
@@ -171,7 +171,7 @@ class PlateNumbersTable extends DataTableComponent
             $this->flash('success', 'Plate Number Status updated', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

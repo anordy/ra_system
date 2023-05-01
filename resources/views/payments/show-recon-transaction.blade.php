@@ -11,19 +11,19 @@
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Control Number</span>
-                    <p class="my-1">{{ $transaction->BillCtrNum }}</p>
+                    <p class="my-1">{{ $transaction->billctrnum }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Transaction Amount</span>
-                    <p class="my-1">{{ number_format($transaction->PaidAmt, 2) }} {{ $transaction->CCy }}</p>
+                    <p class="my-1">{{ number_format($transaction->paidamt, 2) }} {{ $transaction->ccy }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Transaction Date</span>
-                    <p class="my-1">{{ $transaction->TrxDtTm }}</p>
+                    <p class="my-1">{{ $transaction->trxdttm }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Receipt No</span>
-                    <p class="my-1">{{ $transaction->PayRefId }}</p>
+                    <p class="my-1">{{ $transaction->payrefid }}</p>
                 </div>
             </div>
         </div>
@@ -34,23 +34,23 @@
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Payment Channel</span>
-                    <p class="my-1">{{ $transaction->UsdPayChnl }}</p>
+                    <p class="my-1">{{ $transaction->usdpaychnl }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Credited Account Number</span>
-                    <p class="my-1">{{ $transaction->CtrAccNum }}</p>
+                    <p class="my-1">{{ $transaction->ctraccnum }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">PSP Name</span>
-                    <p class="my-1">{{ $transaction->PspName ?? '' }}</p>
+                    <p class="my-1">{{ $transaction->pspname ?? '' }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">PSP Transaction Id</span>
-                    <p class="my-1">{{ $transaction->pspTrxId }}</p>
+                    <p class="my-1">{{ $transaction->psptrxid }}</p>
                 </div>
                 <div class="col-md-12 mb-3">
                     <span class="font-weight-bold text-uppercase">Remarks</span>
-                    <p class="my-1">{{ $transaction->Remarks ?? 'N/A' }}</p>
+                    <p class="my-1">{{ $transaction->remarks ?? 'N/A' }}</p>
                 </div>
             </div>
         </div>
@@ -61,16 +61,16 @@
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Payer Name</span>
-                    <p class="my-1">{{ $transaction->DptName }}</p>
+                    <p class="my-1">{{ $transaction->dptname }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Payer Mobile</span>
-                    <p class="my-1">{{ $transaction->DptCellNum ?? 'N/A' }}</p>
+                    <p class="my-1">{{ $transaction->dptcellnum ?? 'N/A' }}</p>
                 </div>
-                @if ($transaction->DptEmailAddr)
+                @if ($transaction->dptemailaddr)
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Payer Email</span>
-                        <p class="my-1">{{ $transaction->DptEmailAddr }}</p>
+                        <p class="my-1">{{ $transaction->dptemailaddr }}</p>
                     </div>
                 @endif
             </div>

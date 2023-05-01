@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Vetting;
 
 use App\Enum\VettingStatus;
+use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Gate;
 
 class VettingApprovalTable extends DataTableComponent
 {
-    use  ReturnFilterTrait, WithSearch;
+    use  ReturnFilterTrait;
 
     protected $model     = TaxReturn::class;
 
@@ -41,7 +42,7 @@ class VettingApprovalTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')->where('vetting_status', $this->vettingStatus)->orderBy('created_at', 'desc');
+        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')->whereNotIn('return_type',[PetroleumReturn::class])->where('vetting_status', $this->vettingStatus)->orderBy('created_at', 'desc');
     }
 
     public function columns(): array

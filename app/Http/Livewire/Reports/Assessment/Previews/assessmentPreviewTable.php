@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class AssessmentPreviewTable extends DataTableComponent
 {
-    use CustomAlert, AssessmentReportTrait, WithSearch;
+    use CustomAlert, AssessmentReportTrait;
 
     public $parameters;
 

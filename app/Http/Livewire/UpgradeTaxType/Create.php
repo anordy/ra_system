@@ -50,7 +50,7 @@ class Create extends Component
         try {
             if ($value['value'] == "")
             {
-                $this->customAlert('warning', 'Please select currency for to upgrade to new tax type!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+                $this->customAlert('warning', 'Please select currency for to upgrade to new tax type!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
                 return redirect()->back();
 
             }
@@ -102,7 +102,7 @@ class Create extends Component
         {
             DB::rollBack();
             Log::error($exception);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
             redirect()->back()->getTargetUrl();
         }
     }

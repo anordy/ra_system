@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LandLeaseList extends DataTableComponent
 {
-    use WithSearch;
+
     //create builder function
     public function builder(): builder
     {

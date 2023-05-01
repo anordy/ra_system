@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class FinancialMonthsTable extends DataTableComponent
 {
-    use WithSearch;
+
     public $today;
     public function configure(): void
     {

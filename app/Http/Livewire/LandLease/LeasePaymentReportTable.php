@@ -18,7 +18,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LeasePaymentReportTable extends DataTableComponent
 {
-    use CustomAlert, LeasePaymentReportTrait, WithSearch;
+    use CustomAlert, LeasePaymentReportTrait;
 
     public $dates = [];
     public $status;

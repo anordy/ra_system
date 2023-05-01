@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class RejectedTaxAgentTable extends DataTableComponent
 {
-    use WithSearch;
+
 	public function builder(): Builder
 	{
         return TaxAgent::query()->where('status', '=', TaxAgentStatus::REJECTED)

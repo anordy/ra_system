@@ -11,7 +11,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class CreditsTable extends DataTableComponent
 {
-    use WithSearch;
+
 
     public function configure(): void
     {

@@ -16,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class InstallmentsTable extends DataTableComponent
 {
 
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public $active;
     public $cancelled;

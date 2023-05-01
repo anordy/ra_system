@@ -13,7 +13,7 @@ use App\Traits\CustomAlert;
 
 class PetroleumReturnTable extends DataTableComponent
 {
-    use CustomAlert, ReturnFilterTrait, WithSearch;
+    use CustomAlert, ReturnFilterTrait;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
 
@@ -35,6 +35,7 @@ class PetroleumReturnTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects(['business_location_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
@@ -60,9 +61,6 @@ class PetroleumReturnTable extends DataTableComponent
             ->sortable()
             ->searchable(),
             Column::make('TIN', 'business.tin')
-                ->sortable()
-                ->searchable(),
-            Column::make('Branch Name', 'businessLocation.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Petroleum Levy', 'petroleum_levy')

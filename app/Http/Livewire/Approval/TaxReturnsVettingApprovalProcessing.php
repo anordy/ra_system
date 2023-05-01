@@ -41,11 +41,10 @@ class TaxReturnsVettingApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = decrypt($modelId);
+        $this->modelId   = decrypt($modelId);
         $this->return = $modelName::findOrFail($this->modelId);
 
         $this->registerWorkflow($modelName, $this->modelId);
-
     }
 
 
@@ -111,8 +110,6 @@ class TaxReturnsVettingApprovalProcessing extends Component
                     $this->savingClaimPayment($this->return->return->credit_brought_forward);
                 }
 
-                DB::commit();
-
                 event(new SendSms(SendVettedReturnSMS::SERVICE, $this->return));
                 event(new SendMail(SendVettedReturnMail::SERVICE, $this->return));
 
@@ -140,10 +137,11 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->subject->return->vetting_status = VettingStatus::CORRECTION;
                 $this->subject->return->save();
 
-                $this->saveHistory($this->subject);
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
                 DB::commit();
+
+                $this->saveHistory($this->subject);
 
                 event(new SendSms(SendToCorrectionReturnSMS::SERVICE, $this->return));
                 event(new SendMail(SendToCorrectionReturnMail::SERVICE, $this->return));

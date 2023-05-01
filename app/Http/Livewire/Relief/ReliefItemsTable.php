@@ -10,7 +10,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ReliefItemsTable extends DataTableComponent
 {
-    use WithSearch;
+
     public $reliefId;
 
     public function mount($id)

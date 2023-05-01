@@ -18,45 +18,46 @@ class QRCodeGeneratorController extends Controller
 {
     public function invoice($id, Request $request)
     {
-        $bill = ZmBill::with('user')->findOrFail(decrypt($id));
+        $id = decrypt($id);
+        $bill = ZmBill::with('user')->findOrFail($id);
         $name = $bill->user->full_name ?? '';
-
-        $url = route('qrcode-check.invoice', $id);
-
+        
+        $url = env('TAXPAYER_URL') . route('qrcode-check.invoice',  base64_encode(strval($id)), 0);
+        
         $result = Builder::create()
-            ->writer(new PngWriter())
-            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true])
-            ->data($url)
-            ->encoding(new Encoding('UTF-8'))
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-            ->size(300)
-            ->margin(10)
-            ->logoPath(public_path('/images/logo.png'))
-            ->logoResizeToHeight(64)
-            ->logoResizeToWidth(64)
-            ->labelText('SCAN AND PAY')
-            ->labelAlignment(new LabelAlignmentCenter())
-            ->build();
-
+        ->writer(new PngWriter())
+        ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true])
+        ->data($url)
+        ->encoding(new Encoding('UTF-8'))
+        ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+        ->size(300)
+        ->margin(10)
+        ->logoPath(public_path('/images/logo.png'))
+        ->logoResizeToHeight(64)
+        ->logoResizeToWidth(64)
+        ->labelText('SCAN AND PAY')
+        ->labelAlignment(new LabelAlignmentCenter())
+        ->build();
+        
         header('Content-Type: ' . $result->getMimeType());
-
+        
         $dataUri = $result->getDataUri();
-
-        // return view('zanMalipo.pdf.invoice', compact('dataUri', 'bill'));
+        
         $pdf = PDF::loadView('zanMalipo.pdf.invoice', compact('dataUri', 'bill'));
-
-
-
+        
+        
+        
         return $pdf->download('ZanMalipo_invoice_' . time() . '.pdf');
     }
-
+    
     public function transfer($billId, $bankAccountId)
     {
-        $bill = ZmBill::findOrFail(decrypt($billId));
+        $billId = decrypt($billId);
+        $bill = ZmBill::findOrFail($billId);
         $bankAccount = ZrbBankAccount::findOrFail(decrypt($bankAccountId));
         $name = $bill->payer_name;
 
-        $url = route('qrcode-check.transfer', $billId);
+        $url = env('TAXPAYER_URL') . route('qrcode-check.transfer',  base64_encode(strval($billId)), 0);
 
         $result = Builder::create()
             ->writer(new PngWriter())

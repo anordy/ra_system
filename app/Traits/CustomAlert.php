@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enum\AlertConfig;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 trait CustomAlert
@@ -15,7 +16,7 @@ trait CustomAlert
         ], $options);
 
         if ($type != 'success') {
-            $options['timer'] = 60000; //60 seconds
+            $options['timer'] = AlertConfig::ERROR_ALERT_DURATION;
         }
 
         $this->alert($type, $message, $options);

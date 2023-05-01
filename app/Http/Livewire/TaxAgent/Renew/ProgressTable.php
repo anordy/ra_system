@@ -14,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ProgressTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
 //    protected $model = RenewTaxAgentRequest::class;
 

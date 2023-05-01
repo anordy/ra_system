@@ -37,25 +37,25 @@ class ReconTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Control No.', 'BillCtrNum')
+            Column::make('Control No.', 'billctrnum')
                 ->sortable()
                 ->searchable(),
-            Column::make('Currency', 'CCy'),
-            Column::make('Bill Amount', 'PaidAmt')
+            Column::make('Currency', 'ccy'),
+            Column::make('Bill Amount', 'paidamt')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
                 }),
-            Column::make('Ctr Account No', 'CtrAccNum')
+            Column::make('Ctr Account No', 'ctraccnum')
                 ->sortable()
                 ->searchable(),
-            Column::make('Channel', 'UsdPayChnl')
+            Column::make('Channel', 'usdpaychnl')
                 ->sortable()
                 ->searchable(),
-            Column::make('Payer Name', 'DptName'),
-            Column::make('Payer Email', 'DptEmailAddr'),
-            Column::make('Description', 'PspName'),
+            Column::make('Payer Name', 'dptname'),
+            Column::make('Payer Email', 'dptemailaddr'),
+            Column::make('Description', 'pspname'),
             Column::make('Actions', 'id')
                 ->view('payments.includes.recon-transaction-actions')
         ];

@@ -107,7 +107,7 @@ class CreateModal extends Component
         {
             DB::rollBack();
             Log::error($exception);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help!!!');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             redirect()->back()->getTargetUrl();
         }
     }

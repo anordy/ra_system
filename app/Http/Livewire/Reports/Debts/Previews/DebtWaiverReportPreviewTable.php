@@ -14,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class DebtWaiverReportPreviewTable extends DataTableComponent
 {
-    use CustomAlert, DebtReportTrait, WithSearch;
+    use CustomAlert, DebtReportTrait;
 
     public $parameters;
 

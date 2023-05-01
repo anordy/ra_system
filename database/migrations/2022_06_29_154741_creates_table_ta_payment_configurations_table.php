@@ -15,7 +15,7 @@ class CreatesTableTaPaymentConfigurationsTable extends Migration
     {
         Schema::create('ta_payment_configurations', function (Blueprint $table){
 	        $table->id();
-	        $table->enum('category', ['Registration', 'Renewal']);
+	        $table->enum('category', ['Registration Fee', 'Renewal Fee']);
 			$table->string('duration')->nullable();
 			$table->integer('is_citizen');
 			$table->bigInteger('created_by');

@@ -6,7 +6,7 @@
             <select wire:model="recon_type" class="form-control">
                 <option selected>Select Reconcilliation Type</option>
                 <option value="1">ZanMalipo Successful Transactions</option>
-                <option value="2">ZanMalipo and Payment service provider Transaction Reconciliations</option>
+                <option value="2">Exception Transaction report after reconciliation between ZanMalipo and payment service provider</option>
             </select>
             @error('recon_type')
                 <span class="text-danger">{{ $message }}</span>

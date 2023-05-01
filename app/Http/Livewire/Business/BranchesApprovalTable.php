@@ -11,7 +11,7 @@ use App\Models\WorkflowTask;
 
 class BranchesApprovalTable extends DataTableComponent
 {
-    use WithSearch;
+
 
     public function builder(): Builder
     {

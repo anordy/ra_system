@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class ExchangeRateEditModal extends Component
@@ -69,7 +70,7 @@ class ExchangeRateEditModal extends Component
         $this->spot_buying = $this->exchange_rate->spot_buying;
         $this->spot_selling = $this->exchange_rate->spot_selling;
         $this->mean = $this->exchange_rate->mean;
-        $this->exchange_date = $this->exchange_rate->exchange_date;
+        $this->exchange_date = date('Y-m-d', strtotime($this->exchange_rate->exchange_date));
         $this->old_values = [
             'mean' => $this->mean,
             'spot_buying' => $this->spot_buying,

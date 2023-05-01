@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class RejectedClosuresTable extends DataTableComponent
 {
-    use WithSearch;
+
 
     public function configure(): void
     {

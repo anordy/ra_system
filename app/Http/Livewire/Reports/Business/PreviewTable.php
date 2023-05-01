@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class PreviewTable extends DataTableComponent
 {
-    use CustomAlert, RegistrationReportTrait, WithSearch;
+    use CustomAlert, RegistrationReportTrait;
 
     public $parameters;
 

@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class ApprovedClosuresTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
 
     protected $listeners = [

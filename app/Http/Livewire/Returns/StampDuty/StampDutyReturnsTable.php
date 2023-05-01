@@ -11,7 +11,7 @@ use App\Traits\ReturnFilterTrait;
 
 class StampDutyReturnsTable extends DataTableComponent
 {
-    use  ReturnFilterTrait, WithSearch;
+    use  ReturnFilterTrait;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $data         = [];

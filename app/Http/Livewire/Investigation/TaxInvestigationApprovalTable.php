@@ -15,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class TaxInvestigationApprovalTable extends DataTableComponent
 {
 
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public $model = WorkflowTask::class;
 

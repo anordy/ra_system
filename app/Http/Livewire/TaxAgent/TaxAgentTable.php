@@ -12,7 +12,7 @@ use App\Models\TaxAgent;
 
 class TaxAgentTable extends DataTableComponent
 {
-	use CustomAlert, WithSearch;
+	use CustomAlert;
 
 	public function builder(): Builder
 	{

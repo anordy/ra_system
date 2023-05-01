@@ -15,7 +15,7 @@ use App\Models\TaxAgent;
 
 class MotorVehiclesTable extends DataTableComponent
 {
-	use CustomAlert, WithSearch;
+	use CustomAlert;
 
     public $status_id;
 

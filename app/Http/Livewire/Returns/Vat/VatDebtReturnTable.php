@@ -10,7 +10,7 @@ use App\Models\Returns\Vat\VatReturn;
 
 class VatDebtReturnTable extends DataTableComponent
 {
-    use WithSearch;
+
     protected $model = VatReturn::class;
 
     public function configure(): void

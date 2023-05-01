@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class RestaurantReturnsTable extends DataTableComponent
 {
-    use  ReturnFilterTrait, WithSearch;
+    use  ReturnFilterTrait;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $status;

@@ -14,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class DisputeApprovalTable extends DataTableComponent
 {
-    use CustomAlert, WithSearch;
+    use CustomAlert;
 
     public $model = WorkflowTask::class;
 

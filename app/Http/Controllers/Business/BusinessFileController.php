@@ -66,15 +66,15 @@ class BusinessFileController extends Controller
         }
 
         $taxTypeId = decrypt($taxTypeId);
-        $url = route('qrcode-check.business.certificate', ['locationId' => $locationId, 'taxTypeId' => $taxTypeId]);
-
         $locationId = decrypt($locationId);
+          
         $location = BusinessLocation::with('business', 'business.taxpayer')->findOrFail($locationId);
         $tax = TaxType::findOrFail($taxTypeId);
         $taxType = BusinessTaxType::where('business_id', $location->business->id)->where('tax_type_id', $taxTypeId)->firstOrFail();
-
+        
         $certificateNumber = $this->generateCertificateNumber($location, $tax->prefix);
-
+        
+        $url = env('TAXPAYER_URL') . route('qrcode-check.business.certificate', ['locationId' =>  base64_encode(strval($locationId)), 'taxTypeId' =>  base64_encode(strval($taxTypeId))], 0);
         
         $result = Builder::create()
             ->writer(new PngWriter())

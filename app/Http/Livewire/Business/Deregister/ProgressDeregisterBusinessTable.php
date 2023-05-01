@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class ProgressDeregisterBusinessTable extends DataTableComponent
 {
-    use WithSearch;
+
 
     public function builder(): Builder
     {

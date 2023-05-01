@@ -58,9 +58,10 @@ class ChangeTaxType extends Mailable
 
                     $certificateNumber = $this->generateCertificateNumber($location, $tax->prefix);
 
-                    $locationId = encrypt($location->id);
+                    $locationId =  base64_encode(strval($location->id));
+                    $taxTypeID =  base64_encode(strval($taxTypeId));
                     
-                    $url = route('qrcode-check.business.certificate', $locationId,$taxTypeId);
+                    $url = env('TAXPAYER_URL') . route('qrcode-check.business.certificate', $locationId,$taxTypeID, 0);
 
                     $result = Builder::create()
                         ->writer(new PngWriter())

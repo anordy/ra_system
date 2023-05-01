@@ -39,9 +39,10 @@ class WithholdingAgentController extends Controller
     }
 
     public function certificate($id){
-        $whagent = WithholdingAgent::findOrFail(decrypt($id));
+        $id = decrypt($id);
+        $whagent = WithholdingAgent::findOrFail($id);
 
-        $url = route('qrcode-check.withholding-agent.certificate', $id);
+        $url = env('TAXPAYER_URL') . route('qrcode-check.withholding-agent.certificate',  base64_encode(strval($id)), 0);
 
         $result = Builder::create()
             ->writer(new PngWriter())

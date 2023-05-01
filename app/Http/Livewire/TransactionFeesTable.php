@@ -134,7 +134,7 @@ class TransactionFeesTable extends DataTableComponent
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->customAlert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
@@ -171,7 +171,7 @@ class TransactionFeesTable extends DataTableComponent
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            $this->customAlert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
@@ -209,7 +209,7 @@ class TransactionFeesTable extends DataTableComponent
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            $this->customAlert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

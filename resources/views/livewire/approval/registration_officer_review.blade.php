@@ -193,20 +193,18 @@
                                                 Loading....
                                             </div>
                                             <div wire:loading.remove>
-                                                @if(count($subVatOptions) > 0)
+                                                @if($subVatOptions)
                                                     <div class="position-absolute border-bottom rounded" style="overflow: hidden;z-index: 1;">
-                                                        <ul class="custom-dropdown-menu pb-2">
+                                                        <ul class="customized-dropdown-menu pb-2">
                                                             @foreach($subVatOptions as $sub)
-                                                                <li>
-                                                                    <a type="button" wire:click="selectSubVat({{$key}}, {{$sub}})">
-                                                                        <small>{{ $sub->name }}</small>
-                                                                    </a>
+                                                                <li wire:click="selectSubVat({{$key}}, {{$sub}})">
+                                                                    <small>{{ $sub->name }}</small>
                                                                 </li>
                                                             @endforeach
                                                         </ul>
                                                     </div>
                                                 @else
-                                                    <ul class="custom-dropdown-menu pb-2">
+                                                    <ul class="customized-dropdown-menu pb-2">
                                                         <li>
                                                             <small class="font-italic text-center">No record match!</small>
                                                         </li>

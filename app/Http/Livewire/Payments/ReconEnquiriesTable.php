@@ -32,10 +32,10 @@ class ReconEnquiriesTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Reconciliation For', 'TnxDt')
+            Column::make('Reconciliation For', 'tnxdt')
                 ->sortable()
                 ->searchable(),
-            Column::make('Reconciliation Type', 'ReconcOpt')
+            Column::make('Reconciliation Type', 'reconcopt')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
@@ -45,7 +45,7 @@ class ReconEnquiriesTable extends DataTableComponent
                         return 'ZanMalipo and Payment service provider Transaction Reconciliations';
                     }
                 }),
-            Column::make('Status', 'ReconcStsCode')
+            Column::make('Status', 'reconcstscode')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {

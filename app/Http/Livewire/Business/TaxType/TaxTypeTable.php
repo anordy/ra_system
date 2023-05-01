@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class TaxTypeTable extends DataTableComponent
 {
-    use WithSearch;
+
     protected $model = BusinessTaxTypeChange::class;
     public $status;
 

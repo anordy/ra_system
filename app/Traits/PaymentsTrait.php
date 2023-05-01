@@ -27,6 +27,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\SendZanMalipoSMS;
+
 
 trait PaymentsTrait
 {
@@ -57,6 +59,11 @@ trait PaymentsTrait
                 $bill->zan_status       = 'pending';
                 $bill->control_number   = rand(2000070001000, 2000070009999);
                 $bill->save();
+
+                $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
+                $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+    
+                dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
             DB::commit();
 
@@ -86,7 +93,7 @@ trait PaymentsTrait
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
         $description    = "Return payment for {$return->business->name} - {$return->financialMonth->name} {$return->financialMonth->year->code}";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $tax_type->currency;
         $createdby_type = get_class(Auth::user());
         $createdby_id   = Auth::id();
@@ -126,6 +133,11 @@ trait PaymentsTrait
             $bill->zan_status       = 'pending';
             $bill->control_number   = rand(2000070001000, 2000070009999);
             $bill->save();
+
+            $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
+            $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+
+            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
 
             $this->flash('success', 'Your return was submitted, you will receive your payment information shortly - test');
         }
@@ -179,7 +191,7 @@ trait PaymentsTrait
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
         $description    = "Payment for Land Lease with DP number {$leasePayment->landLease->dp_number}";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = 'USD';
         $createdby_type = get_class(Auth::user());
         $createdby_id   = Auth::id();
@@ -319,7 +331,7 @@ trait PaymentsTrait
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
         $description    = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name} on {$debt->financialMonth->name} {$debt->financialMonth->year->code}";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
@@ -418,7 +430,7 @@ trait PaymentsTrait
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
         $description    = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name}";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
@@ -519,7 +531,7 @@ trait PaymentsTrait
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
         $description    = "{$assessment->taxtype->name} dispute waiver for {$assessment->business->name} in {$assessmentLocations}";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $assessment->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
@@ -737,7 +749,7 @@ trait PaymentsTrait
         } else {
             $description = "Return payment for {$return->business->name} - {$return->financialMonth->name} {$return->financialMonth->year->code}";
         }
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = $return->currency;
         $createdby_type = get_class(Auth::user());
         $createdby_id = Auth::id();
@@ -781,6 +793,11 @@ trait PaymentsTrait
             $bill->zan_status = 'pending';
             $bill->control_number = rand(2000070001000, 2000070009999);
             $bill->save();
+
+            $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
+            $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+
+            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
 }

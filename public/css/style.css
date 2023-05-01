@@ -853,7 +853,7 @@ div.table-bordered {
 
 /*Custom Dropdown*/
 
-.custom-dropdown-menu {
+.customized-dropdown-menu {
     width: 280px;
     padding: 0;
     margin: 0;
@@ -863,7 +863,7 @@ div.table-bordered {
     overflow-y: scroll;
 }
 
-.custom-dropdown-menu li {
+.customized-dropdown-menu li {
     line-height: 1.5;
     letter-spacing: 0.7px;
     color: #666;
@@ -874,7 +874,7 @@ div.table-bordered {
     background-color: #FFFFFF;
 }
 
-.custom-dropdown-menu li:hover {
+.customized-dropdown-menu li:hover {
     background-color: #007bff;
     color: #FFFFFF;
 }

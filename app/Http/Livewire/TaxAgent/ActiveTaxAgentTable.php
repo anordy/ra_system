@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class ActiveTaxAgentTable extends DataTableComponent
 {
-    use WithSearch;
+
 	//    protected $model = TaxAgent::class;
 
 	public function builder(): Builder
