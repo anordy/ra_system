@@ -26,7 +26,7 @@ class ExchangeRateAddModal extends Component
     protected function rules()
     {
         return [
-            'currency' => 'required|min:2|unique:exchange_rates',
+            'currency' => 'required|min:2',
             'mean' => 'required|numeric',
             'spot_buying' => 'required|numeric',
             'spot_selling' => 'required|numeric',
