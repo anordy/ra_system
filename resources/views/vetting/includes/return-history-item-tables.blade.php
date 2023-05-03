@@ -37,7 +37,7 @@
                         <th style="width: 20%"></th>
                         <th style="width: 30%"></th>
                         <th style="width: 25%"></th>
-                        <th style="width: 25%">{{ number_format(json_decode($history->return_info)->total_amount, 2) }}</th>
+                        <th style="width: 25%">{{ number_format($return->total_amount_due, 2) }}</th>
                     </tr>
 
                     </tfoot>
