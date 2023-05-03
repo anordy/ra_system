@@ -1,3 +1,4 @@
+@if ($return->vetting_status == \App\Enum\VettingStatus::VETTED)
 @if(!empty($return->latestBill))
     <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
         <div class="col-md-4">
@@ -109,4 +110,5 @@
         </div>
 
     </div>
+@endif
 @endif
