@@ -74,5 +74,39 @@
                 </p>
             </div>
         @endif
+        <div class="col-md-12 mt-3">
+            <span class="font-weight-bold text-uppercase">{{ __('ZanMalipo status') }}:</span>
+            <span>
+                {{ $this->getGepgStatus($return->latestBill->zan_trx_sts_code) }}
+            </span>
+        </div>
+    </div>
+@else
+    <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
+        <div class="col-md-3">
+            <span class="font-weight-bold text-uppercase">
+                Total Tax Payable
+            </span>
+            <p class="my-1">{{ number_format($return->total_amount, 2) }} {{ $return->currency }}
+            </p>
+        </div>
+        <div class="col-md-3">
+            <span class="font-weight-bold text-uppercase">Bill Status</span>
+            <p class="my-1 text-danger">
+                Generation Failed
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p class="my-1">
+                <button target="_blank" wire:click="generateBill"
+                    class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                    <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
+                        wire:target="generateBill"></i>
+                    <i class="bi bi-arrow-repeat mr-2" wire:loading.remove wire:target="generateBill"></i>Generate
+                    Bill
+                </button>
+            </p>
+        </div>
+
     </div>
 @endif

@@ -47,21 +47,18 @@ class MnoReturnsTable extends DataTableComponent
     {
         return [
             Column::make('Taxpayer Name', 'business_id')
-            ->sortable()
-            ->searchable()
-            ->format(function ($value, $row) {
-                return "{$row->business->taxpayer->fullName}";
-            }),
-                
-            Column::make('Business Name', 'business_id')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return "{$row->business->name}";
+                    return "{$row->business->taxpayer->fullName}";
                 }),
+
+            Column::make('Business Name', 'business.name')
+                ->sortable()
+                ->searchable(),
             Column::make('Branch / Location', 'businessLocation.name')
-            ->sortable()
-            ->searchable(),
+                ->sortable()
+                ->searchable(),
 
             Column::make('Total Payable Vat', 'total_amount_due_with_penalties')
                 ->sortable()
@@ -69,10 +66,10 @@ class MnoReturnsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($row->total_amount_due_with_penalties, 2);
                 }),
-                
+
             Column::make('Status', 'status')
                 ->view('returns.excise-duty.mno.includes.status'),
-            
+
             Column::make('Action', 'id')
                 ->view('returns.excise-duty.mno.includes.actions'),
         ];

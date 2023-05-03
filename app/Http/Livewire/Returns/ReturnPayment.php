@@ -2,14 +2,17 @@
 
 namespace App\Http\Livewire\Returns;
 
-use App\Traits\PaymentsTrait;
-use App\Traits\PenaltyTrait;
-use App\Traits\CustomAlert;
+use App\Services\ZanMalipo\GepgResponse;
+use Exception;
 use Livewire\Component;
+use App\Traits\CustomAlert;
+use App\Traits\PenaltyTrait;
+use App\Traits\PaymentsTrait;
+use Illuminate\Support\Facades\Log;
 
 class ReturnPayment extends Component
 {
-    use CustomAlert, PenaltyTrait, PaymentsTrait;
+    use CustomAlert, PenaltyTrait, PaymentsTrait, GepgResponse;
 
     public $return;
 
@@ -28,9 +31,28 @@ class ReturnPayment extends Component
         $response = $this->regenerateControlNo($this->return->bill);
         if ($response){
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
-            return redirect()->route('returns.stamp-duty.show', encrypt($this->return->id));
+            return redirect(request()->header('Referer'));
         }
         $this->customAlert('error', 'Control number could not be generated, please try again later.');
+    }
+
+    /**
+     * A Safety Measure to Generate a bill that has not been generated
+     */
+    public function generateBill(){
+        try {
+            $this->generateReturnControlNumber($this->return);
+            $this->customAlert('success', 'Your request was submitted, you will receive your payment information shortly.');
+            return redirect(request()->header('Referer'));
+        } catch (Exception $e) {
+            $this->customAlert('error', 'Bill could not be generated, please try again later.');
+            Log::error($e);
+        }
+    }
+
+    public function getGepgStatus($code)
+    {
+        return $this->getResponseCodeStatus($code)['message'];
     }
 
     public function render(){
