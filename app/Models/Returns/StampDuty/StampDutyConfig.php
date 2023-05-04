@@ -13,4 +13,8 @@ class StampDutyConfig extends Model
     public function scopeActive($query){
         return $query->where('is_active', true);
     }
+
+    public function headings(){
+        return $this->hasMany(StampDutyConfigHead::class);
+    }
 }
