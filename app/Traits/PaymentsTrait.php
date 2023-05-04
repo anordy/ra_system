@@ -289,9 +289,6 @@ trait PaymentsTrait
         if (config('app.env') != 'local') {
             $response = ZmCore::sendBill($bill->id);
             if ($response->status === ZmResponse::SUCCESS) {
-                $billable->status = BillStatus::CN_GENERATING;
-                $billable->save();
-
                 session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');

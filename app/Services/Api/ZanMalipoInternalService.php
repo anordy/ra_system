@@ -46,6 +46,7 @@ class ZanMalipoInternalService
             $bill->status = 'failed';
             $bill->save();
             $this->sign($bill);
+            return null;
         } else {
         $authorization = "Authorization: Bearer ". $access_token;
 
@@ -91,7 +92,7 @@ class ZanMalipoInternalService
                 $billable->status = TaxAgentStatus::VERIFIED;
                 $billable->billing_status = BillingStatus::CN_GENERATED;
             } else  {
-                $billable->statusCode = ReturnStatus::CN_GENERATING;
+                $billable->status = ReturnStatus::CN_GENERATING;
             }
         } else {
             if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
@@ -100,7 +101,7 @@ class ZanMalipoInternalService
                 $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;
                 $billable->status = TaxAgentStatus::VERIFIED;
             } else {
-                $billable->statusCode = ReturnStatus::CN_GENERATION_FAILED;
+                $billable->status = ReturnStatus::CN_GENERATION_FAILED;
             }
         }
         $billable->save();

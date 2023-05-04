@@ -41,6 +41,12 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'all settings related to filing deadline',
                 'is_approved' => 1
             ],
+            [
+                'name' => 'Business Settings',
+                'code' => 'business-settings',
+                'description' => 'all settings related to business settings',
+                'is_approved' => 1
+            ],
         ];
 
         foreach ($categories as $category) {
@@ -100,6 +106,15 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'Filing Deadline Time',
                 'value' => '17:00',
                 'unit' => 'time',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 5,
+                'name' => 'Duration before delete all draft businesses',
+                'code' => 'duration-before-delete-draft-businesses',
+                'description' => 'Duration before delete all businesses with Draft Status',
+                'value' => '7',
+                'unit' => 'days',
                 'is_approved' => 1
             ],
         ];
