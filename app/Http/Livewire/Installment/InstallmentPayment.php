@@ -112,8 +112,9 @@ class InstallmentPayment extends Component
                 $billItems
             );
 
-            $this->sendBill($bill, $item);
             DB::commit();
+            
+            $this->sendBill($bill, $item);
 
             return redirect()->route('installment.show', encrypt($this->installment->id));
         } catch (\Exception $e){
