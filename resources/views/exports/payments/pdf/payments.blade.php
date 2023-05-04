@@ -84,9 +84,6 @@
                     <strong>Payer Name</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Payer Name</strong>
-                </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Payer Email</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
