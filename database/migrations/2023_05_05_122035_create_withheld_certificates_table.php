@@ -1,11 +1,10 @@
 <?php
 
-use App\Enum\Currencies;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWithholdingCertificatesTable extends Migration
+class CreateWithheldCertificatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +13,7 @@ class CreateWithholdingCertificatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('withholding_certificates', function (Blueprint $table) {
+        Schema::create('withheld_certificates', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('tax_type_id');
@@ -35,6 +34,7 @@ class CreateWithholdingCertificatesTable extends Migration
             $table->unsignedBigInteger('return_id');
             $table->string('return_type');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -46,6 +46,6 @@ class CreateWithholdingCertificatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('withholding_certificates');
+        Schema::dropIfExists('withheld_certificates');
     }
 }

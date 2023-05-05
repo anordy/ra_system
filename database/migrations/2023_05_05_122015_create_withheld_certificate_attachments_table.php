@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWithholdingCertificateAttachmentsTable extends Migration
+class CreateWithheldCertificateAttachmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateWithholdingCertificateAttachmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('withholding_certificate_attachments', function (Blueprint $table) {
+        Schema::create('withheld_certificate_attachments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tax_return_id')->nullable();
 
@@ -22,6 +22,7 @@ class CreateWithholdingCertificateAttachmentsTable extends Migration
             $table->string('return_type');
             $table->string('location');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -33,6 +34,6 @@ class CreateWithholdingCertificateAttachmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('withholding_certificate_attachments');
+        Schema::dropIfExists('withheld_certificate_attachments');
     }
 }
