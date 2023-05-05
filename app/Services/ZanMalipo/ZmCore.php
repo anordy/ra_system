@@ -3,14 +3,15 @@
 namespace App\Services\ZanMalipo;
 
 
+use Exception;
+use Carbon\Carbon;
 use App\Models\ZmBill;
 use App\Models\ZmBillItem;
 use App\Models\ZmEgaCharge;
-use Carbon\Carbon;
-use Exception;
+use Spatie\ArrayToXml\ArrayToXml;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Spatie\ArrayToXml\ArrayToXml;
+use App\Services\Api\ZanMalipoInternalService;
 
 class ZmCore
 {
@@ -188,75 +189,8 @@ class ZmCore
         } else {
             throw new \Exception('Invalid bill supplied to send bill');
         }
-
-        $xml = new XmlWrapper('gepgBillSubReq');
-        $xml_bill_hdr = $xml->createElement("BillHdr");
-        $xml->addChildrenToNode([
-            'SpCode' => config('modulesconfig.zm_spcode'),
-            'RtrRespFlg' => 'true'
-        ], $xml_bill_hdr);
-
-        $xml_trx_info = $xml->createElement("BillTrxInf");
-
-        $xml->addChildrenToNode([
-            'BillId' => $zm_bill->id,
-            'SubSpCode' => config('modulesconfig.zm_subspcode'),
-            'SpSysId' =>  config('modulesconfig.zm_spsysid'),
-            'BillAmt' => $zm_bill->amount,
-            'MiscAmt' => 0,
-            'BillExprDt' => Carbon::createFromFormat('Y-m-d H:i:s', $zm_bill->expire_date)->format('Y-m-d\TH:i:s'),
-            'PyrId' => $zm_bill->payer_id,
-            'PyrName' => $zm_bill->payer_name,
-            'BillDesc' => $zm_bill->description,
-            'BillGenDt' => Carbon::now()->format('Y-m-d\TH:i:s'),
-            'BillGenBy' => $generated_by,
-            'BillApprBy' => $approved_by,
-            'PyrCellNum' => self::formatPhone($zm_bill->payer_phone_number),
-            'PyrEmail' => $zm_bill->payer_email,
-            'Ccy' => $zm_bill->currency,
-            'BillEqvAmt' => $zm_bill->amount,
-            'RemFlag' => 'true',
-            'BillPayOpt' => $zm_bill->payment_option,
-        ], $xml_trx_info);
-
-        $xml_bill_items = $xml->createElement("BillItems");
-
-        if (count($zm_bill->bill_items) == 0) {
-            throw new \Exception('Bill has no bill items (in customer_application_bill_items)');
-        }
-
-        foreach ($zm_bill->bill_items as $zm_item) {
-            $bill_item = [
-                'BillItemRef' => $zm_item->id,
-                'UseItemRefOnPay' => 'N',
-                'BillItemAmt' => $zm_item->amount,
-                'BillItemEqvAmt' => $zm_item->amount,
-                'BillItemMiscAmt' => 0,
-                'GfsCode' => $zm_item->gfs_code
-            ];
-
-            $xml_bill = $xml->createElement('BillItem');
-            $xml->addChildrenToNode($bill_item, $xml_bill);
-            $xml->addChildNodeToNode($xml_bill, $xml_bill_items);
-        }
-
-        $xml->addChildNodeToNode($xml_bill_items, $xml_trx_info);
-        $xml->addToRoot($xml_bill_hdr);
-        $xml->addToRoot($xml_trx_info);
-
-        $response = self::signrequest($xml->toXML(), config('modulesconfig.zm_create_bill'));
-        $status_code = self::getStatusCode($response);
-
-        $zm_bill->zan_trx_sts_code = $status_code;
-
-        if ($status_code == 7101) {
-            $zm_bill->zan_status = 'pending';
-        } else {
-            $zm_bill->zan_status = 'failed';
-        }
-        $zm_bill->save();
-
-        return new ZmResponse($status_code, $zm_bill);
+        $res = (new ZanMalipoInternalService)->createBill($zm_bill);
+        return new ZmResponse($res['data']['status_code'], $zm_bill);
     }
 
     /**

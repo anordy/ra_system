@@ -61,7 +61,7 @@ trait PaymentsTrait
                 $bill->save();
 
                 $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
-                $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
     
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
@@ -135,7 +135,7 @@ trait PaymentsTrait
             $bill->save();
 
             $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
-            $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
 
             dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
 
@@ -289,9 +289,6 @@ trait PaymentsTrait
         if (config('app.env') != 'local') {
             $response = ZmCore::sendBill($bill->id);
             if ($response->status === ZmResponse::SUCCESS) {
-                $billable->status = BillStatus::CN_GENERATING;
-                $billable->save();
-
                 session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
@@ -795,7 +792,7 @@ trait PaymentsTrait
             $bill->save();
 
             $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
-            $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
 
             dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }

@@ -15,6 +15,7 @@ class SystemSetting extends Model implements Auditable
     const LOGIN_DECAY_MINUTES = 'login-decay-minutes';
     const GENERAL_COMMISSIONER_SIGN = 'general-commissioner-sign';
     const GENERAL_COMMISSIONER_NAME = 'general-commissioner-name';
+    const DURATION_BEFORE_DELETE_DRAFT_BUSINESSES = 'duration-before-delete-draft-businesses';
 
     const INPUT_TIME = 'time';
     const INPUT_FILE = 'file';

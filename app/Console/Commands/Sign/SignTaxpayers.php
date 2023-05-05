@@ -40,7 +40,7 @@ class SignTaxpayers extends Command
      */
     public function handle()
     {
-        $this->info('Started signing taxpayers.');
+        $this->line('Started signing taxpayers.');
 
         if ($this->argument('taxpayer')){
 
@@ -56,15 +56,25 @@ class SignTaxpayers extends Command
                 return 0;
             }
 
-            $this->sign($taxpayer);
+            $this->line("Signing: {$taxpayer->full_name}");
+            if ($this->sign($taxpayer)){
+                $this->info("Signing {$taxpayer->full_name} completed.");
+            } else {
+                $this->error("Signing {$taxpayer->full_name} failed.");
+            }
+
             return 0;
         }
 
-        $this->info('Taxpayer ID not provided, signing all.');
+        $this->line('Taxpayer ID not provided, signing all.');
 
         foreach (Taxpayer::all() as $taxpayer){
-            $this->info('Signing: ' . $taxpayer->email);
-            $this->sign($taxpayer);
+            $this->line('Signing: ' . $taxpayer->full_name);
+            if ($this->sign($taxpayer)){
+                $this->info("Signing {$taxpayer->full_name} completed.");
+            } else {
+                $this->error("Signing {$taxpayer->full_name} failed.");
+            }
         }
 
         $this->info('Signing complete');

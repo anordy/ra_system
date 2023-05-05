@@ -30,7 +30,6 @@ trait VerificationTrait
 
         Log::channel('verification')->info('Attempting to verify an instance.');
 
-
         try {
             $token = AuthenticationService::getAuthToken();
 

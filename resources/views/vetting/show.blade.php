@@ -3,6 +3,12 @@
 @section('title', 'Tax Return Vetting Preview')
 
 @section('content')
+    <div class="row mx-1">
+        <div class="col-md-12">
+            <livewire:returns.return-payment :return="$return->tax_return" />
+        </div>
+    </div>
+
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"

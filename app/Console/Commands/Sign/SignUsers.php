@@ -56,15 +56,25 @@ class SignUsers extends Command
                 return 0;
             }
 
-            $this->sign($user);
+            $this->line('Signing: ' . $user->full_name);
+            if ($this->sign($user)){
+                $this->info("Signing {$user->full_name} completed.");
+            } else {
+                $this->error("Signing {$user->full_name} failed.");
+            }
+
             return 0;
         }
 
         $this->info('User ID not provided, signing all.');
 
         foreach (User::all() as $user){
-            $this->info('Signing: ' . $user->email);
-            $this->sign($user);
+            $this->line('Signing: ' . $user->full_name);
+            if ($this->sign($user)){
+                $this->info("Signing {$user->full_name} completed.");
+            } else {
+                $this->error("Signing {$user->full_name} failed.");
+            }
         }
 
         $this->info('Signing complete');

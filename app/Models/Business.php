@@ -9,6 +9,7 @@ use App\Models\Returns\Vat\VatReturn;
 use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Relief\Relief;
@@ -16,7 +17,7 @@ use App\Models\Returns\Petroleum\QuantityCertificate;
 
 class Business extends Model implements Auditable
 {
-    use HasFactory, WorkflowTrait;
+    use HasFactory, WorkflowTrait, SoftDeletes;
     use \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
@@ -163,8 +164,7 @@ class Business extends Model implements Auditable
 
     public function businessLocationIDs(){
         $locationIds = [];
-        foreach ($this->locations as $key => $location) {
-            // $locationIds[] = $location->id;
+        foreach ($this->locations as $location) {
             array_push($locationIds, $location->id);
         }
         return $locationIds;

@@ -56,15 +56,25 @@ class SignReturns extends Command
                 return 0;
             }
 
-            $this->sign($return);
+            $this->line('Signing: ' . $return->id);
+            if ($this->sign($return)){
+                $this->info("Signing {$return->id} completed.");
+            } else {
+                $this->error("Signing {$return->id} failed.");
+            }
+
             return 0;
         }
 
         $this->info('Return ID not provided, signing all.');
 
         foreach (TaxReturn::all() as $return){
-            $this->info('Signing: ' . $return->id);
-            $this->sign($return);
+            $this->line('Signing: ' . $return->id);
+            if ($this->sign($return)){
+                $this->info("Signing {$return->id} completed.");
+            } else {
+                $this->error("Signing {$return->id} failed.");
+            }
         }
 
         $this->info('Signing complete');

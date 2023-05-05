@@ -199,7 +199,7 @@
                     <ol>
                         <li>
                             Kupitia Benki: Fika tawi lolote au wakala wa benki ya
-                            PBZ, CRDB, NMB, NBC.
+                            PBZ, NMB, NBC.
                             {{-- <br> --}}
                             Namba ya kumbukumbu: <b>{{ $bill->control_number }}</b>.
                         </li>
@@ -217,7 +217,7 @@
                 <td>
                     <ol>
                         <li>
-                            Via Bank: Visit any branch or bank agent of CRDB, NMB, NBC.
+                            Via Bank: Visit any branch or bank agent of PBZ, NMB, NBC.
                             {{-- <br> --}}
                             Reference Number: <b>{{ $bill->control_number }}</b>.
                         </li>

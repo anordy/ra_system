@@ -34,6 +34,6 @@ class BusinessRegistered extends Mailable
     public function build()
     {
         return $this->markdown('emails.business.registered')
-            ->subject("ZRB(ZIDRAS) Business Registration - " . strtoupper($this->business->name));
+            ->subject("ZRA(ZIDRAS) Business Registration - " . strtoupper($this->business->name));
     }
 }

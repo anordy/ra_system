@@ -56,15 +56,25 @@ class SignBill extends Command
                 return 0;
             }
 
-            $this->sign($bill);
+            $this->line('Signing: ' . $bill->id);
+            if ($this->sign($bill)){
+                $this->info("Signing {$bill->id} completed.");
+            } else {
+                $this->error("Signing {$bill->id} failed.");
+            }
+
             return 0;
         }
 
         $this->info('Bill ID not provided, signing all.');
 
         foreach (ZmBill::all() as $bill){
-            $this->info('Signing: ' . $bill->id);
-            $this->sign($bill);
+            $this->line('Signing: ' . $bill->id);
+            if ($this->sign($bill)){
+                $this->info("Signing {$bill->id} completed.");
+            } else {
+                $this->error("Signing {$bill->id} failed.");
+            }
         }
 
         $this->info('Signing complete');
