@@ -75,26 +75,34 @@
                         </thead>
                         <tbody>
                         @foreach ($return->items as $item)
-                            <tr>
-                                <td>{{ $item->config->name }}</td>
-                                @if($item->config->code == 'WITHH')
-                                    <td class="bg-secondary"></td>
-                                @else
-                                    <td>{{ number_format($item->value, 2) }}</td>
-                                @endif
-                                @if($item->config->rate_applicable)
-                                    <td>
-                                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
-                                    </td>
-                                @else
-                                    <td class="bg-secondary"></td>
-                                @endif
-                                @if($item->config->is_summable)
-                                    <td>{{ number_format($item->vat, 2) }}</td>
-                                @else
-                                    <td class="bg-secondary"></td>
-                                @endif
-                            </tr>
+                            @if($item->config->col_type === 'heading')
+                                <tr class="font-weight-bold">
+                                    @foreach($item->config->headings as $heading)
+                                        <th>{{ $heading['name'] }}</th>
+                                    @endforeach
+                                </tr>
+                            @else
+                                <tr>
+                                    <td>{{ $item->config->name }}</td>
+                                    @if($item->config->code == 'WITHH')
+                                        <td class="bg-secondary"></td>
+                                    @else
+                                        <td>{{ number_format($item->value, 2) }}</td>
+                                    @endif
+                                    @if($item->config->rate_applicable)
+                                        <td>
+                                            {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
+                                        </td>
+                                    @else
+                                        <td class="bg-secondary"></td>
+                                    @endif
+                                    @if($item->config->is_summable)
+                                        <td>{{ number_format($item->vat, 2) }}</td>
+                                    @else
+                                        <td class="bg-secondary"></td>
+                                    @endif
+                                </tr>
+                            @endif
                         @endforeach
                         </tbody>
                         <tfoot>
