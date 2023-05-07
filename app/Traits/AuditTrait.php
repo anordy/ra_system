@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\User;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Audit;
@@ -35,6 +36,7 @@ trait AuditTrait
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'user_id'    => auth()->user()->id,
+            'user_type'    => User::class,
         ];
 
         try {
