@@ -33,7 +33,7 @@ class WithholdingAgentRegistration extends Mailable
     public function build()
     {
         return $this->markdown('emails.withholding_agent_registration',[
-            'url' => 'https://192.231.237.29:8888/zpc/public'
+            'url' => config('modulesconfig.admin_url')
         ]);
     }
 }

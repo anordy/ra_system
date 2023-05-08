@@ -13,6 +13,10 @@ return [
     //BIO Websocket
     'bio_websocket' => env('WEBSOCKET_BIO'),
 
+    // APP URLs
+    'admin_url' => env('ADMIN_URL'),
+    'taxpayer_url' => env('TAXPAYER_URL'),
+
     //ZM
     'zm_cancel' => env('ZAN_MALIPO_URL_CANCEL_BILL'),
     'zm_recon' => env('ZAN_MALIPO_URL_RECON'),

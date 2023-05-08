@@ -29,7 +29,7 @@ class PasswordChange extends Mailable
     public function build()
     {
         return $this->markdown('emails.password_change',[
-            'url' => 'https://192.231.237.29:8888/zpc/public'
+            'url' => config('modulesconfig.admin_url')
         ]);
     }
 }
