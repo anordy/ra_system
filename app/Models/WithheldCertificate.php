@@ -12,6 +12,11 @@ class WithheldCertificate extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'withholding_receipt_date' => 'datetime',
+        'vfms_receipt_date' => 'datetime'
+    ];
+
     public function return(){
         return $this->morphTo();
     }

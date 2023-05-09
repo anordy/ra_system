@@ -119,11 +119,11 @@
                 <tr>
                     <td>{{ $loop->index + 1 }}</td>
                     <td>{{ $withheld->withholding_receipt_no }}</td>
-                    <td>{{ $withheld->withholding_receipt_date }}</td>
+                    <td>{{ $withheld->withholding_receipt_date->toDateString() }}</td>
                     <td>{{ $withheld->agent_name }}</td>
                     <td>{{ $withheld->agent_no }}</td>
                     <td>{{ $withheld->vfms_receipt_no }}</td>
-                    <td>{{ $withheld->vfms_receipt_date }}</td>
+                    <td>{{ $withheld->vfms_receipt_date->toDateString() }}</td>
                     <td>{{ number_format($withheld->net_amount) }} {{ $withheld->currency }}</td>
                     <td>{{ number_format($withheld->tax_withheld) }} {{ $withheld->currency }}</td>
                 </tr>
