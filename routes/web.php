@@ -354,7 +354,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('stamp-duty.')->group(function () {
             Route::get('/stamp-duty', [StampDutyReturnController::class, 'index'])->name('index');
             Route::get('/stamp-duty/{returnId}', [StampDutyReturnController::class, 'show'])->name('show');
-            Route::get('/stamp-duty/withheld-certificate/{return_id}', [StampDutyReturnController::class, 'getWithheldCertificate'])->name('withheld-certificate');
+            Route::get('/stamp-duty/withheld-certificates-summary/{return_id}', [StampDutyReturnController::class, 'getWithheldCertificatesSummary'])->name('withheld-certificates-summary');
+            Route::get('/stamp-duty/withheld-certificate/{certificate_id}', [StampDutyReturnController::class, 'getWithheldCertificate'])->name('withheld-certificate');
         });
 
         Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
