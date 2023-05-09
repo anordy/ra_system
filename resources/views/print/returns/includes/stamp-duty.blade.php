@@ -25,7 +25,7 @@
             @endif
             @if($item->config->rate_applicable)
                 <td>
-                    {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' . '%' : $item->config->rate_usd .''. $item->config->currency }}
+                    {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
                 </td>
             @else
                 <td class="bg-secondary"></td>
@@ -47,3 +47,51 @@
     </tr>
     </tfoot>
 </table>
+
+
+@if($return->withheld)
+    <table style="border-collapse:collapse; width:100%">
+        <thead>
+        <tr>
+            <th>
+                <p style="margin-bottom: 0px; margin-top: 25px; text-align: left; font-size: 18px; text-transform: uppercase">{{ __('Return Withheld Details') }}</p>
+            </th>
+        </tr>
+        </thead>
+    </table>
+    <table class="tbl-bordered tbl-p-6" style="width: 100%; margin-top: 10px;">
+        <thead>
+        <th></th>
+        <th colspan="2">{{ __('Withholding') }}</th>
+        <th colspan="2">{{ __('Agent') }}</th>
+        <th colspan="2">{{ __('VFMS') }}</th>
+        <th colspan="2">{{ __('Amount') }}</th>
+        </thead>
+        <thead>
+        <th width="10">{{ __('SN') }}</th>
+        <th>{{ __('Receipt No.') }}</th>
+        <th>{{ __('Receipt Date') }}</th>
+        <th>{{ __('Name') }}</th>
+        <th>{{ __('Agent No') }}</th>
+        <th>{{ __('Receipt No') }}</th>
+        <th>{{ __('Receipt Date') }}</th>
+        <th>{{ __('Net Amount') }}</th>
+        <th>{{ __('Tax Withheld') }}</th>
+        </thead>
+        <tbody>
+        @foreach ($return->withheld as $withheld)
+            <tr>
+                <td>{{ $loop->index + 1 }}</td>
+                <td>{{ $withheld->withholding_receipt_no }}</td>
+                <td>{{ $withheld->withholding_receipt_date->toDateString() }}</td>
+                <td>{{ $withheld->agent_name }}</td>
+                <td>{{ $withheld->agent_no }}</td>
+                <td>{{ $withheld->vfms_receipt_no }}</td>
+                <td>{{ $withheld->vfms_receipt_date->toDateString() }}</td>
+                <td>{{ number_format($withheld->net_amount) }} {{ $withheld->currency }}</td>
+                <td>{{ number_format($withheld->tax_withheld) }} {{ $withheld->currency }}</td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+@endif
