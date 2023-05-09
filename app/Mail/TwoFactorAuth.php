@@ -31,7 +31,7 @@ class TwoFactorAuth extends Mailable
     public function build()
     {
         return $this->markdown('emails.two_factor_auth',[
-            'url' => 'https://192.231.237.29:8888/zrb_admin/public'
+            'url' => config('modulesconfig.admin_url')
         ]);
     }
 }

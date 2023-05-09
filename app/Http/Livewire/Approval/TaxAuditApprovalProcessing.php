@@ -421,7 +421,7 @@ class TaxAuditApprovalProcessing extends Component
             $payer_email = $taxpayer->email;
             $payer_phone = $taxpayer->mobile;
             $description = "Auditing for {$taxType}";
-            $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
+            $payment_option = ZmCore::PAYMENT_OPTION_FULL;
             $currency = 'TZS';
             $createdby_type = get_class(Auth::user());
             $createdby_id = Auth::id();

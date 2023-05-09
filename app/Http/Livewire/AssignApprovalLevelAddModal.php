@@ -46,10 +46,12 @@ class AssignApprovalLevelAddModal extends Component
             $this->customAlert('error', 'The selected user is not approved');
             return;
         }
-        if ($this->user->role->name != 'Administrator') {
-            $this->customAlert('error', 'This level of approval is only allowed for Administrator role only');
-            return;
-        }
+
+        // Allow non-admin to be makers and checkers
+        // if ($this->user->role->name != 'Administrator') {
+        //     $this->customAlert('error', 'This level of approval is only allowed for Administrator role only');
+        //     return;
+        // }
         if (Auth::id() == $this->user->id){
             $this->customAlert('error', 'You can not change your own approval level.');
             return;

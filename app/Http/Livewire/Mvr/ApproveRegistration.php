@@ -120,7 +120,7 @@ class ApproveRegistration extends Component
                 ZmCore::formatPhone($mv->agent->taxpayer->mobile),
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
-                ZmCore::PAYMENT_OPTION_EXACT,
+                ZmCore::PAYMENT_OPTION_FULL,
                 'TZS',
                 1,
                 auth()->user()->id,

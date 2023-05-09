@@ -755,7 +755,7 @@
                             <a href="{{ route('settings.street.index') }}">Streets</a>
                         </li>
                     @endcan
-                    @can('setting-banks-view')
+                    @can('setting-bank-view')
                         <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
                             <a href="{{ route('settings.banks.index') }}">Banks</a>
                         </li>
