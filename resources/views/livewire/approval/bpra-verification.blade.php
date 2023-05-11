@@ -116,19 +116,14 @@
                     </table>
                     <div class="card-body mt-0 p-2">
                         <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
-                            {{-- @if ($bpraResponse['directors']) --}}
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active" id="directors-tab" data-toggle="tab" href="#directors"
                                     role="tab" aria-controls="directors" aria-selected="true">Directors</a>
                             </li>
-                            {{-- @endif --}}
-                            {{-- @if (count($bpraResponse['shareHolders'])) --}}
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link" id="shareholders-tab" data-toggle="tab" href="#shareholders"
                                     role="tab" aria-controls="shareholders" aria-selected="false">Shareholders</a>
                             </li>
-                            {{-- @endif --}}
-                            {{-- @if ($bpraResponse['listShareHolderShares']) --}}
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link" id="shares_distribution-tab" data-toggle="tab"
                                     href="#shares_distribution" role="tab" aria-controls="shares_distribution"
@@ -136,7 +131,6 @@
                                     Shares & Distribution
                                 </a>
                             </li>
-                            {{-- @endif --}}
                         </ul>
                         <div class="tab-content bg-white border shadow-sm" id="myTabContent">
                             <div class="tab-pane fade show active" id="directors" role="tabpanel"
@@ -241,8 +235,6 @@
                                                                 N/A
                                                             @endif
                                                         </td>
-                                                        
-
                                                     </tr>
                                                 @endforeach
                                             @else
