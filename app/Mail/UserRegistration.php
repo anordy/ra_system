@@ -34,7 +34,7 @@ class UserRegistration extends Mailable
     public function build()
     {
         return $this->markdown('emails.user_registration',[
-            'url' => 'https://192.231.237.29:8888/zpc/public'
+            'url' => config('modulesconfig.admin_url')
         ]);
     }
 }

@@ -18,6 +18,9 @@
                 <a href="#installment-items" class="nav-item nav-link font-weight-bold active">Return Summary</a>
                 <a href="#payment-structure" class="nav-item nav-link font-weight-bold ">Return Details</a>
                 <a href="#penalties" class="nav-item nav-link font-weight-bold ">Penalties</a>
+                @if($return->withheld_certificates_summary)
+                    <a href="#withheld-attachments" class="nav-item nav-link font-weight-bold ">{{ __('Withheld Summary & Attachments') }}</a>
+                @endif
             </nav>
             <div class="tab-content px-2 pt-3 pb-2 border">
                 <div id="installment-items" class="tab-pane fade active show p-4">
@@ -152,6 +155,58 @@
                         </tbody>
                     </table>
                 </div>
+                <div id="withheld-attachments" class="tab-pane fade p-4">
+                    <table class="table table-bordered table-striped normal-text">
+                        <thead>
+                        <tr>
+                            <th width="10">{{ __('SN') }}</th>
+                            <th>{{ __('Withholding Receipt No.') }}</th>
+                            <th>{{ __('Withholding Receipt Date') }}</th>
+                            <th>{{ __('Agent Name') }}</th>
+                            <th>{{ __('Agent No') }}</th>
+                            <th>{{ __('VFMS Receipt No') }}</th>
+                            <th>{{ __('VFMS Receipt Date') }}</th>
+                            <th>{{ __('Net Amount') }}</th>
+                            <th>{{ __('Tax Withheld') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($return->withheld as $withheld)
+                            <tr>
+                                <td>{{ $loop->index + 1 }}</td>
+                                <td>{{ $withheld->withholding_receipt_no }}</td>
+                                <td>{{ $withheld->withholding_receipt_date->toDateString() }}</td>
+                                <td>{{ $withheld->agent_name }}</td>
+                                <td>{{ $withheld->agent_no }}</td>
+                                <td>{{ $withheld->vfms_receipt_no }}</td>
+                                <td>{{ $withheld->vfms_receipt_date->toDateString() }}</td>
+                                <td>{{ number_format($withheld->net_amount) }} {{ $withheld->currency }}</td>
+                                <td>{{ number_format($withheld->tax_withheld) }} {{ $withheld->currency }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    @if($return->withheld_certificates_summary)
+                        <a class="file-item d-inline-flex pr-3 mr-2"  target="_blank"  href="{{ route('returns.stamp-duty.withheld-certificates-summary', encrypt($return->id)) }}">
+                            <i class="bi bi-file-earmark-excel px-2" style="font-size: x-large"></i>
+                            <div style="font-weight: 500;" class="ml-1">
+                                Withheld Certificates Summary
+                            </div>
+                            <i class="bi bi-arrow-up-right-square ml-2"></i>
+                        </a>
+                    @endif
+
+                    @foreach($return->withheldCertificates as $certificate)
+                        <a class="file-item d-inline-flex pr-3 mr-2"  target="_blank"  href="{{ route('returns.stamp-duty.withheld-certificate', encrypt($certificate->id)) }}">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <div style="font-weight: 500;" class="ml-1">
+                                Withheld Certificate {{ $loop->index + 1 }}
+                            </div>
+                            <i class="bi bi-arrow-up-right-square ml-2"></i>
+                        </a>
+                    @endforeach
+                </div>
+
             </div>
             <div class="row mt-3">
                 <div class="col-md-12 d-flex justify-content-end">

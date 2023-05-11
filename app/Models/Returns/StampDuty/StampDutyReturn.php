@@ -10,6 +10,8 @@ use App\Models\FinancialYear;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxType;
 use App\Models\Verification\TaxVerification;
+use App\Models\WithheldCertificate;
+use App\Models\WithheldCertificateAttachment;
 use App\Models\ZmBill;
 use App\Traits\ReturnTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -85,5 +87,13 @@ class StampDutyReturn extends Model
 
     public function tax_return(){
         return $this->morphOne(TaxReturn::class, 'return');
+    }
+
+    public function withheldCertificates(){
+        return $this->morphMany(WithheldCertificateAttachment::class, 'return');
+    }
+
+    public function withheld(){
+        return $this->morphMany(WithheldCertificate::class, 'return');
     }
 }

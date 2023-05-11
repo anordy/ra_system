@@ -34,7 +34,7 @@ class UserRegistration extends Mailable
     public function build()
     {
         return $this->markdown('emails.user.user-registration',[
-            'url' => 'https://192.231.237.29:8888/zrb_admin/public/login'
+            'url' => config('modulesconfig.admin_url')
         ])->subject("ZRA Staff Registration");
     }
 }

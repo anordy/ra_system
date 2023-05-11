@@ -24,17 +24,17 @@
                         <td>{{ number_format($item->value, 2) }}</td>
                     @endif
                     @if($item->config->rate_applicable)
-                    <td>
-                        @if ($item->config->rate_type == 'percentage')
-                            {{ $item->config->rate }} %
-                        @elseif ($item->config->rate_type == 'fixed')
-                            @if ($item->config->currency == 'TZS')
-                                {{ $item->config->rate }} {{ $item->config->currency }}
-                            @elseif ($item->config->currency == 'USD')
-                            {{ $item->config->rate_usd }} {{ $item->config->currency }}
+                        <td>
+                            @if ($item->config->rate_type == 'percentage')
+                                {{ $item->config->rate }} %
+                            @elseif ($item->config->rate_type == 'fixed')
+                                @if ($item->config->currency == 'TZS')
+                                    {{ $item->config->rate }} {{ $item->config->currency }}
+                                @elseif ($item->config->currency == 'USD')
+                                    {{ $item->config->rate_usd }} {{ $item->config->currency }}
+                                @endif
                             @endif
-                        @endif
-                    </td>
+                        </td>
                     @else
                         <td class="bg-secondary"></td>
                     @endif
@@ -57,35 +57,25 @@
         </tfoot>
     </table>
 </div>
-@if($return->withheld_certificate)
-    <div class="col-md-3">
-        <a class="file-item"  target="_blank"  href="{{ route('returns.stamp-duty.withheld-certificate', encrypt($return->id)) }}">
-            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-            <div style="font-weight: 500;" class="ml-1">
-                Withheld Certificate
-            </div>
-            <i class="bi bi-arrow-up-right-square ml-2"></i>
-        </a>
-    </div>
-@endif
+
 <div class="col-md-12">
     <h6 class="text-uppercase mt-4 mb-2 font-weight-bold">Penalties</h6>
     <table class="table table-bordered table-sm normal-text">
         <thead>
-            <tr>
-                <th>Month</th>
-                <th>Tax Amount</th>
-                <th>Late Filing Amount</th>
-                <th>Late Payment Amount</th>
-                <th>Interest Rate</th>
-                <th>Interest Amount</th>
-                <th>Payable Amount</th>
-            </tr>
+        <tr>
+            <th>Month</th>
+            <th>Tax Amount</th>
+            <th>Late Filing Amount</th>
+            <th>Late Payment Amount</th>
+            <th>Interest Rate</th>
+            <th>Interest Amount</th>
+            <th>Payable Amount</th>
+        </tr>
         </thead>
 
         <tbody>
-            @if(count($return->penalties))
-                @foreach ($return->penalties as $penalty)
+        @if(count($return->penalties))
+            @foreach ($return->penalties as $penalty)
                 <tr>
                     <td>{{ $penalty['financial_month_name'] }}</td>
                     <td>{{ number_format($penalty['tax_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
@@ -95,15 +85,71 @@
                     <td>{{ number_format($penalty['rate_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
                     <td>{{ number_format($penalty['penalty_amount'], 2)}} <strong>{{ $return->currency}}</strong></td>
                 </tr>
-                @endforeach
-            @else
-                <tr>
-                    <td colspan="7" class="text-center py-3">
-                        No penalties for this return.
-                    </td>
-                </tr>
-            @endif
+            @endforeach
+        @else
+            <tr>
+                <td colspan="7" class="text-center py-3">
+                    No penalties for this return.
+                </td>
+            </tr>
+        @endif
         </tbody>
     </table>
 </div>
 
+<div class="col-md-12">
+    <h6 class="text-uppercase mt-4 mb-2 font-weight-bold">Withheld Summary & Attachment</h6>
+    @if($return->withheld_certificates_summary)
+        <table class="table table-bordered table-striped normal-text">
+            <thead>
+            <tr>
+                <th width="10">{{ __('SN') }}</th>
+                <th>{{ __('Withholding Receipt No.') }}</th>
+                <th>{{ __('Withholding Receipt Date') }}</th>
+                <th>{{ __('Agent Name') }}</th>
+                <th>{{ __('Agent No') }}</th>
+                <th>{{ __('VFMS Receipt No') }}</th>
+                <th>{{ __('VFMS Receipt Date') }}</th>
+                <th>{{ __('Net Amount') }}</th>
+                <th>{{ __('Tax Withheld') }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($return->withheld as $withheld)
+                <tr>
+                    <td>{{ $loop->index + 1 }}</td>
+                    <td>{{ $withheld->withholding_receipt_no }}</td>
+                    <td>{{ $withheld->withholding_receipt_date->toDateString() }}</td>
+                    <td>{{ $withheld->agent_name }}</td>
+                    <td>{{ $withheld->agent_no }}</td>
+                    <td>{{ $withheld->vfms_receipt_no }}</td>
+                    <td>{{ $withheld->vfms_receipt_date->toDateString() }}</td>
+                    <td>{{ number_format($withheld->net_amount) }} {{ $withheld->currency }}</td>
+                    <td>{{ number_format($withheld->tax_withheld) }} {{ $withheld->currency }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+        @if($return->withheld_certificates_summary)
+            <a class="file-item d-inline-flex pr-3 mr-2" target="_blank"
+               href="{{ route('returns.stamp-duty.withheld-certificates-summary', encrypt($return->id)) }}">
+                <i class="bi bi-file-earmark-excel px-2" style="font-size: x-large"></i>
+                <div style="font-weight: 500;" class="ml-1">
+                    Withheld Certificates Summary
+                </div>
+                <i class="bi bi-arrow-up-right-square ml-2"></i>
+            </a>
+        @endif
+
+        @foreach($return->withheldCertificates as $certificate)
+            <a class="file-item d-inline-flex pr-3 mr-2" target="_blank"
+               href="{{ route('returns.stamp-duty.withheld-certificate', encrypt($certificate->id)) }}">
+                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                <div style="font-weight: 500;" class="ml-1">
+                    Withheld Certificate {{ $loop->index + 1 }}
+                </div>
+                <i class="bi bi-arrow-up-right-square ml-2"></i>
+            </a>
+        @endforeach
+    @endif
+</div>

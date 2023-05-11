@@ -71,6 +71,7 @@
                             $audit->event == 'deactivated' ||
                             $audit->event == 'activated')
                             <tbody>
+                            @if($isOld)
                                 @foreach (json_decode($old_values, true) as $key => $value)
                                     <tr>
                                         <th>{{ str_replace('_', ' ', $key) }}</th>
@@ -79,10 +80,25 @@
                                             @php
                                                 $new_changes = json_decode($new_values);
                                             @endphp
-                                            {{ $new_changes->$key ?? 'N/A' }}
+                                            {{ $new_changes[$key] ?? 'N/A' }}
                                         </td>
                                     </tr>
                                 @endforeach
+                            @else
+                                @foreach (json_decode($new_values, true) as $key => $value)
+                                    <tr>
+                                        @php
+                                            $old_data = json_decode($old_values);
+                                        @endphp
+                                        <th>{{ str_replace('_', ' ', $key) }}</th>
+                                        <td style="background: {{ count($old_data) > 0 ? compareDualControlValues($old_data, $value) ? '#e9ffe9' : '#ffe9e9' : '#ffe9e9' }}">
+                                            {{ $old_data[$key] ?? 'N/A' }}
+                                        </td>
+                                        <td style="background: #e9ffe9">{{ $value ?? 'N/A' }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
+
                             </tbody>
                         @endif
                     </table>

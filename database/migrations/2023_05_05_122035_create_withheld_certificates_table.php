@@ -1,9 +1,9 @@
 <?php
 
 use App\Enum\Currencies;
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateWithheldCertificatesTable extends Migration
 {
@@ -21,9 +21,9 @@ class CreateWithheldCertificatesTable extends Migration
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('tax_return_id')->nullable();
 
-            $table->string('withholding_receipt_no')->unique();
+            $table->string('withholding_receipt_no');
             $table->date('withholding_receipt_date');
-            $table->string('vfms_receipt_no')->unique();
+            $table->string('vfms_receipt_no');
             $table->date('vfms_receipt_date');
             $table->string('agent_name');
             $table->string('agent_no');

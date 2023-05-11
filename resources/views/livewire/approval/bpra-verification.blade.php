@@ -29,7 +29,7 @@
                         <span class="badge badge-danger py-1 px-2 text-capitalize"
                             style="border-radius: 1rem; background: #fde047; color: #a16207; font-size: 85%">
                             <i class="bi bi-record-circle mr-1"></i>
-                            {{$business->bpra_verification_status}}
+                            {{ $business->bpra_verification_status }}
                         </span>
                     </p>
                 @elseif($business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED)
@@ -116,42 +116,37 @@
                     </table>
                     <div class="card-body mt-0 p-2">
                         <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
-                            @if ($bpraResponse['directors'])
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="directors-tab" data-toggle="tab" href="#directors"
-                                        role="tab" aria-controls="directors" aria-selected="true">Directors</a>
-                                </li>
-                            @endif
-                            @if ($bpraResponse['shareHolders'])
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="shareholders-tab" data-toggle="tab" href="#shareholders"
-                                        role="tab" aria-controls="shareholders"
-                                        aria-selected="false">Shareholders</a>
-                                </li>
-                            @endif
-                            @if ($bpraResponse['listShareHolderShares'])
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="shares_distribution-tab" data-toggle="tab"
-                                        href="#shares_distribution" role="tab" aria-controls="shares_distribution"
-                                        aria-selected="false">Shareholders</a>
-                                </li>
-                            @endif
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="directors-tab" data-toggle="tab" href="#directors"
+                                    role="tab" aria-controls="directors" aria-selected="true">Directors</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="shareholders-tab" data-toggle="tab" href="#shareholders"
+                                    role="tab" aria-controls="shareholders" aria-selected="false">Shareholders</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="shares_distribution-tab" data-toggle="tab"
+                                    href="#shares_distribution" role="tab" aria-controls="shares_distribution"
+                                    aria-selected="false">
+                                    Shares & Distribution
+                                </a>
+                            </li>
                         </ul>
                         <div class="tab-content bg-white border shadow-sm" id="myTabContent">
-                            @if ($bpraResponse['shareHolders'])
-                                <div class="tab-pane fade show active" id="directors" role="tabpanel"
-                                    aria-labelledby="directors-tab">
-                                    <div class="row m-1 p-3">
-                                        <table class="table table-striped table-sm">
-                                            <label class="font-weight-bold text-uppercase mt-2">Directors</label>
-                                            <thead>
-                                                <th style="width: 29%">Name</th>
-                                                <th style="width: 16%">Phone</th>
-                                                <th style="width: 10%">Email</th>
-                                                <th style="width: 20%">Gender</th>
-                                                <th style="width: 25%">Location</th>
-                                            </thead>
-                                            <tbody>
+                            <div class="tab-pane fade show active" id="directors" role="tabpanel"
+                                aria-labelledby="directors-tab">
+                                <div class="row m-1 p-3">
+                                    <table class="table table-striped table-sm">
+                                        <label class="font-weight-bold text-uppercase mt-2">Directors</label>
+                                        <thead>
+                                            <th style="width: 29%">Name</th>
+                                            <th style="width: 16%">Phone</th>
+                                            <th style="width: 10%">Email</th>
+                                            <th style="width: 20%">Gender</th>
+                                            <th style="width: 25%">Location</th>
+                                        </thead>
+                                        <tbody>
+                                            @if ($bpraResponse['directors'])
                                                 @foreach ($bpraResponse['directors'] as $director)
                                                     <tr>
                                                         <td class="">
@@ -182,31 +177,37 @@
                                                         </td>
                                                     </tr>
                                                 @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-
+                                            @else
+                                                <tr>
+                                                    <td colspan="10" class="text-center">
+                                                        No data!
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
                                 </div>
-                            @endif
+                            </div>
 
-                            @if ($bpraResponse['listShareHolderShares'])
-                                <div class="tab-pane fade" id="shareholders" role="tabpanel"
-                                    aria-labelledby="shareholders-tab">
-                                    <div class="row m-1 p-3">
-                                        <table class="table table-striped table-sm">
-                                            <label class="font-weight-bold text-uppercase mt-2">Shareholders</label>
-                                            <thead>
-                                                <th style="width: 29%">Name</th>
-                                                <th style="width: 16%">Phone</th>
-                                                <th style="width: 10%">Email</th>
-                                                <th style="width: 20%">Gender</th>
-                                                <th style="width: 25%">Location</th>
-                                            </thead>
-                                            <tbody>
+                            <div class="tab-pane fade" id="shareholders" role="tabpanel"
+                                aria-labelledby="shareholders-tab">
+                                <div class="row m-1 p-3">
+                                    <table class="table table-striped table-sm">
+                                        <label class="font-weight-bold text-uppercase mt-2">Shareholders</label>
+                                        <thead>
+                                            <th style="width: 29%">Name</th>
+                                            <th style="width: 16%">Phone</th>
+                                            <th style="width: 10%">Email</th>
+                                            <th style="width: 20%">Gender</th>
+                                            <th style="width: 25%">Location</th>
+                                        </thead>
+                                        <tbody>
+                                            @if (count($bpraResponse['shareHolders']))
+
                                                 @foreach ($bpraResponse['shareHolders'] as $shareholder)
                                                     <tr>
                                                         <td class="">
-                                                            {{ $shareholder['entity_name'] }}
+                                                            {{ $shareholder['entity_name'] ? $shareholder['entity_name'] : $shareholder['first_name'] . ' ' . $shareholder['middle_name'] . ' ' . $shareholder['last_name'] ?? 'N/A' }}
                                                         </td>
                                                         <td class="">
                                                             {{ $shareholder['mob_phone'] }}
@@ -223,35 +224,46 @@
                                                                 -
                                                             @endif
                                                         </td>
+                                                        
                                                         <td class="">
-                                                            {{ $shareholder['city_name'] }}
-                                                            <div>
-                                                                {{ $shareholder['first_line'] }}
-                                                            </div>
+                                                            @if ($shareholder['city_name'])
+                                                                {{ $shareholder['city_name'] }}
+                                                                <div>
+                                                                    {{ $shareholder['first_line'] }}
+                                                                </div>
+                                                            @else
+                                                                N/A
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            @else
+                                                <tr>
+                                                    <td colspan="10" class="text-center">
+                                                        No data!
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
                                 </div>
-                            @endif
+                            </div>
 
-                            @if ($bpraResponse['shareHolders'])
-                                <div class="tab-pane fade" id="shares_distribution" role="tabpanel"
-                                    aria-labelledby="shares_distribution-tab">
-                                    <div class="row m-1 p-3">
-                                        <table class="table table-striped table-sm">
-                                            <label class="font-weight-bold text-uppercase mt-2">Shares &
-                                                Distribution</label>
-                                            <thead>
-                                                <th style="width: 30%">Ower Name</th>
-                                                <th style="width: 14%">No Of Shares</th>
-                                                <th style="width: 5%">Currency</th>
-                                                <th style="width: 23%">Shares Taken</th>
-                                                <th style="width: 23%">Shares Paid</th>
-                                            </thead>
-                                            <tbody>
+                            <div class="tab-pane fade" id="shares_distribution" role="tabpanel"
+                                aria-labelledby="shares_distribution-tab">
+                                <div class="row m-1 p-3">
+                                    <table class="table table-striped table-sm">
+                                        <label class="font-weight-bold text-uppercase mt-2">Shares &
+                                            Distribution</label>
+                                        <thead>
+                                            <th style="width: 30%">Ower Name</th>
+                                            <th style="width: 14%">No Of Shares</th>
+                                            <th style="width: 5%">Currency</th>
+                                            <th style="width: 23%">Shares Taken</th>
+                                            <th style="width: 23%">Shares Paid</th>
+                                        </thead>
+                                        <tbody>
+                                            @if ($bpraResponse['listShareHolderShares'])
                                                 @foreach ($bpraResponse['listShareHolderShares'] as $listShareHolderShare)
                                                     <tr>
                                                         <td class="">
@@ -271,11 +283,17 @@
                                                         </td>
                                                     </tr>
                                                 @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            @else
+                                                <tr>
+                                                    <td colspan="10" class="text-center">
+                                                        No data!
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
                                 </div>
-                            @endif
+                            </div>
 
                         </div>
 
@@ -283,17 +301,20 @@
                     <div class="py-1">
                         <div class="mb-1">
                             <small class="font-light font-size-small">
-                                <mark><i class="bi bi-lightbulb-fill"></i></mark> : <mark>Continue with existing provided data won't update any data<mark>
+                                <mark><i class="bi bi-lightbulb-fill"></i></mark> : <mark>Continue with existing
+                                    provided data won't update any data<mark>
                             </small>
                         </div>
                         <div>
                             <small class="text-danger font-light">
-                                <mark><i class="bi bi-lightbulb-fill"></i></mark> : <mark>When Confirm Bpra Data button is clicked, the stakeholders, directors, and shares details will be saved</mark>
+                                <mark><i class="bi bi-lightbulb-fill"></i></mark> : <mark>When Confirm Bpra Data button
+                                    is clicked, the stakeholders, directors, and shares details will be saved</mark>
                             </small>
                         </div>
                     </div>
                     <div class="modal-footer p-2 m-0">
-                        <button wire:click="continueWithProvidedData()" wire:loading.attr="disabled" class="btn btn-primary">
+                        <button wire:click="continueWithProvidedData()" wire:loading.attr="disabled"
+                            class="btn btn-primary">
                             <div wire:loading wire:target="confirm">
                                 <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                                     <span class="sr-only">Loading...</span>
@@ -310,7 +331,7 @@
                     </div>
 
                 </div>
-            
+
             </div>
             <hr>
         @endif

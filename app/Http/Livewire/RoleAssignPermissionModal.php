@@ -39,9 +39,10 @@ class RoleAssignPermissionModal extends Component
 
         try {
             if (isset($this->selectedPermissions)) {
+                $old_permission = $this->role->permissions->pluck('name');
                 $this->role->refreshPermissions($this->selectedPermissions);
                 $new_permissions = $this->permissions->whereIn('id', $this->selectedPermissions)->pluck('name');
-                $this->triggerAudit(Role::class, Audit::UPDATED, 'roles', $this->role->id, $this->role->permissions->pluck('name'), $new_permissions);
+                $this->triggerAudit(Role::class, Audit::UPDATED, 'roles', $this->role->id, $old_permission, $new_permissions);
             } else {
                 $this->role->permissions()->detach();
             }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Returns\StampDuty;
 
 use App\Http\Controllers\Controller;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\WithheldCertificateAttachment;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
@@ -33,12 +34,23 @@ class StampDutyReturnController extends Controller
         return view('returns.stamp-duty.show', compact('return'));
     }
 
-    public function getWithheldCertificate($returnId){
+    public function getWithheldCertificate($certificate_id){
+        if (!Gate::allows('return-stamp-duty-return-view')) {
+            abort(403);
+        }
+
+        $certificate = WithheldCertificateAttachment::findOrFail(decrypt($certificate_id));
+        $extension = pathinfo($certificate->location, PATHINFO_EXTENSION);
+        return Storage::download($certificate->location, "Withheld Certificate.$extension");
+    }
+
+    public function getWithheldCertificatesSummary($returnId){
         if (!Gate::allows('return-stamp-duty-return-view')) {
             abort(403);
         }
 
         $return = StampDutyReturn::findOrFail(decrypt($returnId));
-        return Storage::response($return->withheld_certificate);
+        $extension = pathinfo($return->withheld_certificates_summary, PATHINFO_EXTENSION);
+        return Storage::download($return->withheld_certificates_summary, "Withheld Certificates Summary.$extension");
     }
 }

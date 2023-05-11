@@ -13,6 +13,7 @@ class AuditViewModal extends Component
 
     public $old_values;
     public $new_values;
+    public $isOld;
     public $audit;
 
     public function mount($id)
@@ -23,6 +24,7 @@ class AuditViewModal extends Component
         }
         $this->old_values = $this->audit->old_values;
         $this->new_values = $this->audit->new_values;
+        $this->isOld = !empty($this->old_value) ? true : false;
     }
 
 

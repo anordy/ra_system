@@ -22,29 +22,23 @@
                                         <div class="card-body mt-0 p-2">
                                             <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist"
                                                 style="margin-bottom: 0;">
-                                                @if (count($directors))
-                                                    <li class="nav-item" role="presentation">
-                                                        <a class="nav-link active" id="directors-tab" data-toggle="tab"
-                                                            href="#directors" role="tab" aria-controls="directors"
-                                                            aria-selected="true">Directors</a>
-                                                    </li>
-                                                @endif
-                                                @if (count($shareholders))
-                                                    <li class="nav-item" role="presentation">
-                                                        <a class="nav-link" id="shareholders-tab" data-toggle="tab"
-                                                            href="#shareholders" role="tab" aria-controls="shareholders"
-                                                            aria-selected="false">Shareholders</a>
-                                                    </li>
-                                                @endif
-                                                @if (count($shares))
-                                                    <li class="nav-item" role="presentation">
-                                                        <a class="nav-link" id="shares_distribution-tab" data-toggle="tab"
-                                                            href="#shares_distribution" role="tab"
-                                                            aria-controls="shares_distribution" aria-selected="false">Shares
-                                                            &
-                                                            Distribution</a>
-                                                    </li>
-                                                @endif
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link active" id="directors-tab" data-toggle="tab"
+                                                        href="#directors" role="tab" aria-controls="directors"
+                                                        aria-selected="true">Directors</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="shareholders-tab" data-toggle="tab"
+                                                        href="#shareholders" role="tab" aria-controls="shareholders"
+                                                        aria-selected="false">Shareholders</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="shares_distribution-tab" data-toggle="tab"
+                                                        href="#shares_distribution" role="tab"
+                                                        aria-controls="shares_distribution" aria-selected="false">Shares
+                                                        &
+                                                        Distribution</a>
+                                                </li>
                                             </ul>
                                             <div class="tab-content bg-white border shadow-sm" id="myTabContent">
                                                 @if (count($directors))
@@ -117,7 +111,7 @@
                                                                     @foreach ($shareholders as $shareholder)
                                                                         <tr>
                                                                             <td class="">
-                                                                                {{ $shareholder['entity_name'] }}
+                                                                                {{ $shareholder['entity_name'] ? $shareholder['entity_name'] : $shareholder['first_name'] . ' ' . $shareholder['middle_name'] . ' ' . $shareholder['last_name'] ?? 'N/A' }}
                                                                             </td>
                                                                             <td class="">
                                                                                 {{ $shareholder['mob_phone'] }}
@@ -134,11 +128,16 @@
                                                                                     -
                                                                                 @endif
                                                                             </td>
+
                                                                             <td class="">
-                                                                                {{ $shareholder['city_name'] }}
-                                                                                <div>
-                                                                                    {{ $shareholder['first_line'] }}
-                                                                                </div>
+                                                                                @if ($shareholder['city_name'])
+                                                                                    {{ $shareholder['city_name'] }}
+                                                                                    <div>
+                                                                                        {{ $shareholder['first_line'] }}
+                                                                                    </div>
+                                                                                @else
+                                                                                    N/A
+                                                                                @endif
                                                                             </td>
                                                                         </tr>
                                                                     @endforeach
