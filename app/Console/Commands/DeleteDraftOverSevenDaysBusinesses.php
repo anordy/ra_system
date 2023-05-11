@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use App\Models\Business;
@@ -47,16 +46,23 @@ class DeleteDraftOverSevenDaysBusinesses extends Command
         Log::channel('dailyJobs')->info('End Daily delete all draft businesses that exceed seven days from the day they where created');
     }
 
-    public function dailyDeleteDraftBusiness(){
-        $businesses = Business::whereDate('created_at', '<=', now()->subDays(SystemSetting::DURATION_BEFORE_DELETE_DRAFT_BUSINESSES))->get();
-        if ($businesses){
-            foreach($businesses as $business){
-                $business->locations()->delete();
-                $business->banks()->delete();
-                $business->partners()->delete();
-                $business->consultants()->delete();
-                $business->delete();
+    public function dailyDeleteDraftBusiness()
+    {
+        try {
+            $duration = SystemSetting::where('code', SystemSetting::DURATION_BEFORE_DELETE_DRAFT_BUSINESSES)->where('is_approved', 1)->firstOrFail();
+            $businesses = Business::whereDate('created_at', '<=', now()->subDays($duration->value))->where('status', 'draft')->get();
+            if ($businesses) {
+                foreach ($businesses as $business) {
+                    $business->locations()->delete();
+                    $business->banks()->delete();
+                    $business->partners()->delete();
+                    $business->consultants()->delete();
+                    $business->delete();
+                }
             }
+        } catch (\Exception $e) {
+            Log::channel('dailyJobs')->error($e);
         }
     }
 }
+
