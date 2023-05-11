@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
+use App\Models\BusinessDirector;
+use App\Models\BusinessShare;
+use App\Models\BusinessShareholder;
 use Illuminate\Support\Facades\Gate;
 
 class RegistrationController extends Controller
@@ -22,7 +25,10 @@ class RegistrationController extends Controller
             abort(403);
         }
         $business = Business::findOrFail(decrypt($businessId));
-        return view('business.registrations.show', compact('business'));
+        $directors = BusinessDirector::where('business_id', $business->id)->get();
+        $shareholders = BusinessShareholder::where('business_id', $business->id)->get();
+        $shares = BusinessShare::where('business_id', $business->id)->get();
+        return view('business.registrations.show', compact('business', 'directors', 'shareholders', 'shares'));
     }
 
     public function approval($businessId)
