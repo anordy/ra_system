@@ -4,6 +4,7 @@ namespace App\Models\Returns\Vat;
 
 use App\Models\Claims\TaxClaim;
 use App\Models\Claims\TaxCreditItem;
+use App\Models\WithheldCertificate;
 use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
@@ -106,9 +107,12 @@ class VatReturn extends Model
     }
 
     public function vatWithheld(){
-        return $this->hasOne(VatWithheldAttachment::class, 'vat_return_id');
+        return $this->hasMany(VatWithheldAttachment::class, 'vat_return_id');
     }
 
+    public function withheldDetails(){
+        return $this->morphMany(WithheldCertificate::class, 'return');
+    }
 
     public function cashSales(){
         return $this->hasMany(VatCashSales::class, 'vat_return_id');

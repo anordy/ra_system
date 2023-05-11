@@ -49,7 +49,7 @@ class VatReturnController extends Controller
 
 
     public function getFile($id, $type){
-        $withheld = VatWithheldAttachment::where('vat_return_id',decrypt($id))->first();
+        $withheld = VatWithheldAttachment::where('id',decrypt($id))->first();
 
         if ($type == 'withheld') {
             return Storage::disk('local-admin')->response($withheld->withheld_file);

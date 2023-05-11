@@ -18,13 +18,13 @@
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="hotel-tab" data-toggle="tab" href="#hotel" role="tab"
                        aria-controls="contact"
-                       aria-selected="false">Hotel Details</a>
+                       aria-selected="false">Hotel</a>
                 </li>
 
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="zero-tab" data-toggle="tab" href="#zero" role="tab"
                        aria-controls="contact"
-                       aria-selected="false">Zero Rated Supply Details</a>
+                       aria-selected="false">Zero Rated</a>
                 </li>
 
 
@@ -36,6 +36,12 @@
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="payment-summary-tab" data-toggle="tab" href="#payment-summary" role="tab"
                        aria-controls="payment-summary" aria-selected="false">Payment Summary</a>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="withheld-tab" data-toggle="tab" href="#withheld"
+                       role="tab"
+                       aria-controls="withheld" aria-selected="false">Withheld</a>
                 </li>
             </ul>
             <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
@@ -504,6 +510,58 @@
                 </div>
                 <div class="tab-pane p-2" id="payment-summary" role="tabpanel" aria-labelledby="payment-summary-tab">
                     <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
+                </div>
+
+                <div class="tab-pane p-2" id="withheld" role="tabpanel" aria-labelledby="withheld-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-bordered table-sm normal-text">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="text-center">{{ __('Withholding Receipt No') }}</th>
+                                    <th class="text-center">{{ __('Withholding Receipt Date') }}</th>
+                                    <th class="text-center">{{ __('VFMS Receipt No') }}</th>
+                                    <th class="text-center">{{ __('VFMS Receipt Date') }}</th>
+                                    <th class="text-center">{{ __('Agent Name') }}</th>
+                                    <th class="text-center">{{ __('Agent No') }}</th>
+                                    <th class="text-center">{{ __('Net Amount') }}</th>
+                                    <th class="text-center">{{ __('Tax Withheld') }}</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                @if (count($return->withheldDetails))
+                                    @foreach ($return->withheldDetails as $index=> $details)
+                                        <tr>
+                                            <th class="text-center">{{$index + 1}}</th>
+                                            <td class="text-center">{{ $details['withholding_receipt_no'] }} </td>
+
+                                            <td class="text-center">{{ $details['withholding_receipt_date'] }}</td>
+
+                                            <td class="text-center">{{ $details['vfms_receipt_no'] }}</td>
+
+                                            <td class="text-center">{{ $details['vfms_receipt_date'] }}</td>
+
+                                            <td class="text-center">{{ ucwords($details['agent_name']) }}</td>
+
+                                            <td class="text-center">{{ $details['agent_no'] }}</td>
+                                            <td class="text-center">{{ $details['net_amount'] }} </td>
+                                            <td class="text-center">{{ $details['tax_withheld'] }} </td>
+
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="7" class="text-center py-3">
+                                            {{ __('No details for withhold for this return month') }}.
+                                        </td>
+                                    </tr>
+                                @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
