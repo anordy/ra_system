@@ -103,6 +103,7 @@ class ChangesApprovalProcessing extends Component
 
                     $business->update([
                         'is_own_consultant' => $new_values['is_own_consultant'],
+                        'responsible_person_id' => $new_values['responsible_person_id']
                     ]);
 
                     $this->subject->status = BusinessStatus::APPROVED;

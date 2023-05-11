@@ -51,8 +51,10 @@ class DeleteDraftOverSevenDaysBusinesses extends Command
         $businesses = Business::whereDate('created_at', '<=', now()->subDays(SystemSetting::DURATION_BEFORE_DELETE_DRAFT_BUSINESSES))->get();
         if ($businesses){
             foreach($businesses as $business){
-                BusinessPartner::where('business_id', $business->id)->delete();
-                BusinessBank::where('business_id', $business->id)->delete();
+                $business->locations()->delete();
+                $business->banks()->delete();
+                $business->partners()->delete();
+                $business->consultants()->delete();
                 $business->delete();
             }
         }

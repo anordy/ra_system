@@ -303,6 +303,16 @@
                                     <td class="table-success">Changed</td>
                                 @endif
                             </tr>
+                            <tr>
+                                <th>Responsible Person Name</th>
+                                <td>{{ $this->getResponsiblePersonNameById($old_values->responsible_person_id) ?? 'N/A' }}</td>
+                                <td>{{ $this->getResponsiblePersonNameById($new_values->responsible_person_id) ?? 'N/A' }}</td>
+                                @if ($old_values->responsible_person_id == $new_values->responsible_person_id)
+                                    <td class="table-primary">Unchanged</td>
+                                @else
+                                    <td class="table-success">Changed</td>
+                                @endif
+                            </tr>
                         </tbody>
                     </table>
                     <br>
