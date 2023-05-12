@@ -25,9 +25,9 @@ class RegistrationController extends Controller
             abort(403);
         }
         $business = Business::findOrFail(decrypt($businessId));
-        $directors = BusinessDirector::where('business_id', $business->id)->get();
-        $shareholders = BusinessShareholder::where('business_id', $business->id)->get();
-        $shares = BusinessShare::where('business_id', $business->id)->get();
+        $directors = BusinessDirector::where('business_id', $business->id)->get() ?? [];
+        $shareholders = BusinessShareholder::where('business_id', $business->id)->get() ?? [];
+        $shares = BusinessShare::where('business_id', $business->id)->get() ?? [];
         return view('business.registrations.show', compact('business', 'directors', 'shareholders', 'shares'));
     }
 

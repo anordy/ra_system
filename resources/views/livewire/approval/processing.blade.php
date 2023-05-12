@@ -12,14 +12,15 @@
                         <div class="card">
                             <div class="card-header">BPRA Verification</div>
                             <div class="card-body">
-                                    <livewire:approval.bpra-verification :business="$subject" />
+                                <livewire:approval.bpra-verification :business="$subject" />
                             </div>
 
-                            @if ($subject->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
-                                (count($directors) || count($shareholders) || count($shares)))
+                            @if (
+                                $subject->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
+                                    (count($directors) || count($shareholders) || count($shares)))
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="card-body mt-0 p-2">
+                                        <div class="card-body mt-0 p-2 px-0">
                                             <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist"
                                                 style="margin-bottom: 0;">
                                                 <li class="nav-item" role="presentation">
@@ -41,21 +42,21 @@
                                                 </li>
                                             </ul>
                                             <div class="tab-content bg-white border shadow-sm" id="myTabContent">
-                                                @if (count($directors))
-                                                    <div class="tab-pane fade show active" id="directors" role="tabpanel"
-                                                        aria-labelledby="directors-tab">
-                                                        <div class="row m-1 p-3">
-                                                            <table class="table table-striped table-sm">
-                                                                <label
-                                                                    class="font-weight-bold text-uppercase mt-2">Directors</label>
-                                                                <thead>
-                                                                    <th style="width: 29%">Name</th>
-                                                                    <th style="width: 16%">Phone</th>
-                                                                    <th style="width: 10%">Email</th>
-                                                                    <th style="width: 20%">Gender</th>
-                                                                    <th style="width: 25%">Location</th>
-                                                                </thead>
-                                                                <tbody>
+                                                <div class="tab-pane fade show active" id="directors" role="tabpanel"
+                                                    aria-labelledby="directors-tab">
+                                                    <div class="row m-1 p-3">
+                                                        <table class="table table-striped table-sm">
+                                                            <label
+                                                                class="font-weight-bold text-uppercase mt-2">Directors</label>
+                                                            <thead>
+                                                                <th style="width: 29%">Name</th>
+                                                                <th style="width: 16%">Phone</th>
+                                                                <th style="width: 10%">Email</th>
+                                                                <th style="width: 20%">Gender</th>
+                                                                <th style="width: 25%">Location</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if (count($directors))
                                                                     @foreach ($directors as $director)
                                                                         <tr>
                                                                             <td class="">
@@ -72,7 +73,8 @@
                                                                             <td class="">
                                                                                 @if (substr($director['gender'], 3) == 'M')
                                                                                     MALE
-                                                                                @elseif (substr($director['gender'], 3) == 'F')
+                                                                                    @elseif
+                                                                                    (substr($director['gender'], 3) == 'F')
                                                                                     FEMALE
                                                                                 @else
                                                                                     -
@@ -86,28 +88,34 @@
                                                                             </td>
                                                                         </tr>
                                                                     @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-
+                                                                @else
+                                                                    <tr>
+                                                                        <td colspan="10" class="text-center">
+                                                                            No Data
+                                                                        </td>
+                                                                    </tr>
+                                                                @endif
+                                                            </tbody>
+                                                        </table>
                                                     </div>
-                                                @endif
 
-                                                @if (count($shareholders))
-                                                    <div class="tab-pane fade" id="shareholders" role="tabpanel"
-                                                        aria-labelledby="shareholders-tab">
-                                                        <div class="row m-1 p-3">
-                                                            <table class="table table-striped table-sm">
-                                                                <label
-                                                                    class="font-weight-bold text-uppercase mt-2">Shareholders</label>
-                                                                <thead>
-                                                                    <th style="width: 29%">Name</th>
-                                                                    <th style="width: 16%">Phone</th>
-                                                                    <th style="width: 10%">Email</th>
-                                                                    <th style="width: 20%">Gender</th>
-                                                                    <th style="width: 25%">Location</th>
-                                                                </thead>
-                                                                <tbody>
+                                                </div>
+
+                                                <div class="tab-pane fade" id="shareholders" role="tabpanel"
+                                                    aria-labelledby="shareholders-tab">
+                                                    <div class="row m-1 p-3">
+                                                        <table class="table table-striped table-sm">
+                                                            <label
+                                                                class="font-weight-bold text-uppercase mt-2">Shareholders</label>
+                                                            <thead>
+                                                                <th style="width: 29%">Name</th>
+                                                                <th style="width: 16%">Phone</th>
+                                                                <th style="width: 10%">Email</th>
+                                                                <th style="width: 20%">Gender</th>
+                                                                <th style="width: 25%">Location</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if (count($shareholders))
                                                                     @foreach ($shareholders as $shareholder)
                                                                         <tr>
                                                                             <td class="">
@@ -122,7 +130,8 @@
                                                                             <td class="">
                                                                                 @if (substr($shareholder['gender'], 3) == 'M')
                                                                                     MALE
-                                                                                @elseif (substr($shareholder['gender'], 3) == 'F')
+                                                                                    @elseif
+                                                                                    (substr($shareholder['gender'], 3) == 'F')
                                                                                     FEMALE
                                                                                 @else
                                                                                     -
@@ -141,27 +150,33 @@
                                                                             </td>
                                                                         </tr>
                                                                     @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                                @else
+                                                                    <tr>
+                                                                        <td colspan="10" class="text-center">
+                                                                            No Data
+                                                                        </td>
+                                                                    </tr>
+                                                                @endif
+                                                            </tbody>
+                                                        </table>
                                                     </div>
-                                                @endif
+                                                </div>
 
-                                                @if (count($shares))
-                                                    <div class="tab-pane fade" id="shares_distribution" role="tabpanel"
-                                                        aria-labelledby="shares_distribution-tab">
-                                                        <div class="row m-1 p-3">
-                                                            <table class="table table-striped table-sm">
-                                                                <label class="font-weight-bold text-uppercase mt-2">Shares &
-                                                                    Distribution</label>
-                                                                <thead>
-                                                                    <th style="width: 30%">Ower Name</th>
-                                                                    <th style="width: 14%">No Of Shares</th>
-                                                                    <th style="width: 5%">Currency</th>
-                                                                    <th style="width: 23%">Shares Taken</th>
-                                                                    <th style="width: 23%">Shares Paid</th>
-                                                                </thead>
-                                                                <tbody>
+                                                <div class="tab-pane fade" id="shares_distribution" role="tabpanel"
+                                                    aria-labelledby="shares_distribution-tab">
+                                                    <div class="row m-1 p-3">
+                                                        <table class="table table-striped table-sm">
+                                                            <label class="font-weight-bold text-uppercase mt-2">Shares &
+                                                                Distribution</label>
+                                                            <thead>
+                                                                <th style="width: 30%">Ower Name</th>
+                                                                <th style="width: 14%">No Of Shares</th>
+                                                                <th style="width: 5%">Currency</th>
+                                                                <th style="width: 23%">Shares Taken</th>
+                                                                <th style="width: 23%">Shares Paid</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if (count($shares))
                                                                     @foreach ($shares as $share)
                                                                         <tr>
                                                                             <td class="">
@@ -181,11 +196,17 @@
                                                                             </td>
                                                                         </tr>
                                                                     @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                                @else
+                                                                    <tr>
+                                                                        <td colspan="10" class="text-center">
+                                                                            No Data
+                                                                        </td>
+                                                                    </tr>
+                                                                @endif
+                                                            </tbody>
+                                                        </table>
                                                     </div>
-                                                @endif
+                                                </div>
 
                                             </div>
 
@@ -222,7 +243,8 @@
         </div>
         @if ($this->checkTransition('registration_officer_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject','application_filled_incorrect')">
+                <button type="button" class="btn btn-danger"
+                    wire:click="confirmPopUpModal('reject','application_filled_incorrect')">
                     <div wire:loading wire:target="reject">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
@@ -230,8 +252,8 @@
                     </div>Filled Incorrect return to Applicant
                 </button>
 
-                <button wire:click="confirmPopUpModal('approve', 'registration_officer_review')" wire:loading.attr="disabled"
-                    class="btn btn-primary">
+                <button wire:click="confirmPopUpModal('approve', 'registration_officer_review')"
+                    wire:loading.attr="disabled" class="btn btn-primary">
                     <div wire:loading wire:target="approve">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
@@ -241,7 +263,8 @@
             </div>
         @elseif ($this->checkTransition('registration_manager_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject','registration_manager_reject')">
+                <button type="button" class="btn btn-danger"
+                    wire:click="confirmPopUpModal('reject','registration_manager_reject')">
                     <div wire:loading wire:target="reject">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
@@ -249,8 +272,8 @@
                     </div>
                     Reject & Return
                 </button>
-                <button wire:click="confirmPopUpModal('approve', 'registration_manager_review')" wire:loading.attr="disabled"
-                    class="btn btn-primary">
+                <button wire:click="confirmPopUpModal('approve', 'registration_manager_review')"
+                    wire:loading.attr="disabled" class="btn btn-primary">
                     <div wire:loading wire:target="approve">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
@@ -260,7 +283,8 @@
             </div>
         @elseif ($this->checkTransition('director_of_trai_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject','director_of_trai_reject')">
+                <button type="button" class="btn btn-danger"
+                    wire:click="confirmPopUpModal('reject','director_of_trai_reject')">
                     <div wire:loading wire:target="reject">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
@@ -268,8 +292,8 @@
                     </div>
                     Reject & Return
                 </button>
-                <button wire:click="confirmPopUpModal('approve', 'director_of_trai_review')" wire:loading.attr="disabled"
-                    class="btn btn-primary">
+                <button wire:click="confirmPopUpModal('approve', 'director_of_trai_review')"
+                    wire:loading.attr="disabled" class="btn btn-primary">
                     <div wire:loading wire:target="approve">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>

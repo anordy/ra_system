@@ -113,9 +113,9 @@ class ApprovalProcessing extends Component
             ];
         }
 
-        $this->directors = BusinessDirector::where('business_id', $this->subject->id)->get();
-        $this->shareholders = BusinessShareholder::where('business_id', $this->subject->id)->get();
-        $this->shares = BusinessShare::where('business_id', $this->subject->id)->get();
+        $this->directors = BusinessDirector::where('business_id', $this->subject->id)->get() ?? [];
+        $this->shareholders = BusinessShareholder::where('business_id', $this->subject->id)->get() ?? [];
+        $this->shares = BusinessShare::where('business_id', $this->subject->id)->get() ?? [];
     }
 
     public function isiiciChange($value)

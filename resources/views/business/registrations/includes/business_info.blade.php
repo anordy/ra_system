@@ -2,26 +2,26 @@
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-               aria-selected="true">Business Information</a>
+                aria-selected="true">Business Information</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="location-tab" data-toggle="tab" href="#location" role="tab" aria-controls="location"
-               aria-selected="false">Location</a>
+            <a class="nav-link" id="location-tab" data-toggle="tab" href="#location" role="tab"
+                aria-controls="location" aria-selected="false">Location</a>
         </li>
         @if ($business->partners->count())
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="partners-tab" data-toggle="tab" href="#partners" role="tab"
-                   aria-controls="partners" aria-selected="false">Partners</a>
+                    aria-controls="partners" aria-selected="false">Partners</a>
             </li>
         @endif
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
-               aria-selected="false">Responsible Person</a>
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
+                aria-controls="contact" aria-selected="false">Responsible Person</a>
         </li>
-        @if(count($business->banks))
+        @if (count($business->banks))
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="bank-tab" data-toggle="tab" href="#bank" role="tab" aria-controls="bank"
-                   aria-selected="false">
+                    aria-selected="false">
                     Bank Accounts
                 </a>
             </li>
@@ -29,13 +29,12 @@
         @if ($business->hotel)
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="hotel-tab" data-toggle="tab" href="#hotel" role="tab" aria-controls="hotel"
-                   aria-selected="false">Hotel Information</a>
+                    aria-selected="false">Hotel Information</a>
             </li>
         @endif
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="business-attachment-tab" data-toggle="tab" href="#business-attachment" role="tab"
-               aria-controls="business-attachment"
-               aria-selected="false">Business Attachments</a>
+            <a class="nav-link" id="business-attachment-tab" data-toggle="tab" href="#business-attachment"
+                role="tab" aria-controls="business-attachment" aria-selected="false">Business Attachments</a>
         </li>
     </ul>
 
@@ -104,10 +103,10 @@
                             <button class="btn btn-info">Verify TIN Number</button>
                         </a>
                     @endif --}}
-                    {{--End Will be implementated after TRA intergration --}}
+                    {{-- End Will be implementated after TRA intergration --}}
 
                 </div>
-                @if($business->previous_zno)
+                @if ($business->previous_zno)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Previous ZNO</span>
                         <p class="my-1">{{ $business->previous_zno }}</p>
@@ -207,8 +206,10 @@
                     </div>
                 @endif
 
-                @if ($business->reg_no && $business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
-                    (count($directors) || count($shareholders) || count($shares)))
+                @if (
+                    $business->reg_no &&
+                        $business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
+                        (count($directors) || count($shareholders) || count($shares)))
                     <div class="col-md-12 mb-3">
                         <div class="">
                             <span class="font-weight-bold text-uppercase">BPRA Verification</span>
@@ -217,43 +218,42 @@
                             <livewire:approval.bpra-verification :business="$business" />
                         </div>
                         <div class="col-md-12">
-                                <div class="card-body mt-0 p-2">
-                                    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist"
-                                        style="margin-bottom: 0;">
-                                        <li class="nav-item" role="presentation">
-                                            <a class="nav-link active" id="directors-tab" data-toggle="tab"
-                                               href="#directors" role="tab" aria-controls="directors"
-                                               aria-selected="true">Directors</a>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <a class="nav-link" id="shareholders-tab" data-toggle="tab"
-                                               href="#shareholders" role="tab" aria-controls="shareholders"
-                                               aria-selected="false">Shareholders</a>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <a class="nav-link" id="shares_distribution-tab" data-toggle="tab"
-                                               href="#shares_distribution" role="tab"
-                                               aria-controls="shares_distribution" aria-selected="false">Shares
-                                                &
-                                                Distribution</a>
-                                        </li>
-                                    </ul>
-                                    <div class="tab-content bg-white border shadow-sm" id="myTabContent">
-                                        @if (count($directors))
-                                            <div class="tab-pane fade show active" id="directors" role="tabpanel"
-                                                 aria-labelledby="directors-tab">
-                                                <div class="row m-1 p-3">
-                                                    <table class="table table-striped table-sm">
-                                                        <label
-                                                                class="font-weight-bold text-uppercase mt-2">Directors</label>
-                                                        <thead>
-                                                        <th style="width: 29%">Name</th>
-                                                        <th style="width: 16%">Phone</th>
-                                                        <th style="width: 10%">Email</th>
-                                                        <th style="width: 20%">Gender</th>
-                                                        <th style="width: 25%">Location</th>
-                                                        </thead>
-                                                        <tbody>
+                            <div class="card-body mt-0 p-2 px-0">
+                                <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist"
+                                    style="margin-bottom: 0;">
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" id="directors-tab" data-toggle="tab"
+                                            href="#directors" role="tab" aria-controls="directors"
+                                            aria-selected="true">Directors</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="shareholders-tab" data-toggle="tab"
+                                            href="#shareholders" role="tab" aria-controls="shareholders"
+                                            aria-selected="false">Shareholders</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="shares_distribution-tab" data-toggle="tab"
+                                            href="#shares_distribution" role="tab"
+                                            aria-controls="shares_distribution" aria-selected="false">Shares
+                                            &
+                                            Distribution</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content bg-white border shadow-sm" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="directors" role="tabpanel"
+                                        aria-labelledby="directors-tab">
+                                        <div class="row m-1 p-3">
+                                            <table class="table table-striped table-sm">
+                                                <label class="font-weight-bold text-uppercase mt-2">Directors</label>
+                                                <thead>
+                                                    <th style="width: 29%">Name</th>
+                                                    <th style="width: 16%">Phone</th>
+                                                    <th style="width: 10%">Email</th>
+                                                    <th style="width: 20%">Gender</th>
+                                                    <th style="width: 25%">Location</th>
+                                                </thead>
+                                                <tbody>
+                                                    @if (count($directors) > 0)
                                                         @foreach ($directors as $director)
                                                             <tr>
                                                                 <td class="">
@@ -284,28 +284,34 @@
                                                                 </td>
                                                             </tr>
                                                         @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="10" class="text-center">No Data</td>
+                                                        </tr>
+                                                    @endif
 
-                                            </div>
-                                        @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
 
-                                        @if (count($shareholders))
-                                            <div class="tab-pane fade" id="shareholders" role="tabpanel"
-                                                 aria-labelledby="shareholders-tab">
-                                                <div class="row m-1 p-3">
-                                                    <table class="table table-striped table-sm">
-                                                        <label
-                                                                class="font-weight-bold text-uppercase mt-2">Shareholders</label>
-                                                        <thead>
-                                                        <th style="width: 29%">Name</th>
-                                                        <th style="width: 16%">Phone</th>
-                                                        <th style="width: 10%">Email</th>
-                                                        <th style="width: 20%">Gender</th>
-                                                        <th style="width: 25%">Location</th>
-                                                        </thead>
-                                                        <tbody>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="shareholders" role="tabpanel"
+                                        aria-labelledby="shareholders-tab">
+                                        <div class="row m-1 p-3">
+                                            <table class="table table-striped table-sm">
+                                                <label
+                                                    class="font-weight-bold text-uppercase mt-2">Shareholders</label>
+                                                <thead>
+                                                    <th style="width: 29%">Name</th>
+                                                    <th style="width: 16%">Phone</th>
+                                                    <th style="width: 10%">Email</th>
+                                                    <th style="width: 20%">Gender</th>
+                                                    <th style="width: 25%">Location</th>
+                                                </thead>
+                                                <tbody>
+                                                    @if (count($shareholders) > 0)
+
                                                         @foreach ($shareholders as $shareholder)
                                                             <tr>
                                                                 <td class="">
@@ -339,27 +345,32 @@
                                                                 </td>
                                                             </tr>
                                                         @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        @endif
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="10" class="text-center">No Data</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
 
-                                        @if (count($shares))
-                                            <div class="tab-pane fade" id="shares_distribution" role="tabpanel"
-                                                 aria-labelledby="shares_distribution-tab">
-                                                <div class="row m-1 p-3">
-                                                    <table class="table table-striped table-sm">
-                                                        <label class="font-weight-bold text-uppercase mt-2">Shares &
-                                                            Distribution</label>
-                                                        <thead>
-                                                        <th style="width: 30%">Ower Name</th>
-                                                        <th style="width: 14%">No Of Shares</th>
-                                                        <th style="width: 5%">Currency</th>
-                                                        <th style="width: 23%">Shares Taken</th>
-                                                        <th style="width: 23%">Shares Paid</th>
-                                                        </thead>
-                                                        <tbody>
+                                    <div class="tab-pane fade" id="shares_distribution" role="tabpanel"
+                                        aria-labelledby="shares_distribution-tab">
+                                        <div class="row m-1 p-3">
+                                            <table class="table table-striped table-sm">
+                                                <label class="font-weight-bold text-uppercase mt-2">Shares &
+                                                    Distribution</label>
+                                                <thead>
+                                                    <th style="width: 30%">Ower Name</th>
+                                                    <th style="width: 14%">No Of Shares</th>
+                                                    <th style="width: 5%">Currency</th>
+                                                    <th style="width: 23%">Shares Taken</th>
+                                                    <th style="width: 23%">Shares Paid</th>
+                                                </thead>
+                                                <tbody>
+                                                    @if (count($shares) > 0)
+
                                                         @foreach ($shares as $share)
                                                             <tr>
                                                                 <td class="">
@@ -379,15 +390,19 @@
                                                                 </td>
                                                             </tr>
                                                         @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        @endif
-
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="10" class="text-center">No Data</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
 
                                 </div>
+
+                            </div>
 
                         </div>
                     </div>
@@ -400,7 +415,7 @@
             @if ($location = $business->headquarter)
                 <div class="col-md-12 mt-3">
                     <h6 class="mb-0 font-weight-bold" style="flex: 1;">Headquarter</h6>
-                    <hr class="mt-2 mb-3"/>
+                    <hr class="mt-2 mb-3" />
                 </div>
                 <div class="row m-2">
                     @if ($location->zin)
@@ -431,7 +446,7 @@
                             <p class="my-1">{{ $location->owner_mobile }}</p>
                         </div>
                     @endif
-                    @if($location->effective_date)
+                    @if ($location->effective_date)
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Effective Date</span>
                             <p class="my-1">{{ $location->effective_date->toFormattedDateString() }}</p>
@@ -444,7 +459,7 @@
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Estimated Turnover (Last 12 Months)</span>
                         <p class="my-1">
-                            @if($location->pre_estimated_turnover)
+                            @if ($location->pre_estimated_turnover)
                                 {{ fmCurrency($location->pre_estimated_turnover) }} TZS
                             @else
                                 N/A
@@ -454,7 +469,7 @@
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Estimated Turnover (Next 12 Months)</span>
                         <p class="my-1">
-                            @if($location->post_estimated_turnover)
+                            @if ($location->post_estimated_turnover)
                                 {{ fmCurrency($location->post_estimated_turnover) }} TZS
                             @else
                                 N/A
@@ -493,13 +508,13 @@
                             <p class="my-1">{{ $location->fax }}</p>
                         </div>
                     @endif
-                    @if($location->physical_address)
+                    @if ($location->physical_address)
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Physical Address</span>
                             <p class="my-1">{{ $location->physical_address }}</p>
                         </div>
                     @endif
-                    @if($location->house_no)
+                    @if ($location->house_no)
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">House No.</span>
                             <p class="my-1">{{ $location->house_no }}</p>
@@ -518,8 +533,8 @@
                             <div>
                                 @foreach ($business->taxTypes as $type)
                                     <a target="_blank"
-                                       href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
-                                       class="btn btn-success btn-sm mt-1 text-white">
+                                        href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
+                                        class="btn btn-success btn-sm mt-1 text-white">
                                         <i class="bi bi-patch-check"></i>
                                         {{ $type->name }} Certificate
                                     </a>
@@ -532,7 +547,7 @@
             @if (count($business->branches))
                 <div class="col-md-12">
                     <h6 class="pt-3 mb-0 font-weight-bold">Branches</h6>
-                    <hr class="mt-2 mb-3"/>
+                    <hr class="mt-2 mb-3" />
                 </div>
                 @foreach ($business->branches as $location)
                     <div class="row m-2">
@@ -602,7 +617,7 @@
                             <span class="font-weight-bold text-uppercase">Street</span>
                             <p class="my-1">{{ $location->street->name ?? 'N/A' }}</p>
                         </div>
-                        @if($location->physical_address)
+                        @if ($location->physical_address)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Physical Address</span>
                                 <p class="my-1">{{ $location->physical_address }}</p>
@@ -651,8 +666,8 @@
                                 <div>
                                     @foreach ($business->taxTypes as $type)
                                         <a target="_blank"
-                                           href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
-                                           class="btn btn-success btn-sm mt-1 text-white">
+                                            href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
+                                            class="btn btn-success btn-sm mt-1 text-white">
                                             <i class="bi bi-patch-check"></i>
                                             {{ $type->name }} Certificate
                                         </a>
@@ -661,7 +676,7 @@
                             @endif
                         </div>
                     </div>
-                    <hr style="margin-top: -16px" class="mx-3"/>
+                    <hr style="margin-top: -16px" class="mx-3" />
                 @endforeach
             @endif
         </div>
@@ -671,20 +686,21 @@
                 <div class="row m-2 pt-3">
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Reference No.</th>
-                            <th>Mobile</th>
-                        </tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Reference No.</th>
+                                <th>Mobile</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach ($business->partners as $partner)
-                            <tr class="col-md-4 mb-3">
-                                <td class="font-weight-bold text-uppercase">{{ $partner->taxpayer->full_name }}</td>
-                                <td class="my-1">{{ $partner->taxpayer->reference_no }}</td>
-                                <td class="my-1">{{ $partner->taxpayer->mobile }}</td>
-                            </tr>
-                        @endforeach
+                            @foreach ($business->partners as $partner)
+                                <tr class="col-md-4 mb-3">
+                                    <td class="font-weight-bold text-uppercase">{{ $partner->taxpayer->full_name }}
+                                    </td>
+                                    <td class="my-1">{{ $partner->taxpayer->reference_no }}</td>
+                                    <td class="my-1">{{ $partner->taxpayer->mobile }}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -709,7 +725,8 @@
                 @if ($business->is_own_consultant)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Details</span>
-                        <p class="my-1">{{ $business->taxpayer->first_name }} {{ $business->taxpayer->last_name }}</p>
+                        <p class="my-1">{{ $business->taxpayer->first_name }} {{ $business->taxpayer->last_name }}
+                        </p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Ref No.</span>
@@ -760,7 +777,7 @@
                 @endif
                 <div class="col-md-12 mt-3">
                     <h6 class="mb-0 font-weight-bold" style="flex: 1;">Business Registered By</h6>
-                    <hr class="mt-2 mb-3"/>
+                    <hr class="mt-2 mb-3" />
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Name</span>
@@ -802,7 +819,7 @@
                             <p class="my-1">{{ $bank->branch }}</p>
                         </div>
                         <div class="col-md-12">
-                            <hr/>
+                            <hr />
                         </div>
                     </div>
                 @endforeach
@@ -845,7 +862,8 @@
                         <p class="my-1">{{ $hotel->hotel_capacity }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Average Charging Rate (Per night per person for bed
+                        <span class="font-weight-bold text-uppercase">Average Charging Rate (Per night per person for
+                            bed
                             and breakfast)</span>
                         <p class="my-1">{{ $hotel->average_rate }}</p>
                     </div>
@@ -857,11 +875,13 @@
             </div>
         @endif
 
-        <div class="tab-pane fade" id="business-attachment" role="tabpanel" aria-labelledby="business-attachment-tab">
+        <div class="tab-pane fade" id="business-attachment" role="tabpanel"
+            aria-labelledby="business-attachment-tab">
             <div class="row pt-3 px-3">
                 @foreach ($business->files as $file)
                     <div class="col-md-4">
-                        <a class="file-item" target="_blank" href="{{ route('business.file', encrypt($file->id)) }}">
+                        <a class="file-item" target="_blank"
+                            href="{{ route('business.file', encrypt($file->id)) }}">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <div style="font-weight: 500;" class="ml-1">
                                 {{ $file->type->name ?? 'N/A' }}
@@ -876,11 +896,11 @@
                     @if ($partner->tin)
                         <div class="col-md-4">
                             <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                 class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                                class="p-2 mb-3 d-flex rounded-sm align-items-center">
                                 <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                 <a target="_blank"
-                                   href="{{ route('business.tin.file', encrypt($partner->taxpayer_id)) }}"
-                                   style="font-weight: 500;" class="ml-1">
+                                    href="{{ route('business.tin.file', encrypt($partner->taxpayer_id)) }}"
+                                    style="font-weight: 500;" class="ml-1">
                                     TIN Certificate - {{ $partner->taxpayer->full_name }}
                                     (<b>{{ $partner->taxpayer->reference_no }}</b>)
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -892,10 +912,11 @@
                 @if ($business->taxpayer->tin_location)
                     <div class="col-md-4">
                         <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                             class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <a target="_blank" href="{{ route('business.tin.file', encrypt($business->taxpayer_id)) }}"
-                               style="font-weight: 500;" class="ml-1">
+                            <a target="_blank"
+                                href="{{ route('business.tin.file', encrypt($business->taxpayer_id)) }}"
+                                style="font-weight: 500;" class="ml-1">
                                 TIN Certificate - {{ $business->taxpayer->full_name }}
                                 (<b>{{ $business->taxpayer->reference_no }}</b>)
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
