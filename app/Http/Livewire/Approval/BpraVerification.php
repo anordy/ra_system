@@ -26,6 +26,7 @@ class BpraVerification extends Component
     public $shareholders;
     public $directors;
     public $shares;
+    public $requestSuccess;
 
     public function mount($business){
         $this->business = $business;
@@ -130,7 +131,13 @@ class BpraVerification extends Component
 
             if ($this->shareholders) {
                 foreach ($this->shares as $share) {
-                    $shareHolderID = BusinessShareholder::where('national_id', $share['item'])->value('id');
+                    $shareHolderID = BusinessShareholder::where('entity_name', trim($share['shareholder_name']))
+                        ->orWhere('national_id', $share['item'])->first()->id;
+
+                    if(!$shareHolderID){
+                        $this->customAlert('error', 'Could not associate shares with shareholders.');
+                        return;
+                    }
 
                     BusinessShare::create([
                         'business_id' =>$this->business->id,
@@ -148,7 +155,7 @@ class BpraVerification extends Component
             DB::commit();
             $this->customAlert('success', 'Bpra Verification Completed.');
         } catch (\Throwable $e) {
-            Log::error($e .','. Auth::user());
+            Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

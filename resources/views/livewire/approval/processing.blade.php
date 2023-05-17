@@ -14,10 +14,7 @@
                             <div class="card-body">
                                 <livewire:approval.bpra-verification :business="$subject" />
                             </div>
-
-                            @if (
-                                $subject->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
-                                    (count($directors) || count($shareholders) || count($shares)))
+                            @if ($subject->bpra_verification_status === \App\Models\BusinessStatus::APPROVED && (count($directors) > 0 || count($shareholders) > 0 || count($shares) > 0))
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card-body mt-0 p-2 px-0">
@@ -56,7 +53,7 @@
                                                                 <th style="width: 25%">Location</th>
                                                             </thead>
                                                             <tbody>
-                                                                @if (count($directors))
+                                                                @if (count($directors) > 0)
                                                                     @foreach ($directors as $director)
                                                                         <tr>
                                                                             <td class="">
@@ -71,10 +68,9 @@
                                                                                 {{ $director['email'] }}
                                                                             </td>
                                                                             <td class="">
-                                                                                @if (substr($director['gender'], 3) == 'M')
+                                                                                @if (substr($director['gender'] ?? '', 3) == 'M')
                                                                                     MALE
-                                                                                    @elseif
-                                                                                    (substr($director['gender'], 3) == 'F')
+                                                                                @elseif(substr($director['gender'] ?? '', 3) == 'F')
                                                                                     FEMALE
                                                                                 @else
                                                                                     -
@@ -115,11 +111,11 @@
                                                                 <th style="width: 25%">Location</th>
                                                             </thead>
                                                             <tbody>
-                                                                @if (count($shareholders))
+                                                                @if (count($shareholders) > 0)
                                                                     @foreach ($shareholders as $shareholder)
                                                                         <tr>
                                                                             <td class="">
-                                                                                {{ $shareholder['entity_name'] ? $shareholder['entity_name'] : $shareholder['first_name'] . ' ' . $shareholder['middle_name'] . ' ' . $shareholder['last_name'] ?? 'N/A' }}
+                                                                                {{ $shareholder['entity_name'] ? $shareholder['entity_name'] : ($shareholder['first_name'] . ' ' . $shareholder['middle_name'] . ' ' . $shareholder['last_name'] ?? 'N/A') }}
                                                                             </td>
                                                                             <td class="">
                                                                                 {{ $shareholder['mob_phone'] }}
@@ -128,10 +124,9 @@
                                                                                 {{ $shareholder['email'] }}
                                                                             </td>
                                                                             <td class="">
-                                                                                @if (substr($shareholder['gender'], 3) == 'M')
+                                                                                @if (substr($shareholder['gender'] ?? '', 3) == 'M')
                                                                                     MALE
-                                                                                    @elseif
-                                                                                    (substr($shareholder['gender'], 3) == 'F')
+                                                                                @elseif(substr($shareholder['gender'] ?? '', 3) == 'F')
                                                                                     FEMALE
                                                                                 @else
                                                                                     -
@@ -176,7 +171,7 @@
                                                                 <th style="width: 23%">Shares Paid</th>
                                                             </thead>
                                                             <tbody>
-                                                                @if (count($shares))
+                                                                @if (count($shares) > 0)
                                                                     @foreach ($shares as $share)
                                                                         <tr>
                                                                             <td class="">
