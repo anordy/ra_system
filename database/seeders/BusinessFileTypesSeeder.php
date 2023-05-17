@@ -37,6 +37,15 @@ class BusinessFileTypesSeeder extends Seeder
             'is_approved' => 1,
         ]);
 
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'tin',
+            'name' => 'Taxpayer TIN Certificate',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::SOLE,
+            'is_required' => true,
+            'is_approved' => 1,
+        ]);
+
         // Partnership Deed Agreement
         BusinessFileType::updateOrCreate([
             'short_name' => 'partnership_deed',
@@ -63,6 +72,15 @@ class BusinessFileTypesSeeder extends Seeder
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::PARTNERSHIP,
             'is_required' => false,
+            'is_approved' => 1,
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'tin',
+            'name' => 'Partnership TIN Certificate',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::PARTNERSHIP,
+            'is_required' => true,
             'is_approved' => 1,
         ]);
 
@@ -98,6 +116,15 @@ class BusinessFileTypesSeeder extends Seeder
         BusinessFileType::updateOrCreate([
             'short_name' => 'business_license',
             'name' => 'Business License',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true,
+            'is_approved' => 1,
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'tin',
+            'name' => 'Company TIN Certificate',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
             'is_required' => true,
