@@ -7,7 +7,7 @@
             <div class="border-0">
                 <div class="row mx-4 mt-2">
                     <div class="col-md-4 form-group">
-                        <label for="tin">Institution Tax Identification No. (TIN) *</label>
+                        <label for="tin">Institution Taxpayer Identification Number (TIN) *</label>
                         <input type="number" maxlength="10" minlength="8" wire:model.defer="tin" required
                             class="form-control {{ $errors->has('tin') ? 'is-invalid' : '' }}">
                         @error('tin')

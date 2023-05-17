@@ -18,7 +18,7 @@
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Tax Identification No. (TIN)</span>
+                            <span class="font-weight-bold text-uppercase">Taxpayer Identification Number (TIN)</span>
                             <p class="my-1">{{ $return->business->tin }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
