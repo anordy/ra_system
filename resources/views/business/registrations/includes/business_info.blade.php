@@ -36,6 +36,13 @@
             <a class="nav-link" id="business-attachment-tab" data-toggle="tab" href="#business-attachment"
                 role="tab" aria-controls="business-attachment" aria-selected="false">Business Attachments</a>
         </li>
+        @if ($business->reg_no && $business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
+                (count($directors) || count($shareholders) || count($shares)))
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="bpra-information-tab" data-toggle="tab" href="#bpra-information"
+                        role="tab" aria-controls="bpra-information" aria-selected="false">BPRA Information</a>
+                </li>
+        @endif
     </ul>
 
     <div class="tab-content bg-white border shadow-sm" id="myTabContent">
@@ -205,210 +212,7 @@
                         <p class="my-1">{{ $business->taxRegion->name }}</p>
                     </div>
                 @endif
-
-                @if (
-                    $business->reg_no &&
-                        $business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
-                        (count($directors) || count($shareholders) || count($shares)))
-                    <div class="col-md-12 mb-3">
-                        <div class="">
-                            <span class="font-weight-bold text-uppercase">BPRA Verification</span>
-                        </div>
-                        <div class="pt-2">
-                            <livewire:approval.bpra-verification :business="$business" />
-                        </div>
-                        <div class="col-md-12">
-                            <div class="card-body mt-0 p-2 px-0">
-                                <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist"
-                                    style="margin-bottom: 0;">
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link active" id="directors-tab" data-toggle="tab"
-                                            href="#directors" role="tab" aria-controls="directors"
-                                            aria-selected="true">Directors</a>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link" id="shareholders-tab" data-toggle="tab"
-                                            href="#shareholders" role="tab" aria-controls="shareholders"
-                                            aria-selected="false">Shareholders</a>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link" id="shares_distribution-tab" data-toggle="tab"
-                                            href="#shares_distribution" role="tab"
-                                            aria-controls="shares_distribution" aria-selected="false">Shares
-                                            &
-                                            Distribution</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content bg-white border shadow-sm" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="directors" role="tabpanel"
-                                        aria-labelledby="directors-tab">
-                                        <div class="row m-1 p-3">
-                                            <table class="table table-striped table-sm">
-                                                <label class="font-weight-bold text-uppercase mt-2">Directors</label>
-                                                <thead>
-                                                    <th style="width: 29%">Name</th>
-                                                    <th style="width: 16%">Phone</th>
-                                                    <th style="width: 10%">Email</th>
-                                                    <th style="width: 20%">Gender</th>
-                                                    <th style="width: 25%">Location</th>
-                                                </thead>
-                                                <tbody>
-                                                    @if (count($directors) > 0)
-                                                        @foreach ($directors as $director)
-                                                            <tr>
-                                                                <td class="">
-                                                                    {{ $director['first_name'] }}
-                                                                    {{ $director['middle_name'] }}
-                                                                    {{ $director['last_name'] }}
-                                                                </td>
-                                                                <td class="">
-                                                                    {{ $director['mob_phone'] }}
-                                                                </td>
-                                                                <td class="">
-                                                                    {{ $director['email'] }}
-                                                                </td>
-                                                                <td class="">
-                                                                    @if (substr($director['gender'], 3) == 'M')
-                                                                        MALE
-                                                                    @elseif (substr($director['gender'], 3) == 'F')
-                                                                        FEMALE
-                                                                    @else
-                                                                        -
-                                                                    @endif
-                                                                </td>
-                                                                <td class="">
-                                                                    {{ $director['city_name'] }}
-                                                                    <div>
-                                                                        {{ $director['first_line'] }}
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @else
-                                                        <tr>
-                                                            <td colspan="10" class="text-center">No Data</td>
-                                                        </tr>
-                                                    @endif
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="tab-pane fade" id="shareholders" role="tabpanel"
-                                        aria-labelledby="shareholders-tab">
-                                        <div class="row m-1 p-3">
-                                            <table class="table table-striped table-sm">
-                                                <label
-                                                    class="font-weight-bold text-uppercase mt-2">Shareholders</label>
-                                                <thead>
-                                                    <th style="width: 29%">Name</th>
-                                                    <th style="width: 16%">Phone</th>
-                                                    <th style="width: 10%">Email</th>
-                                                    <th style="width: 20%">Gender</th>
-                                                    <th style="width: 25%">Location</th>
-                                                </thead>
-                                                <tbody>
-                                                    @if (count($shareholders) > 0)
-
-                                                        @foreach ($shareholders as $shareholder)
-                                                            <tr>
-                                                                <td class="">
-                                                                    {{ $shareholder['entity_name'] ? $shareholder['entity_name'] : $shareholder['first_name'] . ' ' . $shareholder['middle_name'] . ' ' . $shareholder['last_name'] ?? 'N/A' }}
-                                                                </td>
-                                                                <td class="">
-                                                                    {{ $shareholder['mob_phone'] }}
-                                                                </td>
-                                                                <td class="">
-                                                                    {{ $shareholder['email'] }}
-                                                                </td>
-                                                                <td class="">
-                                                                    @if (substr($shareholder['gender'], 3) == 'M')
-                                                                        MALE
-                                                                    @elseif (substr($shareholder['gender'], 3) == 'F')
-                                                                        FEMALE
-                                                                    @else
-                                                                        -
-                                                                    @endif
-                                                                </td>
-
-                                                                <td class="">
-                                                                    @if ($shareholder['city_name'])
-                                                                        {{ $shareholder['city_name'] }}
-                                                                        <div>
-                                                                            {{ $shareholder['first_line'] }}
-                                                                        </div>
-                                                                    @else
-                                                                        N/A
-                                                                    @endif
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @else
-                                                        <tr>
-                                                            <td colspan="10" class="text-center">No Data</td>
-                                                        </tr>
-                                                    @endif
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <div class="tab-pane fade" id="shares_distribution" role="tabpanel"
-                                        aria-labelledby="shares_distribution-tab">
-                                        <div class="row m-1 p-3">
-                                            <table class="table table-striped table-sm">
-                                                <label class="font-weight-bold text-uppercase mt-2">Shares &
-                                                    Distribution</label>
-                                                <thead>
-                                                    <th style="width: 30%">Ower Name</th>
-                                                    <th style="width: 14%">No Of Shares</th>
-                                                    <th style="width: 5%">Currency</th>
-                                                    <th style="width: 23%">Shares Taken</th>
-                                                    <th style="width: 23%">Shares Paid</th>
-                                                </thead>
-                                                <tbody>
-                                                    @if (count($shares) > 0)
-
-                                                        @foreach ($shares as $share)
-                                                            <tr>
-                                                                <td class="">
-                                                                    {{ $share['shareholder_name'] }}
-                                                                </td>
-                                                                <td class="">
-                                                                    {{ $share['number_of_shares'] }}
-                                                                </td>
-                                                                <td class="">
-                                                                    {{ $share['currency'] }}
-                                                                </td>
-                                                                <td class="">
-                                                                    {{ $share['number_of_shares_taken'] }}
-                                                                </td>
-                                                                <td class="">
-                                                                    {{ $share['number_of_shares_paid'] }}
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @else
-                                                        <tr>
-                                                            <td colspan="10" class="text-center">No Data</td>
-                                                        </tr>
-                                                    @endif
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                @endif
             </div>
-
         </div>
 
         <div class="tab-pane fade" id="location" role="tabpanel" aria-labelledby="location-tab">
@@ -926,5 +730,195 @@
                 @endif
             </div>
         </div>
+
+        @if ($business->reg_no && $business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
+            (count($directors) || count($shareholders) || count($shares)))
+            <div class="tab-pane fade p-4" id="bpra-information" role="tabpanel"
+                aria-labelledby="bpra-information-tab">
+                <div class="pt-2">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Business No.</span>
+                            <p class="my-1">{{ $business->reg_no ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Business Name</span>
+                            <p class="my-1">{{ $business->name }}</p>
+                        </div>
+            
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Status</span>
+                            @if ($business->bpra_verification_status === \App\Models\BusinessStatus::PENDING)
+                                <p class="my-1">
+                                    <span class="badge badge-danger py-1 px-2 text-capitalize"
+                                        style="border-radius: 1rem; background: #9ca3af; color: #374151; font-size: 85%">
+                                        <i class="bi bi-record-circle mr-1"></i>
+                                        {{ $business->bpra_verification_status }}
+                                    </span>
+                                </p>
+                            @elseif ($business->bpra_verification_status === \App\Models\BusinessStatus::PBRA_UNVERIFIED)
+                                <p class="my-1">
+                                    <span class="badge badge-danger py-1 px-2 text-capitalize"
+                                        style="border-radius: 1rem; background: #fde047; color: #a16207; font-size: 85%">
+                                        <i class="bi bi-record-circle mr-1"></i>
+                                        {{ $business->bpra_verification_status }}
+                                    </span>
+                                </p>
+                            @elseif($business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED)
+                                <p class="my-1">
+                                    <span class="badge badge-success py-1 px-2"
+                                        style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                        <i class="bi bi-check-circle-fill mr-1"></i>
+                                        Verification Successful
+                                    </span>
+                                </p>
+                            @endif
+                        </div>
+                
+                    </div>
+                </div>
+                <table class="table table-striped table-sm table-bordered">
+                    <label class="font-weight-bold text-uppercase mt-2">Directors</label>
+                    <thead>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Location</th>
+                    </thead>
+                    <tbody>
+                        @if (count($directors) > 0)
+                            @foreach ($directors as $director)
+                                <tr>
+                                    <td class="">
+                                        {{ $director['first_name'] }}
+                                        {{ $director['middle_name'] }}
+                                        {{ $director['last_name'] }}
+                                    </td>
+                                    <td class="">
+                                        {{ $director['mob_phone'] }}
+                                    </td>
+                                    <td class="">
+                                        {{ $director['email'] }}
+                                    </td>
+                                    <td class="">
+                                        @if (substr($director['gender'] ?? '', 3) == 'M')
+                                            MALE
+                                        @elseif (substr($director['gender'] ?? '', 3) == 'F')
+                                            FEMALE
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="">
+                                        {{ $director['city_name'] }}
+                                        <div>
+                                            {{ $director['first_line'] }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="10" class="text-center">No Data</td>
+                            </tr>
+                        @endif
+
+                    </tbody>
+                </table>
+                <table class="table table-striped table-sm table-bordered">
+                    <label
+                        class="font-weight-bold text-uppercase mt-2">Shareholders</label>
+                    <thead>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Location</th>
+                    </thead>
+                    <tbody>
+                        @if (count($shareholders) > 0)
+
+                            @foreach ($shareholders as $shareholder)
+                                <tr>
+                                    <td class="">
+                                        {{ $shareholder['entity_name'] ? $shareholder['entity_name'] : $shareholder['first_name'] . ' ' . $shareholder['middle_name'] . ' ' . $shareholder['last_name'] ?? 'N/A' }}
+                                    </td>
+                                    <td class="">
+                                        {{ $shareholder['mob_phone'] }}
+                                    </td>
+                                    <td class="">
+                                        {{ $shareholder['email'] }}
+                                    </td>
+                                    <td class="">
+                                        @if (substr($shareholder['gender'] ?? '', 3) == 'M')
+                                            MALE
+                                        @elseif (substr($shareholder['gender'] ?? '', 3) == 'F')
+                                            FEMALE
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+
+                                    <td class="">
+                                        @if ($shareholder['city_name'])
+                                            {{ $shareholder['city_name'] }}
+                                            <div>
+                                                {{ $shareholder['first_line'] }}
+                                            </div>
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="10" class="text-center">No Data</td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
+                <table class="table table-striped table-sm table-bordered">
+                    <label class="font-weight-bold text-uppercase mt-2">Shares &
+                        Distribution</label>
+                    <thead>
+                        <th style="width: 30%">Ower Name</th>
+                        <th style="width: 14%">No Of Shares</th>
+                        <th style="width: 5%">Currency</th>
+                        <th style="width: 23%">Shares Taken</th>
+                        <th style="width: 23%">Shares Paid</th>
+                    </thead>
+                    <tbody>
+                        @if (count($shares) > 0)
+
+                            @foreach ($shares as $share)
+                                <tr>
+                                    <td class="">
+                                        {{ $share['shareholder_name'] }}
+                                    </td>
+                                    <td class="">
+                                        {{ $share['number_of_shares'] }}
+                                    </td>
+                                    <td class="">
+                                        {{ $share['currency'] }}
+                                    </td>
+                                    <td class="">
+                                        {{ $share['number_of_shares_taken'] }}
+                                    </td>
+                                    <td class="">
+                                        {{ $share['number_of_shares_paid'] }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="10" class="text-center">No Data</td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </div>
 </div>

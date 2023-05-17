@@ -72,6 +72,12 @@ class BpraInternalService
                 if(array_key_exists('list_entitydata', $res['data']['xml'])){
                     $listEntityData = $res['data']['xml']['list_entitydata'];
 
+                    if(array_key_exists('entity_type', $res['data'])){
+                        if($res['data']['entity_type'] == 'ET-COMPANY'){
+                            $listEntityData = $listEntityData['EntityData'];
+                        }
+                    }
+
                     foreach ($listEntityData as $entityData) {
 
                         if ($entityData['list_type'] == 'list_directors') {
