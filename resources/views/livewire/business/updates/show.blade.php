@@ -44,6 +44,16 @@
                                 @endif
                             </tr>
                             <tr>
+                                <th>Taxpayer Name</th>
+                                <td>{{ $old_values->business_information->taxpayer_name }}</td>
+                                <td>{{ $new_values->business_information->taxpayer_name }}</td>
+                                @if ($old_values->business_information->taxpayer_name == $new_values->business_information->taxpayer_name)
+                                    <td class="table-primary">Unchanged</td>
+                                @else
+                                    <td class="table-success">Changed</td>
+                                @endif
+                            </tr>
+                            <tr>
                                 <th>Email</th>
                                 <td>{{ $old_values->business_information->email }}</td>
                                 <td>{{ $new_values->business_information->email }}</td>

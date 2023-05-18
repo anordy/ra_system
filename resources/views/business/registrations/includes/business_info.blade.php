@@ -123,6 +123,12 @@
                     <span class="font-weight-bold text-uppercase">Business Reg. No.</span>
                     <p class="my-1">{{ $business->reg_no ?? 'N/A' }}</p>
                 </div>
+                @if($business->taxpayer_name)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Taxpayer Name</span>
+                        <p class="my-1">{{ $business->taxpayer_name }}</p>
+                    </div>
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Owner Designation</span>
                     <p class="my-1">{{ $business->owner_designation }}</p>
