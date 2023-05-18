@@ -59,13 +59,15 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 ],
             );
 
-            Db::beginTransaction();
+            DB::beginTransaction();
             try {
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
                 $this->return->vetting_status = VettingStatus::VETTED;
                 $this->return->return->vetting_status = VettingStatus::VETTED;
                 $this->return->save();
                 $this->return->return->save();
+
+                DB::commit();
 
                 // Trigger verification
                 $this->triggerTaxVerifications($this->return->return, auth()->user());
