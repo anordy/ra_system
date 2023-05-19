@@ -33,6 +33,7 @@ class SubVatTaxTypesTable extends DataTableComponent
 
             return [];
         });
+        $this->setPerPageAccepted([10, 25, 50, 100]);
     }
 
     protected $listeners = [

@@ -52,7 +52,7 @@ class VatReturnController extends Controller
         $withheld = VatWithheldAttachment::where('id',decrypt($id))->first();
 
         if ($type == 'withheld') {
-            return Storage::disk('local-admin')->response($withheld->withheld_file);
+            return Storage::disk('local')->response($withheld->withheld_file);
         }
 
         return abort(404);

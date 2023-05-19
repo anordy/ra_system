@@ -28,7 +28,7 @@ class EditModal extends Component
     {
         $this->years = FinancialYear::query()->orderByDesc('id')->get();
         $this->edited_month = FinancialMonth::query()->findOrFail(decrypt($id));
-        $this->day = (int)date('m', strtotime($this->edited_month->due_date));
+        $this->day = (int)date('d', strtotime($this->edited_month->due_date));
         $this->month_number = $this->edited_month->number;
         $this->year = $this->edited_month->financial_year_id;
         $this->old_values = [
