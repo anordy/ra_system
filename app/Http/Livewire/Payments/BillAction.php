@@ -83,7 +83,7 @@ class BillAction extends Component
         } else if ($this->action == 'update') {
             try {
                 $this->new_expiration_date = Carbon::create($this->new_expiration_date);
-                $this->new_expiration_date->addHours(6)->addMinute();
+                $this->new_expiration_date->endOfDay();
                 $this->updateBill($this->bill, $this->new_expiration_date);
                 $this->refresh();
                 $this->customAlert('success', 'Bill update request has been sent');
