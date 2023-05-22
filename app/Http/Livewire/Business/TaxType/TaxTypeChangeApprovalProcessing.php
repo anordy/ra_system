@@ -101,12 +101,12 @@ class TaxTypeChangeApprovalProcessing extends Component
                 $this->subject->to_sub_vat_id = $this->sub_vat_id;
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
 
+                DB::commit();
+
                 $notification_payload = [
                     'tax_change' => $this->taxchange,
                 ];
 
-                DB::commit();
-                
                 event(new SendMail('change-tax-type-approval', $notification_payload));
                 event(new SendSms('change-tax-type-approval', $notification_payload));
 

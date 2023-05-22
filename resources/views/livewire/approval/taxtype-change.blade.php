@@ -119,7 +119,7 @@
                 <div class="form-group">
                     <label class="form-label">Effective Date</label>
                     <input type="date" min="{{ $today }}"
-                        class="form-control @error('effective_date') is-invalid @enderror" wire:model="effective_date">
+                        class="form-control @error('effective_date') is-invalid @enderror" wire:model.defer="effective_date">
                     @error('effective_date')
                         <span class="text-danger error">{{ $message }}</span>
                     @enderror
