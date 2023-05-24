@@ -93,7 +93,7 @@
                     <div class="form-group">
                         <label for="effectiveDate">Effective Date</label>
                         <input id="effectiveDate" type="date" class="form-control @error('effectiveDate') is-invalid @enderror"
-                                wire:model="effectiveDate" required />
+                                wire:model.defer="effectiveDate" required />
                         @error('effectiveDate')
                             <div class="invalid-feedback">
                                 {{ $message }}

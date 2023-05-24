@@ -50,7 +50,7 @@ class MnoReturnsTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return "{$row->business->taxpayer->fullName}";
+                    return "{$row->business->taxpayer_name}";
                 }),
 
             Column::make('Business Name', 'business.name')

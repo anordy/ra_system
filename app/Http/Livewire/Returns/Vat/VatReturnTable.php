@@ -37,15 +37,15 @@ class VatReturnTable extends DataTableComponent
 
         $filter = $this->dataFilter($filter, $this->data, $returnTable);
     
-        return $filter->select('editing_count', 'taxpayers.last_name', 'taxpayers.first_name')->with('business', 'business.taxpayer')->orderBy('vat_returns.created_at', 'desc');
+        return $filter->select('editing_count')->with('business', 'business.taxpayer')->orderBy('vat_returns.created_at', 'desc');
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Taxpayer Name', 'business.taxpayer.first_name')
+            Column::make('Taxpayer Name', 'business.taxpayer_name')
                 ->format(function ($value, $row) {
-                    return "{$row->first_name} {$row->last_name}";
+                    return $value ?? 'N/A';
                 })
                 ->sortable()->searchable(),
             Column::make('Business Name', 'business.name')

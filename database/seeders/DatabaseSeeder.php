@@ -105,5 +105,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SubSysModuleSeeder::class);
         $this->call(ApiUserTableSeeder::class);
         $this->call(LumpSumPaymentSeeder::class);
+        $this->call(Vat18ReturnConfigSeeder::class);
     }
 }

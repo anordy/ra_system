@@ -121,7 +121,9 @@
             <div class="watermark">Branch Copy</div>
         @endif
         <span class="embed taxpayer">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
-        <span class="embed trading-as">T/A {{ $location->business->name ?? '' }}</span>
+        @if($location->business->name)
+            <span class="embed trading-as">T/A {{ $location->business->name ?? '' }}</span>
+        @endif
         <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
         @if($location->vrn)
             <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
