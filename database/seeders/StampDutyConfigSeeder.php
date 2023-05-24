@@ -31,6 +31,9 @@ class StampDutyConfigSeeder extends Seeder
                 'rate_usd' => 0,
                 'heading_type' => 'supplies',
                 'active' => true,
+                'value_label' => '01',
+                'rate_label' => '02',
+                'tax_label' => '03'
             ],
             [
                 'financia_year_id' => 1,
@@ -43,6 +46,8 @@ class StampDutyConfigSeeder extends Seeder
                 'rate_applicable' => false,
                 'heading_type' => 'supplies',
                 'active' => true,
+                'value_label' => '04',
+                'tax_label' => '05'
             ],
             [
                 'financia_year_id' => 1,
@@ -56,19 +61,6 @@ class StampDutyConfigSeeder extends Seeder
             ],
             [
                 'financia_year_id' => 1,
-                'order' => 4,
-                'code' => 'EXIMP',
-                'name' => 'Exempted Import Purchases / Manunuzi kutoka nje ya nchi yaliyosamehewa VAT',
-                'row_type' => 'dynamic',
-                'value_calculated' => false,
-                'col_type' => 'normal',
-                'rate_applicable' => false,
-                'is_summable' => false,
-                'active' => true,
-                'heading_type' => 'purchases'
-            ],
-            [
-                'financia_year_id' => 1,
                 'order' => 5,
                 'code' => 'LOCPUR',
                 'name' => 'Local purchases / Manunuzi ya hapa nchini',
@@ -78,7 +70,8 @@ class StampDutyConfigSeeder extends Seeder
                 'rate_applicable' => false,
                 'is_summable' => false,
                 'active' => true,
-                'heading_type' => 'purchases'
+                'heading_type' => 'purchases',
+                'value_label' => '06',
             ],
             [
                 'financia_year_id' => 1,
@@ -92,7 +85,8 @@ class StampDutyConfigSeeder extends Seeder
                 'currency' => 'TZS',
                 'is_summable' => false,
                 'active' => true,
-                'heading_type' => 'purchases'
+                'heading_type' => 'purchases',
+                'value_label' => '07',
             ],
             [
                 'financia_year_id' => 1,
@@ -102,18 +96,20 @@ class StampDutyConfigSeeder extends Seeder
                 'row_type' => 'dynamic',
                 'value_calculated' => false,
                 'col_type' => 'normal',
-                'rate_applicable' => true,
+                'rate_applicable' => false,
                 'rate_type' => 'percentage',
                 'rate' => 2,
                 'rate_usd' => 0,
                 'currency' => 'TZS',
                 'active' => true,
+                'value_label' => '08',
+                'tax_label' => '08'
             ],
             [
                 'financia_year_id' => 1,
                 'order' => 8,
                 'code' => 'TOTAL',
-                'name' => 'Total Duty(Amount due) / Kiasi kinachostahili kulipwa',
+                'name' => 'Total Duty (Amount due) / Kiasi kinachostahili kulipwa',
                 'row_type' => 'dynamic',
                 'value_calculated' => false,
                 'col_type' => 'total',
@@ -124,11 +120,13 @@ class StampDutyConfigSeeder extends Seeder
                 'rate' => 2,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '09',
+                'tax_label' => '09'
             ]
         ];
 
         foreach ($configs as $config) {
-            StampDutyConfig::updateOrCreate($config);
+            StampDutyConfig::updateOrCreate(['code' => $config['code']], $config);
         }
 
         $headingIndex = StampDutyConfig::where('code', 'heading')->first()->id;
@@ -137,7 +135,7 @@ class StampDutyConfigSeeder extends Seeder
             [
                 'stamp_duty_config_id' => $headingIndex,
                 'name' => 'Purchase(Inputs) / Manunuzi',
-                'colspan' => 1,
+                'colspan' => 2,
             ],
             [
                 'stamp_duty_config_id' => $headingIndex,
@@ -147,7 +145,7 @@ class StampDutyConfigSeeder extends Seeder
             [
                 'stamp_duty_config_id' => $headingIndex,
                 'name' => 'Rate / Kiwango',
-                'colspan' => 1,
+                'colspan' => 2,
             ],
             [
                 'stamp_duty_config_id' => $headingIndex,
@@ -157,7 +155,7 @@ class StampDutyConfigSeeder extends Seeder
         ];
 
         foreach ($headings as $heading){
-            StampDutyConfigHead::updateOrCreate($heading);
+            StampDutyConfigHead::updateOrCreate(['name' => $heading['name']], $heading);
         }
     }
 }
