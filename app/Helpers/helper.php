@@ -155,3 +155,29 @@ function formatDate($date)
 {
     return Carbon::parse($date)->format('d M Y');
 }
+
+function roundOff($amount, $currency)
+{
+    if ($currency == 'TZS') {
+        $amount = round($amount);
+
+        // Get the tens from the amount
+        $tens = $amount % 100;
+
+        $roundedTens = ceil($tens / 10) * 10;
+
+        if ($roundedTens > 0 && $roundedTens < 50) {
+            $roundedTens = 50;
+        } else if ($roundedTens > 50 && $roundedTens < 100) {
+            $roundedTens = 100;
+        }
+
+        $roundedAmount = $amount - $tens + $roundedTens;
+    } else if ($currency == 'USD') {
+        $roundedAmount = ceil($amount);
+    } else {
+        throw new Exception('Invalid currency');
+    }
+
+    return $roundedAmount;
+}
