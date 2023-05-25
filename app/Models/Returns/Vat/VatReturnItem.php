@@ -21,11 +21,7 @@ class VatReturnItem extends Model
             ->where('business_tax_type.tax_type_id', $vat->id)
             ->select('sub_vats.code')
             ->first();
-        if (in_array($taxType->code, [SubVatConstant::FINANCIALSERVICES, SubVatConstant::TELECOMMUNICATIONDATASERVICES, SubVatConstant::TELECOMMUNICATIONVOICESERVICES, SubVatConstant::TELEPHONE])){
-            return true;
-        } else {
-            return false;
-        }
+        return in_array($taxType->code, [SubVatConstant::FINANCIALSERVICES, SubVatConstant::TELECOMMUNICATIONDATASERVICES, SubVatConstant::TELECOMMUNICATIONVOICESERVICES, SubVatConstant::TELEPHONE]);
     }
 
     public function config()
