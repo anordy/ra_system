@@ -20,15 +20,15 @@ class VatDebtReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return VatReturn::query()->select('editing_count', 'taxpayers.last_name', 'taxpayers.first_name')->whereHas('debt')->with('business', 'business.taxpayer');
+        return VatReturn::query()->select('editing_count', 'business.taxpayer_name')->whereHas('debt')->with('business', 'business.taxpayer');
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Taxpayer Name', 'business.taxpayer.first_name')
+            Column::make('Taxpayer Name', 'business.taxpayer_name')
                 ->format(function ($value, $row) {
-                    return "{$row->first_name} {$row->last_name}";
+                    return $value ?? 'N/A';
                 })
                 ->sortable()->searchable(),
             Column::make('Business Name', 'business.name')

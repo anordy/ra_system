@@ -45,7 +45,7 @@
                         </div>
                         <div class="form-group col-lg-12">
                             <label class="control-label">Effective Date</label>
-                            <input min="{{$min}}" max="{{$max}}" type="date" wire:model.lazy="effective_date" name="effective_date" id="effective_date" class="form-control" />
+                            <input min="{{$min}}" max="{{$max}}" type="date" wire:model.defer="effective_date" name="effective_date" id="effective_date" class="form-control" />
                             @error('effective_date')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
