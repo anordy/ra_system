@@ -30,6 +30,9 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 15,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '02',
+                'rate_label' => '03',
+                'tax_label' => '04'
             ],
             [
                 'financial_year_id' => 1,
@@ -46,6 +49,9 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 0,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '05',
+                'rate_label' => '29',
+                'tax_label' => '30',
             ],
             [
                 'financial_year_id' => 1,
@@ -62,6 +68,7 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 0,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '06',
             ],
             [
                 'financial_year_id' => 1,
@@ -78,6 +85,7 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 0,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '07',
             ],
             [
                 'financial_year_id' => 1,
@@ -94,6 +102,7 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 0,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '08',
             ],
             [
                 'financial_year_id' => 1,
@@ -110,6 +119,7 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 0,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '09',
             ],
 
             [
@@ -127,6 +137,7 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 0,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '10',
             ],
 
             [
@@ -144,13 +155,14 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 0,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '11',
             ],
 
             [
                 'financial_year_id' => 1,
                 'order' => 9,
                 'code' => 'SLP',
-                'name' => 'Standard Local',
+                'name' => 'Standard Local Purchases',
                 'vat_service_code'=>'PUR',
                 'row_type' => 'dynamic',
                 'value_calculated' => false,
@@ -161,6 +173,9 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 15,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '12',
+                'rate_label' => 13,
+                'tax_label' => 14
             ],
 
             [
@@ -178,6 +193,9 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 15,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => 26,
+                'rate_label' => 27,
+                'tax_label' => 28
             ],
 
             [
@@ -195,6 +213,9 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 18,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '15',
+                'rate_label' => 16,
+                'tax_label' => 17
             ],
 
             [
@@ -212,6 +233,9 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 15,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => 31,
+                'rate_label' => 32,
+                'tax_label' => 33
             ],
 
             [
@@ -229,6 +253,9 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 15,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => 34,
+                'rate_label' => 35,
+                'tax_label' => 36
             ],
 
             [
@@ -242,6 +269,7 @@ class VatReturnConfigSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => 'SLP+SRI+IP',
                 'active' => true,
+                'tax_label' => 18
             ],
 
             [
@@ -255,6 +283,7 @@ class VatReturnConfigSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => '(SRS+ZRS+SER)/(SRS+ZRS+ES+SER)',
                 'active' => true,
+                'tax_label' => 18
             ],
 
             [
@@ -268,6 +297,7 @@ class VatReturnConfigSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => 'SRS-SLP-IP-SRI',
                 'active' => true,
+                'tax_label' => 19
             ],
 
             [
@@ -281,6 +311,7 @@ class VatReturnConfigSeeder extends Seeder
                 'col_type' => 'external',
                 'currency' => 'TZS',
                 'active' => true,
+                'tax_label' => 20
             ],
 
             [
@@ -294,6 +325,7 @@ class VatReturnConfigSeeder extends Seeder
                 'col_type' => 'external',
                 'currency' => 'TZS',
                 'active' => true,
+                'tax_label' => 21
             ],
 
 
@@ -312,6 +344,9 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 2,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '22',
+                'rate_label' => 23,
+                'tax_label' => 24
             ],
 
             [
@@ -329,6 +364,9 @@ class VatReturnConfigSeeder extends Seeder
                 'rate' => 1,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '22',
+                'rate_label' => 23,
+                'tax_label' => 24
             ],
 
             [
@@ -342,13 +380,14 @@ class VatReturnConfigSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => 'SRS-SLP-IP-SRI-VWH-CBF',
                 'active' => true,
+                'tax_label' => 25
             ],
 
 
         ];
 
         foreach ($configs as $config) {
-            VatReturnConfig::query()->updateOrCreate($config);
+            VatReturnConfig::query()->updateOrCreate(['code' => $config['code']], $config);
         }
     }
 }
