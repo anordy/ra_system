@@ -30,6 +30,7 @@ class MmTransferSeeder extends Seeder
                 'rate' => 1,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => 1,
             ],
             [
                 'financia_year_id' => 1,
@@ -45,6 +46,7 @@ class MmTransferSeeder extends Seeder
                 'rate' => 1,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => 2,
             ],
             [ 
                 'financia_year_id' => 1,
@@ -56,11 +58,12 @@ class MmTransferSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => 'LMTRANSFER+LWITHDRAWALS',
                 'active' => true,
+                'value_label' => 3,
             ],
         ];
 
         foreach ($configs as $config) {
-            MmTransferConfig::updateOrCreate($config);
+            MmTransferConfig::updateOrCreate(['code' => $config['code']], $config);
         }
     }
 }
