@@ -29,6 +29,9 @@ class MnoConfigSeeder extends Seeder
                 'rate' => 17,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => 1,
+                'rate_label' => 2,
+                'tax_label' => 3
             ],
 
             [
@@ -45,6 +48,9 @@ class MnoConfigSeeder extends Seeder
                 'rate' => 17,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => 4,
+                'rate_label' => 5,
+                'tax_label' => 6
             ],
 
             [
@@ -61,6 +67,9 @@ class MnoConfigSeeder extends Seeder
                 'rate' => 17,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => 7,
+                'rate_label' => 8,
+                'tax_label' => 9
             ],
 
             [
@@ -77,6 +86,9 @@ class MnoConfigSeeder extends Seeder
                 'rate' => 17,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => 10,
+                'rate_label' => 11,
+                'tax_label' => 12
             ],
 
             [
@@ -93,6 +105,9 @@ class MnoConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => 13,
+                'rate_label' => 14,
+                'tax_label' => 15
             ],
 
             [
@@ -109,6 +124,10 @@ class MnoConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+
+                'value_label' => 16,
+                'rate_label' => 17,
+                'tax_label' => 18
             ],
 
             [
@@ -125,6 +144,9 @@ class MnoConfigSeeder extends Seeder
                 'rate' => 17,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => 19,
+                'rate_label' => 20,
+                'tax_label' => 21
             ],
 
             [
@@ -137,12 +159,13 @@ class MnoConfigSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => 'MNOS+MVNOS+MCPRE+MCPOST+MM+OFS+OES',
                 'active' => true,
+                'tax_label' => 24
             ],
 
         ];
 
         foreach ($configs as $config) {
-            MnoConfig::updateOrCreate($config);
+            MnoConfig::updateOrCreate(['code' => $config['code']], $config);
         }
     }
 }
