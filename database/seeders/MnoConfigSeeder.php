@@ -29,9 +29,9 @@ class MnoConfigSeeder extends Seeder
                 'rate' => 17,
                 'rate_usd' => 0,
                 'active' => true,
-                'value_label' => 1,
-                'rate_label' => 2,
-                'tax_label' => 3
+                'value_label' => '01',
+                'rate_label' => '02',
+                'tax_label' => '03'
             ],
 
             [
@@ -48,9 +48,9 @@ class MnoConfigSeeder extends Seeder
                 'rate' => 17,
                 'rate_usd' => 0,
                 'active' => true,
-                'value_label' => 4,
-                'rate_label' => 5,
-                'tax_label' => 6
+                'value_label' => '04',
+                'rate_label' => '05',
+                'tax_label' => '06'
             ],
 
             [
@@ -67,9 +67,9 @@ class MnoConfigSeeder extends Seeder
                 'rate' => 17,
                 'rate_usd' => 0,
                 'active' => true,
-                'value_label' => 7,
-                'rate_label' => 8,
-                'tax_label' => 9
+                'value_label' => '07',
+                'rate_label' => '08',
+                'tax_label' => '09'
             ],
 
             [
