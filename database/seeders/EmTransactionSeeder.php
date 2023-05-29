@@ -26,6 +26,7 @@ class EmTransactionSeeder extends Seeder
                 'rate' => 1,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '01',
             ],
             [
                 'financia_year_id' => 1,
@@ -41,6 +42,7 @@ class EmTransactionSeeder extends Seeder
                 'rate' => 1,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '02',
             ],
             [ 
                 'financia_year_id' => 1,
@@ -52,11 +54,12 @@ class EmTransactionSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => 'LMTRANSFER+LWITHDRAWALS',
                 'active' => true,
+                'value_label' => '03',
             ],
         ];
 
         foreach ($configs as $config) {
-            EmTransactionConfig::updateOrCreate($config);
+            EmTransactionConfig::updateOrCreate(['code' => $config['code']], $config);
         }
     }
 }

@@ -30,6 +30,9 @@ class PetroleumConfigSeeder extends Seeder
                 'rate' => 300,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '02',
+                'rate_label' => '03',
+                'tax_label' => '04'
             ],
             [
                 'financia_year_id' => 1,
@@ -45,6 +48,9 @@ class PetroleumConfigSeeder extends Seeder
                 'rate' => 350,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '05',
+                'rate_label' => '06',
+                'tax_label' => '07'
             ],
             [
                 'financia_year_id' => 1,
@@ -60,6 +66,9 @@ class PetroleumConfigSeeder extends Seeder
                 'rate' => 12.80,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '08',
+                'rate_label' => '09',
+                'tax_label' => '10'
             ],
             [
                 'financia_year_id' => 1,
@@ -75,6 +84,9 @@ class PetroleumConfigSeeder extends Seeder
                 'rate' => 0,
                 'rate_usd' => 1,
                 'active' => true,
+                'value_label' => '14',
+                'rate_label' => '15',
+                'tax_label' => '16'
             ],
             [
                 'financia_year_id' => 1,
@@ -86,6 +98,7 @@ class PetroleumConfigSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => 'MSP+GO+IK+JET',
                 'active' => true,
+                'tax_label' => '17'
             ],
             [
                 'financia_year_id' => 1,
@@ -101,6 +114,9 @@ class PetroleumConfigSeeder extends Seeder
                 'rate' => 0,
                 'value_formular' => '(50 * MSP)+(50 * GO)',
                 'active' => true,
+                'value_label' => '18',
+                'rate_label' => '29',
+                'tax_label' => '20'
             ],
             [
                 'financia_year_id' => 1,
@@ -115,6 +131,9 @@ class PetroleumConfigSeeder extends Seeder
                 'currency' => 'TZS',
                 'value_formular' => '(70 * MSP)',
                 'active' => true,
+                'value_label' => '21',
+                'rate_label' => '22',
+                'tax_label' => '23'
             ],
             [
                 'financia_year_id' => 1,
@@ -129,6 +148,9 @@ class PetroleumConfigSeeder extends Seeder
                 'currency' => 'TZS',
                 'value_formular' => '(100 * GO)',
                 'active' => true,
+                'value_label' => '24',
+                'rate_label' => '25',
+                'tax_label' => '26'
             ],
             [
                 'financia_year_id' => 1,
@@ -143,6 +165,7 @@ class PetroleumConfigSeeder extends Seeder
                 'currency' => 'TZS',
                 'value_formular' => '(15 * MSP)+(15 * GO)',
                 'active' => true,
+                'value_label' => '27',
             ],
             [
                 'financia_year_id' => 1,
@@ -166,6 +189,7 @@ class PetroleumConfigSeeder extends Seeder
                 'col_type' => 'normal',
                 'rate_type' => 'fixed',
                 'active' => true,
+                'value_label' => '28',
             ],
             [
                 'financia_year_id' => 1,
@@ -178,6 +202,7 @@ class PetroleumConfigSeeder extends Seeder
                 'col_type' => 'normal',
                 'rate_type' => 'fixed',
                 'active' => true,
+                'value_label' => '29',
             ],
             [
                 'financia_year_id' => 1,
@@ -190,6 +215,7 @@ class PetroleumConfigSeeder extends Seeder
                 'col_type' => 'normal',
                 'rate_type' => 'fixed',
                 'active' => true,
+                'value_label' => '30',
             ],
             [
                 'financia_year_id' => 1,
@@ -205,7 +231,7 @@ class PetroleumConfigSeeder extends Seeder
         ];
 
         foreach ($configs as $config) {
-            PetroleumConfig::updateOrCreate($config);
+            PetroleumConfig::updateOrCreate(['code' => $config['code']], $config);
         }
 
         $heading1 = PetroleumConfig::where('code', 'HEADING1')->first();
@@ -214,7 +240,7 @@ class PetroleumConfigSeeder extends Seeder
             [
                 'petroleum_config_id' => $heading1->id,
                 'name' => 'Purchases / Manunuzi',
-                'colspan' => 1
+                'colspan' => 2
             ],
             [
                 'petroleum_config_id' => $heading1->id,
@@ -224,17 +250,17 @@ class PetroleumConfigSeeder extends Seeder
             [
                 'petroleum_config_id' => $heading1->id,
                 'name' => 'Rate (Kiwango)',
-                'colspan' => 1
+                'colspan' => 2
             ],
             [
                 'petroleum_config_id' => $heading1->id,
                 'name' => 'Levy Amount (Kiasi cha Kodi)',
-                'colspan' => 1
+                'colspan' => 2
             ]
         ];
 
         foreach($headings as $heading){
-            PetroleumConfigHead::create($heading);
+            PetroleumConfigHead::updateOrCreate(['name' => $heading['name']], $heading);
         }
         
     }
