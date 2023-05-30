@@ -130,4 +130,8 @@ class VatReturn extends Model
     public function tax_return(){
         return $this->morphOne(TaxReturn::class, 'return');
     }
+
+    public function specialRelief(){
+        return $this->hasMany(VatSpecialRelief::class, 'vat_return_id');
+    }
 }
