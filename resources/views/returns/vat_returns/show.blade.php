@@ -69,6 +69,12 @@
                                role="tab"
                                aria-controls="withheld" aria-selected="false">Withheld</a>
                         </li>
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="special-relief-tab" data-toggle="tab" href="#special-relief"
+                               role="tab"
+                               aria-controls="special-relief" aria-selected="false">Special Relief</a>
+                        </li>
                     </ul>
                     <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
 
@@ -653,6 +659,43 @@
                                             <tr>
                                                 <td colspan="7" class="text-center py-3">
                                                     {{ __('No details for withhold for this return month') }}.
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane p-2" id="special-relief" role="tabpanel" aria-labelledby="special-relief-tab">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table class="table table-bordered table-sm normal-text">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">No:</th>
+                                            <th class="text-center">{{ __('Receipt Number') }}</th>
+                                            <th class="text-center">{{ __('Receipt Date') }}</th>
+                                            <th class="text-center">{{ __('Amount') }}</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        @if (count($return->specialRelief ?? []))
+                                            @foreach ($return->specialRelief as $index=> $details)
+                                                <tr>
+                                                    <th class="text-center">{{$index + 1}}</th>
+                                                    <td class="text-center">{{ $details['receipt_number'] }}
+
+                                                    <td class="text-center">{{ date('D, Y-m-d', strtotime($details['receipt_date'])) }}
+
+                                                    <td class="text-center">{{ $details['amount'] }}</td>
+                                                </tr>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center py-3">
+                                                    {{ __('No details for supplier for this return month') }}.
                                                 </td>
                                             </tr>
                                         @endif
