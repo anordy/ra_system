@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount per Installment</span>
-                    <p class="my-1">{{ $installment->currency }}. {{ number_format($installment->amount/$installment->installment_count, 2) }}</p>
+                    <p class="my-1">{{ $installment->currency }}. {{ number_format(roundOff($installment->amount/$installment->installment_count, $installment->installable->currency), 2) }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Start Date</span>

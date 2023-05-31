@@ -121,18 +121,18 @@
                     <tr>
                         <th>Penalty Amount</th>
                         <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->return->penalty, 2) }}</td>
-                        <td>{{ number_format($waiver->penalty_rate, 2) }} % = {{ number_format($waiver->debt->return->penalty * ($waiver->penalty_rate/100), 2) }}</td>
+                        <td>{{ number_format($waiver->penalty_rate, 2) }} % = {{ number_format($waiver->penalty_amount, 2) }}</td>
                         <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->penalty, 2) }}</td>
                     </tr>
                     <tr>
                         <th>Interest Amount</th>
                         <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->return->interest, 2) }}</td>
-                        <td>{{ number_format($waiver->interest_rate, 2) }} % = {{ number_format($waiver->debt->return->interest * ($waiver->interest_rate/100), 2) }}</td>
+                        <td>{{ number_format($waiver->interest_rate, 2) }} % = {{ number_format($waiver->interest_amount, 2) }}</td>
                         <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->interest, 2) }}</td>
                     </tr>
                     <tr>
                         <th>Total Amount</th>
-                        <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->return->total_amount_due_with_penalties, 2) ?? '' }}</td>
+                        <td></td>
                         <td></td>
                         <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->total_amount, 2) }}</td>
                     </tr>

@@ -57,7 +57,7 @@ class InstallmentPayment extends Component
             DB::beginTransaction();
             $item = InstallmentItem::create([
                 'installment_id' => $this->installment->id,
-                'amount' => $this->installment->amount / $this->installment->installment_count,
+                'amount' => roundOff($this->installment->amount / $this->installment->installment_count, $this->installment->installable->currency),
                 'currency' => $this->installment->currency,
                 'due_date' => $this->installment->getNextPaymentDate()->toDateTimeString()
             ]);

@@ -57,7 +57,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
             } elseif ($this->penaltyPercent < 0 || !is_numeric($this->penaltyPercent)) {
                 $this->penaltyPercent = null;
             }
-            $this->penaltyAmount = ($this->debt->penalty * $this->penaltyPercent) / 100;
+            $this->penaltyAmount = roundOff(($this->debt->penalty * $this->penaltyPercent) / 100, $this->debt->currency);
         }
 
         if ($propertyName == "interestPercent") {
@@ -66,7 +66,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
             } elseif ($this->interestPercent < 0 || !is_numeric($this->interestPercent)) {
                 $this->interestPercent = null;
             }
-            $this->interestAmount = ($this->debt->interest * $this->interestPercent) / 100;
+            $this->interestAmount = roundOff(($this->debt->interest * $this->interestPercent) / 100, $this->debt->currency);
         }
 
         $this->penaltyAmountDue = $this->debt->penalty - $this->penaltyAmount;
