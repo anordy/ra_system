@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVatCashSalesTable extends Migration
+class CreateVatSpecialReliefsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateVatCashSalesTable extends Migration
      */
     public function up()
     {
-        Schema::create('vat_cash_sales', function (Blueprint $table) {
+        Schema::create('vat_special_reliefs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('financial_month_id');
-            $table->unsignedBigInteger('vat_return_id');
-            $table->string('document')->nullable();
-            $table->integer('from_number')->nullable();
-            $table->integer('to_number')->nullable();
-            $table->text('remarks')->nullable();
+            $table->unsignedBigInteger('vat_return_id')->nullable();
+            $table->string('receipt_number');
+            $table->timestamp('receipt_date');
+            $table->decimal('amount',20,2);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -33,6 +33,6 @@ class CreateVatCashSalesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vat_cash_sales');
+        Schema::dropIfExists('vat_special_reliefs');
     }
 }

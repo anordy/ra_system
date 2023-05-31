@@ -61,6 +61,9 @@ class RegistrationController extends Controller
             abort(403);
         }
         $business = Business::findOrFail(decrypt($businessId));
-        return view('business.registrations.approval_progress', compact('business'));
+        $directors = BusinessDirector::where('business_id', $business->id)->get() ?? [];
+        $shareholders = BusinessShareholder::where('business_id', $business->id)->get() ?? [];
+        $shares = BusinessShare::where('business_id', $business->id)->get() ?? [];
+        return view('business.registrations.approval_progress', compact('business', 'directors', 'shareholders', 'shares'));
     }
 }

@@ -30,6 +30,9 @@ class BFOConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '01',
+                'rate_label' => '02',
+                'tax_label' => '03'
             ],
             [
                 'financia_year_id' => 1,
@@ -45,6 +48,9 @@ class BFOConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '04',
+                'rate_label' => '05',
+                'tax_label' => '06'
             ],
             [
                 'financia_year_id' => 1,
@@ -60,6 +66,9 @@ class BFOConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '07',
+                'rate_label' => '08',
+                'tax_label' => '09'
             ],
             [
                 'financia_year_id' => 1,
@@ -75,6 +84,9 @@ class BFOConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '10',
+                'rate_label' => '11',
+                'tax_label' => '12'
             ],
             [
                 'financia_year_id' => 1,
@@ -90,6 +102,9 @@ class BFOConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '13',
+                'rate_label' => '14',
+                'tax_label' => '15'
             ],
             [
                 'financia_year_id' => 1,
@@ -105,6 +120,9 @@ class BFOConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '16',
+                'rate_label' => '17',
+                'tax_label' => '18'
             ],
             [
                 'financia_year_id' => 1,
@@ -120,6 +138,9 @@ class BFOConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '19',
+                'rate_label' => '20',
+                'tax_label' => '21'
             ],
             [
                 'financia_year_id' => 1,
@@ -135,6 +156,9 @@ class BFOConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '22',
+                'rate_label' => '23',
+                'tax_label' => '24'
             ],
             [
                 'financia_year_id' => 1,
@@ -150,6 +174,9 @@ class BFOConfigSeeder extends Seeder
                 'rate' => 5,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '25',
+                'rate_label' => '26',
+                'tax_label' => '27'
             ],
             [
                 'financia_year_id' => 1,
@@ -165,6 +192,9 @@ class BFOConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '28',
+                'rate_label' => '29',
+                'tax_label' => '30'
             ],
             [
                 'financia_year_id' => 1,
@@ -180,6 +210,9 @@ class BFOConfigSeeder extends Seeder
                 'rate' => 10,
                 'rate_usd' => 0,
                 'active' => true,
+                'value_label' => '31',
+                'rate_label' => '32',
+                'tax_label' => '33'
             ],
             [ 
                 'financia_year_id' => 1,
@@ -191,11 +224,14 @@ class BFOConfigSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => 'CWC+EMTC+MLPF+MBTC+SPCF+ODFLC+ComR+RSF+PVTS+ASF+FOTHER',
                 'active' => true,
+                'value_label' => '34',
+                'rate_label' => '35',
+                'tax_label' => '36'
             ],
         ];
 
         foreach ($configs as $config) {
-            BFOConfig::updateOrCreate($config);
+            BFOConfig::updateOrCreate(['code' => $config['code']], $config);
         }
     }
 }
