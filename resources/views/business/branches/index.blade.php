@@ -14,6 +14,7 @@
                 <a href="#tab2" class="nav-item nav-link font-weight-bold active">All Branches</a>
                 <a href="#tab1" class="nav-item nav-link font-weight-bold">Pending Approval</a>
                 <a href="#tab3" class="nav-item nav-link font-weight-bold">Approval Progress</a>
+                <a href="#tab4" class="nav-item nav-link font-weight-bold">Approval Correction</a>
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab2" class="tab-pane fade m-2 show active">
@@ -24,6 +25,9 @@
                 </div>
                 <div id="tab3" class="tab-pane fade m-2">
                     @livewire('business.branches-approval-progress-table')
+                </div>
+                <div id="tab4" class="tab-pane fade m-2">
+                    @livewire('business.branches-approval-correction-table',['status' => 'correction'])
                 </div>
             </div>
         </div>
