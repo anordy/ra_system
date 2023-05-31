@@ -321,10 +321,20 @@
                                         <tr>
                                             <th>Grant Vat Payable</th>
                                             <td colspan="2" class="table-active"></td>
-                                            <th class="text-right">{{number_format($return->total_amount_due_with_penalties, 2, '.',',')}}
+                                            <th class="text-right">{{number_format($return->total_amount_due, 2, '.',',')}}
                                                 <strong>{{$return->currency}}</strong>
                                             </th>
                                         </tr>
+
+                                        @if(count($return->penalties))
+                                            <tr>
+                                                <th>Grant Vat Payable With Penalties</th>
+                                                <td colspan="2" class="table-active"></td>
+                                                <th class="text-right">{{number_format($return->total_amount_due_with_penalties, 2, '.',',')}}
+                                                    <strong>{{$return->currency}}</strong>
+                                                </th>
+                                            </tr>
+                                        @endif
 
                                         </tbody>
                                     </table>

@@ -63,24 +63,24 @@ class BpraInternalService
             curl_close($curl);
             $res = json_decode($response, true);
 
-
+            Log::info($res);
             if ($res) {
-                if(array_key_exists('group_shareholder_shares', $res['data']['xml']['EApplication'])){
+                if(array_key_exists('group_shareholder_shares', $res['data']['xml']['EApplication']) && $res['data']['xml']['EApplication']['group_shareholder_shares']){
                     $listShareHolderShares = $res['data']['xml']['EApplication']['group_shareholder_shares']['list_shareholder_shares'];
                 } 
             
-                if(array_key_exists('list_entitydata', $res['data']['xml'])){
+                if(array_key_exists('list_entitydata', $res['data']['xml']) && $res['data']['xml']['list_entitydata']){
                     $listEntityData = $res['data']['xml']['list_entitydata'];
 
-                    if(array_key_exists('entity_type', $res['data'])){
-                        if($res['data']['entity_type'] == 'ET-COMPANY'){
+                    if(array_key_exists('entity_type', $res['data']) && $res['data']){
+                        if($res['data']['entity_type'] == 'ET-COMPANY' && $listEntityData['EntityData']){
                             $listEntityData = $listEntityData['EntityData'];
                         }
                     }
 
                     foreach ($listEntityData as $entityData) {
 
-                        if ($entityData['list_type'] == 'list_directors') {
+                        if ($entityData['list_type'] == 'list_directors' || $entityData['list_type'] == 'list_director_in_country' && $entityData) {
                             $directors[] = [
                                 'business_id' => $business->id,
                                 'country' => $entityData['country'] ?? '',
@@ -102,7 +102,7 @@ class BpraInternalService
                             ];
                         }
     
-                        if ($entityData['list_type'] == 'list_shareholder' || $entityData['list_type'] == 'list_ownership') {
+                        if ($entityData['list_type'] == 'list_shareholder' || $entityData['list_type'] == 'list_ownership' && $entityData) {
                             $shareHolders[] = [
                                 'business_id' => $business->id,
                                 'country' => $entityData['country'] ?? '',
