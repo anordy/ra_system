@@ -132,16 +132,17 @@ class BpraVerification extends Component
             if ($this->shareholders) {
                 foreach ($this->shares as $share) {
                     $shareHolderID = BusinessShareholder::where('entity_name', trim($share['shareholder_name']))
-                        ->orWhere('national_id', $share['item'])->first()->id;
+                        ->orWhere('national_id', $share['item'])->first();
 
                     if(!$shareHolderID){
-                        $this->customAlert('error', 'Could not associate shares with shareholders.');
-                        return;
+                        Log::info('NO SHAREHOLDER ID');
+                    } else {
+                        $shareHolderID = $shareHolderID->id;
                     }
 
                     BusinessShare::create([
                         'business_id' =>$this->business->id,
-                        'share_holder_id' =>$shareHolderID,
+                        'share_holder_id' =>$shareHolderID ?? 0,
                         'shareholder_name' => $share['shareholder_name'],
                         'share_class' => $share['share_class'],
                         'number_of_shares' => $share['number_of_shares'],

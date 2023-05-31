@@ -33,7 +33,7 @@
                         <span class="font-weight-bold text-uppercase">Payment Status</span>
                         <p class="my-1 text-success font-weight-bold">
                             <i class="bi bi-check-circle-fill mr-2"></i>
-                            Payment Complete
+                            Paid
                         </p>
                     </div>
                     <div class="col-md-4">

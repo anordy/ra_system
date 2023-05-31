@@ -42,7 +42,7 @@ trait ReturnTrait{
             case ReturnStatus::CN_GENERATED:
                 return 'Waiting for payment.';
             case ReturnStatus::COMPLETE:
-                return 'Payment Complete.';
+                return 'Paid.';
             case ReturnStatus::ON_CLAIM:
                 return 'On claim.';
             default:
