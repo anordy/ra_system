@@ -39,6 +39,10 @@ class Business extends Model implements Auditable
         return $this->hasMany(BusinessPartner::class);
     }
 
+    public function assistants(){
+        return $this->hasMany(BusinessAssistant::class);
+    }
+
     public function category(){
         return $this->belongsTo(BusinessCategory::class, 'business_category_id');
     }
