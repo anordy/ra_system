@@ -31,7 +31,11 @@ class StripTag implements Rule
             return true;
         }
 
-        return strip_tags($value) === $value;
+        // Since strip tags always return string,
+        // in order to apply this rule on non string values, like ID's,
+        // the result should explicitly be converted to string or do a loose comparison ==
+
+        return strip_tags($value) === (string)$value;
     }
 
     public function validate(string $attribute, $value, $params, Validator $validator): bool
