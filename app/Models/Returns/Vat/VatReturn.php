@@ -134,4 +134,8 @@ class VatReturn extends Model
     public function specialRelief(){
         return $this->hasMany(VatSpecialRelief::class, 'vat_return_id');
     }
+
+    public function exemptSupplies(){
+        return $this->hasMany(VatExemptSupply::class, 'vat_return_id');
+    }
 }
