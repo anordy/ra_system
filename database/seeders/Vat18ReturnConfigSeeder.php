@@ -387,7 +387,9 @@ class Vat18ReturnConfigSeeder extends Seeder
         ];
 
         foreach ($configs as $config) {
-            Vat18ReturnConfig::query()->updateOrCreate($config);
+            Vat18ReturnConfig::query()->updateOrCreate([
+                'code' => $config['code']
+            ], $config);
         }
     }
 }
