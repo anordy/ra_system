@@ -70,6 +70,10 @@ class ShowChanges extends Component
         return Taxpayer::where('reference_no', $refNo)->first()->fullname() ?? 'N/A';
     }
 
+    public function taxpayer($id){
+        return Taxpayer::find($id);
+    }
+
     public function render()
     {
         return view('livewire.business.updates.show', ['new_values' => $this->new_values, 'old_values' => $this->old_values]);

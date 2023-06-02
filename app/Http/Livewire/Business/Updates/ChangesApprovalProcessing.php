@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Business\Updates;
 
+use App\Enum\AssistantStatus;
+use App\Models\BusinessAssistant;
 use Exception;
 use Carbon\Carbon;
 use App\Events\SendSms;
@@ -103,8 +105,23 @@ class ChangesApprovalProcessing extends Component
 
                     $business->update([
                         'is_own_consultant' => $new_values['is_own_consultant'],
-                        'responsible_person_id' => $new_values['responsible_person_id']
                     ]);
+
+                    // Mark any active assistant as inactive.
+                    $business->assistants()->active()->update(['status' => AssistantStatus::INACTIVE]);
+
+                    if ($new_values['hasAssistants']){
+                        foreach ($new_values['assistants'] as $assistant){
+                            BusinessAssistant::create([
+                                'business_id' => $assistant['business_id'],
+                                'taxpayer_id' => $assistant['taxpayer_id'],
+                                'added_by_type' => $assistant['added_by_type'],
+                                'added_by_id' => $assistant['added_by_id'],
+                                'status' => $assistant['status'],
+                                'assigned_at' => $assistant['assigned_at']
+                            ]);
+                        }
+                    }
 
                     $this->subject->status = BusinessStatus::APPROVED;
 
@@ -131,6 +148,7 @@ class ChangesApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
+            throw $e;
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

@@ -524,7 +524,7 @@
             </div>
             <div class="row m-2 mb-3">
                 @if($business->assistants()->count())
-                    @foreach($business->assistants as $index => $assistant)
+                    @foreach($business->assistants()->active()->with('taxpayer')->get() as $index => $assistant)
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">{{$index + 1}}. {{ __('Name') }}</span>
                             <p class="my-1">{{ $assistant->taxpayer->fullName }}</p>
