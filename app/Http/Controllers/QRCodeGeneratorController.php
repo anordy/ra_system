@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ZmBill;
 use App\Models\ZrbBankAccount;
+use Carbon\Carbon;
 use Endroid\QrCode\Color\Color;
 use Illuminate\Http\Request;
 use Endroid\QrCode\Builder\Builder;
@@ -23,11 +24,22 @@ class QRCodeGeneratorController extends Controller
         $name = $bill->user->full_name ?? '';
         
         $url = env('TAXPAYER_URL') . route('qrcode-check.invoice',  base64_encode(strval($id)), 0);
-        
+
+        $qrPayload = [
+            'opType' => '2',
+            'shortCode' => '100001',
+            'amount' => $bill->amount,
+            'billReference' => $bill->control_number,
+            'billCcy' => $bill->currency,
+            'billExprDt' => Carbon::parse($bill->expire_date)->toDateString(),
+            'billPayOpt' => (int) $bill->payment_option,
+            'billRsv01' => $bill->description
+        ];
+
         $result = Builder::create()
         ->writer(new PngWriter())
         ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true])
-        ->data($url)
+        ->data(json_encode($qrPayload))
         ->encoding(new Encoding('UTF-8'))
         ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
         ->size(300)

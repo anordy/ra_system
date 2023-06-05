@@ -314,14 +314,52 @@
                                 @endif
                             </tr>
                             <tr>
-                                <th>Responsible Person Name</th>
-                                <td>{{ $this->getResponsiblePersonNameById($old_values->responsible_person_id) ?? 'N/A' }}</td>
-                                <td>{{ $this->getResponsiblePersonNameById($new_values->responsible_person_id) ?? 'N/A' }}</td>
-                                @if ($old_values->responsible_person_id == $new_values->responsible_person_id)
+                                <th>Has Assistants</th>
+                                <td>{{ $old_values->hasAssistants ? 'Yes' : 'No' }}</td>
+                                <td>{{ $new_values->hasAssistants ? 'Yes' : 'No' }}</td>
+                                @if ($old_values->hasAssistants == $new_values->hasAssistants)
                                     <td class="table-primary">Unchanged</td>
                                 @else
                                     <td class="table-success">Changed</td>
                                 @endif
+                            </tr>
+                            <tr>
+                                <th>First Assistant</th>
+                                @if($old_values->hasAssistants)
+                                    <td>
+{{--                                        {{ json_encode($old_values->assistants[0]) }}--}}
+                                        {{ $this->taxpayer($old_values->assistants[0]->taxpayer_id)->fullName }}
+                                    </td>
+                                @else
+                                    <td>N/A</td>
+                                @endif
+                                @if($new_values->hasAssistants)
+                                    <td>
+{{--                                        {{ json_encode($new_values->assistants[0]) }}--}}
+                                        {{ $this->taxpayer($new_values->assistants[0]->taxpayer_id)->fullName }}
+                                    </td>
+                                @else
+                                    <td>N/A</td>
+                                @endif
+                                <td class="bg-secondary"></td>
+                            </tr>
+                            <tr>
+                                <th>Second Assistant</th>
+                                @if($old_values->hasAssistants && count($old_values->assistants) > 1)
+                                    <td>
+                                        {{ $this->taxpayer($old_values->assistants[1]->taxpayer_id)->fullName }}
+                                    </td>
+                                @else
+                                    <td>N/A</td>
+                                @endif
+                                @if($new_values->hasAssistants && count($new_values->assistants) > 1)
+                                    <td>
+                                        {{ $this->taxpayer($new_values->assistants[1]->taxpayer_id)->fullName }}
+                                    </td>
+                                @else
+                                    <td>N/A</td>
+                                @endif
+                                <td class="bg-secondary"></td>
                             </tr>
                         </tbody>
                     </table>

@@ -16,7 +16,7 @@
         @endif
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
-                aria-controls="contact" aria-selected="false">Responsible Person</a>
+                aria-controls="contact" aria-selected="false">Assistants & Tax Consultants</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="bank-tab" data-toggle="tab" href="#bank" role="tab" aria-controls="bank"

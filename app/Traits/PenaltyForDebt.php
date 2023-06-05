@@ -108,6 +108,8 @@ class PenaltyForDebt
         
         $period = $tax_return->periods + $tax_return->penatableMonths;
 
+        $outstanding_amount = roundOff($outstanding_amount, $tax_return->currency);
+
         $penaltableAmount = $outstanding_amount;
 
         /**
@@ -115,13 +117,14 @@ class PenaltyForDebt
          */
         if ($tax_return->return_type == EmTransactionReturn::class || $tax_return->return_type == MmTransferReturn::class) {
             $latePaymentAmount = PenaltyRate::where('financial_year_id', $tax_return->financialMonth->year->id)->where('code', PenaltyRate::PENALTY_FOR_MM_TRANSACTION)->firstOrFail()->rate;
+            $latePaymentAmount = roundOff($latePaymentAmount, $tax_return->currency);
             $interestAmount = 0;
             $penaltableAmount = $latePaymentAmount + $penaltableAmount;
         } else {
-            $latePaymentAmount = $latePaymentAfterRate->rate * $penaltableAmount;
+            $latePaymentAmount = roundOff($latePaymentAfterRate->rate * $penaltableAmount, $tax_return->currency);
             $penaltableAmount = $latePaymentAmount + $penaltableAmount;
-            $interestAmount = self::calculateInterest($penaltableAmount, $interestRate->rate, $period);
-            $penaltableAmount = $penaltableAmount + $interestAmount;
+            $interestAmount = roundOff(self::calculateInterest($penaltableAmount, $interestRate->rate, $period), $tax_return->currency);
+            $penaltableAmount = roundOff($penaltableAmount + $interestAmount, $tax_return->currency);
         }
 
         $start_date = Carbon::create($tax_return->curr_payment_due_date)->addDay()->startOfDay();

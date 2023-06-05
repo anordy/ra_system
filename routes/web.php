@@ -276,6 +276,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     Route::prefix('business')->as('business.')->group(function () {
         Route::get('/registrationsApproval/{id}', [RegistrationController::class, 'approval'])->name('registrations.approval'); // KYC
+        Route::get('/registrationsApprovalCorrection/{id}', [RegistrationController::class, 'correction'])->name('registrations.approval.correction'); // KYC
         Route::get('/registrationsApprovalProgress/{id}', [RegistrationController::class, 'approval_progress'])->name('registrations.approval_progress');
         Route::resource('registrations', RegistrationController::class);
         Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');

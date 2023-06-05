@@ -49,6 +49,11 @@
                        aria-controls="special-relief"
                        aria-selected="false">Special Relief</a>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="exempt-supplies-tab" data-toggle="tab" href="#exempt-supplies" role="tab"
+                       aria-controls="exempt-supplies"
+                       aria-selected="false">Exempt Supplies</a>
+                </li>
             </ul>
             <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
 
@@ -601,6 +606,43 @@
                                             <td class="text-center">{{ date('D, Y-m-d', strtotime($details['receipt_date'])) }}
 
                                             <td class="text-center">{{ $details['amount'] }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="7" class="text-center py-3">
+                                            {{ __('No details for zero rated supply for this return month') }}.
+                                        </td>
+                                    </tr>
+                                @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane p-2" id="exempt-supplies" role="tabpanel" aria-labelledby="exempt-supplies-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-bordered table-sm normal-text">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">No:</th>
+                                    <th class="text-center">{{ __('Receipt Number') }}</th>
+                                    <th class="text-center">{{ __('Receipt Date') }}</th>
+                                    <th class="text-center">{{ __('Amount') }}</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                @if (count($return->exemptSupplies ?? []))
+                                    @foreach ($return->exemptSupplies as $index=> $details)
+                                        <tr>
+                                            <th class="text-center">{{$index + 1}}</th>
+                                            <td class="text-center">{{ $details['receipt_number'] }}
+
+                                            <td class="text-center">{{ date('D, Y-m-d', strtotime($details['receipt_date'])) }}
+
+                                            <td class="text-center">{{ number_format($details['amount'], 2) }}</td>
                                         </tr>
                                     @endforeach
                                 @else

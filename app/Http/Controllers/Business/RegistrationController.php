@@ -43,6 +43,18 @@ class RegistrationController extends Controller
         return view('business.registrations.approval', compact('business','directors', 'shareholders', 'shares'));
     } 
 
+    public function correction($businessId)
+    {
+        if (!Gate::allows('business-registration-view')) {
+            abort(403);
+        }
+        $business = Business::findOrFail(decrypt($businessId));
+        $directors = BusinessDirector::where('business_id', $business->id)->get() ?? [];
+        $shareholders = BusinessShareholder::where('business_id', $business->id)->get() ?? [];
+        $shares = BusinessShare::where('business_id', $business->id)->get() ?? [];
+        return view('business.registrations.correction', compact('business','directors', 'shareholders', 'shares'));
+    } 
+
     public function approval_progress($businessId)
     {
         if (!Gate::allows('business-registration-view')) {
