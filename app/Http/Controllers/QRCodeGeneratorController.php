@@ -29,6 +29,7 @@ class QRCodeGeneratorController extends Controller
             'opType' => '2',
             'shortCode' => '100001',
             'amount' => $bill->amount,
+            'billReference' => $bill->control_number,
             'billCcy' => $bill->currency,
             'billExprDt' => Carbon::parse($bill->expire_date)->toDateString(),
             'billPayOpt' => (int) $bill->payment_option,

@@ -1,6 +1,6 @@
 <div class="row px-3">
     @foreach ($this->getEnabledTranstions() as $transition)
-        <div class="col-md-6 card">
+        <div class="col-md-6 card rounded-0">
             <div class="row my-2">
                 <div class="col-md-4 ">
                     <span class="font-weight-bold text-uppercase">Transition Name</span>

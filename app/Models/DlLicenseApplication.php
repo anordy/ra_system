@@ -192,7 +192,7 @@ class DlLicenseApplication extends Model implements Auditable
             ZmCore::formatPhone($this->taxpayer->mobile),
             Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
             $fee->name,
-            ZmCore::PAYMENT_OPTION_FULL,
+            ZmCore::PAYMENT_OPTION_EXACT,
             'TZS', //All fees are paid in tzs
             1,
             auth()->user()->id,

@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">ISIIC Configurations</div>
+        <div class="card rounded-0 shadow-none border">
+            <div class="card-header bg-white font-weight-bold">ISIIC Configurations</div>
             <div class="card-body row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -106,12 +106,12 @@
     </div>
 
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">Business Type Configurations</div>
+        <div class="card rounded-0 shadow-none border">
+            <div class="card-header font-weight-bold bg-white">Business Type Configurations</div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <div class="form-group mb-0">
                             <label>
                                 <input type="checkbox" wire:model.lazy="isBusinessElectric">
                                 Is Business Electric
@@ -124,7 +124,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <div class="form-group mb-0">
                             <label>
                                 <input type="checkbox" wire:model.lazy="isBusinessLTO">
                                 Is Business LTO
@@ -144,8 +144,8 @@
 
 
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">Tax Type Configurations</div>
+        <div class="card rounded-0 shadow-none border">
+            <div class="card-header bg-white font-weight-bold">Tax Type Configurations</div>
             <div class="card-body">
                     @foreach ($selectedTaxTypes as $key => $value)
                     <div class="row">
@@ -279,7 +279,7 @@
                     @endforeach
             </div>
             @if (!$showLumpsumOptions)
-                <div class="card-footer">
+                <div class="card-footer bg-white text-right">
                     <button class="btn text-white btn-info" wire:click.prevent="addTaxtype()">
                         <i class="bi bi-plus-square-fill"></i>
                         Add Tax Type

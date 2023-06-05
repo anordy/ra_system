@@ -16,7 +16,7 @@
         @endif
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
-                aria-controls="contact" aria-selected="false">Responsible Person</a>
+                aria-controls="contact" aria-selected="false">Assistants & Tax Consultants</a>
         </li>
         @if (count($business->banks))
             <li class="nav-item" role="presentation">
@@ -518,75 +518,85 @@
         @endif
 
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-            <div class="row m-2 pt-3">
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Responsible Person Name</span>
-                    <p class="my-1">{{ $business->responsiblePerson->first_name }}
-                        {{ $business->responsiblePerson->last_name }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Responsible Person Ref No.</span>
-                    <p class="my-1">{{ $business->responsiblePerson->reference_no }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Responsible Person Mobile No.</span>
-                    <p class="my-1">{{ $business->responsiblePerson->mobile }}</p>
-                </div>
-                @if ($business->is_own_consultant)
+            <div class="col-md-12 mt-4">
+                <span class="pt-3 mb-0 font-weight-bold">{{ __('Assistants') }}</span>
+                <hr class="mt-2 mb-3" />
+            </div>
+            <div class="row m-2 mb-3">
+                @if($business->assistants()->count())
+                    @foreach($business->assistants()->active()->with('taxpayer')->get() as $index => $assistant)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{$index + 1}}. {{ __('Name') }}</span>
+                            <p class="my-1">{{ $assistant->taxpayer->fullName }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{ __('Ref No') }}.</span>
+                            <p class="my-1">{{ $assistant->taxpayer->reference_no }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{ __('Mobile No') }}.</span>
+                            <p class="my-1">{{ $assistant->taxpayer->mobile }}</p>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="col-md-12 text-center text-muted py-3">N/A</div>
+                @endif
+            </div>
+            <div class="col-md-12 mt-1">
+                <span class="pt-3 mb-0 font-weight-bold">{{ __('Tax Consultant') }}</span>
+                <hr class="mt-2 mb-3" />
+            </div>
+            <div class="row m-2">
+                @if($consultant = $business->consultants()->latest()->first())
+                    @if ($consultant->status !== 'removed')
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{ __('Consultant Name') }}</span>
+                            <p class="my-1">{{ $consultant->taxpayer->first_name }}
+                                {{ $consultant->taxpayer->last_name }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{ __('Consultant Ref No') }}.</span>
+                            <p class="my-1">{{ $consultant->taxpayer->taxAgent->reference_no }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{ __('Consultant Mobile No') }}.</span>
+                            <p class="my-1">{{ $consultant->taxpayer->mobile }}</p>
+                        </div>
+                    @endif
+
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Consultant Details</span>
-                        <p class="my-1">{{ $business->taxpayer->first_name }} {{ $business->taxpayer->last_name }}
-                        </p>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Consultant Ref No.</span>
-                        <p class="my-1">{{ $business->taxpayer->reference_no }}</p>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Consultant Mobile No.</span>
-                        <p class="my-1">{{ $business->taxpayer->mobile }}</p>
-                    </div>
-                @elseif($consultant = $business->consultants()->latest()->first())
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Consultant Name</span>
-                        <p class="my-1">{{ $consultant->taxpayer->first_name }}
-                            {{ $consultant->taxpayer->last_name }}</p>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Consultant Ref No.</span>
-                        <p class="my-1">{{ $consultant->taxpayer->taxAgent->reference_no }}</p>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Consultant Mobile No.</span>
-                        <p class="my-1">{{ $consultant->taxpayer->mobile }}</p>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Consultant Status</span>
+                        <span class="font-weight-bold text-uppercase">{{ __('Consultant Status') }}</span>
                         @if ($consultant->status === 'pending')
                             <p class="my-1 text-info font-weight-bold">
                                 <i class="bi bi-clock-history mr-1"></i>
-                                Waiting Approval From Tax Agent
+                                {{ __('Waiting Approval From Tax Agent') }}
                             </p>
                         @elseif($consultant->status === 'approved')
                             <p class="my-1 text-success font-weight-bold">
                                 <i class="bi bi-check-circle mr-1"></i>
-                                Approved
+                                {{ __('Approved') }}
                             </p>
                         @elseif($consultant->status === 'rejected')
                             <p class="my-1 text-danger font-weight-bold">
                                 <i class="bi bi-x-circle-fill mr-1"></i>
-                                Rejected
+                                {{ __('Rejected') }}
                             </p>
                         @elseif($consultant->status === 'removed')
                             <p class="my-1 text-danger font-weight-bold">
                                 <i class="bi bi-trash-fill mr-1"></i>
-                                Removed. Please assign new tax agent.
+                                {{ __('Removed. Please assign new tax agent') }}.
                             </p>
                         @endif
                     </div>
+                @else
+                    <div class="col-md-12 text-center py-3 text-muted">
+                        N/A
+                    </div>
                 @endif
-                <div class="col-md-12 mt-3">
-                    <h6 class="mb-0 font-weight-bold" style="flex: 1;">Business Registered By</h6>
+            </div>
+            <div class="row m-2">
+                <div class="col-md-12">
+                    <span class="mb-0 font-weight-bold" style="flex: 1;">Business Registered By</span>
                     <hr class="mt-2 mb-3" />
                 </div>
                 <div class="col-md-4 mb-3">

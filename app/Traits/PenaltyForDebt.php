@@ -121,7 +121,7 @@ class PenaltyForDebt
             $interestAmount = 0;
             $penaltableAmount = $latePaymentAmount + $penaltableAmount;
         } else {
-            $latePaymentAmount = roundOff($latePaymentAfterRate->rate, $tax_return->currency) * $penaltableAmount;
+            $latePaymentAmount = roundOff($latePaymentAfterRate->rate * $penaltableAmount, $tax_return->currency);
             $penaltableAmount = $latePaymentAmount + $penaltableAmount;
             $interestAmount = roundOff(self::calculateInterest($penaltableAmount, $interestRate->rate, $period), $tax_return->currency);
             $penaltableAmount = roundOff($penaltableAmount + $interestAmount, $tax_return->currency);
