@@ -18,9 +18,10 @@ class CreateVatCashSalesTable extends Migration
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('financial_month_id');
             $table->unsignedBigInteger('vat_return_id');
-            $table->string('document')->nullable();
-            $table->integer('from_number')->nullable();
-            $table->integer('to_number')->nullable();
+            $table->string('document');
+            $table->integer('from_number');
+            $table->integer('to_number');
+            $table->string('purchases_type');
             $table->text('remarks')->nullable();
             $table->timestamps();
         });
