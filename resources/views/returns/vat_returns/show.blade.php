@@ -377,7 +377,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th>No:</th>
-                                                    <th>{{ __('Supplier ZTN Number') }}</th>
+                                                    <th>{{ __('Supplier ZTN /TIN Number') }}</th>
                                                     <th>{{ __('Tax Invoice Number') }}</th>
                                                     <th>{{ __('Date Of Invoice') }}</th>
                                                     <th>{{ __('Customs Entry Number') }}</th>
@@ -439,7 +439,6 @@
                                                     <th>{{ __('Documents') }}</th>
                                                     <th>{{ __('From Number') }}</th>
                                                     <th>{{ __('To Number') }}</th>
-                                                    <th>{{ __('Purchases Type') }}</th>
                                                     <th>{{ __('Remarks') }}</th>
 
                                                 </tr>
@@ -455,14 +454,6 @@
                                                             <td>{{ $details['from_number'] }}</td>
 
                                                             <td>{{ $details['to_number'] }}</td>
-
-                                                            <td>
-                                                                @if($details['purchases_type'] == 15)
-                                                                    15 %
-                                                                @else
-                                                                    18 %
-                                                                @endif
-                                                            </td>
 
                                                             <td>{{ $details['remarks'] }}</td>
 
@@ -488,7 +479,7 @@
                                     <table class="table table-bordered table-sm normal-text">
                                         <thead>
                                         <tr>
-                                            <th class="text-center">{{ __('No:') }}</th>
+                                            <th class="text-center">{{ __('No Of Days') }}</th>
                                             <th class="text-center" colspan="3">{{ __('NO. OF PAX') }}</th>
                                             <th class="text-center" colspan="3">{{ __('REVENUE') }}</th>
                                             <th class="text-center">{{ __('TOTAL') }}</th>
@@ -508,7 +499,7 @@
                                         @if (count($return->hotelDetails))
                                             @foreach ($return->hotelDetails as $index=> $details)
                                                 <tr>
-                                                    <th class="text-center">{{$index + 1}}</th>
+                                                    <th class="text-center">{{ $details['no_of_days'] }}</th>
                                                     <td class="text-center">{{ $details['no_of_pax_for_r'] }}
 
                                                     <td class="text-center">{{ $details['no_of_pax_for_nr'] }}
