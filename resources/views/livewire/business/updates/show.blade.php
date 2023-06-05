@@ -15,7 +15,6 @@
                                 <strong>{{ $business_update->taxpayer->full_name }}</strong> <br> on
                                 <strong>{{ $business_update->created_at->toFormattedDateString() }}</strong></label>
                         </div>
-
                         <thead>
                             <th style="width: 20%">Property</th>
                             <th style="width: 30%">Old Values</th>
@@ -327,7 +326,6 @@
                                 <th>First Assistant</th>
                                 @if($old_values->hasAssistants)
                                     <td>
-{{--                                        {{ json_encode($old_values->assistants[0]) }}--}}
                                         {{ $this->taxpayer($old_values->assistants[0]->taxpayer_id)->fullName }}
                                     </td>
                                 @else
@@ -335,7 +333,6 @@
                                 @endif
                                 @if($new_values->hasAssistants)
                                     <td>
-{{--                                        {{ json_encode($new_values->assistants[0]) }}--}}
                                         {{ $this->taxpayer($new_values->assistants[0]->taxpayer_id)->fullName }}
                                     </td>
                                 @else

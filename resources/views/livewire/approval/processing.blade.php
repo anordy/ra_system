@@ -7,7 +7,7 @@
             @include('livewire.approval.transitions')
 
             <div class="row">
-                <div class="col-md-12 px-0 mx-0">
+                <div class="col-md-12">
                     @if ($subject->reg_no)
                         <div class="card">
                             <div class="card-header">BPRA Verification</div>

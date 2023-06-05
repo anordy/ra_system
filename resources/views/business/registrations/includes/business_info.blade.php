@@ -387,10 +387,10 @@
                                 <p class="my-1">{{ $location->owner_name }}</p>
                             </div>
                         @endif
-                        @if ($location->owner_mobile)
+                        @if ($location->owner_phone_no)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Owner's Mobile</span>
-                                <p class="my-1">{{ $location->owner_mobile }}</p>
+                                <p class="my-1">{{ $location->owner_phone_no }}</p>
                             </div>
                         @endif
                         <div class="col-md-4 mb-3">
@@ -437,14 +437,18 @@
                             <span class="font-weight-bold text-uppercase">House No.</span>
                             <p class="my-1">{{ $location->house_no }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Latitude</span>
-                            <p class="my-1">{{ $location->latitude }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Longitude</span>
-                            <p class="my-1">{{ $location->longitude }}</p>
-                        </div>
+                        @if($location->latitude)
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Latitude</span>
+                                <p class="my-1">{{ $location->latitude }}</p>
+                            </div>
+                        @endif
+                        @if($location->longitude)
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Longitude</span>
+                                <p class="my-1">{{ $location->longitude }}</p>
+                            </div>
+                        @endif
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Branch Status</span>
                             <p class="my-1 font-weight-bold">
@@ -682,10 +686,8 @@
                         <p class="my-1">{{ $hotel->hotel_capacity }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Average Charging Rate (Per night per person for
-                            bed
-                            and breakfast)</span>
-                        <p class="my-1">{{ $hotel->average_rate }}</p>
+                        <span class="font-weight-bold text-uppercase">Average Charging Rate (Per night per person for bed and breakfast)</span>
+                        <p class="my-1">{{ $hotel->average_rate ? number_format($hotel->average_rate) : 'N/A' }} TZS</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Other Services</span>

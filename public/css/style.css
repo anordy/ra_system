@@ -481,15 +481,35 @@ LIVEWIRE TABS
     background: linear-gradient(45deg, #03405f, #0080c1);
 }
 
-
 .card {
-    border-radius: 5px;
+    border-radius: 0 !important;
     -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
     box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-    border: none;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
+}
+
+.card.tab-content {
+    margin-bottom: 0 !important;
+}
+
+.card .card-header {
+    background-color: #fff !important;
+    font-weight: bold !important;
+    text-transform: uppercase;
+}
+
+.card .card-body {
+    padding: 0.5rem !important;
+}
+
+.tab-content {
+    border-radius: 0px;
+    /*border: none;*/
+    box-shadow: none;
+    -webkit-box-shadow: none;
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
+    border: 1px solid #dfe2e6 !important;
 }
 
 .card .card-block {
