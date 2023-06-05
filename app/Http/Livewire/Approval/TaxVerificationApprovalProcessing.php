@@ -286,7 +286,7 @@ class TaxVerificationApprovalProcessing extends Component
             $payer_email = $taxpayer->email;
             $payer_phone = $taxpayer->mobile;
             $description = "Verification for {$taxType->name} ";
-            $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+            $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
             $currency = 'TZS';
             $createdby_type = get_class(Auth::user());
             $createdby_id = Auth::id();

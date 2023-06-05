@@ -84,7 +84,7 @@ class OwnershipTransferController extends Controller
                 ZmCore::formatPhone(!empty($request->agent)? $request->agent->taxpayer->mobile : $request->new_owner->mobile),
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
-                ZmCore::PAYMENT_OPTION_FULL,
+                ZmCore::PAYMENT_OPTION_EXACT,
                 'TZS',
                 $exchange_rate,
                 auth()->user()->id,

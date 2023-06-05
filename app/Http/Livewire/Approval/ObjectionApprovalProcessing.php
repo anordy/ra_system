@@ -197,7 +197,7 @@ class ObjectionApprovalProcessing extends Component
                 $payer_email = $taxpayer->email;
                 $payer_phone = $taxpayer->mobile;
                 $description = "dispute for assessment";
-                $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+                $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
                 $currency = 'TZS';
                 $createdby_type = get_class(Auth::user());
                 $createdby_id = Auth::id();
@@ -309,7 +309,7 @@ class ObjectionApprovalProcessing extends Component
                 $payer_email = $taxpayer->email;
                 $payer_phone = $taxpayer->mobile;
                 $description = "dispute for assessment";
-                $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+                $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
                 $currency = 'TZS';
                 $createdby_type = get_class(Auth::user());
                 $createdby_id = Auth::id();

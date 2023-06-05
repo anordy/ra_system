@@ -12,7 +12,7 @@
         </div>
         <div class="card-body">
             @livewire('payments.payment-filter', ['tablename' => 'complete-payments-table']) <br>
-            <livewire:payments.payments-table />
+            <livewire:payments.complete-payments-table />
         </div>
     </div>
 @endsection
