@@ -294,6 +294,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/updates/{updateId}/file', [BusinessUpdateFileController::class, 'getContractFile'])->name('contract.file');
 
         Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
+        Route::get('/business-file-location/{location}', [BusinessFileController::class, 'getBusinessFileByLocation'])->name('file-location');
+
         Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
         Route::get('/business-certificate/{location}/taxType/{type}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
 

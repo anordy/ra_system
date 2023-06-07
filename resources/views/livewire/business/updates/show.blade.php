@@ -43,6 +43,16 @@
                                 @endif
                             </tr>
                             <tr>
+                                <th>Previous Zno</th>
+                                <td>{{ $old_values->business_information->previous_zno ?? 'N/A' }}</td>
+                                <td>{{ $new_values->business_information->previous_zno ?? 'N/A' }}</td>
+                                @if ($old_values->business_information->previous_zno == $new_values->business_information->previous_zno)
+                                    <td class="table-primary">Unchanged</td>
+                                @else
+                                    <td class="table-success">Changed</td>
+                                @endif
+                            </tr>
+                            <tr>
                                 <th>Taxpayer Name</th>
                                 <td>{{ $old_values->business_information->taxpayer_name }}</td>
                                 <td>{{ $new_values->business_information->taxpayer_name }}</td>
@@ -280,10 +290,120 @@
                         </tbody>
                     </table>
                 </div>
-            @else
+            @elseif($business_update->type == 'bank_information')
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped table-sm">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="text-left font-weight-bold text-uppercase">{{ $business_update->business->name }} Bank Information</label>
+                        <label class="text-right text-uppercase">Changed by
+                            <strong>{{ $business_update->taxpayer->full_name }}</strong> <br> on
+                            <strong>{{ $business_update->created_at->toFormattedDateString() }}</strong></label>
+                    </div>
+                    <thead>
+                        <th style="width: 50%">Old Bank Information</th>
+                        <th style="width: 50%">Updated Bank Information</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                @if (count($old_values ?? []) > 0)
+                                    @foreach ($old_values as $old_bank)
+                                    <div class="mb-4">
+                                        <p>Bank Name: {{ $this->getNameById('bank_id',$old_bank->bank_id) ?? '' }}</p>
+                                        <p>Account Number: {{ $old_bank->acc_no ?? '' }}</p>
+                                        <p>Account Type: {{ $this->getNameById('account_type_id', $old_bank->account_type_id) ?? '' }}</p>
+                                        <p>Currency: {{ $this->getNameById('currency_id', $old_bank->currency_id) ?? '' }}</p>
+                                        <p>Branch Name: {{ $old_bank->branch ?? '' }}</p>
+                                    </div>
+                                    <hr>
+                                    @endforeach
+                                @endif
+                            </td>
+                            <td>
+                                @if (count($new_values ?? []) > 0)
+                                    @foreach ($new_values as $new_bank)
+                                    <div class="mb-4">
+                                        <p>Bank Name: {{ $this->getNameById('bank_id',$new_bank->bank_id) ?? '' }}</p>
+                                        <p>Account Number: {{ $new_bank->acc_no ?? '' }}</p>
+                                        <p>Account Type: {{ $this->getNameById('account_type_id', $new_bank->account_type_id) ?? '' }}</p>
+                                        <p>Currency: {{ $this->getNameById('currency_id', $new_bank->currency_id) ?? '' }}</p>
+                                        <p>Branch Name: {{ $new_bank->branch ?? '' }}</p>
+                                    </div>
+                                    <hr>
+                                    @endforeach
+                                @endif
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            @elseif($business_update->type == 'business_attachments')
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped table-sm">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="text-left font-weight-bold text-uppercase">{{ $business_update->business->name }} Business Attachments</label>
+                        <label class="text-right text-uppercase">Changed by
+                            <strong>{{ $business_update->taxpayer->full_name }}</strong> <br> on
+                            <strong>{{ $business_update->created_at->toFormattedDateString() }}</strong></label>
+                    </div>
+                    <thead>
+                        <th style="width: 50%">Old Attachments</th>
+                        <th style="width: 50%">Updated Attachments</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                @if (count($old_values ?? []) > 0)
+                                <div class="row">
+                                    @foreach ($old_values as $file)
+                                    <div class="col-md-12">
+                                        <a class="file-item" target="_blank"
+                                            href="{{ route('business.file', encrypt($file->id)) }}">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                            <div style="font-weight: 500;" class="ml-1">
+                                                {{ $this->getNameById('file_type_id',$file->business_file_type_id) ?? 'N/A' }}
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <hr>
+                                    @endforeach
+                                </div>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="row">
+                                    @foreach ($new_values->supporting_attachments as $file)
+                                        <div class="col-md-12">
+                                            <a class="file-item" target="_blank"
+                                                href="{{ route('business.file-location', encrypt($file->location)) }}">
+                                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                                <div style="font-weight: 500;" class="ml-1">
+                                                    {{ $file->name ?? 'N/A' }}
+                                                </div>
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                    @foreach ($new_values->partners_tins as $file)
+                                        <div class="col-md-12">
+                                            <a class="file-item" target="_blank"
+                                                href="{{ route('business.file-location', encrypt($file->tin_location)) }}">
+                                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                                <div style="font-weight: 500;" class="ml-1">
+                                                TIN for {{ $file->reference_no ?? 'N/A' }}
+                                                </div>
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            @elseif($business_update->type == 'responsible_person')
                 <div class="col-md-12">
                     <table class="table table-striped table-sm">
-                        <label class="font-weight-bold text-uppercase">Consultant / Preparer</label>
+                        <label class="font-weight-bold text-uppercase">{{ $business_update->business->name }} Consultant / Preparer</label>
                         <thead>
                             <th style="width: 30%">Property</th>
                             <th style="width: 25%">Old Values</th>
@@ -376,7 +496,6 @@
                     <br>
                 </div>
             @endif
-
 
             @livewire('business.updates.changes-approval-processing', ['modelName' => 'App\Models\BusinessUpdate', 'modelId' => encrypt($business_update->id), 'businessUpdate' => $business_update])
         </div>
