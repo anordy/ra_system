@@ -4,8 +4,6 @@
             Business Registration Approval
         </div>
         <div class="card-body">
-            @include('livewire.approval.transitions')
-
             <div class="row">
                 <div class="col-md-12">
                     @if ($subject->reg_no)
@@ -212,6 +210,13 @@
                             @endif
 
                         </div>
+                        <div class="card">
+                            <div class="card-header">VFMS Verification</div>
+                            <div class="card-body">
+                                Put it here
+{{--                                <livewire:approval.bpra-verification :business="$subject" />--}}
+                            </div>
+                        </div>
                     @endif
 
                 </div>
@@ -220,7 +225,7 @@
             @if ($this->checkTransition('registration_officer_review'))
                 @include('livewire.approval.registration_officer_review')
             @endif
-
+            @include('livewire.approval.transitions')
             <div class="row mx-1">
                 <div class="col-md-12 mb-2">
                     <div class="form-group">

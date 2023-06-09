@@ -26,7 +26,11 @@ class ApiUserTableSeeder extends Seeder
         ];
 
         foreach ($data as $row) {
-            ApiUser::updateOrCreate($row);
+            ApiUser::updateOrCreate([
+                'app_name' => $row['app_name'],
+                'app_url' => $row['app_url'],
+                'username' => $row['username'],
+            ], $row);
         }
     }
 }

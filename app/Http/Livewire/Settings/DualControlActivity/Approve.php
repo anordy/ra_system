@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Settings\DualControlActivity;
 
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
+use App\Traits\VfmsLocationTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;

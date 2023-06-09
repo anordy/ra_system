@@ -114,6 +114,13 @@ return [
             'path' => storage_path('logs/verification/verification.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
-        ]
+        ],
+
+        'vfms' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/vfms/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+        ],
     ],
 ];
