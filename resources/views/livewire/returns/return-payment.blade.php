@@ -15,7 +15,7 @@
             $return->payment_status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
 
             @if($return->latestBill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::SUCCESS)
-                <div class="col-md-4" wire:poll.visible.10000ms="refresh" wire:poll.5000ms>
+                <div class="col-md-4" wire:poll.visible.10000ms="refresh" wire:poll.10000ms>
                     <span class="font-weight-bold text-uppercase">Control No.</span>
                     <p class="my-1">{{ $return->latestBill->control_number }}</p>
                 </div>

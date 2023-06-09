@@ -139,6 +139,11 @@ class BpraInternalService
                     'email' => $res['data']['xml']['EApplication']['group_applicant']['email'],
                 ];
 
+                if (array_key_exists('item', $listShareHolderShares)) {
+                    $shares[] = $listShareHolderShares;
+                    $listShareHolderShares = $shares;
+                }
+
                 $data = [
                     'businessData' => $businessData,
                     'shareHolders' => $shareHolders,

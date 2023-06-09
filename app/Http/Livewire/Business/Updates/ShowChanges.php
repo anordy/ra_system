@@ -6,6 +6,7 @@ use App\Models\AccountType;
 use App\Models\Bank;
 use Livewire\Component;
 use App\Models\BusinessActivity;
+use App\Models\BusinessFileType;
 use App\Models\BusinessUpdate;
 use App\Models\Currency;
 use App\Models\District;
@@ -57,6 +58,14 @@ class ShowChanges extends Component
             return AccountType::find($id)->name ?? 'N/A';
         } else if ($type == 'street_id') {
             return Street::find($id)->name ?? 'N/A';
+        } else if ($type == 'bank_id') {
+            return Bank::find($id)->name ?? 'N/A';
+        } else if ($type == 'account_type_id') {
+            return AccountType::find($id)->name ?? 'N/A';
+        } else if ($type == 'file_type_id') {
+            return BusinessFileType::find($id)->name ?? 'N/A';
+        } else {
+            return 'N/A';
         }
     }
 

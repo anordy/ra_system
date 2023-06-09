@@ -45,6 +45,22 @@ class BusinessFileController extends Controller
         return abort(404);
     }
 
+    public function getBusinessFileByLocation($location){
+        if (!Gate::allows('business-registration-view')) {
+            abort(403);
+        }
+
+        $location = decrypt($location);
+
+        // Check who can access the file
+        if ($location){
+            return Storage::disk('local')->response($location);
+        }
+
+        // If they dont meet requirements, abort
+        return abort(404);
+    }
+
     public function getTinFile($taxpayerId)
     {
         if (!Gate::allows('business-registration-view')) {
