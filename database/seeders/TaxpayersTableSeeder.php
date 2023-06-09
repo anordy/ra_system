@@ -20,9 +20,9 @@ class TaxpayersTableSeeder extends Seeder
     {
         Taxpayer::updateOrCreate([
             'reference_no' => 'ZRB556677',
-            'first_name' => 'John',
-            'middle_name' => 'Tim',
-            'last_name' => 'Doe',
+            'first_name' => 'Imran',
+            'middle_name' => 'Ali',
+            'last_name' => 'Hassan',
             'email' => 'john@doe.com',
             'mobile' => '0700000000',
             'region_id' => 1,

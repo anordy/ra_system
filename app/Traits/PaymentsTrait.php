@@ -5,16 +5,13 @@ namespace App\Traits;
 use App\Enum\BillStatus;
 use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
-use App\Models\BillingStatus;
+use App\Events\SendSms;
+use App\Jobs\SendZanMalipoSMS;
 use App\Models\BusinessTaxType;
 use App\Models\BusinessType;
-use App\Models\ExchangeRate;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\Vat\SubVat;
-use App\Models\TaPaymentConfiguration;
-use App\Models\TaxAgentApproval;
-use App\Models\TaxAgentStatus;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxType;
 use App\Models\TransactionFee;
@@ -27,7 +24,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Jobs\SendZanMalipoSMS;
 
 
 trait PaymentsTrait
@@ -62,8 +58,11 @@ trait PaymentsTrait
 
                 $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
                 $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
-    
-                dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
+
+                event(new SendSms(SendZanMalipoSMS::SERVICE, null, [
+                    'mobile_no' => ZmCore::formatPhone($bill->payer_phone_number),
+                    'message' => $message
+                ]));
             }
             DB::commit();
 

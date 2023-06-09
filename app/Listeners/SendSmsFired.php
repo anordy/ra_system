@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\SendZanMalipoSMS;
 use App\Models\KYC;
 use App\Events\SendSms;
 use App\Models\UserOtp;
@@ -212,6 +213,8 @@ class SendSmsFired
             SendToCorrectionReturnSMS::dispatch($event->tokenId);
         } else if ($event->service === SendBranchRegisteredSMS::SERVICE){
             SendBranchRegisteredSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendZanMalipoSMS::SERVICE){
+            SendZanMalipoSMS::dispatch($event->extra['mobile_no'], $event->extra['message']);
         }
     }
 }
