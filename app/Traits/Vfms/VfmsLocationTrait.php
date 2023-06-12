@@ -66,7 +66,7 @@ trait VfmsLocationTrait
     }
 
     function addWard($district, $data){
-        Ward::create([
+       Ward::create([
             'name' => $data['locality_name'],
             'district_id' => $district->id,
             'is_approved' => true,
@@ -176,5 +176,68 @@ trait VfmsLocationTrait
             Log::error('VFMS: Error On Access token Authentication from Api Server!');
             return null;
         }
+    }
+
+    function getNewWardFromVfms($request){
+        $vfms_internal = config('modulesconfig.api_url') . '/vfms-internal/add_locality';
+        $access_token = (new ApiAuthenticationService)->getAccessToken();
+        if ($access_token) {
+            $authorization = "Authorization: Bearer ". $access_token;
+
+            $payload = [
+                'district_name' => $request['district_name'],
+                'locality_name' => $request['locality_name'],
+                'region_name' => $request['region_name'],
+            ];
+
+            $curl = curl_init();
+            Log::info('VFMS: Get ward from Vfms Start!');
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $vfms_internal,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    "accept: application/json",
+                    "content-type: application/json",
+                    $authorization
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            Log::info('VFMS: Get ward from Vfms End!');
+            $message = $statusCode != 200 ? 'Something went wrong' : 'Data Retrieved Successfully';
+            curl_close($curl);
+            return [
+                'data' => $response,
+                'msg' => $message,
+                'code' => $statusCode
+            ];
+
+        } else {
+            Log::error('VFMS: Error On Access token Authentication from Api Server!');
+            return null;
+        }
+    }
+
+    function updateNewWardFromVfms(){
+        $response = $this->getNewWardFromVfms();
+        $vfmsWard = VfmsWard::find($response['locality_id']);
+        if (!$vfmsWard) {
+            VfmsWard::updateOrCreate([
+                'ward_id' => $vfmsWard->id,
+                'locality_id' => $vfmsWard['locality_id'],
+                'locality_name' => $vfmsWard->name,
+            ]);
+        } else {
+            Log::error('Ward not found!');
+//            Log::info($item);
+        }
+
     }
 }

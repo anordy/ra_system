@@ -72,13 +72,25 @@ class MapVfmsWards extends Command
             } else {
                 //TODO waiting for API from VFMS to tell us on which region and district is ward belong to
                 $response = $this->vfmsCheck($item->locality_id);
+                $data = json_decode($response['data'], true);
                 if ($response['data']){
-                    $data = json_decode($response['data'], true);
                     $region = $this->checkRegion($data);
                     if ($region){
                         $this->addOrCheckDistrict($region, $data);
                     } else {
                         $this->addRegion($data);
+                    }
+                    $ward = Ward::select('id', 'name')->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$locality_name}%"])->first();
+
+                    if ($ward) {
+                        VfmsWard::updateOrCreate([
+                            'ward_id' => $ward->id,
+                            'locality_id' => $data['locality_id'],
+                            'locality_name' => $ward->name,
+                        ]);
+                    } else {
+                        Log::error('Ward not found!');
+                        Log::info($item);
                     }
                 } else {
                     Log::channel('vfms')->error('No response data after new ward entry data to vfms');

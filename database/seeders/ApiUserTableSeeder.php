@@ -23,6 +23,14 @@ class ApiUserTableSeeder extends Seeder
                 'password' => Hash::make('Z1dras@API'),
                 'status' => true,
             ],
+            [
+
+                'app_name' => 'VFMS Test',
+                'app_url' => 'localhost vfms',
+                'username' => 'VFMSAPI',
+                'password' => Hash::make('VFMS1@API'),
+                'status' => true,
+            ],
         ];
 
         foreach ($data as $row) {
