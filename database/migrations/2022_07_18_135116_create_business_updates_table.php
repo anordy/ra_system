@@ -20,7 +20,7 @@ class CreateBusinessUpdatesTable extends Migration
             $table->string('agent_contract')->nullable();
             $table->longText('old_values')->nullable();
             $table->longText('new_values');
-            $table->enum('type', ['business_information', 'responsible_person'])->default('business_information');
+            $table->enum('type', ['business_information', 'responsible_person', 'bank_information', 'business_attachments'])->default('business_information');
             $table->enum('status', ['pending', 'approved', 'correction', 'rejected'])->default('pending');
             $table->string('marking')->nullable();
             $table->timestamp('approved_on')->nullable();
