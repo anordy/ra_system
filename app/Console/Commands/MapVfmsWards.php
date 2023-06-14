@@ -70,10 +70,9 @@ class MapVfmsWards extends Command
             if ($ward){
                 $this->addVfmsWardToZidras($ward, $item);
             } else {
-                //TODO waiting for API from VFMS to tell us on which region and district is ward belong to
                 $response = $this->vfmsCheck($item->locality_id);
                 $data = json_decode($response['data'], true);
-                if ($response['data']){
+                if (array_key_exists('data', $response) && $response['data']){
                     $region = $this->checkRegion($data);
                     if ($region){
                         $this->addOrCheckDistrict($region, $data);

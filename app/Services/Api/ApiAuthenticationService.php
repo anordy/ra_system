@@ -2,6 +2,7 @@
 
 namespace App\Services\Api;
 
+use App\Models\ApiUser;
 use Illuminate\Support\Facades\Log;
 
 class ApiAuthenticationService
@@ -79,7 +80,6 @@ class ApiAuthenticationService
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         if ($statusCode != 200) {
-            dd($statusCode);
             // Handle gateway timeout, request timeout by forwading to next api call to handle error ie. zan malipo
             if ($statusCode == 0 || $statusCode == 408 || curl_errno($curl) == 28) {
                 return null;
@@ -89,7 +89,13 @@ class ApiAuthenticationService
             throw new \Exception($response);
         }
         curl_close($curl);
-        return json_decode($response, true)['data']['access_token'];
+        $response = json_decode($response, true);
+
+        $user = ApiUser::where('username', config('modulesconfig.vfms_api_server_username'))->first();
+        $user->auth_token = $response['data']['access_token'];
+        $user->save();
+
+        return $user->auth_token;
     }
 
 }

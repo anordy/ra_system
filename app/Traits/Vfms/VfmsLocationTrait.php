@@ -12,29 +12,39 @@ use Illuminate\Support\Facades\Log;
 trait VfmsLocationTrait
 {
     function checkRegion($data){
-        $region = Region::select('id', 'name')->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$data['region_name']}%"])->first();
-        return $region;
+//        dd(array_key_exists('region_name', $data));
+        if (array_key_exists('region_name', $data)){
+            $region = Region::select('id', 'name')->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$data['region_name']}%"])->first();
+            return $region;
+        } else {
+            $this->line('Region name does not exist from the response');
+        }
     }
 
 
     function addRegion($data){
 
         $pattern = '/'.Region::PEMBA.'/';
-        if(preg_match($pattern, $data['region_name'])){
-            $location = Region::PEMBA;
+        if (array_key_exists('region_name', $data)) {
+
+            if (preg_match($pattern, $data['region_name'])) {
+                $location = Region::PEMBA;
+            } else {
+                $location = Region::UNGUJA;
+            }
+
+            $region = Region::create([
+                'name' => $data['region_name'],
+                'location' => $location,
+                'is_approved' => true,
+                'is_updated' => true,
+                'created_at' => Carbon::now()
+            ]);
+
+            $this->addOrCheckDistrict($region, $data);
         } else {
-            $location = Region::UNGUJA;
+            $this->line('Region name does not exist from the response');
         }
-
-        $region = Region::create([
-            'name' => $data['region_name'],
-            'location' => $location,
-            'is_approved' => true,
-            'is_updated' => true,
-            'created_at' =>Carbon::now()
-        ]);
-
-        $this->addOrCheckDistrict($region, $data);
     }
 
     function addOrCheckDistrict($region, $data){

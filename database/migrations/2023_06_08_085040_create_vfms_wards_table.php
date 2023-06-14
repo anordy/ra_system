@@ -15,8 +15,8 @@ class CreateVfmsWardsTable extends Migration
     {
         Schema::create('vfms_wards', function (Blueprint $table) {
             $table->id();
-            $table->string('ward_id');
-            $table->string('locality_id');
+            $table->unsignedBigInteger('ward_id');
+            $table->unsignedBigInteger('locality_id');
             $table->string('locality_name');
             $table->softDeletes();
             $table->timestamps();
