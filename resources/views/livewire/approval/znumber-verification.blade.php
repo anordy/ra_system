@@ -51,16 +51,18 @@
                         <th>Trade Name</th>
                         <th>Street</th>
                         <th>Tax Type</th>
+                        <th>Action</th>
                     </thead>
                     <tbody>
                         @foreach ($response as $index => $unit)
-                            <tr wire:click="selectHeadquarter({{ $index }})">
+                            <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $unit['unit_name'] ?? 'N/A' }}</td>
                                 <td>{{ $unit['business_name'] ?? 'N/A' }}</td>
                                 <td>{{ $unit['trade_name'] ?? 'N/A' }}</td>
                                 <td>{{ $unit['street'] ?? 'N/A' }}</td>
                                 <td>{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
+                                <td><input type="checkbox" wire:model="response.{{ $index }}.is_headquarter"></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -68,34 +70,6 @@
             </div>
         </div>
 
-        @if ($selectedUnitHeadquarter)
-            <hr>
-            <label class="font-weight-bold text-uppercase">Selected Headquarter</label>
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Unit Name</span>
-                    <p class="my-1">{{ $selectedUnitHeadquarter['unit_name'] ?? '' }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Business Name</span>
-                    <p class="my-1">{{ $selectedUnitHeadquarter['business_name'] ?? '' }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Trade Name</span>
-                    <p class="my-1">{{ $selectedUnitHeadquarter['trade_name'] ?? '' }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Street</span>
-                    <p class="my-1">{{ $selectedUnitHeadquarter['street'] ?? '' }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Tax Type</span>
-                    <p class="my-1">{{ strtoupper($this->mapVfmsTaxType($selectedUnitHeadquarter['tax_type'])) ?? '' }}</p>
-                </div>
-            </div>
-        @endif
-
-        @if (!$business->znumber_verified_at)
             <hr>
             <div class="row">
                 <div class="col-md-12">
@@ -110,7 +84,6 @@
                     </div>
                 </div>
             </div>
-        @endif
     @endif
 
 

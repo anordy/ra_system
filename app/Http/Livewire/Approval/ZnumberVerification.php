@@ -54,8 +54,16 @@ class ZnumberVerification extends Component
     }
 
     public function complete() {
-        if (!$this->selectedUnitHeadquarter) {
-            $this->customAlert('warning', 'Please select a headquarter unit');
+        $headquarters = [];
+
+        foreach ($this->response as $value) {
+            if (key_exists('is_headquarter', $value) && $value['is_headquarter']) {
+                $headquarters[] = $value['unit_id'];
+            }
+        }
+
+        if(count($headquarters) == 0) {
+            $this->customAlert('warning', 'Please select a headquarter units');
             return;
         }
 
@@ -81,7 +89,8 @@ class ZnumberVerification extends Component
                     'tax_office' => $unit['tax_office'] ?? null,
                     'street' => $unit['street'],
                     'znumber' => $unit['znumber'],
-                    'is_headquarter' => $unit['is_headquarter'] ?? false
+                    'is_headquarter' => $unit['is_headquarter'] ?? false,
+                    'location_id' => $unit['is_headquarter'] ? $this->business->headquarter->id : null
                 ]);
             }
 
@@ -115,17 +124,6 @@ class ZnumberVerification extends Component
         } else {
             return null;
         }
-    }
-
-    public function selectHeadquarter($index) {
-        $units = [];
-        foreach ($this->response as $unit) {
-            unset($unit['is_headquarter']);
-            $units[] = $unit;
-        }
-        $units[$index]['is_headquarter'] = true;
-        $this->selectedUnitHeadquarter = $units[$index];
-        $this->response = $units;
     }
 
     public function render()
