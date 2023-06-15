@@ -10,7 +10,7 @@
         </div>
 
         <div class="card-body">
-            <livewire:vetting.vetting-approval-table vettingStatus="{{ \App\Enum\VettingStatus::VETTED }}" />
+            <livewire:vetting.vetted-returns-table vettingStatus="{{ \App\Enum\VettingStatus::VETTED }}" />
         </div>
     </div>
 @endsection

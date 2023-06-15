@@ -18,12 +18,15 @@ class SendZanMalipoSMS implements ShouldQueue
     private $message;
     private $phone_number;
 
+    const SERVICE = 'zanmalipo-sms';
+
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($phone_number,$message)
+    public function __construct($phone_number, $message)
     {
         $this->message = $message;
         $this->phone_number = $phone_number;

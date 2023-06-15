@@ -276,11 +276,11 @@
                     <li class="{{ request()->is('tax_vettings/approvals*') ? 'active' : '' }}">
                         <a href="{{ route('tax_vettings.approvals') }}">Filed Returns</a>
                     </li>
-                    <li class="{{ request()->is('tax_vettings/corrected*') ? 'active' : '' }}">
-                        <a href="{{ route('tax_vettings.corrected') }}">Corrected Returns</a>
-                    </li>
                     <li class="{{ request()->is('tax_vettings/on-correction*') ? 'active' : '' }}">
                         <a href="{{ route('tax_vettings.on.correction') }}">Returns On Correction</a>
+                    </li>
+                    <li class="{{ request()->is('tax_vettings/corrected*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_vettings.corrected') }}">Corrected Returns</a>
                     </li>
                     <li class="{{ request()->is('tax_vettings/vetted*') ? 'active' : '' }}">
                         <a href="{{ route('tax_vettings.vetted') }}">Vetted Returns</a>
