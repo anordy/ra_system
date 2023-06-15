@@ -29,10 +29,6 @@ class ZnumberVerification extends Component
         $this->response = [];
         try {
 
-            $units = VfmsBusinessUnit::where('znumber', $this->business->previous_zno)->where('is_headquarter', '!=', true)->get();
-
-            dd($units);
-            
             $vfmsService = new VfmsInternalService;
             $response = $vfmsService->getBusinessUnits($this->business);
 
