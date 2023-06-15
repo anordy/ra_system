@@ -17,6 +17,7 @@ use App\Models\LumpSumPayment;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
+use App\Models\Vfms\VfmsBusinessUnit;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -350,6 +351,13 @@ class ApprovalProcessing extends Component
 
                 if (!$location->business->taxTypes->where('code', 'vat')->isEmpty()) {
                     $location->generateVrn();
+                }
+                
+                // If Z-Number has been verified we have business units
+                if ($this->subject->previous_zno && $this->subject->znumber_verified_at) {
+                    $vfms_business_unit = VfmsBusinessUnit::where('business_id', $this->subject->id)->where('is_headquarter', true)->firstOrFail();
+                    $vfms_business_unit->location_id = $location->id;
+                    $vfms_business_unit->save();
                 }
 
                 $location->status = BusinessStatus::APPROVED;

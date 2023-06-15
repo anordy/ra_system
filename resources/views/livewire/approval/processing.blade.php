@@ -6,6 +6,15 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
+                    @if ($subject->previous_zno)
+                    <div class="card">
+                        <div class="card-header">ZNUMBER Verification</div>
+                        <div class="card-body">
+                            <livewire:approval.znumber-verification :business="$subject" />
+                        </div>
+                    </div>
+                    @endif
+
                     @if ($subject->reg_no)
                         <div class="card">
                             <div class="card-header">BPRA Verification</div>
@@ -209,13 +218,6 @@
                                 </div>
                             @endif
 
-                        </div>
-                        <div class="card">
-                            <div class="card-header">VFMS Verification</div>
-                            <div class="card-body">
-                                Put it here
-{{--                                <livewire:approval.bpra-verification :business="$subject" />--}}
-                            </div>
                         </div>
                     @endif
 
