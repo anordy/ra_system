@@ -13,7 +13,7 @@ use App\Models\Returns\TaxReturn;
 use App\Traits\ReturnFilterTrait;
 use Illuminate\Support\Facades\Gate;
 
-class VettingApprovalTable extends DataTableComponent
+class VettedReturnsTable extends DataTableComponent
 {
     use  ReturnFilterTrait;
 
@@ -82,6 +82,12 @@ class VettingApprovalTable extends DataTableComponent
                 ->view('vetting.includes.status')
                 ->searchable()
                 ->sortable(),
+
+            Column::make(__('Payment Status'), 'payment_status')
+                ->view('returns.includes.payment-status')
+                ->searchable()
+                ->sortable(),
+
             Column::make('Filed On', 'created_at')
                 ->sortable()
                 ->format(function ($value, $row) {

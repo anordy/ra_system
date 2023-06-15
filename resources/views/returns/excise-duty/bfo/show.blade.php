@@ -69,7 +69,7 @@
                 <div class="tab-pane p-2 show" id="items" role="tabpanel" aria-labelledby="items-tab">
                     <table class="table table-bordered table-sm">
                         <thead>
-                        <th style="width: 30%">Item Name</th>
+                        <th style="width: 30%">Excise Duty Payable Service</th>
                         <th style="width: 20%">Value ({{ $return->currency }})</th>
                         <th style="width: 10%">Rate</th>
                         <th style="width: 20%">VAT ({{ $return->currency }})</th>
