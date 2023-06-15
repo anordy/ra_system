@@ -38,6 +38,14 @@
                     </div>
                 </div>
             </div>
+            @if ($subject->business->previous_zno)
+                    <div class="card">
+                        <div class="card-header">ZNUMBER Verification</div>
+                        <div class="card-body">
+                            <livewire:approval.znumber-location-verification :location="$subject" />
+                        </div>
+                    </div>
+            @endif
         @endif
         <div class="row mt-2">
             <div class="col-md-12 mb-3">
