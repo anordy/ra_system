@@ -71,15 +71,12 @@ class WorkflowUpdateActors implements ShouldQueue
                 $operators_collection = array();
 
                 foreach ($operators as $operator) {
-                    array_push(
-                        $operators_collection,
-                        new WorkflowTaskOperator([
-                            'task_id' => $task->id,
-                            'workflow_id' => $workflow->id,
-                            'user_id' => $operator,
-                            'user_type' => $user_type
-                        ])
-                    );
+                    $operators_collection[] = new WorkflowTaskOperator([
+                        'task_id' => $task->id,
+                        'workflow_id' => $workflow->id,
+                        'user_id' => $operator,
+                        'user_type' => $user_type
+                    ]);
                 }
 
                 $task->original_operators = json_encode($place['operators']);

@@ -80,51 +80,78 @@ class BpraInternalService
 
                     foreach ($listEntityData as $entityData) {
 
-                        if ($entityData['list_type'] == 'list_directors' || $entityData['list_type'] == 'list_director_in_country' && $entityData) {
-                            $directors[] = [
-                                'business_id' => $business->id,
-                                'country' => $entityData['country'] ?? '',
-                                'birth_date' => $entityData['birth_date'] ?? '',
-                                'first_name' => $entityData['first_name'] ?? '',
-                                'middle_name' => $entityData['middle_name'] ?? '',
-                                'last_name' => $entityData['last_name'] ?? '',
-                                'gender' => $entityData['gender'] ?? '',
-                                'nationality' => $entityData['nationality'] ?? '',
-                                'national_id' => $entityData['national_id'] ?? '',
-                                'city_name' => $entityData['city_name'] ?? '',
-                                'zip_code' => $entityData['zip_code'] ?? '',
-                                'first_line' => $entityData['first_line'] ?? '',
-                                'second_line' => $entityData['second_line'] ?? '',
-                                'third_line' => $entityData['third_line'] ?? '',
-                                'email' => $entityData['email'] ?? '',
-                                'mob_phone' => $entityData['mob_phone'] ?? '',
-                                'created_at' => Carbon::now(),
-                            ];
+                        if (array_key_exists('list_type', $entityData)){
+
+                            if ($entityData['list_type'] == 'list_directors' || $entityData['list_type'] == 'list_director_in_country' && $entityData) {
+                                $directors[] = [
+                                    'business_id' => $business->id,
+                                    'country' => $entityData['country'] ?? '',
+                                    'birth_date' => $entityData['birth_date'] ?? '',
+                                    'first_name' => $entityData['first_name'] ?? '',
+                                    'middle_name' => $entityData['middle_name'] ?? '',
+                                    'last_name' => $entityData['last_name'] ?? '',
+                                    'gender' => $entityData['gender'] ?? '',
+                                    'nationality' => $entityData['nationality'] ?? '',
+                                    'national_id' => $entityData['national_id'] ?? '',
+                                    'city_name' => $entityData['city_name'] ?? '',
+                                    'zip_code' => $entityData['zip_code'] ?? '',
+                                    'first_line' => $entityData['first_line'] ?? '',
+                                    'second_line' => $entityData['second_line'] ?? '',
+                                    'third_line' => $entityData['third_line'] ?? '',
+                                    'email' => $entityData['email'] ?? '',
+                                    'mob_phone' => $entityData['mob_phone'] ?? '',
+                                    'created_at' => Carbon::now(),
+                                ];
+                            }
+
+                            if ($entityData['list_type'] == 'list_shareholder' || $entityData['list_type'] == 'list_ownership' && $entityData) {
+                                $shareHolders[] = [
+                                    'business_id' => $business->id,
+                                    'country' => $entityData['country'] ?? '',
+                                    'birth_date' => $entityData['birth_date'] ?? '',
+                                    'first_name' => $entityData['first_name'] ?? '',
+                                    'middle_name' => $entityData['middle_name'] ?? '',
+                                    'last_name' => $entityData['last_name'] ?? '',
+                                    'gender' => $entityData['gender'] ?? '',
+                                    'nationality' => $entityData['nationality'] ?? '',
+                                    'national_id' => $entityData['national_id'] ?? '',
+                                    'city_name' => $entityData['city_name'] ?? '',
+                                    'zip_code' => $entityData['zip_code'] ?? '',
+                                    'first_line' => $entityData['first_line'] ?? '',
+                                    'second_line' => $entityData['second_line'] ?? '',
+                                    'third_line' => $entityData['third_line'] ?? '',
+                                    'email' => $entityData['email'] ?? '',
+                                    'mob_phone' => $entityData['mob_phone'] ?? '',
+                                    'entity_name' => $entityData['entity_name'] ?? '',
+                                    'full_address' => $entityData['full_address'] ?? '',
+                                    'created_at' => Carbon::now(),
+                                ];
+                            }
+
+                        } elseif (is_array($entityData) && key_exists('list_type', $entityData[0]) && $entityData[0]['list_type'] == 'list_ownership'){
+                            foreach ($entityData as $datum){
+                                $directors[] = [
+                                    'business_id' => $business->id,
+                                    'country' => $datum['country'] ?? '',
+                                    'birth_date' => $datum['birth_date'] ?? '',
+                                    'first_name' => $datum['first_name'] ?? '',
+                                    'middle_name' => $datum['middle_name'] ?? '',
+                                    'last_name' => $datum['last_name'] ?? '',
+                                    'gender' => $datum['gender'] ?? '',
+                                    'nationality' => $datum['nationality'] ?? '',
+                                    'national_id' => $datum['national_id'] ?? '',
+                                    'city_name' => $datum['city_name'] ?? '',
+                                    'zip_code' => $datum['zip_code'] ?? '',
+                                    'first_line' => $datum['first_line'] ?? '',
+                                    'second_line' => $datum['second_line'] ?? '',
+                                    'third_line' => $datum['third_line'] ?? '',
+                                    'email' => $datum['email'] ?? '',
+                                    'mob_phone' => $datum['mob_phone'] ?? '',
+                                    'created_at' => Carbon::now(),
+                                ];
+                            }
                         }
-    
-                        if ($entityData['list_type'] == 'list_shareholder' || $entityData['list_type'] == 'list_ownership' && $entityData) {
-                            $shareHolders[] = [
-                                'business_id' => $business->id,
-                                'country' => $entityData['country'] ?? '',
-                                'birth_date' => $entityData['birth_date'] ?? '',
-                                'first_name' => $entityData['first_name'] ?? '',
-                                'middle_name' => $entityData['middle_name'] ?? '',
-                                'last_name' => $entityData['last_name'] ?? '',
-                                'gender' => $entityData['gender'] ?? '',
-                                'nationality' => $entityData['nationality'] ?? '',
-                                'national_id' => $entityData['national_id'] ?? '',
-                                'city_name' => $entityData['city_name'] ?? '',
-                                'zip_code' => $entityData['zip_code'] ?? '',
-                                'first_line' => $entityData['first_line'] ?? '',
-                                'second_line' => $entityData['second_line'] ?? '',
-                                'third_line' => $entityData['third_line'] ?? '',
-                                'email' => $entityData['email'] ?? '',
-                                'mob_phone' => $entityData['mob_phone'] ?? '',
-                                'entity_name' => $entityData['entity_name'] ?? '',
-                                'full_address' => $entityData['full_address'] ?? '',
-                                'created_at' => Carbon::now(),
-                            ];
-                        }
+
                     }
 
                 }
