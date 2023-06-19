@@ -246,7 +246,6 @@
                                         </th>
                                     </tr>
                                 @endif
-
                                 </tbody>
                             </table>
 

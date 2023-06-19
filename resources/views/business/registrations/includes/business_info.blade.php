@@ -397,13 +397,19 @@
                             <span class="font-weight-bold text-uppercase">Date of Commencing Business</span>
                             <p class="my-1">{{ $location->date_of_commencing->toFormattedDateString() }}</p>
                         </div>
+                        @if ($location->effective_date)
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Effective Date</span>
+                                <p class="my-1">{{ $location->effective_date->toFormattedDateString() }}</p>
+                            </div>
+                        @endif
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Pre Estimated Turnover</span>
+                            <span class="font-weight-bold text-uppercase">Estimated Turnover (Last 12 Months)</span>
                             <p class="my-1">{{ $business->currency->iso }}
                                 . {{ number_format($location->pre_estimated_turnover ?? 0, 2) }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Post Estimated Turnover</span>
+                            <span class="font-weight-bold text-uppercase">Estimated Turnover (Next 12 Months)</span>
                             <p class="my-1">{{ $business->currency->iso }}
                                 . {{ number_format($location->post_estimated_turnover ?? 0, 2) }}</p>
                         </div>

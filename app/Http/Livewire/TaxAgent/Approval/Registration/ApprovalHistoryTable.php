@@ -28,7 +28,8 @@ class ApprovalHistoryTable extends DataTableComponent
     {
         return WorkflowTask::query()->with('user')
             ->where('pinstance_type', $this->modelName)
-            ->where('pinstance_id', $this->modelId);
+            ->where('pinstance_id', $this->modelId)
+            ->orderBy('approved_on', 'ASC');
     }
 
     public function configure(): void

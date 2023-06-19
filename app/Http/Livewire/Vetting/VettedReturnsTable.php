@@ -78,11 +78,13 @@ class VettedReturnsTable extends DataTableComponent
                     return number_format($value, 2);
                 })
                 ->searchable(),
+            Column::make('Currency', 'currency')
+                ->sortable()
+                ->searchable(),
             Column::make('Status', 'vetting_status')
                 ->view('vetting.includes.status')
                 ->searchable()
                 ->sortable(),
-
             Column::make(__('Payment Status'), 'payment_status')
                 ->view('returns.includes.payment-status')
                 ->searchable()
