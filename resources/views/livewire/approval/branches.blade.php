@@ -1,52 +1,52 @@
 @if (count($this->getEnabledTranstions()) > 1)
+@if ($subject->business->previous_zno)
+    <div class="card">
+        <div class="card-header">VFMS Data Linking</div>
+        <div class="card-body">
+            <livewire:approval.znumber-location-verification :location="$subject" />
+        </div>
+    </div>
+@endif
 <div class="card shadow-sm mb-2 bg-white">
     <div class="card-header font-weight-bold">
         Approval
     </div>
     <div class="card-body m-0 pb-0">
-        @include('livewire.approval.transitions')
         @if($this->checkTransition('registration_officer_review'))
-            <div class="row">
-                <div class="col-md-6 ">
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1">Tax Region</label>
-                        <select class="form-control @error('selectedTaxRegion') is-invalid @enderror"
-                                wire:model="selectedTaxRegion">
-                            <option value="null" disabled selected>Select</option>
-                            @foreach ($taxRegions as $region)
-                                <option value="{{ $region->id }}">{{ $region->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('selectedTaxRegion')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                <div class="row">
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            <label for="exampleFormControlTextarea1">Tax Region</label>
+                            <select class="form-control @error('selectedTaxRegion') is-invalid @enderror"
+                                    wire:model="selectedTaxRegion">
+                                <option value="null" disabled selected>Select</option>
+                                @foreach ($taxRegions as $region)
+                                    <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('selectedTaxRegion')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
                         </div>
-                        @enderror
                     </div>
-                </div>
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="effectiveDate">Effective Date</label>
-                        <input id="effectiveDate" type="date" class="form-control @error('effectiveDate') is-invalid @enderror"
-                               wire:model.defer="effectiveDate" required />
-                        @error('effectiveDate')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="effectiveDate">Effective Date</label>
+                            <input id="effectiveDate" type="date" class="form-control @error('effectiveDate') is-invalid @enderror"
+                                   wire:model.defer="effectiveDate" required />
+                            @error('effectiveDate')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
                         </div>
-                        @enderror
                     </div>
                 </div>
-            </div>
-            @if ($subject->business->previous_zno)
-                    <div class="card">
-                        <div class="card-header">ZNUMBER Verification</div>
-                        <div class="card-body">
-                            <livewire:approval.znumber-location-verification :location="$subject" />
-                        </div>
-                    </div>
             @endif
-        @endif
+        @include('livewire.approval.transitions')
         <div class="row mt-2">
             <div class="col-md-12 mb-3">
                 <div class="form-group">

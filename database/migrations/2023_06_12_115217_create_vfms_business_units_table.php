@@ -17,7 +17,7 @@ class CreateVfmsBusinessUnitsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('unit_id');
             $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('location_id')->nullable();
             $table->unsignedBigInteger('locality_id');
             $table->unsignedBigInteger('zidras_tax_type_id');
             $table->string('unit_name');

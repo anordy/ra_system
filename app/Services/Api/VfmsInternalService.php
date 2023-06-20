@@ -14,8 +14,15 @@ class VfmsInternalService
      * @param [object] $business
      * @return [array] business units
      */
-    public function getBusinessUnits($business)
+    public function getBusinessUnits($business, $location, $is_headquarter)
     {
+        $vfmsWard = $is_headquarter ? $business->headquarter->ward->vfms_ward : $location->ward->vfms_ward;
+        if (!$vfmsWard){
+            return  [
+                    'statusCode' => 400,
+                    'statusMessage' => "Ward; '". $vfmsWard->ward->name."' selected for particular Business is not recognized yet from VFMS, contact Admin to complete this action."
+                ];
+        }
         $znumber_internal = config('modulesconfig.api_url') . '/vfms-internal/get_business_units';
         $access_token = (new ApiAuthenticationService)->getAccessToken();
 
@@ -23,9 +30,8 @@ class VfmsInternalService
 
         if ($access_token) {
             $authorization = "Authorization: Bearer " . $access_token;
-
             $payload = [
-                'locality_id' => 0,
+                'locality_id' => $vfmsWard->locality_id,
                 'znumber' => $business->previous_zno
             ];
 
@@ -48,7 +54,6 @@ class VfmsInternalService
 
             $response = curl_exec($curl);
             $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
             if ($statusCode != 200) {
                 curl_close($curl);
                 if (json_decode($response)->error_info == 200) {
@@ -70,7 +75,6 @@ class VfmsInternalService
             $res = json_decode($response, true);
 
             $data = $res;
-
         } else {
             Log::error('ZNUMBER: Error On Access token Authentication from Api Server!');
         }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnZnumberVerifiedAtOnBusinessesTable extends Migration
+class AddColumnVfmsAssociatedAtToBusinessLocations extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddColumnZnumberVerifiedAtOnBusinessesTable extends Migration
      */
     public function up()
     {
-        Schema::table('businesses', function (Blueprint $table) {
-            $table->string('znumber_verified_at')->nullable();
+        Schema::table('business_locations', function (Blueprint $table) {
+            //
+            $table->string('vfms_associated_at')->nullable();
         });
     }
 
@@ -25,9 +26,9 @@ class AddColumnZnumberVerifiedAtOnBusinessesTable extends Migration
      */
     public function down()
     {
-        Schema::table('businesses', function (Blueprint $table) {
+        Schema::table('business_locations', function (Blueprint $table) {
             //
-            $table->dropColumn('znumber_verified_at');
+            $table->dropColumn('vfms_associated_at');
         });
     }
 }
