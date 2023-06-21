@@ -45,7 +45,7 @@ class BranchesTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['is_headquarter']);
+        $this->setAdditionalSelects(['is_headquarter', 'vfms_associated_at']);
     }
 
     public function columns(): array

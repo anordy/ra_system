@@ -338,13 +338,18 @@
                         <span class="font-weight-bold text-uppercase">Longitude</span>
                         <p class="my-1">{{ $location->longitude }}</p>
                     </div>
-                    <div class="col-md-12 mt-1 d-flex justify-content-end mb-4">
+                    @if($location->vfms_associated_at)
+                        <div class="row col-md-12">
+                            <livewire:business.vfms.business-unit-details :location="$location" />
+                        </div>
+                    @endif
+                    <div class="col-md-12 mt-1 d-flex justify-content-end mb-3">
                         @if ($location->status === \App\Models\BusinessStatus::APPROVED)
                             <div>
                                 @foreach ($business->taxTypes as $type)
                                     <a target="_blank"
-                                        href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
-                                        class="btn btn-success btn-sm mt-1 text-white">
+                                       href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
+                                       class="btn btn-success btn-sm mt-1 text-white">
                                         <i class="bi bi-patch-check"></i>
                                         {{ $type->name }} Certificate
                                     </a>
@@ -352,6 +357,7 @@
                             </div>
                         @endif
                     </div>
+                    <hr>
                 </div>
             @endif
             @if (count($business->branches))
@@ -475,6 +481,11 @@
                                 @endif
                             </p>
                         </div>
+                        @if($location->vfms_associated_at)
+                            <div class="row col-md-12">
+                                <livewire:business.vfms.business-unit-details :location="$location" />
+                            </div>
+                        @endif
                         <div class="col-md-12 mt-1 d-flex justify-content-end mb-4">
                             @if ($location->status === \App\Models\BranchStatus::APPROVED)
                                 <div>

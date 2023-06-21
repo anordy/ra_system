@@ -151,6 +151,11 @@
                         @endif
                     </p>
                 </div>
+                @if($location->vfms_associated_at)
+                    <div class="row col-md-12">
+                        <livewire:business.vfms.business-unit-details :location="$location" />
+                    </div>
+                @endif
                 <div class="col-md-12 mt-1 d-flex justify-content-end mb-4">
                     @if ($location->status === \App\Models\BusinessStatus::APPROVED)
                         <div>

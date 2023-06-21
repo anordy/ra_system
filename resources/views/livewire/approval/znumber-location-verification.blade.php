@@ -89,6 +89,7 @@
                                     <td>{{ $unit->street ?? 'N/A' }}</td>
                                     <td>{{ $unit->taxtype->name ?? 'N/A' }}</td>
                                     <td>{{ $unit->integration ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
+                                    <td class="font-weight-bold {{ $unit['integration'] ? 'text-success' : 'text-muted' }}">{{ $unit['integration'] ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
                                     <td><input type="checkbox" wire:model="selectedUnit.{{ $unit->id }}"></td>
                                 </tr>
                             @endforeach
@@ -101,7 +102,7 @@
                                     <td>{{ $unit['trade_name'] ?? 'N/A' }}</td>
                                     <td>{{ $unit['street'] ?? 'N/A' }}</td>
                                     <td>{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
-                                    <td class="font-weight-bold {{ $unit['integration'] ? 'text-success' : 'text-muted' }}">{{ $unit['integration'] ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
+                                    <td class="font-weight-bold {{ $unit->integration ? 'text-success' : 'text-muted' }}">{{ $unit->integration ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
                                     <td><input type="checkbox" wire:model="units.{{ $index }}.is_selected"></td>
                                 </tr>
                             @endforeach
