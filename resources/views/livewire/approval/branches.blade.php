@@ -1,13 +1,14 @@
 @if (count($this->getEnabledTranstions()) > 1)
-@if ($subject->business->previous_zno)
-    <div class="card">
-        <div class="card-header">VFMS Data Linking</div>
-        <div class="card-body">
+<div class="card shadow-sm mb-2 bg-white">
+    @if ($subject->business->previous_zno)
+        <div class="card-header font-weight-bold">
+            VFMS Data Linking
+        </div>
+        <div class="card-body m-0 pb-0">
             <livewire:approval.znumber-location-verification :location="$subject" />
         </div>
-    </div>
-@endif
-<div class="card shadow-sm mb-2 bg-white">
+        <hr/>
+    @endif
     <div class="card-header font-weight-bold">
         Approval
     </div>
@@ -85,6 +86,5 @@
             </button>
         </div>
     @endif
-
 </div>
 @endif

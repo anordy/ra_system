@@ -1,14 +1,15 @@
 @if (count($this->getEnabledTranstions()) > 1)
-    @if ($subject->previous_zno)
-        <div class="card m-2 bg-white rounded-0">
-            <div class="card-header">ZNUMBER Verification</div>
-            <div class="card-body">
-                <livewire:approval.znumber-verification :business="$subject" />
-            </div>
-        </div>
-    @endif
     @if ($subject->reg_no)
         <div class="card m-2 bg-white rounded-0">
+            @if ($subject->previous_zno)
+                <div class="card-header font-weight-bold">
+                    ZNUMBER Verification
+                </div>
+                <div class="card-body m-0 pb-0">
+                    <livewire:approval.znumber-verification :business="$subject" />
+                </div>
+                <hr/>
+            @endif
             <div class="card-header">BPRA Verification</div>
             <div class="card-body">
                 <livewire:approval.bpra-verification :business="$subject" />
