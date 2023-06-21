@@ -390,6 +390,11 @@ class PermissionSeeder extends Seeder
 
             # Tax Returns Vetting
             ['name' => 'tax-returns-vetting-view', 'sys_module_id' => 27],
+
+            # Vfms Integration
+            ['name' => 'vfms-business-unit-data-linking', 'sys_module_id' => 28],
+            ['name' => 'vfms-znumber-verification', 'sys_module_id' => 28],
+            ['name' => 'vfms-associated-business-unit-edit', 'sys_module_id' => 28],
         ];
 
         foreach ($data as $row) {

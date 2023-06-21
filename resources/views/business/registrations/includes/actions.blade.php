@@ -29,3 +29,11 @@
         <i class="bi bi-eye-fill mr-1"></i> View
     </a>
 @endif
+
+@can('vfms-znumber-verification')
+    @if(!$row->headquarter->vfms_associated_at)
+        <button class="m-1 btn btn-outline-success rounded-0 btn-sm" onclick="Livewire.emit('showModal', 'business.vfms.fetch-business-unit-data-modal', '{{  encrypt($row->id) }}', {{ true }})">
+            <i class="bi bi-pen mr-1"></i> Vfms Integration
+        </button>
+    @endif
+@endcan
