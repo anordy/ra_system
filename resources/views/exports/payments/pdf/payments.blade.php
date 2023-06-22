@@ -59,6 +59,10 @@
             <tr>
                 <th style="text-align:center;" colspan="15">
                     <strong>ZANZIBAR Revenue Authority</strong><br>
+                    <strong>Report of {{ strtoupper($status) }} PAYMENTS</strong><br>
+                    <strong>From {{ date("M, d Y", strtotime($parameters['range_start'])) }} To {{ date("M, d Y",
+                        strtotime($parameters['range_end'])) }} </strong><br>
+                    <strong>Total Records: {{ count($records) }}</strong>
                 </th>
             </tr>
         </thead>
@@ -77,14 +81,22 @@
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Bill Amount</strong>
                 </th>
+                @if ($status == 'paid')
+                    <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        <strong>Paid Amount</strong>
+                    </th>
+                    <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        <strong>PSP Name</strong>
+                    </th>
+                @endif
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Currency </strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Payer Name</strong>
+                    <strong>Business Name</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Payer Email</strong>
+                    <strong>Payer Name</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Payer Phone Number</strong>
@@ -107,16 +119,24 @@
                         {{ $record->control_number ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ number_format($record->amount) ?? '-' }}
+                        {{ number_format($record->amount,2) ?? '-' }}
                     </td>
+                    @if ($status == 'paid')
+                        <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                            {{ number_format($record->paid_amount,2) ?? '-' }}
+                        </td>
+                        <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                            {{ $record->payment->psp_name ?? '-' }}
+                        </td>
+                    @endif
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->currency ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->payer_name ?? '-' }}
+                        {{ $record->billable->business->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->payer_email ?? '-' }}
+                        {{ $record->payer_name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->payer_phone_number ?? '-' }}
@@ -125,7 +145,7 @@
                         {{ $record->description ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->status ?? '-' }}
+                        {{ strtoupper($record->status ?? '') ?? '-' }}
                     </td>
                 </tr>
             @endforeach
