@@ -8,10 +8,17 @@
     </a>
 @endif
 
-@can('vfms-business-unit-data-linking')
-    @if(!$row->vfms_associated_at)
-        <button class="m-1 btn btn-outline-success rounded-0 btn-sm" onclick="Livewire.emit('showModal', 'business.vfms.fetch-business-unit-data-modal', '{{  encrypt($row->id) }}', {{ false }})">
+@if(!$row->vfms_associated_at)
+    @can('vfms-business-unit-data-linking')
+        <button class="m-1 btn btn-outline-success rounded-0 btn-sm" onclick="Livewire.emit('showModal', 'business.vfms.fetch-business-unit-data-modal', '{{  encrypt($row->id) }}', '{{ false }}')">
             <i class="bi bi-pen mr-1"></i> Vfms Integration
         </button>
-    @endif
-@endcan
+    @endcan
+@else
+    @can('vfms-business-unit-update')
+        <button class="m-1 btn btn-outline-success rounded-0 btn-sm" onclick="Livewire.emit('showModal', 'business.vfms.update-business-unit-details', '{{  encrypt($row->id) }}', '{{ false }}')">
+            <i class="bi bi-pen mr-1"></i> Update Business Units
+        </button>
+    @endcan
+@endif
+

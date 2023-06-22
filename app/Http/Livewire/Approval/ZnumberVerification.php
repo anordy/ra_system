@@ -25,8 +25,9 @@ class ZnumberVerification extends Component
 
     public function mount($business){
         $this->business = $business;
+//        dd($this->business->headquarter->ward);
         $this->response = VfmsBusinessUnit::where('znumber', $this->business->previous_zno)
-            ->where('locality_id', $this->business->headquarter->ward->vfms_ward->locality_id)
+//            ->where('locality_id', $this->business->headquarter->ward->vfms_ward->locality_id)
             ->where('location_id', $this->business->headquarter->id)
             ->where('is_headquarter', true)
             ->get();

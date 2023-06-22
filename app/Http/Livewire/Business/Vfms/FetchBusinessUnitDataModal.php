@@ -16,7 +16,7 @@ class FetchBusinessUnitDataModal extends Component
             $this->business = Business::findOrFail(decrypt($id));
             $this->location = $this->business->headquarter;
         } else {
-            $this->location = $this->location;
+            $this->location = BusinessLocation::findOrFail(decrypt($id));
         }
     }
 

@@ -395,6 +395,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'vfms-business-unit-data-linking', 'sys_module_id' => 28],
             ['name' => 'vfms-znumber-verification', 'sys_module_id' => 28],
             ['name' => 'vfms-associated-business-unit-edit', 'sys_module_id' => 28],
+            ['name' => 'vfms-business-unit-update', 'sys_module_id' => 28],
         ];
 
         foreach ($data as $row) {
