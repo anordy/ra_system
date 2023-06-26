@@ -3,15 +3,22 @@
 namespace App\Http\Livewire\Payments;
 
 use App\Models\ZmRecon;
+use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Log;
 use App\Services\ZanMalipo\GepgResponse;
 use Illuminate\Database\Eloquent\Builder;
-use App\Traits\CustomAlert;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use App\Services\Api\ZanMalipoInternalService;
+use Exception;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class ReconEnquiriesTable extends DataTableComponent
 {
     use CustomAlert, GepgResponse;
+
+    protected $listeners = [
+        'resend',
+    ];
 
     public function builder(): Builder
     {
@@ -59,5 +66,34 @@ class ReconEnquiriesTable extends DataTableComponent
             Column::make('Actions', 'id')
                 ->view('payments.includes.recon-actions')
         ];
+    }
+
+    public function triggerResendReconModal($id)
+    {
+        $this->customAlert('warning', 'Are you sure you want to resend reconciliation request ?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Resend',
+            'onConfirmed' => 'resend',
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'id' => $id,
+            ],
+
+        ]);
+    }
+
+    public function resend($id)
+    {
+        try {
+            $enquireRecon = (new ZanMalipoInternalService)->requestRecon($id);
+        } catch (Exception $e) {
+            Log::error($e);
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+        }
+    
     }
 }
