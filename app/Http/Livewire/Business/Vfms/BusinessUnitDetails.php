@@ -11,7 +11,7 @@ class BusinessUnitDetails extends Component
     public $location;
     public function mount($location){
         $this->location = $location;
-        $this->businessUnits = VfmsBusinessUnit::where('location_id', $this->location->id)->get();
+        $this->businessUnits = VfmsBusinessUnit::where('location_id', $this->location->id)->where('parent_id', null)->get();
     }
 
     public function render()

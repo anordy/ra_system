@@ -1,17 +1,17 @@
 @if (count($this->getEnabledTranstions()) > 1)
-    @if ($subject->reg_no)
-        <div class="card m-2 bg-white rounded-0">
-            @if ($subject->previous_zno)
-                <div class="card-header font-weight-bold">
-                    ZNUMBER Verification
-                </div>
-                <div class="card-body m-0 pb-0">
-                    <livewire:approval.znumber-verification :business="$subject" />
-                </div>
-                <hr/>
-            @endif
-            <div class="card-header">BPRA Verification</div>
-            <div class="card-body">
+    <div class="card m-2 bg-white rounded-0">
+        @if ($subject->previous_zno)
+            <div class="card-header font-weight-bold">
+                ZNUMBER Verification
+            </div>
+            <div class="card-body m-0 pb-0">
+                <livewire:approval.znumber-verification :business="$subject" />
+            </div>
+            <hr/>
+        @endif
+        @if ($subject->reg_no)
+            <div class="card-header font-weight-bold">BPRA Verification</div>
+            <div class="card-body m-0 pb-0">
                 <livewire:approval.bpra-verification :business="$subject" />
             </div>
             @if ($subject->bpra_verification_status === \App\Models\BusinessStatus::APPROVED && (count($directors) > 0 || count($shareholders) > 0 || count($shares) > 0))
@@ -210,10 +210,8 @@
                     </div>
                 </div>
             @endif
-
-        </div>
-    @endif
-    <div class="card m-2 bg-white rounded-0">
+            <hr/>
+        @endif
         <div class="card-header font-weight-bold bg-white">
             Business Registration Approval
         </div>

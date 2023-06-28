@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
+use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Traits\Vfms\VfmsLocationTrait;
 use Exception;
@@ -20,16 +23,16 @@ class ZnumberVerification extends Component
     use CustomAlert, VfmsLocationTrait;
 
     public $business;
-    public $selectedUnitHeadquarter;
     public $response = [];
+    public $errorMessage = 'Something went wrong, please contact the administrator for help';
 
     public function mount($business){
         $this->business = $business;
-//        dd($this->business->headquarter->ward);
         $this->response = VfmsBusinessUnit::where('znumber', $this->business->previous_zno)
-//            ->where('locality_id', $this->business->headquarter->ward->vfms_ward->locality_id)
+            ->where('locality_id', $this->business->headquarter->ward->vfms_ward->locality_id)
             ->where('location_id', $this->business->headquarter->id)
             ->where('is_headquarter', true)
+            ->where('parent_id', null)
             ->get();
     }
 
@@ -56,11 +59,9 @@ class ZnumberVerification extends Component
                         return;
                     }
                     // Check if business unit associated to another business location
-                    foreach ($this->response as $key => $item){
-                        if ($this->checkIfAssociated($item)){
-                            unset($$this->response[$key]);
-                        }
-                    }
+                    $this->removeAssociatedBusinessUnits();
+                    $businessUnits = collect($this->response)->keyBy('unit_id');
+                    $this->response = $this->buildBusinessUnitTree($businessUnits);
                 }
             } else if (array_key_exists('statusCode', $response) && $response['statusCode'] != 200){
                 $this->customAlert('warning', $response['statusMessage'] ?? 'Something went wrong, please contact the administration for help');
@@ -69,8 +70,29 @@ class ZnumberVerification extends Component
 
         } catch (Exception $e) {
             Log::error($e);
-            return $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            return $this->customAlert('error', $this->errorMessage);
         }
+    }
+
+    private function removeAssociatedBusinessUnits(){
+        foreach ($this->response as $key => $item){
+            if ($this->checkIfAssociated($item)){
+                unset($$this->response[$key]);
+            }
+        }
+    }
+
+    private function buildBusinessUnitTree($businessUnits, $parentId = null){
+        $tree = [];
+
+        foreach ($businessUnits as $businessUnit) {
+            if ($businessUnit['parent_id'] === $parentId) {
+                $businessUnit['children'] = $this->buildBusinessUnitTree($businessUnits, $businessUnit['unit_id']);
+                $tree[] = $businessUnit;
+            }
+        }
+
+        return $tree;
     }
 
     public function complete() {
@@ -83,7 +105,7 @@ class ZnumberVerification extends Component
                 $linkData[] = $value;
             }
         }
-//        dd($linkData);
+
         if(count($headquarters) == 0) {
             $this->customAlert('warning', 'Please select a headquarter units');
             return;
@@ -111,22 +133,7 @@ class ZnumberVerification extends Component
                 }
                 $vfmsBusinessUnit = VfmsBusinessUnit::where('unit_id', $unit['unit_id'])->first();
                 if (!$vfmsBusinessUnit) {
-                    VfmsBusinessUnit::create([
-                        'unit_id' => $unit['unit_id'],
-                        'business_id' => $this->business->id,
-                        'unit_name' => $unit['unit_name'],
-                        'business_name' => $unit['business_name'] ?? null,
-                        'trade_name' => $unit['trade_name'] ?? null,
-                        'locality_id' => $unit['locality_id'],
-                        'vfms_tax_type' => $unit['tax_type'],
-                        'zidras_tax_type_id' => $taxtype->id, // Mapped with zidras tax type id
-                        'tax_office' => $unit['tax_office'] ?? null,
-                        'street' => $unit['street'],
-                        'znumber' => $unit['znumber'],
-                        'is_headquarter' => $unit['is_headquarter'] ?? false,
-                        'location_id' => $unit['is_headquarter'] ? $this->business->headquarter->id : null,
-                        'integration' => $unit['integration']
-                    ]);
+                    $this->createBusinessUnit($unit, $taxtype);
                 } else {
                     $vfmsBusinessUnit->location_id = $unit['is_headquarter'] ? $this->business->headquarter->id : null;
                     $vfmsBusinessUnit->is_headquater = $unit['is_headquarter'] ?? false;
@@ -143,13 +150,90 @@ class ZnumberVerification extends Component
 
             DB::commit();
 
-            $this->flash('success', 'Z-Number approved successfully', [], redirect()->back()->getTargetUrl());
+            $this->customAlert('success', 'Z-Number approved successfully.');
+            return redirect()->route('business.registrations.index');
         } catch(Exception $e) {
             DB::rollBack();
             Log::error($e);
-            return $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            return $this->customAlert('error', $this->errorMessage);
         }
         
+    }
+
+    public function createBusinessUnit($data, $taxtype){
+        $this->createData($data, $taxtype);
+        if(count($data['children'])){
+            foreach ($data['children'] as $child){
+                $this->createData($child, $taxtype);
+            }
+        }
+    }
+
+    private function createData($data, $taxtype){
+        VfmsBusinessUnit::create([
+            'unit_id' => $data['unit_id'],
+            'business_id' => $this->business->id,
+            'unit_name' => $data['unit_name'],
+            'business_name' => $data['business_name'] ?? null,
+            'trade_name' => $data['trade_name'] ?? null,
+            'parent_id' => $data['parent_id'],
+            'locality_id' => $data['locality_id'],
+            'vfms_tax_type' => $data['tax_type'],
+            'zidras_tax_type_id' => $taxtype->id, // Mapped with zidras tax type id
+            'tax_office' => $data['tax_office'] ?? null,
+            'street' => $data['street'],
+            'znumber' => $data['znumber'],
+            'is_headquarter' => (key_exists('is_headquarter', $data) && $data['is_headquarter']) || $data['parent_id'] ?? false,
+            'location_id' => (key_exists('is_headquarter', $data) && $data['is_headquarter']) || $data['parent_id'] ? $this->business->headquarter->id : null,
+            'integration' => $data['integration']
+        ]);
+    }
+
+    public function returnForCorrection(){
+        DB::beginTransaction();
+        try {
+            $updateBusiness = Business::find($this->business->id);
+            $updateBusiness->invalid_z_number = false;
+            $updateBusiness->save();
+
+            DB::commit();
+
+            $payload = [
+                'message' => "You are kindly requested to change Z-Number for your business ". $this->business->name ." as the previous one is incorrect.",
+                'taxpayer_name' => $this->business->responsiblePerson->first_name,
+                'business_name' => $this->business->name,
+                'phone_number' => $this->business->responsiblePerson->phone_number,
+                'email' => $this->business->responsiblePerson->email
+            ];
+
+            event(new SendSms('vfms-client-notification-sms', $payload));
+            event(new SendMail('vfms-client-notification-mail', $payload));
+
+            $this->customAlert('success', 'Requesting taxpayer to correct Z-Number successful.');
+            return redirect()->route('business.registrations.index');
+        } catch (Exception $e){
+            DB::rollBack();
+            Log::error($e);
+            return $this->customAlert('error', $this->errorMessage);
+        }
+    }
+
+    protected $listeners = [
+        'returnForCorrection'
+    ];
+
+    public function confirmPopUpModal($action)
+    {
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null
+        ]);
     }
 
     public function render()

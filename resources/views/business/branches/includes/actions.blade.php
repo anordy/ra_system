@@ -11,7 +11,7 @@
 @if(!$row->vfms_associated_at)
     @can('vfms-business-unit-data-linking')
         <button class="m-1 btn btn-outline-success rounded-0 btn-sm" onclick="Livewire.emit('showModal', 'business.vfms.fetch-business-unit-data-modal', '{{  encrypt($row->id) }}', '{{ false }}')">
-            <i class="bi bi-pen mr-1"></i> Vfms Integration
+            <i class="bi bi-gear-wide-connected mr-1"></i> Vfms Integration
         </button>
     @endcan
 @else

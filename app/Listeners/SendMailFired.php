@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\Vfms\ClientNotificationMail;
 use App\Models\KYC;
 use App\Models\UserOtp;
 use App\Events\SendMail;
@@ -79,7 +80,7 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        if(config('app.env') == 'local'){
+        if(config('app.env') !== 'local'){
             return true;
         }
         if($event->service == 'otp'){
@@ -236,6 +237,8 @@ class SendMailFired
             SendToCorrectionReturnMail::dispatch($event->tokenId);
         } else if ($event->service === SendBranchRegisteredMail::SERVICE){
             SendBranchRegisteredMail::dispatch($event->tokenId);
+        } else if ($event->service === ClientNotificationMail::SERVICE){
+            ClientNotificationMail::dispatch($event->tokenId);
         }
     }
 }

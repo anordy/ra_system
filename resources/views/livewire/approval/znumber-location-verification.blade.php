@@ -39,16 +39,23 @@
             @else
                 @if ($location->vfms_associated_at)
                     <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Status</span>
+                        <span class="font-weight-bold text-uppercase">Saved At</span>
                         <p class="my-1">
                             {{ \Carbon\Carbon::parse($location->vfms_associated_at)->format('l, F j, Y H:i') }}
+                        </p>
+                    </div>
+                @else
+                    <div class="font-weight-bold col-md-3 mb-3">
+                        <span class="text-uppercase">Remark</span>
+                        <p class="my-1 font-italic text-warning text-xs">
+                            Verify Z Number to proceed.
                         </p>
                     </div>
                 @endif
             @endif
         @else
             <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Action</span>
+                <span class="font-weight-bold text-uppercase">Remark</span>
                 <p class="my-1 font-italic text-warning">
                     Contact Admin To Complete this action.
                 </p>
@@ -88,7 +95,6 @@
                                     <td>{{ $unit->trade_name ?? 'N/A' }}</td>
                                     <td>{{ $unit->street ?? 'N/A' }}</td>
                                     <td>{{ $unit->taxtype->name ?? 'N/A' }}</td>
-                                    <td>{{ $unit->integration ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
                                     <td class="font-weight-bold {{ $unit['integration'] ? 'text-success' : 'text-muted' }}">{{ $unit['integration'] ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
                                     <td><input type="checkbox" wire:model="selectedUnit.{{ $unit->id }}"></td>
                                 </tr>
@@ -105,6 +111,29 @@
                                     <td class="font-weight-bold {{ $unit->integration ? 'text-success' : 'text-muted' }}">{{ $unit->integration ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
                                     <td><input type="checkbox" wire:model="units.{{ $index }}.is_selected"></td>
                                 </tr>
+                                @if(count($unit->getChildrenBusinessUnits($unit->unit_id)))
+                                    <tr>
+                                        <td colspan="9" class="px-4 border rounded">
+                                            <table class="table table-sm px-2">
+                                                <label class="font-weight-bold"> {{ $unit['unit_name'] }} associated Business unit(s)</label>
+                                                <thead>
+                                                    <th>No</th>
+                                                    <th>Unit Name</th>
+                                                    <th>Tax Type</th>
+                                                </thead>
+                                                <tbody>
+                                                @foreach($unit->getChildrenBusinessUnits($unit->unit_id) as $childKey => $child)
+                                                    <tr>
+                                                        <td>{{ romanNumeralCount($childKey + 1) }}.</td>
+                                                        <td>{{ $child['unit_name'] ?? 'N/A' }}</td>
+                                                        <td>{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
                         @endif
                     @else
@@ -120,7 +149,8 @@
         </div>
 
         @if($units && count($units) > 0)
-            <p class="small text-danger">* Make sure to select only one unit if two business units returned with the same Tax Type and the same integration Status i.e VAT</p>
+            <div class="small text-danger">* Make sure to select only one unit if two business units returned with the same Tax Type and  integration Status i.e VAT</div>
+            <div class="small text-danger">* For business unit with associated units, if selected all associated business units are also selected.</div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="modal-footer p-2 m-0">
@@ -165,6 +195,29 @@
                                 <td>{{ $unit->taxtype->name ?? 'N/A' }}</td>
                                 <td class="font-weight-bold {{ $unit['integration'] ? 'text-success' : 'text-muted' }}">{{ $unit['integration'] ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
                             </tr>
+                            @if(count($unit->getChildrenBusinessUnits($unit->unit_id)))
+                                <tr>
+                                    <td colspan="9" class="px-4 border rounded">
+                                        <table class="table table-sm px-2">
+                                            <label class="font-weight-bold"> {{ $unit['unit_name'] }} associated Business unit(s)</label>
+                                            <thead>
+                                                <th>No</th>
+                                                <th>Unit Name</th>
+                                                <th>Tax Type</th>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($unit->getChildrenBusinessUnits($unit->unit_id) as $childKey => $child)
+                                                <tr>
+                                                    <td>{{ romanNumeralCount($childKey + 1) }}.</td>
+                                                    <td>{{ $child['unit_name'] ?? 'N/A' }}</td>
+                                                    <td>{{ $child->taxtype->name ?? 'N/A' }}</td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>

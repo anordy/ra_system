@@ -27,7 +27,7 @@ class ZnumberLocationVerification extends Component
 
     public function mount($location){
         $this->location = $location;
-        $this->business_units = VfmsBusinessUnit::where('location_id', $this->location->id)->get();
+        $this->business_units = VfmsBusinessUnit::where('location_id', $this->location->id)->where('parent_id', null)->get();
 
         if($this->location->ward->vfms_ward && $this->location->business->headquarter->ward->vfms_ward) {
             $this->fetch = $this->location->ward->vfms_ward->locality_id != $this->location->business->headquarter->ward->vfms_ward->locality_id;

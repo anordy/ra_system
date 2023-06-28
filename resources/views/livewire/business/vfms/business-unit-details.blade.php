@@ -27,6 +27,29 @@
                             <td>{{ $unit->taxtype->name ?? 'N/A' }}</td>
                             <td class="font-weight-bold {{ $unit['integration'] ? 'text-success' : 'text-muted' }}">{{ $unit['integration'] ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
                         </tr>
+                        @if(count($unit->getChildrenBusinessUnits($unit->unit_id)))
+                            <tr>
+                                <td colspan="9" class="px-4 border rounded">
+                                    <table class="table table-sm px-2">
+                                        <label class="font-weight-bold"> {{ $unit['unit_name'] }} associated Business unit(s)</label>
+                                        <thead>
+                                        <th>No</th>
+                                        <th>Unit Name</th>
+                                        <th>Tax Type</th>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($unit->getChildrenBusinessUnits($unit->unit_id) as $childKey => $child)
+                                            <tr>
+                                                <td>{{ romanNumeralCount($childKey + 1) }}.</td>
+                                                <td>{{ $child->unit_name ?? 'N/A' }}</td>
+                                                <td>{{ $child->taxtype->name ?? 'N/A' }}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                 @else
                     <tr>
