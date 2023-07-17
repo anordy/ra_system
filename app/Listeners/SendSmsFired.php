@@ -217,7 +217,7 @@ class SendSmsFired
         } else if ($event->service === SendZanMalipoSMS::SERVICE){
             SendZanMalipoSMS::dispatch($event->extra['mobile_no'], $event->extra['message']);
         }  else if ($event->service === ClientNotificationSMS::SERVICE){
-            SendZanMalipoSMS::dispatch($event->tokenId);
+            ClientNotificationSMS::dispatch($event->tokenId);
         }
     }
 }

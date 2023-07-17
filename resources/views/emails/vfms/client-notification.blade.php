@@ -1,10 +1,11 @@
 @component('mail::message')
-    # Hello {{ $taxpayer_name }},
+    # Hello {{ $user_name }},
 
     {{ $message }}
 
-    Please login to make necessary corrections.
-
+    @if($user_type == 'taxpayer')
+        Please login to make necessary corrections.
+    @endif
     Thanks,<br>
     {{ config('app.name') }}
 @endcomponent

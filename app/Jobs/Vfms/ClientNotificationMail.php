@@ -4,12 +4,15 @@ namespace App\Jobs\Vfms;
 
 use App\Mail\Vetting\ToCorrectionReturn;
 use App\Mail\Vfms\ClientNotification;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class ClientNotificationMail implements ShouldQueue
@@ -38,8 +41,25 @@ class ClientNotificationMail implements ShouldQueue
     public function handle()
     {
         //
-        if ($this->payload['email']) {
-            Mail::to($this->payload['email'])->send(new ClientNotification($this->payload));
+        try {
+            if ($this->payload['user_type'] == 'taxpayer'){
+                Mail::to($this->payload['email'])->send(new ClientNotification($this->payload));
+            } else {
+                $admin_role = Role::where('name', 'Administrator')->get()->first();
+                if ($admin_role) {
+                    $administrators = User::where('role_id', $admin_role->id)->where('status', true)->get();
+                    if (count($administrators) > 0) {
+                        foreach ($administrators as $admin) {
+                            if ($admin->email) {
+                                $this->payload['user_name'] = $admin->fname;
+                                Mail::to($admin->email)->send(new ClientNotification($this->payload));
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e){
+            Log::error($e);
         }
     }
 }

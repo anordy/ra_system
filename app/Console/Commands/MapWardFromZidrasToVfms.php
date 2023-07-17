@@ -68,22 +68,31 @@ class MapWardFromZidrasToVfms extends Command
         if ($response['data']){
             $data = json_decode($response['data'], true);
             DB::beginTransaction();
-            if (array_key_exists('statusCode', $data)){
-                Log::channel('vfms')->info('Ward already exists on VFMS records, please kindly report to administrator.');
-                Log::channel('vfms')->info($data);
+            try {
+                if (array_key_exists('statusCode', $data)){
+                    Log::channel('vfms')->info('Ward already exists on VFMS records, please kindly report to administrator.');
+                    Log::channel('vfms')->info($data);
+                    DB::rollBack();
+                } else {
+                    VfmsWard::create([
+                        'ward_id' => $ward->id,
+                        'locality_id' => $data['locality_id'],
+                        'locality_name' => $ward->name,
+                    ]);
+                    DB::commit();
+                    $this->totalWardMapped[] = $ward->name;
+                }
+            } catch (\Exception $e){
+                Log::error($e);
                 DB::rollBack();
-            } else {
-                VfmsWard::create([
-                    'ward_id' => $ward->id,
-                    'locality_id' => $data['locality_id'],
-                    'locality_name' => $ward->name,
-                ]);
-                DB::commit();
-                $this->totalWardMapped[] = $ward->name;
             }
         } else {
+
             Log::channel('vfms')->info('No response data after new ward entry to VFMS, please kindly report to administrator.');
-            Log::channel('vfms')->info($response);
+            Log::channel('vfms')->info((string)$response);
+
+            $message = "This alert email concerning Mapping Vfms Locality data with ZIDRAS wards. Inspect the logs as no response after new ward created on VFMS side.";
+            $this->sendnotificationToAdmin($message);
         }
     }
 }

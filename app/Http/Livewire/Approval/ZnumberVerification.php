@@ -202,6 +202,7 @@ class ZnumberVerification extends Component
                 'message' => "You are kindly requested to change Z-Number for your business ". $this->business->name ." as the previous one is incorrect.",
                 'taxpayer_name' => $this->business->responsiblePerson->first_name,
                 'business_name' => $this->business->name,
+                'user_type' => "taxpayer",
                 'phone_number' => $this->business->responsiblePerson->phone_number,
                 'email' => $this->business->responsiblePerson->email
             ];

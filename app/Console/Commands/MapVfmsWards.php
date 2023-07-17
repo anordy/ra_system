@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\Business;
 use App\Models\District;
 use App\Models\Region;
@@ -28,7 +30,7 @@ class MapVfmsWards extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Mapping VFMS Locality with ZIDRAS ward data';
 
     /**
      * Create a new command instance.
@@ -94,6 +96,9 @@ class MapVfmsWards extends Command
                 } else {
                     Log::channel('vfms')->error('No response data after new ward entry data to vfms');
                     Log::channel('vfms')->info($response);
+
+                    $message = "This alert email concerning Mapping Vfms Locality data with ZIDRAS wards. Inspect the logs as no response after requesting Locality data from VFMS side.";
+                    $this->sendnotificationToAdmin($message);
                 }
             }
         }

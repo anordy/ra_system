@@ -2,8 +2,11 @@
 namespace App\Traits\Vfms;
 
 use App\Enum\VfmsTaxTypeMapping;
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\District;
 use App\Models\Region;
+use App\Models\Street;
 use App\Models\Vfms\VfmsBusinessUnit;
 use App\Models\VfmsWard;
 use App\Models\Ward;
@@ -77,13 +80,21 @@ trait VfmsLocationTrait
     }
 
     function addWard($district, $data){
-       Ward::create([
+      $ward = Ward::create([
             'name' => $data['locality_name'],
             'district_id' => $district->id,
             'is_approved' => true,
             'is_updated' => true,
             'created_at' =>Carbon::now()
         ]);
+
+      Street::create([
+          'name' => $data['locality_name'],
+          'ward_id' => $ward->id,
+          'is_approved' => true,
+          'is_updated' => true,
+          'created_at' =>Carbon::now()
+      ]);
     }
 
     private function addVfmsWardToZidras($ward, $data){
@@ -175,6 +186,7 @@ trait VfmsLocationTrait
             $response = curl_exec($curl);
             $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             Log::info('VFMS: Post ward to Vfms End!');
+            Log::channel('vfms')->info($response);
             $message = $statusCode != 200 ? 'Something went wrong' : 'Data Retrieved Successfully';
             curl_close($curl);
             return [
@@ -210,5 +222,18 @@ trait VfmsLocationTrait
     function checkIfAssociated($businessUnit){
         $checkBusinessUnit = VfmsBusinessUnit::where('unit_id', $businessUnit['unit_id'])->where('location_id', '!=', null)->exists();
         return $checkBusinessUnit;
+    }
+
+    function sendnotificationToAdmin($message){
+        $payload = [
+            'message' => $message,
+            'user_name' => null,
+            'user_type' => "staff",
+            'business_name' => null,
+            'phone_number' => null,
+            'email' => null
+        ];
+        event(new SendSms('vfms-client-notification-sms', $payload));
+        event(new SendMail('vfms-client-notification-mail', $payload));
     }
 }

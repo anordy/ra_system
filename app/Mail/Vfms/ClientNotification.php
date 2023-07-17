@@ -11,7 +11,7 @@ class ClientNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $message, $business_name, $taxpayer_name;
+    public $message, $business_name, $user_name, $user_type;
     /**
      * Create a new message instance.
      *
@@ -22,7 +22,8 @@ class ClientNotification extends Mailable
         //
         $this->message = $payload['message'];
         $this->business_name = $payload['business_name'];
-        $this->taxpayer_name = $payload['taxpayer_name'];
+        $this->user_name = $payload['user_name'];
+        $this->user_type = $payload['user_type'];
     }
 
     /**
@@ -32,6 +33,7 @@ class ClientNotification extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.vfms.client-notification')->subject("Update Z-Number for ". $this->business_name);
+        $title = $this->user_type == 'taxpayer' ? "Update Z-Number for ". $this->business_name : "ZIDRAS - VFMS Notification";
+        return $this->markdown('emails.vfms.client-notification')->subject($title);
     }
 }
