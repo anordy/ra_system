@@ -21,17 +21,17 @@
         <tr>
             <th>Penalty Amount</th>
             <td>{{ $tax_return->return->currency }}. {{ number_format($tax_return->return->penalty, 2) }}</td>
-            <td>{{ $tax_return->return->currency }}. {{ number_format($tax_return->return->penalty, 2) }}</td>
+            <td>{{ $tax_return->return->currency }}. {{ number_format($tax_return->penalty, 2) }}</td>
         </tr>
         <tr>
             <th>Interest Amount</th>
             <td>{{ $tax_return->return->currency }}. {{ number_format($tax_return->return->interest, 2) }}</td>
-            <td>{{ $tax_return->return->currency }}. {{ number_format($tax_return->return->interest, 2) }}</td>
+            <td>{{ $tax_return->return->currency }}. {{ number_format($tax_return->interest, 2) }}</td>
         </tr>
         <tr>
             <th>Total Payable Amount</th>
             <td>{{ $tax_return->return->currency }}. {{ number_format($tax_return->return->total_amount_due_with_penalties, 2) }}</td>
-            <td>{{ $tax_return->return->currency }}. {{ number_format($tax_return->return->total_amount_due_with_penalties, 2) }}</td>
+            <td>{{ $tax_return->return->currency }}. {{ number_format($tax_return->total_amount, 2) }}</td>
         </tr>
         <tr>
             <th>Outstanding Amount</th>

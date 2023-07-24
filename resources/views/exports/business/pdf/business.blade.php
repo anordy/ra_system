@@ -95,7 +95,7 @@
                     <strong>Taxpayer</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Date of Commensing</strong>
+                    <strong>Effective Date</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Region</strong>
@@ -109,6 +109,9 @@
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Physical Address</strong>
+                </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Status</strong>
                 </th>
             </tr>
         </thead>
@@ -134,7 +137,7 @@
                         {{ $record->taxpayer->fullname ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ date('M, d Y', strtotime($record->date_of_commencing)) ?? '-' }}
+                        {{ date('M, d Y', strtotime($record->effective_date)) ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->region->name ?? '-' }}
@@ -147,6 +150,9 @@
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->physical_address ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ ucfirst($record->business->status ?? '') ?? '-' }}
                     </td>
                 </tr>
             @endforeach

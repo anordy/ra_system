@@ -150,30 +150,32 @@
                 {{ date('M, d Y', strtotime($record->created_at)) }}
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{$record->filing_due_date==null?'-': date('M, d Y', strtotime($record->filing_due_date)) }}
+                {{$record->filing_due_date==null?'-': date('M, d Y', strtotime(\Carbon\Carbon::create($record->filing_due_date)->addMonth())) }}
             </td>
 
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 {{ $record->paid_at==null?'-':date('M, d Y', strtotime($record->paid_at)) }}
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->payment_due_date==null?'-':date('M, d Y', strtotime($record->payment_due_date)) }}
+                {{ $record->curr_payment_due_date==null?'-':date('M, d Y', strtotime($record->curr_payment_due_date)) }}
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                @if ($record->created_at > $record->filing_due_date )
+                @if ($record->created_at > \Carbon\Carbon::create($record->filing_due_date)->addMonth())
                 Late Filing
                 @else
                 In-Time Filing
                 @endif
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                @if($record->paid_at > $record->payment_due_date)
-                Late Payment
-                @elseif($record->paid_at < $record->payment_due_date)
-                    In-Time Payment
-                    @else
+                @if (!$record->paid_at)
                     Not Paid
-                    @endif
+                @elseif($record->paid_at > $record->curr_payment_due_date)
+                    Late Payment
+                @elseif($record->paid_at <= $record->curr_payment_due_date)
+                    Paid
+                @else
+                    -
+                @endif
             </td>
         </tr>
         @endforeach

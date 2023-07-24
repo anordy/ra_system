@@ -106,7 +106,10 @@ class PenaltyForDebt
             throw new \Exception("JOB FAILED TO RUN, NO LATE PAYMENT RATE FOR THE YEAR {$curr_payment_due_date->year}");
         }
         
-        $period = $tax_return->periods + $tax_return->penatableMonths;
+        // Subtract 1 from periods as the filing due date is of previous month
+        $period = $tax_return->periods - 1;
+
+        $period = round($period);
 
         $outstanding_amount = roundOff($outstanding_amount, $tax_return->currency);
 
@@ -119,7 +122,7 @@ class PenaltyForDebt
             $latePaymentAmount = PenaltyRate::where('financial_year_id', $tax_return->financialMonth->year->id)->where('code', PenaltyRate::PENALTY_FOR_MM_TRANSACTION)->firstOrFail()->rate;
             $latePaymentAmount = roundOff($latePaymentAmount, $tax_return->currency);
             $interestAmount = 0;
-            $penaltableAmount = $latePaymentAmount + $penaltableAmount;
+            $penaltableAmount = roundOff($latePaymentAmount + $penaltableAmount, $tax_return->currency);
         } else {
             $latePaymentAmount = roundOff($latePaymentAfterRate->rate * $penaltableAmount, $tax_return->currency);
             $penaltableAmount = $latePaymentAmount + $penaltableAmount;
@@ -153,8 +156,9 @@ class PenaltyForDebt
                 throw new Exception('Verification failed for tax return, please contact your system administrator for help.');
             }
 
-            $tax_return->penalty = $tax_return->penalty + $debtPenalty->late_payment;
-            $tax_return->interest = $tax_return->interest + $debtPenalty->rate_amount;
+            $tax_return->principal = roundOff($tax_return->principal, $tax_return->currency);
+            $tax_return->penalty = roundOff($tax_return->penalty + $debtPenalty->late_payment, $tax_return->currency);
+            $tax_return->interest = roundOff($tax_return->interest + $debtPenalty->rate_amount, $tax_return->currency);
             $tax_return->curr_payment_due_date = $end_date;
             $tax_return->total_amount = round($penaltableAmount, 2);
             $tax_return->outstanding_amount = round($penaltableAmount, 2);

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Payments;
 
 use App\Enum\PaymentStatus;
+use App\Enum\ZmReconStatus;
 use App\Models\ZmBill;
 use App\Traits\ReconReportTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,7 +30,7 @@ class ReconReportTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects('tax_type_id');
+        $this->setAdditionalSelects(['tax_type_id', 'billable_type', 'billable_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -54,18 +55,50 @@ class ReconReportTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return $value ? number_format($value) : 'Pending';
+                    return $value ? number_format($value,2) : 'Pending';
                 }),
+            Column::make('Paid Amount', 'paid_amount')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return $value ? number_format($value,2) : 0;
+                }),
+            Column::make('Business Name', 'billable')
+                ->label(fn ($row) => $row->billable->business->name ?? 'N/A')
+                ->sortable()
+                ->searchable(),
             Column::make('Tax Type', 'tax_type_id')
                 ->label(fn ($row) => $row->taxType->name ?? 'N/A')
                 ->sortable()
                 ->searchable(),
+            Column::make('PSP Name', 'zmRecon')
+                ->label(fn ($row) => $row->zmRecon->pspname ?? 'N/A')
+                ->sortable()
+                ->searchable(),
             Column::make('ZanMalipo Recon Status', 'zm_recon_status')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->format(function ($value, $row) {
+                    if ($value == ZmReconStatus::PENDING) {
+                        return 'NOT RECONCILED';
+                    } else if ($value == ZmReconStatus::SUCCESS) {
+                        return 'RECONCILED';
+                    } else {
+                        return strtoupper($value) ?? 'N/A';
+                    }
+                }),
             Column::make('Bank Recon Status', 'bank_recon_status')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->format(function ($value, $row) {
+                    if ($value == ZmReconStatus::PENDING) {
+                        return 'NOT RECONCILED';
+                    } else if ($value == ZmReconStatus::SUCCESS) {
+                        return 'RECONCILED';
+                    } else {
+                        return strtoupper($value) ?? 'N/A';
+                    }
+                }),
             Column::make('Actions', 'id')
                 ->view('payments.includes.actions') 
         ];

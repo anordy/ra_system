@@ -73,6 +73,14 @@ class ZmBill extends Model implements Auditable, PayloadInterface
         return $this->belongsTo(BankRecon::class, 'control_number', 'control_no');
     }
 
+    public function zmRecon(){
+        return $this->belongsTo(ZmReconTran::class, 'control_number', 'billctrnum');
+    }
+
+    public function payment(){
+        return $this->hasOne(ZmPayment::class, 'zm_bill_id');
+    }
+
     public function taxType()
     {
         return $this->belongsTo(TaxType::class);

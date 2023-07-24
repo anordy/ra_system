@@ -50,7 +50,7 @@ class ReconReportFilter extends Component
         $records = $this->getBillBuilder($this->parameters)->get();
 
         $fileName = 'recon-report-'.time().'.xlsx';
-        $title    = 'For bills created between '.$this->parameters['range_start'].' and '.$this->parameters['range_end'];
+        $title    = 'Reconciliation Report For bills created between '.$this->parameters['range_start'].' and '.$this->parameters['range_end'];
         
         $this->customAlert('success', 'Exporting Excel File');
         return Excel::download(new ReconReportExport($records, $title), $fileName);          
