@@ -91,9 +91,13 @@
                                             $old_data = json_decode($old_values);
                                         @endphp
                                         <th>{{ str_replace('_', ' ', $key) }}</th>
-                                        <td style="background: {{ count($old_data) > 0 ? compareDualControlValues($old_data, $value) ? '#e9ffe9' : '#ffe9e9' : '#ffe9e9' }}">
-                                            {{ $old_data[$key] ?? 'N/A' }}
-                                        </td>
+                                        @if (is_array($old_data))
+                                            <td style="background: {{ count($old_data) > 0 ? compareDualControlValues($old_data, $value) ? '#e9ffe9' : '#ffe9e9' : '#ffe9e9' }}">
+                                                {{ $old_data[$key] ?? 'N/A' }}
+                                            </td>
+                                        @else
+                                            <td></td>
+                                        @endif
                                         <td style="background: #e9ffe9">{{ $value ?? 'N/A' }}</td>
                                     </tr>
                                 @endforeach

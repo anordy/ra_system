@@ -44,12 +44,6 @@ class AgentsTable extends DataTableComponent
             Column::make("Name", "taxpayer_id")
                 ->format(fn($taxpayer_id)=>Taxpayer::query()->find($taxpayer_id)->fullname())
                 ->sortable(),
-            Column::make("Phone Numbers", "taxpayer_id")
-                ->format(function($taxpayer_id){
-                    $taxpayer = Taxpayer::query()->find($taxpayer_id);
-                    return $taxpayer->mobile.'/'.$taxpayer->alt_mobile;
-                })
-                ->sortable(),
             Column::make("email", "taxpayer.email")
                 ->sortable(),
            Column::make("TIN", "taxpayer.tin")
