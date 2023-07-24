@@ -35,6 +35,10 @@ class StripTag implements Rule
         // in order to apply this rule on non string values, like ID's,
         // the result should explicitly be converted to string or do a loose comparison ==
 
+        if (is_array($value)) { // strip tags from an array 
+            $strippedArray = array_map('strip_tags', $value);
+            return $strippedArray === array_map('strval', $strippedArray);
+        }
         return strip_tags($value) === (string)$value;
     }
 
