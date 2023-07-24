@@ -38,13 +38,13 @@ class CancelledPaymentsTable extends DataTableComponent
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
         }
 
-        return $filter->whereIn('status', [PaymentStatus::CANCELLED])->orderBy('created_at', 'DESC');
+        return $filter->with('billable')->whereIn('status', [PaymentStatus::CANCELLED])->orderBy('created_at', 'DESC');
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects('tax_type_id');
+        $this->setAdditionalSelects(['tax_type_id', 'billable_type', 'billable_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
@@ -73,6 +73,10 @@ class CancelledPaymentsTable extends DataTableComponent
                 ->searchable(),
             Column::make('Tax Type', 'tax_type_id')
                 ->label(fn ($row) => $row->taxType->name ?? 'N/A')
+                ->sortable()
+                ->searchable(),
+            Column::make('Business Name', 'billable')
+                ->label(fn ($row) => $row->billable->business->name ?? 'N/A')
                 ->sortable()
                 ->searchable(),
             Column::make('Payer Name', 'payer_name')

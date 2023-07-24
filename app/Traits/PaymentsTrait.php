@@ -601,17 +601,19 @@ trait PaymentsTrait
          */
         if ($tax_return->return_type != PortReturn::class) {
             // Principal is the main tax type name
-            if ($tax_return->principal > 0) {
-                $billItems[] = [
-                        'billable_id'         => $tax_return->id,
-                        'billable_type'       => get_class($tax_return),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount'              => $tax_return->principal,
-                        'currency'            => $tax_return->currency,
-                        'gfs_code'            => $taxType->gfs_code,
-                        'tax_type_id'         => $tax_return->tax_type_id,
-                ];
-            }
+            if (!$tax_return->has_claim) {
+                if ($tax_return->principal > 0) {
+                    $billItems[] = [
+                            'billable_id'         => $tax_return->id,
+                            'billable_type'       => get_class($tax_return),
+                            'use_item_ref_on_pay' => 'N',
+                            'amount'              => $tax_return->principal,
+                            'currency'            => $tax_return->currency,
+                            'gfs_code'            => $taxType->gfs_code,
+                            'tax_type_id'         => $tax_return->tax_type_id,
+                    ];
+                }
+            } 
         }
 
         if ($tax_return->penalty > 0) {
@@ -801,5 +803,109 @@ trait PaymentsTrait
         }
 
 
+    }
+
+    public function generateAssessmentControlNumber($assessment)
+    {
+        $taxTypes = TaxType::all();
+        $taxType = $assessment->taxtype;
+
+        DB::beginTransaction();
+
+        try {
+            $billitems = [];
+
+            if ($assessment->principal_amount > 0) {
+                $billitems[] = [
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $assessment->principal_amount,
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
+                    'tax_type_id' => $taxType->id
+                ];
+            }
+
+            if ($assessment->interest_amount > 0) {
+                $billitems[] = [
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $assessment->interest_amount,
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
+                    'tax_type_id' => $taxTypes->where('code', 'interest')->firstOrFail()->id
+                ];
+            }
+
+            if ($assessment->penalty_amount > 0) {
+                $billitems[] = [
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $assessment->penalty_amount,
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
+                    'tax_type_id' => $taxTypes->where('code', 'penalty')->firstOrFail()->id
+                ];
+            }
+
+            $taxpayer = $assessment->business->taxpayer;
+
+            $payer_type = get_class($taxpayer);
+            $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+            $payer_email = $taxpayer->email;
+            $payer_phone = $taxpayer->mobile;
+            $description = "{$taxType->name} Verification Assessment for {$assessment->business->name}";
+            $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
+            $currency = $assessment->currency;
+            $createdby_type = get_class(Auth::user());
+            $createdby_id = Auth::id();
+            $exchange_rate = $this->getExchangeRate($assessment->currency);
+            $payer_id = $taxpayer->id;
+            $expire_date = Carbon::now()->addDays(30)->endOfDay();
+            $billableId = $assessment->id;
+            $billableType = get_class($assessment);
+            $taxType = $taxType->id;
+
+            $zmBill = ZmCore::createBill(
+                $billableId,
+                $billableType,
+                $taxType,
+                $payer_id,
+                $payer_type,
+                $payer_name,
+                $payer_email,
+                $payer_phone,
+                $expire_date,
+                $description,
+                $payment_option,
+                $currency,
+                $exchange_rate,
+                $createdby_id,
+                $createdby_type,
+                $billitems
+            );
+            DB::commit();
+
+            if (config('app.env') != 'local') {
+                $this->generateGeneralControlNumber($zmBill);
+            } else {
+                // We are local
+                $assessment->payment_status = ReturnStatus::CN_GENERATED;
+                $assessment->save();
+
+                // Simulate successful control no generation
+                $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                $zmBill->zan_status = 'pending';
+                $zmBill->control_number = rand(2000070001000, 2000070009999);
+                $zmBill->save();
+                $this->customAlert('success', 'A control number for this verification has been generated successfully');
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+        }
     }
 }

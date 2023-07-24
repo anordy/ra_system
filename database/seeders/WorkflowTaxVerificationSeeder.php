@@ -36,7 +36,7 @@ class WorkflowTaxVerificationSeeder extends Seeder
             'conduct_verification' => [
                 'owner' => 'staff',
                 'operator_type' => 'user',
-                'operators' => []
+                'operators' => [1,2]
             ],
             'verification_report' => [
                 'owner' => 'staff',

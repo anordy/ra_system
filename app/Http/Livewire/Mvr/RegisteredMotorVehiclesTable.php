@@ -37,14 +37,13 @@ class RegisteredMotorVehiclesTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Plate Number", "id")
-                ->format(fn($id)=>MvrMotorVehicle::query()->find($id)->current_registration->plate_number??'')
-                ->sortable(),
-            Column::make("Registration Type", "id")
-                ->format(fn($id)=>MvrMotorVehicle::query()->find($id)->current_registration->registration_type->name??'')
+            // Column::make("Plate Number")
+            //     ->format(fn($id, $row)=>MvrMotorVehicle::query()->find($row->id)->current_registration->plate_number??'')
+            //     ->sortable(),
+            Column::make("Registration Type")
+                ->format(fn($id, $row)=> $row->current_registration->registration_type->name??'')
                 ->sortable(),
             Column::make("Date", "registration_date")
-                ->format(fn($id)=>MvrMotorVehicle::query()->find($id)->current_registration->registration_type->name??'')
                 ->sortable(),
             Column::make("Chassis No", "chassis_number")
                 ->sortable(),
@@ -60,13 +59,13 @@ class RegisteredMotorVehiclesTable extends DataTableComponent
                 ->sortable(),
             Column::make("Registration Status", "registration_status.name")
                 ->sortable(),
-            Column::make('Action', 'id')
-                ->format(function ($value) {
-                    $url = route('mvr.show',encrypt($value));
-                    return <<< HTML
-                    <a class="btn btn-outline-primary btn-sm" href="$url"><i class="fa fa-eye"></i>View</a>
-                HTML;})
-                ->html()
+            // Column::make('Action', 'id')
+            //     ->format(function ($value) {
+            //         $url = route('mvr.show',encrypt($value));
+            //         return <<< HTML
+            //         <a class="btn btn-outline-primary btn-sm" href="$url"><i class="fa fa-eye"></i>View</a>
+            //     HTML;})
+            //     ->html()
         ];
     }
 

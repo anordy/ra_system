@@ -166,7 +166,7 @@
             </tr>
             <tr>
                 <td colspan="2" class="padding-left td-title">Transfer Amount</td>
-                <td colspan="2" class="td-content bold">: {{ number_format($bill->amount, 2) }} (TZS)</td>
+                <td colspan="2" class="td-content bold">: {{ number_format($bill->amount, 2) }} ({{ $bill->currency }})</td>
             </tr>
             <tr>
                 <td colspan="2" class="padding-left td-title">Amount in Words</td>

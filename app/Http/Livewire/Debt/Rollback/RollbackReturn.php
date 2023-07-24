@@ -4,10 +4,11 @@ namespace App\Http\Livewire\Debt\Rollback;
 
 use Exception;
 use Livewire\Component;
+use App\Traits\CustomAlert;
 use App\Models\Returns\TaxReturn;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\RollbackReturnPenaltyTrait;
-use App\Traits\CustomAlert;
 
 class RollbackReturn extends Component
 {
@@ -37,7 +38,8 @@ class RollbackReturn extends Component
                 $this->rollBackLatestReturnDebtPenalty($tax_return);
                 $this->customAlert('success', 'Penalty & Interest rolled back successful');
             } catch (Exception $e) {
-                $this->customAlert('warning', 'Something went wrong, please contact support for assistance.');
+                Log::error($e);
+                $this->customAlert('warning', $e->getMessage());
             }
         }
     }

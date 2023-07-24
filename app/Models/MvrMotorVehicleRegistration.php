@@ -144,7 +144,7 @@ class MvrMotorVehicleRegistration extends Model implements Auditable
                 ->join('mvr_motor_vehicles','mvr_motor_vehicles.id','=','mvr_motor_vehicle_id')
                 ->whereIn('mvr_registration_type_id',$reg_type_ids)
                 ->whereNotNull('plate_number')
-                ->orderBy(DB::raw('concat(substring(plate_number,5,2),substring(plate_number,2,3))'), 'desc')
+                ->orderBy(DB::raw('CONCAT(SUBSTR(plate_number,5,2),SUBSTR(plate_number,2,3))'), 'desc')
                 ->lockForUpdate()
                 ->first();
 
