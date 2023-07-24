@@ -60,8 +60,10 @@ class TaxReturnVettingController extends Controller
 
         $return = $tax_return->return;
 
-        $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
 
+        $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
+        $return_ = '';
+        $tax_return_ ='';
         $returnHistories = $tax_return->editReturnHistories;
 
 
@@ -84,11 +86,14 @@ class TaxReturnVettingController extends Controller
             $viewRender = 'returns.excise-duty.mobile-money-transfer.details';
 
         } elseif ($return instanceof PortReturn) {
+            $tax_return_ = TaxReturn::where('parent',$return->id)->first();
+            $return_ = $tax_return_->return;
+            $return_->penalties = $return_->penalties->concat($return_->tax_return->penalties)->sortBy('tax_amount');
+
             $viewRender = 'returns.port.details';
 
         } elseif ($return instanceof MnoReturn) {
             $viewRender = 'returns.excise-duty.mno.details';
-
         }
         elseif ($return instanceof BfoReturn) {
             $viewRender = 'returns.excise-duty.bfo.details';
@@ -100,6 +105,7 @@ class TaxReturnVettingController extends Controller
             abort(404);
         }
 
-        return view('vetting.show', compact('return', 'viewRender', 'tax_return', 'returnHistories'));
+
+        return view('vetting.show', compact('return', 'viewRender', 'tax_return', 'returnHistories','return_','tax_return_'));
     }
 }

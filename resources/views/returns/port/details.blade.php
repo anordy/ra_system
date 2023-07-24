@@ -38,6 +38,45 @@
                 </div>
             @endif
 
+            @if ($return_->configReturns)
+            <div class="col-md-12">
+                <p class="text-uppercase font-weight-bold">{{ __('Return Items') }} (USD)</p>
+            </div>
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped normal-text">
+                    <thead>
+                        <th style="width: 30%">{{ __('Item Name') }}</th>
+                        <th style="width: 20%">{{ __('Value') }}</th>
+                        <th style="width: 10%">{{ __('Rate') }}</th>
+                        <th style="width: 20%">{{ __('Tax') }}</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($return_->configReturns as $item)
+                            <tr>
+                                <td>{{ $item->config->name }}</td>
+                                <td>{{ number_format($item->value, 2) }}</td>
+                                <td>
+                                    @if ($item->config->rate_type == 'fixed')
+                                        @if ($item->config->currency == 'both')
+                                            {{ $item->config->rate }} TZS <br>
+                                            {{ $item->config->rate_usd }} USD
+                                        @elseif ($item->config->currency == 'TZS')
+                                            {{ $item->config->rate }} TZS
+                                        @elseif ($item->config->currency == 'USD')
+                                            {{ $item->config->rate_usd }} USD
+                                        @endif
+                                    @elseif ($item->config->rate_type == 'percentage')
+                                        {{ $item->config->rate }} %
+                                    @endif
+                                    {{-- {{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }} --}}
+                                </td>
+                                <td>{{ number_format($item->vat, 2) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
 
 
             <div class="col-md-12">
@@ -112,7 +151,7 @@
                     </tbody>
                 </table>
 
-                {{-- <table class="table table-bordered table-sm normal-text">
+                <table class="table table-bordered table-sm normal-text">
                     <label>USD Penalties</label>
                     <thead>
                         <tr>
@@ -157,7 +196,7 @@
                             </tr>
                         @endif
                     </tbody>
-                </table> --}}
+                </table>
             </div>
         </div>
     </div>

@@ -32,7 +32,7 @@
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if (view()->exists($viewRender))
-                @php echo view($viewRender, compact('return'))->render() @endphp
+                @php echo view($viewRender, compact('return','return_'))->render() @endphp
                 <livewire:approval.tax-returns-vetting-approval-processing modelName="{{ get_class($tax_return) }}" modelId="{{ encrypt($tax_return->id) }}"></livewire:approval.tax-returns-vetting-approval-processing>
             @else
                 <div class="card">
