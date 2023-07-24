@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Business Registration Details')
+@section('title', "Business Registration Details for $return->business->name} ")
 
 @section('content')
 

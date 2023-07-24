@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Business Branch
+    Business Branch {{ $location->name }} for {{ $business->name }}
 @endsection
 
 @section('content')

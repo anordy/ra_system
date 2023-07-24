@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Tax Return Vetting Preview')
+@section('title', "Tax Return Vetting for {$return->business->name}")
 
 @section('content')
     <div class="row mx-1">
