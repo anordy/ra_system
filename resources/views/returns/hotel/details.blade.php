@@ -104,6 +104,24 @@
                 </table>
             </div>
 
+            <div class="col-md-12 mb-4">
+                @if ($return->taxType->code == \App\Models\TaxType::HOTEL)
+                    @include('returns.hotel.includes.hotel-attachment')
+                @elseif($return->taxType->code == \App\Models\TaxType::AIRBNB)
+                    @include('returns.hotel.includes.airbnb-attachment')
+                @elseif($return->taxType->code == \App\Models\TaxType::TOUR_OPERATOR)
+                    @include('returns.hotel.includes.tour-attachment')
+                @elseif($return->taxType->code == \App\Models\TaxType::RESTAURANT)
+                    @include('returns.hotel.includes.restaurant-attachment')
+                @else
+                    Invalid Return Type
+                @endif
+
+                @if (count($return->withheld) > 0)
+                    @include('returns.hotel.includes.withheld-attachment')
+                @endif
+            </div>
+
             <div class="col-md-12">
                 <h6 class="text-uppercase mt-2 ml-2">Penalties</h6>
                 <hr>
