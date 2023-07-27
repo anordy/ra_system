@@ -41,11 +41,11 @@
                                 @foreach ($return as $item)
                                     <tr>
                                         <td>{{ $item['financial_month'] }}</td>
-                                        <td>{{ $item['total_purchases'] }}</td>
-                                        <td>{{ $item['input_tax'] }}</td>
-                                        <td>{{ $item['total_sales'] }}</td>
-                                        <td>{{ $item['output_vat'] }}</td>
-                                        <td>{{ $item['tax_paid'] }}</td>
+                                        <td>{{ number_format($item['total_purchases'], 2) }}</td>
+                                        <td>{{ number_format($item['input_tax'], 2) }}</td>
+                                        <td>{{ number_format($item['total_sales'], 2) }}</td>
+                                        <td>{{ number_format($item['output_vat'], 2) }}</td>
+                                        <td>{{ number_format($item['tax_paid'], 2) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
