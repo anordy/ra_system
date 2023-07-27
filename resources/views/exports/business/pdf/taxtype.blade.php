@@ -15,6 +15,10 @@
         thead {
             text-align: center
         }
+        .tax {
+            /* background-color: rgb(182, 193, 208); */
+            padding-top: 50px%;
+        }
 
         .tableHead {
             background-color: rgb(182, 193, 208);
@@ -57,7 +61,7 @@
             <tr>
                 <th style="text-align:center;" colspan="10">
                     <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
-                    <strong>Business Registration Report on </strong>
+                    <strong>Business Tax Type Registration Report on </strong>
                     @if(array_key_exists('tax_type_name',$parameters))
                       <strong> {{$parameters['tax_type_name']}}  </strong>
                     @endif
@@ -76,7 +80,20 @@
         </thead>
     </table>
     <br>
+    @foreach($recordsData as $group => $records)
+    <table style="border-collapse:collapse; width:100%;">
+        <thead>
+            <tr>
+                <th style="text-align:left;" colspan="10">
+                    <strong class="tax" > {{ $records[0]->taxtype->name }}</strong><br>
+                   
+                </th>
+            </tr>
+        </thead>
+    </table>
+    
     <table class="table">
+        
         <thead class="tableHead">
             <tr>
                 <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
@@ -98,12 +115,12 @@
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Taxpayer</strong>
                 </th>
-           
+             
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Effective Date</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-
+                    
                     <strong>Region</strong>
                 </th>
 
@@ -122,8 +139,8 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($records as $index => $record)
-                   
+           
+            @foreach ($records as $index => $record) 
                 <tr>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $index + 1 }}
@@ -143,7 +160,7 @@
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->taxpayer->fullname ?? '-' }}
                     </td>
-                
+                 
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ date('M, d Y', strtotime($record->effective_date)) ?? '-' }}
                     </td>
@@ -166,6 +183,8 @@
             @endforeach
         </tbody>
     </table>
+    @endforeach
+
 
     <br>
 </body>

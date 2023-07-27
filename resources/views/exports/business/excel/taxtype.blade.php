@@ -5,12 +5,23 @@
             <th style="text-align:center;" colspan="11" height="70">
                 <strong>ZANZIBAR Revenue Authority</strong><br>
                 {{-- <strong>{{ $title }}</strong><br> --}}
-                {{-- <strong>{{ $taxType->name }}</strong><br> --}}
+                {{-- <strong>taxtypes</strong><br> --}}
+            </th>
+        </tr>
+    </thead>
+</table>
+@foreach($recordsData as $group => $records)
+<table style="border-collapse:collapse; width:100%;">
+    <thead>
+        <tr>
+            <th style="text-align:left;" colspan="11">
+                <strong> {{ $records[0]->taxtype->name }}</strong><br>
             </th>
         </tr>
     </thead>
 </table>
 <table>
+        
     <thead>
         <tr>
             <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
@@ -95,5 +106,10 @@
         @endforeach
     </tbody>
 </table>
+
+@endforeach
+
+
+
 
 </html>
