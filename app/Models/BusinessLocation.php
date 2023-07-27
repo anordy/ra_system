@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
+use App\Models\TaxType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -103,6 +104,9 @@ class BusinessLocation extends Model implements Auditable
         }
     }
 
+    public function taxType(){
+        return $this->belongsTo(TaxType::class);
+    }
 
     public function region(){
         return $this->belongsTo(Region::class);

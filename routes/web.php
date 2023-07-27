@@ -460,6 +460,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
         Route::get('/business', [BusinessRegReportController::class, 'init'])->name('business.init');
         Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
+        Route::get('/taxtype/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesTaxtypeReportPdf'])->name('taxtype.download.pdf');
 
         //  Assesment Report
         Route::get('/assesments', [AssessmentReportController::class, 'index'])->name('assesments');

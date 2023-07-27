@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Reports\Business;
 
 use App\Exports\BusinessReportExport;
+use App\Exports\TaxtypeReportExport;
 use App\Models\BusinessActivity;
 use App\Models\BusinessCategory;
 use App\Models\Currency;
@@ -37,6 +38,7 @@ class Init extends Component
     public $optionMonths = [];
     public $range_start;
     public $range_end;
+    public $tax_type_name;
 
     //extra filters
     public $optionTaxRegions = [];
@@ -96,6 +98,7 @@ class Init extends Component
         $this->optionReportTypes = [
             'Business-Reg-By-Nature' => 'Registered Business By Nature of Business',
             'Business-Reg-By-TaxType' => 'Registered Business By Tax Type',
+           // 'Business-Reg-By-TaxPayers' => 'Registered Business By Tax Payers',
             // 'Business-Reg-By-Turn-Over' => 'Registered Business By Turn Over',
         ];
         $this->optionIsic1s = ISIC1::all();
@@ -230,7 +233,7 @@ class Init extends Component
             $this->hasData = true;
         }
         
-        // return redirect()->route('reports.business.preview',encrypt(json_encode($this->parameters)));
+         return redirect()->route('reports.business.preview',encrypt(json_encode($this->parameters)));
     }
 
     //export excel
@@ -251,7 +254,11 @@ class Init extends Component
         }else{
             $this->customAlert('success','Exporting Excel File');
         }
-        return Excel::download(new BusinessReportExport($this->getBusinessBuilder($this->parameters)), 'Business.xlsx');
+        if(isset($this->parameters['taxtype_id']) == 'all') {
+            return Excel::download(new TaxtypeReportExport($this->getBusinessBuilder($this->parameters)), 'Taxtype.xlsx');
+        } else {
+            return Excel::download(new BusinessReportExport($this->getBusinessBuilder($this->parameters)), 'Business.xlsx');
+        }
     }
 
     public function exportPdf()
@@ -263,7 +270,6 @@ class Init extends Component
         $this->parameters=[];
         $this->selectReportType();
         $this->extraFilters();
-
         $records = $this->getBusinessBuilder($this->parameters);
         if($records->get()->count()<1){
             $this->customAlert('error','No Data Found for selected options');
@@ -271,7 +277,11 @@ class Init extends Component
         }else{
             $this->customAlert('success','Exporting Pdf File');
         }
-        return redirect()->route('reports.business.download.pdf',encrypt(json_encode($this->parameters)));
+        if(isset($this->parameters['taxtype_id']) == 'all') {
+            return redirect()->route('reports.taxtype.download.pdf',encrypt(json_encode($this->parameters)));
+        } else {
+            return redirect()->route('reports.business.download.pdf',encrypt(json_encode($this->parameters)));
+        }
     }
 
     public function checkCheckboxes()
@@ -372,6 +382,14 @@ class Init extends Component
         } elseif ($this->reportType == 'Business-Reg-By-TaxType') {
             $this->parameters['criteria'] = 'Business-Reg-By-TaxType';
             $this->parameters['taxtype_id'] = $this->tax_type_id;
+
+            if($this->tax_type_id != 'all') {
+                $this->tax_type_name = TaxType::select('name')->where('id', $this->tax_type_id)->first()->name;
+                $this->parameters['tax_type_name'] = $this->tax_type_name;
+            }
+          
+        } elseif($this->reportType == 'Business-Reg-By-TaxPayers') {
+            $this->parameters['criteria'] = 'Business-Reg-By-TaxPayers';
         }
         $this->parameters['year'] = $this->year;
         $this->parameters['range_start'] = date('Y-m-d 00:00:00', strtotime($this->range_start));
