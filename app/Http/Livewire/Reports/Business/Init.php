@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Reports\Business;
 
 use App\Exports\BusinessReportExport;
 use App\Exports\TaxtypeReportExport;
+use App\Exports\TaxpayerReportExport;
 use App\Models\BusinessActivity;
 use App\Models\BusinessCategory;
 use App\Models\Currency;
@@ -98,7 +99,7 @@ class Init extends Component
         $this->optionReportTypes = [
             'Business-Reg-By-Nature' => 'Registered Business By Nature of Business',
             'Business-Reg-By-TaxType' => 'Registered Business By Tax Type',
-           // 'Business-Reg-By-TaxPayers' => 'Registered Business By Tax Payers',
+            'Business-Reg-By-TaxPayer' => 'Registered Business By Tax Payer',
             // 'Business-Reg-By-Turn-Over' => 'Registered Business By Turn Over',
         ];
         $this->optionIsic1s = ISIC1::all();
@@ -256,7 +257,10 @@ class Init extends Component
         }
         if(isset($this->parameters['taxtype_id']) == 'all') {
             return Excel::download(new TaxtypeReportExport($this->getBusinessBuilder($this->parameters)), 'Taxtype.xlsx');
-        } else {
+        } elseif($this->parameters['criteria'] == 'Business-Reg-By-TaxPayer') {
+            return Excel::download(new TaxpayerReportExport($this->getBusinessBuilder($this->parameters)), 'Taxpayer.xlsx');
+        }
+        else {
             return Excel::download(new BusinessReportExport($this->getBusinessBuilder($this->parameters)), 'Business.xlsx');
         }
     }
@@ -279,7 +283,9 @@ class Init extends Component
         }
         if(isset($this->parameters['taxtype_id']) == 'all') {
             return redirect()->route('reports.taxtype.download.pdf',encrypt(json_encode($this->parameters)));
-        } else {
+        } elseif($this->parameters['criteria'] == 'Business-Reg-By-TaxPayer') {
+            return redirect()->route('reports.taxpayer.download.pdf',encrypt(json_encode($this->parameters)));
+        }else {
             return redirect()->route('reports.business.download.pdf',encrypt(json_encode($this->parameters)));
         }
     }
@@ -388,8 +394,8 @@ class Init extends Component
                 $this->parameters['tax_type_name'] = $this->tax_type_name;
             }
           
-        } elseif($this->reportType == 'Business-Reg-By-TaxPayers') {
-            $this->parameters['criteria'] = 'Business-Reg-By-TaxPayers';
+        } elseif($this->reportType == 'Business-Reg-By-TaxPayer') {
+            $this->parameters['criteria'] = 'Business-Reg-By-TaxPayer';
         }
         $this->parameters['year'] = $this->year;
         $this->parameters['range_start'] = date('Y-m-d 00:00:00', strtotime($this->range_start));

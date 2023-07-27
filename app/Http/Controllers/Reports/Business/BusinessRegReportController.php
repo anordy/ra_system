@@ -37,4 +37,15 @@ class BusinessRegReportController extends Controller
         return $pdf->download('taxtype.pdf');
     }
 
+    public function exportBusinessesTaxpayerReportPdf($data)
+    {
+        $parameters = json_decode(decrypt($data),true);
+        $records = $this->getBusinessBuilder($parameters)->get();
+        $recordsData = $records->groupBy('taxpayer_id');
+        $pdf = PDF::loadView('exports.business.pdf.taxpayer',compact('records','recordsData', 'parameters'));
+        $pdf->setPaper('a4', 'landscape');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        return $pdf->download('taxpayer.pdf');
+    }
+
 }

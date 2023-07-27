@@ -28,8 +28,8 @@ trait RegistrationReportTrait
                     $businessLocations->where('business_tax_type.tax_type_id', $parameters['taxtype_id']);
                 }
                 break;
-            case 'Business-Reg-By-TaxPayers':
-                    $businessLocations->where('business_tax_type.tax_type_id', $parameters['taxtype_id']);
+            case 'Business-Reg-By-TaxPayer':
+                    $businessLocations = $businessLocations;
                 break;
         }
      
