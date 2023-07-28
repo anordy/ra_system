@@ -44,6 +44,7 @@ class VettingApprovalTable extends DataTableComponent
     {
         return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')
             ->whereNotIn('return_type', [PetroleumReturn::class])
+            ->where('parent',0)
             ->where('vetting_status', $this->vettingStatus)
             ->orderBy('created_at', 'asc');
     }

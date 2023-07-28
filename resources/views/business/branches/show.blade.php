@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Business Branch
+    Business Branch {{ $location->name }} for {{ $business->name }}
 @endsection
 
 @section('content')
@@ -75,6 +75,10 @@
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Date of Commencing</span>
                     <p class="my-1">{{ $location->date_of_commencing->toFormattedDateString() }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Effective Date</span>
+                    <p class="my-1">{{ $location->effective_date->toFormattedDateString() }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Pre Estimated Turnover</span>

@@ -4,7 +4,7 @@
             Tax Verification Approval
         </div>
         <div class="card-body">
-
+            @include('livewire.approval.transitions')
             @if ($this->checkTransition('assign_officers'))
                 <div class="row p-1">
                     <div class="form-group col-lg-12">
@@ -76,7 +76,7 @@
                         <div class="form-group col-lg-6">
                             <label class="control-label">Principal Amount</label>
                             <input type="text" class="form-control @error('principalAmount') is-invalid @enderror"
-                                wire:model.lazy="principalAmount">
+                                wire:model.defer="principalAmount">
                             @error('principalAmount')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -84,7 +84,7 @@
                         <div class="form-group col-lg-6">
                             <label class="control-label">Penalty Amount</label>
                             <input type="text" class="form-control @error('penaltyAmount') is-invalid @enderror"
-                                wire:model.lazy="penaltyAmount">
+                                wire:model.defer="penaltyAmount">
                             @error('penaltyAmount')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -92,7 +92,7 @@
                         <div class="form-group col-lg-6">
                             <label class="control-label">Interest Amount</label>
                             <input type="text" class="form-control @error('interestAmount') is-invalid @enderror"
-                                wire:model.lazy="interestAmount">
+                                wire:model.defer="interestAmount">
                             @error('interestAmount')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror

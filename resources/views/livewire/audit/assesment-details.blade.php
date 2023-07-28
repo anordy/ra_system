@@ -41,22 +41,22 @@
                                 @foreach ($return as $item)
                                     <tr>
                                         <td>{{ $item['financial_month'] }}</td>
-                                        <td>{{ $item['total_purchases'] }}</td>
-                                        <td>{{ $item['input_tax'] }}</td>
-                                        <td>{{ $item['total_sales'] }}</td>
-                                        <td>{{ $item['output_vat'] }}</td>
-                                        <td>{{ $item['tax_paid'] }}</td>
+                                        <td>{{ number_format($item['total_purchases']) }}</td>
+                                        <td>{{ number_format($item['input_tax']) }}</td>
+                                        <td>{{ number_format($item['total_sales']) }}</td>
+                                        <td>{{ number_format($item['output_vat']) }}</td>
+                                        <td>{{ number_format($item['tax_paid']) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td>TOTAL</td>
-                                    <th>{{ $return->sum('total_purchases') }}</th>
-                                    <th>{{ $return->sum('input_tax') }}</th>
-                                    <th>{{ $return->sum('total_sales') }}</th>
-                                    <th>{{ $return->sum('output_vat') }}</th>
-                                    <th>{{ $return->sum('tax_paid') }}</th>
+                                    <th>{{ number_format($return->sum('total_purchases')) }}</th>
+                                    <th>{{ number_format($return->sum('input_tax')) }}</th>
+                                    <th>{{ number_format($return->sum('total_sales')) }}</th>
+                                    <th>{{ number_format($return->sum('output_vat')) }}</th>
+                                    <th>{{ number_format($return->sum('tax_paid')) }}</th>
                                 </tr>
                             </tfoot>
 

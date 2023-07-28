@@ -23,28 +23,28 @@
         .rc-number {
             font-size: 1.15em;
             top: 3.3%;
-            text-align: right;
-            right: 20px;
+            right: 23%;
         }
         .business-name {
             font-size: 1.8em;
             top: 32.3%;
         }
         .taxpayer-name {
-            font-size: 1.6em;
-            top: 41%;
+            font-size: 1.4em;
+            left: 3%;
+            top: 46%;
         }
         .taxpayer {
             font-size: 1.6em;
-            top: 31.2%;
+            top: 40.2%;
         }
         .trading-as {
             font-size: 0.8em;
-            top: 34.3%;
+            top: 44%;
         }
         .reg-no {
-            font-size: 1.5em;
-            top: 53%;
+            font-size: 1.7em;
+            top: 59%;
         }
         .reg-no-alt {
             font-size: 1.5em;
@@ -55,30 +55,54 @@
             top: 55.5%;
         }
         .tax-types {
-            font-size: 1.6em;
-            top: 61.1%;
+            font-size: 1.1em;
+            top: 65%;
+            left: -6%;
         }
         .location {
-            font-size: 1.2em;
-            top: 72%;
+            font-size: 1.1em;
+            top: 70.8%;
+            left: -2%;
+        }
+        .zra-location {
+            font-size: 1.1em;
+            top: 73.5%;
+            left: -12.4%;
         }
         .commencing-date {
-            font-size: 1.2em;
-            top: 80%;
-            padding-left: 90px;
+            font-size: 1.1em;
+            top: 67.7%;
+            left: -7.5%;
+        }
+        .on-hand-date {
+            font-size: 0.8em;
+            top: 92.2%;
+            left: 9%;
         }
         .commissioner-signature {
-            top: 85%;
+            top: 79%;
             position: absolute;
             text-transform: uppercase;
             font-weight: bold;
             width: 100%;
             padding-left: 70px;
             padding-right: 70px;
-            left: 30px;
+            left: 65%;
         }
         .commissioner-name {
-            top: 93%;
+            top: 86.5%;
+            position: absolute;
+            text-transform: capitalize;
+            font-weight: bold;
+            font-size: 20px;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+            margin-left: 55px;
+            left: 60%;
+        }
+        .commissioner-title {
+            top: 88%;
             position: absolute;
             text-transform: uppercase;
             font-weight: bold;
@@ -87,13 +111,13 @@
             padding-left: 70px;
             padding-right: 70px;
             margin-left: 55px;
-            left: 30px;
+            left: 59.5%;
         }
         .qr-code {
             overflow: hidden;
             position:absolute;
-            top: 83%;
-            left: 44%;
+            top: 79%;
+            right: 78%;
             background: white;
             border-radius: 5px;
             height: 180px;
@@ -133,17 +157,25 @@
         @endif
         <span class="embed tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
         <span class="embed location">
-            {{ $location->street->name }}, {{ $location->region->location }}
+            {{ $location->street->name }} - {{ $location->region->location }}
+        </span>
+        <span class="embed zra-location">
+            {{ $location->region->location }}
         </span>
         <span class="embed commencing-date">
-            {{ $location->date_of_commencing->format('d/m/Y') }}
-
+            {{ $location->date_of_commencing->format('d F Y') }}
+        </span>
+        <span class="embed on-hand-date">
+            {{ $location->date_of_commencing->format('d F, Y') }}
         </span>
         <span class="commissioner-signature">
             <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
         </span>
         <span class="commissioner-name">
             {{$commissinerFullName}}
+        </span>
+        <span class="commissioner-title">
+            COMMISSIONER GENERAL
         </span>
         <div class="qr-code">
             <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">

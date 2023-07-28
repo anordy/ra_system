@@ -50,7 +50,7 @@
 
         <div class="col-md-4 mb-2">
             <label>Rate</label>
-            <input type="text" class="form-control form-control-lg" wire:model="rate">
+            <input type="text" class="form-control form-control-lg" wire:model.defer="rate">
         </div>
 
         <div class="col-md-4 mb-2">
@@ -60,13 +60,19 @@
                 @foreach($currencies as $currency)
                     <option value="{{$currency->iso}}">{{$currency->name}}</option>
                 @endforeach
-                <option value="BOTH">Both</option>
             </select>
         </div>
         <div class="col-md-4 mb-2">
             <label>Rate USD</label>
             <input type="text" class="form-control form-control-lg" wire:model="rate_usd">
         </div>
+
+        @if ($value_formular)
+            <div class="col-md-4 mb-2">
+                <label>Value Formula</label>
+                <input type="text" class="form-control form-control-lg" wire:model.defer="value_formular">
+            </div> 
+        @endif
 
         <div class="col-md-12 d-flex justify-content-end">
             @can('setting-return-configuration-edit')

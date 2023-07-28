@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Business Registration Details')
+@section('title', "Business Registration Details for {$business->name}")
 
 @section('content')
     <div class="my-3">
