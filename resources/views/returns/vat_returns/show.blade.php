@@ -415,12 +415,6 @@
                                                                 </td>
 
                                                             </tr>
-                                                        @else
-                                                            <tr>
-                                                                <td colspan="7" class="text-center py-3">
-                                                                    {{ __('No details for supplier for this return month') }}.
-                                                                </td>
-                                                            </tr>
                                                         @endif
                                                     @endforeach
                                                 @else
@@ -480,12 +474,6 @@
                                                                     @endif
                                                                 </td>
 
-                                                            </tr>
-                                                        @else
-                                                            <tr>
-                                                                <td colspan="7" class="text-center py-3">
-                                                                    {{ __('No details for supplier for this return month') }}.
-                                                                </td>
                                                             </tr>
                                                         @endif
                                                     @endforeach
