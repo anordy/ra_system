@@ -34,7 +34,7 @@ class VettingApprovalTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
+        $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id',]);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
@@ -43,7 +43,7 @@ class VettingApprovalTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')
+        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
             ->whereNotIn('code', [
                 TaxType::AIRPORT_SERVICE_CHARGE,
@@ -66,11 +66,17 @@ class VettingApprovalTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Branch / Location', 'location.name')
+            Column::make('Branch', 'location.name')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
                     return "{$row->location->name}";
+                }),
+            Column::make('Tax Region', 'location.tax_region_id')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->location->taxRegion->name}";
                 }),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()

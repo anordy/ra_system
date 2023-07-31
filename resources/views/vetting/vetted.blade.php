@@ -10,26 +10,40 @@
         </div>
 
         <div class="card-body">
-        <nav class="nav nav-tabs mt-0border-top-0">
-                <a href="#domestic-tax-payers" class="nav-item nav-link font-weight-bold active">Domestic Taxpayers</a>
-                <a href="#large-tax-payers" class="nav-item nav-link font-weight-bold ">Large Tax Payers</a>
-                <a href="#non-tax-revenues" class="nav-item nav-link font-weight-bold">Non-Tax Revenues</a>
-        </nav> <br>
+            <nav class="nav nav-tabs mt-0border-top-0">
+                @can('tax-returns-vetting-view-domestic-taxpayers')
+                    <a href="#domestic-tax-payers" class="nav-item nav-link font-weight-bold active">Domestic Taxes Returns
+                        (DTR)</a>
+                @endcan
+                @can('tax-returns-vetting-view-lto-taxpayers')
+                    <a href="#large-tax-payers" class="nav-item nav-link font-weight-bold ">Large Taxpayers Returns (LTO)</a>
+                @endcan
+                @can('tax-returns-vetting-view-non-tax-revenue-taxpayers')
+                    <a href="#non-tax-revenues" class="nav-item nav-link font-weight-bold">Non-Tax Revenue Returns (NTR)</a>
+                @endcan
+            </nav> <br>
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
-                <div id="domestic-tax-payers" class="tab-pane fade active show p-2">
-                    <div class="card p-2">
-                    <livewire:vetting.vetting-approval-table vettingStatus="{{ \App\Enum\VettingStatus::VETTED }}" />
+                @can('tax-returns-vetting-view-domestic-taxpayers')
+                    <div id="domestic-tax-payers" class="tab-pane fade active show p-2">
+                        <div class="card p-2">
+                            <livewire:vetting.vetting-approval-table vettingStatus="{{ \App\Enum\VettingStatus::VETTED }}" />
+                        </div>
+                    </div>
+                @endcan
+                @can('tax-returns-vetting-view-lto-taxpayers')
+                    <div id="large-tax-payers" class="tab-pane fade p-2">
+                        <livewire:vetting.vetting-approval-table-lto vettingStatus="{{ \App\Enum\VettingStatus::VETTED }}" />
+                    </div>
+                @endcan
+                @can('tax-returns-vetting-view-non-tax-revenue-taxpayers')
+                    <div id="non-tax-revenues" class="tab-pane fade p-2">
+                        <div class="card p-2">
+                            <livewire:vetting.vetting-approval-table-ntl
+                                vettingStatus="{{ \App\Enum\VettingStatus::VETTED }}" />
+                        </div>
                     </div>
                 </div>
-                <div id="large-tax-payers" class="tab-pane fade p-2">
-                    <livewire:vetting.vetting-approval-table-lto vettingStatus="{{ \App\Enum\VettingStatus::VETTED }}" />
-                </div>
-                <div id="non-tax-revenues" class="tab-pane fade p-2">
-                    <div class="card p-2">
-                    <livewire:vetting.vetting-approval-table-ntl vettingStatus="{{ \App\Enum\VettingStatus::VETTED }}" />
-                    </div>
-                </div>
-            </div>
+            @endcan
         </div>
     </div>
 @endsection
