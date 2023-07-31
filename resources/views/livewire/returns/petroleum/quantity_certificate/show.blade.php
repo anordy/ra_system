@@ -1,5 +1,9 @@
 <div class="card shadow-none">
     @include('layouts.component.messages')
+
+    @if ($certificate->status == 'correction')
+        @livewire('returns.petroleum.quantity-certificate-edit', ['id' => encrypt($certificate->id)])
+    @else
     <div class="card-body">
         <h6>Taxpayer & Vessel Information</h6>
         <div class="row">
@@ -57,7 +61,10 @@
             </div>
         @endforeach
 
+        <livewire:approval.quantity-certificate-approval-processing modelName="{{ get_class($certificate) }}" modelId="{{ encrypt($certificate->id) }}"></livewire:approval.quantity-certificate-approval-processing>
 
     </div>
+    @endif
+
 
 </div>

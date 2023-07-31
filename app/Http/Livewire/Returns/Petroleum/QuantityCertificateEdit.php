@@ -2,21 +2,23 @@
 
 namespace App\Http\Livewire\Returns\Petroleum;
 
-use App\Models\BusinessLocation;
-use App\Models\Returns\Petroleum\PetroleumConfig;
-use App\Models\Returns\Petroleum\QuantityCertificate;
-use App\Models\Returns\Petroleum\QuantityCertificateItem;
 use Exception;
+use Livewire\Component;
+use App\Traits\CustomAlert;
+use Livewire\WithFileUploads;
+use App\Models\BusinessLocation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Traits\CustomAlert;
-use Livewire\Component;
-
+use App\Enum\QuantityCertificateStatus;
+use App\Traits\WorkflowProcesssingTrait;
+use App\Models\Returns\Petroleum\PetroleumConfig;
+use App\Models\Returns\Petroleum\QuantityCertificate;
+use App\Models\Returns\Petroleum\QuantityCertificateItem;
 
 class QuantityCertificateEdit extends Component
 {
-    use CustomAlert;
+    use CustomAlert, WorkflowProcesssingTrait, WithFileUploads;
 
     public $location;
     public $ship;
@@ -27,10 +29,11 @@ class QuantityCertificateEdit extends Component
     public $metric_tons;
     public $ascertained;
     public $configs = [];
+    public $quantity_certificate_attachment;
+    public $voyage_no;
     public Collection $products;
 
     public $certificate;
-
 
     protected function rules()
     {
@@ -47,6 +50,7 @@ class QuantityCertificateEdit extends Component
             'products.*.liters_observed' => 'required|numeric',
             'products.*.liters_at_20' => 'required|numeric',
             'products.*.metric_tons' => 'required|numeric',
+            'quantity_certificate_attachment' => 'nullable|mimes:pdf|max:1024'
         ];
     }
 
@@ -105,8 +109,6 @@ class QuantityCertificateEdit extends Component
         $this->products->pull($key);
     }
 
-
-
     public function save()
     {
         $this->validate();
@@ -116,18 +118,21 @@ class QuantityCertificateEdit extends Component
             return;
         }
         try {
-            $location = BusinessLocation::firstWhere('zin', $this->location);
+            if ($this->quantity_certificate_attachment) {
+                $attachment_location = $this->quantity_certificate_attachment->store('/quantity-certificates', 'local-admin');
+                $this->certificate->quantity_certificate_attachment = $attachment_location;
+                $this->certificate->save();
+            }
 
             $this->certificate->update([
-                'business_id' => $location->business_id,
-                'location_id' => $location->id,
                 'ascertained' => $this->ascertained,
                 'ship' => $this->ship,
                 'port' => $this->port,
                 'voyage_no' => $this->voyage_no,
                 'created_by' => auth()->user()->id,
-                'download_count' => 0
+                'status' => QuantityCertificateStatus::DRAFT
             ]);
+
             $this->certificate->products()->delete();
             $product_payload = collect();
             foreach ($this->products as $product) {
@@ -144,13 +149,15 @@ class QuantityCertificateEdit extends Component
 
             $this->certificate->products()->saveMany($product_payload);
 
+            $this->registerWorkflow(get_class($this->certificate), $this->certificate->id);
+            $this->doTransition('certificate_corrected', ['status' => 'approved', 'comment' => null]);
+
             DB::commit();
-            session()->flash('success', 'Certificate of Quantity has been generated successfully');
+            session()->flash('success', 'Certificate of Quantity has been updated and forwarded for approval');
             $this->redirect(route('petroleum.certificateOfQuantity.index'));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            report($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
