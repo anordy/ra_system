@@ -76,8 +76,10 @@ class VatReturnTable extends DataTableComponent
                     return number_format($row->total_amount_due_with_penalties, 2);
                 })
                 ->sortable()->searchable(),
-            Column::make('Status', 'status')
-                ->view('returns.vat_returns.includes.approvedStatus'),
+            Column::make(__('Payment Status'), 'status')->format(function ($value, $row) {
+                return view('returns.return-payment-status', ['row' => $row]);
+            })
+            ->searchable(),
             Column::make('Action', 'id')
                 ->view('returns.vat_returns.includes.actions'),
         ];

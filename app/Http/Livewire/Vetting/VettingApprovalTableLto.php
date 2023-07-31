@@ -4,8 +4,8 @@ namespace App\Http\Livewire\Vetting;
 
 use App\Enum\VettingStatus;
 use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Traits\WithSearch;
-use App\Models\TaxType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -14,7 +14,7 @@ use App\Models\Returns\TaxReturn;
 use App\Traits\ReturnFilterTrait;
 use Illuminate\Support\Facades\Gate;
 
-class VettingApprovalTable extends DataTableComponent
+class VettingApprovalTableLto extends DataTableComponent
 {
     use  ReturnFilterTrait;
 
@@ -44,20 +44,11 @@ class VettingApprovalTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')
-            ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
-            ->whereNotIn('code', [
-                TaxType::AIRPORT_SERVICE_CHARGE,
-                TaxType::SEAPORT_TRANSPORT_CHARGE,
-                TaxType::AIRPORT_SAFETY_FEE,
-                TaxType::SEAPORT_SERVICE_CHARGE,
-                TaxType::ROAD_LICENSE_FEE,
-                TaxType::INFRASTRUCTURE, 
-                TaxType::RDF
-            ])
-            ->where('parent',0)
-            ->where('is_business_lto',false)
-            ->where('vetting_status', $this->vettingStatus)
-            ->orderBy('created_at', 'asc');
+                ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
+                ->where('parent', 0)
+                ->where('is_business_lto',true)
+                ->where('vetting_status', $this->vettingStatus)
+                ->orderBy('created_at', 'asc');
     }
 
     public function columns(): array
@@ -107,3 +98,4 @@ class VettingApprovalTable extends DataTableComponent
         ];
     }
 }
+

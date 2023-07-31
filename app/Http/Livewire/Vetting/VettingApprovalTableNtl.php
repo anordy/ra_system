@@ -5,8 +5,8 @@ namespace App\Http\Livewire\Vetting;
 use App\Enum\VettingStatus;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Traits\WithSearch;
-use App\Models\TaxType;
 use Carbon\Carbon;
+use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -14,7 +14,7 @@ use App\Models\Returns\TaxReturn;
 use App\Traits\ReturnFilterTrait;
 use Illuminate\Support\Facades\Gate;
 
-class VettingApprovalTable extends DataTableComponent
+class VettingApprovalTableNtl extends DataTableComponent
 {
     use  ReturnFilterTrait;
 
@@ -45,7 +45,7 @@ class VettingApprovalTable extends DataTableComponent
     {
         return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
-            ->whereNotIn('code', [
+            ->whereIn('code', [
                 TaxType::AIRPORT_SERVICE_CHARGE,
                 TaxType::SEAPORT_TRANSPORT_CHARGE,
                 TaxType::AIRPORT_SAFETY_FEE,
@@ -107,3 +107,5 @@ class VettingApprovalTable extends DataTableComponent
         ];
     }
 }
+
+
