@@ -58,8 +58,7 @@ class GenerateReport extends Component
         if(is_null($financialYearCode)){
             abort(404);
         }
-        $financialYearCode->code;
-        $optionStartYear = intval($financialYearCode);
+        $optionStartYear = intval($financialYearCode->code);
         $this->optionYears = range($optionStartYear, date('Y'));
 
         //add All to year options
