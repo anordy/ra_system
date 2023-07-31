@@ -88,6 +88,10 @@ class DisputeWaiverApprovalProcessing extends Component
         $transition = $transition['data']['transition'];
         $taxType = $this->subject->taxType;
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('objection_manager_review')) {
 
             $this->validate(
@@ -154,6 +158,8 @@ class DisputeWaiverApprovalProcessing extends Component
                 $this->subject->app_status = DisputeStatus::APPROVED;
                 $this->subject->save();
 
+                DB::commit();
+
                 // Generate control number for waived application
                 if ($this->assessment->bill) {
                     CancelBill::dispatch($this->assessment->bill, 'Assessment dispute has been waived');
@@ -162,7 +168,6 @@ class DisputeWaiverApprovalProcessing extends Component
                     GenerateAssessmentDisputeControlNo::dispatch($this->assessment);
                 }
 
-                DB::commit();
 
                 $approveNotification = 'Approved and control number has been generated successful';
             } catch (Exception $e) {

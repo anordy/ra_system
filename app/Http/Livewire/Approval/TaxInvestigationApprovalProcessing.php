@@ -122,6 +122,10 @@ class TaxInvestigationApprovalProcessing extends Component
         $transition = $transition['data']['transition'];
         $operators = [];
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [

@@ -2,30 +2,33 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Enum\TaxClaimStatus;
-use App\Traits\VatReturnTrait;
 use Exception;
+use App\Models\Role;
+use App\Models\User;
 use App\Events\SendSms;
 use Livewire\Component;
 use App\Events\SendMail;
-use App\Enum\VettingStatus;
-use App\Jobs\Vetting\SendToCorrectionReturnMail;
-use App\Jobs\Vetting\SendToCorrectionReturnSMS;
-use App\Jobs\Vetting\SendVettedReturnMail;
-use App\Jobs\Vetting\SendVettedReturnSMS;
-use App\Traits\CustomAlert;
-use App\Models\Returns\Vat\VatReturn;
-use App\Models\Role;
 use App\Models\Taxpayer;
-use App\Models\User;
-use App\Notifications\DatabaseNotification;
+use App\Enum\VettingStatus;
+use App\Traits\CustomAlert;
+use App\Enum\TaxClaimStatus;
 use App\Traits\PaymentsTrait;
-use App\Traits\TaxReturnHistory;
+use App\Traits\PenaltyForDebt;
 use App\Traits\TaxClaimsTrait;
-use App\Traits\WorkflowProcesssingTrait;
+use App\Traits\VatReturnTrait;
+use App\Traits\TaxReturnHistory;
+use App\Models\Returns\TaxReturn;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Returns\ReturnStatus;
 use App\Traits\TaxVerificationTrait;
+use App\Models\Returns\Vat\VatReturn;
+use App\Traits\WorkflowProcesssingTrait;
+use App\Jobs\Vetting\SendVettedReturnSMS;
+use App\Jobs\Vetting\SendVettedReturnMail;
+use App\Notifications\DatabaseNotification;
+use App\Jobs\Vetting\SendToCorrectionReturnSMS;
+use App\Jobs\Vetting\SendToCorrectionReturnMail;
 
 class TaxReturnsVettingApprovalProcessing extends Component
 {
@@ -47,11 +50,45 @@ class TaxReturnsVettingApprovalProcessing extends Component
         $this->registerWorkflow($modelName, $this->modelId);
     }
 
+    public function previewPenalties() {
+        $tax_return = TaxReturn::selectRaw('
+                tax_returns.*, 
+                (MONTHS_BETWEEN(CURRENT_DATE, CAST(filing_due_date as date))) as periods, 
+                (MONTHS_BETWEEN(CAST(curr_payment_due_date as date), CURRENT_DATE)) as penatableMonths
+            ')
+            ->whereRaw("CURRENT_DATE - CAST(filing_due_date as date) > 30") // Since filing due date is of last month
+            ->where('vetting_status', VettingStatus::SUBMITTED)
+            ->where('id', $this->return->id)
+            ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
+            ->get()
+            ->firstOrFail();
+
+        // Before vetting only child return may have penalties
+        $penalties = $tax_return->return->penalties;
+
+        $preVettingPenaltyIterations = $penalties->count();
+        $postVettingPenaltyIterations = round($tax_return->periods);
+
+        $penaltyIterationsToBeAdded = $postVettingPenaltyIterations - $preVettingPenaltyIterations;
+
+        try {
+            return PenaltyForDebt::getPostVettingPenalties($tax_return, $penaltyIterationsToBeAdded);
+        } catch (Exception $e) {
+            Log::error($e);
+            throw new Exception('Failed to preview penalties');
+        }
+
+    }
+
 
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('return_vetting_officer_review')) {
             $this->validate(
                 [
@@ -62,6 +99,10 @@ class TaxReturnsVettingApprovalProcessing extends Component
             DB::beginTransaction();
             try {
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+                
+                // Generate Penalties Additional Penalties
+                $tax_return = $this->previewPenalties();
+
                 $this->return->vetting_status = VettingStatus::VETTED;
                 $this->return->return->vetting_status = VettingStatus::VETTED;
                 $this->return->save();
@@ -73,7 +114,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->triggerTaxVerifications($this->return->return, auth()->user());
 
                 // Generate control number
-                $this->generateReturnControlNumber($this->return);
+                $this->generateReturnControlNumber($tax_return);
 
                 //triggering claim
                 if ($this->return->return_type == VatReturn::class) {

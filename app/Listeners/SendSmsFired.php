@@ -52,6 +52,7 @@ use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionSMS;
 use App\Jobs\User\SendRegistrationSMS as UserSendRegistrationSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
+use App\Jobs\QuantityCertificate\SendQuantityCertificateSMS;
 
 class SendSmsFired
 {
@@ -215,6 +216,8 @@ class SendSmsFired
             SendBranchRegisteredSMS::dispatch($event->tokenId);
         } else if ($event->service === SendZanMalipoSMS::SERVICE){
             SendZanMalipoSMS::dispatch($event->extra['mobile_no'], $event->extra['message']);
+        }  else if ($event->service === SendQuantityCertificateSMS::SERVICE){
+            SendQuantityCertificateSMS::dispatch($event->tokenId);
         }
     }
 }

@@ -44,6 +44,10 @@ class ExtensionRequestApprovalProcessing extends Component
 
     public function approve($transition)
     {
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+
         if ($this->checkTransition('debt_manager')) {
             $this->validate([
                 'extendTo' => [

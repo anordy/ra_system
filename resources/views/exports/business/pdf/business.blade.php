@@ -58,6 +58,9 @@
                 <th style="text-align:center;" colspan="10">
                     <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
                     <strong>Business Registration Report on </strong>
+                    @if(array_key_exists('tax_type_name',$parameters))
+                      <strong> {{$parameters['tax_type_name']}}  </strong>
+                    @endif
                     @if ($parameters['year'] === 'all')
                         <strong>overall period of time</strong>
                     @elseif ($parameters['year'] === 'range')
@@ -65,6 +68,7 @@
                     @else
                         <strong>{{ $parameters['year'] }}</strong>
                     @endif
+
                     {{-- <strong>RELIEF APPLLICATIONS</strong><br> --}}
                     {{-- <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong>  --}}
                 </th>
@@ -94,10 +98,12 @@
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Taxpayer</strong>
                 </th>
+           
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Effective Date</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+
                     <strong>Region</strong>
                 </th>
 
@@ -117,6 +123,7 @@
         </thead>
         <tbody>
             @foreach ($records as $index => $record)
+                   
                 <tr>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $index + 1 }}
@@ -136,6 +143,7 @@
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->taxpayer->fullname ?? '-' }}
                     </td>
+                
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ date('M, d Y', strtotime($record->effective_date)) ?? '-' }}
                     </td>

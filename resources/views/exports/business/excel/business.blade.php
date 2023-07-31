@@ -4,8 +4,8 @@
         <tr>
             <th style="text-align:center;" colspan="11" height="70">
                 <strong>ZANZIBAR Revenue Authority</strong><br>
-                {{-- <strong>{{ $title }}</strong><br>
-                <strong>{{ $taxType->name }}</strong><br> --}}
+                {{-- <strong>{{ $title }}</strong><br> --}}
+                {{-- <strong>{{ $taxType->name }}</strong><br> --}}
             </th>
         </tr>
     </thead>

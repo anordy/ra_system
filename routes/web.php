@@ -224,7 +224,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
-    Route::get('bill_transfer/pdf/{billId}/{bankAccountId}', [QRCodeGeneratorController::class, 'transfer'])->name('bill.transfer');
+    Route::get('bill_transfer/pdf/{billId}/{bankAccountId}/{businessbankAccId}', [QRCodeGeneratorController::class, 'transfer'])->name('bill.transfer');
     Route::get('bill_receipt/pdf/{id}', [QRCodeGeneratorController::class, 'receipt'])->name('bill.receipt');
 
     Route::name('returns.')->prefix('returns')->group(function () {
@@ -460,6 +460,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
         Route::get('/business', [BusinessRegReportController::class, 'init'])->name('business.init');
         Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
+        Route::get('/taxtype/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesTaxtypeReportPdf'])->name('taxtype.download.pdf');
+        Route::get('/taxpayer/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesTaxpayerReportPdf'])->name('taxpayer.download.pdf');
 
         //  Assesment Report
         Route::get('/assesments', [AssessmentReportController::class, 'index'])->name('assesments');

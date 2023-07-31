@@ -71,13 +71,13 @@
                                         Waived Penalty Amount
                                     </td>
                                     <td>
-                                        {{ $penaltyAmount ?? 'N/A' }}
+                                        {{ $penaltyAmount ? number_format($penaltyAmount) : 'N/A' }}
                                     </td>
                                     <td>
                                         Waived Interest Amount
                                     </td>
                                     <td>
-                                        {{ $interestAmount ?? 'N/A' }}
+                                        {{ $interestAmount ? number_format($interestAmount) : 'N/A' }}
                                     </td>
 
                                 </tr>
@@ -86,13 +86,13 @@
                                         Due Penalty Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiverObjection->taxVerificationAssesment->penalty_amount - $penaltyAmount }}
+                                        {{ number_format($this->waiverObjection->taxVerificationAssesment->penalty_amount - $penaltyAmount) }}
                                     </td>
                                     <td>
                                         Due Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiverObjection->taxVerificationAssesment->interest_amount - $interestAmount }}
+                                        {{ number_format($this->waiverObjection->taxVerificationAssesment->interest_amount - $interestAmount) }}
                                     </td>
 
                                 </tr>
