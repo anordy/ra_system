@@ -52,6 +52,10 @@ class TaxReturnsVettingApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('return_vetting_officer_review')) {
             $this->validate(
                 [

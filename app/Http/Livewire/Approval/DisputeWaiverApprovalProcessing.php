@@ -88,6 +88,10 @@ class DisputeWaiverApprovalProcessing extends Component
         $transition = $transition['data']['transition'];
         $taxType = $this->subject->taxType;
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('objection_manager_review')) {
 
             $this->validate(

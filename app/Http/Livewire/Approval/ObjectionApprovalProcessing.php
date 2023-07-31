@@ -107,6 +107,10 @@ class ObjectionApprovalProcessing extends Component
         $this->interest = str_replace(',', '', $this->interest);
         $this->principal = str_replace(',', '', $this->principal);
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('objection_manager_review')) {
 
             $this->validate(

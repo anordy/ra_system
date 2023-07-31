@@ -62,7 +62,7 @@
         .location {
             font-size: 1.1em;
             top: 70.8%;
-            left: -2%;
+            left: 11.4%;
         }
         .zra-location {
             font-size: 1.1em;
@@ -157,7 +157,7 @@
         @endif
         <span class="embed tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
         <span class="embed location">
-            {{ $location->street->name }} - {{ $location->region->location }}
+            {{ $location->street->name }}-{{ $location->ward->name }} - {{ $location->region->location }}
         </span>
         <span class="embed zra-location">
             {{ $location->region->location }}

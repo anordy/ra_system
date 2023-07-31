@@ -94,6 +94,11 @@ class TaxClaimApprovalProcessing extends Component
         $taxType = $this->subject->taxType;
 
         $operators = [];
+
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [

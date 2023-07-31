@@ -92,6 +92,10 @@ class TaxVerificationApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('conduct_verification')) {
             $this->validate(
                 [

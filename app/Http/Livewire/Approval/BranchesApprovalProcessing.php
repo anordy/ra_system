@@ -36,6 +36,10 @@ class BranchesApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('registration_officer_review')) {
             $this->validate([
                 'selectedTaxRegion' => 'required|strip_tag',
