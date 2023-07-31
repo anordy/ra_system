@@ -224,7 +224,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
-    Route::get('bill_transfer/pdf/{billId}/{bankAccountId}', [QRCodeGeneratorController::class, 'transfer'])->name('bill.transfer');
+    Route::get('bill_transfer/pdf/{billId}/{bankAccountId}/{businessbankAccId}', [QRCodeGeneratorController::class, 'transfer'])->name('bill.transfer');
     Route::get('bill_receipt/pdf/{id}', [QRCodeGeneratorController::class, 'receipt'])->name('bill.receipt');
 
     Route::name('returns.')->prefix('returns')->group(function () {

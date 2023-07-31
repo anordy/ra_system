@@ -4,7 +4,7 @@
         <h6>Taxpayer & Vessel Information</h6>
         <div class="row">
             <div class="form-group col-lg-6">
-                <label class="control-label">Name of Importer/Market (ZTN Location No.)</label>
+                <label class="control-label">Name of Importer/Market (ZTN Location No.) *</label>
                 <input type="text" class="form-control @error('location') is-invalid @enderror"
                     wire:model.defer="location">
                 @error('location')
@@ -12,7 +12,7 @@
                 @enderror
             </div>
             <div class="form-group col-lg-6">
-                <label class="control-label">Ascertained Date</label>
+                <label class="control-label">Ascertained Date *</label>
                 <input type="date" class="form-control @error('ascertained') is-invalid @enderror"
                     wire:model.defer="ascertained">
                 @error('ascertained')
@@ -20,7 +20,7 @@
                 @enderror
             </div>
             <div class="form-group col-lg-6">
-                <label class="control-label">Name of Ship</label>
+                <label class="control-label">Name of Ship *</label>
                 <input type="text" class="form-control @error('ship') is-invalid @enderror"
                     wire:model.defer="ship">
                 @error('ship')
@@ -28,7 +28,7 @@
                 @enderror
             </div>
             <div class="form-group col-lg-6">
-                <label class="control-label">Port of Disembarkation</label>
+                <label class="control-label">Port of Disembarkation *</label>
                 <input type="text" class="form-control @error('port') is-invalid @enderror"
                     wire:model.defer="port">
                 @error('port')
@@ -36,13 +36,32 @@
                 @enderror
             </div>
             <div class="form-group col-lg-6">
-                <label class="control-label">Voyage No:</label>
+                <label class="control-label">Voyage No: </label>
                 <input type="text" class="form-control @error('voyage_no') is-invalid @enderror"
                     wire:model.defer="voyage_no">
                 @error('voyage_no')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
+            <div class="form-group col-lg-6">
+                <label class="control-label">Quantity of Certificate Attachment: *</label>
+                    <div style="flex: 1" class="mr-2" x-init="isUploading = false" x-data="{ isUploading: false, progress: 0 }"
+                        x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false"
+                        x-on:livewire-upload-error="isUploading = false"
+                        x-on:livewire-upload-progress="progress = $event.detail.progress">
+                        <input type="file" required accept="application/pdf" class="form-control @error('quantity_certificate_attachment') is-invalid @enderror"
+                            wire:model="quantity_certificate_attachment">
+                        @error('quantity_certificate_attachment')
+                            <span class="invalid-feedback">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                        <div x-show="isUploading">
+                            <progress max="100" x-bind:value="progress"></progress>
+                        </div>
+                </div>
+            </div>
+            
         </div>
     </div>
     <div class="card-body">
