@@ -214,9 +214,27 @@ class BFOConfigSeeder extends Seeder
                 'rate_label' => '32',
                 'tax_label' => '33'
             ],
-            [ 
+            [
                 'financia_year_id' => 1,
                 'order' => 12,
+                'code' => 'FOTHER',
+                'name' => 'Fees On Any Other Service Charges',
+                'row_type' => 'dynamic',
+                'value_calculated' => true,
+                'col_type' => 'normal',
+                'rate_applicable' => true,
+                'rate_type' => 'percentage',
+                'currency' => 'TZS',
+                'rate' => 10,
+                'rate_usd' => 0,
+                'active' => true,
+                'value_label' => '31',
+                'rate_label' => '32',
+                'tax_label' => '33'
+            ],
+            [ 
+                'financia_year_id' => 1,
+                'order' => 13,
                 'code' => 'TotalFBO',
                 'name' => 'Total Excise Duty Payable',
                 'row_type' => 'unremovable',

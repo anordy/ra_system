@@ -31,7 +31,7 @@ class TaxpayersTable extends DataTableComponent
     public function builder(): Builder
     {
         return Taxpayer::query()->with('country', 'region','street')
-            ->orderBy('taxpayers.id', 'desc');
+            ->orderBy('taxpayers.created_at', 'desc');
     }
 
     public function columns(): array

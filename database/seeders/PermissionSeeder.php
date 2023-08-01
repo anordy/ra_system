@@ -328,6 +328,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'system-workflow-configure', 'sys_module_id' => 19],
             ['name' => 'system-all-pdfs-view', 'sys_module_id' => 19],
             ['name' => 'system-get-return-configurations-reminders', 'sys_module_id' => 19],
+            ['name' => 'system-security-questions-view', 'sys_module_id' => 19],
+            ['name' => 'system-security-questions-configure', 'sys_module_id' => 19],
 
 
             # Managerial Report

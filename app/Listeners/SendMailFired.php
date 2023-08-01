@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\Account\SendReferenceNumberMail;
 use App\Models\KYC;
 use App\Models\UserOtp;
 use App\Events\SendMail;
@@ -236,6 +237,8 @@ class SendMailFired
             SendToCorrectionReturnMail::dispatch($event->tokenId);
         } else if ($event->service === SendBranchRegisteredMail::SERVICE){
             SendBranchRegisteredMail::dispatch($event->tokenId);
+        } else if ($event->service === SendReferenceNumberMail::SERVICE){
+            SendReferenceNumberMail::dispatch($event->tokenId);
         }
     }
 }

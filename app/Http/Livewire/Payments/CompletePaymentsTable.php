@@ -50,7 +50,6 @@ class CompletePaymentsTable extends DataTableComponent
             'default' => true,
             'class'   => 'table-bordered table-sm',
         ]);
-
         $this->setPerPageAccepted([15, 25, 50, 100]);
     }
 
@@ -64,6 +63,12 @@ class CompletePaymentsTable extends DataTableComponent
                     return $value ? $value : 'N/A';
                 }),
             Column::make('Bill Amount', 'amount')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return number_format($value, 2);
+                }),
+            Column::make('Paid Amount', 'paid_amount')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
