@@ -990,7 +990,7 @@
         @endcan
 
         @can('system')
-            <li class="{{ request()->is('system*') ? 'active' : '' }} mb-5">
+            <li class="{{ request()->is('system*') ? 'active' : '' }}">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
                 <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
                     @can('system-audit-trail-view')
@@ -1021,7 +1021,19 @@
                 </ul>
             </li>
         @endcan
-
+        <li class="{{ request()->is('account*') ? 'active' : '' }}">
+            <a href="#dlSubmenu" data-toggle="collapse"
+               aria-expanded="{{ request()->is('account*') ? 'true' : 'false' }}"
+               class="dropdown-toggle">{{ __("Account") }}</a>
+            <ul class="collapse list-unstyled {{ request()->is('account*') ? 'show' : '' }}" id="dlSubmenu">
+                <li class="{{ request()->is('account') ? 'active' : '' }}">
+                    <a href="{{ route('account') }}">{{ __("Account Details") }}</a>
+                </li>
+                <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
+                    <a href="{{ route('account.security-questions') }}">{{ __("Security Questions") }}</a>
+                </li>
+            </ul>
+        </li>
     </ul>
 
     <div class="profile d-flex justify-content-between align-items-center">

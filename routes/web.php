@@ -171,6 +171,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::get('/account', [AccountController::class, 'show'])->name('account');
+    Route::get('/account/security-questions', [AccountController::class, 'securityQuestions'])->name('account.security-questions');
 
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::resource('/users', UserController::class);

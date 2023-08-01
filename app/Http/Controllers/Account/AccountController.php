@@ -9,4 +9,8 @@ class AccountController extends Controller
     public function show(){
         return view('account.show');
     }
+
+    public function securityQuestions(){
+        return view('account.security-questions');
+    }
 }
