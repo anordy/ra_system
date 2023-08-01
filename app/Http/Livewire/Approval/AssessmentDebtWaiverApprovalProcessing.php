@@ -83,6 +83,10 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             abort(403);
         }
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('debt_manager_review')) {
 
         }

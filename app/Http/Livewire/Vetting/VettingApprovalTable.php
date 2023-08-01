@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Vetting;
 use App\Enum\VettingStatus;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Traits\WithSearch;
+use App\Models\TaxType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -33,7 +34,7 @@ class VettingApprovalTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
+        $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id',]);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
@@ -42,8 +43,19 @@ class VettingApprovalTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')
-            ->whereNotIn('return_type', [PetroleumReturn::class])
+        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
+            ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
+            ->whereNotIn('code', [
+                TaxType::AIRPORT_SERVICE_CHARGE,
+                TaxType::SEAPORT_TRANSPORT_CHARGE,
+                TaxType::AIRPORT_SAFETY_FEE,
+                TaxType::SEAPORT_SERVICE_CHARGE,
+                TaxType::ROAD_LICENSE_FEE,
+                TaxType::INFRASTRUCTURE, 
+                TaxType::RDF
+            ])
+            ->where('parent',0)
+            ->where('is_business_lto',false)
             ->where('vetting_status', $this->vettingStatus)
             ->orderBy('created_at', 'asc');
     }
@@ -54,11 +66,17 @@ class VettingApprovalTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Branch / Location', 'location.name')
+            Column::make('Branch', 'location.name')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
                     return "{$row->location->name}";
+                }),
+            Column::make('Tax Region', 'location.tax_region_id')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->location->taxRegion->name}";
                 }),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()

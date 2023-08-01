@@ -22,9 +22,17 @@ trait RegistrationReportTrait
                 $businessLocations->whereIn($columnName, $parameters['isic_id']);
                 break;
             case 'Business-Reg-By-TaxType':
-                $businessLocations->where('business_tax_type.tax_type_id', $parameters['taxtype_id']);
+                if($parameters['taxtype_id'] == 'all') {
+                    $businessLocations = $businessLocations;
+                } else {
+                    $businessLocations->where('business_tax_type.tax_type_id', $parameters['taxtype_id']);
+                }
+                break;
+            case 'Business-Reg-By-TaxPayer':
+                    $businessLocations = $businessLocations;
                 break;
         }
+     
         //get period
         if ($parameters['year'] != "all" && $parameters['year'] != "range") {
             $businessLocations->whereYear('business_locations.approved_on', '=', $parameters['year']);

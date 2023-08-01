@@ -3,16 +3,16 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\RecoveryMeasureStatus;
-use Exception;
-use Livewire\Component;
 use App\Models\Debts\DebtRecoveryMeasure;
 use App\Models\Debts\RecoveryMeasure;
+use App\Models\Debts\RecoveryMeasureCategory;
+use App\Traits\CustomAlert;
+use App\Traits\WorkflowProcesssingTrait;
+use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Debts\RecoveryMeasureCategory;
-use App\Traits\WorkflowProcesssingTrait;
-use Illuminate\Support\Collection;
-use App\Traits\CustomAlert;
+use Livewire\Component;
 
 class RecoveryMeasureApprovalProcessing extends Component
 {
@@ -36,19 +36,19 @@ class RecoveryMeasureApprovalProcessing extends Component
         $this->modelName = $modelName;
 
         $this->initializedRecMeasure = RecoveryMeasure::where('debt_id', $this->debtId)
-                ->where('debt_type', $this->modelName)
-                ->get()
-                ->first();
+            ->where('debt_type', $this->modelName)
+            ->get()
+            ->first();
 
         if ($this->initializedRecMeasure == null) {
             $this->initializedRecMeasure = RecoveryMeasure::updateOrCreate([
                 'debt_id' => $this->debtId,
-                'debt_type' => $this->modelName
-            ],[
+                'debt_type' => $this->modelName,
+            ], [
                 'status' => 'unassigned',
             ]);
         }
-            
+
         $this->registerWorkflow(get_class($this->initializedRecMeasure), $this->initializedRecMeasure->id);
 
         if ($this->checkTransition('commissioner_review') || $this->checkTransition('assignment_corrected')) {
@@ -57,11 +57,11 @@ class RecoveryMeasureApprovalProcessing extends Component
         }
     }
 
-
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
-        $this->validate(['recovery_measures' => 'required']);
+        
+        $this->validate(['recovery_measures' => 'required','comments' => 'required|string|strip_tag',]);
         DB::beginTransaction();
         try {
 
@@ -74,8 +74,8 @@ class RecoveryMeasureApprovalProcessing extends Component
 
                 $payload = array_map(function ($measures) {
                     return [
-                        'recovery_measure_category_id'    => $measures,
-                        'recovery_measure_id'    => $this->initializedRecMeasure->id,
+                        'recovery_measure_category_id' => $measures,
+                        'recovery_measure_id' => $this->initializedRecMeasure->id,
                     ];
                 }, $measures);
 
@@ -92,8 +92,8 @@ class RecoveryMeasureApprovalProcessing extends Component
 
                 $payload = array_map(function ($measures) {
                     return [
-                        'recovery_measure_category_id'    => $measures,
-                        'recovery_measure_id'    => $this->initializedRecMeasure->id,
+                        'recovery_measure_category_id' => $measures,
+                        'recovery_measure_id' => $this->initializedRecMeasure->id,
                     ];
                 }, $measures);
 
@@ -112,8 +112,8 @@ class RecoveryMeasureApprovalProcessing extends Component
 
                 $payload = array_map(function ($measures) {
                     return [
-                        'recovery_measure_id'    => $this->initializedRecMeasure->id,
-                        'recovery_measure_category_id' => $measures
+                        'recovery_measure_id' => $this->initializedRecMeasure->id,
+                        'recovery_measure_category_id' => $measures,
                     ];
                 }, $measures);
 
@@ -155,7 +155,7 @@ class RecoveryMeasureApprovalProcessing extends Component
     }
 
     protected $listeners = [
-        'approve', 'reject'
+        'approve', 'reject',
     ];
 
     public function confirmPopUpModal($action, $transition)
@@ -170,7 +170,7 @@ class RecoveryMeasureApprovalProcessing extends Component
             'cancelButtonText' => 'Cancel',
             'timer' => null,
             'data' => [
-                'transition' => $transition
+                'transition' => $transition,
             ],
 
         ]);

@@ -44,14 +44,14 @@ class ObjectionApprovalProcessing extends Component
         if (is_null($this->dispute)) {
             abort(404);
         }
-        $this->principal = $this->dispute->tax_in_dispute;
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
+        $this->principal = $this->assessment->principal_amount;
         if(is_null($this->assessment)){
             abort(404);
         }
         $this->penalty = $this->assessment->penalty_amount;
         $this->interest = $this->assessment->interest_amount;
-        $this->taxTypes = TaxType::where('code', 'disputes')->first();
+        $this->taxTypes = TaxType::findOrFail($this->assessment->tax_type_id);
         if(!$this->taxTypes){
             abort(404);
         }
@@ -107,6 +107,10 @@ class ObjectionApprovalProcessing extends Component
         $this->interest = str_replace(',', '', $this->interest);
         $this->principal = str_replace(',', '', $this->principal);
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('objection_manager_review')) {
 
             $this->validate(
@@ -183,7 +187,7 @@ class ObjectionApprovalProcessing extends Component
                         'billable_type' => get_class($this->dispute),
                         'use_item_ref_on_pay' => 'N',
                         'amount' => $this->total,
-                        'currency' => 'TZS',
+                        'currency' => $this->assessment->currency,
                         'gfs_code' => $this->taxTypes->gfs_code,
                         'tax_type_id' => $this->taxTypes->id,
                     ],

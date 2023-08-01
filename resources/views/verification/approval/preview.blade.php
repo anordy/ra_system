@@ -3,6 +3,15 @@
 @section('title', 'Verification Preview')
 
 @section('content')
+
+    @if ($verification->status == App\Enum\TaxVerificationStatus::APPROVED)
+        <div class="row m-2 pt-3">
+            <div class="col-md-12">
+                <livewire:assesments.tax-assessment-payment :assessment="$verification->assessment" />
+            </div>
+        </div>
+    @endif
+
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
@@ -35,7 +44,8 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Phone Numbers</span>
-                            <p class="my-1">{{ $return->taxpayer->mobile ?? '' }} {{ $return->taxpayer->alt_mobile ? '/ '.$return->taxpayer->alt_mobile : '' }} </p>
+                            <p class="my-1">{{ $return->taxpayer->mobile ?? '' }}
+                                {{ $return->taxpayer->alt_mobile ? '/ ' . $return->taxpayer->alt_mobile : '' }} </p>
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Email</span>
@@ -108,7 +118,8 @@
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                                <p class="my-1">{{ number_format($verification->assessment->penalty_amount ?? 0, 2) }}</p>
+                                <p class="my-1">{{ number_format($verification->assessment->penalty_amount ?? 0, 2) }}
+                                </p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Interest Amount</span>

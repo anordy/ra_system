@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ZmBill;
-use App\Models\ZrbBankAccount;
+use PDF;
 use Carbon\Carbon;
-use Endroid\QrCode\Color\Color;
+use App\Models\ZmBill;
+use App\Models\BusinessBank;
 use Illuminate\Http\Request;
+use App\Models\ZrbBankAccount;
+use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
-use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
-use Endroid\QrCode\Writer\SvgWriter;
-use PDF;
 
 class QRCodeGeneratorController extends Controller
 {
@@ -62,11 +63,13 @@ class QRCodeGeneratorController extends Controller
         return $pdf->download('ZanMalipo_invoice_' . time() . '.pdf');
     }
     
-    public function transfer($billId, $bankAccountId)
+    public function transfer($billId, $bankAccountId, $businessBankAccId)
     {
         $billId = decrypt($billId);
         $bill = ZmBill::findOrFail($billId);
         $bankAccount = ZrbBankAccount::findOrFail(decrypt($bankAccountId));
+        $businessBank = BusinessBank::find(decrypt($businessBankAccId));
+
         $name = $bill->payer_name;
 
         $url = env('TAXPAYER_URL') . route('qrcode-check.transfer',  base64_encode(strval($billId)), 0);
@@ -89,7 +92,7 @@ class QRCodeGeneratorController extends Controller
         header('Content-Type: ' . $result->getMimeType());
 
         $dataUri = $result->getDataUri();
-        $pdf = PDF::loadView('zanMalipo.pdf.transfer', compact('dataUri', 'bill', 'bankAccount'));
+        $pdf = PDF::loadView('zanMalipo.pdf.transfer', compact('dataUri', 'bill', 'bankAccount', 'businessBank'));
         return $pdf->stream('ZanMalipo_transfer_' . time() . '.pdf');
     }
 

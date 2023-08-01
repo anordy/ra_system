@@ -64,7 +64,7 @@ class BillAction extends Component
 
     public function submit()
     {
-        $this->bill = ZmBill::where('control_number', $this->control_number)->latest()->first();
+        $this->bill = ZmBill::where('control_number', trim($this->control_number))->latest()->first();
 
         if (!$this->bill) {
             $this->customAlert('error', 'Control number not found');

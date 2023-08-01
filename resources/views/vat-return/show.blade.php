@@ -89,7 +89,7 @@
                             </tr>
 
                             <tr>
-                                <th>Grand Vat Payable</th>
+                                <th>Grant Amount Payable</th>
                                 <th class="text-right">{{number_format($total, 2, '.',',')}}</th>
                             </tr>
 

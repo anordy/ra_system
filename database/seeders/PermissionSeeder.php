@@ -392,6 +392,10 @@ class PermissionSeeder extends Seeder
 
             # Tax Returns Vetting
             ['name' => 'tax-returns-vetting-view', 'sys_module_id' => 27],
+            ['name' => 'tax-returns-vetting-view-domestic-taxpayers', 'sys_module_id' => 27],
+            ['name' => 'tax-returns-vetting-view-lto-taxpayers', 'sys_module_id' => 27],
+            ['name' => 'tax-returns-vetting-view-non-tax-revenue-taxpayers', 'sys_module_id' => 27],
+
         ];
 
         foreach ($data as $row) {
