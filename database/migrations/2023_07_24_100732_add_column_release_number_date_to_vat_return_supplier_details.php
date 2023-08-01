@@ -14,7 +14,7 @@ class AddColumnReleaseNumberDateToVatReturnSupplierDetails extends Migration
     public function up()
     {
         Schema::table('vat_return_supplier_details', function (Blueprint $table) {
-            $table->dateTime('release_number_date')->after('release_number');
+            $table->dateTime('release_number_date')->after('release_number')->nullable();
         });
     }
 
