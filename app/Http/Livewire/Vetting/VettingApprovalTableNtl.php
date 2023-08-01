@@ -20,7 +20,7 @@ class VettingApprovalTableNtl extends DataTableComponent
 
     protected $model     = TaxReturn::class;
 
-    public $vettingStatus;
+    public $vettingStatus, $orderBy;
 
     public function mount($vettingStatus)
     {
@@ -29,6 +29,12 @@ class VettingApprovalTableNtl extends DataTableComponent
         }
 
         $this->vettingStatus = $vettingStatus;
+
+        if ($this->vettingStatus == VettingStatus::VETTED) {
+            $this->orderBy = 'DESC';
+        } else {
+            $this->orderBy = 'ASC';
+        }
     }
 
     public function configure(): void
@@ -57,7 +63,7 @@ class VettingApprovalTableNtl extends DataTableComponent
             ->where('parent',0)
             ->where('is_business_lto',false)
             ->where('vetting_status', $this->vettingStatus)
-            ->orderBy('created_at', 'asc');
+            ->orderBy('created_at', $this->orderBy);
     }
 
     public function columns(): array
@@ -103,6 +109,11 @@ class VettingApprovalTableNtl extends DataTableComponent
                 ->view('vetting.includes.status')
                 ->searchable()
                 ->sortable(),
+            Column::make('Payment Status', 'payment_status')
+                ->view('returns.includes.payment-status')
+                ->searchable()
+                ->sortable()
+                ->hideIf($this->vettingStatus != VettingStatus::VETTED),
             Column::make('Filed On', 'created_at')
                 ->sortable()
                 ->format(function ($value, $row) {

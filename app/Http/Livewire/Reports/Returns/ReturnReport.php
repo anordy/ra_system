@@ -161,7 +161,17 @@ class ReturnReport extends Component
     {
         $this->validate();
         $this->parameters = $this->getParameters();
-        $this->exportExcelReport($this->parameters);
+        // $this->exportExcelReport($this->parameters);
+        $records = $this->getRecords($this->parameters);
+        if ($records->count() < 1) {
+            $this->customAlert('error', 'No Records Found in the selected criteria');
+            return;
+        }
+
+        $fileName = $this->parameters['tax_type_name'] . '_' . $this->parameters['filing_report_type'] . ' - ' . '.xlsx';
+        $title    = $this->parameters['filing_report_type'] . ' For' . $this->parameters['tax_type_name'];
+        $this->customAlert('success', 'Exporting Excel File');
+        return Excel::download(new ReturnReportExport($records, $title, $this->parameters), $fileName);
     }
 
 

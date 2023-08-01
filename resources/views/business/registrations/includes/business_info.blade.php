@@ -661,12 +661,24 @@
                 <div class="row m-2 pt-3">
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Company Name</span>
-                        <p class="my-1">{{ $hotel->company_name }}</p>
+                        <p class="my-1">{{ $hotel->company_name ?? 'N/A' }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Management Company</span>
-                        <p class="my-1">{{ $hotel->management_company }}</p>
+                        <p class="my-1">{{ $hotel->management_company ?? 'N/A'}}</p>
                     </div>
+                    @if ($hotel->business_reg_no)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Business Registration No</span>
+                            <p class="my-1">{{ $hotel->business_reg_no }}</p>
+                        </div> 
+                    @endif
+                    @if ($hotel->old_business_reg_no)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Old Business Registration No</span>
+                        <p class="my-1">{{ $hotel->old_business_reg_no }}</p>
+                    </div> 
+                @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Hotel Location</span>
                         <p class="my-1">{{ $hotel->hotel_location }}</p>
