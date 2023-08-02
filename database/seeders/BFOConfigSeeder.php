@@ -217,20 +217,20 @@ class BFOConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 12,
-                'code' => 'FOTHER',
-                'name' => 'Fees On Any Other Service Charges',
+                'code' => 'IS',
+                'name' => 'Imported Services',
                 'row_type' => 'dynamic',
                 'value_calculated' => true,
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'percentage',
                 'currency' => 'TZS',
-                'rate' => 10,
+                'rate' => 12,
                 'rate_usd' => 0,
                 'active' => true,
-                'value_label' => '31',
-                'rate_label' => '32',
-                'tax_label' => '33'
+                'value_label' => '34',
+                'rate_label' => '35',
+                'tax_label' => '36'
             ],
             [ 
                 'financia_year_id' => 1,
@@ -240,11 +240,11 @@ class BFOConfigSeeder extends Seeder
                 'row_type' => 'unremovable',
                 'col_type' => 'total',
                 'value_calculated' => true,
-                'formular' => 'CWC+EMTC+MLPF+MBTC+SPCF+ODFLC+ComR+RSF+PVTS+ASF+FOTHER',
+                'formular' => 'CWC+EMTC+MLPF+MBTC+SPCF+ODFLC+ComR+RSF+PVTS+ASF+FOTHER+IS',
                 'active' => true,
-                'value_label' => '34',
-                'rate_label' => '35',
-                'tax_label' => '36'
+                'value_label' => '37',
+                'rate_label' => '38',
+                'tax_label' => '39'
             ],
         ];
 
