@@ -2,14 +2,8 @@
 
 namespace App\Http\Livewire\Account;
 
-use App\Events\SendMail;
-use App\Events\SendSms;
-use App\Jobs\Account\SendReferenceNumberMail;
-use App\Jobs\Account\SendReferenceNumberSMS;
 use App\Models\Security\Question;
-use App\Models\Taxpayer;
 use App\Traits\CustomAlert;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
@@ -22,6 +16,7 @@ class SecurityQuestions extends Component
     public $firstOptions, $secondOptions, $thirdOptions;
     public $firstQn, $secondQn, $thirdQn, $firstAns, $secondAns, $thirdAns;
     public $firstAnsFlag, $secondAnsFlag, $thirdAnsFlag;
+    public $pre = false;
 
     protected function rules(): array
     {
@@ -110,6 +105,9 @@ class SecurityQuestions extends Component
     }
 
     public function render(){
+        if ($this->pre){
+            return view('livewire.account.pre-security-questions');
+        }
         return view('livewire.account.security-questions');
     }
 }
