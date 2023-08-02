@@ -65,7 +65,7 @@ class ReturnDebtsTable extends DataTableComponent
                 }),
             Column::make('Days', 'filing_due_date')
                 ->format(function ($value, $row) {
-                    return Carbon::now()->diffInDays($row->filing_due_date);
+                    return Carbon::now()->diffInDays(Carbon::create($row->filing_due_date)->addMonth()->endOfDay());
                 }),
             Column::make('Payment Status', 'payment_status')->view('debts.includes.status'),
             Column::make('Action', 'id')->view('debts.includes.actions'),

@@ -27,7 +27,7 @@
             </div>
 
             <div class="col-md-6 form-group">
-                <label class="d-flex justify-content-between'">
+                <label class="d-flex justify-content-between">
                     <span>Start Date</span>
                 </label>
                 <input type="date" max="{{ now()->format('Y-m-d') }}" class="form-control" wire:model="range_start">

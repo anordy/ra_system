@@ -35,7 +35,7 @@ class CreateZmBillsTable extends Migration
             $table->string('payer_email')->nullable();
             $table->string('description')->nullable();
             $table->integer('payment_option');
-            $table->enum('status', ['pending', 'paid', 'partially' , 'failed', 'cancelled']);
+            $table->enum('status', ['pending', 'paid', 'partially' , 'failed', 'cancelled','Nill']);
             $table->string('cancellation_reason')->nullable();
             $table->string('zan_status')->nullable();
             $table->string('zan_trx_sts_code')->nullable();

@@ -71,21 +71,18 @@ class WorkflowUpdateActors implements ShouldQueue
                 $operators_collection = array();
 
                 foreach ($operators as $operator) {
-                    array_push(
-                        $operators_collection,
-                        new WorkflowTaskOperator([
-                            'task_id' => $task->id,
-                            'workflow_id' => $workflow->id,
-                            'user_id' => $operator,
-                            'user_type' => $user_type
-                        ])
-                    );
+                    $operators_collection[] = new WorkflowTaskOperator([
+                        'task_id' => $task->id,
+                        'workflow_id' => $workflow->id,
+                        'user_id' => $operator,
+                        'user_type' => $user_type
+                    ]);
                 }
 
                 $task->original_operators = json_encode($place['operators']);
                 $task->operators = json_encode($operators);
                 $task->save();
-                $task->actors()->delete();
+                $task->actors()->forceDelete();
                 $task->actors()->saveMany($operators_collection);
             }
             Log::info("Workflow with id=" . $workflow->id . " and the placename=" . $this->place . " synced successfully");

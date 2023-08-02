@@ -4,9 +4,9 @@
 
 @section('content')
             <div class="d-flex justify-content-end pb-2">
-                @if (!$tax_return->rollback && count($tax_return->penalties) > 0)
+                @if (!$tax_return->rollback && (count($tax_return->penalties) > 0) || count($tax_return->return->penalties) > 0)
                     <a href="{{ route('debts.rollback.return', encrypt($tax_return->id)) }}"
-                        class="btn btn-info btn-sm text-white" style="color: white !important;"><i
+                        class="btn btn-info btn-sm text-white mr-2" style="color: white !important;"><i
                             class="bi bi-arrow-left-right text-white"></i>
                         Rollback Penalty & Interest
                     </a>

@@ -25,6 +25,7 @@ class EditReturnConfig extends Component
     public $currency;
     public $rate;
     public $rate_usd;
+    public $value_formular;
 
     public function mount()
     {
@@ -41,6 +42,7 @@ class EditReturnConfig extends Component
         $this->currency = $this->configs->currency;
         $this->rate = $this->configs->rate;
         $this->rate_usd = $this->configs->rate_usd;
+        $this->value_formular = $this->configs->value_formular;
     }
 
     public function update()
@@ -62,6 +64,7 @@ class EditReturnConfig extends Component
                 'currency'=>$this->currency,
                 'rate'=>$this->rate,
                 'rate_usd'=>$this->rate_usd,
+                'value_formular'=>$this->value_formular
             ];
             $this->configs->update($payload);
             DB::commit();

@@ -75,8 +75,10 @@ class SeaportReturnTable extends DataTableComponent
             Column::make('Total VAT', 'total_amount_due_with_penalties')
                 ->sortable()
                 ->searchable(),
-            Column::make('Payment Status', 'status')
-                ->hideif(true),
+            Column::make(__('Payment Status'), 'status')->format(function ($value, $row) {
+                return view('returns.return-payment-status', ['row' => $row]);
+            })
+            ->searchable(),
             // Column::make('Status', 'id')->view('returns.port.includes.status'),
             Column::make('Action', 'id')
                 ->view('returns.port.includes.actions'),

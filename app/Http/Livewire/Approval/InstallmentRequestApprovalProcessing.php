@@ -58,6 +58,11 @@ class InstallmentRequestApprovalProcessing extends Component
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
+        
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+
         if ($this->checkTransition('debt_manager')) {
             $this->validate([
                 'installmentPhases' => ['required', 'numeric', 'min:1', 'max:12'],

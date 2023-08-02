@@ -48,6 +48,10 @@ class TaxClearenceApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('crdm_review')) {
 
             try {

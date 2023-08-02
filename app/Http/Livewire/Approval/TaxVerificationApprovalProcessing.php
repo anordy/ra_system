@@ -92,6 +92,10 @@ class TaxVerificationApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
 
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('conduct_verification')) {
             $this->validate(
                 [
@@ -104,7 +108,7 @@ class TaxVerificationApprovalProcessing extends Component
 
             if ($this->assessmentReport != $this->subject->assessment_report) {
                 $this->validate([
-                    'assessmentReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
+                    'assessmentReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
                 ]);
             }
         }
@@ -122,6 +126,7 @@ class TaxVerificationApprovalProcessing extends Component
             );
         }
 
+        // TODO: Add this into transaction
         $operators = [];
         if ($this->checkTransition('assign_officers')) {
 
@@ -148,6 +153,9 @@ class TaxVerificationApprovalProcessing extends Component
         if ($this->checkTransition('conduct_verification')) {
             $assessment = $this->subject->assessment()->exists();
 
+            $this->principalAmount = roundOff($this->principalAmount, $this->subject->taxReturn->currency);
+            $this->interestAmount = roundOff($this->interestAmount, $this->subject->taxReturn->currency);
+            $this->penaltyAmount = roundOff($this->penaltyAmount, $this->subject->taxReturn->currency);
             if ($this->hasAssessment == "1") {
                 if ($assessment) {
                     $this->subject->assessment()->update([
@@ -159,7 +167,7 @@ class TaxVerificationApprovalProcessing extends Component
                         'original_principal_amount' => $this->principalAmount,
                         'original_interest_amount' => $this->interestAmount,
                         'original_penalty_amount' => $this->penaltyAmount,
-                        'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
+                        'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
                     ]);
                 } else {
 
@@ -177,7 +185,8 @@ class TaxVerificationApprovalProcessing extends Component
                         'original_principal_amount' => $this->principalAmount,
                         'original_interest_amount' => $this->interestAmount,
                         'original_penalty_amount' => $this->penaltyAmount,
-                        'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
+                        'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
+                        'currency' => $this->subject->taxReturn->currency
                     ]);
                 }
             } else {
@@ -198,15 +207,15 @@ class TaxVerificationApprovalProcessing extends Component
                 event(new SendMail('send-assessment-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
             }
         }
-        Db::beginTransaction();
+        DB::beginTransaction();
         try {
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
             DB::commit();
             if ($this->subject->status == TaxVerificationStatus::APPROVED && $this->subject->assessment()->exists()) {
                 $this->generateControlNumber();
                 $this->subject->assessment->update([
-                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                    'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                    'payment_due_date' => Carbon::now()->addDays(30)->endOfDay(),
+                    'curr_payment_due_date' => Carbon::now()->addDays(30)->endOfDay(),
                 ]);
             }
 
@@ -249,35 +258,44 @@ class TaxVerificationApprovalProcessing extends Component
         DB::beginTransaction();
 
         try {
-            $billitems = [
-                [
+            $billitems = [];
+
+            if ($this->principalAmount > 0) {
+                $billitems[] = [
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $this->principalAmount,
-                    'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'verification')->firstOrFail()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'verification')->firstOrFail()->id
-                ],
-                [
+                    'amount' => $assessment->principal_amount,
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
+                    'tax_type_id' => $taxType->id
+                ];
+            }
+
+            if ($this->interestAmount > 0) {
+                $billitems[] = [
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $this->interestAmount,
-                    'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'interest')->firstOrFail()->gfs_code,
+                    'amount' => $assessment->interest_amount,
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
                     'tax_type_id' => $this->taxTypes->where('code', 'interest')->firstOrFail()->id
-                ],
-                [
+                ];
+            }
+
+            if ($this->penaltyAmount > 0) {
+                $billitems[] = [
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $this->penaltyAmount,
-                    'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->gfs_code,
+                    'amount' => $assessment->penalty_amount,
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
                     'tax_type_id' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->id
-                ]
-            ];
+                ];
+            }
+
 
             $taxpayer = $this->subject->business->taxpayer;
 
@@ -285,17 +303,17 @@ class TaxVerificationApprovalProcessing extends Component
             $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
             $payer_email = $taxpayer->email;
             $payer_phone = $taxpayer->mobile;
-            $description = "Verification for {$taxType->name} ";
+            $description = "{$taxType->name} Verification Assessment for {$this->subject->business->name}";
             $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-            $currency = 'TZS';
+            $currency = $assessment->currency;
             $createdby_type = get_class(Auth::user());
             $createdby_id = Auth::id();
-            $exchange_rate = 1;
+            $exchange_rate = $this->getExchangeRate($assessment->currency);
             $payer_id = $taxpayer->id;
-            $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
+            $expire_date = Carbon::now()->addDays(30)->endOfDay();
             $billableId = $assessment->id;
             $billableType = get_class($assessment);
-            $taxType = $this->taxTypes->where('code', 'verification')->firstOrFail()->id;
+            $taxType = $taxType->id;
 
             $zmBill = ZmCore::createBill(
                 $billableId,
@@ -331,6 +349,7 @@ class TaxVerificationApprovalProcessing extends Component
                 $zmBill->save();
                 $this->customAlert('success', 'A control number for this verification has been generated successfully');
             }
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);

@@ -22,18 +22,26 @@ class RegistrationsTable extends DataTableComponent
     public function builder(): Builder
     {
         if ($this->rejected) {
-            return Business::with('category')->where('businesses.status', BusinessStatus::REJECTED)->orderBy('businesses.created_at', 'desc');
+            return Business::with('category')
+                ->where('businesses.status', BusinessStatus::REJECTED)
+                ->orderBy('businesses.created_at', 'desc');
         }
 
         if ($this->approved) {
-            return Business::with('category')->where('businesses.status', BusinessStatus::APPROVED)->orderBy('businesses.created_at', 'desc');
+            return Business::with('category')
+                ->where('businesses.status', BusinessStatus::APPROVED)
+                ->orderBy('businesses.approved_on', 'desc');
         }
 
         if ($this->pending) {
-            return Business::with('category')->where('businesses.status', BusinessStatus::PENDING)->orderBy('businesses.created_at', 'desc');
+            return Business::with('category')
+                ->where('businesses.status', BusinessStatus::PENDING)
+                ->orderBy('businesses.created_at', 'desc');
         }
 
-        return Business::with('category')->where('businesses.status', '!=', BusinessStatus::DRAFT)->orderBy('businesses.created_at', 'desc');
+        return Business::with('category')
+            ->where('businesses.status', '!=', BusinessStatus::DRAFT)
+            ->orderBy('businesses.approved_on', 'desc');
     }
 
     public function configure(): void

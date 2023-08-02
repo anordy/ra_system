@@ -235,7 +235,7 @@ class ZanMalipoInternalService
         $response = curl_exec($curl);
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-        if ($statusCode != 200) {
+        if ($statusCode != 200 || !$response) {
             curl_close($curl);
             throw new \Exception($response);
         }

@@ -9,7 +9,6 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class RegistrationsTable extends DataTableComponent
 {
-
     public function mount()
     {
         $this->index = $this->page > 1 ? ($this->page - 1) * $this->perPage : 0;
@@ -27,7 +26,9 @@ class RegistrationsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return KYC::query()->with('country', 'region','street');
+        return KYC::query()
+            ->with('country', 'region','street')
+            ->orderBy('created_at', 'desc');
     }
 
     public function columns(): array
@@ -48,6 +49,7 @@ class RegistrationsTable extends DataTableComponent
             Column::make('Nationality', 'country.nationality')->searchable(),
             Column::make('Location', 'region.name')->searchable(),
             Column::make('Street', 'street.name')->searchable(),
+            Column::make('Registered At', 'created_at')->searchable(),
             Column::make('Action', 'id')->view('taxpayers.registrations.actions')
         ];
     }

@@ -403,13 +403,19 @@
                             <span class="font-weight-bold text-uppercase">Date of Commencing Business</span>
                             <p class="my-1">{{ $location->date_of_commencing->toFormattedDateString() }}</p>
                         </div>
+                        @if ($location->effective_date)
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Effective Date</span>
+                                <p class="my-1">{{ $location->effective_date->toFormattedDateString() }}</p>
+                            </div>
+                        @endif
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Pre Estimated Turnover</span>
+                            <span class="font-weight-bold text-uppercase">Estimated Turnover (Last 12 Months)</span>
                             <p class="my-1">{{ $business->currency->iso }}
                                 . {{ number_format($location->pre_estimated_turnover ?? 0, 2) }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Post Estimated Turnover</span>
+                            <span class="font-weight-bold text-uppercase">Estimated Turnover (Next 12 Months)</span>
                             <p class="my-1">{{ $business->currency->iso }}
                                 . {{ number_format($location->post_estimated_turnover ?? 0, 2) }}</p>
                         </div>
@@ -666,12 +672,24 @@
                 <div class="row m-2 pt-3">
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Company Name</span>
-                        <p class="my-1">{{ $hotel->company_name }}</p>
+                        <p class="my-1">{{ $hotel->company_name ?? 'N/A' }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Management Company</span>
-                        <p class="my-1">{{ $hotel->management_company }}</p>
+                        <p class="my-1">{{ $hotel->management_company ?? 'N/A'}}</p>
                     </div>
+                    @if ($hotel->business_reg_no)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Business Registration No</span>
+                            <p class="my-1">{{ $hotel->business_reg_no }}</p>
+                        </div> 
+                    @endif
+                    @if ($hotel->old_business_reg_no)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Old Business Registration No</span>
+                        <p class="my-1">{{ $hotel->old_business_reg_no }}</p>
+                    </div> 
+                @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Hotel Location</span>
                         <p class="my-1">{{ $hotel->hotel_location }}</p>

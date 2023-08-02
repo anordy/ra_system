@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\MVR;
 
+use App\Enum\PaymentStatus;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Http\Controllers\Controller;
@@ -153,7 +154,7 @@ class OwnershipTransferController extends Controller
         try {
             DB::beginTransaction();
             $bill = $request->get_latest_bill();
-            $bill->update(['status' => 'Paid']);
+            $bill->update(['status' => PaymentStatus::PAID]);
             $request->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_ACCEPTED])->id]);
             $request->motor_vehicle->current_owner
                 ->update(['mvr_ownership_status_id' => MvrOwnershipStatus::query()->firstOrCreate(['name' => MvrOwnershipStatus::STATUS_PREVIOUS_OWNER])->id]);

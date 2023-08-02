@@ -1,5 +1,9 @@
 <div class="card shadow-none">
     @include('layouts.component.messages')
+
+    @if ($certificate->status == 'correction')
+        @livewire('returns.petroleum.quantity-certificate-edit', ['id' => encrypt($certificate->id)])
+    @else
     <div class="card-body">
         <h6>Taxpayer & Vessel Information</h6>
         <div class="row">
@@ -39,17 +43,17 @@
 
                     <div class="form-group col-lg-6">
                         <label class="control-label">Liters Observed</label>
-                        <div class="form-control">{{ $product['liters_observed'] ?? '' }}</div>
+                        <div class="form-control">{{ number_format($product['liters_observed'], 2) ?? '' }}</div>
                     </div>
 
                     <div class="form-group col-lg-6">
                         <label class="control-label">Liters At 20 <sup>o</sup> C</label>
-                        <div class="form-control">{{ $product['liters_at_20'] ?? '' }}</div>
+                        <div class="form-control">{{ number_format($product['liters_at_20'], 2) ?? '' }}</div>
 
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="control-label">Metric Tons in Air</label>
-                        <div class="form-control">{{ $product['metric_tons'] ?? '' }}</div>
+                        <div class="form-control">{{ number_format($product['metric_tons'], 2) ?? '' }}</div>
 
                     </div>
 
@@ -57,7 +61,10 @@
             </div>
         @endforeach
 
+        <livewire:approval.quantity-certificate-approval-processing modelName="{{ get_class($certificate) }}" modelId="{{ encrypt($certificate->id) }}"></livewire:approval.quantity-certificate-approval-processing>
 
     </div>
+    @endif
+
 
 </div>

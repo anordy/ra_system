@@ -4,12 +4,13 @@ namespace App\Models\Returns\Petroleum;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class QuantityCertificate extends Model
 {
-    use HasFactory;
+    use HasFactory, WorkflowTrait;
 
     protected $guarded =  [];
 

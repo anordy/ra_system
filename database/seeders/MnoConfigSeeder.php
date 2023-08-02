@@ -148,18 +148,36 @@ class MnoConfigSeeder extends Seeder
                 'rate_label' => 20,
                 'tax_label' => 21
             ],
-
             [
                 'financia_year_id' => 1,
                 'order' => 8,
+                'code' => 'IS',
+                'name' => 'Imported services',
+                'row_type' => 'dynamic',
+                'value_calculated' => false,
+                'col_type' => 'normal',
+                'rate_applicable' => true,
+                'rate_type' => 'percentage',
+                'currency' => 'TZS',
+                'rate' => 12,
+                'rate_usd' => 0,
+                'active' => true,
+                'value_label' => 22,
+                'rate_label' => 23,
+                'tax_label' => 24
+            ],
+
+            [
+                'financia_year_id' => 1,
+                'order' => 9,
                 'code' => 'TOTAL',
                 'name' => 'Total Excise Duty payable',
                 'row_type' => 'unremovable',
                 'col_type' => 'total',
                 'value_calculated' => true,
-                'formular' => 'MNOS+MVNOS+MCPRE+MCPOST+MM+OFS+OES',
+                'formular' => 'MNOS+MVNOS+MCPRE+MCPOST+MM+OFS+OES+IS',
                 'active' => true,
-                'tax_label' => 24
+                'tax_label' => 25
             ],
 
         ];

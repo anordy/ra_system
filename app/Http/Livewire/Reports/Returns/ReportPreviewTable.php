@@ -35,7 +35,7 @@ class ReportPreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['tax_returns.business_id', 'tax_returns.location_id', 'tax_returns.financial_month_id', 'tax_returns.created_at', 'tax_returns.filed_by_id', 'tax_returns.filed_by_type', 'tax_returns.return_id']);
+        $this->setAdditionalSelects(['tax_returns.business_id', 'tax_returns.location_id', 'tax_returns.financial_month_id', 'tax_returns.created_at', 'tax_returns.filed_by_id', 'tax_returns.filed_by_type', 'tax_returns.return_id', 'tax_returns.curr_payment_due_date']);
     }
 
     public function columns(): array
@@ -127,17 +127,31 @@ class ReportPreviewTable extends DataTableComponent
             Column::make("Filing Due Date", 'filing_due_date')
                 ->searchable()
                 ->sortable()
-                ->format(fn($value) =>  $value->toDateString()),
+                ->format(fn($value) => \Carbon\Carbon::create($value)->addMonth()->format('d/m/Y') ?? 'N/A'),
 
             Column::make("Filing Status", "id")
                 ->searchable()
                 ->sortable()
                 ->view('reports.returns.includes.filing-status'),
 
-            Column::make("Payment Status", "paid_at")
-                ->searchable()
-                ->sortable()
-                ->view('reports.returns.includes.payment-status'),
+            Column::make("Payment Status", 'paid_at')
+                ->format(function ($value, $row) {
+                    if ($row->paid_at == null) {
+                        return <<< HTML
+                            <span class="badge badge-danger">Not Paid</span>
+                    HTML;
+                    } else if ($row->paid_at > $row->curr_payment_due_date) {
+                        return <<< HTML
+                        <span class="badge badge-warning">Late Payment</span>
+                    HTML;
+                    } else if ($row->paid_at <= $row->curr_payment_due_date) {
+                        return <<< HTML
+                        <span class="badge badge-success">Paid</span>
+                    HTML;
+                    }
+                })
+                ->html()
+                // ->view('reports.returns.includes.payment-status'),
         ];
     }
 }

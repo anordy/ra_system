@@ -4,8 +4,8 @@
         <tr>
             <th style="text-align:center;" colspan="11" height="70">
                 <strong>ZANZIBAR Revenue Authority</strong><br>
-                {{-- <strong>{{ $title }}</strong><br>
-                <strong>{{ $taxType->name }}</strong><br> --}}
+                {{-- <strong>{{ $title }}</strong><br> --}}
+                {{-- <strong>{{ $taxType->name }}</strong><br> --}}
             </th>
         </tr>
     </thead>
@@ -30,10 +30,16 @@
             </th>
 
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Taxpayer</strong>
+                <strong>Taxpayer Name</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Date of Commensing</strong>
+                <strong>Mobile</strong>
+            </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Email</strong>
+            </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Effective Date</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Region</strong>
@@ -46,6 +52,9 @@
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Physical Address</strong>
+            </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Status</strong>
             </th>
         </tr>
     </thead>
@@ -68,10 +77,16 @@
                 {{ $record->business->category->name ?? '-' }}
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->taxpayer->fullname ?? '-' }}
+                {{ $record->taxpayer_name ?? '-' }}
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ date('M, d Y', strtotime($record->date_of_commencing)) ?? '-' }}
+                {{ $record->mobile ?? '-' }}
+            </td>
+            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                {{ $record->email ?? '-' }}
+            </td>
+            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                {{ date('M, d Y', strtotime($record->effective_date)) ?? '-' }}
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 {{ $record->region->name ?? '-' }}
@@ -84,6 +99,9 @@
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 {{ $record->physical_address ?? '-' }}
+            </td>
+            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                {{ ucfirst($record->business->status ?? '') ?? '-' }}
             </td>
         </tr>
         @endforeach

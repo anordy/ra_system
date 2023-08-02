@@ -97,24 +97,24 @@
             <caption style="font-weight: bold; text-align: left">(a) Remitter/Tax Payer Details :-</caption>
             <tr>
                 <td colspan="3" class="padding-left td-title">Name of Account Holder(s)</td>
-                <td colspan="3" class="td-content">: <span
-                        style="border-bottom: 1px dashed black; width: 100%; display: block"></span></td>
+                <td colspan="3" class="td-content"><span
+                        style="border-bottom: 1px dashed black; width: 100%; display: block; font-weight: 500;">: {{ $bill->billable->business->name ?? '' }}</span></td>
             </tr>
             <tr>
                 <td colspan="3" class="padding-left td-title">Name of Commercial Bank</td>
-                <td colspan="3" class="td-content">: <span
-                        style="border-bottom: 1px dashed black; width: 100%; display: block"></span></td>
+                <td colspan="3" class="td-content"><span
+                        style="border-bottom: 1px dashed black; width: 100%; display: block; font-weight: 500;">: {{ $businessBank->bank->full_name ?? '' }}</span></td>
             </tr>
             <tr>
                 <td colspan="3" class="padding-left td-title">Bank Account Number</td>
-                <td colspan="3" class="td-content">: <span
-                        style="border-bottom: 1px dashed black; width: 100%; display: block"></span></td>
+                <td colspan="3" class="td-content"> <span
+                        style="border-bottom: 1px dashed black; width: 100%; display: block; font-weight: 500;">: {{ $businessBank->acc_no ?? '' }}</span></td>
             </tr>
             <tr>
                 <td colspan="3" class="padding-left td-title">Signatories</td>
-                <td colspan="1"><span class="border_bottom block" style="margin-top: 10px; width: 95%"></span></td>
-                <td colspan="1"><span class="" style="margin-top: 10px; width: 100%"> | </span></td>
-                <td colspan="1"><span class="border_bottom block" style="margin-top: 10px; width: 100%"></span></td>
+                <td colspan="1"><span class="border_bottom block" style="margin-top: 30px; width: 95%"></span></td>
+                <td colspan="1"><span class="" style="margin-top: 30px; width: 100%"> | </span></td>
+                <td colspan="1"><span class="border_bottom block" style="margin-top: 30px; width: 100%"></span></td>
             </tr>
             <tr>
                 <td colspan="3" class="padding-left td-title"></td>
@@ -166,7 +166,7 @@
             </tr>
             <tr>
                 <td colspan="2" class="padding-left td-title">Transfer Amount</td>
-                <td colspan="2" class="td-content bold">: {{ number_format($bill->amount, 2) }} (TZS)</td>
+                <td colspan="2" class="td-content bold">: {{ number_format($bill->amount, 2) }} ({{ $bill->currency }})</td>
             </tr>
             <tr>
                 <td colspan="2" class="padding-left td-title">Amount in Words</td>

@@ -121,6 +121,11 @@ class TaxAuditApprovalProcessing extends Component
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
+
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [

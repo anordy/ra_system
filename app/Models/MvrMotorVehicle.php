@@ -73,7 +73,8 @@ class MvrMotorVehicle extends Model implements Auditable
 		'mvr_fuel_type_id' => 'int',
 		'mvr_transmission_id' => 'int',
 		'mvr_body_type_id' => 'int',
-		'mvr_registration_status_id' => 'int'
+		'mvr_registration_status_id' => 'int',
+		'request_date' => 'datetime:Y-m-d',
 	];
 
 	protected $fillable = [

@@ -206,7 +206,7 @@
 
                                 <tr>
                                     @if($return->business_type != 'other')
-                                        <th>Infrastructure Vat To Be Paid ({{$return->business_type}})</th>
+                                        <th>IInfrastructure Tax ({{$return->business_type}})</th>
                                         <td colspan="2" class="table-active"></td>
                                         <th class="text-right">{{number_format($return->infrastructure_tax,2, '.',',' )}}
                                             <strong>{{$return->currency}}</strong>
@@ -231,7 +231,7 @@
                                 </tr>
 
                                 <tr>
-                                    <th>Grant Vat Payable</th>
+                                    <th>Grant Amount Payable</th>
                                     <td colspan="2" class="table-active"></td>
                                     <th class="text-right">{{number_format($return->total_amount_due, 2, '.',',')}}
                                         <strong>{{$return->currency}}</strong>
@@ -239,14 +239,13 @@
                                 </tr>
                                 @if(count($return->penalties))
                                     <tr>
-                                        <th>Grant Vat Payable With Penalties</th>
+                                        <th>Grant Amount Payable With Penalties</th>
                                         <td colspan="2" class="table-active"></td>
                                         <th class="text-right">{{number_format($return->total_amount_due_with_penalties, 2, '.',',')}}
                                             <strong>{{$return->currency}}</strong>
                                         </th>
                                     </tr>
                                 @endif
-
                                 </tbody>
                             </table>
 
@@ -275,7 +274,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="card">
-                                <div class="card-header">Suppliers Details</div>
+                                <div class="card-header">Suppliers Details for 15 percent</div>
 
                                 <div class="card-body">
                                     <table class="table table-bordered table-sm normal-text">
@@ -283,8 +282,8 @@
                                         <tr>
                                             <th>No:</th>
                                             <th>{{ __('Supplier ZTN /TIN Number') }}</th>
-                                            <th>{{ __('Tax Invoice Number') }}</th>
-                                            <th>{{ __('Date Of Invoice') }}</th>
+                                            <th>{{ __('VFMS Receipt Number') }}</th>
+                                            <th>{{ __('VFMS Receipt Date') }}</th>
                                             <th>{{ __('Customs Entry Number') }}</th>
                                             <th>{{ __('Value') }}</th>
                                             <th>{{ __('Vat') }}</th>
@@ -294,32 +293,105 @@
                                         </thead>
 
                                         <tbody>
-                                        @if (count($return->suppliers))
+                                        @if (count($return->suppliers ?? []))
                                             @foreach ($return->suppliers as $index=> $details)
-                                                <tr>
-                                                    <th>{{$index + 1}}</th>
-                                                    <td>{{ $details['supplier_zin_number'] }}
+                                                @if($details['supply_type'] == 'fifteen_percent')
+                                                    <tr>
+                                                        <th>{{$index + 1}}</th>
+                                                        <td>{{ $details['supplier_zin_number'] }} </td>
 
-                                                    <td>{{ $details['tax_invoice_number'] }}
+                                                        <td>{{ $details['tax_invoice_number'] }}</td>
 
-                                                    <td>{{ date('D, Y-m-d', strtotime($details['date_of_tax_invoice'])) }}
+                                                        <td>{{ date('D, Y-m-d', strtotime($details['date_of_tax_invoice'])) }} </td>
 
-                                                    <td>{{ $details['release_number'] }}
+                                                        <td>{{ $details['release_number'] }}</td>
 
-                                                    </td>
-                                                    <td class="text-right">{{ $details['value'] }}
+                                                        <td class="text-right">{{ number_format($details['value'],2,'.',',') }} </td>
 
-                                                    <td class="text-right">{{ $details['vat']}}
+                                                        <td class="text-right">{{ number_format($details['vat'],2,'.',',')  }} </td>
 
-                                                    <td class="text-right">
-                                                        @if($details['supply_type'] == 'fifteen_percent')
-                                                            15 %
-                                                        @else
-                                                            18 %
-                                                        @endif
-                                                    </td>
+                                                        <td class="text-right">
+                                                            @if($details['supply_type'] == 'fifteen_percent')
+                                                                15 %
+                                                            @else
+                                                                18 %
+                                                            @endif
+                                                        </td>
 
-                                                </tr>
+                                                    </tr>
+                                                @else
+                                                    <tr>
+                                                        <td colspan="7" class="text-center py-3">
+                                                            {{ __('No details for supplier for this return month') }}.
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center py-3">
+                                                    {{ __('No details for supplier for this return month') }}.
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">Suppliers Details For 18 percent</div>
+
+                                <div class="card-body">
+                                    <table class="table table-bordered table-sm normal-text">
+                                        <thead>
+                                        <tr>
+                                            <th>No:</th>
+                                            <th>{{ __('Supplier ZTN /TIN Number') }}</th>
+                                            <th>{{ __('VFD Receipt Number') }}</th>
+                                            <th>{{ __('VFD Receipt Date') }}</th>
+                                            <th>{{ __('Customs Entry Number') }}</th>
+                                            <th>{{ __('Value') }}</th>
+                                            <th>{{ __('Vat') }}</th>
+                                            <th>{{ __('Supply Type') }}</th>
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        @if (count($return->suppliers ?? []))
+                                            @foreach ($return->suppliers as $index=> $details)
+                                                @if($details['supply_type'] != 'fifteen_percent')
+                                                    <tr>
+                                                        <th>{{$index + 1}}</th>
+                                                        <td>{{ $details['supplier_zin_number'] }} </td>
+
+                                                        <td>{{ $details['tax_invoice_number'] }}</td>
+
+                                                        <td>{{ date('D, Y-m-d', strtotime($details['date_of_tax_invoice'])) }} </td>
+
+                                                        <td>{{ $details['release_number'] }}</td>
+
+                                                        <td class="text-right">{{ number_format($details['value'],2,'.',',') }} </td>
+
+                                                        <td class="text-right">{{ number_format($details['vat'],2,'.',',')  }} </td>
+
+                                                        <td class="text-right">
+                                                            @if($details['supply_type'] == 'fifteen_percent')
+                                                                15 %
+                                                            @else
+                                                                18 %
+                                                            @endif
+                                                        </td>
+
+                                                    </tr>
+                                                @else
+                                                    <tr>
+                                                        <td colspan="7" class="text-center py-3">
+                                                            {{ __('No details for supplier for this return month') }}.
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                             @endforeach
                                         @else
                                             <tr>
@@ -367,7 +439,7 @@
                                         @else
                                             <tr>
                                                 <td colspan="7" class="text-center py-3">
-                                                    {{ __('No details for supplier for this return month') }}.
+                                                    {{ __('No details for cash sales for this return month') }}.
                                                 </td>
                                             </tr>
                                         @endif

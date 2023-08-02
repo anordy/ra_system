@@ -246,7 +246,8 @@ class ApprovalProcessing extends Component
                 'selectedTaxTypes.*.currency' => 'required',
                 'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
                 'selectedTaxRegion' => 'required|exists:tax_regions,id',
-                'effectiveDate' => 'required|strip_tag'
+                'effectiveDate' => 'required|strip_tag',
+                'comments' => 'required|string|strip_tag',
             ], [
                 'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
                 'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is required',
@@ -324,6 +325,10 @@ class ApprovalProcessing extends Component
         }
 
         if ($this->checkTransition('director_of_trai_review')) {
+            $this->validate([
+                'comments' => 'required|string|strip_tag',
+            ]);
+            
             try {
                 DB::beginTransaction();
 

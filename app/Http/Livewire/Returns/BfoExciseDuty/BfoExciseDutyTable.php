@@ -81,10 +81,10 @@ class BfoExciseDutyTable extends DataTableComponent
                     return number_format($value, 2);
                 })
                 ->searchable(),
-            Column::make('Status', 'status')
-                ->view('returns.excise-duty.bfo.includes.status')
-                ->searchable()
-                ->sortable(),
+            Column::make(__('Payment Status'), 'status')->format(function ($value, $row) {
+                return view('returns.return-payment-status', ['row' => $row]);
+            })
+            ->searchable(),
             Column::make('Date', 'created_at')
                 ->sortable()
                 ->format(function ($value, $row) {

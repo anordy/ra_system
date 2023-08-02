@@ -328,6 +328,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'system-workflow-configure', 'sys_module_id' => 19],
             ['name' => 'system-all-pdfs-view', 'sys_module_id' => 19],
             ['name' => 'system-get-return-configurations-reminders', 'sys_module_id' => 19],
+            ['name' => 'system-security-questions-view', 'sys_module_id' => 19],
+            ['name' => 'system-security-questions-configure', 'sys_module_id' => 19],
 
 
             # Managerial Report
@@ -390,12 +392,16 @@ class PermissionSeeder extends Seeder
 
             # Tax Returns Vetting
             ['name' => 'tax-returns-vetting-view', 'sys_module_id' => 27],
+            ['name' => 'tax-returns-vetting-view-domestic-taxpayers', 'sys_module_id' => 27],
+            ['name' => 'tax-returns-vetting-view-lto-taxpayers', 'sys_module_id' => 27],
+            ['name' => 'tax-returns-vetting-view-non-tax-revenue-taxpayers', 'sys_module_id' => 27],
 
             # Vfms Integration
             ['name' => 'vfms-business-unit-data-linking', 'sys_module_id' => 28],
             ['name' => 'vfms-znumber-verification', 'sys_module_id' => 28],
             ['name' => 'vfms-associated-business-unit-edit', 'sys_module_id' => 28],
             ['name' => 'vfms-business-unit-update', 'sys_module_id' => 28],
+
         ];
 
         foreach ($data as $row) {

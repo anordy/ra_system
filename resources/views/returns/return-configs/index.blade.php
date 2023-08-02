@@ -31,7 +31,6 @@
                     <th>Rate Applicable</th>
                     <th>Rate</th>
                     <th>Currency</th>
-                    <th>Financial year</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -54,16 +53,18 @@
                             @endif
                         </td>
 
-                        <td>{{$config->rate}}
+                        <td>
+                            @if ($config->currency == 'TZS')
+                                {{number_format($config->rate,2)}}
+                            @elseif ($config->currency == 'USD')
+                                {{number_format($config->rate_usd,2)}}
+                            @endif
                             <strong>
                                 @if($config->rate_type == 'percentage')
                                     %
                                 @endif
                             </strong></td>
                         <td>{{$config->currency}}</td>
-                        <td>
-                        {{\App\Http\Controllers\Returns\ReturnController::getFinancialYear($config->financial_year_id)}}
-                        </td>
                         <td>
                             @can('setting-return-configuration-edit')
                             <a href="{{route('settings.return-config.edit', [encrypt($id), encrypt($code),encrypt($config->id)])}}" class="btn btn-outline-success">

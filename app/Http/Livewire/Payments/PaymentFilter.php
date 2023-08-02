@@ -20,6 +20,7 @@ class PaymentFilter extends Component
     public $tax_type_id;
     public $range_start;
     public $range_end;
+    public $status;
 
     protected $rules = [
         'range_start' => 'required|strip_tag',
@@ -46,12 +47,16 @@ class PaymentFilter extends Component
         $this->data = $filters;
         
         if ($this->tableName == 'complete-payments-table') {
+            $this->status = PaymentStatus::PAID;
             $this->emitTo('App\Http\Livewire\Payments\CompletePaymentsTable', 'filterData', $filters);
         } elseif ($this->tableName == 'pending-payments-table') {
+            $this->status = PaymentStatus::PENDING;
             $this->emitTo('App\Http\Livewire\Payments\PendingPaymentsTable', 'filterData', $filters);
         } elseif ($this->tableName == 'cancelled-payments-table') {
+            $this->status = PaymentStatus::CANCELLED;
             $this->emitTo('App\Http\Livewire\Payments\PendingPaymentsTable', 'filterData', $filters);
         } elseif ($this->tableName == 'failed-payments-table') {
+            $this->status = PaymentStatus::FAILED;
             $this->emitTo('App\Http\Livewire\Payments\FailedPaymentsTable', 'filterData', $filters);
         }
     }
@@ -62,6 +67,7 @@ class PaymentFilter extends Component
 
         $data   = $this->data;
         $filter = (new ZmBill())->newQuery();
+        $status = $this->status;
 
         if (isset($data['tax_type_id']) && $data['tax_type_id'] != 'All') {
             $filter->Where('tax_type_id', $data['tax_type_id']);
@@ -74,18 +80,18 @@ class PaymentFilter extends Component
         }
 
 
-        $records  = $filter->where('status', PaymentStatus::PENDING)->orderBy('created_at', 'DESC')->get();
+        $records  = $filter->with('billable')->where('status', $this->status)->orderBy('created_at', 'DESC')->get();
 
         if ($records->count() < 1) {
             $this->customAlert('error', 'No Data Found for selected options');
             return;
         }
 
-        $fileName = 'pending_payments' . '_' . $data['currency'] . '.pdf';
-        $title = 'pending_payments' . '_' . $data['currency'] . '.pdf';
+        $fileName = $status. '_payments' . '_' . $data['currency'] . '.pdf';
+        $title = $status. 'pending_payments' . '_' . $data['currency'] . '.pdf';
 
         $parameters    = $data;
-        $pdf = PDF::loadView('exports.payments.pdf.payments', compact('records', 'title', 'parameters'));
+        $pdf = PDF::loadView('exports.payments.pdf.payments', compact('records', 'title', 'parameters', 'status'));
         $pdf->setPaper('a4', 'landscape');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 

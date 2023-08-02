@@ -39,18 +39,17 @@ class CompletePaymentsTable extends DataTableComponent
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
         }
 
-        return $filter->whereIn('status', [PaymentStatus::PAID])->orderBy('created_at', 'DESC');
+        return $filter->with(['billable', 'payment'])->whereIn('status', [PaymentStatus::PAID])->orderBy('created_at', 'DESC');
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects('tax_type_id');
+        $this->setAdditionalSelects(['tax_type_id', 'billable_type', 'billable_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
         ]);
-
         $this->setPerPageAccepted([15, 25, 50, 100]);
     }
 
@@ -69,6 +68,12 @@ class CompletePaymentsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
                 }),
+            Column::make('Paid Amount', 'paid_amount')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return number_format($value, 2);
+                }),
             Column::make('Currency', 'currency')
                 ->sortable()
                 ->searchable(),
@@ -76,15 +81,20 @@ class CompletePaymentsTable extends DataTableComponent
                 ->label(fn ($row) => $row->taxType->name ?? 'N/A')
                 ->sortable()
                 ->searchable(),
+            Column::make('Business Name', 'billable')
+                ->label(fn ($row) => $row->billable->business->name ?? 'N/A')
+                ->sortable()
+                ->searchable(),
+            Column::make('PSP Name', 'payment')
+                ->label(fn ($row) => $row->payment->psp_name ?? 'N/A')
+                ->sortable()
+                ->searchable(),
             Column::make('Payer Name', 'payer_name')
-            ->sortable()
-            ->searchable(),
-            Column::make('Payer Email', 'payer_email')
-            ->sortable()
-            ->searchable(),
+                ->sortable()
+                ->searchable(),
             Column::make('Description', 'description')
-            ->sortable()
-            ->searchable(),
+                ->sortable()
+                ->searchable(),
             Column::make('Status', 'status'),
             Column::make('Actions', 'id')
                 ->view('payments.includes.actions'),
