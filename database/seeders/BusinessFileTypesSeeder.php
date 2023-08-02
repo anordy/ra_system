@@ -40,7 +40,7 @@ class BusinessFileTypesSeeder extends Seeder
             ],
             [
                 'short_name' => 'recognition_letter',
-                'name' => 'Recognition Letter',
+                'name' => 'Licence/certificate from control board of the business',
                 'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
                 'file_type' => FileType::PDF,
                 'business_type' => BusinessCategory::SOLE,
@@ -102,7 +102,7 @@ class BusinessFileTypesSeeder extends Seeder
             ],
             [
                 'short_name' => 'recognition_letter',
-                'name' => 'Recognition Letter',
+                'name' => 'Licence/certificate from control board of the business',
                 'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
                 'file_type' => FileType::PDF,
                 'business_type' => BusinessCategory::PARTNERSHIP,
@@ -256,7 +256,7 @@ class BusinessFileTypesSeeder extends Seeder
             ],
             [
                 'short_name' => 'recognition_letter',
-                'name' => 'Recognition Letter',
+                'name' => 'Licence/certificate from control board of the business',
                 'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
                 'file_type' => FileType::PDF,
                 'business_type' => BusinessCategory::COMPANY,
@@ -417,6 +417,36 @@ class BusinessFileTypesSeeder extends Seeder
                 'file_type' => FileType::PDF,
                 'business_type' => BusinessCategory::NGO,
                 'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'registration_certificate',
+                'business_type' => BusinessCategory::SOLE,
+            ],
+            [
+                'short_name' => 'registration_certificate',
+                'name' => 'Registration Certificate of Business Name',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::SOLE,
+                'is_required' => false,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'consolidated_form',
+                'business_type' => BusinessCategory::SOLE,
+            ],
+            [
+                'short_name' => 'consolidated_form',
+                'name' => 'BPRA Consolidated Form',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::SOLE,
+                'is_required' => false,
                 'is_approved' => 1,
             ]
         );
