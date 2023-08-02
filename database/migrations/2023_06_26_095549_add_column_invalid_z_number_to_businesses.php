@@ -15,7 +15,7 @@ class AddColumnInvalidZNumberToBusinesses extends Migration
     {
         Schema::table('businesses', function (Blueprint $table) {
             //
-            $table->boolean('invalid_z_number')->after('znumber_verified_at')->default(true);
+            $table->boolean('valid_z_number')->after('znumber_verified_at')->default(false);
         });
     }
 
@@ -28,7 +28,7 @@ class AddColumnInvalidZNumberToBusinesses extends Migration
     {
         Schema::table('businesses', function (Blueprint $table) {
             //
-            $table->dropColumn('invalid_z_number');
+            $table->dropColumn('valid_z_number');
         });
     }
 }

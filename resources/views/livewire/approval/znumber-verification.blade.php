@@ -12,7 +12,7 @@
             <span class="font-weight-bold text-uppercase">Business Name</span>
             <p class="my-1">{{ $business->name }}</p>
         </div>
-        @if($business->invalid_z_number)
+        @if($business->valid_z_number)
             @if ($business->previous_zno && !$business->znumber_verified_at)
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Action</span>

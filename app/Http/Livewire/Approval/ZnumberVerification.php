@@ -84,14 +84,20 @@ class ZnumberVerification extends Component
 
     private function buildBusinessUnitTree($businessUnits, $parentId = null){
         $tree = [];
-
         foreach ($businessUnits as $businessUnit) {
-            if ($businessUnit['parent_id'] === $parentId) {
-                $businessUnit['children'] = $this->buildBusinessUnitTree($businessUnits, $businessUnit['unit_id']);
-                $tree[] = $businessUnit;
-            }
-        }
+            if ($businessUnit['parent_id'] && $businessUnit['parent_id'] === $parentId) {
+                // Check if there are any children for this parent
+                $children = $this->buildBusinessUnitTree($businessUnits, $businessUnit['unit_id']);
 
+                // Only add the 'children' key if there are children for this parent
+                if (!empty($children)) {
+                    $businessUnit['children'] = $children;
+                }
+            } else {
+                $businessUnit['children'] = [];
+            }
+            $tree[] = $businessUnit;
+        }
         return $tree;
     }
 
@@ -193,7 +199,7 @@ class ZnumberVerification extends Component
         DB::beginTransaction();
         try {
             $updateBusiness = Business::find($this->business->id);
-            $updateBusiness->invalid_z_number = false;
+            $updateBusiness->valid_z_number = false;
             $updateBusiness->save();
 
             DB::commit();
