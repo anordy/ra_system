@@ -18,51 +18,31 @@ class BusinessFileTypesSeeder extends Seeder
     public function run()
     {
 
-        BusinessFileType::updateOrCreate(
-            [
-                'short_name' => 'license',
-                'business_type' => BusinessCategory::SOLE,
-            ],
-            [
-                'short_name' => 'license',
-                'name' => 'Business License',
-                'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::SOLE,
-                'is_required' => true,
-                'is_approved' => 1,
-            ]
-        );
+        self::gvtAgency();
+        self::company();
+        self::sole();
+        self::ngo();
+        self::partnership();
 
+        // General/All
         BusinessFileType::updateOrCreate(
             [
-                'short_name' => 'recognition_letter',
-                'business_type' => BusinessCategory::SOLE,
+                'short_name' => 'lease_agreement',
+                'business_type' => BusinessCategory::OTHER,
             ],
             [
-                'short_name' => 'recognition_letter',
-                'name' => 'Recognition Letter',
-                'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
+                'short_name' => 'lease_agreement',
+                'name' => 'Lease Agreement',
                 'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::SOLE,
+                'business_type' => BusinessCategory::OTHER,
                 'is_required' => false,
                 'is_approved' => 1,
             ]
         );
 
-        BusinessFileType::updateOrCreate(
-            [
-                'short_name' => 'tin',
-                'business_type' => BusinessCategory::SOLE,
-            ],
-            [
-                'short_name' => 'tin',
-                'name' => 'Taxpayer TIN Certificate',
-                'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::SOLE,
-                'is_required' => true,
-                'is_approved' => 1,
-            ]
-        );
+    }
+
+    public static function partnership(){
 
         // Partnership Deed Agreement
         BusinessFileType::updateOrCreate(
@@ -126,17 +106,17 @@ class BusinessFileTypesSeeder extends Seeder
             ]
         );
 
-        // Company
         BusinessFileType::updateOrCreate(
             [
-                'short_name' => 'memorandum',
-                'business_type' => BusinessCategory::COMPANY,
+                'short_name' => 'power_of_attorney',
+                'business_type' => BusinessCategory::PARTNERSHIP,
             ],
             [
-                'short_name' => 'memorandum',
-                'name' => 'Memorandum and Article of Association',
+                'short_name' => 'power_of_attorney',
+                'name' => 'Power of Attorney (Instrument)',
+                'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
                 'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::COMPANY,
+                'business_type' => BusinessCategory::PARTNERSHIP,
                 'is_required' => true,
                 'is_approved' => 1,
             ]
@@ -144,49 +124,24 @@ class BusinessFileTypesSeeder extends Seeder
 
         BusinessFileType::updateOrCreate(
             [
-                'short_name' => 'certificate_of_compliance',
-                'business_type' => BusinessCategory::COMPANY,
+                'short_name' => 'lease_agreement',
+                'business_type' => BusinessCategory::PARTNERSHIP,
+
             ],
             [
-                'short_name' => 'certificate_of_compliance',
-                'name' => 'Certificate of incorporation/Compliance',
+                'short_name' => 'lease_agreement',
+                'name' => 'Lease Agreement',
                 'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::COMPANY,
+                'business_type' => BusinessCategory::PARTNERSHIP,
                 'is_required' => true,
                 'is_approved' => 1,
             ]
         );
 
-        BusinessFileType::updateOrCreate(
-            [
-                'short_name' => 'business_license',
-                'business_type' => BusinessCategory::COMPANY,
-            ],
-            [
-                'short_name' => 'business_license',
-                'name' => 'Business License',
-                'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::COMPANY,
-                'is_required' => true,
-                'is_approved' => 1,
-            ]
-        );
 
-        BusinessFileType::updateOrCreate(
-            [
-                'short_name' => 'tin',
-                'business_type' => BusinessCategory::COMPANY,
-            ],
-            [
-                'short_name' => 'tin',
-                'name' => 'Company TIN Certificate',
-                'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::COMPANY,
-                'is_required' => true,
-                'is_approved' => 1,
-            ]
-        );
+    }
 
+    public static function ngo(){
         // NGO
         BusinessFileType::updateOrCreate(
             [
@@ -251,6 +206,195 @@ class BusinessFileTypesSeeder extends Seeder
 
         BusinessFileType::updateOrCreate(
             [
+                'short_name' => 'power_of_attorney',
+                'business_type' => BusinessCategory::NGO,
+            ],
+            [
+                'short_name' => 'power_of_attorney',
+                'name' => 'Power of Attorney (Instrument)',
+                'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::NGO,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'lease_agreement',
+                'business_type' => BusinessCategory::NGO,
+            ],
+            [
+                'short_name' => 'lease_agreement',
+                'name' => 'Lease Agreement',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::NGO,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+    }
+
+    public static function sole(){
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'license',
+                'business_type' => BusinessCategory::SOLE,
+            ],
+            [
+                'short_name' => 'license',
+                'name' => 'Business License',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::SOLE,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'recognition_letter',
+                'business_type' => BusinessCategory::SOLE,
+            ],
+            [
+                'short_name' => 'recognition_letter',
+                'name' => 'Recognition Letter',
+                'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::SOLE,
+                'is_required' => false,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'tin',
+                'business_type' => BusinessCategory::SOLE,
+            ],
+            [
+                'short_name' => 'tin',
+                'name' => 'Taxpayer TIN Certificate',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::SOLE,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'power_of_attorney',
+                'business_type' => BusinessCategory::SOLE,
+            ],
+            [
+                'short_name' => 'power_of_attorney',
+                'name' => 'Power of Attorney (Instrument)',
+                'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::SOLE,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'lease_agreement',
+                'business_type' => BusinessCategory::SOLE,
+            ],
+            [
+                'short_name' => 'lease_agreement',
+                'name' => 'Lease Agreement',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::SOLE,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+    }
+
+    public static function company(){
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'memorandum',
+                'business_type' => BusinessCategory::COMPANY,
+            ],
+            [
+                'short_name' => 'memorandum',
+                'name' => 'Memorandum and Article of Association',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::COMPANY,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'certificate_of_compliance',
+                'business_type' => BusinessCategory::COMPANY,
+            ],
+            [
+                'short_name' => 'certificate_of_compliance',
+                'name' => 'Certificate of incorporation/Compliance',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::COMPANY,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'business_license',
+                'business_type' => BusinessCategory::COMPANY,
+            ],
+            [
+                'short_name' => 'business_license',
+                'name' => 'Business License',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::COMPANY,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'tin',
+                'business_type' => BusinessCategory::COMPANY,
+            ],
+            [
+                'short_name' => 'tin',
+                'name' => 'Company TIN Certificate',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::COMPANY,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'lease_agreement',
+                'business_type' => BusinessCategory::COMPANY,
+            ],
+            [
+                'short_name' => 'lease_agreement',
+                'name' => 'Lease Agreement',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::COMPANY,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+
+        BusinessFileType::updateOrCreate(
+            [
                 'short_name' => 'recognition_letter',
                 'business_type' => BusinessCategory::COMPANY,
             ],
@@ -280,17 +424,126 @@ class BusinessFileTypesSeeder extends Seeder
             ]
         );
 
-        // General/All
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'power_of_attorney',
+                'business_type' => BusinessCategory::COMPANY,
+            ],
+            [
+                'short_name' => 'power_of_attorney',
+                'name' => 'Power of Attorney (Instrument)',
+                'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::COMPANY,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+    }
+
+    public static function gvtAgency(){
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'memorandum',
+                'business_type' => BusinessCategory::GOVERNMENT,
+            ],
+            [
+                'short_name' => 'memorandum',
+                'name' => 'Memorandum and Article of Association',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::GOVERNMENT,
+                'is_required' => false,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'certificate_of_compliance',
+                'business_type' => BusinessCategory::GOVERNMENT,
+            ],
+            [
+                'short_name' => 'certificate_of_compliance',
+                'name' => 'Certificate of incorporation/Compliance',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::GOVERNMENT,
+                'is_required' => false,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'business_license',
+                'business_type' => BusinessCategory::GOVERNMENT,
+            ],
+            [
+                'short_name' => 'business_license',
+                'name' => 'Business License',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::GOVERNMENT,
+                'is_required' => false,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'tin',
+                'business_type' => BusinessCategory::GOVERNMENT,
+            ],
+            [
+                'short_name' => 'tin',
+                'name' => 'Company TIN Certificate',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::GOVERNMENT,
+                'is_required' => false,
+                'is_approved' => 1,
+            ]
+        );
+
         BusinessFileType::updateOrCreate(
             [
                 'short_name' => 'lease_agreement',
-                'business_type' => BusinessCategory::OTHER,
+                'business_type' => BusinessCategory::GOVERNMENT,
             ],
             [
                 'short_name' => 'lease_agreement',
                 'name' => 'Lease Agreement',
                 'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::OTHER,
+                'business_type' => BusinessCategory::GOVERNMENT,
+                'is_required' => true,
+                'is_approved' => 1,
+            ]
+        );
+
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'recognition_letter',
+                'business_type' => BusinessCategory::GOVERNMENT,
+            ],
+            [
+                'short_name' => 'recognition_letter',
+                'name' => 'Recognition Letter',
+                'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::GOVERNMENT,
+                'is_required' => false,
+                'is_approved' => 1,
+            ]
+        );
+
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'consolidated_form',
+                'business_type' => BusinessCategory::GOVERNMENT,
+            ],
+            [
+                'short_name' => 'consolidated_form',
+                'name' => 'BPRA Consolidated Form',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::GOVERNMENT,
                 'is_required' => false,
                 'is_approved' => 1,
             ]
@@ -299,123 +552,14 @@ class BusinessFileTypesSeeder extends Seeder
         BusinessFileType::updateOrCreate(
             [
                 'short_name' => 'power_of_attorney',
-                'business_type' => BusinessCategory::SOLE,
+                'business_type' => BusinessCategory::GOVERNMENT,
             ],
             [
                 'short_name' => 'power_of_attorney',
                 'name' => 'Power of Attorney (Instrument)',
                 'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
                 'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::SOLE,
-                'is_required' => true,
-                'is_approved' => 1,
-            ]
-        );
-
-        BusinessFileType::updateOrCreate(
-            [
-                'short_name' => 'power_of_attorney',
-                'business_type' => BusinessCategory::PARTNERSHIP,
-            ],
-            [
-                'short_name' => 'power_of_attorney',
-                'name' => 'Power of Attorney (Instrument)',
-                'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
-                'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::PARTNERSHIP,
-                'is_required' => true,
-                'is_approved' => 1,
-            ]
-        );
-
-        BusinessFileType::updateOrCreate(
-            [
-                'short_name' => 'power_of_attorney',
-                'business_type' => BusinessCategory::COMPANY,
-            ],
-            [
-                'short_name' => 'power_of_attorney',
-                'name' => 'Power of Attorney (Instrument)',
-                'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
-                'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::COMPANY,
-                'is_required' => true,
-                'is_approved' => 1,
-            ]
-        );
-
-        BusinessFileType::updateOrCreate(
-            [
-                'short_name' => 'power_of_attorney',
-                'business_type' => BusinessCategory::NGO,
-            ],
-            [
-                'short_name' => 'power_of_attorney',
-                'name' => 'Power of Attorney (Instrument)',
-                'description' => 'If the business is being registered on behalf of the owner, Power of attorney (Instrument) is required.',
-                'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::NGO,
-                'is_required' => true,
-                'is_approved' => 1,
-            ]
-        );
-
-        BusinessFileType::updateOrCreate(
-            [
-                'short_name' => 'lease_agreement',
-                'business_type' => BusinessCategory::SOLE,
-            ],
-            [
-                'short_name' => 'lease_agreement',
-                'name' => 'Lease Agreement',
-                'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::SOLE,
-                'is_required' => true,
-                'is_approved' => 1,
-            ]
-        );
-
-        BusinessFileType::updateOrCreate(
-            [
-                'short_name' => 'lease_agreement',
-                'business_type' => BusinessCategory::PARTNERSHIP,
-
-            ],
-            [
-                'short_name' => 'lease_agreement',
-                'name' => 'Lease Agreement',
-                'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::PARTNERSHIP,
-                'is_required' => true,
-                'is_approved' => 1,
-            ]
-        );
-
-        BusinessFileType::updateOrCreate(
-            [
-                'short_name' => 'lease_agreement',
-                'business_type' => BusinessCategory::COMPANY,
-            ],
-            [
-                'short_name' => 'lease_agreement',
-                'name' => 'Lease Agreement',
-                'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::COMPANY,
-                'is_required' => true,
-                'is_approved' => 1,
-            ]
-        );
-
-        BusinessFileType::updateOrCreate(
-            [
-                'short_name' => 'lease_agreement',
-                'business_type' => BusinessCategory::NGO,
-            ],
-            [
-                'short_name' => 'lease_agreement',
-                'name' => 'Lease Agreement',
-                'file_type' => FileType::PDF,
-                'business_type' => BusinessCategory::NGO,
+                'business_type' => BusinessCategory::GOVERNMENT,
                 'is_required' => true,
                 'is_approved' => 1,
             ]
