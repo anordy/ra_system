@@ -1012,10 +1012,10 @@
             </li>
         @endcan
         <li class="{{ request()->is('account*') ? 'active' : '' }}">
-            <a href="#dlSubmenu" data-toggle="collapse"
+            <a href="#accountMenu" data-toggle="collapse"
                aria-expanded="{{ request()->is('account*') ? 'true' : 'false' }}"
                class="dropdown-toggle">{{ __("Account") }}</a>
-            <ul class="collapse list-unstyled {{ request()->is('account*') ? 'show' : '' }}" id="dlSubmenu">
+            <ul class="collapse list-unstyled {{ request()->is('account*') ? 'show' : '' }}" id="accountMenu">
                 <li class="{{ request()->is('account') ? 'active' : '' }}">
                     <a href="{{ route('account') }}">{{ __("Account Details") }}</a>
                 </li>

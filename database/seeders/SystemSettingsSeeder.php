@@ -74,6 +74,16 @@ class SystemSettingsSeeder extends Seeder
             ],
             [
                 'system_setting_category_id' => 2,
+                'name' => '2FA Using Security Questions',
+                'code' => 'enable-otp-alternative',
+                'description' => 'Enable login using security questions as an alternative to OTP.',
+                'value' => 0,
+                'unit' => SystemSetting::INPUT_OPTIONS,
+                'is_approved' => 1,
+                'options' => json_encode(['disabled' => 0, 'enabled' => 1])
+            ],
+            [
+                'system_setting_category_id' => 2,
                 'name' => 'Decay Minutes',
                 'code' => 'login-decay-minutes',
                 'description' => 'Maximum duration before user allowed to login again',
@@ -120,7 +130,9 @@ class SystemSettingsSeeder extends Seeder
         ];
 
         foreach ($system_settings as $system_setting) {
-            SystemSetting::updateOrCreate($system_setting);
+            SystemSetting::updateOrCreate([
+                'code' => $system_setting['code']
+            ], $system_setting);
         }
     }
 }
