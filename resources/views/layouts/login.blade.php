@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -27,23 +26,23 @@
             padding-top: 40px;
         }
 
+        .middle-box-wd {
+            min-width: 550px !important;
+            max-width: 600px !important;
+        }
+
         .invalid-feedback{
             white-space: nowrap;overflow: scroll
         }
     </style>
     @yield('styles')
 </head>
-
-
-
 <body>
     @yield('content')
-
     <script src="{{ asset('plugins/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('plugins/sweetalert/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('js/alpine.min.js') }}"></script>
     @yield('scripts')
 </body>
-
 </html>

@@ -104,4 +104,8 @@ class TwoFactorAuthController extends Controller
         $request->session()->flush();
         return redirect()->route('login');
     }
+
+    public function securityQuestions(){
+        return view('auth.security-questions');
+    }
 }

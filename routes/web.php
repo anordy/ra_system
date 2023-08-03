@@ -161,6 +161,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
     Route::get('/kill', [TwoFactorAuthController::class, 'kill'])->name('session.kill');
 
+    // OTP using Security Qns
+    Route::get('2fa/security-questions', [TwoFactorAuthController::class, 'securityQuestions'])->name('2fa.security-questions');
+
     Route::get('password/change', [ChangePasswordController::class, 'index'])->name('password.change');
     Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.store');
 });
