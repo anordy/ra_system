@@ -1,10 +1,9 @@
-<div class="text-black p-4 mx-1 mt-5 rounded-lg body-color">
+<div class="text-black p-4 mx-1 mt-5 rounded-lg body-color bg-white">
     <div class="text-center mb-4 mt-3">
         <img src="{{ asset('images/logo.png') }}" id="logo">
     </div>
-    <h6 class="mt-2 text-center">Reference Number Recovery - Security Questions</h6>
-    <p class="text-center text-muted">Please complete the security questions challenge below to <br> recover your
-        reference number.</p>
+    <h6 class="mt-2 text-center">Security Questions</h6>
+    <p class="text-center text-muted">Please complete the security questions below to log into your account.</p>
     <hr/>
     <div class="form-group row mb-2">
         <label class="col-sm-3 col-form-label font-weight-bold">Question No. 1</label>

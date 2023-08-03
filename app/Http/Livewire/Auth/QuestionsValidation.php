@@ -52,7 +52,7 @@ class QuestionsValidation extends Component
         $answers = $user->userAnswers()->whereIn('question_id', [$this->firstQn, $this->secondQn, $this->thirdQn])->get();
 
         // If answers count is less than 3, wrong select, log out.
-        if ($answers->count() != 3){
+        if ($answers->count() < 3){
             Auth::logout();
             session()->flash('error', 'We could not validate your security questions.');
             return redirect()->route('login');
@@ -72,6 +72,7 @@ class QuestionsValidation extends Component
         foreach ($answers as $answer) {
             if (!Hash::check($providedAnswers[$answer->question_id], $answer->answer)){
                 Auth::logout();
+                session()->flush();
                 session()->flash('error', 'We could not validate your security questions.');
                 return redirect()->route('login');
             }
