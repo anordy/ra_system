@@ -138,6 +138,20 @@ class BusinessFileTypesSeeder extends Seeder
             ]
         );
 
+        BusinessFileType::updateOrCreate(
+            [
+                'short_name' => 'consolidated_form',
+                'business_type' => BusinessCategory::PARTNERSHIP,
+            ],
+            [
+                'short_name' => 'consolidated_form',
+                'name' => 'BPRA Consolidated Form',
+                'file_type' => FileType::PDF,
+                'business_type' => BusinessCategory::PARTNERSHIP,
+                'is_required' => false,
+                'is_approved' => 1,
+            ]
+        );
 
     }
 
