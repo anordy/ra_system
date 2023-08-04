@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Security\UserAnswer;
 use App\Services\Verification\PayloadInterface;
 use App\Traits\HasPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -111,5 +112,9 @@ class User extends Authenticatable implements PayloadInterface, Auditable
             return true;
         }
         return false;
+    }
+
+    public function userAnswers(){
+        return $this->morphMany(UserAnswer::class, 'user');
     }
 }

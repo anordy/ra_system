@@ -16,5 +16,7 @@ class BusinessCategory extends Model
     public const NGO = 'ngo';
     public const HOTEL = 'hotel';
     public const OTHER = 'other';
+    public const GOVERNMENT = 'government-agency';
+
     protected $fillable = ['short_name', 'name'];
 }

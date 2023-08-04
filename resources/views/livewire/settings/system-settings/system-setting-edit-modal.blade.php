@@ -53,6 +53,18 @@
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                    @elseif($unit === \App\Models\SystemSetting::INPUT_OPTIONS)
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">Value</label>
+                            <select class="form-control" wire:model.lazy="value">
+                                @foreach($this->options as $key => $option)
+                                <option value="{{ $option }}">{{$key}}</option>
+                                @endforeach
+                            </select>
+                            @error('value')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     @else
                         <div class="form-group col-lg-12">
                             <label class="control-label">Value</label>

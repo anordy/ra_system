@@ -20,7 +20,7 @@ class VettingApprovalTableLto extends DataTableComponent
 
     protected $model     = TaxReturn::class;
 
-    public $vettingStatus;
+    public $vettingStatus, $orderBy;
 
     public function mount($vettingStatus)
     {
@@ -29,6 +29,12 @@ class VettingApprovalTableLto extends DataTableComponent
         }
 
         $this->vettingStatus = $vettingStatus;
+
+        if ($this->vettingStatus == VettingStatus::VETTED) {
+            $this->orderBy = 'DESC';
+        } else {
+            $this->orderBy = 'ASC';
+        }
     }
 
     public function configure(): void
@@ -43,12 +49,12 @@ class VettingApprovalTableLto extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')
+        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
                 ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
                 ->where('parent', 0)
                 ->where('is_business_lto',true)
                 ->where('vetting_status', $this->vettingStatus)
-                ->orderBy('created_at', 'asc');
+                ->orderBy('created_at', $this->orderBy);
     }
 
     public function columns(): array
@@ -57,11 +63,17 @@ class VettingApprovalTableLto extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Branch / Location', 'location.name')
+            Column::make('Branch', 'location.name')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
                     return "{$row->location->name}";
+                }),
+            Column::make('Tax Region', 'location.tax_region_id')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->location->taxRegion->name}";
                 }),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
@@ -88,6 +100,11 @@ class VettingApprovalTableLto extends DataTableComponent
                 ->view('vetting.includes.status')
                 ->searchable()
                 ->sortable(),
+            Column::make('Payment Status', 'payment_status')
+                ->view('returns.includes.payment-status')
+                ->searchable()
+                ->sortable()
+                ->hideIf($this->vettingStatus != VettingStatus::VETTED),
             Column::make('Filed On', 'created_at')
                 ->sortable()
                 ->format(function ($value, $row) {

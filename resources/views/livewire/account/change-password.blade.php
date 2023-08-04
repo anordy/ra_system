@@ -1,7 +1,8 @@
 <div class="card">
+    <div class="card-header text-uppercase font-weight-bold bg-white">
+        Change Password
+    </div>
     <div class="card-body">
-        <h6 class="text-uppercase">Change Password</h6>
-        <hr>
         <div class="row">
             <x-input name="current_password" type="password" required></x-input>
             <x-input name="new_password" type="password" required></x-input>

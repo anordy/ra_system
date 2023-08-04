@@ -15,7 +15,7 @@
     <thead>
         <tr>
             <th style="text-align:left;" colspan="11">
-                <strong> {{ $records[0]->taxtype->name }}</strong><br>
+                <strong> {{ $records[0]->taxtype->name }} ({{ $records->count() }})</strong>
             </th>
         </tr>
     </thead>

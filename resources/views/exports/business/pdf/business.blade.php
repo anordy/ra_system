@@ -96,9 +96,14 @@
                 </th>
 
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Taxpayer</strong>
+                    <strong>Taxpayer Name</strong>
                 </th>
-           
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Mobile</strong>
+                </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Email</strong>
+                </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Effective Date</strong>
                 </th>
@@ -141,7 +146,13 @@
                         {{ $record->business->category->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->taxpayer->fullname ?? '-' }}
+                        {{ $record->taxpayer_name ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->mobile ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->email ?? '-' }}
                     </td>
                 
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">

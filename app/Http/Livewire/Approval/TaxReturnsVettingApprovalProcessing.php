@@ -56,10 +56,8 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 (MONTHS_BETWEEN(CURRENT_DATE, CAST(filing_due_date as date))) as periods, 
                 (MONTHS_BETWEEN(CAST(curr_payment_due_date as date), CURRENT_DATE)) as penatableMonths
             ')
-            ->whereRaw("CURRENT_DATE - CAST(filing_due_date as date) > 30") // Since filing due date is of last month
-            ->where('vetting_status', VettingStatus::SUBMITTED)
             ->where('id', $this->return->id)
-            ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
+            ->whereIn('vetting_status', [VettingStatus::SUBMITTED, VettingStatus::CORRECTED])
             ->get()
             ->firstOrFail();
 

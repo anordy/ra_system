@@ -462,7 +462,7 @@ class PenaltyForDebt
                 ->where('number', $financialMonth->number + 1)
                 ->firstOrFail();
         }
-
+        $month->due_date = Carbon::create($month->due_date);
         return $month;
     }
 
@@ -497,6 +497,7 @@ class PenaltyForDebt
                 ->firstOrFail();
         }
 
+        $month->due_date = Carbon::create($month->due_date);
         return $month;
     }
 }

@@ -161,16 +161,24 @@ Route::middleware('auth')->group(function () {
     Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
     Route::get('/kill', [TwoFactorAuthController::class, 'kill'])->name('session.kill');
 
+    // OTP using Security Qns
+    Route::get('2fa/security-questions', [TwoFactorAuthController::class, 'securityQuestions'])->name('2fa.security-questions');
+
     Route::get('password/change', [ChangePasswordController::class, 'index'])->name('password.change');
     Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.store');
 });
 
-Route::middleware(['2fa', 'auth'])->group(function () {
+Route::middleware(['2fa', 'auth'])->group(function (){
+    Route::get('/account/login-security-questions', [AccountController::class, 'preSecurityQuestions'])->name('account.pre-security-questions');
+});
+
+Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::get('/account', [AccountController::class, 'show'])->name('account');
+    Route::get('/account/security-questions', [AccountController::class, 'securityQuestions'])->name('account.security-questions');
 
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::resource('/users', UserController::class);
