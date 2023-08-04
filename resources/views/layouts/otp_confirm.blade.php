@@ -24,14 +24,7 @@
                             <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px" alt="{{ config('app.name') }}">
                         </div>
                         <h5 class="bg-white text-uppercase text-center">OTP VERIFICATION</h5>
-
-                        @if ($errors->any())
-                            {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
-                        @endif
-                        @if (Session::has('success'))
-                            <div class="alert alert-success">{{ Session::get('success') }}</div>
-                        @endif
-
+                        @include('layouts.component.messages')
                         <form method="POST" action="{{ route('twoFactorAuth.confirm') }}" novalidate>
                             @csrf
                             <div class="mt-2">

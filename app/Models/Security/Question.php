@@ -13,4 +13,8 @@ class Question extends Model
     protected $table = 'security_questions';
 
     protected $guarded = [];
+
+    public function scopeApproved($query){
+        return $query->where('is_approved', true);
+    }
 }
