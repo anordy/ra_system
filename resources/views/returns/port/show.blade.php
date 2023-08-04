@@ -54,25 +54,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Payment Status</span>
-                                <p class="my-1">
-                                    @if ($return->status === \App\Models\Returns\ReturnStatus::COMPLETE)
-                                        <span class="badge badge-success py-1 px-2"
-                                            style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                                            Paid
-                                        </span>
-                                    @elseif($return->status === \App\Models\Returns\ReturnStatus::COMPLETED_PARTIALLY ||
-                                        $return->status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
-                                        <span class="badge badge-success py-1 px-2"
-                                            style="border-radius: 1rem; background: rgba(220,206,53,0.35); color: #cfc61c;; font-size: 85%">
-                                            Partially Paid
-                                        </span>
-                                    @else($return->status === \App\Models\Returns\ReturnStatus::COMPLETED_PARTIALLY)
-                                        <span class="badge badge-success py-1 px-2"
-                                            style="border-radius: 1rem; background: #dc354559; color: #cf1c2d;; font-size: 85%">
-                                            Not Paid
-                                        </span>
-                                    @endif
-                                </p>
+                                 @include('returns.return-payment-status', ['row' => $return])
                             </div>
                         </div>
 
