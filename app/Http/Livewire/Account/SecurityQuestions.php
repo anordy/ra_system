@@ -105,6 +105,9 @@ class SecurityQuestions extends Component
             ]);
             DB::commit();
             session()->flash('success', __('Your security questions were updated successful.'));
+            if ($this->pre){
+                return redirect()->route('home');
+            }
             $this->redirect(route('account.security-questions'));
         } catch (Exception $exception){
             DB::rollBack();
