@@ -31,7 +31,7 @@ class UserEditModal extends Component
     public $old_values;
     public $levels;
     public $level_id;
-
+    public $override_otp;
 
     protected function rules()
     {
@@ -42,6 +42,13 @@ class UserEditModal extends Component
             'gender' => 'required|in:M,F',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'level_id' => 'required',
+            'override_otp' => 'required|in:0,1'
+        ];
+    }
+
+    public function messages(){
+        return [
+            'override_otp.required' => 'Please specify if users can OTP and use security questions by default.'
         ];
     }
 
@@ -49,6 +56,32 @@ class UserEditModal extends Component
         'fname' => 'first name',
         'lname' => 'last name',
     ];
+
+    public function mount($id)
+    {
+        $this->roles = Role::all();
+        $user = User::find(decrypt($id));
+        if(is_null($user)){
+            abort(404);
+        }
+        $this->user = $user;
+        $this->levels = ApprovalLevel::select('id', 'name')->get();
+        $this->fname = $user->fname;
+        $this->level_id = $user->level_id;
+        $this->lname = $user->lname;
+        $this->phone = $user->phone;
+        $this->email = $user->email;
+        $this->gender = $user->gender ?? '';
+        $this->override_otp = $user->override_otp ? 1 : 0;
+        $this->old_values = [
+            'fname' => $this->fname,
+            'lname' => $this->lname,
+            'gender' => $this->gender,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'override_otp' => $this->override_otp ? 1 : 0
+        ];
+    }
 
     public function submit()
     {
@@ -76,6 +109,7 @@ class UserEditModal extends Component
                 'email' => $this->email,
                 'phone' => $this->phone,
                 'level_id' => $this->level_id,
+                'override_otp' => $this->override_otp
             ];
 
             // Sign User
@@ -90,30 +124,6 @@ class UserEditModal extends Component
             Log::error($e);
             $this->customAlert('error', DualControl::ERROR_MESSAGE);
         }
-    }
-
-    public function mount($id)
-    {
-        $this->roles = Role::all();
-        $user = User::find(decrypt($id));
-        if(is_null($user)){
-            abort(404);
-        }
-        $this->user = $user;
-        $this->levels = ApprovalLevel::select('id', 'name')->get();
-        $this->fname = $user->fname;
-        $this->level_id = $user->level_id;
-        $this->lname = $user->lname;
-        $this->phone = $user->phone;
-        $this->email = $user->email;
-        $this->gender = $user->gender ?? '';
-        $this->old_values = [
-            'fname' => $this->fname,
-            'lname' => $this->lname,
-            'gender' => $this->gender,
-            'email' => $this->email,
-            'phone' => $this->phone,
-        ];
     }
 
     public function render()

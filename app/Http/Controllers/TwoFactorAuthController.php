@@ -110,11 +110,11 @@ class TwoFactorAuthController extends Controller
         // Check if security questions config is enabled
         $setting = SystemSetting::where('code', SystemSetting::ENABLE_OTP_ALTERNATIVE)->first();
 
-        if (!$setting || !$setting->value){
-            Session::flash('error', 'Token resend successfully. Check your email/sms');
-            return redirect()->route('twoFactorAuth.index');
+        if (($setting && $setting->value) || Auth::user()->override_otp){
+            return view('auth.security-questions');
         }
 
-        return view('auth.security-questions');
+        Session::flash('error', 'Please validate your OTP to continue');
+        return redirect()->route('twoFactorAuth.index');
     }
 }
