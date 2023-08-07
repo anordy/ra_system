@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SystemSetting;
 use App\Models\UserOtp;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -106,6 +107,14 @@ class TwoFactorAuthController extends Controller
     }
 
     public function securityQuestions(){
+        // Check if security questions config is enabled
+        $setting = SystemSetting::where('code', SystemSetting::ENABLE_OTP_ALTERNATIVE)->first();
+
+        if (!$setting || !$setting->value){
+            Session::flash('error', 'Token resend successfully. Check your email/sms');
+            return redirect()->route('twoFactorAuth.index');
+        }
+
         return view('auth.security-questions');
     }
 }
