@@ -139,7 +139,9 @@
     @if ($location->business->category->short_name == \App\Models\BusinessCategory::SOLE &&
         $location->business->bpra_no)
         <span class="embed sole-owner">{{ $location->business->responsiblePerson->fullname ?? '' }}</span>
-        <span class="embed trading-as">T/A {{ $location->business->name ?? '' }}</span>
+            @if(isset($location->business->name) && isset($location->business->taxpayer_name) && $location->business->name !== $location->business->taxpayer_name)
+            <span class="embed trading-as">T/A {{ $location->business->name }}</span>
+            @endif
     @else
         <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
     @endif

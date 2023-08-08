@@ -101,10 +101,13 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowTaxpayerDetailsAmendmentSeeder::class);
         $this->call(WorkflowKYCDetailsAmendmentSeeder::class);
         $this->call(WorkflowTaxReturnVettingSeeder::class);
+        $this->call(WorkflowCertificateOfQuantitySeeder::class);
         $this->call(StreetTableSeeder::class);
         $this->call(SubSysModuleSeeder::class);
         $this->call(ApiUserTableSeeder::class);
         $this->call(LumpSumPaymentSeeder::class);
         $this->call(Vat18ReturnConfigSeeder::class);
+        $this->call(SecurityQuestionsSeeder::class);
+        $this->call(HotelStarsSeeder::class);
     }
 }

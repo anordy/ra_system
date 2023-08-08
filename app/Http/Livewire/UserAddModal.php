@@ -42,6 +42,7 @@ class UserAddModal extends Component
     public $isAdmin = false;
     public $accessLevel = false;
     public $adminCheck;
+    public $override_otp;
 
     public function mount()
     {
@@ -70,6 +71,7 @@ class UserAddModal extends Component
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'override_otp' => 'required|in:0,1'
         ];
     }
 
@@ -77,6 +79,12 @@ class UserAddModal extends Component
         'fname' => 'first name',
         'lname' => 'last name',
     ];
+
+    public function messages(){
+        return [
+            'override_otp.required' => 'Please specify if users can OTP and use security questions by default.'
+        ];
+    }
 
     public function submit()
     {
@@ -105,6 +113,7 @@ class UserAddModal extends Component
                 'status' => 1,
                 'level_id' => $this->level_id,
                 'password' => Hash::make($this->password),
+                'override_otp' => $this->override_otp
             ]);
 
             // Sign user

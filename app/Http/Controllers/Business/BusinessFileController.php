@@ -113,6 +113,7 @@ class BusinessFileController extends Controller
 
         $signaturePath = SystemSetting::certificatePath();
         $commissinerFullName = SystemSetting::commissinerFullName();
+
         
         $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber', 'signaturePath', 'commissinerFullName'));
         $pdf->setPaper('a4', 'portrait');

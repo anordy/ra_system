@@ -181,7 +181,7 @@
                         {{-- <h1 x-text="$wire.count"></h1> --}}
                  
                         {{-- <button x-on:click="$wire.increment()">Increment</button> --}}
-                        <button class="btn btn-warning ml-2" wire:click="preview" x-on:mouseenter="$wire.preview()">
+                        <button class="btn btn-warning ml-2" wire:click="preview">
                             <i class="bi bi-eye-fill"></i>
                             Preview Report  
                         </button>

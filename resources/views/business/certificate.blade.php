@@ -62,7 +62,7 @@
         .location {
             font-size: 1.1em;
             top: 70.8%;
-            left: -2%;
+            left: 11.4%;
         }
         .zra-location {
             font-size: 1.1em;
@@ -145,8 +145,8 @@
             <div class="watermark">Branch Copy</div>
         @endif
         <span class="embed taxpayer">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
-        @if($location->business->name)
-            <span class="embed trading-as">T/A {{ $location->business->name ?? '' }}</span>
+        @if(isset($location->business->name) && isset($location->business->taxpayer_name) && strtolower(trim($location->business->name)) != strtolower(trim($location->business->taxpayer_name)))
+        <span class="embed trading-as">T/A {{ $location->business->name }}</span>
         @endif
         <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
         @if($location->vrn)
@@ -157,7 +157,7 @@
         @endif
         <span class="embed tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
         <span class="embed location">
-            {{ $location->street->name }} - {{ $location->region->location }}
+            {{ $location->street->name }}-{{ $location->ward->name }} - {{ $location->region->location }}
         </span>
         <span class="embed zra-location">
             {{ $location->region->location }}

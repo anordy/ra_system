@@ -4,33 +4,33 @@
         <h6>Taxpayer & Vessel Information</h6>
         <div class="row">
             <div class="form-group col-lg-6">
-                <label class="control-label">Name of Importer/Market (ZRA No.)</label>
+                <label class="control-label">Name of Importer/Market (ZRA No.) *</label>
                 <input type="text" class="form-control @error('location') is-invalid @enderror"
-                    wire:model.lazy="location">
+                    wire:model.defer="location">
                 @error('location')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
             <div class="form-group col-lg-6">
-                <label class="control-label">Ascertained Date</label>
+                <label class="control-label">Ascertained Date *</label>
                 <input type="date" class="form-control @error('ascertained') is-invalid @enderror"
-                    wire:model.lazy="ascertained">
+                    wire:model.defer="ascertained">
                 @error('ascertained')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
             <div class="form-group col-lg-6">
-                <label class="control-label">Name of Ship</label>
+                <label class="control-label">Name of Ship *</label>
                 <input type="text" class="form-control @error('ship') is-invalid @enderror"
-                    wire:model.lazy="ship">
+                    wire:model.defer="ship">
                 @error('ship')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
             <div class="form-group col-lg-6">
-                <label class="control-label">Port of Disembarkation</label>
+                <label class="control-label">Port of Disembarkation *</label>
                 <input type="text" class="form-control @error('port') is-invalid @enderror"
-                    wire:model.lazy="port">
+                    wire:model.defer="port">
                 @error('port')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -38,10 +38,28 @@
             <div class="form-group col-lg-6">
                 <label class="control-label">Voyage No:</label>
                 <input type="text" class="form-control @error('voyage_no') is-invalid @enderror"
-                    wire:model.lazy="voyage_no">
+                    wire:model.defer="voyage_no">
                 @error('voyage_no')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
+            </div>
+            <div class="form-group col-lg-6">
+                <label class="control-label">Quantity of Certificate Attachment: </label>
+                    <div style="flex: 1" class="mr-2" x-init="isUploading = false" x-data="{ isUploading: false, progress: 0 }"
+                        x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false"
+                        x-on:livewire-upload-error="isUploading = false"
+                        x-on:livewire-upload-progress="progress = $event.detail.progress">
+                        <input type="file" required accept="application/pdf" class="form-control @error('quantity_certificate_attachment') is-invalid @enderror"
+                            wire:model="quantity_certificate_attachment">
+                        @error('quantity_certificate_attachment')
+                            <span class="invalid-feedback">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                        <div x-show="isUploading">
+                            <progress max="100" x-bind:value="progress"></progress>
+                        </div>
+                </div>
             </div>
         </div>
     </div>
@@ -67,7 +85,7 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Liters Observed</label>
                         <input type="number" class="form-control"
-                            wire:model="products.{{ $key }}.liters_observed">
+                            wire:model.defer="products.{{ $key }}.liters_observed">
                         @error("products.{$key}.liters_observed")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -76,7 +94,7 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Liters At 20 <sup>o</sup> C</label>
                         <input type="number" class="form-control"
-                            wire:model="products.{{ $key }}.liters_at_20">
+                            wire:model.defer="products.{{ $key }}.liters_at_20">
                         @error("products.{$key}.liters_at_20")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -84,7 +102,7 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Metric Tons in Air</label>
                         <input type="number" class="form-control"
-                            wire:model="products.{{ $key }}.metric_tons">
+                            wire:model.defer="products.{{ $key }}.metric_tons">
                         @error("products.{$key}.metric_tons")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -112,6 +130,6 @@
 
     </div>
     <div class="card-footer bg-white d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" wire:click='submit'>Save & Generate Certificate</button>
+        <button type="button" class="btn btn-primary" wire:click='submit'>Save & Update Certificate</button>
     </div>
 </div>

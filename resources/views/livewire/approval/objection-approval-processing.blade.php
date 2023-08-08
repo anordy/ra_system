@@ -5,6 +5,8 @@
                 {{ session('message') }}
             </div>
         @endif
+        @include('livewire.approval.transitions')
+
         <div class="card-header font-weight-bold">
             Approval
         </div>

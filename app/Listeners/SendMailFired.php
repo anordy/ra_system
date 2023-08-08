@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\Account\SendReferenceNumberMail;
 use App\Models\KYC;
 use App\Models\UserOtp;
 use App\Events\SendMail;
@@ -58,6 +59,7 @@ use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionMail;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
 use App\Jobs\TaxVerification\SendAssessmentReportEmailToTaxPayer;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantMail;
+use App\Jobs\QuantityCertificate\SendQuantityCertificateMail;
 
 class SendMailFired
 {
@@ -236,6 +238,10 @@ class SendMailFired
             SendToCorrectionReturnMail::dispatch($event->tokenId);
         } else if ($event->service === SendBranchRegisteredMail::SERVICE){
             SendBranchRegisteredMail::dispatch($event->tokenId);
+        } else if ($event->service === SendReferenceNumberMail::SERVICE){
+            SendReferenceNumberMail::dispatch($event->tokenId);
+        } else if ($event->service === SendQuantityCertificateMail::SERVICE){
+            SendQuantityCertificateMail::dispatch($event->tokenId);
         }
     }
 }

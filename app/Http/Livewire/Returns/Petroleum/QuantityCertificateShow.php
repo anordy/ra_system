@@ -2,36 +2,28 @@
 
 namespace App\Http\Livewire\Returns\Petroleum;
 
-use App\Models\Business;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\QuantityCertificate;
 use Illuminate\Support\Collection;
 use App\Traits\CustomAlert;
 use Livewire\Component;
 
-
 class QuantityCertificateShow extends Component
 {
     use CustomAlert;
-
-
    
     public $business;
     public $ship;
     public $port;
     public $cargo;
+    public $voyage_no;
     public $liters_observed;
     public $liters_at_20;
     public $metric_tons;
     public $ascertained;
     public $configs = [];
     public Collection $products;
-
     public $certificate;
-
-
-
-
 
     public function mount($id)
     {
@@ -60,8 +52,6 @@ class QuantityCertificateShow extends Component
                     'metric_tons' => $product->metric_tons,
                 ]));
             }
-
-        
     }
 
     public function render()

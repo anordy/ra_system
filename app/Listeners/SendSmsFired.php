@@ -2,6 +2,8 @@
 
 namespace App\Listeners;
 
+use App\Jobs\Account\SendReferenceNumberMail;
+use App\Jobs\Account\SendReferenceNumberSMS;
 use App\Jobs\SendZanMalipoSMS;
 use App\Models\KYC;
 use App\Events\SendSms;
@@ -52,6 +54,7 @@ use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionSMS;
 use App\Jobs\User\SendRegistrationSMS as UserSendRegistrationSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
+use App\Jobs\QuantityCertificate\SendQuantityCertificateSMS;
 
 class SendSmsFired
 {
@@ -215,6 +218,10 @@ class SendSmsFired
             SendBranchRegisteredSMS::dispatch($event->tokenId);
         } else if ($event->service === SendZanMalipoSMS::SERVICE){
             SendZanMalipoSMS::dispatch($event->extra['mobile_no'], $event->extra['message']);
+        } else if ($event->service === SendReferenceNumberMail::SERVICE) {
+            SendReferenceNumberSMS::dispatch($event->tokenId);
+        }  else if ($event->service === SendQuantityCertificateSMS::SERVICE){
+            SendQuantityCertificateSMS::dispatch($event->tokenId);
         }
     }
 }

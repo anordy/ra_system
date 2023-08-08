@@ -7,6 +7,7 @@ use ReflectionClass;
 class BillStatus implements Status
 {
     const SUBMITTED = 'submitted';
+    const NILL = 'nill';
     const PENDING = 'pending';
     const FAILED = 'failed';    
     const CN_GENERATING = 'control-number-generating';

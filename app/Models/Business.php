@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\BusinessStatus;
 use App\Models\Disputes\Objection;
 use App\Models\Disputes\Waiver;
 use App\Models\Returns\Vat\VatReturn;
@@ -25,6 +24,18 @@ class Business extends Model implements Auditable
     // Scopes
     public function scopeApproved($query){
         $query->where('status', BusinessStatus::APPROVED);
+    }
+
+    public function scopePending($query){
+        $query->where('status', BusinessStatus::PENDING);
+    }
+
+    public function scopeDraft($query){
+        $query->where('status', BusinessStatus::DRAFT);
+    }
+
+    public function scopeCorrection($query){
+        $query->where('status', BusinessStatus::CORRECTION);
     }
 
     public function scopeClosed($query){

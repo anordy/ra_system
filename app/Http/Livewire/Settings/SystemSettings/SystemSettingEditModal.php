@@ -28,6 +28,7 @@ class SystemSettingEditModal extends Component
     public $valueType;
     public $certificateSettings = false;
     public $settingCategory;
+    public $options;
 
     protected function rules()
     {
@@ -76,7 +77,9 @@ class SystemSettingEditModal extends Component
             'description' => $this->description,
         ];
 
-        if($this->unit != SystemSetting::INPUT_FILE && $this->unit != SystemSetting::INPUT_TIME){
+        if($this->unit === SystemSetting::INPUT_OPTIONS){
+            $this->options = json_decode($this->systemSetting->options, true);
+        } elseif($this->unit != SystemSetting::INPUT_FILE && $this->unit != SystemSetting::INPUT_TIME){
             $this->valueType = SystemSetting::INPUT_TEXT;
         } else {
             $this->valueType = $this->unit;

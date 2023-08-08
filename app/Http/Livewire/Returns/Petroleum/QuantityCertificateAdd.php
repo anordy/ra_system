@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\Petroleum;
 
+use App\Enum\QuantityCertificateStatus;
 use App\Models\BusinessLocation;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\QuantityCertificate;
@@ -11,14 +12,15 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
+use App\Traits\WorkflowProcesssingTrait;
 use Livewire\Component;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
+use Livewire\WithFileUploads;
 
 class QuantityCertificateAdd extends Component
 {
-    use CustomAlert;
-
+    use CustomAlert, WithFileUploads, WorkflowProcesssingTrait;
 
     public $location;
     public $ship;
@@ -30,6 +32,7 @@ class QuantityCertificateAdd extends Component
     public $ascertained;
     public $voyage_no;
     public $configs = [];
+    public $quantity_certificate_attachment;
     public Collection $products;
 
 
@@ -48,6 +51,7 @@ class QuantityCertificateAdd extends Component
             'products.*.liters_observed' => 'required|numeric',
             'products.*.liters_at_20' => 'required|numeric',
             'products.*.metric_tons' => 'required|numeric',
+            'quantity_certificate_attachment' => 'required|mimes:pdf|max:1024'
         ];
     }
 
@@ -112,6 +116,10 @@ class QuantityCertificateAdd extends Component
         try {
             $location = BusinessLocation::firstWhere('zin', $this->location);
             
+            if ($this->quantity_certificate_attachment) {
+                $attachment_location = $this->quantity_certificate_attachment->store('/quantity-certificates', 'local-admin');
+            }
+            
             $certificate = QuantityCertificate::create([
                 'business_id' => $location->business_id,
                 'location_id' => $location->id,
@@ -120,7 +128,9 @@ class QuantityCertificateAdd extends Component
                 'port' => $this->port,
                 'voyage_no' => $this->voyage_no,
                 'created_by' => auth()->user()->id,
-                'download_count' => 0
+                'download_count' => 0,
+                'quantity_certificate_attachment' => $attachment_location,
+                'status' => QuantityCertificateStatus::DRAFT
             ]);
             
             $certificateNumber = 'COQ-'.$location->zin.$certificate->id;
@@ -146,8 +156,11 @@ class QuantityCertificateAdd extends Component
 
             $certificate->products()->saveMany($product_payload);
 
+            $this->registerWorkflow(get_class($certificate), $certificate->id);
+            $this->doTransition('certificate_created', ['status' => 'approved', 'comment' => null]);
+
             DB::commit();
-            session()->flash('success', 'Certificate of Quantity has been generated successfully');
+            session()->flash('success', 'Certificate of Quantity has been recorded successfully and forwarded for approval');
             $this->redirect(route('petroleum.certificateOfQuantity.index'));
         } catch (Exception $e) {
             DB::rollBack();

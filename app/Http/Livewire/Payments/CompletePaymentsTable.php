@@ -50,7 +50,6 @@ class CompletePaymentsTable extends DataTableComponent
             'default' => true,
             'class'   => 'table-bordered table-sm',
         ]);
-
         $this->setPerPageAccepted([15, 25, 50, 100]);
     }
 
