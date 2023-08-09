@@ -160,7 +160,7 @@ class QuantityCertificateAdd extends Component
             $this->doTransition('certificate_created', ['status' => 'approved', 'comment' => null]);
 
             DB::commit();
-            session()->flash('success', 'Certificate of Quantity has been generated successfully');
+            session()->flash('success', 'Certificate of Quantity has been recorded successfully and forwarded for approval');
             $this->redirect(route('petroleum.certificateOfQuantity.index'));
         } catch (Exception $e) {
             DB::rollBack();

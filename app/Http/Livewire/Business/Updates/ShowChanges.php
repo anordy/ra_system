@@ -10,6 +10,7 @@ use App\Models\BusinessFileType;
 use App\Models\BusinessUpdate;
 use App\Models\Currency;
 use App\Models\District;
+use App\Models\HotelStar;
 use App\Models\Region;
 use App\Models\Street;
 use App\Models\Taxpayer;
@@ -64,6 +65,8 @@ class ShowChanges extends Component
             return AccountType::find($id)->name ?? 'N/A';
         } else if ($type == 'file_type_id') {
             return BusinessFileType::find($id)->name ?? 'N/A';
+        } else if ($type == 'hotel_star_id') {
+            return HotelStar::find($id)->no_of_stars ?? 'N/A';
         } else {
             return 'N/A';
         }

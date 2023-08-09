@@ -16,12 +16,15 @@ class SystemSetting extends Model implements Auditable
     const GENERAL_COMMISSIONER_SIGN = 'general-commissioner-sign';
     const GENERAL_COMMISSIONER_NAME = 'general-commissioner-name';
     const DURATION_BEFORE_DELETE_DRAFT_BUSINESSES = 'duration-before-delete-draft-businesses';
+    const STAMP_DUTY_MIN = 'stamp-duty-minimum-filling-amount';
 
     const INPUT_TIME = 'time';
     const INPUT_FILE = 'file';
+    const INPUT_OPTIONS = 'options';
     const INPUT_RADIO = 'radio';
     const INPUT_TEXT = 'text';
     const INPUT_NUMBER = 'number';
+    const ENABLE_OTP_ALTERNATIVE = 'enable-otp-alternative';
 
     protected $guarded = [];
     

@@ -78,7 +78,9 @@ class StampDutyReturnsTable extends DataTableComponent
                 }),
             Column::make(__('Vetting Status'), 'vetting_status')->view('returns.vetting-status'),
 
-            Column::make(__('Application Status'), 'status')->view('returns.stamp-duty.includes.status'),
+            Column::make(__('Payment Status'), 'status')->format(function ($value, $row) {
+                return view('returns.return-payment-status', ['row' => $row]);
+            }),
 
             Column::make('Action', 'id')->view('returns.stamp-duty.includes.actions'),
         ];

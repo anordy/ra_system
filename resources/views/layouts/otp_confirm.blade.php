@@ -11,6 +11,10 @@
             padding-top: 60px;
             padding-bottom: 20px;
         }
+
+        .btn-link {
+            font-size: 1em !important;
+        }
     </style>
 @endsection
 @section('content')
@@ -24,14 +28,7 @@
                             <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px" alt="{{ config('app.name') }}">
                         </div>
                         <h5 class="bg-white text-uppercase text-center">OTP VERIFICATION</h5>
-
-                        @if ($errors->any())
-                            {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
-                        @endif
-                        @if (Session::has('success'))
-                            <div class="alert alert-success">{{ Session::get('success') }}</div>
-                        @endif
-
+                        @include('layouts.component.messages')
                         <form method="POST" action="{{ route('twoFactorAuth.confirm') }}" novalidate>
                             @csrf
                             <div class="mt-2">
@@ -67,15 +64,20 @@
                             <form action="{{ route('twoFactorAuth.resend') }}" method="POST" novalidate>
                                 @csrf
                                 <div class="mt-3 inline-block">
-                                    <span>Didn't get the code </span>
+                                    <span>Didn't get the code ?</span>
                                     <button type="submit" title="Re-send" class="btn btn-link">
+                                        <i class="bi bi-arrow-counterclockwise mr-1"></i>
                                         Resend Token
                                     </button>
                                 </div>
                             </form>
 
-                            <div class="mt-3">
-                                <a href="{{ route('session.kill') }}" class="btn-link">Click to Return to Login</a>
+                            <div class="py-1">
+                                <a href="{{ route('session.kill') }}" class="btn-link">Click here to return to login page</a>
+                            </div>
+
+                            <div class="mt-1 mb-2">
+                                <a href="{{ route('2fa.security-questions') }}" class="btn-link">Login using security questions</a>
                             </div>
                         </div>
                     </div>

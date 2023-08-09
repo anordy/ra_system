@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Gate;
 
 class SystemSettingsController extends Controller
 {
-    //
     public function setting_categories()
     {
          if (!Gate::allows('setting-system-category-view')) {

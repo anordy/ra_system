@@ -1,7 +1,8 @@
 <div class="card">
+    <div class="card-header bg-white font-weight-bold text-uppercase">
+        Account Details
+    </div>
     <div class="card-body">
-        <h6 class="text-uppercase">Account Details</h6>
-        <hr>
         <div class="row">
             <x-input name="first_name" readonly></x-input>
             <x-input name="last_name" readonly></x-input>

@@ -139,6 +139,43 @@
                     @endif
                 </tr>
 
+                <tr>
+                    <th>Override OTP</th>
+                    <td>
+                        <p class="my-1">
+                            @if(!empty($result->action != \App\Models\DualControl::EDIT))
+                                @if ($data->override_otp)
+                                    <span>Allowed</span>
+                                @else
+                                    <span>Restricted</span>
+                                @endif
+                            @else
+                                @if ($old_values->override_otp)
+                                    <span>Allowed</span>
+                                @else
+                                    <span>Restricted</span>
+                                @endif
+                            @endif
+                        </p>
+                    </td>
+                    @if ($new_values)
+                        <td>
+                            @if ($new_values->override_otp)
+                                <span>Allowed</span>
+                            @else
+                                <span>Restricted</span>
+                            @endif
+                        </td>
+
+                        @if (compareDualControlValues(
+                            $result->action != \App\Models\DualControl::EDIT ? $data->override_otp : $old_values->override_otp, $new_values->override_otp))
+                            <td class="table-success">NOT CHANGED</td>
+                        @else
+                            <td class="table-danger">CHANGED</td>
+                        @endif
+                    @endif
+                </tr>
+
                 @if($result->action == \App\Models\DualControl::DEACTIVATE || $result->action == \App\Models\DualControl::ACTIVATE)
                     <tr>
                         <th>Status</th>

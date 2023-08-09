@@ -328,6 +328,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'system-workflow-configure', 'sys_module_id' => 19],
             ['name' => 'system-all-pdfs-view', 'sys_module_id' => 19],
             ['name' => 'system-get-return-configurations-reminders', 'sys_module_id' => 19],
+            ['name' => 'system-security-questions-view', 'sys_module_id' => 19],
+            ['name' => 'system-security-questions-configure', 'sys_module_id' => 19],
 
 
             # Managerial Report
@@ -390,6 +392,10 @@ class PermissionSeeder extends Seeder
 
             # Tax Returns Vetting
             ['name' => 'tax-returns-vetting-view', 'sys_module_id' => 27],
+            ['name' => 'tax-returns-vetting-view-domestic-taxpayers', 'sys_module_id' => 27],
+            ['name' => 'tax-returns-vetting-view-lto-taxpayers', 'sys_module_id' => 27],
+            ['name' => 'tax-returns-vetting-view-non-tax-revenue-taxpayers', 'sys_module_id' => 27],
+
         ];
 
         foreach ($data as $row) {

@@ -60,9 +60,20 @@
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="form-group col-lg-6">
+                            <label class="">Override OTP</label>
+                            <select class="form-control" wire:model.defer="override_otp">
+                                <option value="">Choose option</option>
+                                <option value="1">Allowed</option>
+                                <option value="0">Restricted</option>
+                            </select>
+                            @error('override_otp')
+                            <span class="text-danger mt-1">{{ $message }}</span>
+                            @else
+                                <div class="small text-muted mt-1 mb-0">When allowed, user will be able to log into their account using security questions irrespective of any configurations.</div>
+                            @endif
+                        </div>
                     </div>
-
-
                 </div>
             </div>
             <div class="modal-footer">

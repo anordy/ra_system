@@ -661,15 +661,31 @@
                 <div class="row m-2 pt-3">
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Company Name</span>
-                        <p class="my-1">{{ $hotel->company_name }}</p>
+                        <p class="my-1">{{ $hotel->company_name ?? 'N/A' }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Management Company</span>
-                        <p class="my-1">{{ $hotel->management_company }}</p>
+                        <p class="my-1">{{ $hotel->management_company ?? 'N/A'}}</p>
                     </div>
+                    @if ($hotel->business_reg_no)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Business Registration No</span>
+                            <p class="my-1">{{ $hotel->business_reg_no }}</p>
+                        </div> 
+                    @endif
+                    @if ($hotel->old_business_reg_no)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Old Business Registration No</span>
+                        <p class="my-1">{{ $hotel->old_business_reg_no }}</p>
+                    </div> 
+                @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Hotel Location</span>
                         <p class="my-1">{{ $hotel->hotel_location }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Hotel Star Rating</span>
+                        <p class="my-1">{{ $hotel->star->no_of_stars ?? 'N/A' }} Stars</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Number of Rooms</span>
@@ -693,7 +709,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Average Charging Rate (Per night per person for bed and breakfast)</span>
-                        <p class="my-1">{{ $hotel->average_rate ? number_format($hotel->average_rate) : 'N/A' }} TZS</p>
+                        <p class="my-1">{{ $hotel->average_rate ? number_format($hotel->average_rate) : 'N/A' }} {{ $business->currency->iso }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Other Services</span>

@@ -55,7 +55,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Payment Status</span>
-                            <p class="my-1">{{ $return->status }}</p>
+                            @include('returns.return-payment-status', ['row' => $return])
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Return Category</span>

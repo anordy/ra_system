@@ -47,6 +47,12 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'all settings related to business settings',
                 'is_approved' => 1
             ],
+            [
+                'name' => 'Filing Minimum Amount',
+                'code' => 'filing-minimum-amounts',
+                'description' => 'All settings related to filing minimum allowed amounts.',
+                'is_approved' => 1
+            ],
         ];
 
         foreach ($categories as $category) {
@@ -71,6 +77,16 @@ class SystemSettingsSeeder extends Seeder
                 'value' => '3',
                 'unit' => 'number',
                 'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => '2FA Using Security Questions',
+                'code' => 'enable-otp-alternative',
+                'description' => 'Enable login using security questions as an alternative to OTP.',
+                'value' => 0,
+                'unit' => SystemSetting::INPUT_OPTIONS,
+                'is_approved' => 1,
+                'options' => json_encode(['disabled' => 0, 'enabled' => 1])
             ],
             [
                 'system_setting_category_id' => 2,
@@ -117,10 +133,21 @@ class SystemSettingsSeeder extends Seeder
                 'unit' => 'days',
                 'is_approved' => 1
             ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Stamp Duty Minimum Filing Amount',
+                'code' => 'stamp-duty-minimum-filling-amount',
+                'description' => 'Stamp-duty Composition minimum amount required for filling a return.',
+                'value' => '135000',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
         ];
 
         foreach ($system_settings as $system_setting) {
-            SystemSetting::updateOrCreate($system_setting);
+            SystemSetting::updateOrCreate([
+                'code' => $system_setting['code']
+            ], $system_setting);
         }
     }
 }

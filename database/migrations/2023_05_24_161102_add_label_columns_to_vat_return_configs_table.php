@@ -14,9 +14,12 @@ class AddLabelColumnsToVatReturnConfigsTable extends Migration
     public function up()
     {
         Schema::table('vat_return_configs', function (Blueprint $table) {
-            $table->string('value_label')->nullable()->after('heading_type');
-            $table->string('rate_label')->nullable()->after('heading_type');
-            $table->string('tax_label')->nullable()->after('heading_type');
+            $table->string('value_label')->nullable()->after('code');
+            $table->string('rate_label')->nullable()->after('code');
+            $table->string('tax_label')->nullable()->after('code');
+            // $table->string('value_label')->nullable()->after('heading_type');
+            // $table->string('rate_label')->nullable()->after('heading_type');
+            // $table->string('tax_label')->nullable()->after('heading_type');
         });
     }
 

@@ -259,8 +259,7 @@ class Init extends Component
             return Excel::download(new TaxtypeReportExport($this->getBusinessBuilder($this->parameters)), 'Taxtype.xlsx');
         } elseif($this->parameters['criteria'] == 'Business-Reg-By-TaxPayer') {
             return Excel::download(new TaxpayerReportExport($this->getBusinessBuilder($this->parameters)), 'Taxpayer.xlsx');
-        }
-        else {
+        } else {
             return Excel::download(new BusinessReportExport($this->getBusinessBuilder($this->parameters)), 'Business.xlsx');
         }
     }

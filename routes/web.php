@@ -11,135 +11,133 @@
 |
  */
 
-use App\Http\Controllers\Reports\Department\DepartmentalReportController;
-use App\Http\Controllers\Setting\ApiUserController;
-use App\Http\Controllers\StreetController;
-use App\Http\Controllers\Reports\Payments\PaymentReportController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BankController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\WardController;
+use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\AllPdfController;
+use App\Http\Controllers\Assesments\DisputeController;
+use App\Http\Controllers\Assesments\ObjectionController;
+use App\Http\Controllers\Assesments\WaiverController;
+use App\Http\Controllers\Assesments\WaiverObjectionController;
 use App\Http\Controllers\AuditController;
+use App\Http\Controllers\Audit\TaxAuditApprovalController;
+use App\Http\Controllers\Audit\TaxAuditAssessmentController;
+use App\Http\Controllers\Audit\TaxAuditFilesController;
+use App\Http\Controllers\Audit\TaxAuditVerifiedController;
+use App\Http\Controllers\Auth\ChangePasswordController;
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\BusinessCategoryController;
+use App\Http\Controllers\Business\BranchController;
+use App\Http\Controllers\Business\BusinessController;
+use App\Http\Controllers\Business\BusinessFileController;
+use App\Http\Controllers\Business\BusinessUpdateFileController;
+use App\Http\Controllers\Business\RegistrationController;
+use App\Http\Controllers\Captcha\CaptchaController;
+use App\Http\Controllers\Cases\CasesController;
+use App\Http\Controllers\Claims\ClaimFilesController;
+use App\Http\Controllers\Claims\ClaimsController;
+use App\Http\Controllers\Claims\CreditsController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Debt\AssessmentDebtController;
+use App\Http\Controllers\Debt\DebtRollbackController;
+use App\Http\Controllers\Debt\ReturnDebtController;
+use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\Extension\ExtensionController;
+use App\Http\Controllers\Finances\FinanceController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Installment\InstallmentController;
+use App\Http\Controllers\Installment\InstallmentRequestController;
+use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
+use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
+use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
 use App\Http\Controllers\ISIC1Controller;
 use App\Http\Controllers\ISIC2Controller;
 use App\Http\Controllers\ISIC3Controller;
 use App\Http\Controllers\ISIC4Controller;
-use App\Http\Controllers\AllPdfController;
-use App\Http\Controllers\RegionController;
-use App\Http\Controllers\CountryController;
-use App\Http\Controllers\TaxTypeController;
-use App\Http\Controllers\DistrictController;
-use App\Http\Controllers\WorkflowController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MVR\AgentsController;
-use App\Http\Controllers\Cases\CasesController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\VerificationController;
-use App\Http\Controllers\Claims\ClaimsController;
-use App\Http\Controllers\Returns\PrintController;
-use App\Http\Controllers\TwoFactorAuthController;
-use App\Http\Controllers\Claims\CreditsController;
-use App\Http\Controllers\EducationLevelController;
-use App\Http\Controllers\Returns\ReturnController;
-use App\Http\Controllers\TransactionFeeController;
-use App\Http\Controllers\Account\AccountController;
-use App\Http\Controllers\Business\BranchController;
-use App\Http\Controllers\Debt\ReturnDebtController;
-use App\Http\Controllers\QRCodeGeneratorController;
-use App\Http\Controllers\Returns\SettingController;
-use App\Http\Controllers\BusinessCategoryController;
-use App\Http\Controllers\Finances\FinanceController;
-use App\Http\Controllers\WithholdingAgentController;
-use App\Http\Controllers\Assesments\WaiverController;
-use App\Http\Controllers\Business\BusinessController;
-use App\Http\Controllers\Claims\ClaimFilesController;
-use App\Http\Controllers\Debt\DebtRollbackController;
-use App\Http\Controllers\Payments\PaymentsController;
-use App\Http\Controllers\Setting\TaxRegionController;
-use App\Http\Controllers\Assesments\DisputeController;
-use App\Http\Controllers\MVR\DeRegistrationController;
-use App\Http\Controllers\TaxAgents\TaxAgentController;
-use App\Http\Controllers\Audit\TaxAuditFilesController;
-use App\Http\Controllers\Auth\ChangePasswordController;
-use App\Http\Controllers\Debt\AssessmentDebtController;
-use App\Http\Controllers\Extension\ExtensionController;
+use App\Http\Controllers\KYC\KycAmendmentRequestController;
 use App\Http\Controllers\LandLease\LandLeaseController;
-use App\Http\Controllers\Setting\PenaltyRateController;
-use App\Http\Controllers\Taxpayers\TaxpayersController;
-use App\Http\Controllers\Assesments\ObjectionController;
-use App\Http\Controllers\MVR\TRAChassisSearchController;
-use App\Http\Controllers\Relief\ReliefProjectController;
-use App\Http\Controllers\Relief\ReliefSponsorController;
-use App\Http\Controllers\Setting\ExchangeRateController;
-use App\Http\Controllers\Setting\InterestRateController;
-use App\Http\Controllers\Business\BusinessFileController;
-use App\Http\Controllers\Business\RegistrationController;
+use App\Http\Controllers\MVR\AgentsController;
+use App\Http\Controllers\MVR\DeRegistrationController;
+use App\Http\Controllers\MVR\MotorVehicleRegistrationController;
 use App\Http\Controllers\MVR\MvrGenericSettingController;
 use App\Http\Controllers\MVR\OwnershipTransferController;
-use App\Http\Controllers\Returns\Vat\VatReturnController;
-use App\Http\Controllers\Setting\ApprovalLevelController;
-use App\Http\Controllers\Audit\TaxAuditApprovalController;
-use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\MVR\RegistrationChangeController;
+use App\Http\Controllers\MVR\TRAChassisSearchController;
 use App\Http\Controllers\MVR\WrittenOffVehiclesController;
-use App\Http\Controllers\Setting\SystemSettingsController;
-use App\Http\Controllers\Setting\ZrbBankAccountController;
-use App\Http\Controllers\TaxAgents\TaxAgentFileController;
-use App\Http\Controllers\Installment\InstallmentController;
-use App\Http\Controllers\Returns\Port\PortReturnController;
-use App\Http\Controllers\Taxpayers\RegistrationsController;
-use App\Http\Controllers\Audit\TaxAuditAssessmentController;
-use App\Http\Controllers\Relief\ReliefMinistriestController;
-use App\Http\Controllers\Reports\Debts\DebtReportController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Payments\PaymentsController;
+use App\Http\Controllers\QRCodeCheckController;
+use App\Http\Controllers\QRCodeGeneratorController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
-use App\Http\Controllers\Relief\ReliefRegistrationController;
-use App\Http\Controllers\Returns\Hotel\HotelReturnController;
-use App\Http\Controllers\TaxClearance\TaxClearanceController;
-use App\Http\Controllers\Assesments\WaiverObjectionController;
-use App\Http\Controllers\Reports\Claims\ClaimReportController;
-use App\Http\Controllers\Business\BusinessUpdateFileController;
-use App\Http\Controllers\Captcha\CaptchaController;
 use App\Http\Controllers\Relief\ReliefGenerateReportController;
-use App\Http\Controllers\Setting\DualControlActivityController;
-use App\Http\Controllers\MVR\MotorVehicleRegistrationController;
+use App\Http\Controllers\Relief\ReliefMinistriestController;
+use App\Http\Controllers\Relief\ReliefProjectController;
+use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Relief\ReliefSponsorController;
+use App\Http\Controllers\Reports\Claims\ClaimReportController;
+use App\Http\Controllers\Reports\Debts\DebtReportController;
+use App\Http\Controllers\Reports\Department\DepartmentalReportController;
+use App\Http\Controllers\Reports\Dispute\DisputeReportController;
+use App\Http\Controllers\Reports\Payments\PaymentReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
-use App\Http\Controllers\Reports\Dispute\DisputeReportController;
+use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
+use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
+use App\Http\Controllers\Returns\FinancialYears\FinancialYearsController;
+use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
-use App\Http\Controllers\Installment\InstallmentRequestController;
+use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
+use App\Http\Controllers\Returns\Port\PortReturnController;
+use App\Http\Controllers\Returns\PrintController;
 use App\Http\Controllers\Returns\Queries\SalesPurchasesController;
+use App\Http\Controllers\Returns\ReturnController;
+use App\Http\Controllers\Returns\SettingController;
+use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\RoadInspectionOffence\RegisterController;
-use App\Http\Controllers\UpgradeTaxType\UpgradedTaxTypeController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Setting\ApiUserController;
+use App\Http\Controllers\Setting\ApprovalLevelController;
+use App\Http\Controllers\Setting\DualControlActivityController;
+use App\Http\Controllers\Setting\ExchangeRateController;
+use App\Http\Controllers\Setting\InterestRateController;
+use App\Http\Controllers\Setting\PenaltyRateController;
+use App\Http\Controllers\Setting\SystemSettingsController;
+use App\Http\Controllers\Setting\TaxRegionController;
+use App\Http\Controllers\Setting\ZrbBankAccountController;
+use App\Http\Controllers\StreetController;
+use App\Http\Controllers\TaxAgents\TaxAgentController;
+use App\Http\Controllers\TaxAgents\TaxAgentFileController;
+use App\Http\Controllers\TaxClearance\TaxClearanceController;
+use App\Http\Controllers\Taxpayers\AmendmentRequestController;
+use App\Http\Controllers\Taxpayers\RegistrationsController;
+use App\Http\Controllers\Taxpayers\TaxpayersController;
+use App\Http\Controllers\TaxTypeController;
+use App\Http\Controllers\TransactionFeeController;
+use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\UpgradeTaxType\QualifiedTaxTypeController;
 use App\Http\Controllers\Returns\Queries\AllCreditReturnsController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
+use App\Http\Controllers\InternalInfoChange\InternalInfoChangeController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
 use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Verification\TaxVerificationApprovalController;
-use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
-use App\Http\Controllers\Returns\FinancialYears\FinancialYearsController;
-use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
-use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
-use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
-use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
-use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
-use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
-use App\Http\Controllers\Taxpayers\AmendmentRequestController;
-use App\Http\Controllers\KYC\KycAmendmentRequestController;
-use App\Http\Controllers\QRCodeCheckController;
+use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
 use App\Http\Controllers\Vetting\TaxReturnVettingController;
+use App\Http\Controllers\WardController;
+use App\Http\Controllers\WithholdingAgentController;
+use App\Http\Controllers\WorkflowController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
-Auth::routes(['register'=>false]);
+Auth::routes(['register' => false]);
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -161,16 +159,24 @@ Route::middleware('auth')->group(function () {
     Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
     Route::get('/kill', [TwoFactorAuthController::class, 'kill'])->name('session.kill');
 
+    // OTP using Security Qns
+    Route::get('2fa/security-questions', [TwoFactorAuthController::class, 'securityQuestions'])->name('2fa.security-questions');
+
     Route::get('password/change', [ChangePasswordController::class, 'index'])->name('password.change');
     Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.store');
 });
 
-Route::middleware(['2fa', 'auth'])->group(function () {
+Route::middleware(['2fa', 'auth'])->group(function (){
+    Route::get('/account/login-security-questions', [AccountController::class, 'preSecurityQuestions'])->name('account.pre-security-questions');
+});
+
+Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::get('/account', [AccountController::class, 'show'])->name('account');
+    Route::get('/account/security-questions', [AccountController::class, 'securityQuestions'])->name('account.security-questions');
 
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::resource('/users', UserController::class);
@@ -179,6 +185,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/region', RegionController::class);
         Route::resource('/district', DistrictController::class);
         Route::resource('/ward', WardController::class);
+        Route::get('/street/bulk-sample', [StreetController::class, 'downloadSampleSheet'])->name('street.bulk-sample-download');
+        Route::post('/street/bulk-upload', [StreetController::class, 'uploadBulk'])->name('street.bulk-upload');
         Route::resource('/street', StreetController::class);
         Route::resource('/education-level', EducationLevelController::class);
         Route::resource('/banks', BankController::class);
@@ -210,6 +218,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
             Route::get('/show/{id}', [ReturnController::class, 'showReturnConfigs'])->name('show');
             Route::get('/create/{id}/{code}', [ReturnController::class, 'create'])->name('create');
             Route::get('/edit/{id}/{code}/{config_id}', [ReturnController::class, 'edit'])->name('edit');
+            Route::post('/editlumpsum/{config_id}', [ReturnController::class, 'editLumpSum'])->name('edit.lumpSum');
         });
 
         Route::get('/tax-consultant-duration', [TaxAgentController::class, 'duration'])->name('tax-consultant-duration');
@@ -248,7 +257,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('registrations/verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
         Route::resource('taxpayer', TaxpayersController::class);
     });
-
 
     Route::prefix('taxpayers-amendment')->as('taxpayers-amendment.')->group(function () {
         Route::get('view/all', [AmendmentRequestController::class, 'index'])->name('index');
@@ -304,6 +312,12 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
         Route::get('/upgraded-tax-types/', [UpgradedTaxTypeController::class, 'index'])->name('upgraded-tax-types.index');
         Route::get('/upgraded-tax-types/show/{id}', [UpgradedTaxTypeController::class, 'show'])->name('upgraded-tax-types.show');
+
+        Route::name('internal-info-change.')->prefix('internal-info-change')->group(function () {
+            Route::get('index', [InternalInfoChangeController::class, 'index'])->name('index');
+            Route::get('show/{internalInfoChangeId}', [InternalInfoChangeController::class, 'show'])->name('show');
+            Route::get('initiate', [InternalInfoChangeController::class, 'initiate'])->name('initiate');
+        });
     });
 
     // assesments

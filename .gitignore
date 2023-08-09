@@ -25,3 +25,6 @@ public/cert/*.pfx
 storage/debugbar/
 config/debugbar.php
 database/migrations/2023_05_24_161102_add_label_columns_to_vat_return_configs_table.php
+public/vendor/livewire/livewire.js
+database/migrations/2023_05_24_161102_add_label_columns_to_vat_return_configs_table.php
+database/migrations/2023_05_24_161102_add_label_columns_to_vat_return_configs_table.php

@@ -82,6 +82,11 @@
                             <a href="{{ route('business.updatesRequests') }}">Business Updates Requests</a>
                         </li>
                     @endcan
+                    @can('business-update-request-view')
+                        <li class="{{ request()->is('business/internal-info-change/index*') ? 'active' : '' }}">
+                            <a href="{{ route('business.internal-info-change.index') }}">Internal Information Change</a>
+                        </li>
+                    @endcan
                     @can('taxtype-change-request-view')
                         <li class="{{ request()->is('business/change-taxtype*') ? 'active' : '' }}">
                             <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>
@@ -92,7 +97,6 @@
                             <a href="{{ route('business.qualified-tax-types.index') }}">Qualified Tax Types</a>
                         </li>
                     @endcan
-
                     @can('upgraded-tax-types-view')
                         <li class="{{ request()->is('business/upgraded-tax-types*') ? 'active' : '' }}">
                             <a href="{{ route('business.upgraded-tax-types.index') }}">Upgraded Tax Types</a>
@@ -990,7 +994,7 @@
         @endcan
 
         @can('system')
-            <li class="{{ request()->is('system*') ? 'active' : '' }} mb-5">
+            <li class="{{ request()->is('system*') ? 'active' : '' }}">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
                 <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
                     @can('system-audit-trail-view')
@@ -1008,20 +1012,28 @@
                             <a href="{{ route('system.dual-control-activities.index') }}">Dual Control Activities</a>
                         </li>
                     @endcan
-                    {{--                    @can('setting-dual-control-activities') --}}
-                    {{--                        <li class="{{ request()->is('system/dual-control-configure/*') ? 'active' : '' }}">--}}
-                    {{--                            <a href="{{ route('system.dual-control-activities.configure') }}">Dual Control Configure</a>--}}
-                    {{--                        </li>--}}
-                    {{--                    @endcan --}}
-                    {{-- @can('system-all-pdfs-view')
-                        <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
-                            <a href="{{ route('pdf.all') }}">All PDF's</a>
-                        </li>
-                    @endcan --}}
                 </ul>
             </li>
         @endcan
-
+        <li class="{{ request()->is('account*') ? 'active' : '' }}">
+            <a href="#accountMenu" data-toggle="collapse"
+               aria-expanded="{{ request()->is('account*') ? 'true' : 'false' }}"
+               class="dropdown-toggle">{{ __("Account") }}</a>
+            <ul class="collapse list-unstyled {{ request()->is('account*') ? 'show' : '' }}" id="accountMenu">
+                <li class="{{ request()->is('account') ? 'active' : '' }}">
+                    <a href="{{ route('account') }}">{{ __("Account Details") }}</a>
+                </li>
+                <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
+                    <a href="{{ route('account.security-questions') }}">{{ __("Security Questions") }}</a>
+                </li>
+                <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
+                    <a href="{{ route('logout') }}"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        {{ __("Log out") }}
+                    </a>
+                </li>
+            </ul>
+        </li>
     </ul>
 
     <div class="profile d-flex justify-content-between align-items-center">

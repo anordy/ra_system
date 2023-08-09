@@ -10,8 +10,7 @@ trait RegistrationReportTrait
     public function getBusinessBuilder($parameters): Builder
     {
         $businessLocations = BusinessLocation::distinct('business_locations.id')
-            ->join('businesses', 'businesses.id', 'business_locations.business_id')
-            ->join('business_tax_type', 'business_tax_type.business_id', 'businesses.id');
+            ->join('businesses', 'businesses.id', 'business_locations.business_id');
         //get criteria                                
         switch ($parameters['criteria']) {
             case 'All-Business':
@@ -23,7 +22,7 @@ trait RegistrationReportTrait
                 break;
             case 'Business-Reg-By-TaxType':
                 if($parameters['taxtype_id'] == 'all') {
-                    $businessLocations = $businessLocations;
+                    $businessLocations = $businessLocations->join('business_tax_type', 'business_tax_type.business_id', 'businesses.id');
                 } else {
                     $businessLocations->where('business_tax_type.tax_type_id', $parameters['taxtype_id']);
                 }

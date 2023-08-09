@@ -54,7 +54,7 @@ class BusinessAuditAddModal extends Component
     public function businessChange($id)
     {
         if ($this->business_id) {
-            $this->selectedBusiness = Business::with('locations')->find($id);
+            $this->selectedBusiness = Business::with('locations', 'taxTypes')->find($id);
             if (is_null($this->selectedBusiness)) {
                 abort(404);
             }

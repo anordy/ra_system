@@ -20,6 +20,7 @@ class VettedReturnsTable extends DataTableComponent
     protected $model     = TaxReturn::class;
 
     public $vettingStatus;
+    public $orderBy;
 
     public function mount($vettingStatus)
     {
@@ -28,6 +29,12 @@ class VettedReturnsTable extends DataTableComponent
         }
 
         $this->vettingStatus = $vettingStatus;
+
+        if ($this->vettingStatus == VettingStatus::VETTED) {
+            $this->orderBy = 'DESC';
+        } else {
+            $this->orderBy = 'ASC';
+        }
     }
 
     public function configure(): void
@@ -42,11 +49,11 @@ class VettedReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth')
+        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class])
             ->where('parent',0)
             ->where('vetting_status', $this->vettingStatus)
-            ->orderBy('created_at', 'asc');
+            ->orderBy('created_at', $this->orderBy);
     }
 
     public function columns(): array
@@ -55,11 +62,17 @@ class VettedReturnsTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Branch / Location', 'location.name')
+            Column::make('Branch', 'location.name')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
                     return "{$row->location->name}";
+                }),
+            Column::make('Tax Region', 'location.tax_region_id')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->location->taxRegion->name}";
                 }),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()

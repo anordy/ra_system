@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\TransferForm;
 
 use App\Models\ZmBill;
-use App\Models\ZRBBankAccount;
+use App\Models\ZrbBankAccount;
 use Livewire\Component;
 
 class TransferFormGenerator extends Component
@@ -17,7 +17,7 @@ class TransferFormGenerator extends Component
     public $businessBanks;
 
     public function mount($currency, $billId) {
-        $this->zrbBankAccounts = ZRBBankAccount::select('id', 'bank_id')->with('bank')->where('currency_iso', $currency)->where('is_approved', 1)->where('is_transfer', 1)->get();
+        $this->zrbBankAccounts = ZrbBankAccount::select('id', 'bank_id')->with('bank')->where('currency_iso', $currency)->where('is_approved', 1)->where('is_transfer', 1)->get();
         $this->billId = decrypt($billId);
         $bill = ZmBill::findOrFail($this->billId);
         $this->businessBanks = $bill->billable->business->banks;
