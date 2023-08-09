@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class BusinessHotel extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    public function star(){
+        return $this->belongsTo(HotelStar::class, 'hotel_star_id');
+    }
 }

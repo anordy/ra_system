@@ -82,6 +82,11 @@
                             <a href="{{ route('business.updatesRequests') }}">Business Updates Requests</a>
                         </li>
                     @endcan
+                    @can('business-update-request-view')
+                        <li class="{{ request()->is('business/internal-info-change/index*') ? 'active' : '' }}">
+                            <a href="{{ route('business.internal-info-change.index') }}">Internal Information Change</a>
+                        </li>
+                    @endcan
                     @can('taxtype-change-request-view')
                         <li class="{{ request()->is('business/change-taxtype*') ? 'active' : '' }}">
                             <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>
@@ -92,7 +97,6 @@
                             <a href="{{ route('business.qualified-tax-types.index') }}">Qualified Tax Types</a>
                         </li>
                     @endcan
-
                     @can('upgraded-tax-types-view')
                         <li class="{{ request()->is('business/upgraded-tax-types*') ? 'active' : '' }}">
                             <a href="{{ route('business.upgraded-tax-types.index') }}">Upgraded Tax Types</a>
