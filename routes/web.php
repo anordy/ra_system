@@ -119,6 +119,7 @@ use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
+use App\Http\Controllers\InternalInfoChange\InternalInfoChangeController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
 use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
@@ -312,6 +313,12 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
 
         Route::get('/upgraded-tax-types/', [UpgradedTaxTypeController::class, 'index'])->name('upgraded-tax-types.index');
         Route::get('/upgraded-tax-types/show/{id}', [UpgradedTaxTypeController::class, 'show'])->name('upgraded-tax-types.show');
+
+        Route::name('internal-info-change.')->prefix('internal-info-change')->group(function () {
+            Route::get('index', [InternalInfoChangeController::class, 'index'])->name('index');
+            Route::get('show/{internalInfoChangeId}', [InternalInfoChangeController::class, 'show'])->name('show');
+            Route::get('initiate', [InternalInfoChangeController::class, 'initiate'])->name('initiate');
+        });
     });
 
     // assesments

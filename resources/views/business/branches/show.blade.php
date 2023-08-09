@@ -76,10 +76,12 @@
                     <span class="font-weight-bold text-uppercase">Date of Commencing</span>
                     <p class="my-1">{{ $location->date_of_commencing->toFormattedDateString() }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Effective Date</span>
-                    <p class="my-1">{{ $location->effective_date->toFormattedDateString() }}</p>
-                </div>
+                @if ($location->effective_date)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Effective Date</span>
+                        <p class="my-1">{{ $location->effective_date->toFormattedDateString() }}</p>
+                    </div> 
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Pre Estimated Turnover</span>
                     <p class="my-1">{{ number_format($location->pre_estimated_turnover ?? 0, 2) }}
@@ -190,6 +192,10 @@
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Hotel Location</span>
                         <p class="my-1">{{ $hotel->hotel_location }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">{{ __('Hotel Star Rating') }}</span>
+                        <p class="my-1">{{ $hotel->star->no_of_stars ?? 'N/A' }} {{ __('Stars') }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Number of Rooms</span>
