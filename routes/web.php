@@ -218,6 +218,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
             Route::get('/show/{id}', [ReturnController::class, 'showReturnConfigs'])->name('show');
             Route::get('/create/{id}/{code}', [ReturnController::class, 'create'])->name('create');
             Route::get('/edit/{id}/{code}/{config_id}', [ReturnController::class, 'edit'])->name('edit');
+            Route::post('/editlumpsum/{config_id}', [ReturnController::class, 'editLumpSum'])->name('edit.lumpSum');
         });
 
         Route::get('/tax-consultant-duration', [TaxAgentController::class, 'duration'])->name('tax-consultant-duration');

@@ -7,6 +7,7 @@ use App\Models\Returns\BFO\BfoConfig;
 use App\Models\Returns\EmTransactionConfig;
 use App\Models\Returns\ExciseDuty\MnoConfig;
 use App\Models\Returns\HotelReturns\HotelReturnConfig;
+use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\MmTransferConfig;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\StampDuty\StampDutyConfig;
@@ -63,6 +64,10 @@ trait ReturnConfigurationTrait
 
             case TaxType::MOBILE_MONEY_TRANSFER:
                 $model = MmTransferConfig::class;
+                return $model;
+
+            case TaxType::LUMPSUM_PAYMENT:
+                $model = LumpSumConfig::class;
                 return $model;
 
             default:
