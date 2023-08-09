@@ -35,6 +35,10 @@ class InitiateChangeModal extends Component
         ];
     }
 
+    protected $messages = [
+        'newHotelStarId.required_if' => 'Please select new hotel star rating',
+    ];
+
     public function submit()
     {
         $this->validate();
@@ -55,7 +59,6 @@ class InitiateChangeModal extends Component
                     'new_values' => json_encode(['no_of_stars' => $selectedStar->no_of_stars, 'id' => $this->newHotelStarId]),
                 ]);
             }
-
          
             DB::commit();
 
@@ -72,7 +75,7 @@ class InitiateChangeModal extends Component
 
     public function getZin()
     {
-        $this->location = BusinessLocation::select('id', 'business_id')->where('zin', trim($this->zin))->first();
+        $this->location = BusinessLocation::select('id', 'business_id', 'name')->with('business')->where('zin', trim($this->zin))->first();
         if ($this->location) {
             
             // Load hotel stars & Business hotel if hotelStars info type is selected

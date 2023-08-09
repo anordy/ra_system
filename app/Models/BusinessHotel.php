@@ -14,4 +14,8 @@ class BusinessHotel extends Model
     public function star(){
         return $this->belongsTo(HotelStar::class, 'hotel_star_id');
     }
+
+    public function business(){
+        return $this->belongsTo(Business::class, 'business_id');
+    }
 }

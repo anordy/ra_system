@@ -1,6 +1,10 @@
 @extends('layouts.master')
 
-@section('title', "{$info->type} Information Change for {$info->business->name}")
+@php
+    $info_type = ucfirst(str_replace('_', ' ', $info->type));
+@endphp
+
+@section('title', "{$info_type} Information Change for {$info->business->name}")
 
 @section('content')
 <ul class="nav nav-tabs" id="myTab" role="tablist">

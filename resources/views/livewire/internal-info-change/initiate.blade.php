@@ -36,6 +36,8 @@
                 </div>
 
                 @if ($businessHotel)
+                    <div class="text-uppercase font-weight-normal pr-3 pl-3 mb-4 mt-4">Hotel Star Rating Details for {{ $location->business->name }} of Branch {{ $location->name }} <hr></div>
+
                     <div class="row pr-3 pl-3">
                         <div class="form-group col-lg-6">
                             <label class="control-label">Current Hotel Star Rating</label>

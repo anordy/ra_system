@@ -495,6 +495,161 @@
               
                     <br>
                 </div>
+            @elseif ($business_update->type == 'hotel_information')
+            <div class="col-md-12">
+                <table class="table table-striped table-sm">
+                    <label class="font-weight-bold text-uppercase">{{ $business_update->business->name }} Hotel Information</label>
+                    <thead>
+                        <th style="width: 30%">Property</th>
+                        <th style="width: 25%">Old Values</th>
+                        <th style="width: 25%">New Values</th>
+                        <th style="width: 20%">Status</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Is Taxpayer the owner of the hotel ?</th>
+                            <td>{{ $old_values->business_reg_no ? 'No' : 'Yes' }}</td>
+                            <td>{{ $new_values->business_reg_no ? 'No' : 'Yes' }}</td>
+                            @if ($old_values->business_reg_no == $new_values->business_reg_no)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Business Reg No</th>
+                            <td>{{ $old_values->business_reg_no ?? 'N/A' }}</td>
+                            <td>{{ $new_values->business_reg_no ?? 'N/A' }}</td>
+                            @if ($old_values->business_reg_no == $new_values->business_reg_no)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Old Business Reg No</th>
+                            <td>{{ $old_values->old_business_reg_no ?? 'N/A' }}</td>
+                            <td>{{ $new_values->old_business_reg_no ?? 'N/A' }}</td>
+                            @if ($old_values->old_business_reg_no == $new_values->old_business_reg_no)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Company Name</th>
+                            <td>{{ $old_values->company_name ?? 'N/A' }}</td>
+                            <td>{{ $new_values->company_name ?? 'N/A' }}</td>
+                            @if ($old_values->company_name == $new_values->company_name)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Management Company</th>
+                            <td>{{ $old_values->management_company ?? 'N/A' }}</td>
+                            <td>{{ $new_values->management_company ?? 'N/A' }}</td>
+                            @if ($old_values->management_company == $new_values->management_company)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Hotel Location</th>
+                            <td>{{ $old_values->hotel_location }}</td>
+                            <td>{{ $new_values->hotel_location }}</td>
+                            @if ($old_values->hotel_location == $new_values->hotel_location)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Number of Rooms</th>
+                            <td>{{ $old_values->number_of_rooms }}</td>
+                            <td>{{ $new_values->number_of_rooms }}</td>
+                            @if ($old_values->number_of_rooms == $new_values->number_of_rooms)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Number of Single Rooms</th>
+                            <td>{{ $old_values->number_of_single_rooms }}</td>
+                            <td>{{ $new_values->number_of_single_rooms }}</td>
+                            @if ($old_values->number_of_single_rooms == $new_values->number_of_single_rooms)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Number of Double Rooms</th>
+                            <td>{{ $old_values->number_of_double_rooms }}</td>
+                            <td>{{ $new_values->number_of_double_rooms }}</td>
+                            @if ($old_values->number_of_double_rooms == $new_values->number_of_double_rooms)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Number of Other Rooms</th>
+                            <td>{{ $old_values->number_of_other_rooms }}</td>
+                            <td>{{ $new_values->number_of_other_rooms }}</td>
+                            @if ($old_values->number_of_other_rooms == $new_values->number_of_other_rooms)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Hotel Capacity</th>
+                            <td>{{ $old_values->hotel_capacity }}</td>
+                            <td>{{ $new_values->hotel_capacity }}</td>
+                            @if ($old_values->hotel_capacity == $new_values->hotel_capacity)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Average Charging Rate</th>
+                            <td>{{ $old_values->average_rate }}</td>
+                            <td>{{ $new_values->average_rate }}</td>
+                            @if ($old_values->average_rate == $new_values->average_rate)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Other Services</th>
+                            <td>{{ $old_values->other_services }}</td>
+                            <td>{{ $new_values->other_services }}</td>
+                            @if ($old_values->other_services == $new_values->other_services)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Hotel Star Rating</th>
+                            <td>{{ $this->getNameById('hotel_star_id', $old_values->hotel_star_id) }} Star</td>
+                            <td>{{ $this->getNameById('hotel_star_id', $new_values->hotel_star_id) }} Star</td>
+                            @if ($old_values->hotel_star_id == $new_values->hotel_star_id)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+            </div>
             @endif
 
             @livewire('business.updates.changes-approval-processing', ['modelName' => 'App\Models\BusinessUpdate', 'modelId' => encrypt($business_update->id), 'businessUpdate' => $business_update])
