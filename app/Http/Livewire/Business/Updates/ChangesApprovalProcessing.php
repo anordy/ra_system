@@ -19,18 +19,19 @@ use App\Models\Business;
 use App\Models\Currency;
 use App\Models\District;
 use App\Models\TaxAgent;
+use App\Models\Taxpayer;
 use App\Models\TaxRegion;
 use App\Models\AccountType;
 use App\Traits\CustomAlert;
 use App\Models\BusinessBank;
 use App\Models\BusinessFile;
 use App\Enum\AssistantStatus;
+use App\Models\BusinessHotel;
 use App\Models\BusinessStatus;
 use App\Models\BusinessActivity;
 use App\Models\BusinessLocation;
 use App\Models\BusinessAssistant;
 use App\Models\BusinessConsultant;
-use App\Models\Taxpayer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\WorkflowProcesssingTrait;
@@ -274,7 +275,7 @@ class ChangesApprovalProcessing extends Component
                     event(new SendSms('change-business-information-approval', $notification_payload));
                 } else if ($this->business_update_data->type == 'business_attachments') {
                     $new_values = json_decode($this->business_update_data->new_values);
-                  
+
                     $business = Business::findOrFail($this->business_id);
 
                     DB::beginTransaction();
@@ -323,9 +324,33 @@ class ChangesApprovalProcessing extends Component
 
                     event(new SendMail('change-business-information-approval', $notification_payload));
                     event(new SendSms('change-business-information-approval', $notification_payload));
+                } else if ($this->business_update_data->type == 'hotel_information') {
+                    $new_values = json_decode($this->business_update_data->new_values, true);
+
+                    DB::beginTransaction();
+                    try {
+                        // Get the first Hotel of the business
+                        $hotel = BusinessHotel::where('business_id', $this->business_update_data->business_id)->first();
+
+                        $hotel->update($new_values);
+
+                        $this->subject->status = BusinessStatus::APPROVED;
+                        DB::commit();
+                    } catch (Exception $e) {
+                        Log::error($e);
+                        DB::rollBack();
+                        $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+                    }
+
+                    $notification_payload = [
+                        'business' => $hotel->business,
+                        'time' => Carbon::now()->format('d-m-Y')
+                    ];
+
+                    event(new SendMail('change-business-information-approval', $notification_payload));
+                    event(new SendSms('change-business-information-approval', $notification_payload));
                 }
             }
-
         } catch (Exception $e) {
             Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');

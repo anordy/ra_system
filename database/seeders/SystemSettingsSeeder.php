@@ -47,6 +47,12 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'all settings related to business settings',
                 'is_approved' => 1
             ],
+            [
+                'name' => 'Filing Minimum Amount',
+                'code' => 'filing-minimum-amounts',
+                'description' => 'All settings related to filing minimum allowed amounts.',
+                'is_approved' => 1
+            ],
         ];
 
         foreach ($categories as $category) {
@@ -125,6 +131,15 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'Duration before delete all businesses with Draft Status',
                 'value' => '7',
                 'unit' => 'days',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Stamp Duty Minimum Filing Amount',
+                'code' => 'stamp-duty-minimum-filling-amount',
+                'description' => 'Stamp-duty Composition minimum amount required for filling a return.',
+                'value' => '135000',
+                'unit' => 'number',
                 'is_approved' => 1
             ],
         ];

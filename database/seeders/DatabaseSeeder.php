@@ -109,5 +109,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LumpSumConfigSeeder::class);
         $this->call(Vat18ReturnConfigSeeder::class);
         $this->call(SecurityQuestionsSeeder::class);
+        $this->call(HotelStarsSeeder::class);
+        $this->call(WorkflowInternalBusinessInfoChangeSeeder::class);
     }
 }

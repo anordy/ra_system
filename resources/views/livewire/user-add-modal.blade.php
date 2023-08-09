@@ -75,6 +75,17 @@
                                 @enderror
                             </div>
                         @endif
+                        <div class="form-group col-lg-6">
+                            <label class="">Login using security questions</label>
+                            <select class="form-control" wire:model.defer="override_otp">
+                                <option value="">Choose option</option>
+                                <option value="1">Allowed</option>
+                                <option value="0">Restricted</option>
+                            </select>
+                            @error('override_otp')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
                 </div>
             </div>
