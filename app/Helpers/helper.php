@@ -10,6 +10,7 @@ use App\Models\EducationLevel;
 use App\Models\UserApprovalLevel;
 use Illuminate\Support\Facades\Auth;
 use App\Models\BusinessTaxTypeChange;
+use Illuminate\Support\Facades\DB;
 
 function getOperators($owner, $operator_type, $actors)
 {
@@ -180,4 +181,13 @@ function roundOff($amount, $currency)
     }
 
     return $roundedAmount;
+}
+
+function getHotelStarByBusinessId($business_id)
+{
+    $hotel_star = DB::table('business_hotels as b')
+        ->leftJoin('hotel_stars as h','b.hotel_star_id','=','h.id')
+        ->where('b.business_id','=',$business_id)
+        ->select('h.infrastructure_charged','no_of_stars')->first();
+    return $hotel_star;
 }
