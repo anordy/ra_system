@@ -55,8 +55,8 @@ class InitiateChangeModal extends Component
                     'location_id' => $this->location->id,
                     'type' => 'hotel_stars',
                     'triggered_by' => Auth::id(),
-                    'old_values' => json_encode(['no_of_stars' => $this->businessHotel->star->no_of_stars, 'id' => $this->businessHotel->hotel_star_id]),
-                    'new_values' => json_encode(['no_of_stars' => $selectedStar->no_of_stars, 'id' => $this->newHotelStarId]),
+                    'old_values' => json_encode(['no_of_stars' => $this->businessHotel->star->no_of_stars ?? null, 'id' => $this->businessHotel->hotel_star_id]),
+                    'new_values' => json_encode(['no_of_stars' => $selectedStar->no_of_stars ?? null, 'id' => $this->newHotelStarId]),
                 ]);
             }
          

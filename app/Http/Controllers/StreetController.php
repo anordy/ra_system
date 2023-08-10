@@ -35,7 +35,7 @@ class StreetController extends Controller
             abort(403);
         }
         $request->validate([
-            'file' => 'required|file|mimes:csv|max:2048',
+            'file' => 'required|file|mimes:csv,txt|max:2048',
         ]);
 
         if ($request->file('file')->isValid()) {
@@ -76,6 +76,7 @@ class StreetController extends Controller
                                 Street::create([
                                     'ward_id' => $ward->id,
                                     'name' => ucwords($streetName),
+                                    'is_approved' => true
                                 ]);
                             }
                         }

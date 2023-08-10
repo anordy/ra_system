@@ -41,7 +41,7 @@
                     <div class="row pr-3 pl-3">
                         <div class="form-group col-lg-6">
                             <label class="control-label">Current Hotel Star Rating</label>
-                            <input type="text" class="form-control" value="{{ $businessHotel->star->no_of_stars }}" disabled>
+                            <input type="text" class="form-control" value="{{ $businessHotel->star->no_of_stars ?? 'N/A' }}" disabled>
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">New Hotel Star Rating</label>
