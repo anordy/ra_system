@@ -48,7 +48,7 @@ trait PenaltyTrait
                     'taxAmount' => $taxAmount,
                     'penaltyAmount' => $penaltableAMountForPerticularMonth,
                     'lateFilingAmount' => $lateFilingFee ?? 0,
-                    'latePaymentAmount' => $latePaymentAmount ?? 0,
+                    'latePaymentAmount' => 0,
                     'interestRate' => $interestRate,
                     'interestAmount' => $interestAmount
                 ];
@@ -67,7 +67,7 @@ trait PenaltyTrait
                 'taxAmount' => $penaltableAMountForPerticularMonth,
                 'penaltyAmount' => $penaltableAmount,
                 'lateFilingAmount' =>  0,
-                'latePaymentAmount' => $latePaymentAmount ?? 0,
+                'latePaymentAmount' => 0,
                 'interestRate' => $interestRate,
                 'interestAmount' => $interestAmount,
             ];

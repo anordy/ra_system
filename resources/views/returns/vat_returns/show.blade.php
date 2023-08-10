@@ -180,11 +180,19 @@
                                                         <td>{{ $item->config->name }}</td>
                                                         <td class="text-right">{{ number_format($item->value, 2) }} <strong>(No.
                                                                 of bed nights)</strong></td>
-                                                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
+                                                        <td>
+                                                            {{ $item->config->rate_type === 'percentage' ? $item->config->rate : getHotelStarByBusinessId($return->business->id)->infrastructure_charged }}
                                                             @if($item->config->rate_type =='percentage')
                                                                 %
                                                             @else
-                                                                {{$item->config->currency}}
+                                                                @if ($item->config->currency == 'both')
+                                                                    <strong>TZS</strong> <br>
+                                                                    <strong>USD</strong>
+                                                                @elseif ($item->config->currency == 'TZS')
+                                                                    <strong>TZS</strong>
+                                                                @elseif ($item->config->currency == 'USD')
+                                                                    <strong>USD</strong>
+                                                                @endif
                                                             @endif
                                                         </td>
                                                         <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
@@ -415,12 +423,6 @@
                                                                 </td>
 
                                                             </tr>
-                                                        @else
-                                                            <tr>
-                                                                <td colspan="7" class="text-center py-3">
-                                                                    {{ __('No details for supplier for this return month') }}.
-                                                                </td>
-                                                            </tr>
                                                         @endif
                                                     @endforeach
                                                 @else
@@ -480,12 +482,6 @@
                                                                     @endif
                                                                 </td>
 
-                                                            </tr>
-                                                        @else
-                                                            <tr>
-                                                                <td colspan="7" class="text-center py-3">
-                                                                    {{ __('No details for supplier for this return month') }}.
-                                                                </td>
                                                             </tr>
                                                         @endif
                                                     @endforeach

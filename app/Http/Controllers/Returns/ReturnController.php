@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Returns;
 
 use App\Http\Controllers\Controller;
 use App\Models\FinancialYear;
+use App\Models\Returns\LumpSum\LumpSumConfig;
+use App\Models\TaxType;
 use App\Traits\ReturnConfigurationTrait;
 use Illuminate\Support\Facades\Gate;
 
@@ -51,8 +53,13 @@ class ReturnController extends Controller
         $taxtype_id = decrypt($taxtype_id);
         $code = decrypt($code);
         $config_id = decrypt($config_id);
+        $configs = '';
 
-        return view('returns.return-configs.edit', compact('taxtype_id', 'code', 'config_id'));
+        if ($code == TaxType::LUMPSUM_PAYMENT || $code == 'lumpsum payment') {
+            $configs = LumpSumConfig::FindOrFail($config_id);
+        }
+
+        return view('returns.return-configs.edit', compact('taxtype_id', 'code', 'config_id','configs'));
     }
 
     public function showReturnConfigs($id)
@@ -77,5 +84,14 @@ class ReturnController extends Controller
         $year = FinancialYear::query()->where('id', $id)->value('code');
 
         return $year;
+    }
+
+    public function editLumpSum($configId){
+        $edit = LumpSumConfig::where('id', decrypt($configId))->update(request()->except('_token'));
+        if(!$edit){
+            return redirect()->back()->with('error', 'Configuration could not be updated try again');
+        }
+        return redirect()->back()->with('success', 'Configuration updated successfully.');
+        
     }
 }

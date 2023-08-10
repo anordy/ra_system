@@ -14,6 +14,7 @@ use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\LumpSumPayment;
+use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
@@ -51,6 +52,7 @@ class ApprovalProcessing extends Component
     public $subVatOptions = [];
 
     public $showLumpsumOptions = false;
+    public $annualSales;
 
     public $Ids, $exceptionOne, $exceptionTwo;
 
@@ -175,8 +177,11 @@ class ApprovalProcessing extends Component
                     'tax_type_id'     => $lumpSumId,
                     'currency'        => '',
                     'annual_estimate' => '',
-                    'quarters'        => '',
+                    'quarters'        => 4,
                 ];
+
+                $this->annualSales = LumpSumConfig::select('id', 'min_sales_per_year', 'max_sales_per_year', 'payments_per_year', 'payments_per_installment')->get()->toArray();
+
             } else {
                 $this->showLumpsumOptions = false;
             }
