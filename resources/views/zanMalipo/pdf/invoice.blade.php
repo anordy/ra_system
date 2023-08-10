@@ -176,7 +176,7 @@
                 <td colspan="3">: HEAD QUARTER</td>
             </tr>
             <tr>
-                <td>PrintIssueded By</td>
+                <td>Print Issued By</td>
                 <td colspan="3">: {{ $bill->payer_name }}</td>
             </tr>
             <tr>

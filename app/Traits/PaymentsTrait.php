@@ -83,20 +83,20 @@ trait PaymentsTrait
      */
     public function generateControlNo($return, $billItems)
     {
-        $taxpayer = $return->taxpayer;
+        $business = $return->business;
         $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->where('business_id', $return->business_id)->firstOrFail();
         $exchange_rate = $this->getExchangeRate($tax_type->currency);
 
-        $payer_type     = get_class($taxpayer);
-        $payer_name     = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
-        $payer_email    = $taxpayer->email;
-        $payer_phone    = $taxpayer->mobile;
-        $description    = "Return payment for {$return->business->name} - {$return->financialMonth->name} {$return->financialMonth->year->code}";
+        $payer_type     = get_class($business);
+        $payer_name     = $business->name ?? $business->taxpayer_name;
+        $payer_email    = $business->email;
+        $payer_phone    = $business->mobile;
+        $description    = "Return payment for {$payer_name} - {$return->financialMonth->name} {$return->financialMonth->year->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $tax_type->currency;
         $createdby_type = get_class(Auth::user());
         $createdby_id   = Auth::id();
-        $payer_id       = $taxpayer->id;
+        $payer_id       = $business->id;
         $expire_date    = Carbon::now()->addMonth()->toDateTimeString();
         $billableId     = $return->id;
         $billableType   = get_class($return);
@@ -320,19 +320,19 @@ trait PaymentsTrait
 
         $billItems = $this->generateReturnBillItems($debt);
 
-        $taxpayer = $debt->business->taxpayer;
+        $business = $debt->business;
 
-        $payer_type     = get_class($taxpayer);
-        $payer_name     = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
-        $payer_email    = $taxpayer->email;
-        $payer_phone    = $taxpayer->mobile;
-        $description    = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name} on {$debt->financialMonth->name} {$debt->financialMonth->year->code}";
+        $payer_type     = get_class($business);
+        $payer_name     = $business->name ?? $business->taxpayer_name;
+        $payer_email    = $business->email;
+        $payer_phone    = $business->mobile;
+        $description    = "{$debt->taxtype->name} Debt Payment for {$payer_name} {$debt->location->name} on {$debt->financialMonth->name} {$debt->financialMonth->year->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
         $exchange_rate = $this->getExchangeRate($debt->currency);
-        $payer_id = $taxpayer->id;
+        $payer_id = $business->id;
         $expire_date = $debt->curr_payment_due_date;
         $billableId = $debt->id;
         $billableType = get_class($debt);
@@ -419,19 +419,19 @@ trait PaymentsTrait
             ];
         }
 
-        $taxpayer = $debt->business->taxpayer;
+        $business = $debt->business;
 
-        $payer_type     = get_class($taxpayer);
-        $payer_name     = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
-        $payer_email    = $taxpayer->email;
-        $payer_phone    = $taxpayer->mobile;
-        $description    = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name}";
+        $payer_type     = get_class($business);
+        $payer_name     = $business->name ?? $business->taxpayer_id;
+        $payer_email    = $business->email;
+        $payer_phone    = $business->mobile;
+        $description    = "{$debt->taxtype->name} Debt Payment for {$payer_name} {$debt->location->name}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
         $exchange_rate = $this->getExchangeRate($debt->currency);
-        $payer_id = $taxpayer->id;
+        $payer_id = $business->id;
         $expire_date = $debt->curr_payment_due_date;
         $billableId = $debt->id;
         $billableType = get_class($debt);
@@ -511,7 +511,7 @@ trait PaymentsTrait
             ];
         }
 
-        $taxpayer = $assessment->business->taxpayer;
+        $business = $assessment->business;
 
         if ($assessment->assessment_type == TaxAudit::class) {
             $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->taxAuditLocationNames() ?? 'Multiple business locations';
@@ -522,17 +522,17 @@ trait PaymentsTrait
         } else {
             $assessmentLocations = 'Business location';
         }
-        $payer_type     = get_class($taxpayer);
-        $payer_name     = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
-        $payer_email    = $taxpayer->email;
-        $payer_phone    = $taxpayer->mobile;
-        $description    = "{$assessment->taxtype->name} dispute waiver for {$assessment->business->name} in {$assessmentLocations}";
+        $payer_type     = get_class($business);
+        $payer_name     = $business->name ?? $business->taxpayer_id;
+        $payer_email    = $business->email;
+        $payer_phone    = $business->mobile;
+        $description    = "{$assessment->taxtype->name} dispute waiver for {$payer_name} in {$assessmentLocations}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency       = $assessment->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
         $exchange_rate = $this->getExchangeRate($assessment->currency);
-        $payer_id = $taxpayer->id;
+        $payer_id = $business->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
         $billableId = $assessment->id;
         $billableType = get_class($assessment);
@@ -735,25 +735,25 @@ trait PaymentsTrait
     }
 
     public function generateReturnControlNumber($return) {
-        $taxpayer = $return->taxpayer;
+        $business = $return->business;
         $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->where('business_id', $return->business_id)->firstOrFail();
         $exchange_rate = $this->getExchangeRate($return->currency);
 
         // Generate return control no.
-        $payer_type = get_class($taxpayer);
-        $payer_name = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
-        $payer_email = $taxpayer->email;
-        $payer_phone = $taxpayer->mobile;
+        $payer_type = get_class($business);
+        $payer_name = $business->name ?? $business->taxpayer_id;
+        $payer_email = $business->email;
+        $payer_phone = $business->mobile;
         if ($return->table == 'lump_sum_returns') {
-            $description = "Lump Sum Payments for {$return->business->name}  {$this->fillingMonth['name']} ";
+            $description = "Lump Sum Payments for {$payer_name}  {$this->fillingMonth['name']} ";
         } else {
-            $description = "Return payment for {$return->business->name} - {$return->financialMonth->name} {$return->financialMonth->year->code}";
+            $description = "Return payment for {$payer_name} - {$return->financialMonth->name} {$return->financialMonth->year->code}";
         }
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = $return->currency;
         $createdby_type = get_class(Auth::user());
         $createdby_id = Auth::id();
-        $payer_id = $taxpayer->id;
+        $payer_id = $business->id;
         $expire_date = $return->curr_payment_due_date;
         $billableId = $return->id;
         $billableType = get_class($return);
@@ -851,19 +851,19 @@ trait PaymentsTrait
                 ];
             }
 
-            $taxpayer = $assessment->business->taxpayer;
+            $business = $assessment->business;
 
-            $payer_type = get_class($taxpayer);
-            $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
-            $payer_email = $taxpayer->email;
-            $payer_phone = $taxpayer->mobile;
-            $description = "{$taxType->name} Verification Assessment for {$assessment->business->name}";
+            $payer_type = get_class($business);
+            $payer_name = $business->name ?? $business->taxpayer_name;
+            $payer_email = $business->email;
+            $payer_phone = $business->mobile;
+            $description = "{$taxType->name} Verification Assessment for {$payer_name}";
             $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
             $currency = $assessment->currency;
             $createdby_type = get_class(Auth::user());
             $createdby_id = Auth::id();
             $exchange_rate = $this->getExchangeRate($assessment->currency);
-            $payer_id = $taxpayer->id;
+            $payer_id = $business->id;
             $expire_date = Carbon::now()->addDays(30)->endOfDay();
             $billableId = $assessment->id;
             $billableType = get_class($assessment);
