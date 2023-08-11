@@ -138,6 +138,14 @@
                 </div>
             </div>
         </div>
+    @elseif(count($response) == 0)
+        <table class="d-flex justify-content-center">
+            <tr>
+                <td colspan="9" class="px-4 py-1 border rounded">
+                    <div class="text-danger italic font-weight-bold h6">No record found!</div>
+                </td>
+            </tr>
+        </table>
     @endif
 
 </div>

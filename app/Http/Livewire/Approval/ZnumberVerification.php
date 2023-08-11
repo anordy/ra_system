@@ -77,7 +77,7 @@ class ZnumberVerification extends Component
     private function removeAssociatedBusinessUnits(){
         foreach ($this->response as $key => $item){
             if ($this->checkIfAssociated($item)){
-                unset($$this->response[$key]);
+                unset($this->response[$key]);
             }
         }
     }
