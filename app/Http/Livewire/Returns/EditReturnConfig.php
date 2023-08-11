@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
 use Livewire\Component;
+use Exception;
 
 class EditReturnConfig extends Component
 {
@@ -54,7 +55,6 @@ class EditReturnConfig extends Component
         DB::beginTransaction();
         try {
             $payload = [
-                'id'=>$this->config_id,
                 'name'=>$this->name,
                 'row_type'=>$this->row_type,
                 'value_calculated'=>$this->value_calculated,
@@ -64,18 +64,28 @@ class EditReturnConfig extends Component
                 'currency'=>$this->currency,
                 'rate'=>$this->rate,
                 'rate_usd'=>$this->rate_usd,
-                'value_formular'=>$this->value_formular
             ];
+
+            if (key_exists('formular', $this->configs->attributesToArray())){
+                $payload['formular'] = $this->value_formular;
+            } else {
+                $payload['value_formular'] = $this->value_formular;
+            }
+
             $this->configs->update($payload);
             DB::commit();
-            $this->flash('success', 'Record updated successfully');
+            $this->alert('success', 'Record updated successfully');
             redirect()->route('settings.return-config.show', encrypt($this->taxtype_id));
         }
-        catch (\Throwable $exception)
+        catch (Exception $exception)
         {
             DB::rollBack();
             Log::error($exception);
-            $this->flash('warning', 'Something went wrong, please contact the administrator for help', [], redirect()->back()->getTargetUrl());
+            $this->alert('warning', 'Something went wrong, please contact the administrator for help', [], redirect()->back()->getTargetUrl());
+        } catch (\Throwable $throwable){
+            DB::rollBack();
+            Log::error($throwable);
+            $this->alert('warning', 'Something went wrong, please contact the administrator for help', [], redirect()->back()->getTargetUrl());
         }
     }
 

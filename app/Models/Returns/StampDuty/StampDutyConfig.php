@@ -10,6 +10,8 @@ class StampDutyConfig extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $guarded = [];
+
     public function scopeActive($query){
         return $query->where('is_active', true);
     }
