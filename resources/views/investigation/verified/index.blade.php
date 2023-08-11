@@ -8,7 +8,7 @@
             Tax Investigation Approved
         </div>
         <div class="card-body">
-            @livewire('investigation.tax-investigation-verified-table')
+            @livewire('internal-info-change.internal-info-change-table')
         </div>
     </div>
 @endsection

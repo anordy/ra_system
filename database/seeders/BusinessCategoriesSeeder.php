@@ -41,7 +41,7 @@ class BusinessCategoriesSeeder extends Seeder
             'short_name' => 'government-agency',
         ],[
             'short_name' => 'government-agency',
-            'name' => 'Government Agencies'
+            'name' => 'Government Agency'
         ]);
     }
 }

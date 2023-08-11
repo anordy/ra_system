@@ -103,7 +103,7 @@ class StreetTable extends DataTableComponent
                         }
                         if (Gate::allows('setting-street-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete = <<<HTML
-                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                                <button class="btn btn-danger btn-sm" wire:cl   ick="delete($value)"><i class="fa fa-trash"></i> </button>
                             HTML;
                         }
 

@@ -223,42 +223,35 @@
                         @if ($showLumpsumOptions === true)
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label class="form-label">Annual Estimate</label>
-                                    <input type="number"
+                                    <label class="form-label">Annual Sales</label>
+                                    <select 
                                         class="form-control @error("selectedTaxTypes.{$key}.annual_estimate") is-invalid @enderror"
                                         wire:model="selectedTaxTypes.{{ $key }}.annual_estimate">
+                                        <option value="" selected disabled>--Select---</option>
+                                        @foreach($annualSales as $annualSale)
+                                             <option value="{{$annualSale['payments_per_year']}}"> {{number_format($annualSale['min_sales_per_year'],2)}} - {{ number_format($annualSale['max_sales_per_year'],2)}} </option>
+                                        @endforeach
+                                    </select>
                                     @error("selectedTaxTypes.{$key}.annual_estimate")
                                         <span class="text-danger error">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            @foreach ($selectedTaxTypes as $key => $selectedTaxType)
+                            <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="form-label">Payment Quarters per year </label>
-
-                                    <select
-                                        class="form-control @error("selectedTaxTypes.{$key}.quarters") is-invalid @enderror"
-                                        wire:model="selectedTaxTypes.{{ $key }}.quarters">
-                                        <option value="" selected disabled>--Select---</option>
-                                        <option value="1">One </option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                        <option value="4">Four</option>
-                                        <option value="5">Five</option>
-                                        <option value="6">Six</option>
-                                        <option value="7">Seven</option>
-                                        <option value="8">Eight</option>
-                                        <option value="9">Nine</option>
-                                        <option value="10">Ten</option>
-                                        <option value="11">Eleven</option>
-                                        <option value="12">Twelve</option>
-                                    </select>
-
-                                    @error("selectedTaxTypes.{$key}.quarters")
-                                        <span class="text-danger error">{{ $message }}</span>
-                                    @enderror
+                                    <label class="form-label">Payment per year </label>
+                                    <input type="text" value="{{number_format((int)$selectedTaxType['annual_estimate'] )}}" class="form-control" disabled>
                                 </div>
                             </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-label">Payment per three months </label>
+                                    <input type="text" value="{{number_format((int)$selectedTaxType['annual_estimate']/4)}}" class="form-control" disabled>
+                                </div>
+                            </div>
+                            @endforeach
+
                         @endif
 
                         @if ($key > 0)

@@ -2,16 +2,17 @@
 
 namespace App\Http\Livewire\Vetting;
 
-use App\Enum\VettingStatus;
-use App\Models\Returns\Petroleum\PetroleumReturn;
-use App\Traits\WithSearch;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
+use App\Traits\WithSearch;
+use App\Enum\VettingStatus;
 use App\Models\Returns\TaxReturn;
 use App\Traits\ReturnFilterTrait;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\Eloquent\Builder;
+use App\Models\Returns\LumpSum\LumpSumReturn;
+use App\Models\Returns\Petroleum\PetroleumReturn;
+use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class VettedReturnsTable extends DataTableComponent
 {
@@ -50,7 +51,7 @@ class VettedReturnsTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
-            ->whereNotIn('return_type', [PetroleumReturn::class])
+            ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
             ->where('parent',0)
             ->where('vetting_status', $this->vettingStatus)
             ->orderBy('created_at', $this->orderBy);
