@@ -10,7 +10,7 @@
                         <div class="form-group col-lg-6">
                             <label class="control-label">Current Hotel Star Rating</label>
                             <input type="text" class="form-control"
-                                value="{{ json_decode($info->old_values)->no_of_stars ?? 'N/A' }}" disabled>
+                                value="{{ json_decode($info->old_values)->name ?? 'N/A' }}" disabled>
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">New Hotel Star Rating</label>
@@ -35,7 +35,7 @@
                         <div class="form-group col-lg-6">
                             <label class="control-label">Current Hotel Star Rating</label>
                             <input type="text" class="form-control"
-                                value="{{ json_decode($info->old_values)->no_of_stars ?? 'N/A' }}" disabled>
+                                value="{{ json_decode($info->old_values)->name ?? 'N/A' }}" disabled>
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">New Hotel Star Rating</label>
