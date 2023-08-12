@@ -65,9 +65,9 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{ json_decode($info->old_values)->no_of_stars }} Star</td>
-                                <td>{{ json_decode($info->new_values)->no_of_stars }} Star</td>
-                                @if (json_decode($info->old_values)->no_of_stars == json_decode($info->new_values)->no_of_stars)
+                                <td>{{ json_decode($info->old_values)->name ?? 'N/A' }}</td>
+                                <td>{{ json_decode($info->new_values)->name ?? 'N/A' }}</td>
+                                @if (json_decode($info->old_values)->name == json_decode($info->new_values)->name)
                                     <td class="table-primary">Unchanged</td>
                                 @else
                                     <td class="table-success">Changed</td>

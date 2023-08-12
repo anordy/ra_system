@@ -136,6 +136,7 @@ use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 Auth::routes(['register' => false]);
 

@@ -35,7 +35,7 @@ class InternalBusinessInfoChangeProcessing extends Component
 
         // Load Hotel stars data
         if ($this->info->type === InternalInfoType::HOTEL_STARS) {
-            $this->hotelStars = HotelStar::select('id', 'no_of_stars')->get();
+            $this->hotelStars = HotelStar::select('id', 'no_of_stars', 'name')->orderBy('no_of_stars', 'asc')->get();
             $this->newHotelStar = json_decode($this->info->new_values)->id;
         }
 

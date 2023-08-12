@@ -10,7 +10,7 @@
                         <div class="form-group col-lg-6">
                             <label class="control-label">Current Hotel Star Rating</label>
                             <input type="text" class="form-control"
-                                value="{{ json_decode($info->old_values)->no_of_stars }} Star" disabled>
+                                value="{{ json_decode($info->old_values)->no_of_stars ?? 'N/A' }}" disabled>
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">New Hotel Star Rating</label>
@@ -18,7 +18,7 @@
                                 id="newHotelStar">
                                 <option value="">--------- N/A ---------</option>
                                 @foreach ($hotelStars as $hotelStar)
-                                    <option value="{{ $hotelStar->id }}">{{ $hotelStar->no_of_stars }} Star</option>
+                                    <option value="{{ $hotelStar->id }}">{{ $hotelStar->name }} Star</option>
                                 @endforeach
                             </select>
                             @error('newHotelStar')
@@ -35,7 +35,7 @@
                         <div class="form-group col-lg-6">
                             <label class="control-label">Current Hotel Star Rating</label>
                             <input type="text" class="form-control"
-                                value="{{ json_decode($info->old_values)->no_of_stars }} Star" disabled>
+                                value="{{ json_decode($info->old_values)->no_of_stars ?? 'N/A' }}" disabled>
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">New Hotel Star Rating</label>
@@ -43,7 +43,7 @@
                                 id="newHotelStar">
                                 <option value="">--------- N/A ---------</option>
                                 @foreach ($hotelStars as $hotelStar)
-                                    <option value="{{ $hotelStar->id }}">{{ $hotelStar->no_of_stars }} Star</option>
+                                    <option value="{{ $hotelStar->id }}">{{ $hotelStar->name }}</option>
                                 @endforeach
                             </select>
                             @error('newHotelStar')

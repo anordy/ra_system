@@ -48,15 +48,15 @@ class InitiateChangeModal extends Component
 
             // Record data to be altered in Business hotel stars
             if ($this->informationType === 'hotelStars') {
-                $selectedStar = HotelStar::select('id', 'no_of_stars')->findOrFail($this->newHotelStarId);
+                $selectedStar = HotelStar::select('id', 'no_of_stars', 'name')->findOrFail($this->newHotelStarId);
 
                 $internalChange = InternalBusinessUpdate::create([
                     'business_id' => $this->location->business_id,
                     'location_id' => $this->location->id,
                     'type' => 'hotel_stars',
                     'triggered_by' => Auth::id(),
-                    'old_values' => json_encode(['no_of_stars' => $this->businessHotel->star->no_of_stars ?? null, 'id' => $this->businessHotel->hotel_star_id]),
-                    'new_values' => json_encode(['no_of_stars' => $selectedStar->no_of_stars ?? null, 'id' => $this->newHotelStarId]),
+                    'old_values' => json_encode(['name' => $this->businessHotel->star->name ?? null, 'no_of_stars' => $this->businessHotel->star->no_of_stars ?? null, 'id' => $this->businessHotel->hotel_star_id ?? null]),
+                    'new_values' => json_encode(['name' => $selectedStar->name ?? null, 'no_of_stars' => $selectedStar->no_of_stars ?? null, 'id' => $this->newHotelStarId]),
                 ]);
             }
          
@@ -80,7 +80,7 @@ class InitiateChangeModal extends Component
         if ($this->location && $this->location->business->business_type === 'hotel') {
             // Load hotel stars & Business hotel if hotelStars info type is selected
             if ($this->informationType === 'hotelStars') {
-                $this->hotelStars = HotelStar::select('id', 'no_of_stars')->get();
+                $this->hotelStars = HotelStar::select('id', 'no_of_stars', 'name')->orderBy('id','asc')->get();
                 $this->businessHotel = BusinessHotel::select('id', 'location_id', 'hotel_star_id')->with('star')->where('location_id', $this->location->id)->first();;
             }
         } else {
