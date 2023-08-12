@@ -2,17 +2,18 @@
 
 namespace App\Http\Livewire\Vetting;
 
-use App\Enum\VettingStatus;
-use App\Models\Returns\Petroleum\PetroleumReturn;
-use App\Traits\WithSearch;
-use App\Models\TaxType;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
+use App\Models\TaxType;
+use App\Traits\WithSearch;
+use App\Enum\VettingStatus;
 use App\Models\Returns\TaxReturn;
 use App\Traits\ReturnFilterTrait;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\Eloquent\Builder;
+use App\Models\Returns\LumpSum\LumpSumReturn;
+use App\Models\Returns\Petroleum\PetroleumReturn;
+use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class VettingApprovalTable extends DataTableComponent
 {

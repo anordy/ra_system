@@ -46,6 +46,12 @@ class PreviewTable extends DataTableComponent
             Column::make('Branch', 'name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Email', 'business.email')
+                ->sortable()
+                ->searchable(),
+            Column::make('Mobile', 'business.mobile')
+                ->sortable()
+                ->searchable(),
             Column::make('Tax Region', 'taxRegion.name')
                 ->sortable()
                 ->searchable(),

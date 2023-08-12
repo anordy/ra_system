@@ -76,16 +76,15 @@ class InitiateChangeModal extends Component
     public function getZin()
     {
         $this->location = BusinessLocation::select('id', 'business_id', 'name')->with('business')->where('zin', trim($this->zin))->first();
-        if ($this->location) {
-            
+
+        if ($this->location && $this->location->business->business_type === 'hotel') {
             // Load hotel stars & Business hotel if hotelStars info type is selected
             if ($this->informationType === 'hotelStars') {
                 $this->hotelStars = HotelStar::select('id', 'no_of_stars')->get();
                 $this->businessHotel = BusinessHotel::select('id', 'location_id', 'hotel_star_id')->with('star')->where('location_id', $this->location->id)->first();;
             }
-
         } else {
-            $this->customAlert('error', 'Invalid ZIN Number provided');
+            $this->customAlert('error', 'Invalid ZIN Number provided or Business Location is not of Hotel Type');
         }
     }
 
