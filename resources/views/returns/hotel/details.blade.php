@@ -34,21 +34,21 @@
                                     <td class="return-label">
                                         {{ number_format($item->value, 2) }}
                                     </td>
-                                    <td class="@if ($item->config->rate_usd == 0 && $item->config->rate == 0) table-active @endif return-label">
-                                        @if ($item->config->rate_type == 'fixed')
-                                            @if ($item->config->currency == 'both')
-                                                {{ $item->config->rate }} TZS <br>
-                                                {{ $item->config->rate_usd }} USD
-                                            @elseif ($item->config->currency == 'TZS')
-                                                {{ $item->config->rate }} TZS
-                                            @elseif ($item->config->currency == 'USD')
-                                                {{ $item->config->rate_usd }} USD
+                                    <td class="@if ($item->rate_usd == 0 && $item->rate == 0) table-active @endif return-label">
+                                        @if ($item->rate_type == 'fixed')
+                                            @if ($item->currency == 'both')
+                                                {{ $item->rate }} TZS <br>
+                                                {{ $item->rate_usd }} USD
+                                            @elseif ($item->currency == 'TZS')
+                                                {{ $item->rate }} TZS
+                                            @elseif ($item->currency == 'USD')
+                                                {{ $item->rate_usd }} USD
                                             @endif
-                                        @elseif ($item->config->rate_type == 'percentage')
-                                            {{ $item->config->rate }}%
+                                        @elseif ($item->rate_type == 'percentage')
+                                            {{ $item->rate }}%
                                         @endif
                                     </td>
-                                    <td class="@if ($item->config->rate_usd == 0 && $item->config->rate == 0) table-active @endif return-label">
+                                    <td class="@if ($item->rate_usd == 0 && $item->rate == 0) table-active @endif return-label">
                                         {{ number_format($item->vat, 2) }} {{ $return->currency }}
                                     </td>
                                 </tr>
@@ -71,21 +71,21 @@
                                     <td class="return-label">
                                         {{ number_format($item->value, 2) }}
                                     </td>
-                                    <td class="@if ($item->config->rate_usd == 0 && $item->config->rate == 0) table-active @endif return-label">
-                                        @if ($item->config->rate_type == 'fixed')
-                                            @if ($item->config->currency == 'both')
-                                                {{ $item->config->rate }} TZS <br>
-                                                {{ $item->config->rate_usd }} USD
-                                            @elseif ($item->config->currency == 'TZS')
-                                                {{ $item->config->rate }} TZS
-                                            @elseif ($item->config->currency == 'USD')
-                                                {{ $item->config->rate_usd }} USD
+                                    <td class="@if ($item->rate_usd == 0 && $item->rate == 0) table-active @endif return-label">
+                                        @if ($item->rate_type == 'fixed')
+                                            @if ($item->currency == 'both')
+                                                {{ $item->rate }} TZS <br>
+                                                {{ $item->rate_usd }} USD
+                                            @elseif ($item->currency == 'TZS')
+                                                {{ $item->rate }} TZS
+                                            @elseif ($item->currency == 'USD')
+                                                {{ $item->rate_usd }} USD
                                             @endif
-                                        @elseif ($item->config->rate_type == 'percentage')
-                                            {{ $item->config->rate }}%
+                                        @elseif ($item->rate_type == 'percentage')
+                                            {{ $item->rate }}%
                                         @endif
                                     </td>
-                                    <td class="@if ($item->config->rate_usd == 0 && $item->config->rate == 0) table-active @endif return-label">
+                                    <td class="@if ($item->rate_usd == 0 && $item->rate == 0) table-active @endif return-label">
                                         {{ number_format($item->vat, 2) }} {{ $return->currency }}
                                     </td>
                                 </tr>
