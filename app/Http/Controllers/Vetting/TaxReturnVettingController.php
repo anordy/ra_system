@@ -60,7 +60,6 @@ class TaxReturnVettingController extends Controller
 
         $return = $tax_return->return;
 
-
         $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
         $return_ = '';
         $tax_return_ ='';
@@ -86,7 +85,7 @@ class TaxReturnVettingController extends Controller
             $viewRender = 'returns.excise-duty.mobile-money-transfer.details';
 
         } elseif ($return instanceof PortReturn) {
-            $tax_return_ = TaxReturn::where('parent',$return->id)->first();
+            $tax_return_ = TaxReturn::where('return_type', PortReturn::class)->where('parent',$tax_return->id)->first();
             $return_ = $tax_return_->return;
             $return_->penalties = $return_->penalties->concat($return_->tax_return->penalties)->sortBy('tax_amount');
 

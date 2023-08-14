@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Vetting;
 
 use Carbon\Carbon;
 use App\Models\TaxType;
-use App\Traits\WithSearch;
 use App\Enum\VettingStatus;
 use App\Models\Returns\TaxReturn;
 use App\Traits\ReturnFilterTrait;
@@ -14,6 +13,7 @@ use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class VettingApprovalTable extends DataTableComponent
 {
@@ -38,14 +38,39 @@ class VettingApprovalTable extends DataTableComponent
         }
     }
 
+    public function filters(): array
+    {
+        return [
+            SelectFilter::make('Tax Region')
+                ->options([
+                    'all'    => 'All',
+                    'Headquarter' => 'Head Quarter',
+                    'Mjini'  => 'Mjini',
+                    'Kaskazini Unguja'  => 'Kaskazini Unguja',
+                    'Kusini Unguja'  => 'Kusini Unguja',
+                    'Kaskazini Pemba'  => 'Kaskazini Pemba',
+                    'Kusini Pemba'  => 'Kusini Pemba',
+                ])
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value != 'all') {
+                        $builder->whereHas('location.taxRegion', function($query) use($value) {
+                            $query->where('name', $value);
+                        });
+                    }
+                }),
+        ];
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id',]);
+        $this->setFilterLayoutSlideDown();
+        $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
         ]);
+        
     }
 
     public function builder(): Builder
