@@ -7,7 +7,8 @@
         <div class="col-md-12">
             <livewire:returns.return-payment :return="$return->tax_return" />
         </div>
-        @if ($return_->tax_return)
+        {{-- Payment for Port return in USD --}}
+        @if ($return_ && $return_->tax_return)
             <div class="col-md-12">
                 <livewire:returns.return-payment :return="$return_->tax_return" />
             </div>

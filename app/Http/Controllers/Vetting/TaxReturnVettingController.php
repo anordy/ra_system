@@ -61,8 +61,8 @@ class TaxReturnVettingController extends Controller
         $return = $tax_return->return;
 
         $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
-        $return_ = '';
-        $tax_return_ ='';
+        $return_ = null;
+        $tax_return_ = null;
         $returnHistories = $tax_return->editReturnHistories;
 
 
