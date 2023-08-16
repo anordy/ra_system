@@ -345,7 +345,7 @@ class PenaltyForDebt
                     $penaltableAmount = roundOff($latePaymentAmount + $penaltableAmountForPerticularMonth, $tax_return->currency);
                 } else {
                     $period = round($tax_return->periods) + $i + 1;
-                    $latePaymentAmount = roundOff($latePaymentAfterRate->rate * $penaltableAmountForPerticularMonth, $tax_return->currency);
+                    $latePaymentAmount = 0;
                     $penaltableAmount = $latePaymentAmount + $penaltableAmountForPerticularMonth;
                     $interestAmount = roundOff(self::calculateInterest($penaltableAmount, $interestRate->rate, $period), $tax_return->currency);
                     $penaltableAmount = roundOff($penaltableAmount + $interestAmount, $tax_return->currency);

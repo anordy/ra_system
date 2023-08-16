@@ -66,7 +66,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
         $penalties = $tax_return->return->penalties;
 
         $preVettingPenaltyIterations = $penalties->count();
-        $postVettingPenaltyIterations = round($tax_return->periods);
+        $postVettingPenaltyIterations = floor($tax_return->periods);
 
         $penaltyIterationsToBeAdded = $postVettingPenaltyIterations - $preVettingPenaltyIterations;
 
