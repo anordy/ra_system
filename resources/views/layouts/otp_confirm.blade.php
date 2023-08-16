@@ -76,9 +76,9 @@
                                 <a href="{{ route('session.kill') }}" class="btn-link">Click here to return to login page</a>
                             </div>
 
-                            <div class="mt-1 mb-2">
+                            {{-- <div class="mt-1 mb-2">
                                 <a href="{{ route('2fa.security-questions') }}" class="btn-link">Login using security questions</a>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

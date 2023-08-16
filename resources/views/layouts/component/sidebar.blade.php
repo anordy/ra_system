@@ -1023,9 +1023,9 @@
                 <li class="{{ request()->is('account') ? 'active' : '' }}">
                     <a href="{{ route('account') }}">{{ __("Account Details") }}</a>
                 </li>
-                <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
+                {{-- <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
                     <a href="{{ route('account.security-questions') }}">{{ __("Security Questions") }}</a>
-                </li>
+                </li> --}}
                 <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
                     <a href="{{ route('logout') }}"
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
