@@ -234,7 +234,7 @@ class Init extends Component
             $this->hasData = true;
         }
         
-         return redirect()->route('reports.business.preview',encrypt(json_encode($this->parameters)));
+         return redirect()->route('reports.business.init',encrypt(json_encode($this->parameters)));
     }
 
     //export excel
