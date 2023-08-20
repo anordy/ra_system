@@ -86,8 +86,10 @@ class TaxReturnVettingController extends Controller
 
         } elseif ($return instanceof PortReturn) {
             $tax_return_ = TaxReturn::where('return_type', PortReturn::class)->where('parent',$tax_return->id)->first();
-            $return_ = $tax_return_->return;
-            $return_->penalties = $return_->penalties->concat($return_->tax_return->penalties)->sortBy('tax_amount');
+            if ($tax_return_) {
+                $return_ = $tax_return_->return;
+                $return_->penalties = $return_->penalties->concat($return_->tax_return->penalties)->sortBy('tax_amount');
+            }
 
             $viewRender = 'returns.port.details';
 

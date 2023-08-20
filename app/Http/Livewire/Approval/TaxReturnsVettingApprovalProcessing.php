@@ -105,13 +105,17 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 } else {
                     $tax_return = $this->previewPenalties($this->return->id);
 
-                    $child_return = TaxReturn::where('return_type', PortReturn::class)->where('parent',$tax_return->id)->firstOrFail();
-                    $tax_return_ = $this->previewPenalties($child_return->id);
+                    $child_return = TaxReturn::where('return_type', PortReturn::class)->where('parent',$tax_return->id)->first();
 
-                    $tax_return_->vetting_status = VettingStatus::VETTED;
-                    $tax_return_->return->vetting_status = VettingStatus::VETTED;
-                    $tax_return_->save();
-                    $tax_return_->return->save();
+                    if ($child_return) {
+                        $tax_return_ = $this->previewPenalties($child_return->id);
+
+                        $tax_return_->vetting_status = VettingStatus::VETTED;
+                        $tax_return_->return->vetting_status = VettingStatus::VETTED;
+                        $tax_return_->save();
+                        $tax_return_->return->save();
+                    }
+         
                 }
 
                 $this->return->vetting_status = VettingStatus::VETTED;

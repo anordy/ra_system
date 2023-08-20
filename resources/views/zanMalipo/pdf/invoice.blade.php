@@ -209,7 +209,7 @@
                     <ol>
                         <li>
                             Kupitia Benki: Fika tawi lolote au wakala wa benki ya
-                            PBZ, NMB, NBC.
+                            PBZ, NMB, NBC, CRDB.
                             {{-- <br> --}}
                             Namba ya kumbukumbu: <b>{{ $bill->control_number }}</b>.
                         </li>
