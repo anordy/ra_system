@@ -128,6 +128,7 @@ class UploadInspectionReport extends Component
         $motor_vehicle = $result['data'];
         $path = "MVR-Inspection-Report-{$this->chassis}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->inspection_report->extension();
         $inspection_report_path = $this->inspection_report->store( $path,'local');
+
         $mv_data = [
             'registration_number'=>'Z-'.str_pad(MvrMotorVehicle::query()->count().rand(10,99),9,'0',STR_PAD_LEFT),
             'number_of_axle'=>$motor_vehicle['number_of_axle'],
@@ -142,16 +143,16 @@ class UploadInspectionReport extends Component
             'seating_capacity'=>$motor_vehicle['seating_capacity'],
             'mvr_vehicle_status_id'=>$this->getForeignKey('Imported',MvrVehicleStatus::class,true),
             'imported_from_country_id'=>$this->getForeignKey($motor_vehicle['imported_from'],Country::class),
-            'mvr_color_id'=>$this->getForeignKey($motor_vehicle['color'],MvrColor::class),
+            'mvr_color_id'=>$this->getForeignKey($motor_vehicle['color'],MvrColor::class, true),
             'mvr_class_id'=>MvrClass::query()->where(['code'=>$motor_vehicle['class']])->first()->id,
-            'mvr_model_id'=>$this->getForeignKey($motor_vehicle['model'],MvrModel::class),
-            'mvr_fuel_type_id'=>$this->getForeignKey($motor_vehicle['fuel_type'],MvrFuelType::class),
-            'mvr_transmission_id'=>$this->getForeignKey($motor_vehicle['transmission_type'],MvrTransmissionType::class),
-            'mvr_body_type_id'=>$this->getForeignKey($motor_vehicle['body_type'],MvrBodyType::class),
+            'mvr_model_id'=>$this->getForeignKey($motor_vehicle['model'],MvrModel::class, true),
+            'mvr_fuel_type_id'=>$this->getForeignKey($motor_vehicle['fuel_type'],MvrFuelType::class, true),
+            'mvr_transmission_id'=>$this->getForeignKey($motor_vehicle['transmission_type'],MvrTransmissionType::class, true),
+            'mvr_body_type_id'=>$this->getForeignKey($motor_vehicle['body_type'],MvrBodyType::class, true),
             'inspection_report_path'=>$inspection_report_path,
             'mvr_registration_status_id'=>$this->getForeignKey('INSPECTION',MvrRegistrationStatus::class,true)
         ];
-        return ['motor_vehicle'=>$mv_data,'owner'=>$motor_vehicle['owner'],'agent'=>$motor_vehicle['agent']];
+        return ['motor_vehicle'=>$mv_data, 'owner'=>$motor_vehicle['owner'], 'agent'=>$motor_vehicle['agent']];
     }
 
 

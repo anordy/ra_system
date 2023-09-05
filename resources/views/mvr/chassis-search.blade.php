@@ -43,7 +43,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Class</span>
-                            <p class="my-1">{{ $motor_vehicle['class'] }}</p>
+                            <p class="my-1">{{ $motor_vehicle['class'] ?? '' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Fuel type</span>
@@ -56,17 +56,17 @@
                             <p class="my-1">{{ $motor_vehicle['make'] }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Model</Span>
-                            <p class="my-1">{{ $motor_vehicle['model'] }}</p>
+                            <span class="font-weight-bold text-uppercase">Model Type</Span>
+                            <p class="my-1">{{ $motor_vehicle['model_type'] }}</p>
                         </div>
-
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase"> Custom number</span>
-                            <p class="my-1">{{ $motor_vehicle['custom_number'] }}</p>
+                            <span class="font-weight-bold text-uppercase">Model Number</Span>
+                            <p class="my-1">{{ $motor_vehicle['model_number'] }}</p>
                         </div>
-                    </div>
-                    <div class="row">
-
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase"> TANSAD number</span>
+                            <p class="my-1">{{ $motor_vehicle['tansad_number'] }}</p>
+                        </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Gross weight</span>
                             <p class="my-1">{{ $motor_vehicle['gross_weight'] }}</p>
@@ -76,12 +76,10 @@
                             <p class="my-1">{{ $motor_vehicle['color'] }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Usage</span>
-                            <p class="my-1">{{ $motor_vehicle['usage'] }}</p>
+                            <span class="font-weight-bold text-uppercase">Usage Type</span>
+                            <p class="my-1">{{ $motor_vehicle['usage_type'] }}</p>
                         </div>
-                    </div>
                 </div>
-            </div>
 
                 <div class="card mt-3">
                     <div class="card-header">
@@ -91,45 +89,42 @@
                         <div class="row my-2">
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Name</span>
-                                <p class="my-1">{{ $motor_vehicle['owner']['name'] }}</p>
+                                <p class="my-1">{{ $motor_vehicle['importer_name'] }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">TIN</span>
-                                <p class="my-1">{{ $motor_vehicle['owner']['tin'] }}</p>
+                                <p class="my-1">{{ $motor_vehicle['importer_tin'] }}</p>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">State/City</span>
-                                <p class="my-1">{{ $motor_vehicle['owner']['city'] }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Address</span>
-                                <p class="my-1">{{ $motor_vehicle['owner']['address'] }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Street</span>
-                                <p class="my-1">{{ $motor_vehicle['owner']['street'] }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Shehia</span>
-                                <p class="my-1">{{ $motor_vehicle['owner']['shehia'] }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Postal Address</span>
-                                <p class="my-1">{{ $motor_vehicle['owner']['postal_address'] }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Office Number</span>
-                                <p class="my-1">{{ $motor_vehicle['owner']['office_number'] }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Email</span>
-                                <p class="my-1">{{ $motor_vehicle['owner']['email'] }}</p>
-                            </div>
+{{--                            <div class="col-md-4 mb-3">--}}
+{{--                                <span class="font-weight-bold text-uppercase">State/City</span>--}}
+{{--                                <p class="my-1">{{ $motor_vehicle['owner']['city'] }}</p>--}}
+{{--                            </div>--}}
+{{--                            <div class="col-md-4 mb-3">--}}
+{{--                                <span class="font-weight-bold text-uppercase">Address</span>--}}
+{{--                                <p class="my-1">{{ $motor_vehicle['owner']['address'] }}</p>--}}
+{{--                            </div>--}}
+{{--                            <div class="col-md-4 mb-3">--}}
+{{--                                <span class="font-weight-bold text-uppercase">Street</span>--}}
+{{--                                <p class="my-1">{{ $motor_vehicle['owner']['street'] }}</p>--}}
+{{--                            </div>--}}
+{{--                            <div class="col-md-4 mb-3">--}}
+{{--                                <span class="font-weight-bold text-uppercase">Shehia</span>--}}
+{{--                                <p class="my-1">{{ $motor_vehicle['owner']['shehia'] }}</p>--}}
+{{--                            </div>--}}
+{{--                            <div class="col-md-4 mb-3">--}}
+{{--                                <span class="font-weight-bold text-uppercase">Postal Address</span>--}}
+{{--                                <p class="my-1">{{ $motor_vehicle['owner']['postal_address'] }}</p>--}}
+{{--                            </div>--}}
+{{--                            <div class="col-md-4 mb-3">--}}
+{{--                                <span class="font-weight-bold text-uppercase">Office Number</span>--}}
+{{--                                <p class="my-1">{{ $motor_vehicle['owner']['office_number'] }}</p>--}}
+{{--                            </div>--}}
+{{--                            <div class="col-md-4 mb-3">--}}
+{{--                                <span class="font-weight-bold text-uppercase">Email</span>--}}
+{{--                                <p class="my-1">{{ $motor_vehicle['owner']['email'] }}</p>--}}
+{{--                            </div>--}}
                         </div>
 
-                        <div class="row">
-
-                        </div>
 
                     </div>
 
