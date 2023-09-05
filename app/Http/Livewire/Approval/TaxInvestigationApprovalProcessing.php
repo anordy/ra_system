@@ -102,7 +102,8 @@ class TaxInvestigationApprovalProcessing extends Component
             $roles = Role::whereIn('id', $operators)->get()->pluck('id')->toArray();
 
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
-
+           
+            // TODO: Get specified users on production
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
         }
     }
@@ -318,7 +319,7 @@ class TaxInvestigationApprovalProcessing extends Component
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $this->principalAmount,
+                    'amount' => roundOff($this->principalAmount, 'TZS'),
                     'currency' => 'TZS',
                     'gfs_code' => $this->taxTypes->where('code', 'investigation')->firstOrFail()->gfs_code,
                     'tax_type_id' => $this->taxTypes->where('code', 'investigation')->firstOrFail()->id
@@ -327,18 +328,18 @@ class TaxInvestigationApprovalProcessing extends Component
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $this->interestAmount,
+                    'amount' => roundOff($this->interestAmount, 'TZS'),
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'interest')->firstOrFail()->gfs_code,
+                    'gfs_code' => $this->taxTypes->where('code', 'investigation')->firstOrFail()->gfs_code,
                     'tax_type_id' => $this->taxTypes->where('code', 'interest')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $this->penaltyAmount,
+                    'amount' => roundOff($this->penaltyAmount, 'TZS'),
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->gfs_code,
+                    'gfs_code' => $this->taxTypes->where('code', 'investigation')->firstOrFail()->gfs_code,
                     'tax_type_id' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->id
                 ]
             ];
@@ -397,6 +398,7 @@ class TaxInvestigationApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
+            throw $e;
         }
     }
 

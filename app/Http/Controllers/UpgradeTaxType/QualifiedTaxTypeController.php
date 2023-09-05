@@ -99,13 +99,13 @@ class QualifiedTaxTypeController extends Controller
                 abort(404);
         }
 
-        $changed = BusinessTaxTypeChange::query()
-            ->where('business_id', $return->business_id)
-            ->where('from_tax_type_id', $tax_type_id)->firstOrFail();
+        // $changed = BusinessTaxTypeChange::query()
+        //     ->where('business_id', $return->business_id)
+        //     ->where('from_tax_type_id', $tax_type_id)->first();
 
         $currency = $this->getCurrency($return->business_id, $return->tax_type_id);
 
-        return view('upgrade-tax-type.qualified.show', compact('return', 'return_id', 'sales', 'currency', 'changed'));
+        return view('upgrade-tax-type.qualified.show', compact('return', 'return_id', 'sales', 'currency'));
     }
 
     public function getCurrency($business_id, $tax_type_id)

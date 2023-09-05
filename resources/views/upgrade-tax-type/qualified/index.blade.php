@@ -88,7 +88,7 @@
                                                     </strong>
                                                 </td>
                                                 <td>
-                                                    <a href="{{route('bussiness.qualified-tax-types.show', [encrypt($return->id), encrypt($stamp_tax_type_id), encrypt($return->total_sales)])}}"
+                                                    <a href="{{route('business.qualified-tax-types.show', [encrypt($return->id), encrypt($stamp_tax_type_id), encrypt($return->total_sales)])}}"
                                                        class="btn btn-info btn-sm" data-toggle="tooltip"
                                                        data-placement="right" title="View">
                                                         <i class="bi bi-eye-fill"></i>

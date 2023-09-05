@@ -2,28 +2,31 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Enum\TaxVerificationStatus;
-use App\Events\SendMail;
-use App\Models\Returns\ReturnStatus;
-use App\Models\Role;
-use App\Models\TaxAssessments\TaxAssessment;
-use App\Models\TaxType;
-use App\Models\User;
-use App\Models\Verification\TaxVerificationOfficer;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
-use App\Traits\PaymentsTrait;
-use App\Traits\WorkflowProcesssingTrait;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules\NotIn;
-use Illuminate\Validation\Rules\RequiredIf;
-use App\Traits\CustomAlert;
+use Carbon\Carbon;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\TaxType;
 use Livewire\Component;
+use App\Events\SendMail;
+use App\Traits\CustomAlert;
+use App\Models\BusinessType;
+use App\Traits\PaymentsTrait;
 use Livewire\WithFileUploads;
+use App\Models\Returns\Vat\SubVat;
+use App\Services\ZanMalipo\ZmCore;
+use Illuminate\Support\Facades\DB;
+use App\Enum\TaxVerificationStatus;
+use Illuminate\Support\Facades\Log;
+use App\Models\Returns\ReturnStatus;
+use Illuminate\Support\Facades\Auth;
+use App\Services\ZanMalipo\ZmResponse;
+use Illuminate\Validation\Rules\NotIn;
+use App\Models\Returns\Port\PortReturn;
+use App\Traits\WorkflowProcesssingTrait;
+use Illuminate\Validation\Rules\RequiredIf;
+use App\Models\TaxAssessments\TaxAssessment;
+use App\Models\Verification\TaxVerificationOfficer;
 
 class TaxVerificationApprovalProcessing extends Component
 {
@@ -56,6 +59,7 @@ class TaxVerificationApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId   = decrypt($modelId);
         $this->taxTypes = TaxType::all();
+
         $this->taxType = $this->taxTypes->firstWhere('code', TaxType::VERIFICATION);
 
         $this->registerWorkflow($modelName, $this->modelId);
@@ -81,7 +85,7 @@ class TaxVerificationApprovalProcessing extends Component
             $roles = Role::whereIn('id', $operators)->get()->pluck('id')->toArray();
 
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
-
+            
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
         }
     }
@@ -297,19 +301,19 @@ class TaxVerificationApprovalProcessing extends Component
             }
 
 
-            $taxpayer = $this->subject->business->taxpayer;
+            $business = $this->subject->business;
 
-            $payer_type = get_class($taxpayer);
-            $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
-            $payer_email = $taxpayer->email;
-            $payer_phone = $taxpayer->mobile;
+            $payer_type = get_class($business);
+            $payer_name = $business->name;
+            $payer_email = $business->email;
+            $payer_phone = $business->mobile;
             $description = "{$taxType->name} Verification Assessment for {$this->subject->business->name}";
             $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
             $currency = $assessment->currency;
             $createdby_type = get_class(Auth::user());
             $createdby_id = Auth::id();
             $exchange_rate = $this->getExchangeRate($assessment->currency);
-            $payer_id = $taxpayer->id;
+            $payer_id = $business->id;
             $expire_date = Carbon::now()->addDays(30)->endOfDay();
             $billableId = $assessment->id;
             $billableType = get_class($assessment);

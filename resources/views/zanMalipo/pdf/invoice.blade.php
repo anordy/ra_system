@@ -227,7 +227,7 @@
                 <td>
                     <ol>
                         <li>
-                            Via Bank: Visit any branch or bank agent of PBZ, NMB, NBC.
+                            Via Bank: Visit any branch or bank agent of PBZ, NMB, NBC, CRDB.
                             {{-- <br> --}}
                             Reference Number: <b>{{ $bill->control_number }}</b>.
                         </li>

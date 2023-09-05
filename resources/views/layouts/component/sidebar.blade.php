@@ -511,7 +511,7 @@
                 </li>
             </ul>
         </li>
-        @can('motor-vehicles-view')
+        @can('motor-vehicle-view')
             <li class="{{ request()->is('mvr*') ? 'active' : '' }}">
             <a href="#mvrSubmenu" data-toggle="collapse"
                aria-expanded="{{ request()->is('mvr*') ? 'true' : 'false' }}" class="dropdown-toggle">Motor Vehicle
@@ -633,7 +633,7 @@
             </li>
         @endcan
 
-        @can('managerial-report-view')
+        {{-- @can('managerial-report-view')
             <li class="{{ request()->is('queries*') ? 'active' : '' }}">
                 <a href="#queriesSubmenu" data-toggle="collapse"
                    aria-expanded="{{ request()->is('queries*') ? 'true' : 'false' }}" class="dropdown-toggle">
@@ -649,7 +649,7 @@
                     </li>
                 </ul>
             </li>
-        @endcan
+        @endcan --}}
 
         @can('manage-payment-management')
             <li class="{{ request()->is('payments*') ? 'active' : '' }}">
