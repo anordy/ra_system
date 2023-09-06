@@ -19,7 +19,7 @@ class CreateExitedGoodsTable extends Migration
             $table->integer('supplier_tin_number');
             $table->string('tansad_number');
             $table->timestamp('tansad_date');
-            $table->string('vat_registation_number');
+            $table->string('vat_registration_number');
             $table->decimal('value_excluding_tax', 20, 2);
             $table->decimal('tax_amount', 20,2);
             $table->string('invoice_number');
