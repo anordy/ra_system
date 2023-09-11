@@ -115,7 +115,7 @@
                                         Total waived amount
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{ number_format($penaltyAmountDue + $interestAmountDue) }}
+                                        {{ number_format($penaltyAmount + $interestAmount) }}
                                     </td>
                                 </tr>
                                 <tr>

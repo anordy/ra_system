@@ -71,10 +71,11 @@ class DailyDebtCalculateCommand extends Command
          */
         $tax_returns = TaxReturn::selectRaw('tax_returns.*, ROUND(CURRENT_DATE - CAST(filing_due_date as date)) as days_passed')
             ->whereIn('return_category', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
-            ->whereRaw("CURRENT_DATE - CAST(filing_due_date as date) > 30") // Since filing due date is of last month
+            ->whereRaw("CURRENT_DATE - CAST(filing_due_date as date) > 31") // Since filing due date is of last month
             ->where('vetting_status', VettingStatus::VETTED)
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
+
 
         foreach ($tax_returns as $tax_return) {
             DB::beginTransaction();

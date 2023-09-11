@@ -46,18 +46,17 @@ class ObjectionApprovalProcessing extends Component
         }
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
         $this->principal = $this->assessment->principal_amount;
-        if(is_null($this->assessment)){
+        if (is_null($this->assessment)) {
             abort(404);
         }
         $this->penalty = $this->assessment->penalty_amount;
         $this->interest = $this->assessment->interest_amount;
         $this->taxTypes = TaxType::findOrFail($this->assessment->tax_type_id);
-        if(!$this->taxTypes){
+        if (!$this->taxTypes) {
             abort(404);
         }
         $this->principal_amount_due = $this->assessment->principal_amount - $this->dispute->tax_deposit;
-        $this->total = ($this->penalty + $this->interest + $this->principal) - ($this->dispute->tax_deposit);
-
+        $this->total = $this->assessment->outstanding_amount;
         $this->registerWorkflow($modelName, $this->modelId);
     }
 
@@ -91,11 +90,11 @@ class ObjectionApprovalProcessing extends Component
         if ($propertyName == "interestPercent" || $propertyName == "penaltyPercent") {
             $this->penalty = $this->assessment->penalty_amount - $this->penaltyAmount;
             $this->interest = $this->assessment->interest_amount - $this->interestAmount;
-            $this->total = ($this->penalty + $this->interest + $this->assessment->principal_amount) - ($this->dispute->tax_deposit);
+            $this->total = ($this->penalty + $this->interest + $this->assessment->principal_amount);
         }
 
         if ($propertyName == "penalty" || $propertyName == "interest") {
-            $this->total = (str_replace(',', '', $this->penalty) + str_replace(',', '', $this->interest) + str_replace(',', '', $this->principal)) - ($this->dispute->tax_deposit);
+            $this->total = (str_replace(',', '', $this->penalty) + str_replace(',', '', $this->interest) + str_replace(',', '', $this->principal));
         }
     }
 
@@ -110,7 +109,7 @@ class ObjectionApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
-        
+
         if ($this->checkTransition('objection_manager_review')) {
 
             $this->validate(
@@ -135,7 +134,7 @@ class ObjectionApprovalProcessing extends Component
             }
 
             $dispute = Dispute::find($this->modelId);
-            if(is_null($dispute)){
+            if (is_null($dispute)) {
                 abort(404);
             }
             DB::beginTransaction();
@@ -180,37 +179,38 @@ class ObjectionApprovalProcessing extends Component
                     return;
                 }
 
+                $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
+
                 // Generate control number for waived application
                 $billitems = [
                     [
-                        'billable_id' => $this->dispute->id,
-                        'billable_type' => get_class($this->dispute),
+                        'billable_id' => $this->assessment->id,
+                        'billable_type' => get_class($this->assessment),
                         'use_item_ref_on_pay' => 'N',
-                        'amount' => $this->total,
+                        'amount' => $this->principal + $this->penalty + $this->interest,
                         'currency' => $this->assessment->currency,
                         'gfs_code' => $this->taxTypes->gfs_code,
                         'tax_type_id' => $this->taxTypes->id,
                     ],
                 ];
 
-
                 $taxpayer = $this->subject->business->taxpayer;
-
+    
                 $payer_type = get_class($taxpayer);
                 $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
                 $payer_email = $taxpayer->email;
                 $payer_phone = $taxpayer->mobile;
                 $description = "dispute for assessment";
                 $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-                $currency = 'TZS';
+                $currency = $this->assessment->currency;
                 $createdby_type = get_class(Auth::user());
                 $createdby_id = Auth::id();
-                $exchange_rate = 1;
+                $exchange_rate = $this->getExchangeRate($this->assessment->currency);
                 $payer_id = $taxpayer->id;
                 $expire_date = Carbon::now()->addMonth()->toDateTimeString();
                 $billableId = $this->assessment->id;
                 $billableType = get_class($this->assessment);
-
+    
                 $zmBill = ZmCore::createBill(
                     $billableId,
                     $billableType,
@@ -230,26 +230,28 @@ class ObjectionApprovalProcessing extends Component
                     $billitems
                 );
 
+                DB::commit();
+    
                 if (config('app.env') != 'local') {
                     $response = ZmCore::sendBill($zmBill->id);
                     if ($response->status === ZmResponse::SUCCESS) {
                         $this->dispute->payment_status = ReturnStatus::CN_GENERATING;
                         $this->dispute->save();
-
+    
                         $this->flash('success', 'A control number has been generated successful.');
                     } else {
-
+    
                         session()->flash('error', 'Control number generation failed, try again later');
                         $this->dispute->payment_status = ReturnStatus::CN_GENERATION_FAILED;
                     }
-
+    
                     $this->dispute->save();
                 } else {
-
+    
                     // We are local
                     $this->dispute->payment_status = ReturnStatus::CN_GENERATED;
                     $this->dispute->save();
-
+    
                     // Simulate successful control no generation
                     $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                     $zmBill->zan_status = 'pending';
@@ -258,10 +260,11 @@ class ObjectionApprovalProcessing extends Component
                     $this->flash('success', 'A control number for this dispute has been generated successfull and approved');
                 }
 
-                DB::commit();
             } catch (Exception $e) {
+                DB::rollBack();
                 Log::error($e);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+                return;
             }
         }
 
@@ -269,7 +272,6 @@ class ObjectionApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            DB::rollBack();
             Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
             return;
@@ -284,11 +286,12 @@ class ObjectionApprovalProcessing extends Component
             'comments' => 'required|string|strip_tag',
         ]);
 
-        DB::beginTransaction();
 
         try {
 
+            // TODO: Why on commissioner reject we generate control number???
             if ($this->checkTransition('commisioner_reject')) {
+                DB::beginTransaction();
 
                 $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal_amount_due, $this->assessment->penalty_amount, $this->assessment->interest_amount, $this->dispute->tax_deposit);
                 $total_deposit = $this->principal_amount_due + $this->assessment->interest_amount + $this->assessment->penalty_amount;
@@ -300,7 +303,7 @@ class ObjectionApprovalProcessing extends Component
                         'billable_type' => get_class($this->assessment),
                         'use_item_ref_on_pay' => 'N',
                         'amount' => $total_deposit,
-                        'currency' => 'TZS',
+                        'currency' => $this->assessment->currency,
                         'gfs_code' => $this->taxTypes->gfs_code,
                         'tax_type_id' => $this->taxTypes->id,
                     ],
@@ -314,10 +317,10 @@ class ObjectionApprovalProcessing extends Component
                 $payer_phone = $taxpayer->mobile;
                 $description = "dispute for assessment";
                 $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-                $currency = 'TZS';
+                $currency = $this->assessment->currency;
                 $createdby_type = get_class(Auth::user());
                 $createdby_id = Auth::id();
-                $exchange_rate = 1;
+                $exchange_rate = $this->getExchangeRate($this->assessment->currency);
                 $payer_id = $taxpayer->id;
                 $expire_date = Carbon::now()->addMonth()->toDateTimeString();
                 $billableId = $this->assessment->id;
@@ -341,6 +344,8 @@ class ObjectionApprovalProcessing extends Component
                     $createdby_type,
                     $billitems
                 );
+                
+                DB::commit();
 
                 if (config('app.env') != 'local') {
                     $response = ZmCore::sendBill($zmBill->id);
@@ -371,12 +376,17 @@ class ObjectionApprovalProcessing extends Component
                 }
             }
 
-            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            return;
+        }
 
+        try {
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            DB::rollBack();
             Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;

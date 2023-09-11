@@ -32,6 +32,7 @@ trait TaxAssessmentDisputeTrait
                 'interest_amount' => $interest,
                 'penalty_amount' => $penalty,
                 'total_amount' => $principal_amount + $penalty + $interest,
+                'outstanding_amount' => $principal_amount + $penalty + $interest,
                 'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString() ?? null,
                 'paid_amount' => $paid_amount,
                 'app_status' => $app_status,
@@ -53,6 +54,7 @@ trait TaxAssessmentDisputeTrait
                 $assessment->update($data);
             } catch (Exception $e) {
                 Log::error($e);
+                throw new Exception('Failed to update assessment history');
             }
         }
     }

@@ -424,7 +424,7 @@ trait PaymentsTrait
         $business = $debt->business;
 
         $payer_type     = get_class($business);
-        $payer_name     = $business->name ?? $business->taxpayer_id;
+        $payer_name     = $business->name ?? $business->taxpayer_name;
         $payer_email    = $business->email;
         $payer_phone    = $business->mobile;
         $description    = "{$debt->taxtype->name} Debt Payment for {$payer_name} {$debt->location->name}";
@@ -477,41 +477,18 @@ trait PaymentsTrait
     {
         $tax_type = TaxType::findOrFail($assessment->tax_type_id);
 
-        if ($assessment->principal_amount > 0) {
+        if ($assessment->outstanding_amount > 0) {
             $billItems[] = [
                 'billable_id'         => $assessment->id,
                 'billable_type'       => get_class($assessment),
                 'use_item_ref_on_pay' => 'N',
-                'amount'              => $assessment->principal_amount,
+                'amount'              => $assessment->outstanding_amount,
                 'currency'            => $assessment->currency,
                 'gfs_code'            => $tax_type->gfs_code,
                 'tax_type_id'         => $tax_type->id,
             ];
         }
 
-        if ($assessment->penalty_amount > 0) {
-            $billItems[] = [
-                'billable_id'         => $assessment->id,
-                'billable_type'       => get_class($assessment),
-                'use_item_ref_on_pay' => 'N',
-                'amount'              => $assessment->penalty_amount,
-                'currency'            => $assessment->currency,
-                'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $tax_type->id,
-            ];
-        }
-
-        if ($assessment->interest_amount > 0) {
-            $billItems[] = [
-                'billable_id'         => $assessment->id,
-                'billable_type'       => get_class($assessment),
-                'use_item_ref_on_pay' => 'N',
-                'amount'              => $assessment->interest_amount,
-                'currency'            => $assessment->currency,
-                'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $tax_type->id,
-            ];
-        }
 
         $business = $assessment->business;
 
@@ -525,7 +502,7 @@ trait PaymentsTrait
             $assessmentLocations = 'Business location';
         }
         $payer_type     = get_class($business);
-        $payer_name     = $business->name ?? $business->taxpayer_id;
+        $payer_name     = $business->name ?? $business->taxpayer_name;
         $payer_email    = $business->email;
         $payer_phone    = $business->mobile;
         $description    = "{$assessment->taxtype->name} dispute waiver for {$payer_name} in {$assessmentLocations}";
@@ -753,7 +730,7 @@ trait PaymentsTrait
 
         // Generate return control no.
         $payer_type = get_class($business);
-        $payer_name = $business->name ?? $business->taxpayer_id;
+        $payer_name = $business->name ?? $business->taxpayer_name;
         $payer_email = $business->email;
         $payer_phone = $business->mobile;
         if ($return->table == 'lump_sum_returns') {
@@ -820,7 +797,12 @@ trait PaymentsTrait
     public function generateAssessmentControlNumber($assessment)
     {
         $taxTypes = TaxType::all();
+
         $taxType = $assessment->taxtype;
+
+        if (!$taxType->gfs_code) {
+            $taxType = TaxType::where('code', TaxType::VERIFICATION)->first();
+        }
 
         DB::beginTransaction();
 

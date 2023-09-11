@@ -308,7 +308,7 @@ class PenaltyForDebt
 
     public static function getPostVettingPenalties($tax_return, $iterations)
     {
-        if ($iterations > 0) {
+        if ($iterations > 0 && $tax_return->outstanding_amount > 0) {
             $curr_payment_due_date = Carbon::create($tax_return->curr_payment_due_date);
 
             $year = FinancialYear::where('code', $curr_payment_due_date->year)->first();

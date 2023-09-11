@@ -38,7 +38,7 @@
                 </div>
             @endif
 
-            @if ($return_->configReturns)
+            @if (isset($return_) && $return_->configReturns)
             <div class="col-md-12">
                 <p class="text-uppercase font-weight-bold">{{ __('Return Items') }} (USD)</p>
             </div>
@@ -166,7 +166,7 @@
                     </thead>
 
                     <tbody>
-                        @if (count($return_->penalties))
+                        @if (isset($return_) && count($return_->penalties))
                             @foreach ($return_->penalties->where('currency', 'USD') as $penalty)
                                 <tr>
                                     <td>{{ $penalty['financial_month_name'] }}</td>

@@ -206,6 +206,11 @@
                     <p class="my-1">
                         {{ number_format($waiverObjection->taxVerificationAssesment->total_amount ?? 0, 2) }}</p>
                 </div>
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
+                    <p class="my-1">
+                        {{ number_format($waiverObjection->taxVerificationAssesment->outstanding_amount ?? 0, 2) }}</p>
+                </div>
 
             </div>
         </div>
