@@ -15,7 +15,7 @@
             </a>
         @endif
     @elseif($instace->operator_type == 'role')
-        @if (in_array(auth()->user()->role->id, $operators))
+        @if (in_array(auth()->id(), $operators))
             <a href="{{ route('petroleum.certificateOfQuantity.show', encrypt($value)) }}"
                 class="btn btn-outline-primary btn-sm">
                 <i class="bi bi-eye-fill mr-1"></i> View & Approve
