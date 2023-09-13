@@ -166,11 +166,25 @@ class InitiateChangeModal extends Component
             }
 
             if ($this->informationType === 'taxRegion') {
-                dd($this->taxRegionId);
+                $internalChange = InternalBusinessUpdate::create([
+                    'business_id' => $this->location->business_id,
+                    'location_id' => $this->location->id,
+                    'type' => InternalInfoType::TAX_REGION,
+                    'triggered_by' => Auth::id(),
+                    'old_values' => json_encode(['tax_region_id' => $this->location->tax_region_id, 'name' => TaxRegion::findOrFail($this->location->tax_region_id)->name]),
+                    'new_values' => json_encode(['tax_region_id' => $this->taxRegionId, 'name' => TaxRegion::findOrFail($this->taxRegionId)->name]),
+                ]);
             }
 
             if ($this->informationType === 'currency') {
-                dd($this->businessCurrencyId);
+                $internalChange = InternalBusinessUpdate::create([
+                    'business_id' => $this->location->business_id,
+                    'location_id' => $this->location->id,
+                    'type' => InternalInfoType::CURRENCY,
+                    'triggered_by' => Auth::id(),
+                    'old_values' => json_encode(['currency_id' => $this->location->business->currency_id, 'name' => Currency::findOrFail($this->location->business->currency_id)->name]),
+                    'new_values' => json_encode(['currency_id' => $this->businessCurrencyId, 'name' => Currency::findOrFail($this->businessCurrencyId)->name]),
+                ]);
             }
          
             DB::commit();
@@ -188,7 +202,7 @@ class InitiateChangeModal extends Component
 
     public function getZin()
     {
-        $this->location = BusinessLocation::select('id', 'business_id', 'name', 'effective_date')->with('business')->where('zin', trim($this->zin))->first();
+        $this->location = BusinessLocation::select('id', 'business_id', 'name', 'effective_date', 'tax_region_id')->with('business')->where('zin', trim($this->zin))->first();
 
         if ($this->location) {
             // Load hotel stars & Business hotel if hotelStars info type is selected

@@ -8,10 +8,12 @@ use App\Models\Business;
 use App\Models\BusinessHotel;
 use App\Models\BusinessLocation;
 use App\Models\BusinessType;
+use App\Models\Currency;
 use App\Models\HotelStar;
 use App\Models\InternalBusinessUpdate;
 use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
+use App\Models\TaxRegion;
 use App\Models\TaxType;
 use Exception;
 use Illuminate\Support\Arr;
@@ -43,6 +45,8 @@ class InternalBusinessInfoChangeProcessing extends Component
     public $oldTaxes = [];
     public $ltoStatus = false, $currentltoStatus, $currentElectricStatus, $electricStatus = false, $taxRegionId, $businessCurrencyId;
     public $currencies = [], $taxRegions = [];
+    public $currentCurrency, $newCurrency, $currentCurrencyId;
+    public $currentTaxRegion, $newTaxRegion, $currentTaxRegionId;
 
     public function mount($modelName, $modelId)
     {
@@ -80,6 +84,26 @@ class InternalBusinessInfoChangeProcessing extends Component
         if ($this->infoType === InternalInfoType::LTO) {
             $this->currentltoStatus = boolval($this->info->old_values);
             $this->ltoStatus = boolval($this->info->new_values);
+        }
+
+        if ($this->infoType === InternalInfoType::CURRENCY) {
+            $this->currencies = Currency::select('id', 'name')->get();
+            $this->currentCurrency = json_decode($this->info->old_values, TRUE);
+            $this->newCurrency = json_decode($this->info->new_values, TRUE);
+            $this->currentCurrencyId = $this->currentCurrency['currency_id'];
+            $this->businessCurrencyId = $this->newCurrency['currency_id'];
+        }
+
+        if ($this->infoType === InternalInfoType::TAX_REGION) {
+            $this->taxRegions = TaxRegion::select('id', 'name')->get();
+            $this->currentTaxRegion = json_decode($this->info->old_values, TRUE);
+            $this->newTaxRegion = json_decode($this->info->new_values, TRUE);
+            $this->currentTaxRegionId = $this->currentTaxRegion['tax_region_id'];
+            $this->taxRegionId = $this->newTaxRegion['tax_region_id'];
+        }
+
+        if ($this->infoType === InternalInfoType::ISIC) {
+
         }
     }
 
@@ -156,6 +180,14 @@ class InternalBusinessInfoChangeProcessing extends Component
                 if ($this->infoType === InternalInfoType::LTO) {
                     $this->info->update(['new_values' => $this->ltoStatus]);
                 }
+
+                if ($this->infoType === InternalInfoType::CURRENCY) {
+                    $this->info->update(['new_values' => json_encode(['currency_id' => $this->businessCurrencyId, 'name' => Currency::findOrFail($this->businessCurrencyId)->name])]);
+                }
+
+                if ($this->infoType === InternalInfoType::TAX_REGION) {
+                    $this->info->update(['new_values' => json_encode(['tax_region_id' => $this->taxRegionId, 'name' => TaxRegion::findOrFail($this->taxRegionId)->name])]);
+                }
             }
 
             if ($this->checkTransition('director_of_trai_review')) {
@@ -211,6 +243,20 @@ class InternalBusinessInfoChangeProcessing extends Component
                     $business = $this->subject->business;
                     $business->update([
                         'is_business_lto' => $this->ltoStatus
+                    ]);
+                }
+
+                if ($this->subject->type === InternalInfoType::CURRENCY) {
+                    $business = $this->subject->business;
+                    $business->update([
+                        'currency_id' => $this->businessCurrencyId
+                    ]);
+                }
+
+                if ($this->subject->type === InternalInfoType::TAX_REGION) {
+                    $location = $this->subject->location;
+                    $location->update([
+                        'tax_region_id' => $this->taxRegionId
                     ]);
                 }
 

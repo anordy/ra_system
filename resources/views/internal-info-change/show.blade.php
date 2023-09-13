@@ -207,6 +207,58 @@
                         </div>
                     @endif
 
+                    @if ($info->type === \App\Enum\InternalInfoType::TAX_REGION)
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped table-sm">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="text-left font-weight-bold text-uppercase">Tax Region Change</label>
+                                </div>
+                                <thead>
+                                <th style="width: 30%">Current Tax Region</th>
+                                <th style="width: 30%">New Tax Region</th>
+                                <th style="width: 20%">Status</th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ json_decode($info->old_values)->name ?? '' }}</td>
+                                    <td>{{ json_decode($info->new_values)->name ?? '' }}</td>
+                                    @if (json_decode($info->old_values)->name == json_decode($info->new_values)->name)
+                                        <td class="table-primary">Unchanged</td>
+                                    @else
+                                        <td class="table-success">Changed</td>
+                                    @endif
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+
+                    @if ($info->type === \App\Enum\InternalInfoType::CURRENCY)
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped table-sm">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="text-left font-weight-bold text-uppercase">Business Currency Type Change</label>
+                                </div>
+                                <thead>
+                                <th style="width: 30%">Current Business Currency Status</th>
+                                <th style="width: 30%">New Business Currency Status</th>
+                                <th style="width: 20%">Status</th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ json_decode($info->old_values)->name }}</td>
+                                    <td>{{ json_decode($info->new_values)->name }}</td>
+                                    @if (json_decode($info->old_values)->name == json_decode($info->new_values)->name)
+                                        <td class="table-primary">Unchanged</td>
+                                    @else
+                                        <td class="table-success">Changed</td>
+                                    @endif
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+
             </div>  
             @endif
           

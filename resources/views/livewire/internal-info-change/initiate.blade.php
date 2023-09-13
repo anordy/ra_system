@@ -152,7 +152,7 @@
                 @endif
 
                 @if($taxRegionId)
-                    <div class="col-md-6 ">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="exampleFormControlTextarea1">Tax Region</label>
                             <select class="form-control @error('taxRegionId') is-invalid @enderror"
