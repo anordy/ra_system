@@ -77,6 +77,136 @@
                     </table>
                 </div>
                 @endif
+
+                    @if ($info->type === \App\Enum\InternalInfoType::EFFECTIVE_DATE)
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped table-sm">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="text-left font-weight-bold text-uppercase">Effective Date Change</label>
+                                </div>
+                                <thead>
+                                <th style="width: 30%">Current Effective Date</th>
+                                <th style="width: 30%">New Effective Date</th>
+                                <th style="width: 20%">Status</th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ json_decode($info->old_values)->effective_date ?? 'N/A' }}</td>
+                                    <td>{{ \Carbon\Carbon::create(json_decode($info->new_values)->effective_date)->format('d-M-Y') ?? 'N/A' }}</td>
+                                    @if (json_decode($info->old_values)->effective_date == json_decode($info->new_values)->effective_date)
+                                        <td class="table-primary">Unchanged</td>
+                                    @else
+                                        <td class="table-success">Changed</td>
+                                    @endif
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+
+                    @if($info->type === \App\Enum\InternalInfoType::TAX_TYPE)
+                        @php
+                            $oldTaxes = json_decode($info->old_values, TRUE);
+                            $newTaxes = json_decode($info->new_values, TRUE)['selectedTaxTypes'];
+                        @endphp
+
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped table-sm">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="text-left font-weight-bold text-uppercase">Current Tax Types</label>
+                                </div>
+                                <thead>
+                                <th style="width: 30%">Tax Type Name</th>
+                                <th style="width: 30%">Currency</th>
+                                <th style="width: 30%">Sub VAT Category (If available)</th>
+                                </thead>
+                                <tbody>
+                                    @foreach($oldTaxes as $oldTax)
+                                        <tr>
+                                            <td>{{ getTaxTypeName($oldTax['tax_type_id'])  }}</td>
+                                            <td>{{ $oldTax['currency']  }}</td>
+                                            <td>{{ getSubVatName($oldTax['sub_vat_id'] ?? null) ?? 'N/A'  }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped table-sm">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="text-left font-weight-bold text-uppercase">Current Tax Types</label>
+                                </div>
+                                <thead>
+                                <th style="width: 30%">Tax Type Name</th>
+                                <th style="width: 30%">Currency</th>
+                                <th style="width: 30%">Sub VAT Category (If available)</th>
+                                </thead>
+                                <tbody>
+                                @foreach($newTaxes as $newTax)
+                                    <tr>
+                                        <td>{{ getTaxTypeName($newTax['tax_type_id'])  }}</td>
+                                        <td>{{ $newTax['currency']  }}</td>
+                                        <td>{{ getSubVatName($newTax['sub_vat_id'] ?? null) ?? 'N/A'  }}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                    @endif
+
+                    @if ($info->type === \App\Enum\InternalInfoType::ELECTRIC)
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped table-sm">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="text-left font-weight-bold text-uppercase">Business Electric Change</label>
+                                </div>
+                                <thead>
+                                <th style="width: 30%">Current Business Electric Status</th>
+                                <th style="width: 30%">New Business Electric Status</th>
+                                <th style="width: 20%">Status</th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ json_decode($info->old_values) ? 'Yes' : 'No' }}</td>
+                                    <td>{{ json_decode($info->new_values) ? 'Yes' : 'No' }}</td>
+                                    @if (json_decode($info->old_values) == json_decode($info->new_values))
+                                        <td class="table-primary">Unchanged</td>
+                                    @else
+                                        <td class="table-success">Changed</td>
+                                    @endif
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+
+                    @if ($info->type === \App\Enum\InternalInfoType::LTO)
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped table-sm">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="text-left font-weight-bold text-uppercase">Business LTO Change</label>
+                                </div>
+                                <thead>
+                                <th style="width: 30%">Current Business LTO Status</th>
+                                <th style="width: 30%">New Business LTO Status</th>
+                                <th style="width: 20%">Status</th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ json_decode($info->old_values) ? 'Yes' : 'No' }}</td>
+                                    <td>{{ json_decode($info->new_values) ? 'Yes' : 'No' }}</td>
+                                    @if (json_decode($info->old_values) == json_decode($info->new_values))
+                                        <td class="table-primary">Unchanged</td>
+                                    @else
+                                        <td class="table-success">Changed</td>
+                                    @endif
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+
             </div>  
             @endif
           
