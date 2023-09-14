@@ -11,6 +11,10 @@ use App\Models\BusinessType;
 use App\Models\Currency;
 use App\Models\HotelStar;
 use App\Models\InternalBusinessUpdate;
+use App\Models\ISIC1;
+use App\Models\ISIC2;
+use App\Models\ISIC3;
+use App\Models\ISIC4;
 use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
@@ -47,6 +51,9 @@ class InternalBusinessInfoChangeProcessing extends Component
     public $currencies = [], $taxRegions = [];
     public $currentCurrency, $newCurrency, $currentCurrencyId;
     public $currentTaxRegion, $newTaxRegion, $currentTaxRegionId;
+    public $current_isiic_i, $current_isiic_ii, $current_isiic_iii, $current_isiic_iv;
+    public $isiic_i, $isiic_ii, $isiic_iii, $isiic_iv;
+    public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList  = [];
 
     public function mount($modelName, $modelId)
     {
@@ -103,6 +110,32 @@ class InternalBusinessInfoChangeProcessing extends Component
         }
 
         if ($this->infoType === InternalInfoType::ISIC) {
+            $this->isiiciList = ISIC1::all();
+
+            $currentData = json_decode($this->info->old_values, TRUE);
+            $newData = json_decode($this->info->new_values, TRUE);
+
+            $this->isiic_i = $newData['isiic_i'];
+            if ($this->isiic_i) {
+                $this->isiiciChange($this->isiic_i);
+            }
+
+            $this->isiic_ii = $newData['isiic_ii'];
+            if ($this->isiic_ii) {
+                $this->isiiciiChange($this->isiic_ii);
+            }
+
+            $this->isiic_iii = $newData['isiic_iii'];
+            if ($this->isiic_iii) {
+                $this->isiiciiiChange($this->isiic_iii);
+            }
+
+            $this->isiic_iv = $newData['isiic_iv'];
+
+            $this->current_isiic_i = $currentData['isiic_i'];
+            $this->current_isiic_ii = $currentData['isiic_ii'];
+            $this->current_isiic_iii = $currentData['isiic_iii'];
+            $this->current_isiic_iv = $currentData['isiic_iv'];
 
         }
     }
@@ -127,6 +160,10 @@ class InternalBusinessInfoChangeProcessing extends Component
                    'electricStatus' => 'required_if:informationType,electric',
                    'taxRegionId' => 'required_if:informationType,tax_region',
                    'businessCurrencyId' => 'required_if:informationType,currency',
+                   'isiic_i' => 'required_if:informationType,isic|numeric|exists:isic1s,id',
+                   'isiic_ii' => 'required_if:informationType,isic|numeric|exists:isic2s,id',
+                   'isiic_iii' => 'required_if:informationType,isic|numeric|exists:isic3s,id',
+                   'isiic_iv' => 'required_if:informationType,isic|numeric|exists:isic4s,id',
                ]);
 
                if ($this->infoType === InternalInfoType::EFFECTIVE_DATE) {
@@ -187,6 +224,21 @@ class InternalBusinessInfoChangeProcessing extends Component
 
                 if ($this->infoType === InternalInfoType::TAX_REGION) {
                     $this->info->update(['new_values' => json_encode(['tax_region_id' => $this->taxRegionId, 'name' => TaxRegion::findOrFail($this->taxRegionId)->name])]);
+                }
+
+                if ($this->infoType === InternalInfoType::ISIC) {
+                    $this->info->update([
+                        'new_values' => json_encode([
+                            'isiic_i' => $this->isiic_i,
+                            'isiic_i_name' => ISIC1::findOrFail($this->isiic_i)->description,
+                            'isiic_ii' => $this->isiic_ii,
+                            'isiic_ii_name' => ISIC2::findOrFail($this->isiic_ii)->description,
+                            'isiic_iii' => $this->isiic_iii,
+                            'isiic_iii_name' => ISIC3::findOrFail($this->isiic_iii)->description,
+                            'isiic_iv' => $this->isiic_iv,
+                            'isiic_iv_name' => ISIC4::findOrFail($this->isiic_iv)->description,
+                        ]),
+                    ]);
                 }
             }
 
@@ -260,6 +312,16 @@ class InternalBusinessInfoChangeProcessing extends Component
                     ]);
                 }
 
+                if ($this->subject->type === InternalInfoType::ISIC) {
+                    $business = $this->subject->business;
+                    $business->update([
+                        'isiic_i' => $this->isiic_i,
+                        'isiic_ii' => $this->isiic_ii,
+                        'isiic_iii' => $this->isiic_iii,
+                        'isiic_iv' => $this->isiic_iv,
+                    ]);
+                }
+
                 $this->subject->status = InternalInfoChangeStatus::APPROVED;
                 $this->subject->approved_on = Carbon::now();
                 $this->subject->save();
@@ -295,6 +357,30 @@ class InternalBusinessInfoChangeProcessing extends Component
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
+    }
+
+    public function isiiciChange($value)
+    {
+        $this->isiiciiList  = ISIC2::where('isic1_id', $value)->get();
+        $this->isiic_ii     = null;
+        $this->isiic_iii    = null;
+        $this->isiic_iv     = null;
+        $this->isiiciiiList = [];
+        $this->isiicivList  = [];
+    }
+
+    public function isiiciiChange($value)
+    {
+        $this->isiiciiiList = ISIC3::where('isic2_id', $value)->get();
+        $this->isiic_iii    = null;
+        $this->isiic_iv     = null;
+        $this->isiicivList  = [];
+    }
+
+    public function isiiciiiChange($value)
+    {
+        $this->isiicivList = ISIC4::where('isic3_id', $value)->get();
+        $this->isiic_iv    = null;
     }
 
 

@@ -6,6 +6,10 @@ use App\Enum\InternalInfoType;
 use App\Models\Business;
 use App\Models\BusinessType;
 use App\Models\Currency;
+use App\Models\ISIC1;
+use App\Models\ISIC2;
+use App\Models\ISIC3;
+use App\Models\ISIC4;
 use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
@@ -40,6 +44,8 @@ class InitiateChangeModal extends Component
     public $ltoStatus = false, $electricStatus = false, $taxRegionId, $businessCurrencyId;
     public $currencies = [], $taxRegions = [];
     public $showElectric = false, $showLto = false;
+    public $isiic_i, $isiic_ii, $isiic_iii, $isiic_iv;
+    public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList  = [];
 
     public function mount() {
 
@@ -56,6 +62,10 @@ class InitiateChangeModal extends Component
             'electricStatus' => 'required_if:informationType,electric',
             'taxRegionId' => 'required_if:informationType,taxRegion',
             'businessCurrencyId' => 'required_if:informationType,currency',
+            'isiic_i' => 'required_if:informationType,isic|numeric|exists:isic1s,id',
+            'isiic_ii' => 'required_if:informationType,isic|numeric|exists:isic2s,id',
+            'isiic_iii' => 'required_if:informationType,isic|numeric|exists:isic3s,id',
+            'isiic_iv' => 'required_if:informationType,isic|numeric|exists:isic4s,id',
         ];
     }
 
@@ -186,6 +196,35 @@ class InitiateChangeModal extends Component
                     'new_values' => json_encode(['currency_id' => $this->businessCurrencyId, 'name' => Currency::findOrFail($this->businessCurrencyId)->name]),
                 ]);
             }
+
+            if ($this->informationType === 'isic') {
+                $internalChange = InternalBusinessUpdate::create([
+                    'business_id' => $this->location->business_id,
+                    'location_id' => $this->location->id,
+                    'type' => InternalInfoType::ISIC,
+                    'triggered_by' => Auth::id(),
+                    'old_values' => json_encode([
+                        'isiic_i' => $this->location->business->isiic_i,
+                        'isiic_i_name' => ISIC1::findOrFail($this->location->business->isiic_i)->description,
+                        'isiic_ii' => $this->location->business->isiic_ii,
+                        'isiic_ii_name' => ISIC2::findOrFail($this->location->business->isiic_ii)->description,
+                        'isiic_iii' => $this->location->business->isiic_iii,
+                        'isiic_iii_name' => ISIC3::findOrFail($this->location->business->isiic_iii)->description,
+                        'isiic_iv' => $this->location->business->isiic_iv,
+                        'isiic_iv_name' => ISIC4::findOrFail($this->location->business->isiic_iv)->description,
+                    ]),
+                    'new_values' => json_encode([
+                        'isiic_i' => $this->isiic_i,
+                        'isiic_i_name' => ISIC1::findOrFail($this->isiic_i)->description,
+                        'isiic_ii' => $this->isiic_ii,
+                        'isiic_ii_name' => ISIC2::findOrFail($this->isiic_ii)->description,
+                        'isiic_iii' => $this->isiic_iii,
+                        'isiic_iii_name' => ISIC3::findOrFail($this->isiic_iii)->description,
+                        'isiic_iv' => $this->isiic_iv,
+                        'isiic_iv_name' => ISIC4::findOrFail($this->isiic_iv)->description,
+                    ]),
+                ]);
+            }
          
             DB::commit();
 
@@ -259,7 +298,7 @@ class InitiateChangeModal extends Component
                 $this->taxRegions = TaxRegion::select('id', 'name')->get();
                 $this->taxRegionId = $this->location->tax_region_id;
             } else if ($this->informationType === 'isic') {
-
+                $this->isiiciList = ISIC1::all();
             }
         } else {
             $this->customAlert('error', 'Invalid ZIN Number provided');
@@ -356,6 +395,30 @@ class InitiateChangeModal extends Component
         $this->selectedTaxTypes[$key]['sub_vat_id'] = $subVat['id'];
         $this->selectedTaxTypes[$key]['sub_vat_name'] = $subVat['name'];
         $this->selectedTaxTypes[$key]['show_hide_options'] = false;
+    }
+
+    public function isiiciChange($value)
+    {
+        $this->isiiciiList  = ISIC2::where('isic1_id', $value)->get();
+        $this->isiic_ii     = null;
+        $this->isiic_iii    = null;
+        $this->isiic_iv     = null;
+        $this->isiiciiiList = [];
+        $this->isiicivList  = [];
+    }
+
+    public function isiiciiChange($value)
+    {
+        $this->isiiciiiList = ISIC3::where('isic2_id', $value)->get();
+        $this->isiic_iii    = null;
+        $this->isiic_iv     = null;
+        $this->isiicivList  = [];
+    }
+
+    public function isiiciiiChange($value)
+    {
+        $this->isiicivList = ISIC4::where('isic3_id', $value)->get();
+        $this->isiic_iv    = null;
     }
 
     public function render()

@@ -259,6 +259,68 @@
                         </div>
                     @endif
 
+                    @if ($info->type === \App\Enum\InternalInfoType::ISIC)
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped table-sm">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="text-left font-weight-bold text-uppercase">ISIIC Codes Change</label>
+                                </div>
+                                <thead>
+                                <th style="width: 30%">ISIIC Level</th>
+                                <th style="width: 30%">Current ISIIC Code</th>
+                                <th style="width: 30%">New ISIIC Code</th>
+                                <th style="width: 20%">Status</th>
+                                </thead>
+                                <tbody>
+                                @php
+                                    $currentData = json_decode($info->old_values);
+                                    $newData = json_decode($info->new_values);
+                                @endphp
+                                <tr>
+                                    <td>ISIIC Level 1</td>
+                                    <td>{{ $currentData->isiic_i_name ?? '' }}</td>
+                                    <td>{{ $newData->isiic_i_name ?? '' }}</td>
+                                    @if ($currentData->isiic_i == $newData->isiic_i)
+                                        <td class="table-primary">Unchanged</td>
+                                    @else
+                                        <td class="table-success">Changed</td>
+                                    @endif
+                                </tr>
+                                <tr>
+                                    <td>ISIIC Level 2</td>
+                                    <td>{{ $currentData->isiic_ii_name ?? '' }}</td>
+                                    <td>{{ $newData->isiic_ii_name ?? '' }}</td>
+                                    @if ($currentData->isiic_ii == $newData->isiic_ii)
+                                        <td class="table-primary">Unchanged</td>
+                                    @else
+                                        <td class="table-success">Changed</td>
+                                    @endif
+                                </tr>
+                                <tr>
+                                    <td>ISIIC Level 3</td>
+                                    <td>{{ $currentData->isiic_iii_name ?? '' }}</td>
+                                    <td>{{ $newData->isiic_iii_name ?? '' }}</td>
+                                    @if ($currentData->isiic_iii == $newData->isiic_iii)
+                                        <td class="table-primary">Unchanged</td>
+                                    @else
+                                        <td class="table-success">Changed</td>
+                                    @endif
+                                </tr>
+                                <tr>
+                                    <td>ISIIC Level 4</td>
+                                    <td>{{ $currentData->isiic_iv_name ?? '' }}</td>
+                                    <td>{{ $newData->isiic_iv_name ?? '' }}</td>
+                                    @if ($currentData->isiic_iv == $newData->isiic_iv)
+                                        <td class="table-primary">Unchanged</td>
+                                    @else
+                                        <td class="table-success">Changed</td>
+                                    @endif
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+
             </div>  
             @endif
           

@@ -62,6 +62,9 @@
                     @if($info->type === \App\Enum\InternalInfoType::TAX_REGION)
                         @include('livewire.internal-info-change.tax_region.registration_manager_review')
                     @endif
+                    @if($info->type === \App\Enum\InternalInfoType::ISIC)
+                        @include('livewire.internal-info-change.isic.registration_manager_review')
+                    @endif
             @endif
 
             @if ($this->checkTransition('director_of_trai_review'))
@@ -118,6 +121,9 @@
                     @endif
                     @if($info->type === \App\Enum\InternalInfoType::TAX_REGION)
                         @include('livewire.internal-info-change.tax_region.director_trai_review')
+                    @endif
+                    @if($info->type === \App\Enum\InternalInfoType::ISIC)
+                        @include('livewire.internal-info-change.isic.director_trai_review')
                     @endif
             @endif
 
