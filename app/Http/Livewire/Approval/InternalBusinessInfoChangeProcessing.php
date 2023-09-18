@@ -160,10 +160,10 @@ class InternalBusinessInfoChangeProcessing extends Component
                    'electricStatus' => 'required_if:informationType,electric',
                    'taxRegionId' => 'required_if:informationType,tax_region',
                    'businessCurrencyId' => 'required_if:informationType,currency',
-                   'isiic_i' => 'required_if:informationType,isic|numeric|exists:isic1s,id',
-                   'isiic_ii' => 'required_if:informationType,isic|numeric|exists:isic2s,id',
-                   'isiic_iii' => 'required_if:informationType,isic|numeric|exists:isic3s,id',
-                   'isiic_iv' => 'required_if:informationType,isic|numeric|exists:isic4s,id',
+                   'isiic_i' => 'required_if:informationType,isic',
+                   'isiic_ii' => 'required_if:informationType,isic',
+                   'isiic_iii' => 'required_if:informationType,isic',
+                   'isiic_iv' => 'required_if:informationType,isic',
                ]);
 
                if ($this->infoType === InternalInfoType::EFFECTIVE_DATE) {
