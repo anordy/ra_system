@@ -28,7 +28,6 @@ class CreateChassisNumbersTable extends Migration
             $table->integer('tare_weight');
             $table->integer('gross_weight');
             $table->string('engine_number');
-            $table->integer('engine_capacity')->nullable();
             $table->integer('passenger_capacity');
             $table->string('purchase_day');
             $table->string('color');
@@ -38,6 +37,11 @@ class CreateChassisNumbersTable extends Migration
             $table->string('imported_from');
             $table->string('tansad_number');
             $table->integer('status')->default(1)->comment('1-For Registration, 2-For Deregistration');
+            $table->string('engine_cubic_capacity')->nullable();
+            $table->string('engine_kw_capacity')->nullable();
+            $table->string('engine_hp_capacity')->nullable();
+            $table->string('plate_number')->nullable();
+            $table->string('filter_code')->nullable();
             $table->timestamps();
         });
     }

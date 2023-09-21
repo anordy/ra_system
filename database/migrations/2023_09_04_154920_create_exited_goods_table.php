@@ -15,6 +15,7 @@ class CreateExitedGoodsTable extends Migration
     {
         Schema::create('exited_goods', function (Blueprint $table) {
             $table->id();
+            $table->string('good_id');
             $table->integer('owner_tin_number')->index('owner_tin_number_index');
             $table->integer('supplier_tin_number');
             $table->string('tansad_number');

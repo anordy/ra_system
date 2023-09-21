@@ -55,33 +55,9 @@ class TinVerification extends Component
 
     public function save(){
         try {
-            DB::beginTransaction();
-
             $this->business->tin_verification_status = TinVerificationStatus::APPROVED;
             $this->business->save();
 
-            Tin::create([
-                'tin' => $this->tin['tin'],
-                'date_of_birth' => Carbon::create($this->tin['date_of_birth'])->format('Y-m-d'),
-                'first_name' => $this->tin['first_name'],
-                'middle_name' => $this->tin['middle_name'],
-                'last_name' => $this->tin['last_name'],
-                'gender' => $this->tin['gender'],
-                'taxpayer_name' => $this->tin['taxpayer_name'],
-                'trading_name' => $this->tin['trading_name'],
-                'postal_address' => $this->tin['postal_address'],
-                'street' => $this->tin['street'],
-                'plot_number' => $this->tin['plot_number'],
-                'district' => $this->tin['district'],
-                'region' => $this->tin['region'],
-                'postal_code' => $this->tin['postal_code'],
-                'mobile' => $this->tin['mobile'],
-                'email' => $this->tin['email'],
-                'vat_registration_number' => $this->tin['vat_registration_number'],
-                'biometric' => $this->tin['biometric'],
-            ]);
-
-            DB::commit();
             $this->customAlert('success', 'TIN Verification Completed.');
         } catch (\Throwable $e) {
             Log::error($e);
