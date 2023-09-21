@@ -76,7 +76,7 @@ class BusinessAuditAddModal extends Component
             ->whereHas('taxAuditLocations', function ($query) use ($location_ids) {
                 $query->whereIn('business_location_id', $location_ids);
             })
-            ->orWhereHas('taxAuditTaxTypes', function ($query) use ($tax_type_ids) {
+            ->whereHas('taxAuditTaxTypes', function ($query) use ($tax_type_ids) {
                 $query->whereIn('business_tax_type_id', $tax_type_ids);
             })
             ->whereIn('status', ['draft', 'pending'])

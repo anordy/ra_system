@@ -285,7 +285,7 @@ class UsersTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            $user = User::find($data->id);
+            $user = User::find(decrypt($data->id));
             if(is_null($user)){
                 abort(404);
             }

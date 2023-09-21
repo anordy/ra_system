@@ -191,3 +191,11 @@ function getHotelStarByBusinessId($business_id)
         ->select('h.infrastructure_charged','no_of_stars')->first();
     return $hotel_star;
 }
+
+function getTaxTypeName($taxTypeId) {
+    return \App\Models\TaxType::select('name')->findOrFail($taxTypeId)->name;
+}
+
+function getSubVatName($subVatId) {
+    return \App\Models\Returns\Vat\SubVat::select('name')->find($subVatId)->name ?? '';
+}

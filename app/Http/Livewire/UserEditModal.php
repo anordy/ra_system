@@ -41,7 +41,6 @@ class UserEditModal extends Component
             'email' => 'required|unique:users,email,' . $this->user->id . ',id',
             'gender' => 'required|in:M,F',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'level_id' => 'required',
             'override_otp' => 'required|in:0,1'
         ];
     }

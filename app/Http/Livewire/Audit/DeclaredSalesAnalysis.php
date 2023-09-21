@@ -169,7 +169,7 @@ class DeclaredSalesAnalysis extends Component
     protected function petroleum()
     {
         $config = PetroleumConfig::where('code', '!=', 'TOTAL')->get();
-        $salesConfigs = $config->pluck('name');
+        $salesConfigs = $config->pluck('id');
         $headers = $config->pluck('name');
 
         $yearReturnGroup = PetroleumReturnItem::select('petroleum_configs.code', 'petroleum_return_items.value', 'petroleum_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')

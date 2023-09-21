@@ -19,7 +19,7 @@ class CreateInternalBusinessUpdatesTable extends Migration
             $table->unsignedBigInteger('location_id')->nullable();
             $table->longText('old_values')->nullable();
             $table->longText('new_values')->nullable();
-            $table->enum('type', ['effective_date', 'isic', 'tax_type', 'hotel_stars']);
+            $table->enum('type', ['effective_date', 'isic', 'tax_type', 'hotel_stars', 'lto', 'electric', 'tax_region', 'currency']);
             $table->enum('status', ['pending', 'approved'])->default('pending');
             $table->string('marking')->nullable();
             $table->timestamp('approved_on')->nullable();
