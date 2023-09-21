@@ -28,7 +28,7 @@ class CreateChassisNumbersTable extends Migration
             $table->integer('tare_weight');
             $table->integer('gross_weight');
             $table->string('engine_number');
-            $table->integer('engine_capacity');
+            $table->integer('engine_capacity')->nullable();
             $table->integer('passenger_capacity');
             $table->string('purchase_day');
             $table->string('color');
