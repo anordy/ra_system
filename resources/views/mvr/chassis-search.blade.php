@@ -1,7 +1,5 @@
 @extends('layouts.master')
-
 @section('title', 'Motor Vehicle Search')
-
 @section('content')
     <div class="card mt-3">
         <div class="card-body">
@@ -39,7 +37,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Engine capacity</span>
-                            <p class="my-1">{{ $motor_vehicle['engine_capacity'] }}</p>
+                            <p class="my-1">{{ $motor_vehicle['engine_cubic_capacity'] }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Class</span>
@@ -79,6 +77,8 @@
                             <span class="font-weight-bold text-uppercase">Usage Type</span>
                             <p class="my-1">{{ $motor_vehicle['usage_type'] }}</p>
                         </div>
+                </div>
+                </div>
                 </div>
 
                 <div class="card mt-3">
@@ -127,7 +127,6 @@
 
 
                     </div>
-
                 </div>
             @else
                 <div class="card mt-3">

@@ -829,44 +829,6 @@
                             <a href="{{ route('settings.tax-regions.index') }}">Tax Regions</a>
                         </li>
                     @endcan
-                    @can('setting-mvr-make-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrMake') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrMake') }}">Motor Vehicle Make</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-model-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrModel') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrModel') }}">Motor Vehicle Model</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-transmission-type-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrTransmissionType') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransmissionType') }}">Motor Vehicle
-                                Transmission</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-fuel-type-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrFuelType') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrFuelType') }}">Motor vehicle Fuel
-                                Type</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-class-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrClass') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrClass') }}">Motor Vehicle Class</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-color-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrColor') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrColor') }}">Motor Vehicle Color</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-body-type-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrBodyType') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrBodyType') }}">Motor Vehicle Body
-                                Type</a>
-                        </li>
-                    @endcan
                     @can('setting-mvr-plate-size-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrPlateSize') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrPlateSize') }}">Motor Vehicle Plate

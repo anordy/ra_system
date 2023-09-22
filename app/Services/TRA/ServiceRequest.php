@@ -54,7 +54,7 @@ class ServiceRequest
 
     public function getChassisNumber(string $chassisNumber)
     {
-        $apiUrl = config('modulesconfig.api_url') . '/tra/mvr?chassisNumber='.$chassisNumber;
+        $apiUrl = config('modulesconfig.api_url') . '/tra/mvr/registered/'.$chassisNumber;
 
         $accessToken = (new ApiAuthenticationService)->getAccessToken();
 

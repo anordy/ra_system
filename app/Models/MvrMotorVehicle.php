@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use App\Models\Tra\ChassisNumber;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -77,32 +78,12 @@ class MvrMotorVehicle extends Model implements Auditable
 		'request_date' => 'datetime:Y-m-d',
 	];
 
-	protected $fillable = [
-		'registration_date',
-		'registration_number',
-		'number_of_axle',
-		'chassis_number',
-		'year_of_manufacture',
-		'engine_number',
-		'gross_weight',
-		'engine_capacity',
-		'seating_capacity',
-		'mvr_vehicle_status_id',
-		'imported_from_country_id',
-		'mvr_color_id',
-		'mvr_class_id',
-		'mvr_model_id',
-		'mvr_fuel_type_id',
-		'mvr_transmission_id',
-		'mvr_body_type_id',
-		'inspection_report_path',
-		'certificate_of_worth_path',
-		'mvr_agent_id',
-		'mileage',
-		'inspection_date',
-		'certificate_number',
-		'mvr_registration_status_id'
-	];
+	protected $guarded = [];
+
+	public function chassis()
+	{
+		return $this->belongsTo(ChassisNumber::class, 'chassis_number');
+	}
 
 	public function imported_from_country()
 	{

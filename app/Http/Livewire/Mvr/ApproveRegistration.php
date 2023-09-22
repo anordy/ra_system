@@ -11,6 +11,7 @@ use App\Models\MvrPersonalizedPlateNumberRegistration;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
+use App\Models\Tra\Tin;
 use App\Models\ZmBill;
 use App\Services\TRA\ServiceRequest;
 use App\Services\ZanMalipo\ZmCore;
@@ -109,15 +110,17 @@ class ApproveRegistration extends Component
             $amount = $fee->amount;
             $gfs_code = $fee->gfs_code;
 
+            $tin = Tin::where('tin', $mv->chassis->importer_tin)->firstOrFail();
+
             $zmBill = ZmCore::createBill(
                 $registration->id,
                 get_class($registration),
                 6,
-                $mv->agent->id,
-                get_class($mv->agent),
-                $mv->agent->taxpayer->fullname(),
-                $mv->agent->taxpayer->email,
-                ZmCore::formatPhone($mv->agent->taxpayer->mobile),
+                $tin->tin,
+                'TIN',
+                $mv->chassis->importer_name,
+                $tin->email,
+                ZmCore::formatPhone($tin->mobile),
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
                 ZmCore::PAYMENT_OPTION_EXACT,

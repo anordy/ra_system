@@ -19,6 +19,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -73,7 +74,7 @@ class MotorVehicleRegistrationController extends Controller
             DB::beginTransaction();
             $status = MvrRegistrationStatus::query()
                 ->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING]);
-            $mv =  MvrMotorVehicle::query()
+            $mv = MvrMotorVehicle::query()
                 ->findOrFail($id);
             $mv->update([
                     'mvr_registration_status_id'=>$status->id
@@ -95,7 +96,7 @@ class MotorVehicleRegistrationController extends Controller
         }catch (\Exception $e){
             session()->flash('error', 'Could not update status');
             DB::rollBack();
-            report($e);
+            Log::error($e);
         }
         return redirect()->route('mvr.show',encrypt($id));
     }

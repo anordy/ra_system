@@ -149,49 +149,49 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Year</span>
-                    <p class="my-1">{{ $motor_vehicle->year_of_manufacture }}</p>
+                    <p class="my-1">{{ $motor_vehicle->chassis->year }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">imported from</span>
-                    <p class="my-1">{{ $motor_vehicle->imported_from_country->name }}</p>
+                    <p class="my-1">{{ $motor_vehicle->chassis->imported_from }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Engine capacity</span>
-                    <p class="my-1">{{ $motor_vehicle->engine_capacity }}</p>
+                    <p class="my-1">{{ $motor_vehicle->chassis->engine_cubic_capacity }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Class</span>
-                    <p class="my-1">{{ $motor_vehicle->class->name }}</p>
+                    <p class="my-1">{{ $motor_vehicle->class->name ?? 'N/A' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Fuel type</span>
-                    <p class="my-1">{{ $motor_vehicle->fuel_type->name }}</p>
+                    <p class="my-1">{{ $motor_vehicle->chassis->fuel_type }}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Make</span>
-                    <p class="my-1">{{ $motor_vehicle->model->make->name }}</p>
+                    <p class="my-1">{{ $motor_vehicle->chassis->make }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Model</Span>
-                    <p class="my-1">{{ $motor_vehicle->model->name}}</p>
+                    <p class="my-1">{{ $motor_vehicle->chassis->model_type}}</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase"> Custom number</span>
-                    <p class="my-1">{{ $motor_vehicle->custom_number }}</p>
+                    <p class="my-1">{{ $motor_vehicle->chassis->tansad_number }}</p>
                 </div>
             </div>
             <div class="row">
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Gross weight</span>
-                    <p class="my-1">{{ $motor_vehicle->gross_weight }}</p>
+                    <p class="my-1">{{ $motor_vehicle->chassis->gross_weight }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Color</span>
-                    <p class="my-1">{{ $motor_vehicle->color->name }}</p>
+                    <p class="my-1">{{ $motor_vehicle->chassis->color }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Inspection Report</span>
@@ -202,7 +202,7 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Vehicle Status</span>
-                    <p class="my-1">{{$motor_vehicle->vehicle_status->name}}</p>
+                    <p class="my-1">{{$motor_vehicle->chassis->status}}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Registration Status</span>
@@ -220,14 +220,14 @@
         <div class="card-body">
             <div class="row my-2">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Name</span>
-                    <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->fullname() }}</p>
+                    <span class="font-weight-bold text-uppercase">Importer Name</span>
+                    <p class="my-1">{{ $motor_vehicle->chassis->importer_name}}</p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Z-Number</span>
-                    <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->reference_no }}</p>
+                    <span class="font-weight-bold text-uppercase">Importer TIN</span>
+                    <p class="my-1">{{ $motor_vehicle->chassis->importer_tin }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
+                {{-- <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">TIN</span>
                     <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->reference_no }}</p>
                 </div>
@@ -254,13 +254,13 @@
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Email</span>
                     <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->email }}</p>
-                </div>
+                </div> --}}
             </div>
 
         </div>
     </div>
 
-    <!--- Agent --->
+    {{-- <!--- Agent --->
     <div class="card mt-3">
         <div class="card-header">
             <h5>Agent</h5>
@@ -291,6 +291,6 @@
             </div>
 
         </div>
-    </div>
+    </div> --}}
 
 @endsection
