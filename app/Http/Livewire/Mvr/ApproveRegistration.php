@@ -110,7 +110,12 @@ class ApproveRegistration extends Component
             $amount = $fee->amount;
             $gfs_code = $fee->gfs_code;
 
-            $tin = Tin::where('tin', $mv->chassis->importer_tin)->firstOrFail();
+            $tin = Tin::where('tin', $mv->chassis->importer_tin)->first();
+
+            if (!$tin) {
+                $this->customAlert('error', 'Importer TIN information is not verified');
+                return;
+            }
 
             $zmBill = ZmCore::createBill(
                 $registration->id,
@@ -161,7 +166,7 @@ class ApproveRegistration extends Component
             return redirect()->to(route('mvr.show', encrypt($this->motor_vehicle_id)));
         } catch (Exception $e) {
             DB::rollBack();
-            report($e);
+            Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

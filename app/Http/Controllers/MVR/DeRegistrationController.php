@@ -13,6 +13,7 @@ use App\Models\MvrRegistrationChangeRequest;
 use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRequestStatus;
 use App\Models\TaxType;
+use App\Services\Api\TraInternalService;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\MotorVehicleSearchTrait;
@@ -21,6 +22,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DeRegistrationController extends Controller
 {
@@ -166,17 +168,20 @@ class DeRegistrationController extends Controller
         try {
             DB::beginTransaction();
             $bill = $request->get_latest_bill();
-            $bill->update(['status' => 'Paid']);
+            $bill->update(['status' => 'paid']);
             $request->update(['certificate_date' => date('Y-m-d'), 'mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_ACCEPTED])->id]);
             $request->motor_vehicle->update(['mvr_registration_status_id' => MvrRegistrationStatus::query()->firstOrCreate(['name' => MvrRegistrationStatus::STATUS_DE_REGISTERED])->id]);
             $mvr_reg = $request->motor_vehicle->current_registration;
             $mvr_reg->update(['mvr_plate_number_status_id' => $plate_status->id]);
             DB::commit();
+            // TODO: Send deregistration status as a job
+            $traService = new TraInternalService();
+            $traService->postPlateNumber($request->motor_vehicle->chassis_number, $mvr_reg->plate_number, 'deregistration');
             return redirect()->route('mvr.de-register-requests.show', encrypt($id));
         } catch (\Exception $e) {
+            Log::error($e);
             session()->flash('error', 'Could not update status');
             DB::rollBack();
-            report($e);
             return redirect()->route('mvr.de-register-requests.show', encrypt($id));
         }
     }

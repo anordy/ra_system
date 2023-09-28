@@ -20,12 +20,12 @@ class CreateExitedGoodsTable extends Migration
             $table->integer('supplier_tin_number');
             $table->string('tansad_number');
             $table->timestamp('tansad_date');
-            $table->string('vat_registration_number');
-            $table->decimal('value_excluding_tax', 20, 2);
-            $table->decimal('tax_amount', 20,2);
-            $table->string('invoice_number');
-            $table->timestamp('invoice_date');
-            $table->timestamp('release_date');
+            $table->string('vat_registration_number')->nullable();
+            $table->decimal('value_excluding_tax', 20, 2)->default(0);
+            $table->decimal('tax_amount', 20,2)->default(0);
+            $table->string('invoice_number')->nullable();
+            $table->timestamp('invoice_date')->nullable();
+            $table->timestamp('release_date')->nullable();
             $table->string('custom_declaration_types')->comment('IM4 or IM9');
             $table->integer('status')->default(0)->comment('0-Not utilized, 1-Utilized');
             $table->timestamps();

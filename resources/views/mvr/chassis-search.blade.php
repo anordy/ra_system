@@ -29,29 +29,29 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Year</span>
-                            <p class="my-1">{{ $motor_vehicle['year'] }}</p>
+                            <p class="my-1">{{ $motor_vehicle['year'] ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">imported from</span>
                             <p class="my-1">{{ $motor_vehicle['imported_from'] }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Engine capacity</span>
+                            <span class="font-weight-bold text-uppercase">Engine capacity (cc)</span>
                             <p class="my-1">{{ $motor_vehicle['engine_cubic_capacity'] }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Class</span>
-                            <p class="my-1">{{ $motor_vehicle['class'] ?? '' }}</p>
+                            <p class="my-1">{{ $motor_vehicle['class'] ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Fuel type</span>
-                            <p class="my-1">{{ $motor_vehicle['fuel_type'] }}</p>
+                            <p class="my-1">{{ $motor_vehicle['fuel_type'] ?? 'N/A' }}</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Make</span>
-                            <p class="my-1">{{ $motor_vehicle['make'] }}</p>
+                            <p class="my-1">{{ $motor_vehicle['make'] ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Model Type</Span>
@@ -71,11 +71,24 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Color</span>
-                            <p class="my-1">{{ $motor_vehicle['color'] }}</p>
+                            <p class="my-1">{{ $motor_vehicle['color'] ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Usage Type</span>
                             <p class="my-1">{{ $motor_vehicle['usage_type'] }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Vehicle Category</Span>
+                            <p class="my-1">{{ $motor_vehicle['vehicle_category'] }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Purchase Day</Span>
+                            <p class="my-1">{{ $motor_vehicle['purchase_day'] }}</p>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Passenger Capacity</span>
+                            <p class="my-1">{{ $motor_vehicle['passenger_capacity'] }}</p>
                         </div>
                 </div>
                 </div>
@@ -87,6 +100,10 @@
                     </div>
                     <div class="card-body">
                         <div class="row my-2">
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Owner Category</Span>
+                                <p class="my-1">{{ $motor_vehicle['owner_category'] }}</p>
+                            </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Name</span>
                                 <p class="my-1">{{ $motor_vehicle['importer_name'] }}</p>

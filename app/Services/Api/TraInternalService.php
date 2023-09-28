@@ -132,7 +132,7 @@ class TraInternalService
         }
     }
 
-    public function postPlateNumber(string $chassisNumber, string $plateNumber) {
+    public function postPlateNumber(string $chassisNumber, string $plateNumber, string  $registrationType) {
 
         $accessToken = (new ApiAuthenticationService)->getAccessToken();
 
@@ -140,11 +140,12 @@ class TraInternalService
 
             $authorization = 'Bearer ' .$accessToken;
 
-            $tinUrl = config('modulesconfig.api_url') . '/tra/tin/post-znumber';
+            $tinUrl = config('modulesconfig.api_url') . '/tra/mvr/post-plate-number';
 
             $payload = [
                 'chassisNumber' => $chassisNumber,
                 'plateNumber' => $plateNumber,
+                'registrationType' => $registrationType
             ];
 
             $curl = curl_init();
@@ -177,7 +178,7 @@ class TraInternalService
                         'data' => null
                     ];
                 } else {
-                    Log::error('FAILED TO POST Z-NUMBER: '.$response);
+                    Log::error('FAILED TO POST PLATE NUMBER: '.$response);
                     return [
                         'message' => 'failed',
                         'data' => null

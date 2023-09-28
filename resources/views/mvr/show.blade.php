@@ -182,6 +182,23 @@
                     <span class="font-weight-bold text-uppercase"> Custom number</span>
                     <p class="my-1">{{ $motor_vehicle->chassis->tansad_number }}</p>
                 </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Usage Type</span>
+                    <p class="my-1">{{ $motor_vehicle->chassis->usage_type }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Vehicle Category</Span>
+                    <p class="my-1">{{ $motor_vehicle->chassis->vehicle_category }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Purchase Day</Span>
+                    <p class="my-1">{{ $motor_vehicle->chassis->purchase_day }}</p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Passenger Capacity</span>
+                    <p class="my-1">{{ $motor_vehicle->chassis->passenger_capacity }}</p>
+                </div>
             </div>
             <div class="row">
 

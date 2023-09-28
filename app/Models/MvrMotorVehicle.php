@@ -82,7 +82,7 @@ class MvrMotorVehicle extends Model implements Auditable
 
 	public function chassis()
 	{
-		return $this->belongsTo(ChassisNumber::class, 'chassis_number');
+		return $this->belongsTo(ChassisNumber::class, 'chassis_number', 'chassis_number');
 	}
 
 	public function imported_from_country()

@@ -12,6 +12,7 @@ use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrRequestStatus;
 use App\Models\SystemSetting;
+use App\Services\Api\TraInternalService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -65,6 +66,7 @@ class MotorVehicleRegistrationController extends Controller
     }
 
 
+    // TODO: Shift to API upon payment completed
     public function simulatePayment($id){
         $id = decrypt($id);
         $reg =  MvrMotorVehicle::query()
@@ -93,6 +95,10 @@ class MotorVehicleRegistrationController extends Controller
             $plate_status = MvrPlateNumberStatus::query()->firstOrCreate(['name' => MvrPlateNumberStatus::STATUS_GENERATED]);
             $reg->update(['plate_number'=>$plate_number,'mvr_plate_number_status_id'=>$plate_status->id,'registration_date'=>date('Y-m-d')]);
             DB::commit();
+
+            // TODO: Send Registration status as a job
+            $traService = new TraInternalService();
+            $traService->postPlateNumber($mv->chassis_number, $plate_number, 'registration');
         }catch (\Exception $e){
             session()->flash('error', 'Could not update status');
             DB::rollBack();
