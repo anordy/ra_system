@@ -68,7 +68,7 @@ class TraInternalService
         }
     }
 
-    public function postZNumber(string $tinNumber, string $zNumber, string $taxpayerName, $registrationDate) {
+    public function postZNumber($businessId) {
 
         $accessToken = (new ApiAuthenticationService)->getAccessToken();
 
@@ -79,10 +79,7 @@ class TraInternalService
             $tinUrl = config('modulesconfig.api_url') . '/tra/tin/post-znumber';
 
             $payload = [
-                'zNumber' => $zNumber,
-                'tinNumber' => $tinNumber,
-                'registrationDate' => $registrationDate,
-                'taxpayerName' => $taxpayerName
+                'businessId' => $businessId,
             ];
 
             $curl = curl_init();

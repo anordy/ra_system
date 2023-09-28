@@ -372,8 +372,10 @@ class ApprovalProcessing extends Component
 
                 DB::commit();
 
+                // TODO: Make it as a job
                 $traService = new TraInternalService();
-                $traService->postZNumber($this->subject->tin, $this->subject->ztn_number, $this->subject->taxpayer_name, $this->subject->verified_at);
+                $traService->postZNumber($this->subject->id);
+
             } catch (Exception $exception){
                 DB::rollBack();
                 Log::error($exception);
