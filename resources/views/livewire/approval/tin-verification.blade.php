@@ -17,7 +17,7 @@
                             <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
-                        </div>Verify Data From TRA
+                        </div>Verify TIN
                     </button>
                 </p>
             </div>
@@ -63,23 +63,31 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Middle Name</span>
-                                <p class="my-1">{{ $tin['middle_name'] ?? '' }}</p>
+                                <p class="my-1">{{ $tin['middle_name'] ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Last Name</span>
-                                <p class="my-1">{{ $tin['last_name'] }}</p>
+                                <p class="my-1">{{ $tin['last_name'] ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Email</span>
-                                <p class="my-1">{{ $tin['email'] }}</p>
+                                <p class="my-1">{{ $tin['email'] ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Mobile</span>
-                                <p class="my-1">{{ $tin['mobile'] }}</p>
+                                <p class="my-1">{{ $tin['mobile'] ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Gender</span>
                                 <p class="my-1">{{ $tin['gender'] }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Date of Birth</span>
+                                <p class="my-1">{{ $tin['date_of_birth'] ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Nationality</span>
+                                <p class="my-1">{{ $tin['nationality'] ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Taxpayer Name</span>
@@ -102,24 +110,32 @@
                                 <p class="my-1">{{ $tin['street'] }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Postal Code</span>
-                                <p class="my-1">{{ $tin['postal_code'] }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Plot Number</span>
-                                <p class="my-1">{{ $tin['plot_number'] }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Vat Registration Number</span>
-                                <p class="my-1">{{ $tin['vat_registration_number'] }}</p>
+                                <span class="font-weight-bold text-uppercase">Postal City</span>
+                                <p class="my-1">{{ $tin['postal_city'] ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Plot Number</span>
                                 <p class="my-1">{{ $tin['plot_number'] ?? 'N/A' }}</p>
                             </div>
-                            <div class="col-md-8 mb-3">
-                                <span class="font-weight-bold text-uppercase">Postal Address</span>
-                                <p class="my-1">{{ $tin['postal_address'] }}</p>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Block Number</span>
+                                <p class="my-1">{{ $tin['block_number'] ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Vat Registration Number</span>
+                                <p class="my-1">{{ $tin['vat_registration_number'] ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Status</span>
+                                <p class="my-1">{{ $tin['status'] ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Is Business TIN</span>
+                                <p class="my-1">{{ $tin['is_business_tin'] == 1 ? 'Yes' : 'No' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Is Entity TIN</span>
+                                <p class="my-1">{{ $tin['is_entity_tin'] == 1 ? 'Yes' : 'No' }}</p>
                             </div>
                         </div>
 
@@ -130,7 +146,7 @@
                                 <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                                     <span class="sr-only">Loading...</span>
                                 </div>
-                            </div>Save TIN Information
+                            </div>Confirm Verification
                         </button>
                     </div>
 

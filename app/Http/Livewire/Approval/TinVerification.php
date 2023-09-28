@@ -30,20 +30,19 @@ class TinVerification extends Component
 
     public function validateTinNumber()
     {
-        $traService = new TraInternalService();
-
         try {
-            $response = $traService->getTinNumber($this->business->tin);
+                $traService = new TraInternalService();
+                $response = $traService->getTinNumber($this->business->tin);
 
-            if ($response && $response['data']) {
-                $this->tin = $response['data'];
-            } else if ($response && $response['data'] == null) {
-                $this->customAlert('warning', 'No TIN information found');
-                return;
-            } else {
-                $this->customAlert('error', 'Something went wrong');
-                return;
-            }
+                if ($response && $response['data']) {
+                    $this->tin = $response['data'];
+                } else if ($response && $response['data'] == null) {
+                    $this->customAlert('warning', $response['message']);
+                    return;
+                } else {
+                    $this->customAlert('error', 'Something went wrong');
+                    return;
+                }
 
         } catch (Exception $e) {
             DB::rollBack();
