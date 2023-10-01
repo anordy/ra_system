@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\Investigation\TaxInvestigationLocation;
 use App\Models\Investigation\TaxInvestigationTaxType;
+use App\Models\TaxAudit\TaxAudit;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -77,7 +78,7 @@ class BusinessInvestigationAddModal extends Component
             ->whereHas('taxInvestigationLocations', function ($query) use ($location_ids) {
                 $query->whereIn('business_location_id', $location_ids);
             })
-            ->orWhereHas('taxInvestigationTaxTypes', function ($query) use ($tax_type_ids) {
+            ->whereHas('taxInvestigationTaxTypes', function ($query) use ($tax_type_ids) {
                 $query->whereIn('business_tax_type_id', $tax_type_ids);
             })
             ->whereIn('status', ['draft', 'pending'])
