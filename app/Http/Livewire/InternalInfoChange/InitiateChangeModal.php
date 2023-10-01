@@ -62,10 +62,10 @@ class InitiateChangeModal extends Component
             'electricStatus' => 'required_if:informationType,electric',
             'taxRegionId' => 'required_if:informationType,taxRegion',
             'businessCurrencyId' => 'required_if:informationType,currency',
-            'isiic_i' => 'required_if:informationType,isic',
-            'isiic_ii' => 'required_if:informationType,isic',
-            'isiic_iii' => 'required_if:informationType,isic',
-            'isiic_iv' => 'required_if:informationType,isic',
+            'isiic_i' => 'required_if:informationType,isic|numeric|exists:isic1s,id',
+            'isiic_ii' => 'required_if:informationType,isic|numeric|exists:isic2s,id',
+            'isiic_iii' => 'required_if:informationType,isic|numeric|exists:isic3s,id',
+            'isiic_iv' => 'required_if:informationType,isic|numeric|exists:isic4s,id',
         ];
     }
 
@@ -73,8 +73,6 @@ class InitiateChangeModal extends Component
         'newHotelStarId.required_if' => 'Please select new hotel star rating',
         'newEffectiveDate.required_if' => 'Please enter effective date',
     ];
-
-
 
     public function submit()
     {
@@ -309,16 +307,6 @@ class InitiateChangeModal extends Component
 
     public function updated($property)
     {
-        if ($property === 'informationType') {
-            $this->businessHotel = null;
-            $this->currentEffectiveDate = null;
-            $this->taxTypes = [];
-            $this->showElectric = false;
-            $this->showLto = false;
-            $this->taxRegionId = null;
-            $this->businessCurrencyId = null;
-            $this->isiiciiList = [];
-        }
 
         $property = explode('.', $property);
 

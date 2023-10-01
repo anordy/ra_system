@@ -134,7 +134,7 @@
                         <div class="col-md-12">
                             <table class="table table-bordered table-striped table-sm">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <label class="text-left font-weight-bold text-uppercase">New Tax Types</label>
+                                    <label class="text-left font-weight-bold text-uppercase">Current Tax Types</label>
                                 </div>
                                 <thead>
                                 <th style="width: 30%">Tax Type Name</th>

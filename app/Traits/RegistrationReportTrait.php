@@ -24,7 +24,7 @@ trait RegistrationReportTrait
                 if($parameters['taxtype_id'] == 'all') {
                     $businessLocations = $businessLocations->join('business_tax_type', 'business_tax_type.business_id', 'businesses.id');
                 } else {
-                    $businessLocations->where('business_tax_type.tax_type_id', $parameters['taxtype_id']);
+                    $businessLocations->join('business_tax_type', 'business_tax_type.business_id', 'businesses.id')->where('business_tax_type.tax_type_id', $parameters['taxtype_id']);
                 }
                 break;
             case 'Business-Reg-By-TaxPayer':

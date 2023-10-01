@@ -141,7 +141,7 @@ class KycAmendmentRequestAddModal extends Component
             'nida' => 'exclude_if:is_citizen,0|required_without:zanid|nullable|digits:20|unique:kycs,nida_no,' . $this->kyc->id . ',id|unique:taxpayers,nida_no',
             'zanid' => 'exclude_if:is_citizen,0|required_without:nida|nullable|digits:9|unique:kycs,zanid_no,' . $this->kyc->id . ',id|unique:taxpayers,zanid_no',
             'nationality' => 'required_if:is_citizen,0',
-            'passportNo' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:kycs,passport_no,' . $this->kyc->id . ',id|unique:taxpayers,passport_no|min:6,max:15',
+            'passportNo' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:kycs,passport_no,' . $this->kyc->id . ',id|unique:taxpayers,passport_no|digits_between:8,15',
             'permitNumber' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:taxpayers,permit_number,' . $this->kyc->id . ',id|string|min:10|max:20',
         ];
     }

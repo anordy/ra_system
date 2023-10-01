@@ -91,7 +91,7 @@ class LicenseApplicationsController extends Controller
             }
             $application->save();
             $bill = $application->get_latest_bill();
-            $bill->update(['status' => 'Paid']);
+            $bill->update(['status' => 'paid']);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

@@ -15,7 +15,7 @@
     <thead>
         <tr>
             <th style="text-align:left;" colspan="11">
-                <strong> {{ $records[0]->taxpayer->fullname }}</strong><br>
+                <strong> {{ $records[0]->taxpayer->fullname }}</strong>
             </th>
         </tr>
     </thead>
