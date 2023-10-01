@@ -720,6 +720,26 @@
             </li>
         @endcan
 
+        <li class="{{ request()->is('tra*') ? 'active' : '' }}">
+                <a href="#tra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    TRA Information
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('tra*') ? 'show' : '' }}" id="tra">
+                        <li class="{{ request()->is('tra/tins*') ? 'active' : '' }}">
+                            <a href="{{ route('tra.tins') }}">TINs Information</a>
+                        </li>
+                        <li class="{{ request()->is('tra/chassis*') ? 'active' : '' }}">
+                            <a href="{{ route('tra.chassis') }}">Chassis Numbers</a>
+                        </li>
+                        <li class="{{ request()->is('tra/goods*') ? 'active' : '' }}">
+                            <a href="{{ route('tra.goods') }}">Exited Goods</a>
+                        </li>
+                        <li class="{{ request()->is('tra/receipts*') ? 'active' : '' }}">
+                            <a href="{{ route('tra.receipts') }}">VFDMS Receipts</a>
+                        </li>
+                </ul>
+        </li>
+
         @can('setting')
             <li class="{{ request()->is('settings*') ? 'active' : '' }}">
                 <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>

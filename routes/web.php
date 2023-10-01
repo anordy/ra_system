@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -687,6 +688,13 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/show/{id}', [CasesController::class, 'show'])->name('show');
         Route::get('/appeals', [CasesController::class, 'appealsIndex'])->name('appeals');
         Route::get('/appeals/{id}', [CasesController::class, 'appealShow'])->name('appeal.show');
+    });
+
+    Route::prefix('tra')->as('tra.')->group(function () {
+        Route::get('/tins', [TraController::class, 'tins'])->name('tins');
+        Route::get('/efdms-receipts', [TraController::class, 'receipts'])->name('receipts');
+        Route::get('/chassis-numbers', [TraController::class, 'chassis'])->name('chassis');
+        Route::get('/exited-goods', [TraController::class, 'goods'])->name('goods');
     });
 
     Route::get('/control-number/retry/{id}', [LicenseApplicationsController::class, 'retryControlNumber'])->name('control-number.retry');
