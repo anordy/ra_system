@@ -253,7 +253,7 @@
                             <div class="d-flex justify-content-end  p-2">
                                 @if ($application->application_status->name === \App\Models\DlApplicationStatus::STATUS_INITIATED ||
                                     $application->application_status->name === \App\Models\DlApplicationStatus::STATUS_DETAILS_CORRECTION)
-                                    <a href="{{ route('drivers-license.', encrypt($application->id)) }}">
+                                    <a href="{{ route('drivers-license.licenses.show', encrypt($application->id)) }}">
                                         <button class="btn btn-primary btn-sm "><i class="fa fa-check"></i>
                                             Submit
                                         </button>

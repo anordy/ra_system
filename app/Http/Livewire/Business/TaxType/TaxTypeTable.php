@@ -61,7 +61,7 @@ class TaxTypeTable extends DataTableComponent
                 ->searchable()
                 ->format(function ($value, $row) {
                     if ($row->toTax->code == 'vat') {
-                        return $row->subvat->name;
+                        return $row->subvat ? $row->subvat->name : 'SUBVAT_NOTSET_ERR';
                     } else {
                         return $row->toTax->name;
                     }
