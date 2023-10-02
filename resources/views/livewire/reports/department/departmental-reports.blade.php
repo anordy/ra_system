@@ -144,8 +144,8 @@
                     <tfoot class="text-right">
                         <tr>
                             <th class="text-left">Total</th>
-                            <th>{{ number_format(array_sum($report['TZS'] ?? 0), 2) }}</th>
-                            <th>{{ number_format(array_sum($report['USD'] ?? 0), 2) }}</th>
+                            <th>{{ number_format(array_sum($report['TZS'] ?? [0]), 2) }}</th>
+                            <th>{{ number_format(array_sum($report['USD'] ?? [0]), 2) }}</th>
                         </tr>
                     </tfoot>
                 </table>
