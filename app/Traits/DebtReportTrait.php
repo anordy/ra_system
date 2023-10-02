@@ -2,11 +2,13 @@
 namespace App\Traits;
 
 use App\Enum\ReturnCategory;
+use App\Models\Business;
 use App\Models\Debts\DebtWaiver;
 use App\Models\Returns\TaxReturn;
 use App\Models\Debts\DemandNotice;
 use App\Models\Installment\Installment;
 use App\Models\TaxAssessments\TaxAssessment;
+use Carbon\Carbon;
 
 trait DebtReportTrait
 {
@@ -29,6 +31,40 @@ trait DebtReportTrait
 
     public function getSelectedRecords($model,$parameters)
     {
+        if (isset($parameters['year']) && $parameters['year'] == 'all'){
+            return $model->get();
+        }
+
+        if (isset($parameters['period']) && $parameters['period'] == 'Annual'){
+            return $model->whereBetween('created_at', [
+                Carbon::parse($parameters['year'])->startOfYear(),
+                Carbon::parse($parameters['year'])->endOfYear()
+            ]);
+        }
+
+        if (isset($parameters['period']) && $parameters['period'] == 'Monthly'){
+            return $model->whereBetween('created_at', [
+                Carbon::parse($parameters['year'] . "-" . $parameters['month'])->startOfMonth(),
+                Carbon::parse($parameters['year'] . "-" . $parameters['month'])->endOfMonth()
+            ]);
+        }
+
+        // TODO: Implement for semi annual and quarterly correctly
+        if (isset($parameters['period']) && $parameters['period'] == 'Quarterly'){
+            return $model->whereBetween('created_at', [
+                Carbon::parse($parameters['year'])->startOfYear(),
+                Carbon::parse($parameters['year'])->endOfYear()
+            ]);
+        }
+
+        // TODO: Implement for semi annual and quarterly correctly
+        if (isset($parameters['period']) && $parameters['period'] == 'Semi-Annual'){
+            return $model->whereBetween('created_at', [
+                Carbon::parse($parameters['year'])->startOfYear(),
+                Carbon::parse($parameters['year'])->endOfYear()
+            ]);
+        }
+
         if ($parameters['range_start'] == [] || $parameters['range_end'] == []) {
             return $model->orderBy("created_at", 'asc');
         }
