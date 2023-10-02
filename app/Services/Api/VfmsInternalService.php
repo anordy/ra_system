@@ -23,16 +23,19 @@ class VfmsInternalService
                     'statusMessage' => "Ward; '". $vfmsWard->ward->name."' selected for particular Business is not recognized yet from VFMS, contact Admin to complete this action."
                 ];
         }
-        $znumber_internal = config('modulesconfig.api_url') . '/vfms-internal/get_business_units';
+        $znumber_internal = config('modulesconfig.api_url') . '/vfms-internal/check_znumber';
         $access_token = (new ApiAuthenticationService)->getAccessToken();
 
         $data = [];
 
         if ($access_token) {
             $authorization = "Authorization: Bearer " . $access_token;
+//            $payload = [
+//                'locality_id' => $vfmsWard->locality_id,
+//                'znumber' => $business->previous_zno
+//            ];
             $payload = [
-                'locality_id' => $vfmsWard->locality_id,
-                'znumber' => $business->previous_zno
+                'znumber' => $business->previous_zno,
             ];
 
             $curl = curl_init();
@@ -73,7 +76,6 @@ class VfmsInternalService
             curl_close($curl);
 
             $res = json_decode($response, true);
-
             $data = $res;
         } else {
             Log::error('ZNUMBER: Error On Access token Authentication from Api Server!');

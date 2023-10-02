@@ -29,11 +29,12 @@ class ZnumberVerification extends Component
     public function mount($business){
         $this->business = $business;
         $this->response = VfmsBusinessUnit::where('znumber', $this->business->previous_zno)
-            ->where('locality_id', $this->business->headquarter->ward->vfms_ward->locality_id)
+//            ->where('locality_id', $this->business->headquarter->ward->vfms_ward->locality_id)
             ->where('location_id', $this->business->headquarter->id)
             ->where('is_headquarter', true)
             ->where('parent_id', null)
             ->get();
+//        dd(is_array($this->response), $this->response);
     }
 
     public function verifyZNumber() {
@@ -44,29 +45,41 @@ class ZnumberVerification extends Component
             $response = $vfmsService->getBusinessUnits($this->business, null, true);
 
 
-            if (array_key_exists('error', $response) && $response['error'] == 'validation-failed') {
-                $this->customAlert('error', $response['error_info'] ?? 'Something went wrong, please contact the administrator for help');
-                return;
-            } else if (array_key_exists('data', $response) && $response['data']['status'] == 'successful') {
-                $this->response = $response['data']['body'] ?? [];
-                if (array_key_exists('statusCode', $this->response) && $this->response['statusCode'] != 200) {
-                    $this->customAlert('warning', $this->response['statusMessage'] ?? 'Something went wrong, please contact the administration for help');
-                    $this->response = [];
-                    return;
-                } else {
-                    if (count($this->response) == 0) {
-                        $this->customAlert('warning', 'No data found');
-                        return;
-                    }
-                    // Check if business unit associated to another business location
-                    $this->removeAssociatedBusinessUnits();
-                    $businessUnits = collect($this->response)->keyBy('unit_id');
-                    $this->response = $this->buildBusinessUnitTree($businessUnits);
-                }
-            } else if (array_key_exists('statusCode', $response) && $response['statusCode'] != 200){
-                $this->customAlert('warning', $response['statusMessage'] ?? 'Something went wrong, please contact the administration for help');
+            $this->response = $response['business_units'];
+
+            if (count($this->response) == 0) {
+                $this->customAlert('warning', 'No data found');
                 return;
             }
+
+            // Check if business unit associated to another business location
+            $this->removeAssociatedBusinessUnits();
+            $businessUnits = collect($this->response)->keyBy('unit_id');
+            $this->response = $this->buildBusinessUnitTree($businessUnits);
+
+//            if (array_key_exists('error', $response) && $response['error'] == 'validation-failed') {
+//                $this->customAlert('error', $response['error_info'] ?? 'Something went wrong, please contact the administrator for help');
+//                return;
+//            } else if (array_key_exists('data', $response) && $response['data']['status'] == 'successful') {
+//                $this->response = $response['data']['body'] ?? [];
+//                if (array_key_exists('statusCode', $this->response) && $this->response['statusCode'] != 200) {
+//                    $this->customAlert('warning', $this->response['statusMessage'] ?? 'Something went wrong, please contact the administration for help');
+//                    $this->response = [];
+//                    return;
+//                } else {
+//                    if (count($this->response) == 0) {
+//                        $this->customAlert('warning', 'No data found');
+//                        return;
+//                    }
+//                    // Check if business unit associated to another business location
+//                    $this->removeAssociatedBusinessUnits();
+//                    $businessUnits = collect($this->response)->keyBy('unit_id');
+//                    $this->response = $this->buildBusinessUnitTree($businessUnits);
+//                }
+//            } else if (array_key_exists('statusCode', $response) && $response['statusCode'] != 200){
+//                $this->customAlert('warning', $response['statusMessage'] ?? 'Something went wrong, please contact the administration for help');
+//                return;
+//            }
 
         } catch (Exception $e) {
             Log::error($e);
@@ -82,24 +95,52 @@ class ZnumberVerification extends Component
         }
     }
 
-    private function buildBusinessUnitTree($businessUnits, $parentId = null){
+//    private function buildBusinessUnitTree($businessUnits, $parentId = null){
+//        $tree = [];
+//        foreach ($businessUnits as $businessUnit) {
+//            if ($businessUnit['parent_id'] && $businessUnit['parent_id'] === $parentId) {
+//                // Check if there are any children for this parent
+//                $children = $this->buildBusinessUnitTree($businessUnits, $businessUnit['unit_id']);
+//
+//                // Only add the 'children' key if there are children for this parent
+//                if (!empty($children)) {
+//                    $businessUnit['children'] = $children;
+//                }
+//            } else {
+//                $businessUnit['children'] = [];
+//            }
+//            $tree[] = $businessUnit;
+//        }
+//        return $tree;
+//    }
+    private function buildBusinessUnitTree($businessUnits)
+    {
         $tree = [];
-        foreach ($businessUnits as $businessUnit) {
-            if ($businessUnit['parent_id'] && $businessUnit['parent_id'] === $parentId) {
-                // Check if there are any children for this parent
-                $children = $this->buildBusinessUnitTree($businessUnits, $businessUnit['unit_id']);
+        $indexedUnits = [];
 
-                // Only add the 'children' key if there are children for this parent
-                if (!empty($children)) {
-                    $businessUnit['children'] = $children;
+        // Index the units by their unit_id
+        foreach ($businessUnits as $businessUnit) {
+            $indexedUnits[$businessUnit['unit_id']] = $businessUnit;
+        }
+
+        foreach ($businessUnits as $businessUnit) {
+            if ($businessUnit['parent_id']) {
+                // Check if the parent exists in the indexed array
+                if (isset($indexedUnits[$businessUnit['parent_id']])) {
+                    $parent = &$indexedUnits[$businessUnit['parent_id']];
+                    if (!isset($parent['children'])) {
+                        $parent['children'] = [];
+                    }
+                    $parent['children'][] = &$indexedUnits[$businessUnit['unit_id']];
                 }
             } else {
-                $businessUnit['children'] = [];
+                $tree[] = &$indexedUnits[$businessUnit['unit_id']];
             }
-            $tree[] = $businessUnit;
         }
+
         return $tree;
     }
+
 
     public function complete() {
         $headquarters = [];
@@ -132,7 +173,7 @@ class ZnumberVerification extends Component
         try {
             foreach ($this->response as $unit) {
                 $taxtype = TaxType::select('id', 'code')->where('code', $this->mapVfmsTaxType($unit['tax_type']))->first();
-    
+
                 if (!$taxtype) {
                     $this->customAlert('error', 'Missing VFMS Tax Type Mapping');
                     return;
@@ -180,15 +221,15 @@ class ZnumberVerification extends Component
             'unit_id' => $data['unit_id'],
             'business_id' => $this->business->id,
             'unit_name' => $data['unit_name'],
-            'business_name' => $data['business_name'] ?? null,
-            'trade_name' => $data['trade_name'] ?? null,
+            'business_name' => $data['business_name'] ?? $this->business->name,
+            'trade_name' => $data['trade_name'] ?? $this->business->trading_name ?? $this->business->name,
             'parent_id' => $data['parent_id'],
             'locality_id' => $data['locality_id'],
             'vfms_tax_type' => $data['tax_type'],
             'zidras_tax_type_id' => $taxtype->id, // Mapped with zidras tax type id
             'tax_office' => $data['tax_office'] ?? null,
             'street' => $data['street'],
-            'znumber' => $data['znumber'],
+            'znumber' => $this->business->previous_zno,
             'is_headquarter' => (key_exists('is_headquarter', $data) && $data['is_headquarter']) || $data['parent_id'] ?? false,
             'location_id' => (key_exists('is_headquarter', $data) && $data['is_headquarter']) || $data['parent_id'] ? $this->business->headquarter->id : null,
             'integration' => $data['integration']

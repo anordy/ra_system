@@ -236,4 +236,60 @@ trait VfmsLocationTrait
         event(new SendSms('vfms-client-notification-sms', $payload));
         event(new SendMail('vfms-client-notification-mail', $payload));
     }
+
+    function updateVfmsUnitsWithZtnLocation($request): ?array
+    {
+        $vfms_internal = config('modulesconfig.api_url') . '/vfms-internal/business/unit/update/znt/location';
+        $access_token = (new ApiAuthenticationService)->getAccessToken();
+
+        if ($access_token) {
+            $authorization = "Authorization: Bearer ". $access_token;
+
+            $payload = ['location_info' => $request];
+
+            $curl = curl_init();
+            Log::info('VFMS: Post ward to Vfms Start!');
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $vfms_internal,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30000,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_HTTPHEADER => array(
+                    "accept: application/json",
+                    "content-type: application/json",
+                    $authorization
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            Log::info('VFMS: Post ward to Vfms End!');
+            Log::channel('vfms')->info($response);
+            $response = json_decode($response);
+            if (isset($response->error)){
+                return [
+                    'msg' => $response->error,
+                    'code' => $statusCode
+                ];
+            }
+
+            $message =  $response->message;
+            curl_close($curl);
+            return [
+                'message' => $message,
+                'code' => $statusCode
+            ];
+
+        } else {
+            Log::error('VFMS: Error On Access token Authentication from Api Server!');
+            return [
+                'message' => "VFMS: Error On Access token Authentication from Api Server!",
+                'code' => 404
+            ];
+        }
+    }
 }

@@ -19,6 +19,7 @@ use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Models\Vfms\VfmsBusinessUnit;
+use App\Traits\Vfms\VfmsLocationTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -30,7 +31,7 @@ use Livewire\Component;
 
 class ApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert;
+    use WorkflowProcesssingTrait, CustomAlert, VfmsLocationTrait;
     public $modelId;
     public $modelName;
     public $comments;
@@ -364,10 +365,31 @@ class ApprovalProcessing extends Component
                 }
                 
                 // If Z-Number has been verified we have business units
-                if ($this->subject->previous_zno && $this->subject->znumber_verified_at) {
-                    $vfms_business_unit = VfmsBusinessUnit::where('business_id', $this->subject->id)->where('is_headquarter', true)->firstOrFail();
-                    $vfms_business_unit->location_id = $location->id;
-                    $vfms_business_unit->save();
+                if ($this->subject->previous_zno) {
+                    if ($this->subject->znumber_verified_at){
+                        DB::table('vfms_business_units')->where('business_id', $this->subject->id)
+                            ->update(['location_id' => $location->id]);
+                        $businessUnitIds = DB::table('vfms_business_units')->where('business_id', $this->subject->id)
+                            ->select('id')->get();
+                        $data = [];
+                        foreach ($businessUnitIds as $businessUnitId){
+                            $item = [
+                              'unit_id' => $businessUnitId->id,
+                                'ztn_location' => $location->zin,
+                                'ztn_number' => $location->business->ztn_number
+                            ];
+                            $data [] = $item;
+                        }
+                        $resp = $this->updateVfmsUnitsWithZtnLocation($data);
+
+                        if ($resp['code'] != 200){
+                            $this->customAlert('error', $resp['message'].". Please contact admin for support");
+                            return;
+                        }
+                    } else {
+                        $this->customAlert('warning', 'Please verify Previous ZNUMBER Before approve the request');
+                        return;
+                    }
                 }
 
                 $location->status = BusinessStatus::APPROVED;

@@ -64,14 +64,78 @@
         @endif
     </div>
 
-    @if ($response && is_array($response) && count($response) > 0)
-        <hr>
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-striped table-hover table-sm">
-                    <label class="font-weight-bold text-uppercase">VFMS Business Unit(s) Information</label>
-                    <p class="small">* Select a unit to make it a headquarter</p>
-                    <thead>
+    @if($business->znumber_verified_at)
+        @if($response)
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped table-hover table-sm">
+                        <label class="font-weight-bold text-uppercase">VFMS Business Unit(s) Information</label>
+                        <thead>
+                        <th>No</th>
+                        <th>Unit Name</th>
+                        <th>Business Name</th>
+                        <th>Trade Name</th>
+                        <th>Street</th>
+                        <th>Tax Type</th>
+                        <th>integration Status</th>
+                        </thead>
+                        <tbody>
+                        @foreach ($response as $index => $unit)
+                            <tr>
+                                <td class="px-2">{{ $index + 1 }}</td>
+                                <td class="px-2">{{ $unit['unit_name'] ?? 'N/A' }}</td>
+                                <td class="px-2">{{ $unit['business_name'] ?? 'N/A' }}</td>
+                                <td class="px-2">{{ $unit['trade_name'] ?? 'N/A' }}</td>
+                                <td class="px-2">{{ $unit['street'] ?? 'N/A' }}</td>
+                                <td class="px-2">{{ strtoupper($this->mapVfmsTaxType($unit['vfms_tax_type'])) ?? 'N/A' }}</td>
+                                <td class="font-weight-bold {{ $unit->integration ? 'text-success' : 'text-muted' }}">{{ $unit->integration ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
+                            </tr>
+                            @if(count($unit->getChildrenBusinessUnits($unit->unit_id)))
+                                <tr>
+                                    <td colspan="9" class="px-4 border rounded">
+                                        <table class="table table-sm px-2">
+                                            <label class="font-weight-bold"> {{ $unit['unit_name'] }} associated Business unit(s)</label>
+                                            <thead>
+                                            <th>No</th>
+                                            <th>Unit Name</th>
+                                            <th>Tax Type</th>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($unit->getChildrenBusinessUnits($unit->unit_id) as $childKey => $child)
+                                                <tr>
+                                                    <td class="px-2">{{ romanNumeralCount($childKey + 1) }}.</td>
+                                                    <td class="px-2">{{ $child['unit_name'] ?? 'N/A' }}</td>
+                                                    <td class="px-2">{{ strtoupper($this->mapVfmsTaxType($unit['vfms_tax_type'])) ?? 'N/A' }}</td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @else
+            <table class="d-flex justify-content-center">
+                <tr>
+                    <td colspan="10">
+                        <div class="text-danger italic text-sm">No record found!</div>
+                    </td>
+                </tr>
+            </table>
+        @endif
+    @else
+        @if ($response && is_array($response) && count($response) > 0)
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped table-hover table-sm">
+                        <label class="font-weight-bold text-uppercase">VFMS Business Unit(s) Information</label>
+                        <p class="small">* Select a unit to make it a headquarter</p>
+                        <thead>
                         <th>No</th>
                         <th>Unit Name</th>
                         <th>Business Name</th>
@@ -81,19 +145,19 @@
                         <th>No of Children</th>
                         <th>integration Status</th>
                         <th>Action</th>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         @foreach ($response as $index => $unit)
                             <tr>
-                                <td>{{ $index + 1 }}.</td>
-                                <td>{{ $unit['unit_name'] ?? 'N/A' }}</td>
-                                <td>{{ $unit['business_name'] ?? 'N/A' }}</td>
-                                <td>{{ $unit['trade_name'] ?? 'N/A' }}</td>
-                                <td>{{ $unit['street'] ?? 'N/A' }}</td>
-                                <td>{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
-                                <td>{{ count($unit['children']) }}</td>
-                                <td class="font-weight-bold {{ $unit['integration'] ? 'text-success' : 'text-muted' }}">{{ $unit['integration'] ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
-                                <td><input type="checkbox" wire:model="response.{{ $index }}.is_headquarter"></td>
+                                <td class="px-2">{{ $index + 1 }}.</td>
+                                <td class="px-2">{{ $unit['unit_name'] ?? 'N/A' }}</td>
+                                <td class="px-2">{{ $unit['business_name'] ?? 'N/A' }}</td>
+                                <td class="px-2">{{ $unit['trade_name'] ?? 'N/A' }}</td>
+                                <td class="px-2">{{ $unit['street'] ?? 'N/A' }}</td>
+                                <td class="px-2">{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
+                                <td class="px-2">{{ count($unit['children']) }}</td>
+                                <td class="font-weight-bold px-2 {{ $unit['integration'] ? 'text-success' : 'text-muted' }}">{{ $unit['integration'] ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
+                                <td class="px-2"><input type="checkbox" wire:model="response.{{ $index }}.is_headquarter"></td>
                             </tr>
                             @if(count($unit['children']))
                                 <tr>
@@ -101,51 +165,52 @@
                                         <table class="table table-sm px-2">
                                             <label class="font-weight-bold"> {{ $unit['unit_name'] }} associated Business unit(s)</label>
                                             <thead>
-                                                <th>No</th>
-                                                <th>Unit Name</th>
-                                                <th>Tax Type</th>
+                                            <th>No</th>
+                                            <th>Unit Name</th>
+                                            <th>Tax Type</th>
                                             </thead>
                                             <tbody>
-                                                @foreach($unit['children'] as $childKey => $child)
-                                                    <tr>
-                                                        <td>{{ romanNumeralCount($childKey + 1) }}.</td>
-                                                        <td>{{ $child['unit_name'] ?? 'N/A' }}</td>
-                                                        <td>{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
-                                                    </tr>
-                                                @endforeach
+                                            @foreach($unit['children'] as $childKey => $child)
+                                                <tr>
+                                                    <td class="px-2">{{ romanNumeralCount($childKey + 1) }}.</td>
+                                                    <td class="px-2">{{ $child['unit_name'] ?? 'N/A' }}</td>
+                                                    <td class="px-2">{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
+                                                </tr>
+                                            @endforeach
                                             </tbody>
                                         </table>
                                     </td>
                                 </tr>
                             @endif
                         @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="small text-danger">* Make sure to select only one unit if two business units returned with the same Tax Type and  integration Status i.e VAT</div>
-        <div class="small text-danger">* For business unit with associated units, if selected all associated business units are also selected.</div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="modal-footer p-2 m-0">
-                    <button wire:click="complete()" wire:loading.attr="disabled" class="btn btn-success">
-                        <div wire:loading wire:target="complete">
-                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        </div>Complete ZNUMBER Verification
-                    </button>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
-    @elseif(count($response) == 0)
-        <table class="d-flex justify-content-center">
-            <tr>
-                <td colspan="9" class="px-4 py-1 border rounded">
-                    <div class="text-danger italic font-weight-bold h6">No record found!</div>
-                </td>
-            </tr>
-        </table>
+            <div class="small text-danger">* Make sure to select only one unit if two business units returned with the same Tax Type and  integration Status i.e VAT</div>
+            <div class="small text-danger">* For business unit with associated units, if selected all associated business units are also selected.</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="modal-footer p-2 m-0">
+                        <button wire:click="complete()" wire:loading.attr="disabled" class="btn btn-success">
+                            <div wire:loading wire:target="complete">
+                                <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>Complete ZNUMBER Verification
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @elseif(count($response) == 0)
+            <table class="d-flex justify-content-center">
+                <tr>
+                    <td colspan="10">
+                        <div class="text-danger italic text-sm">No record found!</div>
+                    </td>
+                </tr>
+            </table>
+        @endif
     @endif
 
 </div>
