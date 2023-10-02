@@ -40,6 +40,94 @@ class LicenseApplicationsController extends Controller
         return view('driver-license.license-applications-create');
     }
 
+
+    public function submit($id)
+    {
+        $id = decrypt($id);
+        $application = DlLicenseApplication::query()->find($id);
+        if (strtolower($application->type) == 'fresh') {
+            $comment = $application->application_status->name == DlApplicationStatus::STATUS_DETAILS_CORRECTION ? 'Initiated' : 'Resubmitted';
+            $transition = $application->application_status->name == DlApplicationStatus::STATUS_DETAILS_CORRECTION ? 'application_corrected' : 'application_submitted';
+            try {
+                DB::beginTransaction();
+                $application->update(['dl_application_status_id' => DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_PENDING_APPROVAL])->id]);
+                $this->registerWorkflow(get_class($application), $application->id);
+                $this->doTransition($transition, ['status' => '', 'comment' => $comment]);
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                report($e);
+                session()->flash('error', 'Could not update application');
+            }
+        } else {
+
+            try {
+                DB::beginTransaction();
+                $application->update(['dl_application_status_id' => DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_PENDING_PAYMENT])->id]);
+                $fee = DlFee::query()->where(['type' => $application->type])->first();
+                if (empty($fee)) {
+                    session()->flash('error', "Fee for Drivers license application ({$application->type}) is not configured");
+                    return redirect()->back();
+                }
+                $exchange_rate = 1;
+                $amount = $fee->amount;
+                $zmBill = ZmCore::createBill(
+                    $application->id,
+                    get_class($application),
+                    6,
+                    $application->taxpayer->id,
+                    get_class($application->taxpayer),
+                    $application->taxpayer->fullname(),
+                    $application->taxpayer->email,
+                    ZmCore::formatPhone($application->taxpayer->mobile),
+                    Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
+                    $fee->name,
+                    ZmCore::PAYMENT_OPTION_EXACT,
+                    'TZS',
+                    1,
+                    auth()->user()->id,
+                    get_class(auth()->user()),
+                    [
+                        [
+                            'billable_id' => $application->id,
+                            'billable_type' => get_class($application),
+                            'fee_id' => $fee->id,
+                            'fee_type' => get_class($fee),
+                            'tax_type_id' => 6,
+                            'amount' => $amount,
+                            'currency' => 'TZS',
+                            'exchange_rate' => $exchange_rate,
+                            'equivalent_amount' => $exchange_rate * $amount,
+                            'gfs_code' => $fee->gfs_code
+                        ]
+                    ]
+                );
+
+                if (config('app.env') != 'local') {
+                    $response = ZmCore::sendBill($zmBill->id);
+                    if ($response->status === ZmResponse::SUCCESS) {
+                        session()->flash('success', __('A control number request was sent successful.'));
+                    } else {
+                        session()->flash('error', __('Control number generation failed, try again later'));
+                    }
+                } else {
+                    $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                    $zmBill->zan_status = 'pending';
+                    $zmBill->control_number = rand(2000070001000, 2000070009999);
+                    $zmBill->save();
+                }
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                report($e);
+                session()->flash('error', __('Could not update application'));
+            }
+        }
+
+        return redirect()->route('drivers-license.applications.show', encrypt($id));
+    }
+
     public function show($id)
     {
         $id = decrypt($id);
