@@ -12,7 +12,10 @@ class TinsTable extends DataTableComponent
 {
     use CustomAlert;
 
-    protected $model = Tin::class;
+    public function builder(): \Illuminate\Database\Eloquent\Builder
+    {
+        return Tin::query()->orderBy('created_at', 'desc');
+    }
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -56,9 +59,6 @@ class TinsTable extends DataTableComponent
             Column::make('Registration Date', 'registration_date')
                 ->sortable()
                 ->searchable(),
-            Column::make('Received On', 'created_at')
-                ->sortable()
-                ->searchable(),
             Column::make('Status', 'tra_sync_status')
                 ->format(function ($value, $row) {
                     if ($value == 0) {
@@ -85,6 +85,8 @@ class TinsTable extends DataTableComponent
                     }
                 })
                 ->html(),
+            Column::make('Action', 'id')
+                ->view('tra.includes.tin-actions')
         ];
     }
 

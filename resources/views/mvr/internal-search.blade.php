@@ -197,7 +197,7 @@
                    <div class="col-md-12 mb-3">
                        <div class="text-center m-3 text-center h3"><i class="fa fa-search text-danger"></i></div>
                        @if(\Route::currentRouteName() === 'mvr.internal-search-dr')
-                           <h3 class="font-weight-bold text-center m-3 text-danger">Motor Vehicle with {{$search_type}} {{$number}} is has not been processed for Deregistration</h3>
+                           <h3 class="font-weight-bold text-center m-3 text-danger">Motor Vehicle with {{$search_type}} {{$number}} has not been processed for Deregistration or has not been Registered</h3>
                        @else
                             <h3 class="font-weight-bold text-center m-3 text-danger">Motor Vehicle with {{$search_type}} {{$number}} is not found</h3>
                        @endif

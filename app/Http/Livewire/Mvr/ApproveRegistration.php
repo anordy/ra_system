@@ -11,6 +11,7 @@ use App\Models\MvrPersonalizedPlateNumberRegistration;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
+use App\Models\Taxpayer;
 use App\Models\Tra\Tin;
 use App\Models\ZmBill;
 use App\Services\TRA\ServiceRequest;
@@ -110,10 +111,10 @@ class ApproveRegistration extends Component
             $amount = $fee->amount;
             $gfs_code = $fee->gfs_code;
 
-            $tin = Tin::where('tin', $mv->chassis->importer_tin)->first();
+            $owner = Taxpayer::where('reference_no', 'ZU200005')->first();
 
-            if (!$tin) {
-                $this->customAlert('error', 'Importer TIN information is not verified');
+            if (!$owner) {
+                $this->customAlert('error', 'Owner/Agent must be linked to this registration');
                 return;
             }
 
@@ -121,11 +122,11 @@ class ApproveRegistration extends Component
                 $registration->id,
                 get_class($registration),
                 6,
-                $tin->tin,
-                'TIN',
+                $owner->id,
+                get_class($owner),
                 $mv->chassis->importer_name,
-                $tin->email,
-                ZmCore::formatPhone($tin->mobile),
+                $owner->email,
+                ZmCore::formatPhone($owner->mobile),
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
                 ZmCore::PAYMENT_OPTION_EXACT,
@@ -148,7 +149,7 @@ class ApproveRegistration extends Component
                     ]
                 ]
             );
-            if (config('app.env') != 'local') {
+            if (config('app.env') === 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
                     session()->flash('success', 'A control number request was sent successful.');

@@ -692,9 +692,16 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     Route::prefix('tra')->as('tra.')->group(function () {
         Route::get('/tins', [TraController::class, 'tins'])->name('tins');
+        Route::get('/tins/{id}', [TraController::class, 'showTin'])->name('tins.show');
+
         Route::get('/efdms-receipts', [TraController::class, 'receipts'])->name('receipts');
+        Route::get('/efdms-receipts/{id}', [TraController::class, 'showReceipt'])->name('receipts.show');
+
         Route::get('/chassis-numbers', [TraController::class, 'chassis'])->name('chassis');
+        Route::get('/chassis-numbers/{id}', [TraController::class, 'showChassis'])->name('chassis.show');
+
         Route::get('/exited-goods', [TraController::class, 'goods'])->name('goods');
+        Route::get('/exited-goods/{id}', [TraController::class, 'showGoods'])->name('goods.show');
     });
 
     Route::get('/control-number/retry/{id}', [LicenseApplicationsController::class, 'retryControlNumber'])->name('control-number.retry');

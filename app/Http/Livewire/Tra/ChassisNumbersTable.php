@@ -65,9 +65,6 @@ class ChassisNumbersTable extends DataTableComponent
             Column::make('Engine CC', 'engine_cubic_capacity')
                 ->sortable()
                 ->searchable(),
-            Column::make('Received On', 'created_at')
-                ->sortable()
-                ->searchable(),
             Column::make('Plate Number', 'plate_number')
                 ->sortable()
                 ->searchable(),
@@ -110,6 +107,8 @@ class ChassisNumbersTable extends DataTableComponent
                     }
                 })
                 ->html(),
+            Column::make('Action', 'id')
+                ->view('tra.includes.chassis-actions')
         ];
     }
 

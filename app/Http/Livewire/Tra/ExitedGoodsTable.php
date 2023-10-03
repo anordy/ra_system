@@ -11,7 +11,12 @@ class ExitedGoodsTable extends DataTableComponent
 {
     use CustomAlert;
 
-    protected $model = ExitedGood::class;
+
+    public function builder(): \Illuminate\Database\Eloquent\Builder
+    {
+        return ExitedGood::query()->orderBy('created_at', 'desc');
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -35,6 +40,9 @@ class ExitedGoodsTable extends DataTableComponent
     {
         return [
             Column::make('TANSAD Number', 'tansad_number')
+                ->sortable()
+                ->searchable(),
+            Column::make('TANSAD Date', 'tansad_date')
                 ->sortable()
                 ->searchable(),
             Column::make('Supplier TIN', 'supplier_tin_number')

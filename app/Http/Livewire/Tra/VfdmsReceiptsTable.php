@@ -11,7 +11,10 @@ class VfdmsReceiptsTable extends DataTableComponent
 {
     use CustomAlert;
 
-    protected $model = EfdmsReceipt::class;
+    public function builder(): \Illuminate\Database\Eloquent\Builder
+    {
+        return EfdmsReceipt::query()->orderBy('created_at', 'desc');
+    }
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -35,6 +38,9 @@ class VfdmsReceiptsTable extends DataTableComponent
     {
         return [
             Column::make('Receipt Number', 'receipt_number')
+                ->sortable()
+                ->searchable(),
+            Column::make('Receipt Date', 'receipt_date')
                 ->sortable()
                 ->searchable(),
             Column::make('Seller TIN', 'seller_tin')

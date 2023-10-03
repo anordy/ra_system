@@ -48,7 +48,7 @@ class DeRegistrationController extends Controller
 
     public function search($type, $number)
     {
-        $motor_vehicle = $this->searchRegistered($type, $number);
+        $motor_vehicle = $this->searchDeRegistered($type, $number);
         $search_type = ucwords(preg_replace('/-/', ' ', $type));
         $action = 'mvr.de-registration-request';
         $result_route = 'mvr.internal-search-dr';

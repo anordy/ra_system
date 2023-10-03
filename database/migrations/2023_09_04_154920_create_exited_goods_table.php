@@ -16,15 +16,15 @@ class CreateExitedGoodsTable extends Migration
         Schema::create('exited_goods', function (Blueprint $table) {
             $table->id();
             $table->string('good_id');
-            $table->integer('owner_tin_number')->index('owner_tin_number_index');
-            $table->integer('supplier_tin_number');
+            $table->string('owner_tin_number')->index('owner_tin_number_index');
+            $table->string('supplier_tin_number');
             $table->string('tansad_number');
             $table->timestamp('tansad_date');
             $table->string('vat_registration_number')->nullable();
             $table->decimal('value_excluding_tax', 20, 2)->default(0);
             $table->decimal('tax_amount', 20,2)->default(0);
             $table->string('invoice_number')->nullable();
-            $table->timestamp('invoice_date')->nullable();
+            $table->string('invoice_date')->nullable();
             $table->timestamp('release_date')->nullable();
             $table->string('custom_declaration_types')->comment('IM4 or IM9');
             $table->integer('status')->default(0)->comment('0-Not utilized, 1-Utilized');
