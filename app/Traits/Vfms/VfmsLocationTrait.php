@@ -12,6 +12,7 @@ use App\Models\VfmsWard;
 use App\Models\Ward;
 use App\Services\Api\ApiAuthenticationService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 trait VfmsLocationTrait
@@ -214,6 +215,10 @@ trait VfmsLocationTrait
             return VfmsTaxTypeMapping::F;
         }  else if ($tax_type == 'G') {
             return VfmsTaxTypeMapping::G;
+        }else if ($tax_type == 'I') {
+                return VfmsTaxTypeMapping::I;
+        }else if ($tax_type == 'J') {
+            return VfmsTaxTypeMapping::J;
         } else {
             return null;
         }
@@ -272,11 +277,16 @@ trait VfmsLocationTrait
             $response = json_decode($response);
             if (isset($response->error)){
                 return [
-                    'msg' => $response->error,
+                    'message' => $response->error,
                     'code' => $statusCode
                 ];
             }
-
+            if (isset($response->statusCode)){
+                return [
+                    'message' => $response->statusMessage,
+                    'code' => $response->statusCode
+                ];
+            }
             $message =  $response->message;
             curl_close($curl);
             return [
@@ -290,6 +300,50 @@ trait VfmsLocationTrait
                 'message' => "VFMS: Error On Access token Authentication from Api Server!",
                 'code' => 404
             ];
+        }
+    }
+
+    public function getLocationBusinessUnits($previous_zno, $location_id){
+        return VfmsBusinessUnit::where('znumber', $previous_zno)
+            ->where('location_id', $location_id)
+            ->where('is_headquarter', true)
+            ->where('parent_id', null)
+            ->get();
+    }
+
+    private function buildBusinessUnitTree($businessUnits)
+    {
+        $tree = [];
+        $indexedUnits = [];
+
+        // Index the units by their unit_id
+        foreach ($businessUnits as $businessUnit) {
+            $indexedUnits[$businessUnit['unit_id']] = $businessUnit;
+        }
+
+        foreach ($businessUnits as $businessUnit) {
+            if ($businessUnit['parent_id']) {
+                // Check if the parent exists in the indexed array
+                if (isset($indexedUnits[$businessUnit['parent_id']])) {
+                    $parent = &$indexedUnits[$businessUnit['parent_id']];
+                    if (!isset($parent['children'])) {
+                        $parent['children'] = [];
+                    }
+                    $parent['children'][] = &$indexedUnits[$businessUnit['unit_id']];
+                }
+            } else {
+                $tree[] = &$indexedUnits[$businessUnit['unit_id']];
+            }
+        }
+
+        return $tree;
+    }
+
+    private function removeAssociatedBusinessUnits(){
+        foreach ($this->response as $key => $item){
+            if ($this->checkIfAssociated($item)){
+                unset($this->response[$key]);
+            }
         }
     }
 }

@@ -370,11 +370,11 @@ class ApprovalProcessing extends Component
                         DB::table('vfms_business_units')->where('business_id', $this->subject->id)
                             ->update(['location_id' => $location->id]);
                         $businessUnitIds = DB::table('vfms_business_units')->where('business_id', $this->subject->id)
-                            ->select('id')->get();
+                            ->select('unit_id')->get();
                         $data = [];
                         foreach ($businessUnitIds as $businessUnitId){
                             $item = [
-                              'unit_id' => $businessUnitId->id,
+                                'unit_id' => $businessUnitId->unit_id,
                                 'ztn_location' => $location->zin,
                                 'ztn_number' => $location->business->ztn_number
                             ];

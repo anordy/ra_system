@@ -28,13 +28,7 @@ class ZnumberVerification extends Component
 
     public function mount($business){
         $this->business = $business;
-        $this->response = VfmsBusinessUnit::where('znumber', $this->business->previous_zno)
-//            ->where('locality_id', $this->business->headquarter->ward->vfms_ward->locality_id)
-            ->where('location_id', $this->business->headquarter->id)
-            ->where('is_headquarter', true)
-            ->where('parent_id', null)
-            ->get();
-//        dd(is_array($this->response), $this->response);
+        $this->response = $this->getLocationBusinessUnits($this->business->previous_zno, $this->business->headquarter->id);
     }
 
     public function verifyZNumber() {
@@ -44,9 +38,12 @@ class ZnumberVerification extends Component
             $vfmsService = new VfmsInternalService;
             $response = $vfmsService->getBusinessUnits($this->business, null, true);
 
+            if (isset($response['statusCode'])){
+                $this->customAlert('warning', $response['statusMessage']);
+                return;
+            }
 
             $this->response = $response['business_units'];
-
             if (count($this->response) == 0) {
                 $this->customAlert('warning', 'No data found');
                 return;
@@ -87,13 +84,6 @@ class ZnumberVerification extends Component
         }
     }
 
-    private function removeAssociatedBusinessUnits(){
-        foreach ($this->response as $key => $item){
-            if ($this->checkIfAssociated($item)){
-                unset($this->response[$key]);
-            }
-        }
-    }
 
 //    private function buildBusinessUnitTree($businessUnits, $parentId = null){
 //        $tree = [];
@@ -113,33 +103,7 @@ class ZnumberVerification extends Component
 //        }
 //        return $tree;
 //    }
-    private function buildBusinessUnitTree($businessUnits)
-    {
-        $tree = [];
-        $indexedUnits = [];
 
-        // Index the units by their unit_id
-        foreach ($businessUnits as $businessUnit) {
-            $indexedUnits[$businessUnit['unit_id']] = $businessUnit;
-        }
-
-        foreach ($businessUnits as $businessUnit) {
-            if ($businessUnit['parent_id']) {
-                // Check if the parent exists in the indexed array
-                if (isset($indexedUnits[$businessUnit['parent_id']])) {
-                    $parent = &$indexedUnits[$businessUnit['parent_id']];
-                    if (!isset($parent['children'])) {
-                        $parent['children'] = [];
-                    }
-                    $parent['children'][] = &$indexedUnits[$businessUnit['unit_id']];
-                }
-            } else {
-                $tree[] = &$indexedUnits[$businessUnit['unit_id']];
-            }
-        }
-
-        return $tree;
-    }
 
 
     public function complete() {
@@ -175,6 +139,7 @@ class ZnumberVerification extends Component
                 $taxtype = TaxType::select('id', 'code')->where('code', $this->mapVfmsTaxType($unit['tax_type']))->first();
 
                 if (!$taxtype) {
+                    dd($unit);
                     $this->customAlert('error', 'Missing VFMS Tax Type Mapping');
                     return;
                 }
@@ -197,8 +162,9 @@ class ZnumberVerification extends Component
 
             DB::commit();
 
+            $this->response = $this->getLocationBusinessUnits($this->business->previous_zno, $this->business->headquarter->id);
             $this->customAlert('success', 'Z-Number approved successfully.');
-            return redirect()->route('business.registrations.index');
+            return redirect()->back();
         } catch(Exception $e) {
             DB::rollBack();
             Log::error($e);
@@ -209,27 +175,32 @@ class ZnumberVerification extends Component
 
     public function createBusinessUnit($data, $taxtype){
         $this->createData($data, $taxtype);
-        if(count($data['children'])){
-            foreach ($data['children'] as $child){
-                $this->createData($child, $taxtype);
+        if (isset($data['children'])){
+            if(count($data['children'])){
+                foreach ($data['children'] as $child){
+                    $this->createData($child, $taxtype);
+                }
             }
         }
     }
 
     private function createData($data, $taxtype){
+        $businessName = $this->business->name;
+        $tradingName = $this->business->trading_name;
+        $previousZno = $this->business->previous_zno;
         VfmsBusinessUnit::create([
             'unit_id' => $data['unit_id'],
             'business_id' => $this->business->id,
             'unit_name' => $data['unit_name'],
-            'business_name' => $data['business_name'] ?? $this->business->name,
-            'trade_name' => $data['trade_name'] ?? $this->business->trading_name ?? $this->business->name,
+            'business_name' => $data['business_name'] ?? $businessName,
+            'trade_name' => $data['trade_name'] ?? $tradingName ?? $businessName,
             'parent_id' => $data['parent_id'],
             'locality_id' => $data['locality_id'],
             'vfms_tax_type' => $data['tax_type'],
             'zidras_tax_type_id' => $taxtype->id, // Mapped with zidras tax type id
             'tax_office' => $data['tax_office'] ?? null,
             'street' => $data['street'],
-            'znumber' => $this->business->previous_zno,
+            'znumber' => $previousZno,
             'is_headquarter' => (key_exists('is_headquarter', $data) && $data['is_headquarter']) || $data['parent_id'] ?? false,
             'location_id' => (key_exists('is_headquarter', $data) && $data['is_headquarter']) || $data['parent_id'] ? $this->business->headquarter->id : null,
             'integration' => $data['integration']

@@ -14,6 +14,10 @@ class VfmsTaxTypeMapping implements Status
     const E = TaxType::RESTAURANT;
     const F = TaxType::TOUR_OPERATOR;
     const G = TaxType::SEAPORT_SERVICE_CHARGE;
+    const I = TaxType::EXCISE_DUTY_BFO;
+    const J = TaxType::AIRBNB;
+
+//    const I = TaxType::B
 
     static function getConstants(): array
     {

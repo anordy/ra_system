@@ -22,7 +22,8 @@
         </div>
 
         @if($location->ward->vfms_ward && $location->business->headquarter->ward->vfms_ward)
-            @if ($location->business->previous_zno && $fetch && !$location->vfms_associated_at)
+{{--            {{ dd($location->business->previous_zno, $fetch, !$location->vfms_associated_at) }}--}}
+            @if ($location->business->previous_zno  && !$location->vfms_associated_at)
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Action</span>
                     <p class="my-1">
@@ -86,7 +87,7 @@
                     </thead>
                     <tbody>
                     @if($units && count($units) > 0)
-                        @if(!$fetch)
+                        @if(!$is_requested)
                             @foreach ($units as $index => $unit)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
@@ -108,31 +109,33 @@
                                     <td>{{ $unit['trade_name'] ?? 'N/A' }}</td>
                                     <td>{{ $unit['street'] ?? 'N/A' }}</td>
                                     <td>{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
-                                    <td class="font-weight-bold {{ $unit->integration ? 'text-success' : 'text-muted' }}">{{ $unit->integration ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
+                                    <td class="font-weight-bold {{ $unit['integration'] ? 'text-success' : 'text-muted' }}">{{ $unit['integration'] ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
                                     <td><input type="checkbox" wire:model="units.{{ $index }}.is_selected"></td>
                                 </tr>
-                                @if(count($unit->getChildrenBusinessUnits($unit->unit_id)))
-                                    <tr>
-                                        <td colspan="9" class="px-4 border rounded">
-                                            <table class="table table-sm px-2">
-                                                <label class="font-weight-bold"> {{ $unit['unit_name'] }} associated Business unit(s)</label>
-                                                <thead>
-                                                    <th>No</th>
-                                                    <th>Unit Name</th>
-                                                    <th>Tax Type</th>
-                                                </thead>
-                                                <tbody>
-                                                @foreach($unit->getChildrenBusinessUnits($unit->unit_id) as $childKey => $child)
-                                                    <tr>
-                                                        <td>{{ romanNumeralCount($childKey + 1) }}.</td>
-                                                        <td>{{ $child['unit_name'] ?? 'N/A' }}</td>
-                                                        <td>{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
+                                @if(isset($unit['children']))
+                                    @if( count($unit['children']))
+                                        <tr>
+                                            <td colspan="9" class="px-4 border rounded">
+                                                <table class="table table-sm px-2">
+                                                    <label class="font-weight-bold"> {{ $unit['unit_name'] }} associated Business unit(s)</label>
+                                                    <thead>
+                                                        <th>No</th>
+                                                        <th>Unit Name</th>
+                                                        <th>Tax Type</th>
+                                                    </thead>
+                                                    <tbody>
+                                                    @foreach($unit['children'] as $childKey => $child)
+                                                        <tr>
+                                                            <td>{{ romanNumeralCount($childKey + 1) }}.</td>
+                                                            <td>{{ $child['unit_name'] ?? 'N/A' }}</td>
+                                                            <td>{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                   @endif
                                 @endif
                             @endforeach
                         @endif

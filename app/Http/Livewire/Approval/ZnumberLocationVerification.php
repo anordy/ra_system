@@ -38,35 +38,24 @@ class ZnumberLocationVerification extends Component
         $this->units = [];
         try {
             $vfmsService = new VfmsInternalService;
-            $response = $vfmsService->getBusinessUnits($this->location->business, $this->location, false);
+            $response = $vfmsService->getBusinessUnits($this->location->business, $this->location, $this->fetch);
+//            dd($response);
             $this->is_requested = true;
-
-            if (array_key_exists('error', $response) && $response['error'] == 'validation-failed') {
-                $this->customAlert('error', $response['error_info'] ?? 'Something went wrong, please contact the administrator for help');
-                return;
-            } else if (array_key_exists('data', $response) && $response['data']['status'] == 'successful') {
-                $this->units = $response['data']['body'] ?? [];
-                if (array_key_exists('statusCode', $this->units) && $this->units['statusCode'] != 200) {
-                    $this->customAlert('warning', $this->units['statusMessage'] ?? 'Something went wrong, please contact the administration for help');
-                    $this->units = [];
-                    return;
-                } else {
-                    if (count($this->units) == 0) {
-                        $this->customAlert('warning', 'No data found');
-                        return;
-                    }
-
-                    // Check if business unit associated to another business location
-                    foreach ($this->units as $key => $item){
-                        if ($this->checkIfAssociated($item)){
-                            unset($this->units[$key]);
-                        }
-                    }
-                }
-            } else if (array_key_exists('statusCode', $response) && $response['statusCode'] != 200){
-                $this->customAlert('warning', $response['statusMessage'] ?? 'Something went wrong, please contact the administration for help');
+            if (isset($response['statusCode'])){
+                $this->customAlert('warning', $response['statusMessage']);
                 return;
             }
+
+            $this->response = $response['business_units'];
+            if (count($this->response) == 0) {
+                $this->customAlert('warning', 'No data found');
+                return;
+            }
+
+            // Check if business unit associated to another business location
+            $this->removeAssociatedBusinessUnits();
+            $businessUnits = collect($this->response)->keyBy('unit_id');
+            $this->units = $this->buildBusinessUnitTree($businessUnits);
 
         } catch (Exception $e) {
             Log::error($e);
@@ -78,28 +67,14 @@ class ZnumberLocationVerification extends Component
     public function complete() {
         $links = [];
         $linkData = [];
-        if($this->location->ward->vfms_ward && $this->location->business->headquarter->ward->vfms_ward) {
-            if ($this->location->ward->vfms_ward->locality_id == $this->location->business->headquarter->ward->vfms_ward->locality_id) {
-                foreach ($this->selectedUnit as $key => $value) {
-                    if ($value) {
-                        $links[] = $value;
-                    }
-                }
-            } else {
-                foreach ($this->units as $value) {
-                    if (key_exists('is_selected', $value) && $value['is_selected']) {
-                        $links[] = $value['unit_id'];
-                        $linkData[] = $value;
-                    }
-                }
+        foreach ($this->units as $value) {
+            if (key_exists('is_selected', $value) && $value['is_selected']) {
+                $links[] = $value['unit_id'];
+                $linkData[] = $value;
             }
-        } else {
-            $this->customAlert('warning', 'Ward;' . $this->location->ward->name .' or '. $this->location->business->headquarter->ward->name.' for the business location is not recognized to VFMS, contact Admin to complete this action');
-            return;
         }
-
         if(count($links) == 0) {
-            $this->customAlert('warning', 'Please select a unit to link');
+            $this->customAlert('warning', 'Please select units to link');
             return;
         }
 
@@ -115,7 +90,7 @@ class ZnumberLocationVerification extends Component
 
         DB::beginTransaction();
         try {
-            if ($this->fetch){
+            if ($this->is_requested){
                 foreach ($this->units as $unit) {
                     $taxtype = TaxType::select('id', 'code')->where('code', $this->mapVfmsTaxType($unit['tax_type']))->first();
 
@@ -127,18 +102,21 @@ class ZnumberLocationVerification extends Component
                     $vfmsBusinessUnit = VfmsBusinessUnit::where('unit_id', $unit['unit_id'])->first();
 
                     if (!$vfmsBusinessUnit) {
+                        $businessName = $this->location->business->name;
+                        $tradingName = $this->location->business->trading_name;
+                        $previousZno = $this->location->business->previous_zno;
                         VfmsBusinessUnit::create([
                             'unit_id' => $unit['unit_id'],
                             'business_id' => $this->location->business_id,
                             'unit_name' => $unit['unit_name'],
-                            'business_name' => $unit['business_name'] ?? null,
-                            'trade_name' => $unit['trade_name'] ?? null,
+                            'business_name' => $data['business_name'] ?? $businessName,
+                            'trade_name' => $data['trade_name'] ?? $tradingName ?? $businessName,
                             'locality_id' => $unit['locality_id'],
                             'vfms_tax_type' => $unit['tax_type'],
                             'zidras_tax_type_id' => $taxtype->id, // Mapped with zidras tax type id
                             'tax_office' => $unit['tax_office'] ?? null,
                             'street' => $unit['street'],
-                            'znumber' => $unit['znumber'],
+                            'znumber' => $previousZno,
                             'is_headquarter' => false,
                             'location_id' => key_exists('is_selected', $unit) && $unit['is_selected'] ? $this->location->id : false,
                             'integration' => $unit['integration']
@@ -161,8 +139,10 @@ class ZnumberLocationVerification extends Component
                 }
             }
             DB::commit();
-            $this->flash('success', 'VFMS Business unit(s) linked with business branch', [], redirect()->back()->getTargetUrl());
+            $this->customAlert('success', 'VFMS Business unit(s) linked with business branch');
+            return redirect()->back()->getTargetUrl();
         } catch(Exception $e) {
+            dd($e);
             DB::rollBack();
             Log::error($e);
             return $this->customAlert('error', 'Something went wrong, please contact the administrator for help');

@@ -155,32 +155,34 @@
                                 <td class="px-2">{{ $unit['trade_name'] ?? 'N/A' }}</td>
                                 <td class="px-2">{{ $unit['street'] ?? 'N/A' }}</td>
                                 <td class="px-2">{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
-                                <td class="px-2">{{ count($unit['children']) }}</td>
+                                <td class="px-2">{{ isset($unit['children']) ? count($unit['children']) : 0 }}</td>
                                 <td class="font-weight-bold px-2 {{ $unit['integration'] ? 'text-success' : 'text-muted' }}">{{ $unit['integration'] ? 'Integrated' : 'Not integrated' ?? 'N/A' }}</td>
                                 <td class="px-2"><input type="checkbox" wire:model="response.{{ $index }}.is_headquarter"></td>
                             </tr>
-                            @if(count($unit['children']))
-                                <tr>
-                                    <td colspan="9" class="px-4 border rounded">
-                                        <table class="table table-sm px-2">
-                                            <label class="font-weight-bold"> {{ $unit['unit_name'] }} associated Business unit(s)</label>
-                                            <thead>
-                                            <th>No</th>
-                                            <th>Unit Name</th>
-                                            <th>Tax Type</th>
-                                            </thead>
-                                            <tbody>
-                                            @foreach($unit['children'] as $childKey => $child)
-                                                <tr>
-                                                    <td class="px-2">{{ romanNumeralCount($childKey + 1) }}.</td>
-                                                    <td class="px-2">{{ $child['unit_name'] ?? 'N/A' }}</td>
-                                                    <td class="px-2">{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
-                                                </tr>
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
+                            @if(isset($unit['children']))
+                                @if( count($unit['children']))
+                                    <tr>
+                                        <td colspan="9" class="px-4 border rounded">
+                                            <table class="table table-sm px-2">
+                                                <label class="font-weight-bold"> {{ $unit['unit_name'] }} associated Business unit(s)</label>
+                                                <thead>
+                                                <th>No</th>
+                                                <th>Unit Name</th>
+                                                <th>Tax Type</th>
+                                                </thead>
+                                                <tbody>
+                                                @foreach($unit['children'] as $childKey => $child)
+                                                    <tr>
+                                                        <td class="px-2">{{ romanNumeralCount($childKey + 1) }}.</td>
+                                                        <td class="px-2">{{ $child['unit_name'] ?? 'N/A' }}</td>
+                                                        <td class="px-2">{{ strtoupper($this->mapVfmsTaxType($unit['tax_type'])) ?? 'N/A' }}</td>
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                @endif
                             @endif
                         @endforeach
                         </tbody>
