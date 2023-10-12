@@ -919,34 +919,56 @@
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Transfer Fees</a>
                         </li>
                     @endcan
-                    <li class="{{ request()->is('settings/mvr-generic/DlLicenseClass') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index', 'DlLicenseClass') }}">Driver's License
-                            Classes</a>
-                    </li>
 
+                    @can('setting-dl-class-view')
+                        <li class="{{ request()->is('settings/mvr-generic/DlLicenseClass') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'DlLicenseClass') }}">Driver's License
+                                Classes</a>
+                        </li>
+                    @endcan
 
-                    <li class="{{ request()->is('settings/mvr-generic/DlLicenseDuration') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index', 'DlLicenseDuration') }}">Driver's License
-                            Duration</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index', 'DlBloodGroup') }}">Blood Groups</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/DlFee') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index', 'DlFee') }}">Driver's License Fees</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/CaseStage') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index', 'CaseStage') }}">Case Stages</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/CaseOutcome') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index', 'CaseOutcome') }}">Case Outcomes</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/CaseDecision') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index', 'CaseDecision') }}">Case Decision</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/CourtLevel') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index', 'CourtLevel') }}">Court Levels</a>
-                    </li>
+                    @can('setting-dl-duration-view')
+                        <li class="{{ request()->is('settings/mvr-generic/DlLicenseDuration') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'DlLicenseDuration') }}">Driver's License
+                                Duration</a>
+                        </li>
+                    @endcan
+
+                    @can('setting-dl-blood-group-view')
+                        <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'DlBloodGroup') }}">Blood Groups</a>
+                        </li>
+                    @endcan
+
+                    @can('setting-dl-fee-view')
+                        <li class="{{ request()->is('settings/mvr-generic/DlFee') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'DlFee') }}">Driver's License Fees</a>
+                        </li>
+                    @endcan
+
+                    @can('setting-case-stage-view')
+                        <li class="{{ request()->is('settings/mvr-generic/CaseStage') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'CaseStage') }}">Case Stages</a>
+                        </li>
+                    @endcan
+
+                    @can('setting-case-outcome-view')
+                        <li class="{{ request()->is('settings/mvr-generic/CaseOutcome') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'CaseOutcome') }}">Case Outcomes</a>
+                        </li>
+                    @endcan
+
+                    @can('setting-case-decision-view')
+                        <li class="{{ request()->is('settings/mvr-generic/CaseDecision') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'CaseDecision') }}">Case Decision</a>
+                        </li>
+                    @endcan
+
+                    @can('setting-court-level-view')
+                        <li class="{{ request()->is('settings/mvr-generic/CourtLevel') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'CourtLevel') }}">Court Levels</a>
+                        </li>
+                    @endcan
 
                     @can('setting-financial-year-view')
                         <li class="{{ request()->is('settings/financial-years') ? 'active' : '' }}">
