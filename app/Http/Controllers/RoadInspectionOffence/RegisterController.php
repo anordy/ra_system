@@ -21,16 +21,23 @@ class RegisterController extends Controller
     use WorkflowProcesssingTrait;
 
     public function index(){
-
+        if (!Gate::allows('road-inspection-offence-view')) {
+            abort(403);
+        }
         return view('road-inspection-offence.register-index');
     }
 
     public function create(){
-
+        if (!Gate::allows('road-inspection-offence-create')) {
+            abort(403);
+        }
         return view('road-inspection-offence.register-create');
     }
 
     public function removeRestriction($id){
+        if (!Gate::allows('road-inspection-offence-create')) {
+            abort(403);
+        }
         $id = decrypt($id);
         $register = RioRegister::query()->findOrFail($id);
         $register->update(['block_status'=>'REMOVED','block_removed_at'=>Carbon::now(),'block_removed_by'=>auth()->user()->id]);
@@ -39,6 +46,9 @@ class RegisterController extends Controller
     }
 
     public function show($id){
+        if (!Gate::allows('road-inspection-offence-view')) {
+            abort(403);
+        }
         $id = decrypt($id);
         $register = RioRegister::query()->findOrFail($id);
         $mvr = $register->motor_vehicle_registration;

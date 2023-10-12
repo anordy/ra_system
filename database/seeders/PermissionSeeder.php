@@ -73,6 +73,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'verification-approval-view', 'sys_module_id' => 8],
             ['name' => 'verification-assessment-view', 'sys_module_id' => 8],
             ['name' => 'verification-approved-view', 'sys_module_id' => 8],
+            ['name' => 'verification-view', 'sys_module_id' => 8],
 
             # Tax Claim
             ['name' => 'tax-claim-view', 'sys_module_id' => 9],
@@ -87,6 +88,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'tax-investigation-approval-view', 'sys_module_id' => 11],
             ['name' => 'tax-investigation-assessment-view', 'sys_module_id' => 11],
             ['name' => 'tax-investigation-approved-view', 'sys_module_id' => 11],
+            ['name' => 'tax-investigation-view', 'sys_module_id' => 8],
 
             # Disputes Management
             ['name' => 'dispute-waiver-view', 'sys_module_id' => 12],
@@ -282,9 +284,23 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-mvr-plate-size-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-fee-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-deregistration-reason-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-deregistration-fee-view', 'sys_module_id' => 18],
+
             ['name' => 'setting-mvr-ownership-transfer-reason-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-category-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-fee-view', 'sys_module_id' => 18],
+
+            ['name' => 'setting-dl-class-view', 'sys_module_id' => 18],
+            ['name' => 'setting-dl-duration-view', 'sys_module_id' => 18],
+            ['name' => 'setting-dl-fee-view', 'sys_module_id' => 18],
+            ['name' => 'setting-dl-blood-group-view', 'sys_module_id' => 18],
+
+
+            ['name' => 'setting-case-stage-view', 'sys_module_id' => 18],
+            ['name' => 'setting-case-outcome-view', 'sys_module_id' => 18],
+            ['name' => 'setting-case-decision-view', 'sys_module_id' => 18],
+            ['name' => 'setting-court-level-outcome-view', 'sys_module_id' => 18],
+
 
             ['name' => 'setting-system-category-view', 'sys_module_id' => 18],
             ['name' => 'setting-system-category-add', 'sys_module_id' => 18],
@@ -334,11 +350,18 @@ class PermissionSeeder extends Seeder
 
             # Managerial Report
             ['name' => 'managerial-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-report-excel', 'sys_module_id' => 20],
+            ['name' => 'managerial-report-pdf', 'sys_module_id' => 20],
+            ['name' => 'managerial-report-preview', 'sys_module_id' => 20],
             ['name' => 'managerial-claim-report-view', 'sys_module_id' => 20],
             ['name' => 'managerial-claim-report-excel', 'sys_module_id' => 20],
             ['name' => 'managerial-claim-report-pdf', 'sys_module_id' => 20],
-            ['name' => 'managerial-claim-report-preview', 'sys_module_id' => 20],
-
+            ['name' => 'managerial-return-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-assessment-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-dispute-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-business-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-debt-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-payment-report-view', 'sys_module_id' => 20],
 
             # Extenstion
             ['name' => 'payment-extension-view', 'sys_module_id' => 21],
@@ -386,6 +409,7 @@ class PermissionSeeder extends Seeder
 
             # Driver's Licence
             ['name' => 'driver-licences-view', 'sys_module_id' => 25],
+            ['name' => 'driver-licences-create', 'sys_module_id' => 25],
 
             # Motor Vehicle
             ['name' => 'motor-vehicle-view', 'sys_module_id' => 26],
@@ -395,6 +419,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'tax-returns-vetting-view-domestic-taxpayers', 'sys_module_id' => 27],
             ['name' => 'tax-returns-vetting-view-lto-taxpayers', 'sys_module_id' => 27],
             ['name' => 'tax-returns-vetting-view-non-tax-revenue-taxpayers', 'sys_module_id' => 27],
+
+            # Road Inspection Offence
+            ['name' => 'road-inspection-offence-view', 'sys_module_id' => 28],
+            ['name' => 'road-inspection-offence-create', 'sys_module_id' => 28],
+
 
         ];
 

@@ -2,7 +2,8 @@
     <div class="sidebar-header text-center pb-0">
         <h3 class="mt-2 d-flex justify-content-center align-items-center">
             <div style="height: 38px; width: 38px; border-radius: 50%" class="mr-3">
-                <img style="height: 38px; width: 38px; object-fit: contain;" src="{{ asset('images/logo.png') }}" class="rounded-circle" height="38px">
+                <img style="height: 38px; width: 38px; object-fit: contain;" src="{{ asset('images/logo.png') }}"
+                     class="rounded-circle" height="38px">
             </div>
             ZIDRAS
         </h3>
@@ -24,9 +25,11 @@
         @can('taxpayer-management')
             <li class="{{ request()->is('taxpayers*') || request()->is('kycs-amendment*') ? 'active' : '' }}">
                 <a href="#taxpayersMenu" data-toggle="collapse"
-                   aria-expanded="{{ request()->is('taxpayers*') || request()->is('kycs-amendment*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers
+                   aria-expanded="{{ request()->is('taxpayers*') || request()->is('kycs-amendment*') ? 'true' : 'false' }}"
+                   class="dropdown-toggle">Taxpayers
                     Management</a>
-                <ul class="collapse list-unstyled {{ request()->is('taxpayers*') || request()->is('kycs-amendment*') ? 'show' : '' }}" id="taxpayersMenu">
+                <ul class="collapse list-unstyled {{ request()->is('taxpayers*') || request()->is('kycs-amendment*') ? 'show' : '' }}"
+                    id="taxpayersMenu">
                     @can('taxpayer_view')
                         <li class="{{ request()->is('taxpayers/taxpayer*') ? 'active' : '' }}">
                             <a href="{{ route('taxpayers.taxpayer.index') }}">Taxpayers</a>
@@ -513,59 +516,59 @@
         </li>
         @can('motor-vehicle-view')
             <li class="{{ request()->is('mvr*') ? 'active' : '' }}">
-            <a href="#mvrSubmenu" data-toggle="collapse"
-               aria-expanded="{{ request()->is('mvr*') ? 'true' : 'false' }}" class="dropdown-toggle">Motor Vehicle
-                Registration</a>
-            <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
-                <li class="{{ request()->is('mvr/register') ? 'active' : '' }}">
-                    <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
-                </li>
-                @canany(['receive_plate_number', 'print_plate_number'])
-                    <li class="{{ request()->is('mvr/plate-numbers') ? 'active' : '' }}">
-                        <a href="{{ route('mvr.plate-numbers') }}">Plate Number Printing</a>
+                <a href="#mvrSubmenu" data-toggle="collapse"
+                   aria-expanded="{{ request()->is('mvr*') ? 'true' : 'false' }}" class="dropdown-toggle">Motor Vehicle
+                    Registration</a>
+                <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
+                    <li class="{{ request()->is('mvr/register') ? 'active' : '' }}">
+                        <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
                     </li>
-                @endcanany
-                <li class="{{ request()->is('mvr/reg-change-requests') ? 'active' : '' }}">
-                    <a href="{{ route('mvr.reg-change-requests') }}">Status Change Requests</a>
-                </li>
-                <li class="{{ request()->is('mvr/transfer-ownership*') ? 'active' : '' }}">
-                    <a href="{{ route('mvr.transfer-ownership') }}">Transfer Ownership</a>
-                </li>
-                <li class="{{ request()->is('mvr/de-register-requests*') ? 'active' : '' }}">
-                    <a href="{{ route('mvr.de-register-requests') }}">De-registration</a>
-                </li>
-                <li class="{{ request()->is('mvr/written-off') ? 'active' : '' }}">
-                    <a href="{{ route('mvr.written-off') }}">Written-off Vehicles</a>
-                </li>
-                <li class="{{ request()->is('mvr/registered') ? 'active' : '' }}">
-                    <a href="{{ route('mvr.registered') }}">Registered Motor Vehicles</a>
-                </li>
-                <li class="{{ request()->is('mvr/agent') ? 'active' : '' }}">
-                    <a href="{{ route('mvr.agent') }}">Transport Agents</a>
-                </li>
-            </ul>
-        </li>
+                    @canany(['receive_plate_number', 'print_plate_number'])
+                        <li class="{{ request()->is('mvr/plate-numbers') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.plate-numbers') }}">Plate Number Printing</a>
+                        </li>
+                    @endcanany
+                    <li class="{{ request()->is('mvr/reg-change-requests') ? 'active' : '' }}">
+                        <a href="{{ route('mvr.reg-change-requests') }}">Status Change Requests</a>
+                    </li>
+                    <li class="{{ request()->is('mvr/transfer-ownership*') ? 'active' : '' }}">
+                        <a href="{{ route('mvr.transfer-ownership') }}">Transfer Ownership</a>
+                    </li>
+                    <li class="{{ request()->is('mvr/de-register-requests*') ? 'active' : '' }}">
+                        <a href="{{ route('mvr.de-register-requests') }}">De-registration</a>
+                    </li>
+                    <li class="{{ request()->is('mvr/written-off') ? 'active' : '' }}">
+                        <a href="{{ route('mvr.written-off') }}">Written-off Vehicles</a>
+                    </li>
+                    <li class="{{ request()->is('mvr/registered') ? 'active' : '' }}">
+                        <a href="{{ route('mvr.registered') }}">Registered Motor Vehicles</a>
+                    </li>
+                    <li class="{{ request()->is('mvr/agent') ? 'active' : '' }}">
+                        <a href="{{ route('mvr.agent') }}">Transport Agents</a>
+                    </li>
+                </ul>
+            </li>
         @endif
         @can('driver-licences-view')
             <li class="{{ request()->is('drivers-license*') || request()->is('rio*') ? 'active' : '' }}">
-            <a href="#dlSubmenu" data-toggle="collapse"
-               aria-expanded="{{ request()->is('drivers-license*') || request()->is('rio*') ? 'true' : 'false' }}"
-               class="dropdown-toggle">Driver's Licenses</a>
-            <ul class="collapse list-unstyled {{ request()->is('drivers-license*') || request()->is('rio*') ? 'show' : '' }}"
-                id="dlSubmenu">
-                <li
-                        class="{{ request()->is('drivers-license/applications') || request()->is('drivers-license*') ? 'active' : '' }}">
-                    <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
-                </li>
-                <li
-                        class="{{ request()->is('drivers-license/license*') || request()->is('drivers-license*') ? 'active' : '' }}">
-                    <a href="{{ route('drivers-license.licenses') }}">Driver's Licenses</a>
-                </li>
-                <li class="{{ request()->is('rio*') ? 'active' : '' }}">
-                    <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
-                </li>
-            </ul>
-        </li>
+                <a href="#dlSubmenu" data-toggle="collapse"
+                   aria-expanded="{{ request()->is('drivers-license*') || request()->is('rio*') ? 'true' : 'false' }}"
+                   class="dropdown-toggle">Driver's Licenses</a>
+                <ul class="collapse list-unstyled {{ request()->is('drivers-license*') || request()->is('rio*') ? 'show' : '' }}"
+                    id="dlSubmenu">
+                    <li
+                            class="{{ request()->is('drivers-license/applications') || request()->is('drivers-license*') ? 'active' : '' }}">
+                        <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
+                    </li>
+                    <li
+                            class="{{ request()->is('drivers-license/license*') || request()->is('drivers-license*') ? 'active' : '' }}">
+                        <a href="{{ route('drivers-license.licenses') }}">Driver's Licenses</a>
+                    </li>
+                    <li class="{{ request()->is('rio*') ? 'active' : '' }}">
+                        <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
+                    </li>
+                </ul>
+            </li>
         @endif
         @can('land-lease-management')
             <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
@@ -601,32 +604,46 @@
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('reports*') ? 'show' : '' }}" id="reportSubmenu">
                     @can('managerial-report-view')
-                        <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
-                            <a href="{{ route('reports.returns') }}">Return Reports</a>
-                        </li>
-                        <li class="{{ request()->is('reports/departmental*') ? 'active' : '' }}">
-                            <a href="{{ route('reports.departmental') }}">Departmental Reports</a>
-                        </li>
-                        <li class="{{ request()->is('reports/assesments*') ? 'active' : '' }}">
-                            <a href="{{ route('reports.assesments') }}">Assessment Reports</a>
-                        </li>
-                        <li class="{{ request()->is('reports/disputes*') ? 'active' : '' }}">
-                            <a href="{{ route('reports.disputes') }}">Dispute Reports</a>
-                        </li>
-                        <li class="{{ request()->is('reports/business*') ? 'active' : '' }}">
-                            <a href="{{ route('reports.business.init') }}">Registration Reports</a>
-                        </li>
+                        @can('managerial-return-report-view')
+                            <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.returns') }}">Return Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-departmental-report-view')
+                            <li class="{{ request()->is('reports/departmental*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.departmental') }}">Departmental Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-assessment-report-view')
+                            <li class="{{ request()->is('reports/assesments*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.assesments') }}">Assessment Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-dispute-report-view')
+                            <li class="{{ request()->is('reports/disputes*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.disputes') }}">Dispute Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-business-report-view')
+                            <li class="{{ request()->is('reports/business*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.business.init') }}">Registration Reports</a>
+                            </li>
+                        @endcan
                         @can('managerial-claim-report-view')
                             <li class="{{ request()->is('reports/claims*') ? 'active' : '' }}">
                                 <a href="{{ route('reports.claims.init') }}">Claim Reports</a>
                             </li>
                         @endcan
-                        <li class="{{ request()->is('reports/debts*') ? 'active' : '' }}">
-                            <a href="{{ route('reports.debts') }}">Debt Reports</a>
-                        </li>
-                        <li class="{{ request()->is('reports/payments*') ? 'active' : '' }}">
-                            <a href="{{ route('reports.payments') }}">Payment Reports</a>
-                        </li>
+                        @can('managerial-debt-report-view')
+                            <li class="{{ request()->is('reports/debts*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.debts') }}">Debt Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-payment-report-view')
+                            <li class="{{ request()->is('reports/payments*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.payments') }}">Payment Reports</a>
+                            </li>
+                        @endcan
                     @endcan
 
                 </ul>

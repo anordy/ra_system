@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reports\Payments;
 use App\Http\Controllers\Controller;
 
 use App\Traits\PaymentReportTrait;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class PaymentReportController extends Controller
@@ -13,11 +14,17 @@ class PaymentReportController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('managerial-payment-report-vie')) {
+            abort(403);
+        }
         return view('reports.payments.index');
     }
 
     public function exportPaymentReportPdf($parameters)
     {
+        if (!Gate::allows('managerial-report-pdf')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($parameters), true);
         $records = $this->getRecords($parameters);
 
