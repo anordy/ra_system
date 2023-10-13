@@ -501,51 +501,79 @@
             </li>
         @endcan
 
-        <li class="{{ request()->is('cases*') ? 'active' : '' }}">
-            <a href="#lcmSubmenu" data-toggle="collapse"
-               aria-expanded="{{ request()->is('cases*') ? 'true' : 'false' }}" class="dropdown-toggle">Legal Cases
-                Management</a>
-            <ul class="collapse list-unstyled {{ request()->is('cases*') ? 'show' : '' }}" id="lcmSubmenu">
-                <li class="{{ request()->is('cases') ? 'active' : '' }}">
-                    <a href="{{ route('cases.index') }}">Cases</a>
-                </li>
-                <li class="{{ request()->is('cases/appeals') ? 'active' : '' }}">
-                    <a href="{{ route('cases.appeals') }}">Appeals</a>
-                </li>
-            </ul>
-        </li>
+        @can('legal-cases')
+            <li class="{{ request()->is('cases*') ? 'active' : '' }}">
+                <a href="#lcmSubmenu" data-toggle="collapse"
+                   aria-expanded="{{ request()->is('cases*') ? 'true' : 'false' }}" class="dropdown-toggle">Legal Cases
+                    Management</a>
+                <ul class="collapse list-unstyled {{ request()->is('cases*') ? 'show' : '' }}" id="lcmSubmenu">
+                    @can('legal-cases-view')
+                        <li class="{{ request()->is('cases') ? 'active' : '' }}">
+                            <a href="{{ route('cases.index') }}">Cases</a>
+                        </li>
+                    @endcan
+                    @can('legal-cases-appeal')
+                        <li class="{{ request()->is('cases/appeals') ? 'active' : '' }}">
+                            <a href="{{ route('cases.appeals') }}">Appeals</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+
         @can('motor-vehicle-view')
             <li class="{{ request()->is('mvr*') ? 'active' : '' }}">
                 <a href="#mvrSubmenu" data-toggle="collapse"
                    aria-expanded="{{ request()->is('mvr*') ? 'true' : 'false' }}" class="dropdown-toggle">Motor Vehicle
                     Registration</a>
                 <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
-                    <li class="{{ request()->is('mvr/register') ? 'active' : '' }}">
-                        <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
-                    </li>
-                    @canany(['receive_plate_number', 'print_plate_number'])
+                    @can('motor-vehicle-registration')
+                        <li class="{{ request()->is('mvr/register') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
+                        </li>
+                    @endcan
+
+                    @can('motor-vehicle-plate-number-printing')
                         <li class="{{ request()->is('mvr/plate-numbers') ? 'active' : '' }}">
                             <a href="{{ route('mvr.plate-numbers') }}">Plate Number Printing</a>
                         </li>
-                    @endcanany
-                    <li class="{{ request()->is('mvr/reg-change-requests') ? 'active' : '' }}">
-                        <a href="{{ route('mvr.reg-change-requests') }}">Status Change Requests</a>
-                    </li>
-                    <li class="{{ request()->is('mvr/transfer-ownership*') ? 'active' : '' }}">
-                        <a href="{{ route('mvr.transfer-ownership') }}">Transfer Ownership</a>
-                    </li>
-                    <li class="{{ request()->is('mvr/de-register-requests*') ? 'active' : '' }}">
-                        <a href="{{ route('mvr.de-register-requests') }}">De-registration</a>
-                    </li>
-                    <li class="{{ request()->is('mvr/written-off') ? 'active' : '' }}">
-                        <a href="{{ route('mvr.written-off') }}">Written-off Vehicles</a>
-                    </li>
-                    <li class="{{ request()->is('mvr/registered') ? 'active' : '' }}">
-                        <a href="{{ route('mvr.registered') }}">Registered Motor Vehicles</a>
-                    </li>
-                    <li class="{{ request()->is('mvr/agent') ? 'active' : '' }}">
-                        <a href="{{ route('mvr.agent') }}">Transport Agents</a>
-                    </li>
+                    @endcan
+
+                    @can('motor-vehicle-status-change-request')
+                        <li class="{{ request()->is('mvr/reg-change-requests') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.reg-change-requests') }}">Status Change Requests</a>
+                        </li>
+                    @endcan
+
+                    @can('motor-vehicle-transfer-ownership')
+                        <li class="{{ request()->is('mvr/transfer-ownership*') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.transfer-ownership') }}">Transfer Ownership</a>
+                        </li>
+                    @endcan
+
+                    @can('motor-vehicle-deregistration')
+                        <li class="{{ request()->is('mvr/de-register-requests*') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.de-register-requests') }}">De-registration</a>
+                        </li>
+                    @endcan
+
+                    @can('motor-vehicle-status-written-off')
+                        <li class="{{ request()->is('mvr/written-off') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.written-off') }}">Written-off Vehicles</a>
+                        </li>
+                    @endcan
+
+                    @can('motor-vehicle-status-registered')
+                        <li class="{{ request()->is('mvr/registered') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.registered') }}">Registered Motor Vehicles</a>
+                        </li>
+                    @endcan
+
+                    @can('motor-vehicle-status-transport-agent')
+                        <li class="{{ request()->is('mvr/agent') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.agent') }}">Transport Agents</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endif
@@ -556,17 +584,26 @@
                    class="dropdown-toggle">Driver's Licenses</a>
                 <ul class="collapse list-unstyled {{ request()->is('drivers-license*') || request()->is('rio*') ? 'show' : '' }}"
                     id="dlSubmenu">
-                    <li
-                            class="{{ request()->is('drivers-license/applications') || request()->is('drivers-license*') ? 'active' : '' }}">
-                        <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
-                    </li>
-                    <li
-                            class="{{ request()->is('drivers-license/license*') || request()->is('drivers-license*') ? 'active' : '' }}">
-                        <a href="{{ route('drivers-license.licenses') }}">Driver's Licenses</a>
-                    </li>
-                    <li class="{{ request()->is('rio*') ? 'active' : '' }}">
-                        <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
-                    </li>
+                    @can('driver-licences-application')
+                        <li
+                                class="{{ request()->is('drivers-license/applications') || request()->is('drivers-license*') ? 'active' : '' }}">
+                            <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
+                        </li>
+                    @endcan
+
+                    @can('driver-licences-view')
+                        <li
+                                class="{{ request()->is('drivers-license/license*') || request()->is('drivers-license*') ? 'active' : '' }}">
+                            <a href="{{ route('drivers-license.licenses') }}">Driver's Licenses</a>
+                        </li>
+                    @endcan
+
+                    @can('driver-licences-road-inspection')
+                        <li class="{{ request()->is('rio*') ? 'active' : '' }}">
+                            <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
+                        </li>
+                    @endcan
+
                 </ul>
             </li>
         @endif
@@ -736,6 +773,41 @@
                 </ul>
             </li>
         @endcan
+
+        @can('tra-information')
+            <li class="{{ request()->is('tra*') ? 'active' : '' }}">
+                <a href="#tra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    TRA Information
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('tra*') ? 'show' : '' }}" id="tra">
+                    @can('tra-information-tin')
+                        <li class="{{ request()->is('tra/tins*') ? 'active' : '' }}">
+                            <a href="{{ route('tra.tins') }}">TINs Information</a>
+                        </li>
+                    @endcan
+
+                    @can('tra-information-chassis-number')
+                        <li class="{{ request()->is('tra/chassis*') ? 'active' : '' }}">
+                            <a href="{{ route('tra.chassis') }}">Chassis Numbers</a>
+                        </li>
+                    @endcan
+
+                    @can('tra-information-exited-good')
+                        <li class="{{ request()->is('tra/goods*') ? 'active' : '' }}">
+                            <a href="{{ route('tra.goods') }}">Exited Goods</a>
+                        </li>
+                    @endcan
+
+                    @can('tra-information-efdms-receipt')
+                        <li class="{{ request()->is('tra/receipts*') ? 'active' : '' }}">
+                            <a href="{{ route('tra.receipts') }}">EFDMS Receipts</a>
+                        </li>
+                    @endcan
+
+                </ul>
+            </li>
+        @endcan
+
 
         @can('setting')
             <li class="{{ request()->is('settings*') ? 'active' : '' }}">

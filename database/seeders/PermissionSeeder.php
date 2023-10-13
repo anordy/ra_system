@@ -410,9 +410,21 @@ class PermissionSeeder extends Seeder
             # Driver's Licence
             ['name' => 'driver-licences-view', 'sys_module_id' => 25],
             ['name' => 'driver-licences-create', 'sys_module_id' => 25],
+            ['name' => 'driver-licences-application', 'sys_module_id' => 25],
+            ['name' => 'driver-licences-road-inspection', 'sys_module_id' => 25],
+
 
             # Motor Vehicle
             ['name' => 'motor-vehicle-view', 'sys_module_id' => 26],
+            ['name' => 'motor-vehicle-registration', 'sys_module_id' => 26],
+            ['name' => 'motor-vehicle-plate-number-printing', 'sys_module_id' => 26],
+            ['name' => 'motor-vehicle-status-change-request', 'sys_module_id' => 26],
+            ['name' => 'motor-vehicle-transfer-ownership', 'sys_module_id' => 26],
+            ['name' => 'motor-vehicle-deregistration', 'sys_module_id' => 26],
+            ['name' => 'motor-vehicle-written-off', 'sys_module_id' => 26],
+            ['name' => 'motor-vehicle-registered', 'sys_module_id' => 26],
+            ['name' => 'motor-vehicle-transport-agent', 'sys_module_id' => 26],
+            ['name' => 'motor-vehicle-transport-agent-create', 'sys_module_id' => 26],
 
             # Tax Returns Vetting
             ['name' => 'tax-returns-vetting-view', 'sys_module_id' => 27],
@@ -424,6 +436,15 @@ class PermissionSeeder extends Seeder
             ['name' => 'road-inspection-offence-view', 'sys_module_id' => 28],
             ['name' => 'road-inspection-offence-create', 'sys_module_id' => 28],
 
+            # Tra Information
+            ['name' => 'tra-information-view-tin', 'sys_module_id' => 29],
+            ['name' => 'tra-information-view-exited-good', 'sys_module_id' => 29],
+            ['name' => 'tra-information-view-efdms-receipt', 'sys_module_id' => 29],
+            ['name' => 'tra-information-view-chassis-number', 'sys_module_id' => 29],
+
+            # Legal Cases
+            ['name' => 'legal-cases-view', 'sys_module_id' => 30],
+            ['name' => 'legal-cases-appeal', 'sys_module_id' => 30],
 
         ];
 
