@@ -159,7 +159,7 @@ Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
     Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
-    Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
+    Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend')->middleware('throttle:auth');
     Route::get('/kill', [TwoFactorAuthController::class, 'kill'])->name('session.kill');
 
     // OTP using Security Qns

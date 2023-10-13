@@ -14,11 +14,15 @@ use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Verification\TaxVerification;
+use Illuminate\Support\Facades\Gate;
 
 class TaxVerificationApprovalController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('verification-approval-view')) {
+            abort(403);
+        }
         $paidAproval     = 'verification.verification-approval-table';
         $unPaidAproval   = 'verification.verification-unpaid-approval-table';
 
@@ -27,6 +31,10 @@ class TaxVerificationApprovalController extends Controller
 
     public function edit($id)
     {
+        if (!Gate::allows('verification-view')) {
+            abort(403);
+        }
+
         $verification = TaxVerification::with('assessment', 'officers')->findOrFail(decrypt($id));
 
         $return = $verification->taxReturn;
@@ -75,6 +83,9 @@ class TaxVerificationApprovalController extends Controller
 
     public function show($id)
     {
+        if (!Gate::allows('verification-view')) {
+            abort(403);
+        }
         $verification = TaxVerification::with('assessment', 'officers')->findOrFail(decrypt($id));
 
         $return = $verification->taxReturn;

@@ -30,19 +30,26 @@ class LicenseApplicationsController extends Controller
 
     public function index()
     {
-
+        if (!Gate::allows('driver-licences-view')) {
+            abort(403);
+        }
         return view('driver-license.license-applications-index');
     }
 
     public function create()
     {
-
+        if (!Gate::allows('driver-licences-create')) {
+            abort(403);
+        }
         return view('driver-license.license-applications-create');
     }
 
 
     public function submit($id)
     {
+        if (!Gate::allows('driver-licences-create')) {
+            abort(403);
+        }
         $id = decrypt($id);
         $application = DlLicenseApplication::query()->find($id);
         if (strtolower($application->type) == 'fresh') {
@@ -130,6 +137,9 @@ class LicenseApplicationsController extends Controller
 
     public function show($id)
     {
+        if (!Gate::allows('driver-licences-view')) {
+            abort(403);
+        }
         $id = decrypt($id);
         $application = DlLicenseApplication::query()->findOrFail($id);
         $title = ['fresh' => 'New License Application', 'renew' => 'License Renewal Application', 'duplicate' => 'License Duplicate Application'][strtolower($application->type)];
@@ -239,11 +249,17 @@ class LicenseApplicationsController extends Controller
 
 
     public function showLicense($id){
+        if (!Gate::allows('driver-licences-view')) {
+            abort(403);
+        }
         $license = DlDriversLicense::query()->findOrFail(decrypt($id));
         return view('driver-license.licenses-show',compact('license'));
     }
 
     public function indexLicense(){
+        if (!Gate::allows('driver-licences-view')) {
+            abort(403);
+        }
         return view('driver-license.licenses-index');
     }
 

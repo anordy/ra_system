@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reports\Assessment;
 use App\Http\Controllers\Controller;
 use App\Models\TaxType;
 use App\Traits\AssessmentReportTrait;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class AssessmentReportController extends Controller
@@ -13,11 +14,17 @@ class AssessmentReportController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('managerial-assessment-report-vie')) {
+            abort(403);
+        }
         return view('reports.assessment.index');
     }
 
     public function preview($parameters)
     {
+        if (!Gate::allows('managerial-report-preview')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($parameters), true);
 
         return view('reports.assessment.preview', compact('parameters'));
@@ -25,6 +32,9 @@ class AssessmentReportController extends Controller
 
     public function exportAssessmentReportPdf($parameters)
     {
+        if (!Gate::allows('managerial-report-pdf')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($parameters), true);
         $records    = $this->getRecords($parameters);
         if ($parameters['tax_type_id'] == 'all') {

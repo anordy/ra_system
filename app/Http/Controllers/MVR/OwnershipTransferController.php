@@ -21,6 +21,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class OwnershipTransferController extends Controller
 {
@@ -29,6 +30,9 @@ class OwnershipTransferController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('motor-vehicle-transfer-ownership')) {
+            abort(403);
+        }
         return view('mvr.ownership-transfer-index');
     }
 
@@ -38,6 +42,9 @@ class OwnershipTransferController extends Controller
      */
     public function show($id)
     {
+        if (!Gate::allows('motor-vehicle-transfer-ownership')) {
+            abort(403);
+        }
         $id = decrypt($id);
         /** @var MvrRegistrationChangeRequest $change_req */
         $request = MvrOwnershipTransfer::query()->findOrFail($id);
