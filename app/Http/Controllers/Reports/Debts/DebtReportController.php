@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reports\Debts;
 
 use App\Http\Controllers\Controller;
 use App\Traits\DebtReportTrait;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class DebtReportController extends Controller
@@ -12,17 +13,26 @@ class DebtReportController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('managerial-debt-report-vie')) {
+            abort(403);
+        }
         return view('reports.debts.index');
     }
 
     public function preview($parameters)
     {
+        if (!Gate::allows('managerial-report-preview')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($parameters), true);
         return view('reports.debts.preview', compact('parameters'));
     }
 
     public function exportDebtReportPdf($parameters)
     {
+        if (!Gate::allows('managerial-report-pdf')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($parameters), true);
         $records = $this->getRecords($parameters);
     

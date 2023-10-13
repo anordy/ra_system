@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reports\Returns;
 use App\Http\Controllers\Controller;
 
 use App\Traits\ReturnReportTrait;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class ReturnReportController extends Controller
@@ -13,11 +14,17 @@ class ReturnReportController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('managerial-return-report-vie')) {
+            abort(403);
+        }
         return view('reports.returns.index');
     }
 
     public function exportReturnReportPdf($parameters)
     {
+        if (!Gate::allows('managerial-report-pdf')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($parameters), true);
         $records = $this->getRecords($parameters);
     

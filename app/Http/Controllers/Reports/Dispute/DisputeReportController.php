@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\TaxType;
 use App\Traits\AssessmentReportTrait;
 use App\Traits\DisputeReportTrait;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 use Illuminate\Http\Request;
 
@@ -14,17 +15,26 @@ class DisputeReportController extends Controller
      use DisputeReportTrait;
     public function index()
     {
+        if (!Gate::allows('managerial-dispute-report-vie')) {
+            abort(403);
+        }
         return view('reports.dispute.index');
     }
 
     public function preview($parameters)
     {
+        if (!Gate::allows('managerial-report-preview')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($parameters), true);
         return view('reports.dispute.preview', compact('parameters'));
     }
 
     public function exportDisputeReportPdf($parameters)
     {
+        if (!Gate::allows('managerial-report-pdf')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($parameters), true);
         $records = $this->getRecords($parameters);
         if ($parameters['tax_type_id'] == 'all') {

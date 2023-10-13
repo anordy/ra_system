@@ -31,6 +31,9 @@ class DeRegistrationController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('motor-vehicle-deregistration')) {
+            abort(403);
+        }
         return view('mvr.de-register-requests-index');
     }
 
@@ -40,6 +43,9 @@ class DeRegistrationController extends Controller
      */
     public function show($id)
     {
+        if (!Gate::allows('motor-vehicle-deregistration')) {
+            abort(403);
+        }
         $id = decrypt($id);
         /** @var MvrRegistrationChangeRequest $change_req */
         $request = MvrDeRegistrationRequest::query()->findOrFail($id);

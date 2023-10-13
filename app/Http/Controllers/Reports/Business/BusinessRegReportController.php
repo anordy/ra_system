@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reports\Business;
 
 use App\Http\Controllers\Controller;
 use App\Traits\RegistrationReportTrait;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class BusinessRegReportController extends Controller
@@ -11,11 +12,17 @@ class BusinessRegReportController extends Controller
     use RegistrationReportTrait;
 
     public function init(){
+        if (!Gate::allows('managerial-business-report-vie')) {
+            abort(403);
+        }
         return view('reports.business.init');
     }
 
     public function exportBusinessesReportPdf($data)
     {
+        if (!Gate::allows('managerial-report-pdf')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($data),true);
         $records = $this->getBusinessBuilder($parameters)->get();
 
@@ -27,6 +34,9 @@ class BusinessRegReportController extends Controller
 
     public function exportBusinessesTaxtypeReportPdf($data)
     {
+        if (!Gate::allows('managerial-report-pdf')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($data),true);
         $records = $this->getBusinessBuilder($parameters)->get();
         $recordsData = $records->groupBy('tax_type_id');
@@ -39,6 +49,9 @@ class BusinessRegReportController extends Controller
 
     public function exportBusinessesTaxpayerReportPdf($data)
     {
+        if (!Gate::allows('managerial-report-pdf')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($data),true);
         $records = $this->getBusinessBuilder($parameters)->get();
         $recordsData = $records->groupBy('taxpayer_id');
