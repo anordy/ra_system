@@ -23,12 +23,12 @@ class VerifyHostMiddleware
         $currentUrl = $request->url();
         $currentDomain = parse_url($currentUrl, PHP_URL_HOST);
 
-        if (!$host || $hostDomain){
-            return response('Malformed Request: Invalid Host', 403);
+        if (!$host || !$hostDomain){
+            return response('Malformed Request: Host Not Found.', 403);
         }
 
         if ($hostDomain !== $currentDomain){
-            return response('Malformed Request: Invalid Host', 403);
+            return response('Malformed Request: Invalid Host.', 403);
         }
 
         return $next($request);

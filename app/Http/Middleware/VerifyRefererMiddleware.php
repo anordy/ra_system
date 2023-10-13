@@ -30,24 +30,27 @@ class VerifyRefererMiddleware
         // 1. Check if domain does not match
         if ($refererDomain){
             if ($refererDomain !== $currentDomain){
-                return response('Malformed Referer URL', 403);
+                return response('Malformed Request: Invalid Base', 403);
             }
         }
 
 
         $refererUrl = parse_url($referer);
+        $path = str_replace(config('constants.context_path'), '', $refererUrl['path']);
 
         // 2. Check if the request matches defined routes
         $routes = Route::getRoutes();
 
         try {
-            if (!$routes->match(app('request')->create($refererUrl['path']))){
-                return response('Malformed Referer URL', 403);
+            if (!$routes->match(app('request')->create($path))){
+                return response('Malformed Request: Invalid Path', 403);
             }
         } catch (\Exception $exception){
             logger("Invalid referer URL detected");
+            logger($referer);
+            logger($refererUrl);
             logger($exception);
-            return response('Malformed Referer URL', 403);
+            return response('Malformed Request: Invalid URL', 403);
         }
 
         return $next($request);
