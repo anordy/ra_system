@@ -780,25 +780,25 @@
                     TRA Information
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('tra*') ? 'show' : '' }}" id="tra">
-                    @can('tra-information-tin')
+                    @can('tra-information-view-tin')
                         <li class="{{ request()->is('tra/tins*') ? 'active' : '' }}">
                             <a href="{{ route('tra.tins') }}">TINs Information</a>
                         </li>
                     @endcan
 
-                    @can('tra-information-chassis-number')
+                    @can('tra-information-view-chassis-number')
                         <li class="{{ request()->is('tra/chassis*') ? 'active' : '' }}">
                             <a href="{{ route('tra.chassis') }}">Chassis Numbers</a>
                         </li>
                     @endcan
 
-                    @can('tra-information-exited-good')
+                    @can('tra-information-view-exited-good')
                         <li class="{{ request()->is('tra/goods*') ? 'active' : '' }}">
                             <a href="{{ route('tra.goods') }}">Exited Goods</a>
                         </li>
                     @endcan
 
-                    @can('tra-information-efdms-receipt')
+                    @can('tra-information-view-efdms-receipt')
                         <li class="{{ request()->is('tra/receipts*') ? 'active' : '' }}">
                             <a href="{{ route('tra.receipts') }}">EFDMS Receipts</a>
                         </li>
