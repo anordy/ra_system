@@ -135,6 +135,17 @@
             </li>
         @endcan
 
+            <li class="{{ request()->is('property-tax*') ? 'active' : '' }}">
+                <a href="#propertyTaxMenu" data-toggle="collapse"
+                   aria-expanded="{{ request()->is('property-tax*') ? 'true' : 'false' }}" class="dropdown-toggle">Property Tax
+                    </a>
+                <ul class="collapse list-unstyled {{ request()->is('property-tax*') ? 'show' : '' }}" id="propertyTaxMenu">
+                        <li class="{{ request()->is('property-tax/condominium/registration') ? 'active' : '' }}">
+                            <a href="{{ route('property-tax.condominium.registration') }}">Condominium Registration</a>
+                        </li>
+                </ul>
+            </li>
+
         @can('withholding-agent')
             <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
                 <a href="#withholdingAgentsMenu" data-toggle="collapse"

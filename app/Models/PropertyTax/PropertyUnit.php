@@ -17,7 +17,7 @@ class PropertyUnit extends Model
     }
 
     public function storey(){
-        return $this->belongsTo(PropertyStorey::class, 'property_id');
+        return $this->belongsTo(PropertyStorey::class, 'storey_id');
     }
 
 }
