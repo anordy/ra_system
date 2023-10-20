@@ -5,6 +5,8 @@
         </div>
         <div class="card-body">
 
+            @include('livewire.approval.transitions')
+
             @if ($this->checkTransition('assign_officers'))
                 <div class="row px-3">
                     <div class="form-group col-lg-12">
@@ -112,7 +114,7 @@
                         <div class="form-group col-lg-6">
                             <label class="control-label">Principal Amount</label>
                             <input type="text" class="form-control @error('principalAmount') is-invalid @enderror"
-                                wire:model.lazy="principalAmount" x-data x-mask:dynamic="$money($input)" >
+                                wire:model.defer="principalAmount" x-data x-mask:dynamic="$money($input)" >
                             @error('principalAmount')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -120,7 +122,7 @@
                         <div class="form-group col-lg-6">
                             <label class="control-label">Penalty Amount</label>
                             <input type="text" class="form-control @error('penaltyAmount') is-invalid @enderror"
-                                wire:model.lazy="penaltyAmount" x-data x-mask:dynamic="$money($input)" >
+                                wire:model.defer="penaltyAmount" x-data x-mask:dynamic="$money($input)" >
                             @error('penaltyAmount')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -128,7 +130,7 @@
                         <div class="form-group col-lg-6">
                             <label class="control-label">Interest Amount</label>
                             <input type="text" class="form-control @error('interestAmount') is-invalid @enderror"
-                                wire:model.lazy="interestAmount" x-data x-mask:dynamic="$money($input)" >
+                                wire:model.defer="interestAmount" x-data x-mask:dynamic="$money($input)" >
                             @error('interestAmount')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror

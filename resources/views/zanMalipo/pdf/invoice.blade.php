@@ -168,8 +168,12 @@
             </tr>
             <tr>
                 <td>Prepared By</td>
-                <td colspan="3" class="bold">:
-                    {{ $bill->payer_name }}</td>
+                <td colspan="3">:
+                    @if ($bill->billable_type == \App\Models\Returns\TaxReturn::class)
+                        {{ $bill->billable->taxpayer->fullname }}
+                    @else
+                        {{ $bill->payer_name }}
+                    @endif</td>
             </tr>
             <tr>
                 <td>Collection Centre</td>
@@ -177,7 +181,13 @@
             </tr>
             <tr>
                 <td>Print Issued By</td>
-                <td colspan="3">: {{ $bill->payer_name }}</td>
+                <td colspan="3">:  
+                    @if ($bill->billable_type == \App\Models\Returns\TaxReturn::class)
+                        {{ $bill->billable->taxpayer->fullname }}
+                    @else
+                        {{ $bill->payer_name }}
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td>Issued On</td>
@@ -199,7 +209,7 @@
                     <ol>
                         <li>
                             Kupitia Benki: Fika tawi lolote au wakala wa benki ya
-                            PBZ, NMB, NBC.
+                            PBZ, NMB, NBC, CRDB.
                             {{-- <br> --}}
                             Namba ya kumbukumbu: <b>{{ $bill->control_number }}</b>.
                         </li>
@@ -217,7 +227,7 @@
                 <td>
                     <ol>
                         <li>
-                            Via Bank: Visit any branch or bank agent of PBZ, NMB, NBC.
+                            Via Bank: Visit any branch or bank agent of PBZ, NMB, NBC, CRDB.
                             {{-- <br> --}}
                             Reference Number: <b>{{ $bill->control_number }}</b>.
                         </li>

@@ -270,16 +270,16 @@
                                                             {{ $listShareHolderShare['shareholder_name'] }}
                                                         </td>
                                                         <td class="">
-                                                            {{ number_format($listShareHolderShare['number_of_shares']) }}
+                                                            {{ $listShareHolderShare['number_of_shares'] }}
                                                         </td>
                                                         <td class="">
-                                                            {{  $listShareHolderShare['currency'] }}
+                                                            {{ $listShareHolderShare['currency'] }}
                                                         </td>
                                                         <td class="">
-                                                            {{ number_format($listShareHolderShare['number_of_shares_taken']) }}
+                                                            {{ $listShareHolderShare['number_of_shares_taken'] }}
                                                         </td>
                                                         <td class="">
-                                                            {{ number_format($listShareHolderShare['number_of_shares_paid']) }}
+                                                            {{ $listShareHolderShare['number_of_shares_paid'] }}
                                                         </td>
                                                     </tr>
                                                 @endforeach

@@ -151,7 +151,7 @@
             </tr>
             <tr>
                 <td colspan="2" class="padding-left td-title">Payer Name</td>
-                <td colspan="2" class="td-content">:
+                <td colspan="2" class="td-content bold">:
                     {{ $bill->payer_name ?? '' }}</td>
             </tr>
             <tr>
@@ -210,8 +210,13 @@
             </tr>
             <tr>
                 <td>Prepared By</td>
-                <td colspan="3" class="bold">:
-                    {{ $bill->payer_name }}</td>
+                <td colspan="3">:
+                    @if ($bill->billable_type == \App\Models\Returns\TaxReturn::class)
+                        {{ $bill->billable->taxpayer->fullname }}
+                    @else
+                        {{ $bill->payer_name }}
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td>Collection Centre</td>
@@ -219,7 +224,13 @@
             </tr>
             <tr>
                 <td>Printed By</td>
-                <td colspan="3">: {{ $bill->payer_name }}</td>
+                <td colspan="3">: 
+                    @if ($bill->billable_type == \App\Models\Returns\TaxReturn::class)
+                        {{ $bill->billable->taxpayer->fullname }}
+                    @else
+                        {{ $bill->payer_name }}
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td>Printed On</td>

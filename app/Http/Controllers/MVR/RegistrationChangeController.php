@@ -29,6 +29,9 @@ class RegistrationChangeController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('motor-vehicle-status-change-request')) {
+            abort(403);
+        }
         return view('mvr.reg-change-index');
     }
 
@@ -38,6 +41,9 @@ class RegistrationChangeController extends Controller
      */
     public function show($id)
     {
+        if (!Gate::allows('motor-vehicle-status-change-request')) {
+            abort(403);
+        }
         $id = decrypt($id);
         /** @var MvrRegistrationChangeRequest $change_req */
         $change_req = MvrRegistrationChangeRequest::query()->findOrFail($id);

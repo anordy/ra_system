@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\audit;
+namespace App\Jobs\Audit;
 
 use App\Mail\audit\AuditApprovedEmail;
 use Illuminate\Bus\Queueable;

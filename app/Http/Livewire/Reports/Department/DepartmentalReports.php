@@ -9,13 +9,13 @@ use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Models\ZmBill;
+use App\Traits\CustomAlert;
 use App\Traits\DailyPaymentTrait;
 use App\Traits\ManagerialReportTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
@@ -77,7 +77,8 @@ class DepartmentalReports extends Component
                 TaxType::AIRPORT_SAFETY_FEE,
                 TaxType::SEAPORT_SERVICE_CHARGE,
                 TaxType::ROAD_LICENSE_FEE,
-                TaxType::INFRASTRUCTURE, TaxType::RDF
+                TaxType::INFRASTRUCTURE, TaxType::RDF,
+                TaxType::LAND_LEASE
             ])
             ->get();
 
@@ -191,12 +192,13 @@ class DepartmentalReports extends Component
         $queryDTD = ZmBill::query()
             ->rightJoin('zm_bill_items', 'zm_bills.id', 'zm_bill_items.zm_bill_id')
             ->leftJoin('tax_returns', 'zm_bills.billable_id', 'tax_returns.id')
+            ->leftJoin('business_locations', 'business_locations.id', 'tax_returns.location_id')
             ->select(['zm_bills.tax_type_id as tax_type_id', DB::raw('sum(zm_bill_items.amount) as item_amount')])
             ->groupBy(['zm_bills.tax_type_id'])
             ->whereNotNull(['zm_bill_items.billable_id', 'zm_bill_items.billable_id'])
             ->whereIn('zm_bills.tax_type_id', $this->domesticTaxTypes->pluck('id'))
             ->whereHas('billable', function ($query) use ($taxRegionsIds, $filteringForLto, $currency){
-                $query->whereIn('location_id', $taxRegionsIds);
+                $query->whereIn('business_locations.tax_region_id', $taxRegionsIds);
 
                 // If filtering for LTO
                 if ($filteringForLto){
@@ -208,24 +210,24 @@ class DepartmentalReports extends Component
                 }
 
                 // Filter currencies
-                $query->where('currency', $currency);
+                $query->where('zm_bills.currency', $currency);
 
-                // Filter Dates
-                $query->whereDate('paid_at', '>=', $this->range_start);
-                $query->whereDate('tax_returns.created_at', '<=', $this->range_end);
+                // TODO: Filter Dates and paid at status
+//                $query->whereDate('paid_at', '>=', $this->range_start);
+//                $query->whereDate('tax_returns.created_at', '<=', $this->range_end);
             })
             ->with('billable', 'billable.business');
 
         $queryNTR = ZmBill::query()
             ->rightJoin('zm_bill_items', 'zm_bills.id', 'zm_bill_items.zm_bill_id')
             ->leftJoin('tax_returns', 'zm_bills.billable_id', 'tax_returns.id')
+            ->leftJoin('business_locations', 'business_locations.id', 'tax_returns.location_id')
             ->select(['zm_bill_items.tax_type_id as tax_type_id', DB::raw('sum(zm_bill_items.amount) as item_amount')])
             ->groupBy(['zm_bill_items.tax_type_id'])
             ->whereNotNull(['zm_bill_items.billable_id', 'zm_bill_items.billable_id'])
             ->whereIn('zm_bill_items.tax_type_id', $this->nonRevenueTaxTypes->pluck('id'))
-            //     columns
             ->whereHas('billable', function ($query) use ($taxRegionsIds, $filteringForLto, $currency){
-                $query->whereIn('location_id', $taxRegionsIds);
+                $query->whereIn('business_locations.tax_region_id', $taxRegionsIds);
 
                 // If filtering for LTO
                 if ($filteringForLto){
@@ -237,11 +239,11 @@ class DepartmentalReports extends Component
                 }
 
                 // Filter currency
-                $query->where('currency', $currency);
+                $query->where('zm_bills.currency', $currency);
 
-                // Filter Dates
-                $query->whereDate('paid_at', '>=', $this->range_start);
-                $query->whereDate('tax_returns.created_at', '<=', $this->range_end);
+                // TODO: Filter Dates and paid at status
+//                $query->whereDate('paid_at', '>=', $this->range_start);
+//                $query->whereDate('tax_returns.created_at', '<=', $this->range_end);
             })
             ->with('billable', 'billable.business');
 

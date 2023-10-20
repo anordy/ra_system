@@ -237,7 +237,10 @@
                         <span class="font-weight-bold text-uppercase">Total Amount Due</span>
                         <p class="my-1">{{ number_format($assesment->total_amount ,2)?? '' }}</p>
                     </div>
-
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
+                        <p class="my-1">{{ number_format($assesment->outstanding_amount ,2)?? '' }}</p>
+                    </div>
                 </div>
             </div>
         </div>

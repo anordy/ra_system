@@ -30,7 +30,7 @@ use App\Jobs\Configuration\SendExchangeRateEmail;
 use App\Jobs\Configuration\SendInterestRateEmail;
 use App\Jobs\Extension\SendExtensionApprovedMail;
 use App\Jobs\Extension\SendExtensionRejectedMail;
-use App\Jobs\audit\AuditApprovedNotificationEmail;
+use App\Jobs\Audit\AuditApprovedNotificationEmail;
 use App\Jobs\Audit\ExitPreliminaryEmailToTaxPayer;
 use App\Jobs\Configuration\SendFinancialYearEmail;
 use App\Jobs\Configuration\SendFinancialMonthEmail;

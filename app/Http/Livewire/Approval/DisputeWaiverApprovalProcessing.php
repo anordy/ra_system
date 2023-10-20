@@ -80,7 +80,7 @@ class DisputeWaiverApprovalProcessing extends Component
 
         $this->penaltyAmountDue = $this->assessment->penalty_amount - $this->penaltyAmount;
         $this->interestAmountDue = $this->assessment->interest_amount - $this->interestAmount;
-        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->assessment->principal_amount);
+        $this->total = $this->assessment->outstanding_amount - ($this->penaltyAmount + $this->interestAmount);
     }
 
     public function approve($transition)

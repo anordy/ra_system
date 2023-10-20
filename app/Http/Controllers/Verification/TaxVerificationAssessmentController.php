@@ -13,11 +13,15 @@ use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\Verification\TaxVerification;
 use App\Models\Returns\HotelReturns\HotelReturn;
+use Illuminate\Support\Facades\Gate;
 
 class TaxVerificationAssessmentController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('verification-assessment-view')) {
+            abort(403);
+        }
         $tableName = 'verification.verification-assessment-table';
 
         return view('verification.assessment.index', compact('tableName'));
@@ -25,6 +29,9 @@ class TaxVerificationAssessmentController extends Controller
 
     public function show($id)
     {
+        if (!Gate::allows('verification-view')) {
+            abort(403);
+        }
         $verification = TaxVerification::with('assessment', 'officers')->findOrFail(decrypt($id));
 
         $return = $verification->taxReturn;

@@ -308,7 +308,7 @@ class PenaltyForDebt
 
     public static function getPostVettingPenalties($tax_return, $iterations)
     {
-        if ($iterations > 0) {
+        if ($iterations > 0 && $tax_return->outstanding_amount > 0) {
             $curr_payment_due_date = Carbon::create($tax_return->curr_payment_due_date);
 
             $year = FinancialYear::where('code', $curr_payment_due_date->year)->first();
@@ -345,7 +345,7 @@ class PenaltyForDebt
                     $penaltableAmount = roundOff($latePaymentAmount + $penaltableAmountForPerticularMonth, $tax_return->currency);
                 } else {
                     $period = round($tax_return->periods) + $i + 1;
-                    $latePaymentAmount = roundOff($latePaymentAfterRate->rate * $penaltableAmountForPerticularMonth, $tax_return->currency);
+                    $latePaymentAmount = 0;
                     $penaltableAmount = $latePaymentAmount + $penaltableAmountForPerticularMonth;
                     $interestAmount = roundOff(self::calculateInterest($penaltableAmount, $interestRate->rate, $period), $tax_return->currency);
                     $penaltableAmount = roundOff($penaltableAmount + $interestAmount, $tax_return->currency);

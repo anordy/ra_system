@@ -6,6 +6,8 @@
         <div class="card-body p-0 m-0">
             @include('layouts.component.messages')
 
+            @include('livewire.approval.transitions')
+
             @if ($this->checkTransition('assign_officers'))
                 <div class="row p-3">
                     <div class="col-lg-12 mt-2">

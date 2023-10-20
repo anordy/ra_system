@@ -284,9 +284,11 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
             'actual_transaction_date' => 'required_unless:explanation_text,BALANCE B/F',
             'explanation_text' => 'required',
             'debit_amount' => 'nullable',
-            'credit_amount' => 'required_unless:explanation_text,BALANCE B/F',
+            'credit_amount' => 'nullable',
+//            'credit_amount' => 'required_unless:explanation_text,BALANCE B/F',
             'current_balance' => 'required',
-            'value_date' => 'required_unless:explanation_text,BALANCE B/F',
+            'value_date' => 'nullable',
+//            'value_date' => 'required_unless:explanation_text,BALANCE B/F',
             'dccr' => 'nullable',
             'doc_num' => 'nullable'
         ];

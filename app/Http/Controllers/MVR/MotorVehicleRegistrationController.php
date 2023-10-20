@@ -27,12 +27,17 @@ class MotorVehicleRegistrationController extends Controller
 
 
     public function registeredIndex(){
+        if (!Gate::allows('motor-vehicle-registration')) {
+            abort(403);
+        }
         return view('mvr.registered-index');
     }
 
 
 	public function index(){
-
+        if (!Gate::allows('motor-vehicle-registration')) {
+            abort(403);
+        }
 		return view('mvr.index');
 	}
 
@@ -41,6 +46,9 @@ class MotorVehicleRegistrationController extends Controller
      * @return Application|Factory|View
      */
     public function show($id){
+        if (!Gate::allows('motor-vehicle-registration')) {
+            abort(403);
+        }
         $id = decrypt($id);
         $motor_vehicle = MvrMotorVehicle::query()->findOrFail($id);
         return view('mvr.show',compact('motor_vehicle'));
@@ -102,6 +110,9 @@ class MotorVehicleRegistrationController extends Controller
 
 
     public function plateNumbers(){
+        if (!Gate::allows('motor-vehicle-plate-number-printing')) {
+            abort(403);
+        }
         return view('mvr.plate-numbers');
     }
 

@@ -2,28 +2,30 @@
 
 namespace App\Traits;
 
+use Carbon\Carbon;
+use App\Models\ZmBill;
+use App\Events\SendSms;
+use App\Models\TaxType;
 use App\Enum\BillStatus;
 use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
-use App\Events\SendSms;
-use App\Jobs\SendZanMalipoSMS;
-use App\Models\BusinessTaxType;
 use App\Models\BusinessType;
-use App\Models\Investigation\TaxInvestigation;
-use App\Models\Returns\ReturnStatus;
-use App\Models\Returns\Vat\SubVat;
-use App\Models\TaxAudit\TaxAudit;
-use App\Models\TaxType;
-use App\Models\TransactionFee;
-use App\Models\ZmBill;
 use App\Models\ZmBillChange;
-use App\Services\Api\ZanMalipoInternalService;
+use App\Jobs\SendZanMalipoSMS;
+use App\Models\TransactionFee;
+use App\Models\BusinessTaxType;
+use App\Models\TaxAudit\TaxAudit;
+use App\Models\Returns\Vat\SubVat;
 use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Returns\ReturnStatus;
+use Illuminate\Support\Facades\Auth;
+use App\Services\ZanMalipo\ZmResponse;
+use App\Models\Returns\Port\PortReturn;
+use App\Models\Investigation\TaxInvestigation;
+use App\Services\Api\ZanMalipoInternalService;
+use App\Models\Returns\Petroleum\PetroleumReturn;
 
 
 trait PaymentsTrait
@@ -422,7 +424,7 @@ trait PaymentsTrait
         $business = $debt->business;
 
         $payer_type     = get_class($business);
-        $payer_name     = $business->name ?? $business->taxpayer_id;
+        $payer_name     = $business->name ?? $business->taxpayer_name;
         $payer_email    = $business->email;
         $payer_phone    = $business->mobile;
         $description    = "{$debt->taxtype->name} Debt Payment for {$payer_name} {$debt->location->name}";
@@ -475,41 +477,18 @@ trait PaymentsTrait
     {
         $tax_type = TaxType::findOrFail($assessment->tax_type_id);
 
-        if ($assessment->principal_amount > 0) {
+        if ($assessment->outstanding_amount > 0) {
             $billItems[] = [
                 'billable_id'         => $assessment->id,
                 'billable_type'       => get_class($assessment),
                 'use_item_ref_on_pay' => 'N',
-                'amount'              => $assessment->principal_amount,
+                'amount'              => $assessment->outstanding_amount,
                 'currency'            => $assessment->currency,
                 'gfs_code'            => $tax_type->gfs_code,
                 'tax_type_id'         => $tax_type->id,
             ];
         }
 
-        if ($assessment->penalty_amount > 0) {
-            $billItems[] = [
-                'billable_id'         => $assessment->id,
-                'billable_type'       => get_class($assessment),
-                'use_item_ref_on_pay' => 'N',
-                'amount'              => $assessment->penalty_amount,
-                'currency'            => $assessment->currency,
-                'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $tax_type->id,
-            ];
-        }
-
-        if ($assessment->interest_amount > 0) {
-            $billItems[] = [
-                'billable_id'         => $assessment->id,
-                'billable_type'       => get_class($assessment),
-                'use_item_ref_on_pay' => 'N',
-                'amount'              => $assessment->interest_amount,
-                'currency'            => $assessment->currency,
-                'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $tax_type->id,
-            ];
-        }
 
         $business = $assessment->business;
 
@@ -523,7 +502,7 @@ trait PaymentsTrait
             $assessmentLocations = 'Business location';
         }
         $payer_type     = get_class($business);
-        $payer_name     = $business->name ?? $business->taxpayer_id;
+        $payer_name     = $business->name ?? $business->taxpayer_name;
         $payer_email    = $business->email;
         $payer_phone    = $business->mobile;
         $description    = "{$assessment->taxtype->name} dispute waiver for {$payer_name} in {$assessmentLocations}";
@@ -587,7 +566,17 @@ trait PaymentsTrait
 
     public function generateReturnBillItems($tax_return) {
         $taxTypes = TaxType::all();
-        $taxType = TaxType::findOrFail($tax_return->tax_type_id);
+        if ($tax_return->return_type != PortReturn::class) {
+            $taxType = TaxType::findOrFail($tax_return->tax_type_id);
+        } else {
+            if ($tax_return->airport_service_charge > 0 || $tax_return->airport_safety_fee > 0) {
+                $taxType = TaxType::where('code', TaxType::AIRPORT_SERVICE_CHARGE)->firstOrFail();
+            } else if ($tax_return->seaport_service_charge > 0 || $tax_return->seaport_transport_charge > 0) {
+                $taxType = TaxType::where('code', TaxType::SEAPORT_SERVICE_CHARGE)->firstOrFail();
+            } else {
+                throw new \Exception('Invalid PORT return tax type');
+            }
+        }
 
         // If tax type is VAT use sub_vat tax type & gfs code
         if ($taxType->code == TaxType::VAT) {
@@ -691,7 +680,7 @@ trait PaymentsTrait
                 }
 
                 if ($tax_return->airport_safety_fee > 0) {
-                    $airportSafetyFeeTax = $taxTypes->where('code', TaxType::AIRPORT_SERVICE_SAFETY_FEE)->firstOrFail();
+                    $airportSafetyFeeTax = $taxTypes->where('code', TaxType::AIRPORT_SAFETY_FEE)->firstOrFail();
                     $billItems[] = [
                         'billable_id' => $tax_return->id,
                         'billable_type' => get_class($tax_return),
@@ -717,7 +706,7 @@ trait PaymentsTrait
                 }
 
                 if ($tax_return->seaport_transport_charge > 0) {
-                    $seaportTransportChargeTax = $taxTypes->where('code', TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE)->firstOrFail();
+                    $seaportTransportChargeTax = $taxTypes->where('code', TaxType::SEAPORT_TRANSPORT_CHARGE)->firstOrFail();
                     $billItems[] = [
                         'billable_id' => $tax_return->id,
                         'billable_type' => get_class($tax_return),
@@ -741,7 +730,7 @@ trait PaymentsTrait
 
         // Generate return control no.
         $payer_type = get_class($business);
-        $payer_name = $business->name ?? $business->taxpayer_id;
+        $payer_name = $business->name ?? $business->taxpayer_name;
         $payer_email = $business->email;
         $payer_phone = $business->mobile;
         if ($return->table == 'lump_sum_returns') {
@@ -808,7 +797,12 @@ trait PaymentsTrait
     public function generateAssessmentControlNumber($assessment)
     {
         $taxTypes = TaxType::all();
+
         $taxType = $assessment->taxtype;
+
+        if (!$taxType->gfs_code) {
+            $taxType = TaxType::where('code', TaxType::VERIFICATION)->first();
+        }
 
         DB::beginTransaction();
 

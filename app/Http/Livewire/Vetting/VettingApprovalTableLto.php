@@ -13,6 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\TaxReturn;
 use App\Traits\ReturnFilterTrait;
 use Illuminate\Support\Facades\Gate;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class VettingApprovalTableLto extends DataTableComponent
 {
@@ -40,11 +41,35 @@ class VettingApprovalTableLto extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setFilterLayoutSlideDown();
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
         ]);
+    }
+
+    public function filters(): array
+    {
+        return [
+            SelectFilter::make('Tax Region')
+                ->options([
+                    'all'    => 'All',
+                    'Headquarter' => 'Head Quarter',
+                    'Mjini'  => 'Mjini',
+                    'Kaskazini Unguja'  => 'Kaskazini Unguja',
+                    'Kusini Unguja'  => 'Kusini Unguja',
+                    'Kaskazini Pemba'  => 'Kaskazini Pemba',
+                    'Kusini Pemba'  => 'Kusini Pemba',
+                ])
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value != 'all') {
+                        $builder->whereHas('location.taxRegion', function($query) use($value) {
+                            $query->where('name', $value);
+                        });
+                    }
+                }),
+        ];
     }
 
     public function builder(): Builder

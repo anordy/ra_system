@@ -696,7 +696,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Hotel Star Rating</span>
-                        <p class="my-1">{{ $hotel->star->no_of_stars ?? 'N/A' }} Stars</p>
+                        <p class="my-1">{{ $hotel->star->name ?? 'N/A' }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Number of Rooms</span>

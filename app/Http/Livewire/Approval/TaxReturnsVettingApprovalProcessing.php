@@ -29,6 +29,7 @@ use App\Jobs\Vetting\SendVettedReturnMail;
 use App\Notifications\DatabaseNotification;
 use App\Jobs\Vetting\SendToCorrectionReturnSMS;
 use App\Jobs\Vetting\SendToCorrectionReturnMail;
+use App\Models\Returns\Port\PortReturn;
 
 class TaxReturnsVettingApprovalProcessing extends Component
 {
@@ -50,13 +51,13 @@ class TaxReturnsVettingApprovalProcessing extends Component
         $this->registerWorkflow($modelName, $this->modelId);
     }
 
-    public function previewPenalties() {
+    public function previewPenalties($tax_return_id) {
         $tax_return = TaxReturn::selectRaw('
                 tax_returns.*, 
                 (MONTHS_BETWEEN(CURRENT_DATE, CAST(filing_due_date as date))) as periods, 
                 (MONTHS_BETWEEN(CAST(curr_payment_due_date as date), CURRENT_DATE)) as penatableMonths
             ')
-            ->where('id', $this->return->id)
+            ->where('id', $tax_return_id)
             ->whereIn('vetting_status', [VettingStatus::SUBMITTED, VettingStatus::CORRECTED])
             ->get()
             ->firstOrFail();
@@ -65,7 +66,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
         $penalties = $tax_return->return->penalties;
 
         $preVettingPenaltyIterations = $penalties->count();
-        $postVettingPenaltyIterations = round($tax_return->periods);
+        $postVettingPenaltyIterations = floor($tax_return->periods);
 
         $penaltyIterationsToBeAdded = $postVettingPenaltyIterations - $preVettingPenaltyIterations;
 
@@ -99,7 +100,23 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
                 
                 // Generate Penalties Additional Penalties
-                $tax_return = $this->previewPenalties();
+                if ($this->return->return_type != PortReturn::class) {
+                    $tax_return = $this->previewPenalties($this->return->id);
+                } else {
+                    $tax_return = $this->previewPenalties($this->return->id);
+
+                    $child_return = TaxReturn::where('return_type', PortReturn::class)->where('parent',$tax_return->id)->first();
+
+                    if ($child_return) {
+                        $tax_return_ = $this->previewPenalties($child_return->id);
+
+                        $tax_return_->vetting_status = VettingStatus::VETTED;
+                        $tax_return_->return->vetting_status = VettingStatus::VETTED;
+                        $tax_return_->save();
+                        $tax_return_->return->save();
+                    }
+         
+                }
 
                 $this->return->vetting_status = VettingStatus::VETTED;
                 $this->return->return->vetting_status = VettingStatus::VETTED;
@@ -111,8 +128,12 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 // Trigger verification
                 $this->triggerTaxVerifications($this->return->return, auth()->user());
 
-                // Generate control number
-                $this->generateReturnControlNumber($tax_return);
+                if ($tax_return->return_type != PortReturn::class) {
+                    $this->generateReturnControlNumber($tax_return);
+                } else {
+                    $this->generateReturnControlNumber($tax_return);
+                    $this->generateReturnControlNumber($tax_return_);
+                }
 
                 //triggering claim
                 if ($this->return->return_type == VatReturn::class) {

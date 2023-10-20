@@ -30,6 +30,9 @@ class WrittenOffVehiclesController extends Controller
     use MotorVehicleSearchTrait;
 
 	public function index(){
+        if (!Gate::allows('motor-vehicle-written-off')) {
+            abort(403);
+        }
 		return view('mvr.written-off-index');
 	}
 
@@ -38,6 +41,9 @@ class WrittenOffVehiclesController extends Controller
      * @return Application|Factory|View
      */
     public function show($id){
+        if (!Gate::allows('motor-vehicle-written-off')) {
+            abort(403);
+        }
         $id = decrypt($id);
         /** @var MvrRegistrationChangeRequest $change_req */
         $change_req = MvrRegistrationChangeRequest::query()->findOrFail($id);

@@ -55,9 +55,9 @@
     <tr>
         <th style="border-collapse:collapse;border: 1px solid black;"><strong>Total</strong></th>
         <th style="border-collapse:collapse;border: 1px solid black;text-align:right">
-            <strong>{{ number_format(array_sum($report['TZS'] ?? 0), 2) }}</strong></th>
+            <strong>{{ number_format(array_sum($report['TZS'] ?? [0]), 2) }}</strong></th>
         <th style="border-collapse:collapse;border: 1px solid black;text-align:right">
-            <strong>{{ number_format(array_sum($report['USD'] ?? 0), 2) }}</strong></th>
+            <strong>{{ number_format(array_sum($report['USD'] ?? [0]), 2) }}</strong></th>
     </tr>
     </tfoot>
 </table>

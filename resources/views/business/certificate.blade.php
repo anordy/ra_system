@@ -57,12 +57,15 @@
         .tax-types {
             font-size: 1.1em;
             top: 65%;
-            left: -6%;
+            left: 38.4%;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
         }
         .location {
             font-size: 1.1em;
             top: 70.8%;
-            left: 11.4%;
+            left: 10.8%;
         }
         .zra-location {
             font-size: 1.1em;
@@ -155,7 +158,7 @@
         @else
             <span class="embed reg-no">{{ $location->business->ztn_number ?? '' }}</span>
         @endif
-        <span class="embed tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
+        <span class="tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
         <span class="embed location">
             {{ $location->street->name }}-{{ $location->ward->name }} - {{ $location->region->location }}
         </span>

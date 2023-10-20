@@ -19,12 +19,14 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        $users[] = [];
 
-        User::updateOrCreate([
-            'fname' => "Meshack",
-            'lname' => "Victor",
-            'email' => "meshack.fungo@ubx.co.tz",
-            'phone' => '0753550590',
+        $users = [
+            [
+            'fname' => "Phillip",
+            'lname' => "Morro",
+            'email' => "phillip.morro@ubx.co.tz",
+            'phone' => '0763218007',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -33,13 +35,11 @@ class UserSeeder extends Seeder
             'is_first_login' => false,
             'is_approved' => 1,
             'pass_expired_on' => Carbon::now()->addYear()
-        ]);
-
-        User::updateOrCreate([
-            'fname' => "Mang'erere",
-            'lname' => "Mgini",
-            'email' => "Mangerere.Mgini@ubx.co.tz",
-            'phone' => '0743317069',
+        ], [
+            'fname' => "Tabitha",
+            'lname' => "Mkude",
+            'email' => "tabitha.mkude@ubx.co.tz",
+            'phone' => '0748570624',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -48,13 +48,11 @@ class UserSeeder extends Seeder
             'is_first_login' => false,
             'is_approved' => 1,
             'pass_expired_on' => Carbon::now()->addYear()
-        ]);
-
-        User::updateOrCreate([
-            'fname' => "Gerald",
-            'lname' => "Njau",
-            'email' => "markgerald262@gmail.com",
-            'phone' => '0745831971',
+        ], [
+            'fname' => "Asma",
+            'lname' => "Hassan",
+            'email' => "asma.hassan@zanrevenue.org",
+            'phone' => '0772724747',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -63,13 +61,11 @@ class UserSeeder extends Seeder
             'is_first_login' => false,
             'is_approved' => 1,
             'pass_expired_on' => Carbon::now()->addYear()
-        ]);
-
-        User::updateOrCreate([
-            'fname' => "Peter",
-            'lname' => "Joseph",
-            'email' => "petergaty360@icloud.com",
-            'phone' => '0769824511',
+        ], [
+            'fname' => "Maryam",
+            'lname' => "Bundala",
+            'email' => "maryam.ramadhan@zanrevenue.org",
+            'phone' => '0719606146',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -78,13 +74,11 @@ class UserSeeder extends Seeder
             'is_first_login' => false,
             'is_approved' => 1,
             'pass_expired_on' => Carbon::now()->addYear()
-        ]);
-
-        User::updateOrCreate([
-            'fname' => "David",
-            'lname' => "Mabula",
-            'email' => "davidmabux@gmail.com",
-            'phone' => '0621749596',
+        ], [
+            'fname' => "Amina",
+            'lname' => "Barnabas",
+            'email' => "amina.charles@zanrevenue.org",
+            'phone' => '0777412984',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -93,13 +87,11 @@ class UserSeeder extends Seeder
             'is_first_login' => false,
             'is_approved' => 1,
             'pass_expired_on' => Carbon::now()->addYear()
-        ]);
-
-        User::updateOrCreate([
-            'fname' => "Anord",
-            'lname' => "John",
-            'email' => "anordy@gmail.com",
-            'phone' => '0716121689',
+        ], [
+            'fname' => "SULEIMAN",
+            'lname' => "IDDI",
+            'email' => "suleiman.iddi@zanrevenue.org",
+            'phone' => '0773359471',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -108,7 +100,38 @@ class UserSeeder extends Seeder
             'is_first_login' => false,
             'is_approved' => 1,
             'pass_expired_on' => Carbon::now()->addYear()
-        ]);
+        ], [
+            'fname' => "Safia",
+            'lname' => "Mzee",
+            'email' => "safia.mzee@zanrevenue.org",
+            'phone' => '0777490855',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'role_id' => 1,
+            'status' => true,
+            'is_first_login' => false,
+            'is_approved' => 1,
+            'pass_expired_on' => Carbon::now()->addYear()
+        ]];
+
+        foreach ($users as $user) {
+            User::updateOrCreate([
+                'fname' => $user['fname'],
+                'lname' => $user['lname'],
+                'email' => $user['email'],
+                'phone' => $user['phone'],
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+                'remember_token' => Str::random(10),
+                'role_id' => 1,
+                'level_id' => 1,
+                'status' => true,
+                'is_first_login' => false,
+                'is_approved' => 1,
+                'pass_expired_on' => Carbon::now()->addYear()
+            ]);
+        }
 
     }
 }

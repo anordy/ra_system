@@ -13,7 +13,7 @@
                 </td>
                 <td>
                     @if ($taxchange->toTax->code == 'vat')
-                        {{ $taxchange->subvat->name }}
+                        {{ $taxchange->subvat ? $taxchange->subvat->name : 'SUBVAT_NOTSET_ERR' }}
                     @else
                     <span style="font-size: 13px">{{ $taxchange->toTax->name }} -
                         {{ $taxchange->to_tax_type_currency ?? '' }}</span><br>

@@ -114,6 +114,7 @@ class TaxAuditApprovalProcessing extends Component
 
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
         }
+
     }
 
 
@@ -344,6 +345,8 @@ class TaxAuditApprovalProcessing extends Component
                     'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
                     'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
                 ]);
+
+                event(new SendMail('audit-approved-notification', $this->subject->business->taxpayer));
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
@@ -352,18 +355,6 @@ class TaxAuditApprovalProcessing extends Component
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
 
-        if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
-            $this->generateControlNumber();
-            $this->subject->assessment->update([
-                'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-            ]);
-
-            event(new SendMail('audit-approved-notification', $this->subject->business->taxpayer));
-
-        } else {
-            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
-        }
     }
 
     public function generateControlNumber()
@@ -394,7 +385,7 @@ class TaxAuditApprovalProcessing extends Component
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $this->principalAmount,
+                    'amount' => roundOff($this->principalAmount, 'TZS'),
                     'currency' => 'TZS',
                     'gfs_code' => $this->taxTypes->where('code', 'audit')->firstOrFail()->gfs_code,
                     'tax_type_id' => $this->taxTypes->where('code', 'audit')->firstOrFail()->id
@@ -403,18 +394,18 @@ class TaxAuditApprovalProcessing extends Component
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $this->interestAmount,
+                    'amount' => roundOff($this->interestAmount, 'TZS'),
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'interest')->firstOrFail()->gfs_code,
+                    'gfs_code' => $this->taxTypes->where('code', 'audit')->firstOrFail()->gfs_code,
                     'tax_type_id' => $this->taxTypes->where('code', 'interest')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $this->penaltyAmount,
+                    'amount' => roundOff($this->penaltyAmount, 'TZS'),
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->gfs_code,
+                    'gfs_code' => $this->taxTypes->where('code', 'audit')->firstOrFail()->gfs_code,
                     'tax_type_id' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->id
                 ]
             ];
@@ -454,7 +445,7 @@ class TaxAuditApprovalProcessing extends Component
                 $createdby_type,
                 $billitems
             );
-
+            DB::commit();
 
             if (config('app.env') != 'local') {
                $this->generateGeneralControlNumber($zmBill);
@@ -471,10 +462,10 @@ class TaxAuditApprovalProcessing extends Component
 
                 $this->customAlert('success', 'A control number for this verification has been generated successfully');
             }
-            DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
+            throw $e;
         }
     }
 
