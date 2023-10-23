@@ -8,7 +8,7 @@
             </div>
         @endif
         @if ($kyc->nida_no)
-            <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 d-flex align-items-center">
                 <span class="font-weight-bold text-uppercase">NIDA No.</span>
                 <p class="my-1">{{ $kyc->nida_no }}</p>
             </div>

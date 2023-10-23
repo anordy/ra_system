@@ -57,3 +57,7 @@
 @if ($kyc->identification->name == \App\Models\IDType::PASSPORT)
     <livewire:taxpayers.details.passport :kyc="$kyc" />
 @endif
+
+@if($kyc->tin_no)
+    <livewire:taxpayers.details.tin :kyc="$kyc" />
+@endif
