@@ -55,11 +55,9 @@ class DeRegisterRequestsTable extends DataTableComponent
         return [
             Column::make("Chassis No", "motor_vehicle.chassis_number")
                 ->sortable(),
-            Column::make("Plate Number", "mvr_motor_vehicle_id")
-                ->format(fn($mv_id)=>MvrMotorVehicle::query()->find($mv_id)->current_registration->plate_number)
+            Column::make("Plate Number", "motor_vehicle.current_registration.plate_number")
                 ->sortable(),
-            Column::make("Reg Type", "mvr_motor_vehicle_id")
-                ->format(fn($mv_id)=>MvrMotorVehicle::query()->find($mv_id)->current_registration->registration_type->name)
+            Column::make("Reg Type", "motor_vehicle.current_registration.registration_type.name")
                 ->sortable(),
             Column::make("Received Date", "date_received")
                 ->sortable(),

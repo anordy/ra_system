@@ -12,6 +12,7 @@ use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrRequestStatus;
 use App\Models\SystemSetting;
+use App\Services\Api\TraInternalService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -19,6 +20,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -72,6 +75,7 @@ class MotorVehicleRegistrationController extends Controller
     }
 
 
+    // TODO: Shift to API upon payment completed
     public function simulatePayment($id){
         $id = decrypt($id);
         $reg =  MvrMotorVehicle::query()
@@ -81,7 +85,7 @@ class MotorVehicleRegistrationController extends Controller
             DB::beginTransaction();
             $status = MvrRegistrationStatus::query()
                 ->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING]);
-            $mv =  MvrMotorVehicle::query()
+            $mv = MvrMotorVehicle::query()
                 ->findOrFail($id);
             $mv->update([
                     'mvr_registration_status_id'=>$status->id
@@ -100,10 +104,14 @@ class MotorVehicleRegistrationController extends Controller
             $plate_status = MvrPlateNumberStatus::query()->firstOrCreate(['name' => MvrPlateNumberStatus::STATUS_GENERATED]);
             $reg->update(['plate_number'=>$plate_number,'mvr_plate_number_status_id'=>$plate_status->id,'registration_date'=>date('Y-m-d')]);
             DB::commit();
+
+            // TODO: Send Registration status as a job
+            $traService = new TraInternalService();
+            $traService->postPlateNumber($mv->chassis_number, $plate_number, 'registration');
         }catch (\Exception $e){
             session()->flash('error', 'Could not update status');
             DB::rollBack();
-            report($e);
+            Log::error($e);
         }
         return redirect()->route('mvr.show',encrypt($id));
     }

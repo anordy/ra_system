@@ -18,6 +18,7 @@ use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
+use App\Services\Api\TraInternalService;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -370,6 +371,11 @@ class ApprovalProcessing extends Component
                 $this->subject->status = BusinessStatus::APPROVED;
 
                 DB::commit();
+
+                // TODO: Make it as a job
+                $traService = new TraInternalService();
+                $traService->postZNumber($this->subject->id);
+
             } catch (Exception $exception){
                 DB::rollBack();
                 Log::error($exception);

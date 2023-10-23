@@ -15,17 +15,12 @@ class CreateMvrMotorVehicleOwnerTable extends Migration
     {
         Schema::create('mvr_vehicle_owners', function (Blueprint $table) {
             $table->id();
-
             $table->unsignedBigInteger('mvr_motor_vehicle_id');
-            $table->unsignedBigInteger('taxpayer_id');
+            $table->string('taxpayer_id');
             $table->date('date')->nullable();
             $table->unsignedBigInteger('mvr_ownership_status_id');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('mvr_motor_vehicle_id')->references('id')->on('mvr_motor_vehicles');
-            $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
-            $table->foreign('mvr_ownership_status_id')->references('id')->on('mvr_ownership_status');
 
         });
     }
