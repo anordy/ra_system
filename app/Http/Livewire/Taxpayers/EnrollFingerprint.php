@@ -103,21 +103,15 @@ class EnrollFingerprint extends Component
             }
         }
 
-        // If id is zanid or nida & zanid check if zan id has been verified
-        if ($this->kyc->identification->name == IDType::ZANID || $this->kyc->identification->name == IDType::NIDA_ZANID) {
-            if ($kyc->is_citizen == '1' && isNullOrEmpty($kyc->zanid_verified_at)) {
-                $this->customAlert('error', 'User ZANID not verified by authorities');
-                return;
-            }
-        } else if ($this->kyc->identification->name == IDType::PASSPORT) {
-            // TODO: Allow this when immigration api has been integrated
-            // if($kyc->is_citizen == '0' && (isNullOrEmpty($kyc->passport_verified_at))) {
-            //     $this->customAlert('error', 'User Passport Number not verified by authorities');
-            //     return;
-            // }
-        } else if ($this->kyc->identification->name == IDType::NIDA) {
-            // TODO: Check nida when nida api has been integrated
-        } 
+        if ($this->kyc->tin && !$this->kyc->tin_verified_at){
+            $this->customAlert('error', 'TIN No. Not verified by Authorities');
+            return;
+        }
+
+        if ($this->kyc->zanid && !$this->kyc->zanid_verified_at){
+            $this->customAlert('error', 'ZANID Not verified by Authorities');
+            return;
+        }
 
         DB::beginTransaction();
 

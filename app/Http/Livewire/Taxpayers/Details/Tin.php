@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Taxpayers\Details;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Http\Controllers\v1\ZanIDController;
+use App\Services\Api\TraInternalService;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,9 @@ class Tin extends Component
 
     public $kyc;
     public $is_verified_triggered = false;
-    public $zanid_data;
+    public $zanid_data; // TODO: Remove
+    public $tin;
+
     public $matchesText = 'Match';
     public $notValidText = 'Mismatch';
 
@@ -35,9 +38,25 @@ class Tin extends Component
 
     public function verifyTIN()
     {
-        $this->is_verified_triggered = true;
-        $zanid_controller = new ZanIDController;
-        $this->zanid_data = $zanid_controller->getZanIDData($this->kyc->zanid_no);
+        try {
+            $this->is_verified_triggered = true;
+            $traService = new TraInternalService();
+            $response = $traService->getTinNumber($this->kyc->tin_no);
+            if ($response && $response['data']) {
+                $this->tin = $response['data'];
+            } else if ($response && $response['data'] == null) {
+                $this->customAlert('warning', $response['message']);
+                return;
+            } else {
+                $this->customAlert('error', 'Something went wrong');
+                return;
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            return;
+        }
     }
 
     public function compareProperties($kyc_property, $zanid_property)
@@ -89,10 +108,10 @@ class Tin extends Component
     {
         try {
             $this->kyc->update([
-                'first_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_FIRST_NAME']),
-                'middle_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_MIDLE_NAME']),
-                'last_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_LAST_NAME']),
-                'zanid_verified_at' => Carbon::now()->toDateTimeString(),
+                'first_name' => $this->convertStringToCamelCase($this->tin['first_name']),
+                'middle_name' => $this->convertStringToCamelCase($this->tin['middle_name']),
+                'last_name' => $this->convertStringToCamelCase($this->tin['last_name']),
+                'tin_verified_at' => Carbon::now()->toDateTimeString(),
             ]);
             $this->customAlert('success', 'Taxpayer details have been approved!');
             return redirect()->route('taxpayers.enroll-fingerprint', [encrypt($this->kyc->id)]);
@@ -128,7 +147,8 @@ class Tin extends Component
         }
     }
 
-    public function convertStringToCamelCase($string) {
+    public function convertStringToCamelCase($string)
+    {
         return ucfirst(strtolower($string));
     }
 

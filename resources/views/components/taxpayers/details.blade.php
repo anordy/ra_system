@@ -49,12 +49,11 @@
     @endif
 </div>
 
-
-@if ($kyc->identification->name == \App\Models\IDType::ZANID or $kyc->identification->name == \App\Models\IDType::NIDA_ZANID)
+@if ($kyc->zanid_no)
     <livewire:taxpayers.details.zanid :kyc="$kyc" />
 @endif
 
-@if ($kyc->identification->name == \App\Models\IDType::PASSPORT)
+@if($kyc->passport_no || $kyc->permit_number)
     <livewire:taxpayers.details.passport :kyc="$kyc" />
 @endif
 

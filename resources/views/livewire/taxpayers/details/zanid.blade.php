@@ -7,12 +7,6 @@
                 <p class="my-1">{{ $kyc->zanid_no }}</p>
             </div>
         @endif
-        @if ($kyc->nida_no)
-                <div class="col-md-4 mb-3 d-flex align-items-center">
-                <span class="font-weight-bold text-uppercase">NIDA No.</span>
-                <p class="my-1">{{ $kyc->nida_no }}</p>
-            </div>
-        @endif
 
         @if (empty($kyc->zanid_verified_at))
             <div class="col-md-4 mb-3">
@@ -23,6 +17,11 @@
                         </div>
                     </div>Verify Zan ID Data
                 </button>
+            </div>
+        @else
+            <div class="col-md-4 mb-3">
+                <span class="font-weight-bold text-uppercase">ZANID Verified At</span>
+                <p class="my-1">{{ $kyc->zanid_verified_at->toDateTimeString() }}</p>
             </div>
         @endif
     </div>

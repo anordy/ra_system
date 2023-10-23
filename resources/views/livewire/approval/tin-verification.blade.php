@@ -138,7 +138,6 @@
                                 <p class="my-1">{{ $tin['is_entity_tin'] == 1 ? 'Yes' : 'No' }}</p>
                             </div>
                         </div>
-
                     </div>
                     <div class="modal-footer p-2 m-0">
                         <button wire:click="save()" wire:loading.attr="disabled" class="btn btn-success">
@@ -149,14 +148,9 @@
                             </div>Confirm Verification
                         </button>
                     </div>
-
                 </div>
-
             </div>
             <hr>
         @endif
     @endif
-
-
-
 </div>
