@@ -135,6 +135,7 @@ class UsersTable extends DataTableComponent
                                     HTML;
                         }
                     }
+
                     if (Gate::allows('setting-user-change-password')) {
                         $changePwd = <<< HTML
                                     <button class="btn btn-warning btn-sm" onclick="Livewire.emit('showModal', 'user-change-password-modal',$value)"><i class="fa fa-key"></i> </button>

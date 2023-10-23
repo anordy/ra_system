@@ -214,6 +214,15 @@
                         </div>
                     @endif
 
+                    @if($subject->tin)
+                        <div class="card">
+                            <div class="card-header">TIN Number Verification</div>
+                            <div class="card-body">
+                                <livewire:approval.tin-verification :business="$subject" />
+                            </div>
+                        </div>
+                    @endif
+
                 </div>
 
             </div>

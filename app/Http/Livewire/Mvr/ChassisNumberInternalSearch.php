@@ -18,7 +18,6 @@ class ChassisNumberInternalSearch extends Component
     public $type;
     public $result_route;
 
-
     protected function rules()
     {
         return [

@@ -16,7 +16,7 @@ class CreateMvrModelTable extends Migration
         Schema::create('mvr_models', function (Blueprint $table) {
             $table->id();
             $table->string('name',100);
-            $table->unsignedBigInteger('mvr_make_id');
+            $table->unsignedBigInteger('mvr_make_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

@@ -24,7 +24,7 @@ class MotorVehiclesTable extends DataTableComponent
         if (empty($this->status_id)){
             return MvrMotorVehicle::query();
         }else{
-            return MvrMotorVehicle::query()->distinct('chassis_number')->where(['mvr_registration_status_id'=>$this->status_id]);
+            return MvrMotorVehicle::query()->where(['mvr_registration_status_id'=>$this->status_id]);
         }
 	}
 
@@ -36,7 +36,7 @@ class MotorVehiclesTable extends DataTableComponent
 	public function configure(): void
     {
         $this->setPrimaryKey('id');
-
+//        $this->setAdditionalSelects(['chassis_number']);
 	    $this->setTableWrapperAttributes([
 	      'default' => true,
 	      'class' => 'table-bordered table-sm',
@@ -46,17 +46,15 @@ class MotorVehiclesTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Chassis No", "chassis_number")
+            Column::make("Chassis No", "chassis.chassis_number")
                 ->sortable(),
-            Column::make("Axles", "number_of_axle")
-                ->sortable(),
-            Column::make("YoM", "year_of_manufacture")
-                ->sortable(),
-	        Column::make("Engine Capacity", "engine_capacity")
+	        Column::make("Engine Capacity", "chassis.engine_cubic_capacity")
 	          ->sortable(),
-           Column::make("Model", "model.name")
+           Column::make("Model", "chassis.model_type")
                 ->sortable(),
-            Column::make("Make", "model.make.name")
+            Column::make("Make", "chassis.make")
+                ->sortable(),
+            Column::make("Imported From", "chassis.imported_from")
                 ->sortable(),
             Column::make("Registration Status", "registration_status.name")
                 ->sortable(),
