@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\PropertyTax\CondominiumController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -176,6 +177,17 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['2fa', 'auth'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
+
+    Route::prefix('property-tax')->name('property-tax.')->group(function () {
+
+        Route::prefix('condominium')->name('condominium.')->group(function () {
+            Route::get('/registration', [CondominiumController::class, 'register'])->name('registration');
+            Route::get('/index', [CondominiumController::class, 'index'])->name('index');
+            Route::get('/show/{id}', [CondominiumController::class, 'show'])->name('show');
+        });
+
+
+    });
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::get('/account', [AccountController::class, 'show'])->name('account');
