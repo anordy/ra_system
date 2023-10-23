@@ -27,7 +27,8 @@ class AddTinToTaxpayersTable extends Migration
     public function down()
     {
         Schema::table('taxpayers', function (Blueprint $table) {
-            //
+            $table->dropColumn('tin_no');
+            $table->dropColumn('tin_verified_at');
         });
     }
 }

@@ -27,7 +27,8 @@ class AddTinToKycsTable extends Migration
     public function down()
     {
         Schema::table('kycs', function (Blueprint $table) {
-            //
+            $table->dropColumn('tin_no');
+            $table->dropColumn('tin_verified_at');
         });
     }
 }
