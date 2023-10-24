@@ -10,7 +10,7 @@ class PaymentExtension extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'condominium';
+    protected $table = 'property_payment_extensions';
 
     protected $guarded = [];
 }

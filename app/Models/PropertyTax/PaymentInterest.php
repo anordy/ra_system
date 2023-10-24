@@ -10,7 +10,7 @@ class PaymentInterest extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'condominium';
+    protected $table = 'property_payment_interests';
 
     protected $guarded = [];
 }

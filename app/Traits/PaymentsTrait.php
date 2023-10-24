@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enum\PropertyTypeStatus;
 use Carbon\Carbon;
 use App\Models\ZmBill;
 use App\Events\SendSms;
@@ -901,5 +902,23 @@ trait PaymentsTrait
             DB::rollBack();
             Log::error($e);
         }
+    }
+
+    public function generatePropertyTaxBillItems($property) {
+        $billItems = [];
+
+        if ($property->type === PropertyTypeStatus::HOTEL) {
+            $billItems[] = [
+                'billable_id'         => $property->id,
+                'billable_type'       => get_class($property),
+                'use_item_ref_on_pay' => 'N',
+                'amount'              => $property->star->charged_amount,
+                'currency'            => $property->star->currency->iso,
+                'gfs_code'            => $taxType->gfs_code,
+                'tax_type_id'         => $tax_return->tax_type_id,
+            ];
+        }
+
+        return $billItems;
     }
 }

@@ -11,7 +11,7 @@ class CondominiumUnit extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'condominium';
+    protected $table = 'condominium_units';
 
     protected $guarded = [];
 

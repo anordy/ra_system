@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Jobs\Account\SendReferenceNumberMail;
 use App\Jobs\Account\SendReferenceNumberSMS;
+use App\Jobs\PropertyTax\SendPropertyTaxApprovalSMS;
 use App\Jobs\SendZanMalipoSMS;
 use App\Models\KYC;
 use App\Events\SendSms;
@@ -220,8 +221,10 @@ class SendSmsFired
             SendZanMalipoSMS::dispatch($event->extra['mobile_no'], $event->extra['message']);
         } else if ($event->service === SendReferenceNumberMail::SERVICE) {
             SendReferenceNumberSMS::dispatch($event->tokenId);
-        }  else if ($event->service === SendQuantityCertificateSMS::SERVICE){
+        } else if ($event->service === SendQuantityCertificateSMS::SERVICE){
             SendQuantityCertificateSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendPropertyTaxApprovalSMS::SERVICE){
+            SendPropertyTaxApprovalSMS::dispatch($event->tokenId);
         }
     }
 }

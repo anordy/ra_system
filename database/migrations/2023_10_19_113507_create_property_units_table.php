@@ -20,6 +20,7 @@ class CreatePropertyUnitsTable extends Migration
             $table->unsignedBigInteger('storey_id')->index('storey_id_property_index');
             $table->string('name');
             $table->string('house_number');
+            $table->string('meter_number')->nullable();
             $table->enum('usage_type', UnitUsageTypeStatus::getConstants());
 
             $table->timestamps();

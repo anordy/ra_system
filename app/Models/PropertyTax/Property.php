@@ -7,13 +7,14 @@ use App\Models\Region;
 use App\Models\Street;
 use App\Models\Taxpayer;
 use App\Models\Ward;
+use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Property extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, WorkflowTrait;
 
     protected $guarded = [];
 
@@ -35,6 +36,14 @@ class Property extends Model
 
     public function taxpayer(){
         return $this->belongsTo(Taxpayer::class, 'taxpayer_id');
+    }
+
+    public function responsible(){
+        return $this->hasOne(PropertyOwner::class, 'property_id', 'id');
+    }
+
+    public function star(){
+        return $this->belongsTo(PropertyTaxHotelStar::class, 'hotel_stars_id');
     }
 
 }

@@ -8,7 +8,7 @@
             <h5 class="text-uppercase">Register Condominium Property</h5>
         </div>
         <div class="card-body">
-            {{-- @livewire('relief.relief-project-table')--}}
+             @livewire('property-tax.condominium.condominium-registration')
         </div>
     </div>
 @endsection

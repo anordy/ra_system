@@ -1,11 +1,10 @@
 <?php
 
-use App\Enum\CondominiumStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCondominiumUnitsTable extends Migration
+class CreatePropertyTaxHotelStarsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +13,14 @@ class CreateCondominiumUnitsTable extends Migration
      */
     public function up()
     {
-        Schema::create('condominium_units', function (Blueprint $table) {
+        Schema::create('property_tax_hotel_stars', function (Blueprint $table) {
             $table->id();
-            $table->integer('condominium_storey_id');
-            $table->integer('condominium_id');
             $table->string('name');
-            $table->enum('status', CondominiumStatus::getConstants())->default(CondominiumStatus::UNREGISTERED);
-            $table->softDeletes();
+            $table->integer('no_of_stars');
+            $table->decimal('amount_charged', 20,2);
+            $table->unsignedBigInteger('currency_id');
+            $table->string('is_approved')->default(0);
+            $table->boolean('is_updated')->default(0);
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ class CreateCondominiumUnitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('condominium_units');
+        Schema::dropIfExists('property_tax_hotel_stars');
     }
 }

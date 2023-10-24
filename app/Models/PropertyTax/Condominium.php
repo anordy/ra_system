@@ -22,12 +22,12 @@ class Condominium extends Model
 
     public function units(): HasMany
     {
-        return $this->hasMany(CondominiumStorey::class);
+        return $this->hasMany(CondominiumUnit::class);
     }
 
     public function storeys(): HasMany
     {
-        return $this->hasMany(CondominiumUnit::class);
+        return $this->hasMany(CondominiumStorey::class);
     }
 
     public function region(): BelongsTo

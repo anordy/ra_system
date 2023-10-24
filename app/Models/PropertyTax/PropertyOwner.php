@@ -13,6 +13,10 @@ class PropertyOwner extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'date_of_birth' => 'date'
+    ];
+
 
     public function property(){
         return $this->belongsTo(Property::class, 'property_id');

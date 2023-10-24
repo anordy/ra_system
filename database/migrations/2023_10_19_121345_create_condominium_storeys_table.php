@@ -15,6 +15,8 @@ class CreateCondominiumStoreysTable extends Migration
     {
         Schema::create('condominium_storeys', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
+            $table->integer('number');
             $table->integer('condominium_id');
             $table->softDeletes();
             $table->timestamps();

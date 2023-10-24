@@ -143,6 +143,12 @@
                         <li class="{{ request()->is('property-tax/condominium/registration') ? 'active' : '' }}">
                             <a href="{{ route('property-tax.condominium.registration') }}">Condominium Registration</a>
                         </li>
+                    <li class="{{ request()->is('property-tax/condominium/index') ? 'active' : '' }}">
+                        <a href="{{ route('property-tax.condominium.index') }}">Registered Condominiums</a>
+                    </li>
+                    <li class="{{ request()->is('property-tax/index') ? 'active' : '' }}">
+                        <a href="{{ route('property-tax.index') }}">Properties Registrations</a>
+                    </li>
                 </ul>
             </li>
 

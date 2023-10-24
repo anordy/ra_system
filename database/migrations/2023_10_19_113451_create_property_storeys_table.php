@@ -15,6 +15,8 @@ class CreatePropertyStoreysTable extends Migration
     {
         Schema::create('property_storeys', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
+            $table->integer('number');
             $table->unsignedBigInteger('property_id')->index('property_id_storey_index');
             $table->timestamps();
             $table->softDeletes();

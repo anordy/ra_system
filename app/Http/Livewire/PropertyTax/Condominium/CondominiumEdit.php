@@ -7,6 +7,7 @@ use App\Models\District;
 use App\Models\PropertyTax\Condominium;
 use App\Models\PropertyTax\CondominiumStorey;
 use App\Models\PropertyTax\CondominiumUnit;
+use App\Models\Region;
 use App\Models\Street;
 use App\Models\Ward;
 use App\Traits\CustomAlert;
@@ -14,30 +15,70 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-class CondominiumRegistration extends Component
+class CondominiumEdit extends Component
 {
     use CustomAlert;
 
+    public $condominium;
     public $name, $region_id, $district_id, $ward_id, $street_id, $status;
     public $streets = [];
     public $wards = [];
     public $districts = [];
     public $regions = [];
-    public $storeys = [
-        [
-            [
-                'name' => '',
-            ]
-        ]
-    ];
+    public $storeys = [];
 
-    public function mount()
+    public function mount($id)
     {
-        $regions = DB::table('regions')
-            ->select('id', 'name')
+        $this->condominium = Condominium::findOrFail(decrypt($id));
+
+        $this->region_id = $this->condominium->region_id;
+        $this->district_id = $this->condominium->district_id;
+        $this->ward_id = $this->condominium->ward_id;
+        $this->street_id = $this->condominium->street_id;
+        $this->name = $this->condominium->name;
+        $this->status = $this->condominium->status;
+
+        $regions = Region::select('id', 'name')
             ->where('is_approved', 1)
             ->get();
+
         $this->regions = json_decode($regions, true);
+
+        if ($this->region_id){
+            $this->districts = District::where('region_id', $this->region_id)
+                ->select('id', 'name')
+                ->approved()
+                ->get();
+        }
+
+        if ($this->district_id){
+            $this->wards = Ward::where('district_id', $this->district_id)->select('id', 'name')
+                ->approved()
+                ->get();
+        }
+
+        if ($this->ward_id){
+            $this->streets = Street::where('ward_id', $this->ward_id)->select('id', 'name')->approved()->get();
+        } elseif ($this->street_id){
+            $this->streets = Street::where('ward_id', $this->street->ward_id)
+                ->select('id', 'name')
+                ->approved()
+                ->get();
+        }
+
+        // Patch Storeys with Units
+        $storeys = $this->condominium->storeys;
+        foreach ($storeys as $i => $storey) {
+            $this->storeys[$i] = [
+                'name' => $storey->name
+            ];
+
+            foreach ($storey->units as $j => $unit) {
+                $this->storeys[$i][$j] = [
+                    'name' => $unit->name,
+                ];
+            }
+        }
     }
 
     public function addStorey()
@@ -71,35 +112,42 @@ class CondominiumRegistration extends Component
         try {
             DB::beginTransaction();
 
-            $condominium = Condominium::create([
+            $this->condominium->update([
                 'name' => $this->name,
                 'region_id' => $this->region_id,
                 'district_id' => $this->district_id,
                 'ward_id' => $this->ward_id,
                 'street_id' => $this->street_id,
                 'status' => $this->status,
-                'staff_id' => Auth::user()->id
             ]);
 
+            $this->condominium->storeys()->delete();
+            $this->condominium->units()->delete();
 
             foreach ($this->storeys as $i => $storey) {
-                $condominiumStorey = CondominiumStorey::create([
-                    'number' => $i+1,
-                    'condominium_id' => $condominium->id
-                ]);
+                // Create Storey
+                $condominiumStorey = CondominiumStorey::create(
+                    [
+                        'number' => $i+1,
+                        'condominium_id' => $this->condominium->id
+                    ]
+                );
 
                 foreach ($storey as $unit) {
-                    CondominiumUnit::create([
-                        'condominium_storey_id' => $condominiumStorey->id,
-                        'condominium_id' => $condominium->id,
-                        'name' => $unit['name'],
-                        'status' => CondominiumStatus::UNREGISTERED
-                    ]);
+                    // Create Storey Units
+                    CondominiumUnit::create(
+                        [
+                            'condominium_storey_id' => $condominiumStorey->id,
+                            'condominium_id' => $this->condominium->id,
+                            'name' => $unit['name'],
+                            'status' => CondominiumStatus::UNREGISTERED
+                        ]
+                    );
                 }
             }
 
             DB::commit();
-            $this->customAlert('success', 'Property Registered Successful');
+            $this->customAlert('success', 'Property Updated Successful');
             return redirect()->route('property-tax.condominium.index');
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -112,7 +160,7 @@ class CondominiumRegistration extends Component
     protected function rules(): array
     {
         return [
-            'name' => ['required', 'unique:condominium,name', 'strip_tag'],
+            'name' => ['required', 'unique:condominium,name,'.$this->condominium->id, 'strip_tag'],
             'region_id' => 'required',
             'district_id' => 'required',
             'ward_id' => 'required',

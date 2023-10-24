@@ -51,7 +51,7 @@ class WorkflowPropertyTaxRegistrationSeeder extends Seeder
                 'condition' => '',
             ],
             'property_tax_officer_review' => [
-                'from' => 'return_vetting_officer',
+                'from' => 'property_tax_officer',
                 'to'   => 'completed',
                 'condition' => '',
             ],
