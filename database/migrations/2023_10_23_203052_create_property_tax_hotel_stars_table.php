@@ -22,6 +22,7 @@ class CreatePropertyTaxHotelStarsTable extends Migration
             $table->string('is_approved')->default(0);
             $table->boolean('is_updated')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

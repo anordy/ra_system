@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\PropertyTax;
 
+use App\Enum\PropertyStatus;
 use App\Models\PropertyTax\Property;
 use App\Traits\CustomAlert;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +15,7 @@ class RegisteredPropertiesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Property::orderByDesc('created_at');
+        return Property::where('status', PropertyStatus::APPROVED)->orderByDesc('created_at');
     }
     public function configure(): void
     {
@@ -54,10 +55,10 @@ class RegisteredPropertiesTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return $row->created_at->toFormattedDateString() ?? 'N/A';
                 }),
-//            Column::make('Status', 'status')
-//                ->view('property-tax.condominium.includes.status'),
-//            Column::make('Action', 'id')
-//                ->view('property-tax.condominium.includes.actions'),
+            Column::make('Status', 'status')
+                ->view('property-tax.includes.status'),
+            Column::make('Action', 'id')
+                ->view('property-tax.includes.actions'),
         ];
     }
 

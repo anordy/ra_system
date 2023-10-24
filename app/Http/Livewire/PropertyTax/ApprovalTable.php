@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\PropertyTax;
 
+use App\Enum\PropertyStatus;
 use App\Models\PropertyTax\Condominium;
 use App\Models\PropertyTax\Property;
 use App\Traits\CustomAlert;
@@ -15,7 +16,7 @@ class ApprovalTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Property::orderByDesc('created_at');
+        return Property::where('status', PropertyStatus::PENDING)->orderByDesc('created_at');
     }
     public function configure(): void
     {

@@ -20,6 +20,18 @@
                 </tr>
             @endif
 
+            @if($property->type === \App\Enum\PropertyTypeStatus::CONDOMINIUM)
+                <tr>
+                    <th width="20%">Bill Item</th>
+                    <td>Property Tax</td>
+                    <th class="text-right">{{ number_format($condominiumBill, 2) }}</th>
+                </tr>
+                <tr class="bg-secondary">
+                    <th colspan="2">Total Billed Amount</th>
+                    <th class="text-right">{{ number_format($condominiumBill, 2) }} TZS</th>
+                </tr>
+            @endif
+
             </tbody>
         </table>
     </div>

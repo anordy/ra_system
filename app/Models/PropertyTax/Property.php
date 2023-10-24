@@ -42,6 +42,14 @@ class Property extends Model
         return $this->hasOne(PropertyOwner::class, 'property_id', 'id');
     }
 
+    public function payment(){
+        return $this->hasOne(PropertyPayment::class, 'property_id');
+    }
+
+    public function unit(){
+        return $this->hasOne(PropertyUnit::class, 'property_id', 'id');
+    }
+
     public function star(){
         return $this->belongsTo(PropertyTaxHotelStar::class, 'hotel_stars_id');
     }

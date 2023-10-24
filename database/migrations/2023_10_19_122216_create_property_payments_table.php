@@ -29,6 +29,7 @@ class CreatePropertyPaymentsTable extends Migration
             $table->enum('payment_category', PropertyPaymentCategoryStatus::getConstants());
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -3,6 +3,14 @@
 @section('title','View Properties')
 
 @section('content')
+    @if($property->status === \App\Enum\PropertyStatus::APPROVED)
+        <div class="row mx-1">
+            <div class="col-md-12">
+                <livewire:property-tax.property-tax-payment :payment="$property->payment" />
+            </div>
+        </div>
+    @endif
+
     <div class="card">
         <div class="card-header">
             <h5 class="text-uppercase">Property Information</h5>
@@ -69,6 +77,38 @@
             </div>
 
         </div>
+
+        @if($property->type === \App\Enum\PropertyTypeStatus::CONDOMINIUM)
+            <div class="card-body">
+                <div class="card-header">
+                    <h5 class="text-uppercase">Unit Information</h5>
+                </div>
+                <div class="row m-2 pt-3">
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Unit Name/Number</span>
+                        <p class="my-1">{{ $property->unit->name ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Usage Type</span>
+                        <p class="my-1">{{ $property->unit->usage_type ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Storey Number</span>
+                        <p class="my-1">{{ $property->unit->storey->number ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">House Number</span>
+                        <p class="my-1">{{ $property->unit->house_number ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Meter Number</span>
+                        <p class="my-1">{{ $property->unit->meter_number ?? 'N/A' }}</p>
+                    </div>
+                </div>
+            </div>
+
+        @endif
+
 
         <div class="card-body">
             <div class="card-header">

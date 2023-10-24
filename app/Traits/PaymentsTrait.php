@@ -2,31 +2,30 @@
 
 namespace App\Traits;
 
-use App\Enum\PropertyTypeStatus;
-use Carbon\Carbon;
-use App\Models\ZmBill;
-use App\Events\SendSms;
-use App\Models\TaxType;
 use App\Enum\BillStatus;
 use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
-use App\Models\BusinessType;
-use App\Models\ZmBillChange;
+use App\Events\SendSms;
 use App\Jobs\SendZanMalipoSMS;
-use App\Models\TransactionFee;
 use App\Models\BusinessTaxType;
-use App\Models\TaxAudit\TaxAudit;
+use App\Models\BusinessType;
+use App\Models\Investigation\TaxInvestigation;
+use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Returns\Port\PortReturn;
+use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\Vat\SubVat;
+use App\Models\TaxAudit\TaxAudit;
+use App\Models\TaxType;
+use App\Models\TransactionFee;
+use App\Models\ZmBill;
+use App\Models\ZmBillChange;
+use App\Services\Api\ZanMalipoInternalService;
 use App\Services\ZanMalipo\ZmCore;
+use App\Services\ZanMalipo\ZmResponse;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Returns\ReturnStatus;
-use Illuminate\Support\Facades\Auth;
-use App\Services\ZanMalipo\ZmResponse;
-use App\Models\Returns\Port\PortReturn;
-use App\Models\Investigation\TaxInvestigation;
-use App\Services\Api\ZanMalipoInternalService;
-use App\Models\Returns\Petroleum\PetroleumReturn;
 
 
 trait PaymentsTrait
@@ -40,7 +39,7 @@ trait PaymentsTrait
     public function regenerateControlNo(ZmBill $bill): bool
     {
         $this->verify($bill);
-        
+
         DB::beginTransaction();
 
         try {
@@ -55,11 +54,11 @@ trait PaymentsTrait
 
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
-                $bill->zan_status       = 'pending';
-                $bill->control_number   = rand(2000070001000, 2000070009999);
+                $bill->zan_status = 'pending';
+                $bill->control_number = rand(2000070001000, 2000070009999);
                 $bill->save();
 
-                $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
+                $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
                 $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
 
                 event(new SendSms(SendZanMalipoSMS::SERVICE, null, [
@@ -90,19 +89,19 @@ trait PaymentsTrait
         $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->where('business_id', $return->business_id)->firstOrFail();
         $exchange_rate = $this->getExchangeRate($tax_type->currency);
 
-        $payer_type     = get_class($business);
-        $payer_name     = $business->name ?? $business->taxpayer_name;
-        $payer_email    = $business->email;
-        $payer_phone    = $business->mobile;
-        $description    = "Return payment for {$payer_name} - {$return->financialMonth->name} {$return->financialMonth->year->code}";
+        $payer_type = get_class($business);
+        $payer_name = $business->name ?? $business->taxpayer_name;
+        $payer_email = $business->email;
+        $payer_phone = $business->mobile;
+        $description = "Return payment for {$payer_name} - {$return->financialMonth->name} {$return->financialMonth->year->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-        $currency       = $tax_type->currency;
+        $currency = $tax_type->currency;
         $createdby_type = get_class(Auth::user());
-        $createdby_id   = Auth::id();
-        $payer_id       = $business->id;
-        $expire_date    = Carbon::now()->addMonth()->toDateTimeString();
-        $billableId     = $return->id;
-        $billableType   = get_class($return);
+        $createdby_id = Auth::id();
+        $payer_id = $business->id;
+        $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+        $billableId = $return->id;
+        $billableType = get_class($return);
 
         $bill = ZmCore::createBill(
             $billableId,
@@ -132,11 +131,11 @@ trait PaymentsTrait
 
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $bill->zan_status       = 'pending';
-            $bill->control_number   = rand(2000070001000, 2000070009999);
+            $bill->zan_status = 'pending';
+            $bill->control_number = rand(2000070001000, 2000070009999);
             $bill->save();
 
-            $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
+            $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
             $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
 
             dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
@@ -152,7 +151,7 @@ trait PaymentsTrait
 
             return $cancelBill;
         } else {
-            $bill->status              = PaymentStatus::CANCELLED;
+            $bill->status = PaymentStatus::CANCELLED;
             $bill->cancellation_reason = $cancellationReason ?? '';
             $bill->save();
         }
@@ -172,35 +171,35 @@ trait PaymentsTrait
             $bill->save();
 
             $bill_change = ZmBillChange::create([
-                'zm_bill_id'  => $bill->id,
+                'zm_bill_id' => $bill->id,
                 'expire_date' => Carbon::parse($expireDate)->toDateTimeString(),
-                'category'    => 'update',
-                'staff_id'    => Auth::id(),
-                'ack_date'    => Carbon::now()->toDateTimeString(),
-                'ack_status'  => ZmResponse::SUCCESS,
+                'category' => 'update',
+                'staff_id' => Auth::id(),
+                'ack_date' => Carbon::now()->toDateTimeString(),
+                'ack_status' => ZmResponse::SUCCESS,
             ]);
         }
     }
 
     public function landLeaseGenerateControlNo($leasePayment, $billItems)
     {
-        $taxpayer      = $leasePayment->taxpayer;
-        $tax_type      = TaxType::where('code', TaxType::LAND_LEASE)->firstOrFail();
-        $exchange_rate  = $this->getExchangeRate('USD');
+        $taxpayer = $leasePayment->taxpayer;
+        $tax_type = TaxType::where('code', TaxType::LAND_LEASE)->firstOrFail();
+        $exchange_rate = $this->getExchangeRate('USD');
 
-        $payer_type     = get_class($taxpayer);
-        $payer_name     = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
-        $payer_email    = $taxpayer->email;
-        $payer_phone    = $taxpayer->mobile;
-        $description    = "Payment for Land Lease with DP number {$leasePayment->landLease->dp_number}";
+        $payer_type = get_class($taxpayer);
+        $payer_name = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
+        $payer_email = $taxpayer->email;
+        $payer_phone = $taxpayer->mobile;
+        $description = "Payment for Land Lease with DP number {$leasePayment->landLease->dp_number}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-        $currency       = 'USD';
+        $currency = 'USD';
         $createdby_type = get_class(Auth::user());
-        $createdby_id   = Auth::id();
-        $payer_id       = $taxpayer->id;
-        $expire_date    = Carbon::now()->addMonth()->toDateTimeString();
-        $billableId     = $leasePayment->id;
-        $billableType   = get_class($leasePayment);
+        $createdby_id = Auth::id();
+        $payer_id = $taxpayer->id;
+        $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+        $billableId = $leasePayment->id;
+        $billableType = get_class($leasePayment);
 
         $bill = ZmCore::createBill(
             $billableId,
@@ -230,8 +229,8 @@ trait PaymentsTrait
 
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $bill->zan_status       = 'pending';
-            $bill->control_number   = rand(2000070001000, 2000070009999);
+            $bill->zan_status = 'pending';
+            $bill->control_number = rand(2000070001000, 2000070009999);
             $bill->save();
 
             // $this->flash('success', 'Your landLease was submitted, you will receive your payment information shortly - test');
@@ -247,10 +246,10 @@ trait PaymentsTrait
      */
     public function getTransactionFee($amount, $currency, $exchangeRate = null)
     {
-        if (!config('modulesconfig.charges_inclusive')){
+        if (!config('modulesconfig.charges_inclusive')) {
             return 0;
         }
-        
+
         if ($currency != 'TZS' && (!is_numeric($exchangeRate) || $exchangeRate <= 0)) {
             throw new \Exception('Please provide exchange rate for non TZS currency');
         }
@@ -260,7 +259,7 @@ trait PaymentsTrait
         }
 
         $transactionFee = TransactionFee::whereNull('maximum_amount')->select('minimum_amount', 'fee')->first();
-        if($transactionFee == null){
+        if ($transactionFee == null) {
             return 0;
         }
         $minFee = $transactionFee->minimum_amount;
@@ -272,7 +271,7 @@ trait PaymentsTrait
             $fee = TransactionFee::where('minimum_amount', '<=', $amount)->where('maximum_amount', '>=', $amount)->pluck('fee')->firstOrFail();
             $fee = $fee * $amount;
         }
-        
+
         if ($currency != 'TZS') {
             $fee = round($fee / $exchangeRate, 2);
         }
@@ -305,8 +304,8 @@ trait PaymentsTrait
 
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $bill->zan_status       = 'pending';
-            $bill->control_number   = rand(2000070001000, 2000070009999);
+            $bill->zan_status = 'pending';
+            $bill->control_number = rand(2000070001000, 2000070009999);
             $bill->save();
 
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly - test');
@@ -325,15 +324,15 @@ trait PaymentsTrait
 
         $business = $debt->business;
 
-        $payer_type     = get_class($business);
-        $payer_name     = $business->name ?? $business->taxpayer_name;
-        $payer_email    = $business->email;
-        $payer_phone    = $business->mobile;
-        $description    = "{$debt->taxtype->name} Debt Payment for {$payer_name} {$debt->location->name} on {$debt->financialMonth->name} {$debt->financialMonth->year->code}";
+        $payer_type = get_class($business);
+        $payer_name = $business->name ?? $business->taxpayer_name;
+        $payer_email = $business->email;
+        $payer_phone = $business->mobile;
+        $description = "{$debt->taxtype->name} Debt Payment for {$payer_name} {$debt->location->name} on {$debt->financialMonth->name} {$debt->financialMonth->year->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-        $currency       = $debt->currency;
+        $currency = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
-        $createdby_id   = Auth::id() != null ? Auth::id() : null;
+        $createdby_id = Auth::id() != null ? Auth::id() : null;
         $exchange_rate = $this->getExchangeRate($debt->currency);
         $payer_id = $business->id;
         $expire_date = $debt->curr_payment_due_date;
@@ -369,8 +368,8 @@ trait PaymentsTrait
 
             // Simulate successful control no generation
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status       = 'pending';
-            $zmBill->control_number   = rand(2000070001000, 2000070009999);
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = rand(2000070001000, 2000070009999);
             $zmBill->save();
         }
     }
@@ -388,51 +387,51 @@ trait PaymentsTrait
 
         if ($debt->principal_amount > 0) {
             $billItems[] = [
-                'billable_id'         => $debt->id,
-                'billable_type'       => get_class($debt),
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
                 'use_item_ref_on_pay' => 'N',
-                'amount'              => $debt->principal_amount,
-                'currency'            => $debt->currency,
-                'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $debt->tax_type_id,
+                'amount' => $debt->principal_amount,
+                'currency' => $debt->currency,
+                'gfs_code' => $tax_type->gfs_code,
+                'tax_type_id' => $debt->tax_type_id,
             ];
         }
 
         if ($debt->penalty_amount > 0) {
             $billItems[] = [
-                'billable_id'         => $debt->id,
-                'billable_type'       => get_class($debt),
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
                 'use_item_ref_on_pay' => 'N',
-                'amount'              => $debt->penalty_amount,
-                'currency'            => $debt->currency,
-                'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $taxTypes->where('code', TaxType::PENALTY)->firstOrFail()->id,
+                'amount' => $debt->penalty_amount,
+                'currency' => $debt->currency,
+                'gfs_code' => $tax_type->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->firstOrFail()->id,
             ];
         }
 
         if ($debt->interest_amount > 0) {
             $billItems[] = [
-                'billable_id'         => $debt->id,
-                'billable_type'       => get_class($debt),
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
                 'use_item_ref_on_pay' => 'N',
-                'amount'              => $debt->interest_amount,
-                'currency'            => $debt->currency,
-                'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $taxTypes->where('code', TaxType::INTEREST)->firstOrFail()->id,
+                'amount' => $debt->interest_amount,
+                'currency' => $debt->currency,
+                'gfs_code' => $tax_type->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->firstOrFail()->id,
             ];
         }
 
         $business = $debt->business;
 
-        $payer_type     = get_class($business);
-        $payer_name     = $business->name ?? $business->taxpayer_name;
-        $payer_email    = $business->email;
-        $payer_phone    = $business->mobile;
-        $description    = "{$debt->taxtype->name} Debt Payment for {$payer_name} {$debt->location->name}";
+        $payer_type = get_class($business);
+        $payer_name = $business->name ?? $business->taxpayer_name;
+        $payer_email = $business->email;
+        $payer_phone = $business->mobile;
+        $description = "{$debt->taxtype->name} Debt Payment for {$payer_name} {$debt->location->name}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-        $currency       = $debt->currency;
+        $currency = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
-        $createdby_id   = Auth::id() != null ? Auth::id() : null;
+        $createdby_id = Auth::id() != null ? Auth::id() : null;
         $exchange_rate = $this->getExchangeRate($debt->currency);
         $payer_id = $business->id;
         $expire_date = $debt->curr_payment_due_date;
@@ -468,8 +467,8 @@ trait PaymentsTrait
 
             // Simulate successful control no generation
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status       = 'pending';
-            $zmBill->control_number   = rand(2000070001000, 2000070009999);
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = rand(2000070001000, 2000070009999);
             $zmBill->save();
         }
     }
@@ -480,13 +479,13 @@ trait PaymentsTrait
 
         if ($assessment->outstanding_amount > 0) {
             $billItems[] = [
-                'billable_id'         => $assessment->id,
-                'billable_type'       => get_class($assessment),
+                'billable_id' => $assessment->id,
+                'billable_type' => get_class($assessment),
                 'use_item_ref_on_pay' => 'N',
-                'amount'              => $assessment->outstanding_amount,
-                'currency'            => $assessment->currency,
-                'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $tax_type->id,
+                'amount' => $assessment->outstanding_amount,
+                'currency' => $assessment->currency,
+                'gfs_code' => $tax_type->gfs_code,
+                'tax_type_id' => $tax_type->id,
             ];
         }
 
@@ -502,15 +501,15 @@ trait PaymentsTrait
         } else {
             $assessmentLocations = 'Business location';
         }
-        $payer_type     = get_class($business);
-        $payer_name     = $business->name ?? $business->taxpayer_name;
-        $payer_email    = $business->email;
-        $payer_phone    = $business->mobile;
-        $description    = "{$assessment->taxtype->name} dispute waiver for {$payer_name} in {$assessmentLocations}";
+        $payer_type = get_class($business);
+        $payer_name = $business->name ?? $business->taxpayer_name;
+        $payer_email = $business->email;
+        $payer_phone = $business->mobile;
+        $description = "{$assessment->taxtype->name} dispute waiver for {$payer_name} in {$assessmentLocations}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-        $currency       = $assessment->currency;
+        $currency = $assessment->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
-        $createdby_id   = Auth::id() != null ? Auth::id() : null;
+        $createdby_id = Auth::id() != null ? Auth::id() : null;
         $exchange_rate = $this->getExchangeRate($assessment->currency);
         $payer_id = $business->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
@@ -546,8 +545,8 @@ trait PaymentsTrait
 
             // Simulate successful control no generation
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status       = 'pending';
-            $zmBill->control_number   = rand(2000070001000, 2000070009999);
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = rand(2000070001000, 2000070009999);
             $zmBill->save();
         }
     }
@@ -565,7 +564,8 @@ trait PaymentsTrait
         }
     }
 
-    public function generateReturnBillItems($tax_return) {
+    public function generateReturnBillItems($tax_return)
+    {
         $taxTypes = TaxType::all();
         if ($tax_return->return_type != PortReturn::class) {
             $taxType = TaxType::findOrFail($tax_return->tax_type_id);
@@ -594,16 +594,16 @@ trait PaymentsTrait
             if (!$tax_return->has_claim) {
                 if ($tax_return->principal > 0) {
                     $billItems[] = [
-                            'billable_id'         => $tax_return->id,
-                            'billable_type'       => get_class($tax_return),
-                            'use_item_ref_on_pay' => 'N',
-                            'amount'              => $tax_return->principal,
-                            'currency'            => $tax_return->currency,
-                            'gfs_code'            => $taxType->gfs_code,
-                            'tax_type_id'         => $tax_return->tax_type_id,
+                        'billable_id' => $tax_return->id,
+                        'billable_type' => get_class($tax_return),
+                        'use_item_ref_on_pay' => 'N',
+                        'amount' => $tax_return->principal,
+                        'currency' => $tax_return->currency,
+                        'gfs_code' => $taxType->gfs_code,
+                        'tax_type_id' => $tax_return->tax_type_id,
                     ];
                 }
-            } 
+            }
         }
 
         if ($tax_return->penalty > 0) {
@@ -642,89 +642,90 @@ trait PaymentsTrait
         }
 
         if ($tax_return->return_type == PetroleumReturn::class) {
-                if ($tax_return->rdf_tax > 0) {
-                    $rdfTax = $taxTypes->where('code', TaxType::RDF)->firstOrFail();
-                    $billItems[] = [
-                        'billable_id' => $tax_return->id,
-                        'billable_type' => get_class($tax_return),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $tax_return->rdf_tax,
-                        'currency' => $tax_return->currency,
-                        'gfs_code' => $rdfTax->gfs_code,
-                        'tax_type_id' => $rdfTax->id
-                    ];
-                }
-                if ($tax_return->road_lincence_fee > 0) {
-                    $rlfTax = $taxTypes->where('code', TaxType::ROAD_LICENSE_FEE)->firstOrFail();
-                    $billItems[] = [
-                        'billable_id' => $tax_return->id,
-                        'billable_type' => get_class($tax_return),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $tax_return->road_lincence_fee,
-                        'currency' => $tax_return->currency,
-                        'gfs_code' => $rlfTax->gfs_code,
-                        'tax_type_id' => $rlfTax->id
-                    ];
-                }
+            if ($tax_return->rdf_tax > 0) {
+                $rdfTax = $taxTypes->where('code', TaxType::RDF)->firstOrFail();
+                $billItems[] = [
+                    'billable_id' => $tax_return->id,
+                    'billable_type' => get_class($tax_return),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $tax_return->rdf_tax,
+                    'currency' => $tax_return->currency,
+                    'gfs_code' => $rdfTax->gfs_code,
+                    'tax_type_id' => $rdfTax->id
+                ];
+            }
+            if ($tax_return->road_lincence_fee > 0) {
+                $rlfTax = $taxTypes->where('code', TaxType::ROAD_LICENSE_FEE)->firstOrFail();
+                $billItems[] = [
+                    'billable_id' => $tax_return->id,
+                    'billable_type' => get_class($tax_return),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $tax_return->road_lincence_fee,
+                    'currency' => $tax_return->currency,
+                    'gfs_code' => $rlfTax->gfs_code,
+                    'tax_type_id' => $rlfTax->id
+                ];
+            }
         } elseif ($tax_return->return_type == PortReturn::class) {
-                if ($tax_return->airport_service_charge > 0) {
-                    $airportServiceChargeTax = $taxTypes->where('code', TaxType::AIRPORT_SERVICE_CHARGE)->firstOrFail();
-                    $billItems[] = [
-                        'billable_id' => $tax_return->id,
-                        'billable_type' => get_class($tax_return),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $tax_return->airport_service_charge,
-                        'currency' => $tax_return->currency,
-                        'gfs_code' => $airportServiceChargeTax->gfs_code,
-                        'tax_type_id' => $airportServiceChargeTax->id
-                    ];
-                }
+            if ($tax_return->airport_service_charge > 0) {
+                $airportServiceChargeTax = $taxTypes->where('code', TaxType::AIRPORT_SERVICE_CHARGE)->firstOrFail();
+                $billItems[] = [
+                    'billable_id' => $tax_return->id,
+                    'billable_type' => get_class($tax_return),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $tax_return->airport_service_charge,
+                    'currency' => $tax_return->currency,
+                    'gfs_code' => $airportServiceChargeTax->gfs_code,
+                    'tax_type_id' => $airportServiceChargeTax->id
+                ];
+            }
 
-                if ($tax_return->airport_safety_fee > 0) {
-                    $airportSafetyFeeTax = $taxTypes->where('code', TaxType::AIRPORT_SAFETY_FEE)->firstOrFail();
-                    $billItems[] = [
-                        'billable_id' => $tax_return->id,
-                        'billable_type' => get_class($tax_return),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $tax_return->airport_safety_fee,
-                        'currency' => $tax_return->currency,
-                        'gfs_code' => $airportSafetyFeeTax->gfs_code,
-                        'tax_type_id' => $airportSafetyFeeTax->id
-                    ];
-                }
+            if ($tax_return->airport_safety_fee > 0) {
+                $airportSafetyFeeTax = $taxTypes->where('code', TaxType::AIRPORT_SAFETY_FEE)->firstOrFail();
+                $billItems[] = [
+                    'billable_id' => $tax_return->id,
+                    'billable_type' => get_class($tax_return),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $tax_return->airport_safety_fee,
+                    'currency' => $tax_return->currency,
+                    'gfs_code' => $airportSafetyFeeTax->gfs_code,
+                    'tax_type_id' => $airportSafetyFeeTax->id
+                ];
+            }
 
-                if ($tax_return->seaport_service_charge > 0) {
-                    $seaportServiceChargeTax = $taxTypes->where('code', TaxType::SEAPORT_SERVICE_CHARGE)->firstOrFail();
-                    $billItems[] = [
-                        'billable_id' => $tax_return->id,
-                        'billable_type' => get_class($tax_return),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $tax_return->seaport_service_charge,
-                        'currency' => $tax_return->currency,
-                        'gfs_code' => $seaportServiceChargeTax->gfs_code,
-                        'tax_type_id' => $seaportServiceChargeTax->id
-                    ];
-                }
+            if ($tax_return->seaport_service_charge > 0) {
+                $seaportServiceChargeTax = $taxTypes->where('code', TaxType::SEAPORT_SERVICE_CHARGE)->firstOrFail();
+                $billItems[] = [
+                    'billable_id' => $tax_return->id,
+                    'billable_type' => get_class($tax_return),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $tax_return->seaport_service_charge,
+                    'currency' => $tax_return->currency,
+                    'gfs_code' => $seaportServiceChargeTax->gfs_code,
+                    'tax_type_id' => $seaportServiceChargeTax->id
+                ];
+            }
 
-                if ($tax_return->seaport_transport_charge > 0) {
-                    $seaportTransportChargeTax = $taxTypes->where('code', TaxType::SEAPORT_TRANSPORT_CHARGE)->firstOrFail();
-                    $billItems[] = [
-                        'billable_id' => $tax_return->id,
-                        'billable_type' => get_class($tax_return),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $tax_return->seaport_transport_charge,
-                        'currency' => $tax_return->currency,
-                        'gfs_code' => $seaportTransportChargeTax->gfs_code,
-                        'tax_type_id' => $seaportTransportChargeTax->id
-                    ];
-                }
+            if ($tax_return->seaport_transport_charge > 0) {
+                $seaportTransportChargeTax = $taxTypes->where('code', TaxType::SEAPORT_TRANSPORT_CHARGE)->firstOrFail();
+                $billItems[] = [
+                    'billable_id' => $tax_return->id,
+                    'billable_type' => get_class($tax_return),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $tax_return->seaport_transport_charge,
+                    'currency' => $tax_return->currency,
+                    'gfs_code' => $seaportTransportChargeTax->gfs_code,
+                    'tax_type_id' => $seaportTransportChargeTax->id
+                ];
+            }
 
         }
 
         return $billItems;
     }
 
-    public function generateReturnControlNumber($return) {
+    public function generateReturnControlNumber($return)
+    {
         $business = $return->business;
         $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->where('business_id', $return->business_id)->firstOrFail();
         $exchange_rate = $this->getExchangeRate($return->currency);
@@ -769,7 +770,7 @@ trait PaymentsTrait
                 $createdby_type,
                 $billItems
             );
-    
+
             if (config('app.env') != 'local') {
                 $sendBill = (new ZanMalipoInternalService)->createBill($bill);
             } else {
@@ -778,16 +779,16 @@ trait PaymentsTrait
                 $return->return->status = ReturnStatus::CN_GENERATED;
                 $return->return->save();
                 $return->save();
-    
+
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = 'pending';
                 $bill->control_number = rand(2000070001000, 2000070009999);
                 $bill->save();
-    
-                $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s") ;
+
+                $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
                 $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
-    
+
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
         }
@@ -904,20 +905,88 @@ trait PaymentsTrait
         }
     }
 
-    public function generatePropertyTaxBillItems($property) {
-        $billItems = [];
+    public function generatePropertyTaxControlNumber($propertyPayment)
+    {
+        $taxType = TaxType::where('code', TaxType::PROPERTY_TAX)->firstOrFail();
 
-        if ($property->type === PropertyTypeStatus::HOTEL) {
-            $billItems[] = [
-                'billable_id'         => $property->id,
-                'billable_type'       => get_class($property),
-                'use_item_ref_on_pay' => 'N',
-                'amount'              => $property->star->charged_amount,
-                'currency'            => $property->star->currency->iso,
-                'gfs_code'            => $taxType->gfs_code,
-                'tax_type_id'         => $tax_return->tax_type_id,
-            ];
+        $property = $propertyPayment->property;
+
+        $exchange_rate = $this->getExchangeRate($propertyPayment->currency->iso);
+
+        $payer_type = get_class($property->responsible);
+        $payer_id = $property->responsible->id;
+        $payer_name = $property->responsible->first_name . ' ' . $property->responsible->last_name;
+        $payer_email = $property->responsible->email;
+        $payer_phone = $property->responsible->mobile;
+        $description = "Property Tax Payment for {$payer_name} - {$propertyPayment->year->code}";
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
+        $currency = $propertyPayment->currency->iso;
+        $createdby_type = get_class(Auth::user());
+        $createdby_id = Auth::id();
+        $expire_date = $propertyPayment->curr_payment_date;
+        $billableId = $propertyPayment->id;
+        $billableType = get_class($propertyPayment);
+
+        $billItems = $this->generatePropertyTaxBillItems($propertyPayment, $taxType);
+
+        if (!$billItems) {
+            throw new \Exception('No bill items generated');
         }
+
+        $bill = ZmCore::createBill(
+            $billableId,
+            $billableType,
+            $taxType->tax_type_id,
+            $payer_id,
+            $payer_type,
+            $payer_name,
+            $payer_email,
+            $payer_phone,
+            $expire_date,
+            $description,
+            $payment_option,
+            $currency,
+            $exchange_rate,
+            $createdby_id,
+            $createdby_type,
+            $billItems
+        );
+
+        if (config('app.env') != 'local') {
+            $sendBill = (new ZanMalipoInternalService)->createBill($bill);
+        } else {
+            // We are local
+            $propertyPayment->payment_status = BillStatus::CN_GENERATED;
+            $propertyPayment->save();
+
+            // Simulate successful control no generation
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = rand(2000070001000, 2000070009999);
+            $bill->save();
+
+            $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+
+            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
+
+            $this->flash('success', 'Your return was submitted, you will receive your payment information shortly - test');
+        }
+    }
+
+    public function generatePropertyTaxBillItems($propertyPayment, $taxType)
+    {
+        $property = $propertyPayment->property;
+
+        $billItems[] = [
+            'billable_id' => $propertyPayment->id,
+            'billable_type' => get_class($property),
+            'use_item_ref_on_pay' => 'N',
+            'amount' => $propertyPayment->amount,
+            'currency' => $propertyPayment->currency->iso,
+            'gfs_code' => $taxType->gfs_code,
+            'tax_type_id' => $taxType->id,
+        ];
 
         return $billItems;
     }

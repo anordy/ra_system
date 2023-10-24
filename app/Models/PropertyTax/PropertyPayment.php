@@ -4,6 +4,7 @@ namespace App\Models\PropertyTax;
 
 use App\Models\Currency;
 use App\Models\FinancialYear;
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,6 +25,21 @@ class PropertyPayment extends Model
 
     public function currency(){
         return $this->belongsTo(Currency::class, 'currency_id');
+    }
+
+    public function bills()
+    {
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function bill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable');
+    }
+
+    public function latestBill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 
 }
