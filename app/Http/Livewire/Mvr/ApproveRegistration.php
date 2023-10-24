@@ -11,6 +11,8 @@ use App\Models\MvrPersonalizedPlateNumberRegistration;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
+use App\Models\Taxpayer;
+use App\Models\Tra\Tin;
 use App\Models\ZmBill;
 use App\Services\TRA\ServiceRequest;
 use App\Services\ZanMalipo\ZmCore;
@@ -109,15 +111,22 @@ class ApproveRegistration extends Component
             $amount = $fee->amount;
             $gfs_code = $fee->gfs_code;
 
+            $owner = Taxpayer::where('reference_no', 'ZU200005')->first();
+
+            if (!$owner) {
+                $this->customAlert('error', 'Owner/Agent must be linked to this registration');
+                return;
+            }
+
             $zmBill = ZmCore::createBill(
                 $registration->id,
                 get_class($registration),
                 6,
-                $mv->agent->id,
-                get_class($mv->agent),
-                $mv->agent->taxpayer->fullname(),
-                $mv->agent->taxpayer->email,
-                ZmCore::formatPhone($mv->agent->taxpayer->mobile),
+                $owner->id,
+                get_class($owner),
+                $mv->chassis->importer_name,
+                $owner->email,
+                ZmCore::formatPhone($owner->mobile),
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
                 ZmCore::PAYMENT_OPTION_EXACT,
@@ -140,7 +149,7 @@ class ApproveRegistration extends Component
                     ]
                 ]
             );
-            if (config('app.env') != 'local') {
+            if (config('app.env') === 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
                     session()->flash('success', 'A control number request was sent successful.');
@@ -158,7 +167,7 @@ class ApproveRegistration extends Component
             return redirect()->to(route('mvr.show', encrypt($this->motor_vehicle_id)));
         } catch (Exception $e) {
             DB::rollBack();
-            report($e);
+            Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

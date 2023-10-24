@@ -8,11 +8,13 @@
             <div class="d-flex justify-content-between align-items-center bg-white">
                 <div class="text-uppercase font-weight-bold">Internal Business Information Change
                 </div>
+                @if (\Illuminate\Support\Facades\Auth::user()->role->name === 'Registration Manager')
                 <div class="card-tools">
                     <button class="btn btn-primary btn-sm px-3" onclick="Livewire.emit('showModal', 'internal-info-change.initiate-change-modal')">
                         <i class="bi bi-plus-circle-fill pr-2"></i>Initiate Change
                     </button>
-                </div>
+                </div>  
+                @endif
             </div>
         </div>
 

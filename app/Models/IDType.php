@@ -14,6 +14,7 @@ class IDType extends Model
     public const ZANID = 'ZANID';
     public const NIDA_ZANID = 'NIDA & ZANID';
     public const PASSPORT = 'PASSPORT';
+    public const TIN = 'TIN';
 
     protected $table = 'id_types';
 

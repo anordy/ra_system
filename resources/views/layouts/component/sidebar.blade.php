@@ -797,25 +797,25 @@
                     TRA Information
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('tra*') ? 'show' : '' }}" id="tra">
-                    @can('tra-information-tin')
+                    @can('tra-information-view-tin')
                         <li class="{{ request()->is('tra/tins*') ? 'active' : '' }}">
                             <a href="{{ route('tra.tins') }}">TINs Information</a>
                         </li>
                     @endcan
 
-                    @can('tra-information-chassis-number')
+                    @can('tra-information-view-chassis-number')
                         <li class="{{ request()->is('tra/chassis*') ? 'active' : '' }}">
                             <a href="{{ route('tra.chassis') }}">Chassis Numbers</a>
                         </li>
                     @endcan
 
-                    @can('tra-information-exited-good')
+                    @can('tra-information-view-exited-good')
                         <li class="{{ request()->is('tra/goods*') ? 'active' : '' }}">
                             <a href="{{ route('tra.goods') }}">Exited Goods</a>
                         </li>
                     @endcan
 
-                    @can('tra-information-efdms-receipt')
+                    @can('tra-information-view-efdms-receipt')
                         <li class="{{ request()->is('tra/receipts*') ? 'active' : '' }}">
                             <a href="{{ route('tra.receipts') }}">EFDMS Receipts</a>
                         </li>
@@ -933,44 +933,6 @@
                     @can('setting-region-view')
                         <li class="{{ request()->is('settings/tax-regions*') ? 'active' : '' }}">
                             <a href="{{ route('settings.tax-regions.index') }}">Tax Regions</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-make-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrMake') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrMake') }}">Motor Vehicle Make</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-model-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrModel') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrModel') }}">Motor Vehicle Model</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-transmission-type-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrTransmissionType') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransmissionType') }}">Motor Vehicle
-                                Transmission</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-fuel-type-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrFuelType') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrFuelType') }}">Motor vehicle Fuel
-                                Type</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-class-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrClass') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrClass') }}">Motor Vehicle Class</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-color-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrColor') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrColor') }}">Motor Vehicle Color</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-body-type-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrBodyType') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrBodyType') }}">Motor Vehicle Body
-                                Type</a>
                         </li>
                     @endcan
                     @can('setting-mvr-plate-size-view')

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Disputes\Objection;
 use App\Models\Disputes\Waiver;
 use App\Models\Returns\Vat\VatReturn;
+use App\Models\Tra\Tin;
 use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -183,6 +184,10 @@ class Business extends Model implements Auditable
             array_push($locationIds, $location->id);
         }
         return $locationIds;
+    }
+
+    public function tininformation() {
+        return $this->belongsTo(Tin::class, 'tin', 'tin');
     }
     
 }

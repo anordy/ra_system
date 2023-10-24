@@ -21,7 +21,7 @@ class RegisteredMotorVehiclesTable extends DataTableComponent
             ->whereIn('name',[MvrRegistrationStatus::STATUS_REGISTERED])
             ->pluck('id')
             ->toArray();
-		return MvrMotorVehicle::query()->distinct()->whereIn('mvr_registration_status_id',$in_statuses);
+		return MvrMotorVehicle::query()->whereIn('mvr_registration_status_id',$in_statuses);
 	}
 
 	public function configure(): void
@@ -37,35 +37,31 @@ class RegisteredMotorVehiclesTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            // Column::make("Plate Number")
-            //     ->format(fn($id, $row)=>MvrMotorVehicle::query()->find($row->id)->current_registration->plate_number??'')
-            //     ->sortable(),
-            Column::make("Registration Type")
-                ->format(fn($id, $row)=> $row->current_registration->registration_type->name??'')
+             Column::make("Plate Number", "current_registration.plate_number")
+                 ->sortable(),
+            Column::make("Registration Type", "current_registration.registration_type.name")
                 ->sortable(),
             Column::make("Date", "registration_date")
                 ->sortable(),
             Column::make("Chassis No", "chassis_number")
                 ->sortable(),
-            Column::make("Axles", "number_of_axle")
+            Column::make("YoM", "chassis.year")
                 ->sortable(),
-            Column::make("YoM", "year_of_manufacture")
-                ->sortable(),
-	        Column::make("Engine Capacity", "engine_capacity")
+	        Column::make("Engine Capacity", "chassis.engine_cubic_capacity")
 	          ->sortable(),
-           Column::make("Model", "model.name")
+           Column::make("Model", "chassis.model_type")
                 ->sortable(),
-            Column::make("Make", "model.make.name")
+            Column::make("Make", "chassis.make")
                 ->sortable(),
             Column::make("Registration Status", "registration_status.name")
                 ->sortable(),
-            // Column::make('Action', 'id')
-            //     ->format(function ($value) {
-            //         $url = route('mvr.show',encrypt($value));
-            //         return <<< HTML
-            //         <a class="btn btn-outline-primary btn-sm" href="$url"><i class="fa fa-eye"></i>View</a>
-            //     HTML;})
-            //     ->html()
+             Column::make('Action', 'id')
+                 ->format(function ($value) {
+                     $url = route('mvr.show',encrypt($value));
+                     return <<< HTML
+                     <a class="btn btn-outline-primary btn-sm" href="$url"><i class="fa fa-eye"></i>View</a>
+                 HTML;})
+                 ->html()
         ];
     }
 

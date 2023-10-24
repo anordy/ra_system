@@ -2,19 +2,20 @@
 
 namespace App\Console\Commands;
 
+use Exception;
+use App\Enum\VettingStatus;
 use App\Enum\ReturnCategory;
 use App\Jobs\Bill\CancelBill;
-use App\Jobs\Debt\GenerateAssessmentDebtControlNo;
-use App\Jobs\Debt\GenerateControlNo;
-use App\Models\Returns\ReturnStatus;
-use App\Models\Returns\TaxReturn;
-use App\Models\TaxAssessments\TaxAssessment;
 use App\Traits\PaymentsTrait;
 use App\Traits\PenaltyForDebt;
-use Exception;
 use Illuminate\Console\Command;
+use App\Models\Returns\TaxReturn;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\Debt\GenerateControlNo;
+use App\Models\Returns\ReturnStatus;
+use App\Models\TaxAssessments\TaxAssessment;
+use App\Jobs\Debt\GenerateAssessmentDebtControlNo;
 
 class DailyDebtPenaltyInterest extends Command
 {
@@ -72,6 +73,7 @@ class DailyDebtPenaltyInterest extends Command
         ')
             ->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
             ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0") // This determines if the payment due date has reached
+            ->where('vetting_status', VettingStatus::VETTED)
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE]) // Get all non paid returns
             ->get();
 

@@ -106,7 +106,6 @@ class MvrMotorVehicleRegistration extends Model implements Auditable
         $last_reg = MvrMotorVehicleRegistration::query()
             ->join('mvr_motor_vehicles','mvr_motor_vehicles.id','=','mvr_motor_vehicle_id')
             ->where(['mvr_registration_type_id' => $reg_type->id])
-            ->where(['mvr_class_id' => $class->id])
             ->whereNotNull('plate_number')
             ->orderBy('plate_number', 'desc')
             ->lockForUpdate()
