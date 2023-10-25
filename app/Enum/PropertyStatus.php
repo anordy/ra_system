@@ -8,6 +8,7 @@ class PropertyStatus implements Status
 {
     const PENDING = 'pending';
     const APPROVED = 'approved';
+    const CORRECTION = 'correction';
 
     public static function getConstants(): array
     {

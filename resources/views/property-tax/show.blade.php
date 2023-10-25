@@ -20,15 +20,20 @@
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Property Status</span>
                     <p class="my-1">
-                        @if ($property->status === 'approved')
+                        @if ($property->status === \App\Enum\PropertyStatus::APPROVED)
                             <span class="font-weight-bold text-success">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Approved
                             </span>
-                        @elseif($property->status === 'pending')
+                        @elseif($property->status === \App\Enum\PropertyStatus::PENDING)
                             <span class="font-weight-bold text-warning">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Pending
+                            </span>
+                        @elseif($property->status === \App\Enum\PropertyStatus::CORRECTION)
+                            <span class="font-weight-bold text-warning">
+                                <i class="bi bi-check-circle-fill mr-1"></i>
+                                On Correction
                             </span>
                         @else
                             <span class="font-weight-bold text-info">

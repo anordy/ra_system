@@ -3,19 +3,24 @@
 namespace App\Http\Livewire\PropertyTax;
 
 use App\Enum\PropertyStatus;
+use App\Models\PropertyTax\Condominium;
 use App\Models\PropertyTax\Property;
 use App\Traits\CustomAlert;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class RegisteredPropertiesTable extends DataTableComponent
+class PropertyTaxTable extends DataTableComponent
 {
     use CustomAlert;
+    public $status;
+    public function mount($status) {
+        $this->status = $status;
+    }
 
     public function builder(): Builder
     {
-        return Property::where('status', PropertyStatus::APPROVED)->orderByDesc('created_at');
+        return Property::where('status', $this->status)->orderByDesc('created_at');
     }
     public function configure(): void
     {

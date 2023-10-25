@@ -136,6 +136,8 @@ class PropertyTaxApprovalProcessing extends Component
             DB::beginTransaction();
             try {
 
+                $this->property->status = PropertyStatus::CORRECTION;
+                $this->property->save();
 
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
@@ -144,7 +146,7 @@ class PropertyTaxApprovalProcessing extends Component
                 //event(new SendSms(SendToCorrectionReturnSMS::SERVICE, $this->return));
                 //event(new SendMail(SendToCorrectionReturnMail::SERVICE, $this->return));
 
-                $this->flash('success', 'Application sent for correction', [], redirect()->back()->getTargetUrl());
+                $this->flash('success', 'Registration sent for correction', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error($e);
