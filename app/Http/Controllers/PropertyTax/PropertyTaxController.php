@@ -17,4 +17,8 @@ class PropertyTaxController extends Controller
         return view('property-tax.show', compact('property'));
     }
 
+    public function nextBills() {
+        return view('property-tax.next-financial-year-bills');
+    }
+
 }

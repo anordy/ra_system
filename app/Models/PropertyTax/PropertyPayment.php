@@ -15,6 +15,11 @@ class PropertyPayment extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'paid_at' => 'date',
+        'curr_payment_date' => 'date'
+    ];
+
     public function property(){
         return $this->belongsTo(Property::class, 'property_id');
     }
@@ -37,7 +42,7 @@ class PropertyPayment extends Model
         return $this->morphOne(ZmBill::class, 'billable');
     }
 
-    public function latestBill()
+    public function latestbill()
     {
         return $this->morphOne(ZmBill::class, 'billable')->latest();
     }

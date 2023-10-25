@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\BillStatus;
+use App\Enum\CondominiumStatus;
 use App\Enum\PropertyPaymentCategoryStatus;
 use App\Enum\PropertyStatus;
 use App\Enum\PropertyTypeStatus;
@@ -71,7 +72,7 @@ class PropertyTaxApprovalProcessing extends Component
 
                 // Calculate amount to be paid based on property type
                 if ($this->property->type === PropertyTypeStatus::HOTEL) {
-                    $amount = $this->property->star->charged_amount;
+                    $amount = $this->property->star->amount_charged;
                 } else if ($this->property->type === PropertyTypeStatus::CONDOMINIUM) {
                     if (!$this->property->unit) {
                         $this->customAlert('warning', 'Invalid condominium unit');
@@ -112,8 +113,8 @@ class PropertyTaxApprovalProcessing extends Component
                 $this->generatePropertyTaxControlNumber($propertyPayment);
 
                 // Send Notification
-                //event(new SendSms(SendPropertyTaxApprovalSMS::SERVICE, $this->property));
-                //event(new SendMail(SendPropertyTaxApprovalMail::SERVICE, $this->property));
+                event(new SendSms(SendPropertyTaxApprovalSMS::SERVICE, $this->property));
+                event(new SendMail(SendPropertyTaxApprovalMail::SERVICE, $this->property));
 
                 $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
@@ -137,6 +138,12 @@ class PropertyTaxApprovalProcessing extends Component
             try {
 
                 $this->property->status = PropertyStatus::CORRECTION;
+
+                if ($this->property->type === PropertyTypeStatus::CONDOMINIUM) {
+                    $this->property->unit->status = CondominiumStatus::UNREGISTERED;
+                    $this->property->unit->save();
+                }
+
                 $this->property->save();
 
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);

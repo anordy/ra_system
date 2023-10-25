@@ -149,6 +149,9 @@
                     <li class="{{ request()->is('property-tax/index') ? 'active' : '' }}">
                         <a href="{{ route('property-tax.index') }}">Properties Registrations</a>
                     </li>
+                    <li class="{{ request()->is('property-tax/next-bills') ? 'active' : '' }}">
+                        <a href="{{ route('property-tax.next.bills') }}">Next Bills Preview</a>
+                    </li>
                 </ul>
             </li>
 

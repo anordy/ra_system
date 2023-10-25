@@ -1,5 +1,5 @@
 <div class="card rounded-0">
-    <div class="card-header bg-white font-weight-bold">Bill Preview</div>
+    <div class="card-header bg-white font-weight-bold">Bill Preview per Annum</div>
     <div class="card-body">
         <table class="table normal-text mb-0">
             <tbody>
@@ -15,7 +15,7 @@
                     <th class="text-right">{{ number_format($hotelBill->amount_charged, 2) }}</th>
                 </tr>
                 <tr class="bg-secondary">
-                    <th colspan="2">Total Billed Amount</th>
+                    <th colspan="2">Total Billed Amount Per Annum</th>
                     <th class="text-right">{{ number_format($hotelBill->amount_charged, 2) }} {{ $hotelBill->currency->iso }}</th>
                 </tr>
             @endif
@@ -27,7 +27,7 @@
                     <th class="text-right">{{ number_format($condominiumBill, 2) }}</th>
                 </tr>
                 <tr class="bg-secondary">
-                    <th colspan="2">Total Billed Amount</th>
+                    <th colspan="2">Total Billed Amount Per Annum</th>
                     <th class="text-right">{{ number_format($condominiumBill, 2) }} TZS</th>
                 </tr>
             @endif

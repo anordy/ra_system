@@ -199,3 +199,8 @@ function getTaxTypeName($taxTypeId) {
 function getSubVatName($subVatId) {
     return \App\Models\Returns\Vat\SubVat::select('name')->find($subVatId)->name ?? '';
 }
+
+function formatEnum($string) {
+    $string = str_replace( '_', ' ', $string);
+    return ucwords($string);
+}
