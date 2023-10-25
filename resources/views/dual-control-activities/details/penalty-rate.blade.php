@@ -64,7 +64,7 @@
                     <th>Rate</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->rate : $old_values->rate }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? number_format($data->rate, 2) : number_format($old_values->rate, 2) }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -85,7 +85,7 @@
                     <th>Year</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->year : $old_values->year }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->year->code : $old_values->year->code }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -94,7 +94,7 @@
                         </td>
 
                         @if (compareDualControlValues(
-                            $result->action != \App\Models\DualControl::EDIT ? $data->year : $old_values->year, $new_values->year))
+                            $result->action != \App\Models\DualControl::EDIT ? $data->year->code : $old_values->year->code, $new_values->year->code))
                             <td class="table-success">NOT CHANGED</td>
                         @else
                             <td class="table-danger">CHANGED</td>

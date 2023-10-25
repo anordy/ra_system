@@ -30,11 +30,12 @@ class PenaltyRateAddModal extends Component
 
     protected $rules = [
         'configs.*.rate' => 'required|numeric',
-//        'financial_year_id' => 'required'
+        'financial_year_id' => 'required'
     ];
 
     protected $messages = [
         'configs.*.rate.required' => 'Rate is required.',
+        'financial_year_id.required' => 'financial year is required.',
     ];
 
     public function submit()
@@ -47,7 +48,7 @@ class PenaltyRateAddModal extends Component
         try {
             foreach ($this->configs as $config) {
                $penalty_rate = PenaltyRate::create([
-                    'financial_year_id' => 72,
+                    'financial_year_id' => $this->financial_year_id,
                     'code' => $config['code'],
                     'name' => $config['name'],
                     'rate' => $config['rate'],
@@ -56,6 +57,7 @@ class PenaltyRateAddModal extends Component
             }
 
             DB::commit();
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
