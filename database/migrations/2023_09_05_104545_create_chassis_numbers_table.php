@@ -29,7 +29,7 @@ class CreateChassisNumbersTable extends Migration
             $table->integer('gross_weight');
             $table->string('engine_number');
             $table->integer('passenger_capacity');
-            $table->string('purchase_day');
+            $table->string('purchase_day')->nullable();
             $table->string('color');
             $table->string('fuel_type');
             $table->string('owner_category');
@@ -42,6 +42,8 @@ class CreateChassisNumbersTable extends Migration
             $table->string('engine_hp_capacity')->nullable();
             $table->string('plate_number')->nullable();
             $table->string('filter_code')->nullable();
+            $table->boolean('tra_registration_synced')->nullable();
+            $table->boolean('tra_deregistration_synced')->nullable();
             $table->timestamps();
         });
     }
