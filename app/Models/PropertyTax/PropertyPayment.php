@@ -28,6 +28,10 @@ class PropertyPayment extends Model
         return $this->belongsTo(FinancialYear::class, 'financial_year_id');
     }
 
+    public function reminders(){
+        return $this->hasMany(PropertyPaymentReminder::class, 'property_payment_id');
+    }
+
     public function currency(){
         return $this->belongsTo(Currency::class, 'currency_id');
     }

@@ -114,6 +114,13 @@ return [
             'path' => storage_path('logs/verification/verification.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
-        ]
+        ],
+
+        'property-tax' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/jobs/property-tax/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+        ],
     ],
 ];

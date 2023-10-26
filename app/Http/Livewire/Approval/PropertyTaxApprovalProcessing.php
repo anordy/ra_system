@@ -16,6 +16,7 @@ use App\Models\FinancialYear;
 use App\Models\PropertyTax\PropertyPayment;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\PropertyTaxTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -25,7 +26,7 @@ use Livewire\Component;
 
 class PropertyTaxApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, PropertyTaxTrait;
 
     public $modelId;
     public $modelName;
@@ -61,38 +62,14 @@ class PropertyTaxApprovalProcessing extends Component
             try {
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
-                // Generate URN Number
+                // TODO: Generate URN Number
 
 
                 // Update Status
                 $this->property->status = PropertyStatus::APPROVED;
                 $this->property->save();
 
-                $amount = 0;
-
-                // Calculate amount to be paid based on property type
-                if ($this->property->type === PropertyTypeStatus::HOTEL) {
-                    $amount = $this->property->star->amount_charged;
-                } else if ($this->property->type === PropertyTypeStatus::CONDOMINIUM) {
-                    if (!$this->property->unit) {
-                        $this->customAlert('warning', 'Invalid condominium unit');
-                        return;
-                    }
-                    // TODO: Fetch from System Settings
-                    $amount = 10000;
-                } else if ($this->property->type === PropertyTypeStatus::RESIDENTIAL_STOREY || $this->property->type === PropertyTypeStatus::STOREY_BUSINESS) {
-
-                } else if ($this->property->type === PropertyTypeStatus::OTHER) {
-
-                } else {
-                    $this->customAlert('warning', 'Invalid property Type Provided');
-                    return;
-                }
-
-                if (!$amount || $amount < 0) {
-                    $this->customAlert('warning', 'Invalid payable amount');
-                    return;
-                }
+                $amount = $this->getPayableAmount($this->property);
 
                 // Generate Bill
                 $propertyPayment = PropertyPayment::create([

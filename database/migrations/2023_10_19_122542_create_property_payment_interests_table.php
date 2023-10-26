@@ -20,6 +20,7 @@ class CreatePropertyPaymentInterestsTable extends Migration
             $table->unsignedBigInteger('financial_month_id')->index();
             $table->decimal('amount', 20, 2);
             $table->decimal('interest', 20, 2);
+            $table->decimal('total_amount', 20, 2);
             $table->integer('period');
             $table->dateTime('payment_date');
             $table->softDeletes();

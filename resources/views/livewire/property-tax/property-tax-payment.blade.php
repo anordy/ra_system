@@ -25,6 +25,11 @@
                             <i class="bi bi-download mr-3"></i><u>Download Bill</u>
                         </a>
                     </p>
+                    <p class="my-1">
+                        <a target="_blank" href="{{ route('property-tax.bill', encrypt($payment->id)) }}" class="btn btn-primary btn-sm py-1 w-75 font-weight-bold">
+                            <i class="bi bi-download mr-3"></i><u>Download Property Tax Bill</u>
+                        </a>
+                    </p>
                     <button class="btn btn-secondary btn-sm py-1 w-75 font-weight-bold"
                         onclick="Livewire.emit('showModal', 'transfer-form.transfer-form-generator', '{{$payment->latestBill->currency}}', '{{  encrypt($payment->latestBill->id) }}')">
                         <i class="bi bi-file-earmark-text"></i>
