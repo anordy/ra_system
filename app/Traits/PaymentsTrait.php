@@ -913,12 +913,12 @@ trait PaymentsTrait
 
         $exchange_rate = $this->getExchangeRate($propertyPayment->currency->iso);
 
-        $payer_type = get_class($property->responsible);
-        $payer_id = $property->responsible->id;
-        $payer_name = $property->responsible->first_name . ' ' . $property->responsible->last_name;
-        $payer_email = $property->responsible->email;
-        $payer_phone = $property->responsible->mobile;
-        $description = "Property Tax Payment for {$payer_name} - {$propertyPayment->year->code}";
+        $payer_type = get_class($property->taxpayer);
+        $payer_id = $property->taxpayer->id;
+        $payer_name = $property->taxpayer->first_name . ' ' . $property->taxpayer->last_name;
+        $payer_email = $property->taxpayer->email;
+        $payer_phone = $property->taxpayer->mobile;
+        $description = "Property Tax Payment for {$property->urn} - {$propertyPayment->year->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = $propertyPayment->currency->iso;
         $createdby_type = get_class(Auth::user());
@@ -968,7 +968,9 @@ trait PaymentsTrait
             $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
             $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
 
-            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
+            if (env('APP_ENV') === 'production') {
+                dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
+            }
 
             $this->flash('success', 'Your return was submitted, you will receive your payment information shortly - test');
         }

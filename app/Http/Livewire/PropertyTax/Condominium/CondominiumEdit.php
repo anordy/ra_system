@@ -46,22 +46,22 @@ class CondominiumEdit extends Component
 
         if ($this->region_id){
             $this->districts = District::where('region_id', $this->region_id)
-                ->select('id', 'name')
+                ->select('id', 'name', 'region_id')
                 ->approved()
                 ->get();
         }
 
         if ($this->district_id){
-            $this->wards = Ward::where('district_id', $this->district_id)->select('id', 'name')
+            $this->wards = Ward::where('district_id', $this->district_id)->select('id', 'name', 'district_id')
                 ->approved()
                 ->get();
         }
 
         if ($this->ward_id){
-            $this->streets = Street::where('ward_id', $this->ward_id)->select('id', 'name')->approved()->get();
+            $this->streets = Street::where('ward_id', $this->ward_id)->select('id', 'name', 'ward_id')->approved()->get();
         } elseif ($this->street_id){
             $this->streets = Street::where('ward_id', $this->street->ward_id)
-                ->select('id', 'name')
+                ->select('id', 'name', 'ward_id')
                 ->approved()
                 ->get();
         }

@@ -3,9 +3,9 @@
 
 namespace App\Http\Controllers\v1;
 
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Services\Api\ApiAuthenticationService;
+use Faker\Factory;
 
 class ZanIDController extends Controller
 {
@@ -21,27 +21,42 @@ class ZanIDController extends Controller
 
     public function getZanIDData($zanIDNumber)
     {
+        if (env('APP_ENV') != 'production') {
+            $faker = Factory::create();
+            return [
+                'data' => [
+                    'PRSN_FIRST_NAME' => $faker->firstName,
+                    'PRSN_MIDLE_NAME' => $faker->firstName,
+                    'PRSN_LAST_NAME' => $faker->lastName,
+                    'PRSN_SEX' => $faker->randomElements(['M', 'F'])[0],
+                    'PRSN_BIRTH_DATE' => '30-04-1972',
+                    'PRSN_EMAILS' => $faker->email,
+                    'PRSN_RES_ADDRESS' => $faker->address
+                ]
+            ];
+        }
+
         $zanid_endpoint = config('modulesconfig.api_url') . '/zanid-internal/lookup';
         $access_token = (new ApiAuthenticationService)->getAccessToken();
 
         if ($access_token == null) {
             return ['data' => null, 'msg' => 'Gateway Timed Out', 'code' => 504];
         } else {
-            $authorization = "Authorization: Bearer ". $access_token;
-        
+            $authorization = "Authorization: Bearer " . $access_token;
+
             $payload = [
                 'zanid' => $zanIDNumber,
             ];
-    
+
             $curl = curl_init();
             curl_setopt_array($curl, array(
-                CURLOPT_URL => $zanid_endpoint, 
-                CURLOPT_RETURNTRANSFER => true, 
-                CURLOPT_ENCODING => '', 
-                CURLOPT_MAXREDIRS => 10, 
+                CURLOPT_URL => $zanid_endpoint,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
                 CURLOPT_CONNECTTIMEOUT => 30,
-                CURLOPT_FOLLOWLOCATION => true, 
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, 
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => json_encode($payload),
                 CURLOPT_HTTPHEADER => array(

@@ -14,7 +14,7 @@ class PropertyOwner extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'date_of_birth' => 'date'
+        'date_of_birth' => 'date',
     ];
 
 

@@ -16,12 +16,21 @@ class PropertyPayment extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'paid_at' => 'date',
+        'curr_payment_date' => 'date'
+    ];
+
     public function property(){
         return $this->belongsTo(Property::class, 'property_id');
     }
 
     public function year(){
         return $this->belongsTo(FinancialYear::class, 'financial_year_id');
+    }
+
+    public function reminders(){
+        return $this->hasMany(PropertyPaymentReminder::class, 'property_payment_id');
     }
 
     public function currency(){
@@ -38,7 +47,7 @@ class PropertyPayment extends Model
         return $this->morphOne(ZmBill::class, 'billable');
     }
 
-    public function latestBill()
+    public function latestbill()
     {
         return $this->morphOne(ZmBill::class, 'billable')->latest();
     }

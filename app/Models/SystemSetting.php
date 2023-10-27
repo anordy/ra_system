@@ -26,6 +26,12 @@ class SystemSetting extends Model implements Auditable
     const INPUT_NUMBER = 'number';
     const ENABLE_OTP_ALTERNATIVE = 'enable-otp-alternative';
 
+    const RESIDENTIAL_STOREY_BUILDING = 'residential-storey-building-property-tax-amount';
+    const CONDOMINIUM_BUILDING = 'condominium-building-property-tax-amount';
+    const STOREY_BUSINESS_BUILDING = 'storey-business-building-property-tax-amount';
+    const OTHER_BUSINESS_BUILDING = 'other-business-building-property-tax-amount';
+
+
     protected $guarded = [];
     
     public function system_setting_category(){

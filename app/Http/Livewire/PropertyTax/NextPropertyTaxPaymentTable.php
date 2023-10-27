@@ -4,24 +4,21 @@ namespace App\Http\Livewire\PropertyTax;
 
 use App\Enum\PropertyStatus;
 use App\Enum\PropertyTypeStatus;
-use App\Models\PropertyTax\Condominium;
 use App\Models\PropertyTax\Property;
 use App\Traits\CustomAlert;
+use App\Traits\PropertyTaxTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class PropertyTaxTable extends DataTableComponent
+class NextPropertyTaxPaymentTable extends DataTableComponent
 {
-    use CustomAlert;
-    public $status;
-    public function mount($status) {
-        $this->status = $status;
-    }
+    use CustomAlert, PropertyTaxTrait;
 
     public function builder(): Builder
     {
-        return Property::where('status', $this->status)->orderByDesc('created_at');
+        return Property::where('status', PropertyStatus::APPROVED)
+            ->orderByDesc('created_at');
     }
     public function configure(): void
     {
@@ -30,6 +27,7 @@ class PropertyTaxTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+        $this->setAdditionalSelects(['hotel_stars_id']);
     }
 
     public function columns(): array
@@ -79,7 +77,14 @@ class PropertyTaxTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return $row->street->name ?? 'N/A';
                 }),
-
+            Column::make('Billable Amount')
+                ->label(function ($row) {
+                    $amount = $this->getPayableAmount($row);
+                    if ($amount) {
+                        return number_format($amount, 2);
+                    }
+                    return 'N/A';
+                }),
             Column::make('Date of Registration', 'created_at')
                 ->format(function ($value, $row) {
                     return $row->created_at->toFormattedDateString() ?? 'N/A';

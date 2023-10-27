@@ -23,11 +23,11 @@ class CreateTinsTable extends Migration
             $table->string('gender')->nullable();
             $table->string('taxpayer_name')->nullable();
             $table->string('trading_name')->nullable();
-            $table->string('street');
+            $table->string('street')->nullable();
             $table->string('plot_number')->nullable();
-            $table->string('district');
-            $table->string('region');
-            $table->string('mobile');
+            $table->string('district')->nullable();
+            $table->string('region')->nullable();
+            $table->string('mobile')->nullable();
             $table->string('email')->nullable();
             $table->string('vat_registration_number')->nullable();
             $table->longText('biometric', 8000)->nullable();
@@ -37,8 +37,8 @@ class CreateTinsTable extends Migration
             $table->string('nationality')->nullable();
             $table->string('postal_city')->nullable();
             $table->string('block_number')->nullable();
-            $table->boolean('is_business_tin');
-            $table->boolean('is_entity_tin');
+            $table->boolean('is_business_tin')->nullable();
+            $table->boolean('is_entity_tin')->nullable();
             $table->string('status');
             $table->timestamps();
         });

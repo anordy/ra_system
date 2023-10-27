@@ -46,6 +46,10 @@ class Property extends Model
         return $this->hasOne(PropertyPayment::class, 'property_id');
     }
 
+    public function payments(){
+        return $this->hasMany(PropertyPayment::class, 'property_id');
+    }
+
     public function unit(){
         return $this->hasOne(PropertyUnit::class, 'property_id', 'id');
     }

@@ -16,8 +16,8 @@ class CreateEfdmsReceiptsTable extends Migration
         Schema::create('efdms_receipts', function (Blueprint $table) {
             $table->id();
             $table->string('seller_tin');
-            $table->string('seller_vrn');
-            $table->string('buyer_tin');
+            $table->string('seller_vrn')->nullable();
+            $table->string('buyer_tin')->nullable();
             $table->string('receipt_number');
             $table->timestamp('receipt_date');
             $table->string('verification_code');
