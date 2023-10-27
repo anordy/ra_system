@@ -149,9 +149,7 @@ class CondominiumRegistration extends Component
                 ->select('id', 'name')
                 ->get();
             $this->streets = json_decode($streets, true);
-
         }
-
     }
 
     public function render()

@@ -32,7 +32,6 @@
                 <div class="card-header">
                     <h5 class="text-uppercase">Property Information</h5>
                 </div>
-
                 <div class="card-body">
                     <div class="row m-2 pt-3">
                         <div class="col-md-4 mb-3">
