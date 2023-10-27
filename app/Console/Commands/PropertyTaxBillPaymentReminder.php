@@ -65,6 +65,7 @@ class PropertyTaxBillPaymentReminder extends Command
     {
         $payments = PropertyPayment::where('payment_status', '!=', BillStatus::COMPLETE)->get();
 
+
         if ($payments) {
             foreach ($payments as $payment) {
                 $currentPaymentDate = Carbon::parse($payment->curr_payment_date);
@@ -110,7 +111,7 @@ class PropertyTaxBillPaymentReminder extends Command
             CancelBill::dispatch($propertyPayment->latestBill, 'Property Tax Interest Increment');
         }
 
-        GeneratePropertyTaxControlNo::dispatch($propertyPayment);
+         GeneratePropertyTaxControlNo::dispatch($propertyPayment);
 
     }
 

@@ -21,15 +21,16 @@ trait PropertyTaxTrait
 
         $period = $currentDate->diffInMonths($currentPaymentDate);
 
+        // TODO: Add condition to calculate interest whenever viable but not everyday
         if ($currentDate->diffInDays($currentPaymentDate) === 30) {
 
             try {
                 DB::beginTransaction();
 
                 // Calculate interest and add it to current payment with new total amount
-                $principalTaxAmount = $propertyPayment->amount;
-                $interest = $this->calculatePaymentInterest($principalTaxAmount);
-                $totalAmount = $propertyPayment + $interest;
+                $principalTaxAmount = $propertyPayment->amount + $propertyPayment->interest;
+                $interest = $this->calculatePaymentInterest($principalTaxAmount, $period);
+                $totalAmount = $propertyPayment->amount + $interest;
 
                 $newPaymentDate = $currentPaymentDate->addDays(30);
 
@@ -67,10 +68,10 @@ trait PropertyTaxTrait
 
     }
 
-    private function calculatePaymentInterest($taxAmount){
-        $rate = 0; // Fetch from DB
-        $period = 0; // Fetch from DB
-        return $taxAmount * pow((1 + $rate), $period);
+    private function calculatePaymentInterest($taxAmount, $period){
+        $rate = SystemSetting::where('code', SystemSetting::PROPERTY_TAX_INTEREST_RATE)->firstOrFail()->value;
+        $numberOfTimesInterestIsCompounded = SystemSetting::where('code', SystemSetting::NUMBER_OF_TIMES_INTEREST_IS_COMPOUNDED_IN_PROPERTY_TAX_PER_YEAR)->firstOrFail()->value;
+        return $taxAmount * pow((1 + ($rate/$numberOfTimesInterestIsCompounded)), ($period));
     }
 
     private function getCurrentPropertyTaxFinancialMonth() {

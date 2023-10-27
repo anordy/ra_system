@@ -1,9 +1,9 @@
 @extends('layouts.master')
 
-@section('title','View Properties')
+@section('title', 'View Property')
 
 @section('content')
-    @if($property->status === \App\Enum\PropertyStatus::APPROVED)
+    @if ($property->status === \App\Enum\PropertyStatus::APPROVED)
         <div class="row mx-1">
             <div class="col-md-12">
                 <livewire:property-tax.property-tax-payment :payment="$property->payment"/>
@@ -40,24 +40,24 @@
                             <p class="my-1">
                                 @if ($property->status === \App\Enum\PropertyStatus::APPROVED)
                                     <span class="font-weight-bold text-success">
-                                <i class="bi bi-check-circle-fill mr-1"></i>
-                                Approved
-                            </span>
+                                        <i class="bi bi-check-circle-fill mr-1"></i>
+                                        Approved
+                                    </span>
                                 @elseif($property->status === \App\Enum\PropertyStatus::PENDING)
                                     <span class="font-weight-bold text-warning">
-                                <i class="bi bi-check-circle-fill mr-1"></i>
-                                Pending
-                            </span>
+                                        <i class="bi bi-check-circle-fill mr-1"></i>
+                                        Pending
+                                    </span>
                                 @elseif($property->status === \App\Enum\PropertyStatus::CORRECTION)
                                     <span class="font-weight-bold text-warning">
-                                <i class="bi bi-check-circle-fill mr-1"></i>
-                                On Correction
-                            </span>
+                                        <i class="bi bi-check-circle-fill mr-1"></i>
+                                        On Correction
+                                    </span>
                                 @else
                                     <span class="font-weight-bold text-info">
-                                <i class="bi bi-clock-history mr-1"></i>
-                                Unknown Status
-                            </span>
+                                        <i class="bi bi-clock-history mr-1"></i>
+                                        Unknown Status
+                                    </span>
                                 @endif
                             </p>
                         </div>
@@ -89,7 +89,7 @@
                             <span class="font-weight-bold text-uppercase">Property Type</span>
                             <p class="my-1">{{ formatEnum($property->type) ?? 'N/A' }}</p>
                         </div>
-                        @if($property->type === \App\Enum\PropertyTypeStatus::HOTEL)
+                        @if ($property->type === \App\Enum\PropertyTypeStatus::HOTEL)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Hotel Stars</span>
                                 <p class="my-1">{{ $property->star->name ?? 'N/A' }}</p>
@@ -101,17 +101,17 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Registered By</span>
-                            <p class="my-1">{{ $property->taxpayer->first_name ?? 'N/A' }} {{ $property->taxpayer->last_name ?? 'N/A' }}</p>
+                            <p class="my-1">{{ $property->taxpayer->first_name ?? 'N/A' }}
+                                {{ $property->taxpayer->last_name ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Date of Registration</span>
                             <p class="my-1">{{ $property->created_at->toFormattedDateString() ?? 'N/A' }}</p>
                         </div>
                     </div>
-
                 </div>
 
-                @if($property->type === \App\Enum\PropertyTypeStatus::CONDOMINIUM)
+                @if ($property->type === \App\Enum\PropertyTypeStatus::CONDOMINIUM)
                     <div class="card-body">
                         <div class="card-header">
                             <h5 class="text-uppercase">Unit Information</h5>
@@ -139,10 +139,9 @@
                             </div>
                         </div>
                     </div>
-
                 @endif
 
-                @if($property->responsible->idType->name === \App\Models\IDType::ZANID)
+                @if ($property->responsible->idType->name === \App\Models\IDType::ZANID)
                     <div class="card rounded-0">
                         <div class="card-header bg-white font-weight-bold">ZANID VERIFICATION</div>
                         <div class="card-body">
@@ -151,7 +150,7 @@
                     </div>
                 @endif
 
-                @if($property->responsible->idType->name === \App\Models\IDType::TIN)
+                @if ($property->responsible->idType->name === \App\Models\IDType::TIN)
                     <div class="card">
                         <div class="card-body">
                             <div class="card-header bg-white font-weight-bold">TIN VERIFICATION</div>
@@ -167,7 +166,9 @@
                     <div class="row m-2 pt-3">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Name</span>
-                            <p class="my-1">{{ $property->responsible->first_name ?? 'N/A' }} {{ $property->responsible->middle_name }} {{ $property->responsible->last_name ?? 'N/A' }}</p>
+                            <p class="my-1">{{ $property->responsible->first_name ?? 'N/A' }}
+                                {{ $property->responsible->middle_name }} {{ $property->responsible->last_name ?? 'N/A' }}
+                            </p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Gender</span>
@@ -175,7 +176,9 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Date of Birth</span>
-                            <p class="my-1">{{ $property->responsible->date_of_birth ? $property->responsible->date_of_birth->toFormattedDateString() : 'N/A' }}</p>
+                            <p class="my-1">
+                                {{ $property->responsible->date_of_birth ? $property->responsible->date_of_birth->toFormattedDateString() : 'N/A' }}
+                            </p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Email</span>
@@ -201,25 +204,22 @@
                 </div>
             </div>
 
-
             <livewire:property-tax.bill-preview
                     propertyId="{{ encrypt($property->id) }}"></livewire:property-tax.bill-preview>
 
             <livewire:approval.property-tax-approval-processing modelName="{{ get_class($property) }}"
                                                                 modelId="{{ encrypt($property->id) }}"></livewire:approval.property-tax-approval-processing>
 
-
         </div>
-    </div>
 
-    <div class="tab-pane fade m-2" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-        @livewire('property-tax.property-tax-payment-table', ['propertyId' => encrypt($property->id)])
-    </div>
+        <div class="tab-pane fade m-2" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+            @livewire('property-tax.property-tax-payment-table', ['propertyId' => encrypt($property->id)])
+        </div>
 
-    <div class="tab-pane fade m-2" id="approval" role="tabpanel" aria-labelledby="approval-tab">
-        <livewire:approval.approval-history-table modelName='{{ \App\Models\PropertyTax\Property::class  }}'
-                                                  modelId="{{ encrypt($property->id) }}"/>
-    </div>
+        <div class="tab-pane fade m-2" id="approval" role="tabpanel" aria-labelledby="approval-tab">
+            <livewire:approval.approval-history-table modelName='{{ \App\Models\PropertyTax\Property::class }}'
+                                                      modelId="{{ encrypt($property->id) }}"/>
+        </div>
     </div>
 
 @endsection

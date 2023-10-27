@@ -11,6 +11,8 @@ use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Jobs\PropertyTax\SendPropertyTaxApprovalMail;
 use App\Jobs\PropertyTax\SendPropertyTaxApprovalSMS;
+use App\Jobs\PropertyTax\SendPropertyTaxCorrectionMail;
+use App\Jobs\PropertyTax\SendPropertyTaxCorrectionSMS;
 use App\Models\Currency;
 use App\Models\FinancialYear;
 use App\Models\PropertyTax\PropertyPayment;
@@ -115,8 +117,8 @@ class PropertyTaxApprovalProcessing extends Component
                 $this->property->status = PropertyStatus::CORRECTION;
 
                 if ($this->property->type === PropertyTypeStatus::CONDOMINIUM) {
-                    $this->property->unit->status = CondominiumStatus::UNREGISTERED;
-                    $this->property->unit->save();
+                    $this->property->unit->condounit->status = CondominiumStatus::UNREGISTERED;
+                    $this->property->unit->condounit->save();
                 }
 
                 $this->property->save();
@@ -125,8 +127,8 @@ class PropertyTaxApprovalProcessing extends Component
 
                 DB::commit();
 
-                //event(new SendSms(SendToCorrectionReturnSMS::SERVICE, $this->return));
-                //event(new SendMail(SendToCorrectionReturnMail::SERVICE, $this->return));
+                event(new SendSms(SendPropertyTaxCorrectionSMS::SERVICE, $this->property));
+                event(new SendMail(SendPropertyTaxCorrectionMail::SERVICE, $this->property));
 
                 $this->flash('success', 'Registration sent for correction', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {

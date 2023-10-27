@@ -184,6 +184,33 @@ class SystemSettingsSeeder extends Seeder
                 'unit' => 'number',
                 'is_approved' => 1
             ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Number of Times Interest Is Compounded in Property Tax Per Year',
+                'code' => SystemSetting::NUMBER_OF_TIMES_INTEREST_IS_COMPOUNDED_IN_PROPERTY_TAX_PER_YEAR,
+                'description' => 'Number of Times Interest Is Compounded in Property Tax Per Year.',
+                'value' => '3',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Property Tax Interest Rate Value',
+                'code' => SystemSetting::PROPERTY_TAX_INTEREST_RATE,
+                'description' => 'Property Tax Interest Rate Value.',
+                'value' => '0.015',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Property Tax Time Variable',
+                'code' => SystemSetting::PROPERTY_TAX_TIME_VARIABLE,
+                'description' => 'Property Tax Time Variable.',
+                'value' => '0',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
         ];
 
         foreach ($system_settings as $system_setting) {

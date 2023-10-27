@@ -20,4 +20,7 @@ class PropertyUnit extends Model
         return $this->belongsTo(PropertyStorey::class, 'storey_id');
     }
 
+    public function condounit() {
+        return $this->belongsTo(CondominiumUnit::class, 'condominium_unit_id');
+    }
 }

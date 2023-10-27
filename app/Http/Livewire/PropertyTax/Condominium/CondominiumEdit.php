@@ -69,16 +69,13 @@ class CondominiumEdit extends Component
         // Patch Storeys with Units
         $storeys = $this->condominium->storeys;
         foreach ($storeys as $i => $storey) {
-            $this->storeys[$i] = [
-                'name' => $storey->name
-            ];
-
             foreach ($storey->units as $j => $unit) {
                 $this->storeys[$i][$j] = [
                     'name' => $unit->name,
                 ];
             }
         }
+
     }
 
     public function addStorey()
