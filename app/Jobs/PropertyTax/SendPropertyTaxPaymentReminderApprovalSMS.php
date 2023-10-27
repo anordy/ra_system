@@ -34,7 +34,7 @@ class SendPropertyTaxPaymentReminderApprovalSMS implements ShouldQueue
     public function handle()
     {
         $sms_controller = new SMSController;
-        $send_to = $this->property->responsible->mobile;
+        $send_to = $this->property->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
         $customer_message = "Hello {$this->property->taxpayer->fullname()}, This is a reminder for your property tax {$this->property->urn} payment.";
         $sms_controller->sendSMS($send_to, $source, $customer_message);

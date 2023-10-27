@@ -62,11 +62,9 @@ class PropertyTaxApprovalProcessing extends Component
             try {
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
-                // TODO: Generate URN Number
-
-
                 // Update Status
                 $this->property->status = PropertyStatus::APPROVED;
+                $this->property->urn = $this->generateURN($this->property);
                 $this->property->save();
 
                 $amount = $this->getPayableAmount($this->property);

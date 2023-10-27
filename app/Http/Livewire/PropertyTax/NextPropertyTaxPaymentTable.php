@@ -6,13 +6,14 @@ use App\Enum\PropertyStatus;
 use App\Enum\PropertyTypeStatus;
 use App\Models\PropertyTax\Property;
 use App\Traits\CustomAlert;
+use App\Traits\PropertyTaxTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class NextPropertyTaxPaymentTable extends DataTableComponent
 {
-    use CustomAlert;
+    use CustomAlert, PropertyTaxTrait;
 
     public function builder(): Builder
     {
@@ -40,6 +41,11 @@ class NextPropertyTaxPaymentTable extends DataTableComponent
                     } else {
                         return "{$row->name} - {$row->unit->name}" ?? 'N/A';
                     }
+                }),
+            Column::make('URN', 'urn')
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return $value ?? 'N/A';
                 }),
             Column::make('Type', 'type')
                 ->searchable()
@@ -73,13 +79,11 @@ class NextPropertyTaxPaymentTable extends DataTableComponent
                 }),
             Column::make('Billable Amount')
                 ->label(function ($row) {
-                   if ($row->type === PropertyTypeStatus::CONDOMINIUM) {
-                       return 10000;
-                   } else if ($row->type === PropertyTypeStatus::HOTEL) {
-                       return number_format($row->star->amount_charged, 2);
-                   } else {
-                       return 'N/A';
-                   }
+                    $amount = $this->getPayableAmount($row);
+                    if ($amount) {
+                        return number_format($amount, 2);
+                    }
+                    return 'N/A';
                 }),
             Column::make('Date of Registration', 'created_at')
                 ->format(function ($value, $row) {

@@ -7,7 +7,6 @@
                 <th width="20%">Bill Description</th>
                 <td colspan="2">Property Tax bill for {{ $property->name }} - {{ formatEnum($property->type) }}</td>
             </tr>
-
             <tr>
                 <th width="20%">Bill Item</th>
                 <td>Property Tax</td>
@@ -15,7 +14,7 @@
             </tr>
             <tr class="bg-secondary">
                 <th colspan="2">Total Billed Amount Per Annum</th>
-                <th class="text-right">{{ number_format($amount, 2) }} {{ $property->payment->currency->iso }}</th>
+                <th class="text-right">{{ number_format($amount, 2) }} TZS</th>
             </tr>
 
             </tbody>

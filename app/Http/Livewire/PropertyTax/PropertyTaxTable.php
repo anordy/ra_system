@@ -44,6 +44,11 @@ class PropertyTaxTable extends DataTableComponent
                         return "{$row->name} - {$row->unit->name}" ?? 'N/A';
                     }
                 }),
+            Column::make('URN', 'urn')
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return $value ?? 'N/A';
+                }),
             Column::make('Type', 'type')
                 ->searchable()
                 ->format(function ($value, $row) {

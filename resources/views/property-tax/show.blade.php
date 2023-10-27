@@ -6,7 +6,7 @@
     @if($property->status === \App\Enum\PropertyStatus::APPROVED)
         <div class="row mx-1">
             <div class="col-md-12">
-                <livewire:property-tax.property-tax-payment :payment="$property->payment" />
+                <livewire:property-tax.property-tax-payment :payment="$property->payment"/>
             </div>
         </div>
     @endif
@@ -32,6 +32,7 @@
                 <div class="card-header">
                     <h5 class="text-uppercase">Property Information</h5>
                 </div>
+
                 <div class="card-body">
                     <div class="row m-2 pt-3">
                         <div class="col-md-4 mb-3">
@@ -63,6 +64,10 @@
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Property Name/Number</span>
                             <p class="my-1">{{ $property->name ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Unit Registration Number</span>
+                            <p class="my-1">{{ $property->urn ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Region</span>
@@ -137,11 +142,28 @@
 
                 @endif
 
-
-                <div class="card-body">
-                    <div class="card-header">
-                        <h5 class="text-uppercase">Responsible Person</h5>
+                @if($property->responsible->idType->name === \App\Models\IDType::ZANID)
+                    <div class="card rounded-0">
+                        <div class="card-header bg-white font-weight-bold">ZANID VERIFICATION</div>
+                        <div class="card-body">
+                            @livewire('property-tax.verification.zanid', ['responsiblePerson' => $property->responsible])
+                        </div>
                     </div>
+                @endif
+
+                @if($property->responsible->idType->name === \App\Models\IDType::TIN)
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header bg-white font-weight-bold">TIN VERIFICATION</div>
+                            @livewire('property-tax.verification.tin', ['responsiblePerson' => $property->responsible])
+                        </div>
+                    </div>
+                @endif
+
+                <div class="card-header">
+                    <h5 class="text-uppercase">Responsible Person</h5>
+                </div>
+                <div class="card-body">
                     <div class="row m-2 pt-3">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Name</span>
@@ -153,15 +175,11 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Date of Birth</span>
-                            <p class="my-1">{{ $property->responsible->date_of_birth->toFormattedDateString() ?? 'N/A' }}</p>
+                            <p class="my-1">{{ $property->responsible->date_of_birth ? $property->responsible->date_of_birth->toFormattedDateString() : 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Email</span>
                             <p class="my-1">{{ $property->responsible->email ?? 'N/A' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Mobile</span>
-                            <p class="my-1">{{ $property->responsible->mobile ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Mobile</span>
@@ -181,24 +199,27 @@
                         </div>
                     </div>
                 </div>
-
-                <livewire:property-tax.bill-preview propertyId="{{ encrypt($property->id) }}"></livewire:property-tax.bill-preview>
-
-                <livewire:approval.property-tax-approval-processing modelName="{{ get_class($property) }}"
-                                                                    modelId="{{ encrypt($property->id) }}"></livewire:approval.property-tax-approval-processing>
-
-
             </div>
-        </div>
 
-        <div class="tab-pane fade m-2" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-                    @livewire('property-tax.property-tax-payment-table', ['propertyId' => encrypt($property->id)])
-        </div>
 
-        <div class="tab-pane fade m-2" id="approval" role="tabpanel" aria-labelledby="approval-tab">
-            <livewire:approval.approval-history-table modelName='{{ \App\Models\PropertyTax\Property::class  }}'
-                                                      modelId="{{ encrypt($property->id) }}" />
+            <livewire:property-tax.bill-preview
+                    propertyId="{{ encrypt($property->id) }}"></livewire:property-tax.bill-preview>
+
+            <livewire:approval.property-tax-approval-processing modelName="{{ get_class($property) }}"
+                                                                modelId="{{ encrypt($property->id) }}"></livewire:approval.property-tax-approval-processing>
+
+
         </div>
+    </div>
+
+    <div class="tab-pane fade m-2" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+        @livewire('property-tax.property-tax-payment-table', ['propertyId' => encrypt($property->id)])
+    </div>
+
+    <div class="tab-pane fade m-2" id="approval" role="tabpanel" aria-labelledby="approval-tab">
+        <livewire:approval.approval-history-table modelName='{{ \App\Models\PropertyTax\Property::class  }}'
+                                                  modelId="{{ encrypt($property->id) }}"/>
+    </div>
     </div>
 
 @endsection

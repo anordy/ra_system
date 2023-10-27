@@ -114,5 +114,42 @@ trait PropertyTaxTrait
 
         return $setting->value;
     }
+
+    public function generateURN($property) {
+        $location = $property->region->location;
+
+        if ($location === 'unguja') {
+            $locationCode = '01';
+        } else if ($location === 'pemba') {
+            $locationCode = '02';
+        } else {
+            throw new \Exception('Invalid Location Provided');
+        }
+
+        $regionCode = sprintf("%02d", $property->region_id);
+        $districtCode = sprintf("%02d", $property->district_id);
+        $wardCode = sprintf("%02d", $property->ward_id);
+
+        $urn = "{$locationCode}{$regionCode}{$districtCode}{$wardCode}";
+
+        // Hotels do not have house number
+        if ($property->type != PropertyTypeStatus::HOTEL) {
+            $houseNumber = $property->unit->house_number;
+
+            if (!$houseNumber) {
+                $this->customAlert('error', 'The selected Property does not have house number');
+                return;
+            }
+
+            $urn = "{$urn}-$houseNumber";
+        }
+
+        if ($property->type === PropertyTypeStatus::HOTEL) {
+            $hotelId = sprintf("%02d", $property->id);
+            $urn = "{$urn}-{$property->hotel_stars_id}{$hotelId}";
+        }
+
+        return $urn;
+    }
 }
 
