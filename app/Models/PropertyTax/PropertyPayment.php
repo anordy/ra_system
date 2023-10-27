@@ -2,6 +2,7 @@
 
 namespace App\Models\PropertyTax;
 
+use App\Enum\PaymentExtensionStatus;
 use App\Models\Currency;
 use App\Models\FinancialYear;
 use App\Models\ZmBill;
@@ -51,4 +52,11 @@ class PropertyPayment extends Model
         return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 
+    public function paymentExtension(){
+        return $this->hasMany(PaymentExtension::class, 'property_payment_id');
+    }
+
+    public function checkAnyPendingExtensionRequest(){
+        return $this->paymentExtension()->where('status', PaymentExtensionStatus::PENDING)->exists();
+    }
 }
