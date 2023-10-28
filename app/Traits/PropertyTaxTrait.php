@@ -91,20 +91,72 @@ trait PropertyTaxTrait
             $amount = $property->star->amount_charged;
         } else if ($propertyType === PropertyTypeStatus::RESIDENTIAL_STOREY) {
             $amount = $this->getPropertyTaxPayableAmount(SystemSetting::RESIDENTIAL_STOREY_BUILDING);
+            $amount = $property->units->count() * $amount;
         } else if ($propertyType === PropertyTypeStatus::STOREY_BUSINESS) {
             $amount = $this->getPropertyTaxPayableAmount(SystemSetting::STOREY_BUSINESS_BUILDING);
+            $amount = $property->units->count() * $amount;
         } else if ($propertyType === PropertyTypeStatus::OTHER) {
             $amount = $this->getPropertyTaxPayableAmount(SystemSetting::OTHER_BUSINESS_BUILDING);
         } else {
             throw new \Exception('Invalid Property Type Provided');
         }
 
-        if (!$amount || $amount < 0) {
+        if (!$amount || $amount <= 0) {
             throw new \Exception('Invalid Property Tax Amount');
         }
 
         return $amount;
     }
+
+    public function previewPayableAmount($property) {
+        $propertyType = $property->type;
+
+        if ($propertyType === PropertyTypeStatus::CONDOMINIUM) {
+            $amount = $this->getPropertyTaxPayableAmount(SystemSetting::CONDOMINIUM_BUILDING);
+            $breakDown = [
+                'units' => 1,
+                'amount' => $amount,
+                'total_amount' => $amount
+            ];
+        } else if ($propertyType === PropertyTypeStatus::HOTEL) {
+            $amount = $property->star->amount_charged;
+            $breakDown = [
+                'units' => 1,
+                'amount' => $amount,
+                'total_amount' => $amount
+            ];
+        } else if ($propertyType === PropertyTypeStatus::RESIDENTIAL_STOREY) {
+            $amount = $this->getPropertyTaxPayableAmount(SystemSetting::RESIDENTIAL_STOREY_BUILDING);
+            $breakDown = [
+                'units' => $property->units->count(),
+                'amount' => $amount,
+                'total_amount' => $property->units->count() * $amount
+            ];
+        } else if ($propertyType === PropertyTypeStatus::STOREY_BUSINESS) {
+            $amount = $this->getPropertyTaxPayableAmount(SystemSetting::STOREY_BUSINESS_BUILDING);
+            $breakDown = [
+                'units' => $property->units->count(),
+                'amount' => $amount,
+                'total_amount' => $property->units->count() * $amount
+            ];
+        } else if ($propertyType === PropertyTypeStatus::OTHER) {
+            $amount = $this->getPropertyTaxPayableAmount(SystemSetting::OTHER_BUSINESS_BUILDING);
+            $breakDown = [
+                'units' => 1,
+                'amount' => $amount,
+                'total_amount' => $amount
+            ];
+        } else {
+            throw new \Exception('Invalid Property Type Provided');
+        }
+
+        if ($breakDown['total_amount'] <= 0) {
+            throw new \Exception('Invalid Property Tax Amount');
+        }
+
+        return $breakDown;
+    }
+
 
     private function getPropertyTaxPayableAmount($systemSettingCode) {
         $setting =  SystemSetting::where('code', $systemSettingCode)->firstOrFail();

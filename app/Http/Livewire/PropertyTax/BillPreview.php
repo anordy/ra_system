@@ -12,12 +12,12 @@ class BillPreview extends Component
 {
     use PropertyTaxTrait;
 
-    public $amount;
+    public $breakDown;
     public $property;
     public function mount($propertyId)
     {
         $this->property = Property::findOrFail(decrypt($propertyId));
-        $this->amount = $this->getPayableAmount($this->property);
+        $this->breakDown = $this->previewPayableAmount($this->property);
     }
 
     public function render()

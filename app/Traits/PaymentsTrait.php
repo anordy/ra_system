@@ -43,14 +43,19 @@ trait PaymentsTrait
         DB::beginTransaction();
 
         try {
-            $return = $bill->billable;
+            $billable = $bill->billable;
 
             if (config('app.env') != 'local') {
                 $sendBill = (new ZanMalipoInternalService)->createBill($bill);
             } else {
                 // We are local
-                $return->status = ReturnStatus::CN_GENERATED;
-                $return->save();
+                if ($billable && isset($billable->status)) {
+                    $billable->status = ReturnStatus::CN_GENERATED;
+                }
+
+                if ($billable && isset($billable->payment_status)) {
+                    $billable->payment_status = ReturnStatus::CN_GENERATED;
+                }
 
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
