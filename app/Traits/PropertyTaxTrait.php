@@ -186,20 +186,19 @@ trait PropertyTaxTrait
         $urn = "{$locationCode}{$regionCode}{$districtCode}{$wardCode}";
 
         // Hotels do not have house number
-        if ($property->type != PropertyTypeStatus::HOTEL) {
-            $houseNumber = $property->unit->house_number;
-
-            if (!$houseNumber) {
-                $this->customAlert('error', 'The selected Property does not have house number');
-                return;
-            }
-
-            $urn = "{$urn}-$houseNumber";
-        }
-
         if ($property->type === PropertyTypeStatus::HOTEL) {
             $hotelId = sprintf("%02d", $property->id);
             $urn = "{$urn}-{$property->hotel_stars_id}{$hotelId}";
+        } else if ($property->type === PropertyTypeStatus::OTHER ||
+            $property->type === PropertyTypeStatus::RESIDENTIAL_STOREY ||
+            $property->type === PropertyTypeStatus::STOREY_BUSINESS) {
+            $houseNumber = $property->house_number;
+            $urn = "{$urn}-{$houseNumber}";
+        } else if ($property->type === PropertyTypeStatus::CONDOMINIUM) {
+            $houseNumber = $property->unit->house_number;
+            $urn = "{$urn}-{$houseNumber}";
+        } else {
+            throw new \Exception('Invalid Property Type Provided');
         }
 
         return $urn;

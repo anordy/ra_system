@@ -32,6 +32,7 @@ class Tin extends Component
             $response = $traService->getTinNumber($this->responsiblePerson->id_number);
             if ($response && $response['data']) {
                 $this->tin = $response['data'];
+                $this->approve();
             } else if ($response && $response['data'] == null) {
                 $this->customAlert('warning', $response['message']);
                 return;

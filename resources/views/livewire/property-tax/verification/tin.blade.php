@@ -27,7 +27,7 @@
         @else
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">TIN Verified At</span>
-                <p class="my-1">{{ $responsiblePerson->id_verified_at->toDateTimeString() }}</p>
+                <p class="my-1">{{ \Carbon\Carbon::parse($responsiblePerson->id_verified_at)->format('d M Y H:i:s') }}</p>
             </div>
         @endif
     </div>
