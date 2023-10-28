@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Jobs\Account\SendReferenceNumberMail;
 use App\Jobs\Account\SendReferenceNumberSMS;
+use App\Jobs\PropertyTax\SendPaymentExtensionApprovalSMS;
 use App\Jobs\PropertyTax\SendPropertyTaxApprovalSMS;
 use App\Jobs\PropertyTax\SendPropertyTaxCorrectionSMS;
 use App\Jobs\PropertyTax\SendPropertyTaxPaymentReminderApprovalSMS;
@@ -231,6 +232,8 @@ class SendSmsFired
             SendPropertyTaxPaymentReminderApprovalSMS::dispatch($event->tokenId);
         } else if ($event->service === SendPropertyTaxCorrectionSMS::SERVICE){
             SendPropertyTaxCorrectionSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendPaymentExtensionApprovalSMS::SERVICE){
+            SendPaymentExtensionApprovalSMS::dispatch($event->tokenId);
         }
     }
 }

@@ -196,7 +196,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::prefix('payment-extension')->name('payment-extension.')->group(function () {
             Route::get('/index', [\App\Http\Controllers\PropertyTax\PaymentExtensionController::class, 'index'])->name('index');
             Route::get('/show/{id}', [\App\Http\Controllers\PropertyTax\PaymentExtensionController::class, 'show'])->name('show');
-            Route::get('/edit/{id}', [CondominiumController::class, 'edit'])->name('edit');
         });
     });
 
