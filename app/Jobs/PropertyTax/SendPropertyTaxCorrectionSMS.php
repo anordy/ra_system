@@ -36,7 +36,7 @@ class SendPropertyTaxCorrectionSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->property->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Your property registration for {$this->property->mobile} requires correction. Please login to your account to update your registration.";
+        $customer_message = "Your property registration for {$this->property->name} requires correction. Please login to your account to update your registration.";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

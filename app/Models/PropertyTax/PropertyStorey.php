@@ -15,4 +15,8 @@ class PropertyStorey extends Model
     public function property(){
         return $this->belongsTo(Property::class, 'property_id');
     }
+
+    public function units(){
+        return $this->hasMany(PropertyUnit::class, 'storey_id');
+    }
 }

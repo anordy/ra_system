@@ -113,5 +113,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowInternalBusinessInfoChangeSeeder::class);
         $this->call(WorkflowPropertyTaxRegistrationSeeder::class);
         $this->call(PropertyTaxHotelStarsSeeder::class);
+        $this->call(WorkflowPropertyTaxExtensionApprovalSeeder::class);
     }
 }

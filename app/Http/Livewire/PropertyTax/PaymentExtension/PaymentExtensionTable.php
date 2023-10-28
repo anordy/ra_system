@@ -27,7 +27,7 @@ class PaymentExtensionTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['property_payment_id', 'requested_by_id']);
+        $this->setAdditionalSelects(['requested_by_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -37,6 +37,15 @@ class PaymentExtensionTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('Property Name', 'property_payment_id')
+                ->searchable()
+                ->format(function ($value, $row) {
+                    if ($row->propertyPayment->property->type != PropertyTypeStatus::CONDOMINIUM) {
+                        return $row->propertyPayment->property->name ?? 'N/A';
+                    } else {
+                        return "{$row->propertyPayment->property->name} - {$row->propertyPayment->property->unit->name}" ?? 'N/A';
+                    }
+                }),
             Column::make('Control Number', 'id')
                 ->searchable()
                 ->format(function ($value, $row) {

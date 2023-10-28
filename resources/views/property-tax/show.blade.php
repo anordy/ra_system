@@ -16,6 +16,12 @@
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                aria-selected="true"> Property Information</a>
         </li>
+        @if($property->type == \App\Enum\PropertyTypeStatus::STOREY_BUSINESS || $property->type == \App\Enum\PropertyTypeStatus::RESIDENTIAL_STOREY)
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="storeys-tab" data-toggle="tab" href="#storeys" role="tab" aria-controls="storeys"
+                   aria-selected="true"> Storeys and Units</a>
+            </li>
+        @endif
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="payment-tab" data-toggle="tab" href="#payment" role="tab" aria-controls="home"
                aria-selected="true"> Payment History</a>
@@ -210,6 +216,34 @@
                                                                 modelId="{{ encrypt($property->id) }}"></livewire:approval.property-tax-approval-processing>
 
         </div>
+
+        <div class="tab-pane fade m-2" id="storeys" role="tabpanel" aria-labelledby="storeys-tab">
+            <table class="table table-bordered">
+                <thead>
+                <th>Storey</th>
+                <th>Unit Name</th>
+                <th>Purpose</th>
+                <th>House Number</th>
+                </thead>
+                <tbody>
+                @foreach($property->storeys as $index => $storey)
+                    @foreach($storey->units as $unit)
+                        <tr>
+                            @if($loop->first)
+                                <td rowspan="{{ $storey->units()->count() }}">
+                                    # {{ $index + 1 }}
+                                </td>
+                            @endif
+                            <td>{{ $unit->name }}</td>
+                            <td>{{ $unit->usage_type }}</td>
+                            <td>{{ $unit->house_number }}</td>
+                        </tr>
+                    @endforeach
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+
 
         <div class="tab-pane fade m-2" id="payment" role="tabpanel" aria-labelledby="payment-tab">
             @livewire('property-tax.property-tax-payment-table', ['propertyId' => encrypt($property->id)])

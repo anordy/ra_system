@@ -58,4 +58,12 @@ class Property extends Model
         return $this->belongsTo(PropertyTaxHotelStar::class, 'hotel_stars_id');
     }
 
+    public function storeys(){
+        return $this->hasMany(PropertyStorey::class, 'property_id');
+    }
+
+    public function units(){
+        return $this->hasMany(PropertyUnit::class, 'property_id');
+    }
+
 }
