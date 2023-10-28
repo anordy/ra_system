@@ -15,13 +15,13 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class PaymentExtensionTable extends DataTableComponent
 {
-    public function mount(){
-        $d = PaymentExtension::query()->get();
-//        dd($d);
+    public $status;
+    public function mount($status){
+        $this->status = $status;
     }
     public function builder(): Builder
     {
-        return  PaymentExtension::query()->orderByDesc('created_at');
+        return  PaymentExtension::query()->where('status', $this->status)->orderByDesc('created_at');
     }
 
     public function configure(): void

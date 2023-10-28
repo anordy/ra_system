@@ -25,8 +25,4 @@ class PaymentExtensionController extends Controller
         }
         return view('property-tax.payment-extension.show', compact('paymentExtension', 'requestedByName'));
     }
-
-    public function edit(string $id) {
-        return view('property-tax.condominium.edit', compact('id'));
-    }
 }

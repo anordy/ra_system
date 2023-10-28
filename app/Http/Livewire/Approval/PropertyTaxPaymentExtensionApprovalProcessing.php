@@ -9,12 +9,16 @@ use App\Enum\PropertyStatus;
 use App\Enum\PropertyTypeStatus;
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Jobs\PropertyTax\SendPaymentExtensionApprovalSMS;
 use App\Jobs\PropertyTax\SendPropertyTaxApprovalMail;
 use App\Jobs\PropertyTax\SendPropertyTaxApprovalSMS;
+use App\Jobs\PropertyTax\SendPropertyTaxExtensionApprovalMail;
+use App\Jobs\Vetting\SendToCorrectionReturnMail;
 use App\Models\Currency;
 use App\Models\FinancialYear;
 use App\Models\PropertyTax\PaymentExtension;
 use App\Models\PropertyTax\PropertyPayment;
+use App\Models\Taxpayer;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
@@ -32,7 +36,7 @@ class PropertyTaxPaymentExtensionApprovalProcessing extends Component
     public $modelName;
     public $comments;
 
-    public $paymentExtension, $new_payment_due_date;
+    public $paymentExtension, $new_payment_due_date, $emailPayload, $smsPayload, $approvedText, $rejectedText, $mobile, $email;
 
     public function mount($modelName, $modelId)
     {
@@ -41,6 +45,24 @@ class PropertyTaxPaymentExtensionApprovalProcessing extends Component
         $this->paymentExtension = $modelName::findOrFail($this->modelId);
 
         $this->registerWorkflow($modelName, $this->modelId);
+
+        $requestedBy = Taxpayer::find($this->paymentExtension->requested_by_id);
+        $name = 'N/A';
+        if ($requestedBy){
+            $name = $requestedBy->first_name .' '. $requestedBy->middle_name .' '. $requestedBy->last_name;
+            $this->email = $requestedBy->email;
+            $this->mobile = $requestedBy->mobile;
+        }
+        $this->approvedText = "Your property tax payment extension request was approved, for more information visit ZIDRAS portal.";
+        $this->rejectedText = "Your property tax payment extension request was rejected, for more information visit ZIDRAS portal.";
+        $this->emailPayload = [
+            'name' => $name,
+            'email' =>   $this->email
+        ];
+        $this->smsPayload = [
+            'name' => $name,
+            'phone' =>   $this->mobile
+        ];
     }
 
     public function approve($transition)
@@ -75,9 +97,18 @@ class PropertyTaxPaymentExtensionApprovalProcessing extends Component
             try {
                 $this->updateBill($propertyPayment->latestBill, $this->new_payment_due_date);
                 $this->customAlert('success', 'Approved successfully');
+                //Send Sms & email
+                if ($this->email){
+                    $this->emailPayload['message'] = $this->approvedText;
+                    $test = event(new SendMail(SendPropertyTaxExtensionApprovalMail::SERVICE, $this->emailPayload));
+                }
+                if ($this->mobile){
+                    $this->smsPayload['message'] = $this->approvedText;
+                    $test = event(new SendSms(SendPaymentExtensionApprovalSMS::SERVICE, $this->smsPayload));
+                }
                 $this->flash(
                     'success',
-                    __('Request submited successfully'),
+                    __('Approved successfully'),
                     [],
                     redirect()
                         ->back()
@@ -99,22 +130,34 @@ class PropertyTaxPaymentExtensionApprovalProcessing extends Component
     public function reject($transition)
     {
         $transition = $transition['data']['transition'];
+
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
 
-        if ($this->checkTransition('application_filled_incorrect')) {
+        if ($this->checkTransition('commissioner_approve')) {
 
             DB::beginTransaction();
             try {
-                $this->property->status = PropertyStatus::CORRECTION;
-                $this->property->save();
+                $this->new_payment_due_date = Carbon::create($this->new_payment_due_date);
+                $this->paymentExtension->extension_to = $this->new_payment_due_date;
+                $this->paymentExtension->status = PaymentExtensionStatus::REJECTED;
+                $this->paymentExtension->save();
 
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
                 DB::commit();
-                event(new SendMail(SendToCorrectionReturnMail::SERVICE, $this->return));
+                $this->customAlert('success', 'Approval Rejected successfully');
+                //Send Sms & email
+                if ($this->email){
+                    $this->emailPayload['message'] = $this->rejectedText;
+                    $test = event(new SendMail(SendPropertyTaxExtensionApprovalMail::SERVICE, $this->emailPayload));
+                }
 
-                $this->flash('success', 'Registration sent for correction', [], redirect()->back()->getTargetUrl());
+                if ($this->mobile){
+                    $this->smsPayload['message'] = $this->rejectedText;
+                    $test = event(new SendSms(SendPaymentExtensionApprovalSMS::SERVICE, $this->smsPayload));
+                }
+                $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl(),);
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error($e);
