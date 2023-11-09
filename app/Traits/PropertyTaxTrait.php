@@ -7,9 +7,11 @@ use App\Enum\PropertyTypeStatus;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\PropertyTax\PaymentInterest;
+use App\Models\PropertyTax\Property;
 use App\Models\SystemSetting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 trait PropertyTaxTrait
 {
@@ -192,13 +194,20 @@ trait PropertyTaxTrait
         } else if ($property->type === PropertyTypeStatus::OTHER ||
             $property->type === PropertyTypeStatus::RESIDENTIAL_STOREY ||
             $property->type === PropertyTypeStatus::STOREY_BUSINESS) {
-            $houseNumber = $property->house_number;
-            $urn = "{$urn}-{$houseNumber}";
+            $id = $property->id;
+            $urn = "{$urn}-{$id}";
         } else if ($property->type === PropertyTypeStatus::CONDOMINIUM) {
-            $houseNumber = $property->unit->house_number;
-            $urn = "{$urn}-{$houseNumber}";
+            $id = $property->id;
+            $urn = "{$urn}-{$id}";
         } else {
             throw new \Exception('Invalid Property Type Provided');
+        }
+
+        $doesURNExists = Property::where('urn', $urn)->first();
+
+        if ($doesURNExists) {
+            Log::error("DUPLICATE URN FOUND {$urn}");
+            throw new \Exception('Duplicate URN Found');
         }
 
         return $urn;

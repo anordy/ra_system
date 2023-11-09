@@ -14,7 +14,7 @@ class ReturnReportController extends Controller
 
     public function index()
     {
-        if (!Gate::allows('managerial-return-report-vie')) {
+        if (!Gate::allows('managerial-return-report-view')) {
             abort(403);
         }
         return view('reports.returns.index');

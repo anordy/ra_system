@@ -70,6 +70,12 @@
                             <span class="font-weight-bold text-uppercase">Property Name/Number</span>
                             <p class="my-1">{{ $property->name ?? 'N/A' }}</p>
                         </div>
+                        @if($property->house_number)
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">House Number</span>
+                                <p class="my-1">{{ $property->house_number }}</p>
+                            </div>
+                        @endif
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Unit Registration Number</span>
                             <p class="my-1">{{ $property->urn ?? 'N/A' }}</p>
@@ -94,6 +100,32 @@
                             <span class="font-weight-bold text-uppercase">Property Type</span>
                             <p class="my-1">{{ formatEnum($property->type) ?? 'N/A' }}</p>
                         </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Property Size</span>
+                            <p class="my-1">{{ $property->size ?? 'N/A' }} sqft</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Property Value</span>
+                            <p class="my-1">{{ $property->property_value ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Purchase Value</span>
+                            <p class="my-1">{{ $property->purchase_value ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Acquisition Date</span>
+                            <p class="my-1">{{ $property->acquisition_date ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Ownership Type</span>
+                            <p class="my-1">{{ formatEnum($property->ownership->name) ?? 'N/A' }}</p>
+                        </div>
+                        @if($property->ownership->name != \App\Enum\PropertyOwnershipTypeStatus::PRIVATE)
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Institution Name</span>
+                                <p class="my-1">{{ $property->institution_name ?? 'N/A' }}</p>
+                            </div>
+                        @endif
                         @if ($property->type === \App\Enum\PropertyTypeStatus::HOTEL)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Hotel Stars</span>
@@ -116,7 +148,35 @@
                     </div>
                 </div>
 
-                @if ($property->type === \App\Enum\PropertyTypeStatus::CONDOMINIUM)
+                @if($property->agent)
+
+                    <div class="card rounded-0">
+                        <div class="card-header bg-white font-weight-bold">Property Agent</div>
+                        <div class="card-body">
+                            <div class="row m-2 pt-3">
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Name</span>
+                                    <p class="my-1">{{ $property->agent->first_name ?? 'N/A' }} {{ $property->agent->middle_name }} {{ $property->agent->last_name ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Email</span>
+                                    <p class="my-1">{{ $property->agent->email ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Mobile</span>
+                                    <p class="my-1">{{ $property->agent->mobile ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Alt Mobile</span>
+                                    <p class="my-1">{{ $property->responsible->alt_mobile ?? 'N/A' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+
+            @if ($property->type === \App\Enum\PropertyTypeStatus::CONDOMINIUM && $property->unit)
                     <div class="card-body">
                         <div class="card-header">
                             <h5 class="text-uppercase">Unit Information</h5>
@@ -146,7 +206,7 @@
                     </div>
                 @endif
 
-                @if ($property->responsible->idType->name === \App\Models\IDType::ZANID)
+                @if ($property->responsible && $property->responsible->idType->name === \App\Models\IDType::ZANID)
                     <div class="card rounded-0">
                         <div class="card-header bg-white font-weight-bold">ZANID VERIFICATION</div>
                         <div class="card-body">
@@ -155,7 +215,7 @@
                     </div>
                 @endif
 
-                @if ($property->responsible->idType->name === \App\Models\IDType::TIN)
+                @if ($property->responsible && $property->responsible->idType->name === \App\Models\IDType::TIN)
                     <div class="card">
                         <div class="card-body">
                             <div class="card-header bg-white font-weight-bold">TIN VERIFICATION</div>
@@ -164,49 +224,52 @@
                     </div>
                 @endif
 
-                <div class="card-header">
-                    <h5 class="text-uppercase">Responsible Person</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row m-2 pt-3">
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Name</span>
-                            <p class="my-1">{{ $property->responsible->first_name ?? 'N/A' }}
-                                {{ $property->responsible->middle_name }} {{ $property->responsible->last_name ?? 'N/A' }}
-                            </p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Gender</span>
-                            <p class="my-1">{{ $property->responsible->gender ?? 'N/A' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Date of Birth</span>
-                            <p class="my-1">
-                                {{ $property->responsible->date_of_birth ? $property->responsible->date_of_birth->toFormattedDateString() : 'N/A' }}
-                            </p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Email</span>
-                            <p class="my-1">{{ $property->responsible->email ?? 'N/A' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Mobile</span>
-                            <p class="my-1">{{ $property->responsible->mobile ?? 'N/A' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Address</span>
-                            <p class="my-1">{{ $property->responsible->address ?? 'N/A' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">ID Type</span>
-                            <p class="my-1">{{ $property->responsible->idType->name ?? 'N/A' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">ID Number</span>
-                            <p class="my-1">{{ $property->responsible->id_number ?? 'N/A' }}</p>
+                @if($property->ownership->name === \App\Enum\PropertyOwnershipTypeStatus::PRIVATE && $property->responsible)
+                    <div class="card-header">
+                        <h5 class="text-uppercase">Responsible Person</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row m-2 pt-3">
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Name</span>
+                                <p class="my-1">{{ $property->responsible->first_name ?? 'N/A' }}
+                                    {{ $property->responsible->middle_name }} {{ $property->responsible->last_name ?? 'N/A' }}
+                                </p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Gender</span>
+                                <p class="my-1">{{ $property->responsible->gender ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Date of Birth</span>
+                                <p class="my-1">
+                                    {{ $property->responsible->date_of_birth ? $property->responsible->date_of_birth->toFormattedDateString() : 'N/A' }}
+                                </p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Email</span>
+                                <p class="my-1">{{ $property->responsible->email ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Mobile</span>
+                                <p class="my-1">{{ $property->responsible->mobile ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Address</span>
+                                <p class="my-1">{{ $property->responsible->address ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">ID Type</span>
+                                <p class="my-1">{{ $property->responsible->idType->name ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">ID Number</span>
+                                <p class="my-1">{{ $property->responsible->id_number ?? 'N/A' }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
+
             </div>
 
             <livewire:property-tax.bill-preview

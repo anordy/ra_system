@@ -15,7 +15,7 @@ class DisputeReportController extends Controller
      use DisputeReportTrait;
     public function index()
     {
-        if (!Gate::allows('managerial-dispute-report-vie')) {
+        if (!Gate::allows('managerial-dispute-report-view')) {
             abort(403);
         }
         return view('reports.dispute.index');

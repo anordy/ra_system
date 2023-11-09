@@ -13,7 +13,7 @@ class DebtReportController extends Controller
 
     public function index()
     {
-        if (!Gate::allows('managerial-debt-report-vie')) {
+        if (!Gate::allows('managerial-debt-report-view')) {
             abort(403);
         }
         return view('reports.debts.index');

@@ -66,4 +66,11 @@ class Property extends Model
         return $this->hasMany(PropertyUnit::class, 'property_id');
     }
 
+    public function agent(){
+        return $this->hasOne(PropertyAgent::class, 'property_id', 'id');
+    }
+
+    public function ownership(){
+        return $this->belongsTo(PropertyOwnershipType::class, 'ownership_type_id');
+    }
 }

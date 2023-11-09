@@ -23,7 +23,7 @@ class CreateEfdmsReceiptsTable extends Migration
             $table->string('verification_code');
             $table->decimal('total_tax_exclusive', 20, 2);
             $table->decimal('total_tax_inclusive', 20, 2);
-            $table->decimal('total_tax_amount', 20, 2);
+            $table->decimal('total_tax_amount', 20, 2)->nullable();
             $table->integer('is_cancelled');
             $table->integer('is_onhold');
             $table->integer('is_utilized')->default(0)->comment('0-Not utilized, 1- Utilized');

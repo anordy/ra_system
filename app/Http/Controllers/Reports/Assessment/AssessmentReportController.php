@@ -14,7 +14,7 @@ class AssessmentReportController extends Controller
 
     public function index()
     {
-        if (!Gate::allows('managerial-assessment-report-vie')) {
+        if (!Gate::allows('managerial-assessment-report-view')) {
             abort(403);
         }
         return view('reports.assessment.index');
