@@ -18,14 +18,15 @@ class CreatePropertiesTable extends Migration
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('house_number')->nullable();
             $table->string('urn')->nullable();
+            $table->string('interview_id')->nullable();
 
-            $table->unsignedBigInteger('region_id');
-            $table->unsignedBigInteger('district_id');
-            $table->unsignedBigInteger('ward_id');
-            $table->unsignedBigInteger('street_id');
+            $table->string('region_id');
+            $table->string('district_id');
+            $table->string('ward_id');
+            $table->string('street_id')->nullable();
 
             $table->enum('status', PropertyStatus::getConstants())->default('pending');
             $table->enum('type', PropertyTypeStatus::getConstants());

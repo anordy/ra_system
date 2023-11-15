@@ -125,7 +125,7 @@
         </tr>
         <tr>
             <td class="padding-left td-title bold">Plot No / Namba ya Nyumba</td>
-            <td class="td-content">{{ $propertyPayment->property->name }}</td>
+            <td class="td-content">{{ $propertyPayment->property->name ?? $propertyPayment->property->house_number }}</td>
             <td class="padding-left td-title bold">Street / Mtaa</td>
             <td class="td-content">{{ $propertyPayment->property->street->name }}</td>
         </tr>
@@ -133,7 +133,7 @@
             <td class="padding-left td-title bold">Use / Matumizi</td>
             <td class="td-content">{{ formatEnum($propertyPayment->property->usage_type) }}</td>
             <td class="padding-left td-title bold">Block No.</td>
-            <td class="td-content">{{ $propertyPayment->property->name }}</td>
+            <td class="td-content">{{ $propertyPayment->property->name ?? $propertyPayment->property->house_number }}</td>
         </tr>
         <tr>
             <td colspan="2" class="padding-left td-title bold">Payment Control No/Nambari ya Malipo</td>

@@ -11,6 +11,7 @@ class PropertyAgent extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $guarded = [];
     public function property(): BelongsTo
     {
         return $this->belongsTo(Property::class, 'property_id');

@@ -93,10 +93,10 @@ trait PropertyTaxTrait
             $amount = $property->star->amount_charged;
         } else if ($propertyType === PropertyTypeStatus::RESIDENTIAL_STOREY) {
             $amount = $this->getPropertyTaxPayableAmount(SystemSetting::RESIDENTIAL_STOREY_BUILDING);
-            $amount = $property->units->count() * $amount;
+            $amount = $property->storeys->count() * $amount;
         } else if ($propertyType === PropertyTypeStatus::STOREY_BUSINESS) {
             $amount = $this->getPropertyTaxPayableAmount(SystemSetting::STOREY_BUSINESS_BUILDING);
-            $amount = $property->units->count() * $amount;
+            $amount = $property->storeys->count() * $amount;
         } else if ($propertyType === PropertyTypeStatus::OTHER) {
             $amount = $this->getPropertyTaxPayableAmount(SystemSetting::OTHER_BUSINESS_BUILDING);
         } else {
@@ -130,16 +130,16 @@ trait PropertyTaxTrait
         } else if ($propertyType === PropertyTypeStatus::RESIDENTIAL_STOREY) {
             $amount = $this->getPropertyTaxPayableAmount(SystemSetting::RESIDENTIAL_STOREY_BUILDING);
             $breakDown = [
-                'units' => $property->units->count(),
+                'units' => $property->storeys->count(),
                 'amount' => $amount,
-                'total_amount' => $property->units->count() * $amount
+                'total_amount' => $property->storeys->count() * $amount
             ];
         } else if ($propertyType === PropertyTypeStatus::STOREY_BUSINESS) {
             $amount = $this->getPropertyTaxPayableAmount(SystemSetting::STOREY_BUSINESS_BUILDING);
             $breakDown = [
-                'units' => $property->units->count(),
+                'units' => $property->storeys->count(),
                 'amount' => $amount,
-                'total_amount' => $property->units->count() * $amount
+                'total_amount' => $property->storeys->count() * $amount
             ];
         } else if ($propertyType === PropertyTypeStatus::OTHER) {
             $amount = $this->getPropertyTaxPayableAmount(SystemSetting::OTHER_BUSINESS_BUILDING);

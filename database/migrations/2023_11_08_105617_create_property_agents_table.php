@@ -21,6 +21,7 @@ class CreatePropertyAgentsTable extends Migration
             $table->string('last_name');
             $table->string('mobile');
             $table->string('alt_mobile')->nullable();
+            $table->string('company_name')->nullable();
             $table->string('email')->nullable();
             $table->timestamps();
             $table->softDeletes();

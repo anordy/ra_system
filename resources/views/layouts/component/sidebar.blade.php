@@ -140,9 +140,12 @@
                    aria-expanded="{{ request()->is('property-tax*') ? 'true' : 'false' }}" class="dropdown-toggle">Property Tax
                     </a>
                 <ul class="collapse list-unstyled {{ request()->is('property-tax*') ? 'show' : '' }}" id="propertyTaxMenu">
-                        <li class="{{ request()->is('property-tax/condominium/registration') ? 'active' : '' }}">
-                            <a href="{{ route('property-tax.condominium.registration') }}">Condominium Registration</a>
-                        </li>
+                    <li class="{{ request()->is('property-tax/survey-solution/initial') ? 'active' : '' }}">
+                        <a href="{{ route('property-tax.survey-solution.initial') }}">Survey Solution Registration</a>
+                    </li>
+                    <li class="{{ request()->is('property-tax/condominium/registration') ? 'active' : '' }}">
+                        <a href="{{ route('property-tax.condominium.registration') }}">Condominium Registration</a>
+                    </li>
                     <li class="{{ request()->is('property-tax/condominium/index') ? 'active' : '' }}">
                         <a href="{{ route('property-tax.condominium.index') }}">Registered Condominiums</a>
                     </li>

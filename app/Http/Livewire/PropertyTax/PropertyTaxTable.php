@@ -62,24 +62,18 @@ class PropertyTaxTable extends DataTableComponent
             Column::make('Region', 'region_id')
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return $row->region->name ?? 'N/A';
+                    return $value ?? 'N/A';
                 }),
             Column::make('District', 'district_id')
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return $row->district->name ?? 'N/A';
+                    return $value ?? 'N/A';
                 }),
             Column::make('Ward', 'ward_id')
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return $row->ward->name ?? 'N/A';
+                    return $value ?? 'N/A';
                 }),
-            Column::make('Street', 'street_id')
-                ->searchable()
-                ->format(function ($value, $row) {
-                    return $row->street->name ?? 'N/A';
-                }),
-
             Column::make('Date of Registration', 'created_at')
                 ->format(function ($value, $row) {
                     return $row->created_at->toFormattedDateString() ?? 'N/A';

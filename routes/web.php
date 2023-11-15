@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\PropertyTax\CondominiumController;
 use App\Http\Controllers\PropertyTax\PropertyTaxController;
+use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -185,6 +186,10 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/show/{id}', [PropertyTaxController::class, 'show'])->name('show');
         Route::get('/index/next-bills', [PropertyTaxController::class, 'nextBills'])->name('next.bills');
         Route::get('/get/bill/{id}', [PropertyTaxController::class, 'getBill'])->name('bill');
+
+        Route::prefix('survey-solution')->name('survey-solution.')->group(function () {
+            Route::get('/registration', [SurveySolutionController::class, 'init'])->name('initial');
+        });
 
         Route::prefix('condominium')->name('condominium.')->group(function () {
             Route::get('/registration', [CondominiumController::class, 'register'])->name('registration');
