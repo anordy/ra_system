@@ -15,22 +15,20 @@ class SurveySolutionInternalService
 
             $authorization = 'Bearer ' .$accessToken;
 
-            $tinUrl = config('modulesconfig.api_url') . '/tra/tin/post-znumber';
+            $url = config('modulesconfig.api_url') . '/property-tax/property-info';
 
             $payload = [
-                'indentifierType' => $identifierType,
-                'identifierNumber' => $identifierNumber
+                $identifierType => $identifierNumber,
             ];
 
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => $tinUrl,
+                CURLOPT_URL => $url,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30000,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_TIMEOUT => 30,
                 CURLOPT_CUSTOMREQUEST => "POST",
                 CURLOPT_POSTFIELDS => json_encode($payload),
                 CURLOPT_HTTPHEADER => array(
@@ -42,23 +40,19 @@ class SurveySolutionInternalService
 
             $response = curl_exec($curl);
 
+            Log::info($response);
+
             $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
             if ($statusCode != 200) {
                 curl_close($curl);
-                if (json_decode($response) == 200){
-                    return [
-                        'message' => 'unsuccessful',
-                        'data' => null
-                    ];
-                } else {
-                    Log::error('FAILED TO POST Z-NUMBER: '.$response);
-                    return [
-                        'message' => 'failed',
-                        'data' => null
-                    ];
-                }
+                Log::error('FAILED');
+                return [
+                    'message' => 'failed',
+                    'data' => null
+                ];
             } else {
+                curl_close($curl);
                 return json_decode($response, true);
             }
 

@@ -3,23 +3,37 @@
 namespace App\Http\Livewire\PropertyTax\SurveySolution;
 
 
+use App\Enum\BillStatus;
 use App\Enum\PropertyOwnershipTypeStatus;
+use App\Enum\PropertyPaymentCategoryStatus;
+use App\Enum\PropertyStatus;
 use App\Enum\PropertyTypeStatus;
 use App\Enum\UnitUsageTypeStatus;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Country;
+use App\Models\Currency;
+use App\Models\District;
+use App\Models\FinancialYear;
 use App\Models\IDType;
 use App\Models\KYC;
 use App\Models\PropertyTax\Property;
 use App\Models\PropertyTax\PropertyAgent;
 use App\Models\PropertyTax\PropertyOwner;
 use App\Models\PropertyTax\PropertyOwnershipType;
+use App\Models\PropertyTax\PropertyPayment;
 use App\Models\PropertyTax\PropertyStorey;
 use App\Models\PropertyTax\PropertyTaxHotelStar;
+use App\Models\Street;
 use App\Models\Taxpayer;
+use App\Models\Ward;
+use App\Services\Api\SurveySolutionInternalService;
 use App\Traits\CustomAlert;
+use App\Traits\PaymentsTrait;
+use App\Traits\PropertyTaxTrait;
 use App\Traits\VerificationTrait;
+use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -27,14 +41,21 @@ use Livewire\Component;
 
 class Initial extends Component
 {
-    use CustomAlert, VerificationTrait;
+    use CustomAlert, VerificationTrait, WorkflowProcesssingTrait, PropertyTaxTrait, PaymentsTrait;
 
     public $identifierType, $identifierNumber;
     public $properties, $nationality, $permitNumber;
     public $size, $name, $features, $propertyValue, $purchaseValue, $acquisitionDate, $ownershipType, $institutionName;
     public $ownershipTypes = [];
     public $countries = [];
-
+    public $streets = [];
+    public $wards = [];
+    public $districts = [];
+    public $regions = [];
+    public $stars = [];
+    public $additionalProperties = [];
+    public $type;
+    public $propertyTypes = [];
 
     public function mount()
     {
@@ -44,6 +65,34 @@ class Initial extends Component
             ->where('name', '!=', Country::TANZANIA)
             ->where('is_approved', 1)
             ->get();
+        $this->stars = PropertyTaxHotelStar::select('id', 'name')->get();
+        $regions = DB::table('regions')
+            ->select('id', 'name')
+            ->where('is_approved', 1)
+            ->get();
+        $this->regions = json_decode($regions, true);
+        $this->propertyTypes = PropertyTypeStatus::getConstants();
+        $this->propertyTypes = array_values($this->propertyTypes);
+    }
+
+    public function addProperty()
+    {
+        $this->additionalProperties[] = [
+            'name' => '',
+            'hotel_stars_id' => '',
+            'house_number' => '',
+            'region_id' => '',
+            'district_id' => '',
+            'ward_id' => '',
+            'type' => PropertyTypeStatus::OTHER,
+            'usage_type' => '',
+            'size' => '',
+            'property_value' => '',
+            'purchase_value' => '',
+            'acquisition_date' => '',
+            'features' => '',
+            'number_of_storeys' => ''
+        ];
     }
 
     public function submit()
@@ -51,7 +100,7 @@ class Initial extends Component
         $this->validate(
             [
                 'ownershipType' => 'required',
-                'institutionName' => ['nullable', 'strip_tag' ,'required_if:ownershipType,' . PropertyOwnershipTypeStatus::RELIGIOUS . ',' . PropertyOwnershipTypeStatus::GOVERNMENT],
+                'institutionName' => ['nullable', 'strip_tag', 'required_if:ownershipType,' . PropertyOwnershipTypeStatus::RELIGIOUS . ',' . PropertyOwnershipTypeStatus::GOVERNMENT],
             ]
         );
 
@@ -63,6 +112,15 @@ class Initial extends Component
                 ]
             );
         }
+
+//        $this->validate([
+//            'additionalProperties.*.region_id' => 'required',
+//            'additionalProperties.*.district_id' => 'required',
+//            'additionalProperties.*.ward_id' => 'required',
+//            'additionalProperties.*.type' => 'required',
+////            'additionalProperties.*.number_of_storeys' => 'required',
+////            'additionalProperties.*.region_id' => 'required',
+//        ]);
 
         try {
             DB::beginTransaction();
@@ -114,13 +172,23 @@ class Initial extends Component
                 $taxPayer->generateReferenceNo();
 
             }
+
             // Save property information
-            foreach ($this->properties as $property) {
+            foreach ($this->properties as $i => $property) {
+                $i++;
                 if ($property['property_type'] === PropertyTypeStatus::HOTEL) {
                     if (is_null($property['hotel_star'])) {
-                        throw new \Exception('Missing Number of Stars for Hotel');
+                        $this->customAlert('warning', 'Missing Number of Stars for Hotel');
+                        return;
                     }
                     $hotelStarId = PropertyTaxHotelStar::where('no_of_stars', $property['hotel_star'])->firstOrFail()->id;
+                }
+
+                $doesInterviewExist = Property::where('interview_id', $property['interview__id'])->first();
+
+                if ($doesInterviewExist) {
+                    $this->customAlert('warning', "Property Number {$i} has already been registered");
+                    return;
                 }
 
                 $generatedProperty = Property::create([
@@ -132,8 +200,7 @@ class Initial extends Component
                     'region_id' => $property['region'],
                     'district_id' => $property['district'],
                     'ward_id' => $property['locality'],
-                    'street_id' => null,
-                    'type' => PropertyTypeStatus::OTHER, // $property['property_type']
+                    'type' => $property['property_type'],
                     'usage_type' => UnitUsageTypeStatus::RESIDENTIAL, // Requires mapping
                     'taxpayer_id' => $taxPayer->id,
 
@@ -152,8 +219,6 @@ class Initial extends Component
                     'first_name' => $owner[0] ?? '',
                     'middle_name' => $owner[1] ?? '',
                     'last_name' => $owner[2] ?? '',
-                    'gender' => '',
-                    'date_of_birth' => '',
                     'mobile' => $property['owner']['phone_no'] ?? '',
                     'email' => $property['owner']['email_address'],
                     'address' => 'N/A',
@@ -179,12 +244,99 @@ class Initial extends Component
                 if ($property['property_type'] === PropertyTypeStatus::STOREY_BUSINESS || $property['property_type'] === PropertyTypeStatus::RESIDENTIAL_STOREY) {
                     for ($i = 0; $i < $property['number_of_storey']; $i++) {
                         PropertyStorey::create([
-                            'number' => $i+1,
+                            'number' => $i + 1,
                             'property_id' => $generatedProperty->id
                         ]);
                     }
                 }
+
+                // Update Status
+                $generatedProperty->status = PropertyStatus::APPROVED;
+                $generatedProperty->urn = $this->generateURN($generatedProperty);
+                $generatedProperty->save();
+
+                $amount = $this->getPayableAmount($generatedProperty);
+
+                // Generate Bill
+                $propertyPayment = PropertyPayment::create([
+                    'property_id' => $generatedProperty->id,
+                    'financial_year_id' => FinancialYear::where('code', Carbon::now()->year)->firstOrFail()->id,
+                    'currency_id' => Currency::where('iso', 'TZS')->firstOrFail()->id,
+                    'amount' => $amount,
+                    'interest' => 0,
+                    'total_amount' => $amount,
+                    'payment_date' => Carbon::now()->addMonths(3),
+                    'curr_payment_date' => Carbon::now()->addMonths(3),
+                    'payment_status' => BillStatus::SUBMITTED,
+                    'payment_category' => PropertyPaymentCategoryStatus::NORMAL,
+                ]);
+
+                $this->generatePropertyTaxControlNumber($propertyPayment);
+
             }
+
+//            foreach ($this->additionalProperties as $additionalProperty) {
+//                if ($additionalProperty['type'] === PropertyTypeStatus::HOTEL) {
+//                    if (is_null($additionalProperty['starId'])) {
+//                        $this->customAlert('warning', 'Missing Number of Stars for Hotel');
+//                        return;
+//                    }
+//                    $hotelStarId = PropertyTaxHotelStar::where('no_of_stars', $additionalProperty['starId'])->firstOrFail()->id;
+//                }
+//
+//                $generatedPropertyII = Property::create([
+//                    'name' => $this->name, // Inserted manually
+//                    'hotel_stars_id' => $hotelStarId ?? null,
+//
+//                    'house_number' => $additionalProperty['house_number'],
+//                    'region_id' => $additionalProperty['region_id'],
+//                    'district_id' => $additionalProperty['district_id'],
+//                    'ward_id' => $additionalProperty['ward_id'],
+//                    'type' => $additionalProperty['property_type'],
+//                    'usage_type' => UnitUsageTypeStatus::RESIDENTIAL, // Requires mapping
+//                    'taxpayer_id' => $taxPayer->id,
+//
+//                    'size' => $additionalProperty['size'], // Inserted manually
+//                    'property_value' => $additionalProperty['propertyValue'], // Inserted manually
+//                    'purchase_value' => $additionalProperty['purchaseValue'], // Inserted manually
+//                    'acquisition_date' => $additionalProperty['acquisitionDate'], // Inserted manually
+//                    'features' => $additionalProperty['property_feature'],
+//
+//                    'ownership_type_id' => $this->ownershipTypes->where('name', $this->ownershipType)->firstOrFail()->id, // Required
+//                ]);
+//
+//                if ($additionalProperty['type'] === PropertyTypeStatus::STOREY_BUSINESS || $additionalProperty['type'] === PropertyTypeStatus::RESIDENTIAL_STOREY) {
+//                    for ($i = 0; $i < $additionalProperty['number_of_storey']; $i++) {
+//                        PropertyStorey::create([
+//                            'number' => $i + 1,
+//                            'property_id' => $generatedPropertyII->id
+//                        ]);
+//                    }
+//                }
+//
+//                // Update Status
+//                $generatedPropertyII->status = PropertyStatus::APPROVED;
+//                $generatedPropertyII->urn = $this->generateURN($generatedPropertyII);
+//                $generatedPropertyII->save();
+//
+//                $amount = $this->getPayableAmount($generatedPropertyII);
+//
+//                // Generate Bill
+//                $propertyPayment = PropertyPayment::create([
+//                    'property_id' => $generatedPropertyII->id,
+//                    'financial_year_id' => FinancialYear::where('code', Carbon::now()->year)->firstOrFail()->id,
+//                    'currency_id' => Currency::where('iso', 'TZS')->firstOrFail()->id,
+//                    'amount' => $amount,
+//                    'interest' => 0,
+//                    'total_amount' => $amount,
+//                    'payment_date' => Carbon::now()->addMonths(3),
+//                    'curr_payment_date' => Carbon::now()->addMonths(3),
+//                    'payment_status' => BillStatus::SUBMITTED,
+//                    'payment_category' => PropertyPaymentCategoryStatus::NORMAL,
+//                ]);
+//
+//                $this->generatePropertyTaxControlNumber($propertyPayment);
+//            }
 
             DB::commit();
 
@@ -217,7 +369,7 @@ class Initial extends Component
             'first_name' => $owner[0],
             'middle_name' => $owner[1] ?? '',
             'last_name' => $owner[2],
-            'mobile' => $this->properties[0]['owner']['phone_no'] ?? '',
+            'mobile' => $this->properties[0]['owner']['phone_no'],
             'email' => $this->properties[0]['owner']['email_address'] ?? '',
             'region_id' => '1',
             'district_id' => '1',
@@ -265,6 +417,11 @@ class Initial extends Component
         return KYC::create($data);
     }
 
+    public function removeProperty($i)
+    {
+        unset($this->additionalProperties[$i]);
+    }
+
 
     public function search()
     {
@@ -276,239 +433,20 @@ class Initial extends Component
         );
 
         // Query from API
+        $ssService = new SurveySolutionInternalService();
+        $response = $ssService->getPropertyInformation($this->identifierType, $this->identifierNumber);
 
-        $datas = [
-            [
-                "interview__id" => "5fc4a773-ea76-4bee-b190-c4816a2b8fc1",
-                "location" => [
-                    "Accuracy" => 8.34294319152832,
-                    "Altitude" => 46.92864990234375,
-                    "Latitude" => -5.91033177,
-                    "Longitude" => 39.29912219,
-                    "Timestamp" => "2023-10-25T09:10:53.908+00:00"
-                ],
-                "owner" => [
-                    "zra_ref_no" => "ZU0000000",
-                    "zra_number" => "Z000000000",
-                    "fullName" => "SIHABA ALI HAJI",
-                    "mail_address" => "0",
-                    "phone_no" => "0772-882-756",
-                    "email_address" => "0",
-                    "tin" => 0,
-                    "nida" => null,
-                    "zanID" => "000000000",
-                    "passport" => "0"
-                ],
-                "agent" => [
-                    "name_of_person" => "SIHABA ALI HAJI",
-                    "name_of_company" => "881429566",
-                    "phone_no_1" => "0772-882-756",
-                    "phone_no_2" => "0000-000-000",
-                    "email" => "0"
-                ],
-                "valuation" => [
-                    "property_id" => null,
-                    "property_feature" => null
-                ],
-                "region" => "Kaskazini Unguja",
-                "district" => "Kaskazini A",
-                "locality" => "Gamba",
-                "property_address" => "GAMBA MAJENZINI",
-                "meter_no" => "54172277003",
-                "house_number" => "5",
-                "postcode" => "5/4",
-                "road_name" => "GAMBA",
-                "property_type" => "Jengo la Kondominiamu",
-                "number_of_storey" => "0",
-                "type_of_business" => "Nyumba za wageni",
-                "hotel_star" => null,
-                "property_feature" => null
-            ],
-            [
-                "interview__id" => "d3bce707-72ac-4bcd-b585-cbb6309b91e0",
-                "location" => [
-                    "Accuracy" => 16.13362693786621,
-                    "Altitude" => 53.77685546875,
-                    "Latitude" => -5.91054921,
-                    "Longitude" => 39.2989792,
-                    "Timestamp" => "2023-10-25T09:22:52.901+00:00"
-                ],
-                "owner" => [
-                    "zra_ref_no" => "ZU0000000",
-                    "zra_number" => "Z000000000",
-                    "fullName" => "HASSAN MAHMOUD JUMA",
-                    "mail_address" => "0",
-                    "phone_no" => "0715-402-273",
-                    "email_address" => "0",
-                    "tin" => 0,
-                    "nida" => "00000000000000000000",
-                    "zanID" => "000000000",
-                    "passport" => "0"
-                ],
-                "agent" => [
-                    "name_of_person" => "HASSAN MAHMOUD JUMA",
-                    "name_of_company" => "710024138",
-                    "phone_no_1" => "0715-402-273",
-                    "phone_no_2" => "0773-631-211",
-                    "email" => "0"
-                ],
-                "valuation" => [
-                    "property_id" => null,
-                    "property_feature" => null
-                ],
-                "region" => "Kaskazini Unguja",
-                "district" => "Kaskazini A",
-                "locality" => "Gamba",
-                "property_address" => "GAMBA MAJENZINI",
-                "meter_no" => "54172271717",
-                "house_number" => "5",
-                "postcode" => "5/6",
-                "road_name" => "GAMBA",
-                "property_type" => "Jengo la Kondominiamu",
-                "number_of_storey" => "0",
-                "type_of_business" => "Nyumba za wageni",
-                "hotel_star" => null,
-                "property_feature" => null
-            ],
-            [
-                "interview__id" => "7a12e4b1-2cbc-4038-bf07-9ef7109ce883",
-                "location" => [
-                    "Accuracy" => 13.469212532043457,
-                    "Altitude" => 42.612060546875,
-                    "Latitude" => -5.91050087,
-                    "Longitude" => 39.2991197,
-                    "Timestamp" => "2023-10-25T09:29:03.908+00:00"
-                ],
-                "owner" => [
-                    "zra_ref_no" => "ZU0000000",
-                    "zra_number" => "Z000000000",
-                    "fullName" => "ALI SHAABAN SHAIB",
-                    "mail_address" => "0",
-                    "phone_no" => "0778-734-142",
-                    "email_address" => "0",
-                    "tin" => 0,
-                    "nida" => "00000000000000000000",
-                    "zanID" => "000000000",
-                    "passport" => "0"
-                ],
-                "agent" => [
-                    "name_of_person" => "ALI SHAABAN SHAIB",
-                    "name_of_company" => "070010224",
-                    "phone_no_1" => "0778-734-142",
-                    "phone_no_2" => "0000-000-000",
-                    "email" => "0"
-                ],
-                "valuation" => [
-                    "property_id" => null,
-                    "property_feature" => null
-                ],
-                "region" => "Kaskazini Unguja",
-                "district" => "Kaskazini A",
-                "locality" => "Gamba",
-                "property_address" => "GAMBA MAJENZINI",
-                "meter_no" => "00000000000",
-                "house_number" => "5",
-                "postcode" => "5/5",
-                "road_name" => "GAMBA",
-                "property_type" => "Jengo la Kondominiamu",
-                "number_of_storey" => "0",
-                "type_of_business" => "Nyumba za wageni",
-                "hotel_star" => null,
-                "property_feature" => null
-            ],
-            [
-                "interview__id" => "94c127af-6515-4ca9-92c0-db8622918cf1",
-                "location" => [
-                    "Accuracy" => 9.047110557556152,
-                    "Altitude" => 46.3594970703125,
-                    "Latitude" => -5.91018537,
-                    "Longitude" => 39.2990662,
-                    "Timestamp" => "2023-10-25T09:41:02+00:00"
-                ],
-                "owner" => [
-                    "zra_ref_no" => "ZU0000000",
-                    "zra_number" => "Z000000000",
-                    "fullName" => "MUSSA MAKAME BAKARI",
-                    "mail_address" => "0",
-                    "phone_no" => "0719-503-008",
-                    "email_address" => "0",
-                    "tin" => 0,
-                    "nida" => "00000000000000000000",
-                    "zanID" => "000000000",
-                    "passport" => "0"
-                ],
-                "agent" => [
-                    "name_of_person" => "MUSSA MAKAME BAKARI",
-                    "name_of_company" => "600011530",
-                    "phone_no_1" => "0719-503-008",
-                    "phone_no_2" => "0000-000-000",
-                    "email" => "0"
-                ],
-                "valuation" => [
-                    "property_id" => null,
-                    "property_feature" => null
-                ],
-                "region" => "Kaskazini Unguja",
-                "district" => "Kaskazini A",
-                "locality" => "Gamba",
-                "property_address" => "GAMBA MAJENZI",
-                "meter_no" => "00000000000",
-                "house_number" => "5",
-                "postcode" => "5/8",
-                "road_name" => "GAMBA",
-                "property_type" => "Jengo la Kondominiamu",
-                "number_of_storey" => "0",
-                "type_of_business" => "Nyumba za wageni",
-                "hotel_star" => null,
-                "property_feature" => null
-            ],
-            [
-                "interview__id" => "43dc0b92-a51e-406c-bffe-d0572d0d9aef",
-                "location" => [
-                    "Accuracy" => 9.95927619934082,
-                    "Altitude" => 41.8427734375,
-                    "Latitude" => -5.910242,
-                    "Longitude" => 39.29906195,
-                    "Timestamp" => "2023-10-25T09:48:42.913+00:00"
-                ],
-                "owner" => [
-                    "zra_ref_no" => "ZU0000000",
-                    "zra_number" => "Z000000000",
-                    "fullName" => "SHEHA JABIR MAKAME",
-                    "mail_address" => "0",
-                    "phone_no" => "0777-324-253",
-                    "email_address" => "0",
-                    "tin" => 0,
-                    "nida" => "00000000000000000000",
-                    "zanID" => "000000000",
-                    "passport" => "0"
-                ],
-                "agent" => [
-                    "name_of_person" => "SHEHA JABIR MAKAME",
-                    "name_of_company" => "060004617",
-                    "phone_no_1" => "0777-324-253",
-                    "phone_no_2" => "0000-000-000",
-                    "email" => "0"
-                ],
-                "valuation" => [
-                    "property_id" => null,
-                    "property_feature" => null
-                ],
-                "region" => "Kaskazini Unguja",
-                "district" => "Kaskazini A",
-                "locality" => "Gamba",
-                "property_address" => "GAMBA MAJENZI",
-                "meter_no" => "00000000000",
-                "house_number" => "5",
-                "postcode" => "5/9",
-                "road_name" => "GAMBA",
-                "property_type" => "Jengo la Kondominiamu",
-                "number_of_storey" => "1",
-                "type_of_business" => "Nyumba za wageni",
-                "hotel_star" => null,
-                "property_feature" => null
-            ],
-        ];
+        if ($response && isset($response['totalItems'])) {
+            if ($response['totalItems'] > 0) {
+                $datas = $response['propertyInforList'];
+            } else {
+                $this->customAlert('warning', 'No Data Found');
+                return;
+            }
+        } else {
+            $this->customAlert('warning', 'Something went wrong, Please try again');
+            return;
+        }
 
 
         foreach ($datas as $property) {
@@ -516,6 +454,38 @@ class Initial extends Component
         }
 
     }
+
+    public function updated($propertyName)
+    {
+        if ($propertyName === 'region_id') {
+            $this->reset('district_id', 'ward_id', 'wards', 'street_id', 'streets');
+            $districts = District::where('region_id', $this->region_id)
+                ->where('is_approved', 1)
+                ->select('id', 'name')
+                ->get();
+            $this->districts = json_decode($districts, true);
+        }
+
+        if ($propertyName === 'district_id') {
+            $this->reset('ward_id', 'streets', 'street_id');
+            $wards = Ward::where('district_id', $this->district_id)
+                ->where('is_approved', 1)
+                ->select('id', 'name')
+                ->get();
+            $this->wards = json_decode($wards, true);
+        }
+
+        if ($propertyName === 'ward_id') {
+            $this->reset('street_id');
+            $streets = Street::where('ward_id', $this->ward_id)
+                ->where('is_approved', 1)
+                ->select('id', 'name')
+                ->get();
+            $this->streets = json_decode($streets, true);
+        }
+
+    }
+
 
     public function render()
     {

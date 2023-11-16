@@ -181,9 +181,9 @@ trait PropertyTaxTrait
             throw new \Exception('Invalid Location Provided');
         }
 
-        $regionCode = sprintf("%02d", $property->region_id);
-        $districtCode = sprintf("%02d", $property->district_id);
-        $wardCode = sprintf("%02d", $property->ward_id);
+        $regionCode = sprintf("%02d", $property->region->id);
+        $districtCode = sprintf("%02d", $property->district->id);
+        $wardCode = sprintf("%02d", $property->ward->id);
 
         $urn = "{$locationCode}{$regionCode}{$districtCode}{$wardCode}";
 

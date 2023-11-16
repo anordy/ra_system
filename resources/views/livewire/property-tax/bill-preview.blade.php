@@ -9,7 +9,7 @@
             </tr>
             <tr>
                 <th width="20%">Bill Item</th>
-                <td>Property Tax for <b>{{ $breakDown['units']  }} Unit @ {{ number_format($breakDown['amount'], 2) }}</b></td>
+                <td>Property Tax for <b>{{ $breakDown['units']  }} Unit/Storey @ {{ number_format($breakDown['amount'], 2) }}</b></td>
                 <th class="text-right">{{ number_format($breakDown['total_amount'] ?? 0, 2) }} TZS</th>
             </tr>
             <tr class="bg-secondary">

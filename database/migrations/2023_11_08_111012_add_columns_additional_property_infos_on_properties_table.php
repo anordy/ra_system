@@ -21,6 +21,8 @@ class AddColumnsAdditionalPropertyInfosOnPropertiesTable extends Migration
             $table->string('property_value')->nullable();
             $table->string('purchase_value')->nullable();
             $table->timestamp('acquisition_date')->nullable();
+            $table->string('interview_id')->nullable();
+
         });
     }
 
