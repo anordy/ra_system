@@ -44,19 +44,19 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Region</span>
-                    <p class="my-1">{{ $condominium->region->name ?? 'N/A' }}</p>
+                    <p class="my-1">{{ $condominium->region_id ?? 'N/A' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">District</span>
-                    <p class="my-1">{{ $condominium->district->name ?? 'N/A' }}</p>
+                    <p class="my-1">{{ $condominium->district_id ?? 'N/A' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Ward</span>
-                    <p class="my-1">{{ $condominium->ward->name ?? 'N/A' }}</p>
+                    <p class="my-1">{{ $condominium->ward_id ?? 'N/A' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Street</span>
-                    <p class="my-1">{{ $condominium->street->name ?? 'N/A' }}</p>
+                    <p class="my-1">{{ $condominium->street_id ?? 'N/A' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Date of Registration</span>

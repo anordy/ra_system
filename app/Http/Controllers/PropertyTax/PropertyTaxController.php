@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PropertyTax\Property;
 use App\Models\PropertyTax\PropertyPayment;
 use App\Models\SystemSetting;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -18,19 +19,31 @@ class PropertyTaxController extends Controller
 {
 
     public function index() {
+        if (!Gate::allows('properties-registrations')) {
+            abort(403);
+        }
         return view('property-tax.index');
     }
 
     public function show(string $id) {
+        if (!Gate::allows('properties-registrations')) {
+            abort(403);
+        }
         $property = Property::findOrFail(decrypt($id));
         return view('property-tax.show', compact('property'));
     }
 
     public function nextBills() {
+        if (!Gate::allows('next-bills-preview')) {
+            abort(403);
+        }
         return view('property-tax.next-financial-year-bills');
     }
 
     public function getBill($id){
+        if (!Gate::allows('properties-registrations')) {
+            abort(403);
+        }
         $propertyPayment = PropertyPayment::findOrFail(decrypt($id));
 
         $url = env('TAXPAYER_URL');

@@ -135,30 +135,48 @@
             </li>
         @endcan
 
+        @can('property-tax')
             <li class="{{ request()->is('property-tax*') ? 'active' : '' }}">
                 <a href="#propertyTaxMenu" data-toggle="collapse"
-                   aria-expanded="{{ request()->is('property-tax*') ? 'true' : 'false' }}" class="dropdown-toggle">Property Tax
-                    </a>
-                <ul class="collapse list-unstyled {{ request()->is('property-tax*') ? 'show' : '' }}" id="propertyTaxMenu">
-                    <li class="{{ request()->is('property-tax/survey-solution/initial') ? 'active' : '' }}">
-                        <a href="{{ route('property-tax.survey-solution.initial') }}">Survey Solution Registration</a>
-                    </li>
-                    <li class="{{ request()->is('property-tax/condominium/registration') ? 'active' : '' }}">
-                        <a href="{{ route('property-tax.condominium.registration') }}">Condominium Registration</a>
-                    </li>
-                    <li class="{{ request()->is('property-tax/condominium/index') ? 'active' : '' }}">
-                        <a href="{{ route('property-tax.condominium.index') }}">Registered Condominiums</a>
-                    </li>
-                    <li class="{{ request()->is('property-tax/index') ? 'active' : '' }}">
-                        <a href="{{ route('property-tax.index') }}">Properties Registrations</a>
-                    </li>
-                    <li class="{{ request()->is('property-tax/payment-extension/index') ? 'active' : '' }}">
-                        <a href="{{ route('property-tax.payment-extension.index') }}">Payment Extension Request</a>
-                    <li class="{{ request()->is('property-tax/next-bills') ? 'active' : '' }}">
-                        <a href="{{ route('property-tax.next.bills') }}">Next Bills Preview</a>
-                    </li>
+                   aria-expanded="{{ request()->is('property-tax*') ? 'true' : 'false' }}" class="dropdown-toggle">Property
+                    Tax
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('property-tax*') ? 'show' : '' }}"
+                    id="propertyTaxMenu">
+                    @can('survey-solution-view')
+                        <li class="{{ request()->is('property-tax/survey-solution/initial') ? 'active' : '' }}">
+                            <a href="{{ route('property-tax.survey-solution.initial') }}">Survey Solution
+                                Registration</a>
+                        </li>
+                    @endcan
+                    @can('condominium-registration')
+                        <li class="{{ request()->is('property-tax/condominium/registration') ? 'active' : '' }}">
+                            <a href="{{ route('property-tax.condominium.registration') }}">Condominium Registration</a>
+                        </li>
+                    @endcan
+                    @can('registered-condominium')
+                        <li class="{{ request()->is('property-tax/condominium/index') ? 'active' : '' }}">
+                            <a href="{{ route('property-tax.condominium.index') }}">Registered Condominiums</a>
+                        </li>
+                    @endcan
+                    @can('properties-registrations')
+                        <li class="{{ request()->is('property-tax/index') ? 'active' : '' }}">
+                            <a href="{{ route('property-tax.index') }}">Properties Registrations</a>
+                        </li>
+                    @endcan
+                    @can('property-payment-extension')
+                        <li class="{{ request()->is('property-tax/payment-extension/index') ? 'active' : '' }}">
+                            <a href="{{ route('property-tax.payment-extension.index') }}">Payment Extension Request</a>
+                        </li>
+                    @endcan
+{{--                    @can('next-bills-preview')--}}
+{{--                        <li class="{{ request()->is('property-tax/next-bills') ? 'active' : '' }}">--}}
+{{--                            <a href="{{ route('property-tax.next.bills') }}">Next Bills Preview</a>--}}
+{{--                        </li>--}}
+{{--                    @endcan--}}
                 </ul>
             </li>
+        @endcan
 
         @can('withholding-agent')
             <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
