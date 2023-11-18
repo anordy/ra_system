@@ -1,4 +1,4 @@
-@if (count($this->getEnabledTranstions()) >= 1)
+@if (count($this->getEnabledTransitions()) >= 1)
     <div class="card shadow-sm mb-2 bg-white">
         <div class="row m-2 pt-3">
             <div class="col-md-4 mb-3">

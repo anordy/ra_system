@@ -141,7 +141,6 @@ trait DualControlActivityTrait
                     } else {
                         return true;
                     }
-                    break;
 
                 case DualControl::REGION:
                     if (count($data->landLeases) > 0) {
@@ -149,17 +148,12 @@ trait DualControlActivityTrait
                     } else {
                         return true;
                     }
-                    if (!empty($data->taxagent)) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                    break;
 
                 default:
                     abort(404);
             }
         }
+        abort(404);
     }
 
     public function updateControllable($data, $status)

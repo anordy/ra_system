@@ -1,4 +1,4 @@
-@if (count($this->getEnabledTranstions()) >= 1)
+@if (count($this->getEnabledTransitions()) >= 1)
     <div class="card shadow-sm mb-2 bg-white rounded-0 m-2 pt-3">
         <div class="card-header text-uppercase font-weight-bold bg-white">
             Internal Information Change Approval

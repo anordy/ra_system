@@ -24,16 +24,12 @@ class PenaltyForDebt
 
     public static function getTotalPenalties($debtId, $date, $taxAmount, $period)
     {
-        $penaltableAmount = 0;
 
         $year = FinancialYear::where('code', $date->year)->firstOrFail();
         $interestRate = InterestRate::where('year', $year->code)->firstOrFail()->rate;
         $latePaymentAfterRate = PenaltyRate::where('financial_year_id', $year->id)
             ->where('code', 'LPA')
             ->firstOrFail()->rate;
-
-        $endDate = null;
-        $totalAmount = 0;
 
         $penaltableAmount = $taxAmount;
         $latePaymentAmount = $latePaymentAfterRate * $penaltableAmount;
@@ -50,7 +46,7 @@ class PenaltyForDebt
             'financial_month_name' => $fromDate->day . '-' . $fromDate->monthName . '-' . $fromDate->year . '  to ' . $toDate->day . '-' . $toDate->monthName . '-' . $toDate->year,
             'tax_amount' => $taxAmount,
             'late_filing' => 0,
-            'late_payment' => $latePaymentAmount ?? 0,
+            'late_payment' => $latePaymentAmount,
             'rate_percentage' => $interestRate,
             'rate_amount' => $interestAmount,
             'penalty_amount' => $penaltableAmount,
@@ -235,7 +231,7 @@ class PenaltyForDebt
                 'financial_month_name' => $start_date->day . '-' . $start_date->monthName . '-' . $start_date->year . '  to ' . $end_date->day . '-' . $end_date->monthName . '-' . $end_date->year,
                 'tax_amount' => $outstanding_amount,
                 'late_filing' => 0,
-                'late_payment' => $latePaymentAmount ?? 0,
+                'late_payment' => $latePaymentAmount,
                 'rate_percentage' => $interestRate->rate,
                 'rate_amount' => $interestAmount,
                 'penalty_amount' => $penaltableAmount,

@@ -24,6 +24,7 @@ use App\Models\PropertyTax\PropertyOwnershipType;
 use App\Models\PropertyTax\PropertyPayment;
 use App\Models\PropertyTax\PropertyStorey;
 use App\Models\PropertyTax\PropertyTaxHotelStar;
+use App\Models\Region;
 use App\Models\Street;
 use App\Models\Taxpayer;
 use App\Models\Ward;
@@ -56,6 +57,7 @@ class Initial extends Component
     public $additionalProperties = [];
     public $type;
     public $propertyTypes = [];
+    public $addRegionId, $addDistrictId, $addWardId;
 
     public function mount()
     {
@@ -81,9 +83,6 @@ class Initial extends Component
             'name' => '',
             'hotel_stars_id' => '',
             'house_number' => '',
-            'region_id' => '',
-            'district_id' => '',
-            'ward_id' => '',
             'type' => PropertyTypeStatus::OTHER,
             'usage_type' => '',
             'size' => '',
@@ -97,30 +96,17 @@ class Initial extends Component
 
     public function submit()
     {
-        $this->validate(
-            [
-                'ownershipType' => 'required',
-                'institutionName' => ['nullable', 'strip_tag', 'required_if:ownershipType,' . PropertyOwnershipTypeStatus::RELIGIOUS . ',' . PropertyOwnershipTypeStatus::GOVERNMENT],
-            ]
-        );
-
-        if (isset($this->properties[0]['owner']['passport']) && !is_null($this->properties[0]['owner']['passport'])) {
-            $this->validate(
-                [
-                    'nationality' => 'required',
-                    'permitNumber' => 'required|numeric'
-                ]
-            );
-        }
-
-//        $this->validate([
-//            'additionalProperties.*.region_id' => 'required',
-//            'additionalProperties.*.district_id' => 'required',
-//            'additionalProperties.*.ward_id' => 'required',
-//            'additionalProperties.*.type' => 'required',
-////            'additionalProperties.*.number_of_storeys' => 'required',
-////            'additionalProperties.*.region_id' => 'required',
-//        ]);
+        $this->validate([
+            'ownershipType' => 'required',
+            'institutionName' => ['nullable', 'strip_tag', 'required_if:ownershipType,' . PropertyOwnershipTypeStatus::RELIGIOUS . ',' . PropertyOwnershipTypeStatus::GOVERNMENT],
+            'nationality' => isset($this->properties[0]['owner']['passport']) && !is_null($this->properties[0]['owner']['passport']) ? 'required' : '',
+            'permitNumber' => isset($this->properties[0]['owner']['passport']) && !is_null($this->properties[0]['owner']['passport']) ? 'required|numeric' : '',
+            'addWardId' => count($this->additionalProperties) > 0 ? 'required' : '',
+            'addDistrictId' => count($this->additionalProperties) > 0 ? 'required' : '',
+            'addRegionId' => count($this->additionalProperties) > 0 ? 'required' : '',
+            'additionalProperties.*.type' => count($this->additionalProperties) > 0 ? 'required' : '',
+//            'additionalProperties.*.number_of_storeys' => $this->additionalProperties[0]['type']) > 0 ? 'required' : '',
+        ]);
 
         try {
             DB::beginTransaction();
@@ -275,68 +261,68 @@ class Initial extends Component
 
             }
 
-//            foreach ($this->additionalProperties as $additionalProperty) {
-//                if ($additionalProperty['type'] === PropertyTypeStatus::HOTEL) {
-//                    if (is_null($additionalProperty['starId'])) {
-//                        $this->customAlert('warning', 'Missing Number of Stars for Hotel');
-//                        return;
-//                    }
-//                    $hotelStarId = PropertyTaxHotelStar::where('no_of_stars', $additionalProperty['starId'])->firstOrFail()->id;
-//                }
-//
-//                $generatedPropertyII = Property::create([
-//                    'name' => $this->name, // Inserted manually
-//                    'hotel_stars_id' => $hotelStarId ?? null,
-//
-//                    'house_number' => $additionalProperty['house_number'],
-//                    'region_id' => $additionalProperty['region_id'],
-//                    'district_id' => $additionalProperty['district_id'],
-//                    'ward_id' => $additionalProperty['ward_id'],
-//                    'type' => $additionalProperty['property_type'],
-//                    'usage_type' => UnitUsageTypeStatus::RESIDENTIAL, // Requires mapping
-//                    'taxpayer_id' => $taxPayer->id,
-//
-//                    'size' => $additionalProperty['size'], // Inserted manually
-//                    'property_value' => $additionalProperty['propertyValue'], // Inserted manually
-//                    'purchase_value' => $additionalProperty['purchaseValue'], // Inserted manually
-//                    'acquisition_date' => $additionalProperty['acquisitionDate'], // Inserted manually
-//                    'features' => $additionalProperty['property_feature'],
-//
-//                    'ownership_type_id' => $this->ownershipTypes->where('name', $this->ownershipType)->firstOrFail()->id, // Required
-//                ]);
-//
-//                if ($additionalProperty['type'] === PropertyTypeStatus::STOREY_BUSINESS || $additionalProperty['type'] === PropertyTypeStatus::RESIDENTIAL_STOREY) {
-//                    for ($i = 0; $i < $additionalProperty['number_of_storey']; $i++) {
-//                        PropertyStorey::create([
-//                            'number' => $i + 1,
-//                            'property_id' => $generatedPropertyII->id
-//                        ]);
-//                    }
-//                }
-//
-//                // Update Status
-//                $generatedPropertyII->status = PropertyStatus::APPROVED;
-//                $generatedPropertyII->urn = $this->generateURN($generatedPropertyII);
-//                $generatedPropertyII->save();
-//
-//                $amount = $this->getPayableAmount($generatedPropertyII);
-//
-//                // Generate Bill
-//                $propertyPayment = PropertyPayment::create([
-//                    'property_id' => $generatedPropertyII->id,
-//                    'financial_year_id' => FinancialYear::where('code', Carbon::now()->year)->firstOrFail()->id,
-//                    'currency_id' => Currency::where('iso', 'TZS')->firstOrFail()->id,
-//                    'amount' => $amount,
-//                    'interest' => 0,
-//                    'total_amount' => $amount,
-//                    'payment_date' => Carbon::now()->addMonths(3),
-//                    'curr_payment_date' => Carbon::now()->addMonths(3),
-//                    'payment_status' => BillStatus::SUBMITTED,
-//                    'payment_category' => PropertyPaymentCategoryStatus::NORMAL,
-//                ]);
-//
-//                $this->generatePropertyTaxControlNumber($propertyPayment);
-//            }
+            foreach ($this->additionalProperties as $additionalProperty) {
+                if ($additionalProperty['type'] === PropertyTypeStatus::HOTEL) {
+                    if (is_null($additionalProperty['starId'])) {
+                        $this->customAlert('warning', 'Missing Number of Stars for Hotel');
+                        return;
+                    }
+                    $hotelStarId = PropertyTaxHotelStar::where('no_of_stars', $additionalProperty['starId'])->firstOrFail()->id;
+                }
+
+                $generatedPropertyII = Property::create([
+                    'name' => $additionalProperty['name'] ?? null, // Inserted manually
+                    'hotel_stars_id' => $hotelStarId ?? null,
+
+                    'house_number' => $additionalProperty['house_number'],
+                    'region_id' => Region::findOrFail($this->addRegionId)->name,
+                    'district_id' => District::findOrFail($this->addDistrictId)->name,
+                    'ward_id' => Ward::findOrFail($this->addWardId)->name,
+                    'type' => $additionalProperty['type'],
+                    'usage_type' => UnitUsageTypeStatus::RESIDENTIAL, // Requires mapping
+                    'taxpayer_id' => $taxPayer->id,
+
+                    'size' => $additionalProperty['size'], // Inserted manually
+                    'property_value' => $additionalProperty['propertyValue'], // Inserted manually
+                    'purchase_value' => $additionalProperty['purchaseValue'], // Inserted manually
+                    'acquisition_date' => $additionalProperty['acquisitionDate'], // Inserted manually
+                    'features' => $additionalProperty['property_feature'],
+
+                    'ownership_type_id' => $this->ownershipTypes->where('name', $this->ownershipType)->firstOrFail()->id, // Required
+                ]);
+
+                if ($additionalProperty['type'] === PropertyTypeStatus::STOREY_BUSINESS || $additionalProperty['type'] === PropertyTypeStatus::RESIDENTIAL_STOREY) {
+                    for ($i = 0; $i < $additionalProperty['number_of_storey']; $i++) {
+                        PropertyStorey::create([
+                            'number' => $i + 1,
+                            'property_id' => $generatedPropertyII->id
+                        ]);
+                    }
+                }
+
+                // Update Status
+                $generatedPropertyII->status = PropertyStatus::APPROVED;
+                $generatedPropertyII->urn = $this->generateURN($generatedPropertyII);
+                $generatedPropertyII->save();
+
+                $amount = $this->getPayableAmount($generatedPropertyII);
+
+                // Generate Bill
+                $propertyPayment = PropertyPayment::create([
+                    'property_id' => $generatedPropertyII->id,
+                    'financial_year_id' => FinancialYear::where('code', Carbon::now()->year)->firstOrFail()->id,
+                    'currency_id' => Currency::where('iso', 'TZS')->firstOrFail()->id,
+                    'amount' => $amount,
+                    'interest' => 0,
+                    'total_amount' => $amount,
+                    'payment_date' => Carbon::now()->addMonths(3),
+                    'curr_payment_date' => Carbon::now()->addMonths(3),
+                    'payment_status' => BillStatus::SUBMITTED,
+                    'payment_category' => PropertyPaymentCategoryStatus::NORMAL,
+                ]);
+
+                $this->generatePropertyTaxControlNumber($propertyPayment);
+            }
 
             DB::commit();
 
@@ -425,29 +411,76 @@ class Initial extends Component
 
     public function search()
     {
-        $this->validate(
-            [
-                'identifierType' => 'required',
-                'identifierNumber' => 'required'
-            ]
-        );
+//        $this->validate(
+//            [
+//                'identifierType' => 'required',
+//                'identifierNumber' => 'required'
+//            ]
+//        );
 
         // Query from API
-        $ssService = new SurveySolutionInternalService();
-        $response = $ssService->getPropertyInformation($this->identifierType, $this->identifierNumber);
-
-        if ($response && isset($response['totalItems'])) {
-            if ($response['totalItems'] > 0) {
-                $datas = $response['propertyInforList'];
-            } else {
-                $this->customAlert('warning', 'No Data Found');
-                return;
-            }
-        } else {
-            $this->customAlert('warning', 'Something went wrong, Please try again');
-            return;
-        }
-
+//        $ssService = new SurveySolutionInternalService();
+//        $response = $ssService->getPropertyInformation($this->identifierType, $this->identifierNumber);
+//
+//        if ($response && isset($response['totalItems'])) {
+//            if ($response['totalItems'] > 0) {
+//                $datas = $response['propertyInforList'];
+//            } else {
+//                $this->customAlert('warning', 'No Data Found');
+//                return;
+//            }
+//        } else {
+//            $this->customAlert('warning', 'Something went wrong, Please try again');
+//            return;
+//        }
+        $datas = [
+            [
+                "interview__id" => "5fc4a773-ea76-4bee-b190-c4816a2b8fc1",
+                "location" => [
+                    "Accuracy" => 8.34294319152832,
+                    "Altitude" => 46.92864990234375,
+                    "Latitude" => -5.91033177,
+                    "Longitude" => 39.29912219,
+                    "Timestamp" => "2023-10-25T09:10:53.908+00:00"
+                ],
+                "owner" => [
+                    "zra_ref_no" => "ZU0000000",
+                    "zra_number" => "Z000000000",
+                    "fullName" => "SIHABA ALI HAJI",
+                    "mail_address" => "0",
+                    "phone_no" => "0772-882-756",
+                    "email_address" => "0",
+                    "tin" => 0,
+                    "nida" => null,
+                    "zanID" => "000000000",
+                    "passport" => "0"
+                ],
+                "agent" => [
+                    "name_of_person" => "SIHABA ALI HAJI",
+                    "name_of_company" => "881429566",
+                    "phone_no_1" => "0772-882-756",
+                    "phone_no_2" => "0000-000-000",
+                    "email" => "0"
+                ],
+                "valuation" => [
+                    "property_id" => null,
+                    "property_feature" => null
+                ],
+                "region" => "Kaskazini Unguja",
+                "district" => "Kaskazini A",
+                "locality" => "Gamba",
+                "property_address" => "GAMBA MAJENZINI",
+                "meter_no" => "54172277003",
+                "house_number" => "5",
+                "postcode" => "5/4",
+                "road_name" => "GAMBA",
+                "property_type" => "Jengo la Kondominiamu",
+                "number_of_storey" => "0",
+                "type_of_business" => "Nyumba za wageni",
+                "hotel_star" => null,
+                "property_feature" => null
+            ],
+        ];
 
         foreach ($datas as $property) {
             $this->properties[] = $property;
@@ -457,32 +490,51 @@ class Initial extends Component
 
     public function updated($propertyName)
     {
-        if ($propertyName === 'region_id') {
-            $this->reset('district_id', 'ward_id', 'wards', 'street_id', 'streets');
-            $districts = District::where('region_id', $this->region_id)
+//        if ($propertyName === 'region_id') {
+//            $this->reset('district_id', 'ward_id', 'wards', 'street_id', 'streets');
+//            $districts = District::where('region_id', $this->region_id)
+//                ->where('is_approved', 1)
+//                ->select('id', 'name')
+//                ->get();
+//            $this->districts = json_decode($districts, true);
+//        }
+//
+//        if ($propertyName === 'district_id') {
+//            $this->reset('ward_id', 'streets', 'street_id');
+//            $wards = Ward::where('district_id', $this->district_id)
+//                ->where('is_approved', 1)
+//                ->select('id', 'name')
+//                ->get();
+//            $this->wards = json_decode($wards, true);
+//        }
+//
+//        if ($propertyName === 'ward_id') {
+//            $this->reset('street_id');
+//            $streets = Street::where('ward_id', $this->ward_id)
+//                ->where('is_approved', 1)
+//                ->select('id', 'name')
+//                ->get();
+//            $this->streets = json_decode($streets, true);
+//        }
+
+        if ($propertyName === 'addRegionId') {
+            $this->reset('addDistrictId', 'addWardId', 'wards', 'streets');
+            $districts = District::where('region_id', $this->addRegionId)
                 ->where('is_approved', 1)
                 ->select('id', 'name')
                 ->get();
             $this->districts = json_decode($districts, true);
         }
 
-        if ($propertyName === 'district_id') {
-            $this->reset('ward_id', 'streets', 'street_id');
-            $wards = Ward::where('district_id', $this->district_id)
+        if ($propertyName === 'addDistrictId') {
+            $this->reset('addWardId', 'streets');
+            $wards = Ward::where('district_id', $this->addDistrictId)
                 ->where('is_approved', 1)
                 ->select('id', 'name')
                 ->get();
             $this->wards = json_decode($wards, true);
         }
 
-        if ($propertyName === 'ward_id') {
-            $this->reset('street_id');
-            $streets = Street::where('ward_id', $this->ward_id)
-                ->where('is_approved', 1)
-                ->select('id', 'name')
-                ->get();
-            $this->streets = json_decode($streets, true);
-        }
 
     }
 

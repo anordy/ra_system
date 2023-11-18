@@ -143,7 +143,7 @@
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('property-tax*') ? 'show' : '' }}"
                     id="propertyTaxMenu">
-                    @can('survey-solution-view')
+                    @can('survey-solution-registration')
                         <li class="{{ request()->is('property-tax/survey-solution/initial') ? 'active' : '' }}">
                             <a href="{{ route('property-tax.survey-solution.initial') }}">Survey Solution
                                 Registration</a>

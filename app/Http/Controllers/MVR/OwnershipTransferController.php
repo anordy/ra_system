@@ -126,7 +126,7 @@ class OwnershipTransferController extends Controller
             } else {
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = 'pending';
-                $bill->control_number = rand(2000070001000, 2000070009999);
+                $bill->control_number = random_int(2000070001000, 2000070009999);
                 $bill->save();
                 session()->flash("success", 'Request Approved, Control Number request sent');
             }

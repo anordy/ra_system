@@ -1,4 +1,4 @@
-@if (count($this->getEnabledTranstions()) >= 1)
+@if (count($this->getEnabledTransitions()) >= 1)
     <div class="card shadow-sm mb-2 mt-4 bg-white mx-4">
         <div class="card-header font-weight-bold">
             Approval

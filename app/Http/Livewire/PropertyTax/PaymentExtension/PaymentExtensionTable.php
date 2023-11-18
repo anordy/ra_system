@@ -43,7 +43,7 @@ class PaymentExtensionTable extends DataTableComponent
                     if ($row->propertyPayment->property->type != PropertyTypeStatus::CONDOMINIUM) {
                         return $row->propertyPayment->property->name ?? 'N/A';
                     } else {
-                        return "{$row->propertyPayment->property->name} - {$row->propertyPayment->property->unit->name}" ?? 'N/A';
+                        return "{$row->propertyPayment->property->name} - {$row->propertyPayment->property->unit->name}";
                     }
                 }),
             Column::make('Control Number', 'id')

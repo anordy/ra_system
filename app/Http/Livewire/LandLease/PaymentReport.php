@@ -117,7 +117,7 @@ class PaymentReport extends Component
         if ($this->date_type == 'payment_month') {
             $months = $this->getMonthList($dates);
                 $years = $this->getYearList($dates);
-                $model = LeasePayment::query()
+                $leasePayment = LeasePayment::query()
                 ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
                 ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
                 ->whereIn("land_leases.{$this->date_type}", $months)
@@ -159,11 +159,11 @@ class PaymentReport extends Component
 
         $dates = $this->getStartEndDate();
         if($dates['startDate'] == null || $dates['endDate'] == null) {
-            
-            $exists = LeasePayment::exists();
-            
+
+            $query = LeasePayment::get();
+
             if ($this->status) {
-                $query =LeasePayment::where('lease_payments.status', $this->status);
+                $query = LeasePayment::where('lease_payments.status', $this->status);
             }
 
             if ($this->taxpayer_id) {
@@ -183,7 +183,7 @@ class PaymentReport extends Component
         if ($this->date_type == 'payment_month') {
             $months = $this->getMonthList($dates);
                 $years = $this->getYearList($dates);
-                $model = LeasePayment::query()
+                $leasePayment = LeasePayment::query()
                 ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
                 ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
                 ->whereIn("land_leases.{$this->date_type}", $months)

@@ -170,6 +170,8 @@ class InternalBusinessInfoChangeProcessing extends Component
                    $this->info->update(['new_values' => json_encode(['effective_date' => $this->newEffectiveDate])]);
                }
 
+                $lumpsumPayment = [];
+
                if ($this->infoType === InternalInfoType::TAX_TYPE) {
                    if ($this->showLumpsumOptions == true) {
                        $currency = Arr::pluck($this->selectedTaxTypes, 'currency');
@@ -202,7 +204,7 @@ class InternalBusinessInfoChangeProcessing extends Component
 
                    $newTaxes = [
                        'selectedTaxTypes' => $this->selectedTaxTypes,
-                       'lumpsumPayment' => $lumpsumPayment ?? null
+                       'lumpsumPayment' => $lumpsumPayment
                    ];
 
                    $this->info->update([

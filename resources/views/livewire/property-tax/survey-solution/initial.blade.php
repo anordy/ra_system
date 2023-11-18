@@ -285,9 +285,12 @@
                             @if(array_key_last($properties) === $index)
                                 <hr>
                                 <div class="col-md-12 text-center">
-{{--                                    <button class="btn btn-info rounded-0 px-3" wire:click="addProperty()">--}}
-{{--                                        Add More Property--}}
-{{--                                    </button>--}}
+                                    @if(!$additionalProperties)
+                                        <button class="btn btn-info rounded-0 px-3" wire:click="addProperty()">
+                                            Add Property
+                                        </button>
+                                    @endif
+
                                     @if(count($additionalProperties) <= 0)
                                         <button class="btn btn-primary rounded-0 px-3" wire:click="submit()">
                                             Submit
@@ -303,7 +306,7 @@
         @endforeach
     @endif
 
-    @if(count($additionalProperties) > 0)
+    @if($additionalProperties)
         @foreach($additionalProperties as $i => $additionalProperty)
 
             <div class="card text-left rounded-0">
@@ -363,48 +366,48 @@
 
                             <div class="col-md-4 mb-3">
                                 <label>Region *</label>
-                                <select class="form-control @error('additionalProperties.'.$i.'region_id') is-invalid @enderror"
-                                        wire:model="additionalProperties.{{$i}}.region_id">
+                                <select class="form-control @error('addRegionId') is-invalid @enderror"
+                                        wire:model="addRegionId">
                                     <option></option>
                                     @foreach ($regions as $region)
-                                        <option value="{{ $region['name'] }}">{{ $region['name'] }}</option>
+                                        <option value="{{ $region['id'] }}">{{ $region['name'] }}</option>
                                     @endforeach
                                 </select>
-                                @error('additionalProperties.'.$i.'region_id')
+                                @error('addRegionId')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="col-md-4 mb-3">
                                 <label>District *</label>
-                                <select class="form-control @error('additionalProperties.'.$i.'district_id') is-invalid @enderror"
-                                        wire:model="additionalProperties.{{$i}}.district_id">
+                                <select class="form-control @error('addDistrictId') is-invalid @enderror"
+                                        wire:model="addDistrictId">
                                     <option></option>
-                                    <option wire:loading wire:target="region_id">
+                                    <option wire:loading wire:target="addRegionId">
                                         Loading...
                                     </option>
                                     @foreach ($districts as $district)
-                                        <option value="{{ $district['name'] }}">{{ $district['name'] }}</option>
+                                        <option value="{{ $district['id'] }}">{{ $district['name'] }}</option>
                                     @endforeach
                                 </select>
-                                @error('additionalProperties.'.$i.'district_id')
+                                @error('addDistrictId')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="col-md-4 mb-3">
                                 <label>Ward *</label>
-                                <select class="form-control @error('additionalProperties.'.$i.'ward_id') is-invalid @enderror"
-                                        wire:model="additionalProperties.{{$i}}.ward_id">
+                                <select class="form-control @error('addWardId') is-invalid @enderror"
+                                        wire:model="addWardId">
                                     <option></option>
-                                    <option wire:loading wire:target="district_id">
+                                    <option wire:loading wire:target="addDistrictId">
                                         Loading...
                                     </option>
                                     @foreach ($wards as $ward)
-                                        <option value="{{ $ward['name'] }}">{{ $ward['name'] }}</option>
+                                        <option value="{{ $ward['id'] }}">{{ $ward['name'] }}</option>
                                     @endforeach
                                 </select>
-                                @error('additionalProperties.'.$i.'ward_id')
+                                @error('addWardId')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

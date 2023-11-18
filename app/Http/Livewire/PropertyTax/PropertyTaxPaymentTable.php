@@ -43,7 +43,7 @@ class PropertyTaxPaymentTable extends DataTableComponent
                     if ($row->type != PropertyTypeStatus::CONDOMINIUM) {
                         return $row->property->name ?? 'N/A';
                     } else {
-                        return "{$row->property->name} - {$row->property->unit->name}" ?? 'N/A';
+                        return "{$row->property->name} - {$row->property->unit->name}";
                     }
                 }),
             Column::make('Payment Year', 'financial_year_id')

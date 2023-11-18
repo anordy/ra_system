@@ -121,13 +121,13 @@
             <td class="padding-left td-title bold">BRN</td>
             <td class="td-content">{{ $propertyPayment->property->urn }}</td>
             <td class="padding-left td-title bold">District / Wilaya</td>
-            <td class="td-content">{{ $propertyPayment->property->district->name }}</td>
+            <td class="td-content">{{ $propertyPayment->property->district_id }}</td>
         </tr>
         <tr>
             <td class="padding-left td-title bold">Plot No / Namba ya Nyumba</td>
             <td class="td-content">{{ $propertyPayment->property->name ?? $propertyPayment->property->house_number }}</td>
             <td class="padding-left td-title bold">Street / Mtaa</td>
-            <td class="td-content">{{ $propertyPayment->property->street->name }}</td>
+            <td class="td-content">{{ $propertyPayment->property->street_id }}</td>
         </tr>
         <tr>
             <td class="padding-left td-title bold">Use / Matumizi</td>
@@ -148,7 +148,7 @@
                 located
                 at
             </td>
-            <td colspan="2" class="td-content"> {{ $propertyPayment->property->street->name }}</td>
+            <td colspan="2" class="td-content"> {{ $propertyPayment->property->street_id }}</td>
         </tr>
         <tr>
             <td colspan="2" class="padding-left td-title bold">Tax Rate/Kiwango</td>

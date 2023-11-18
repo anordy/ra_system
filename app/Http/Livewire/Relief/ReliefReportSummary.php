@@ -100,7 +100,10 @@ class ReliefReportSummary extends Component
             return Carbon::parse($date)->format('F Y');
         })->unique()->values()->all();
 
-        $projectSections = $projectSections??ReliefProject::all();
+        $projectSections = [];
+        if (!$projectSections) {
+            $projectSections = ReliefProject::all();
+        }
         
         foreach ($projectSections as $projectSection ) {
             $this->projectSectionsArray[] = [

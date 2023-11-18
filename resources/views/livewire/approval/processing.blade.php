@@ -1,4 +1,4 @@
-@if (count($this->getEnabledTranstions()) > 1)
+@if (count($this->getEnabledTransitions()) > 1)
     <div class="card my-2 mx-2 bg-white rounded-0">
         <div class="card-header font-weight-bold bg-white">
             Business Registration Approval

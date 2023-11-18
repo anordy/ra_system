@@ -107,6 +107,7 @@ class InitiateChangeModal extends Component
                 ]);
             }
 
+            $lumpsumPayment = [];
             if ($this->informationType === 'taxType') {
                 if ($this->showLumpsumOptions == true) {
                     $currency = Arr::pluck($this->selectedTaxTypes, 'currency');
@@ -137,9 +138,10 @@ class InitiateChangeModal extends Component
                     ];
                 }
 
+
                 $newTaxes = [
                     'selectedTaxTypes' => $this->selectedTaxTypes,
-                    'lumpsumPayment' => $lumpsumPayment ?? null
+                    'lumpsumPayment' => $lumpsumPayment
                 ];
 
                 $internalChange = InternalBusinessUpdate::create([

@@ -20,11 +20,15 @@ class UserOtp extends Model
         return $this->morphTo();
     }
 
+    /**
+     * Generate OTP
+     * @throws \Exception
+     */
     public static function generate($codeLength = 5)
     {
         $min = pow(10, $codeLength);
         $max = $min * 10 - 1;
-        $code = mt_rand($min, $max);
+        $code = random_int($min, $max);
 
         if (config('app.env') == 'local') {
             return '123456';

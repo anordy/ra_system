@@ -299,7 +299,7 @@ class TaxInvestigationApprovalProcessing extends Component
             [
                 'tax_investigation_id' => $this->subject->id,
                 'date_opened' => Carbon::now(),
-                'case_number' => rand(0, 3),
+                'case_number' => random_int(0, 3),
                 'case_details' => 'Added from Investigation Approval',
                 'court' => 1,
                 'case_stage_id' => CaseStage::query()->firstOrCreate(['name' => 'Case Opening'])->id ?? 1,
@@ -391,7 +391,7 @@ class TaxInvestigationApprovalProcessing extends Component
                 // Simulate successfully control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $zmBill->zan_status = 'pending';
-                $zmBill->control_number = rand(2000070001000, 2000070009999);
+                $zmBill->control_number = random_int(2000070001000, 2000070009999);
                 $zmBill->save();
                 $this->customAlert('success', 'A control number for this verification has been generated successfully');
             }

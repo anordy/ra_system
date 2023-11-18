@@ -43,7 +43,7 @@ trait WorkflowProcesssingTrait
         $this->subject->save();
     }
 
-    public function getEnabledTranstions()
+    public function getEnabledTransitions()
     {
         if ($this->flow == []) {
             Log::error('Workflow object is null for model ' . get_class($this->subject));
@@ -52,8 +52,7 @@ trait WorkflowProcesssingTrait
         $registry = new WorkflowRegistry($this->flow, new WorkflowSubscriber());
         $workflow = $registry->get($this->subject);
 
-        $enabledTransitions = $workflow->getEnabledTransitions($this->subject);
-        return $enabledTransitions;
+        return $workflow->getEnabledTransitions($this->subject);
     }
 
     public function checkTransition($name)

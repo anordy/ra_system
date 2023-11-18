@@ -39,7 +39,7 @@ class NextPropertyTaxPaymentTable extends DataTableComponent
                     if ($row->type != PropertyTypeStatus::CONDOMINIUM) {
                         return $row->name ?? 'N/A';
                     } else {
-                        return "{$row->name} - {$row->unit->name}" ?? 'N/A';
+                        return "{$row->name} - {$row->unit->name}";
                     }
                 }),
             Column::make('URN', 'urn')
