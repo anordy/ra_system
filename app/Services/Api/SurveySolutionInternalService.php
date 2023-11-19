@@ -20,6 +20,8 @@ class SurveySolutionInternalService
             $payload = [
                 $identifierType => $identifierNumber,
             ];
+            Log::info('------SEARCHING FOR IDENTIFIER------');
+            Log::info(json_encode($payload));
 
             $curl = curl_init();
 

@@ -46,7 +46,7 @@ class ServiceRequest
                 CURLOPT_MAXREDIRS => 10,
                 CURLOPT_CONNECTTIMEOUT => 30,
                 CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+               
                 CURLOPT_HTTPHEADER => array(
                     "accept: application/json",
                     "content-type: application/json",

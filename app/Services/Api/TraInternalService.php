@@ -17,6 +17,8 @@ class TraInternalService
 
             $tinUrl = config('modulesconfig.api_url') . '/tra/tin/'.$tinNumber;
 
+            Log::info('------REQUESTING TIN------', [$tinUrl]);
+
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -24,8 +26,7 @@ class TraInternalService
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30000,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_TIMEOUT => 30,
                 CURLOPT_CUSTOMREQUEST => "GET",
                 CURLOPT_HTTPHEADER => array(
                     "accept: application/json",
@@ -35,6 +36,8 @@ class TraInternalService
             ));
 
             $response = curl_exec($curl);
+
+            Log::info($response);
 
             $response = json_decode($response, TRUE);
 
@@ -82,6 +85,8 @@ class TraInternalService
                 'businessId' => $businessId,
             ];
 
+            Log::info('------POSTING Z-NUMBER', [json_encode($payload)]);
+
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -89,8 +94,7 @@ class TraInternalService
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30000,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_TIMEOUT => 30,
                 CURLOPT_CUSTOMREQUEST => "POST",
                 CURLOPT_POSTFIELDS => json_encode($payload),
                 CURLOPT_HTTPHEADER => array(
@@ -101,6 +105,8 @@ class TraInternalService
             ));
 
             $response = curl_exec($curl);
+
+            Log::info($response);
 
             $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
@@ -148,6 +154,9 @@ class TraInternalService
                 'registrationType' => $registrationType
             ];
 
+            Log::info('------POSTING PLATE NUMBER', [json_encode($payload)]);
+
+
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -155,8 +164,7 @@ class TraInternalService
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30000,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_TIMEOUT => 30,
                 CURLOPT_CUSTOMREQUEST => "POST",
                 CURLOPT_POSTFIELDS => json_encode($payload),
                 CURLOPT_HTTPHEADER => array(
@@ -167,6 +175,8 @@ class TraInternalService
             ));
 
             $response = curl_exec($curl);
+
+            Log::info($response);
 
             $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 

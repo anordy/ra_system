@@ -350,6 +350,11 @@ class Initial extends Component
 
     private function createKYC()
     {
+        if (isset($this->properties[0]['owner']['phone_no']) && !is_null($this->properties[0]['owner']['phone_no'])) {
+            $this->customAlert('warning', 'Owner must have a phone number');
+            return;
+        }
+
         $owner = explode(' ', $this->properties[0]['owner']['fullName']);
         $data = [
             'first_name' => $owner[0],
@@ -357,11 +362,11 @@ class Initial extends Component
             'last_name' => $owner[2],
             'mobile' => $this->properties[0]['owner']['phone_no'],
             'email' => $this->properties[0]['owner']['email_address'] ?? '',
-            'region_id' => '1',
-            'district_id' => '1',
-            'ward_id' => '1',
-            'street_id' => '1',
-            'physical_address' => 'N/A',
+            'region_id' => $this->properties[0]['region'],
+            'district_id' => $this->properties[0]['district'],
+            'ward_id' => $this->properties[0]['locality'],
+            'street_id' => $this->properties[0]['region'],
+            'physical_address' => $this->properties[0]['post_code'],
             'is_citizen' => !is_null($this->properties[0]['owner']['passport']),
         ];
 
@@ -411,76 +416,28 @@ class Initial extends Component
 
     public function search()
     {
-//        $this->validate(
-//            [
-//                'identifierType' => 'required',
-//                'identifierNumber' => 'required'
-//            ]
-//        );
-
-        // Query from API
-//        $ssService = new SurveySolutionInternalService();
-//        $response = $ssService->getPropertyInformation($this->identifierType, $this->identifierNumber);
-//
-//        if ($response && isset($response['totalItems'])) {
-//            if ($response['totalItems'] > 0) {
-//                $datas = $response['propertyInforList'];
-//            } else {
-//                $this->customAlert('warning', 'No Data Found');
-//                return;
-//            }
-//        } else {
-//            $this->customAlert('warning', 'Something went wrong, Please try again');
-//            return;
-//        }
-        $datas = [
+        $this->validate(
             [
-                "interview__id" => "5fc4a773-ea76-4bee-b190-c4816a2b8fc1",
-                "location" => [
-                    "Accuracy" => 8.34294319152832,
-                    "Altitude" => 46.92864990234375,
-                    "Latitude" => -5.91033177,
-                    "Longitude" => 39.29912219,
-                    "Timestamp" => "2023-10-25T09:10:53.908+00:00"
-                ],
-                "owner" => [
-                    "zra_ref_no" => "ZU0000000",
-                    "zra_number" => "Z000000000",
-                    "fullName" => "SIHABA ALI HAJI",
-                    "mail_address" => "0",
-                    "phone_no" => "0772-882-756",
-                    "email_address" => "0",
-                    "tin" => 0,
-                    "nida" => null,
-                    "zanID" => "000000000",
-                    "passport" => "0"
-                ],
-                "agent" => [
-                    "name_of_person" => "SIHABA ALI HAJI",
-                    "name_of_company" => "881429566",
-                    "phone_no_1" => "0772-882-756",
-                    "phone_no_2" => "0000-000-000",
-                    "email" => "0"
-                ],
-                "valuation" => [
-                    "property_id" => null,
-                    "property_feature" => null
-                ],
-                "region" => "Kaskazini Unguja",
-                "district" => "Kaskazini A",
-                "locality" => "Gamba",
-                "property_address" => "GAMBA MAJENZINI",
-                "meter_no" => "54172277003",
-                "house_number" => "5",
-                "postcode" => "5/4",
-                "road_name" => "GAMBA",
-                "property_type" => "Jengo la Kondominiamu",
-                "number_of_storey" => "0",
-                "type_of_business" => "Nyumba za wageni",
-                "hotel_star" => null,
-                "property_feature" => null
-            ],
-        ];
+                'identifierType' => 'required',
+                'identifierNumber' => 'required'
+            ]
+        );
+
+        $ssService = new SurveySolutionInternalService();
+        $response = $ssService->getPropertyInformation($this->identifierType, $this->identifierNumber);
+
+        if ($response && isset($response['totalItems'])) {
+            if ($response['totalItems'] > 0) {
+                $datas = $response['propertyInforList'];
+            } else {
+                $this->customAlert('warning', 'No Data Found');
+                return;
+            }
+        } else {
+            $this->customAlert('warning', 'Something went wrong, Please try again');
+            return;
+        }
+
 
         foreach ($datas as $property) {
             $this->properties[] = $property;
@@ -490,32 +447,32 @@ class Initial extends Component
 
     public function updated($propertyName)
     {
-//        if ($propertyName === 'region_id') {
-//            $this->reset('district_id', 'ward_id', 'wards', 'street_id', 'streets');
-//            $districts = District::where('region_id', $this->region_id)
-//                ->where('is_approved', 1)
-//                ->select('id', 'name')
-//                ->get();
-//            $this->districts = json_decode($districts, true);
-//        }
-//
-//        if ($propertyName === 'district_id') {
-//            $this->reset('ward_id', 'streets', 'street_id');
-//            $wards = Ward::where('district_id', $this->district_id)
-//                ->where('is_approved', 1)
-//                ->select('id', 'name')
-//                ->get();
-//            $this->wards = json_decode($wards, true);
-//        }
-//
-//        if ($propertyName === 'ward_id') {
-//            $this->reset('street_id');
-//            $streets = Street::where('ward_id', $this->ward_id)
-//                ->where('is_approved', 1)
-//                ->select('id', 'name')
-//                ->get();
-//            $this->streets = json_decode($streets, true);
-//        }
+        if ($propertyName === 'region_id') {
+            $this->reset('district_id', 'ward_id', 'wards', 'street_id', 'streets');
+            $districts = District::where('region_id', $this->region_id)
+                ->where('is_approved', 1)
+                ->select('id', 'name')
+                ->get();
+            $this->districts = json_decode($districts, true);
+        }
+
+        if ($propertyName === 'district_id') {
+            $this->reset('ward_id', 'streets', 'street_id');
+            $wards = Ward::where('district_id', $this->district_id)
+                ->where('is_approved', 1)
+                ->select('id', 'name')
+                ->get();
+            $this->wards = json_decode($wards, true);
+        }
+
+        if ($propertyName === 'ward_id') {
+            $this->reset('street_id');
+            $streets = Street::where('ward_id', $this->ward_id)
+                ->where('is_approved', 1)
+                ->select('id', 'name')
+                ->get();
+            $this->streets = json_decode($streets, true);
+        }
 
         if ($propertyName === 'addRegionId') {
             $this->reset('addDistrictId', 'addWardId', 'wards', 'streets');
