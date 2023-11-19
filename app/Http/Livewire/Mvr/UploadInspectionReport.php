@@ -117,7 +117,7 @@ class UploadInspectionReport extends Component
         $inspection_report_path = $this->inspection_report->store( $path,'local');
 
         $mv_data = [
-            'registration_number'=>'Z-'.str_pad(MvrMotorVehicle::query()->count().rand(10,99),9,'0',STR_PAD_LEFT),
+            'registration_number'=>'Z-'.str_pad(MvrMotorVehicle::query()->count().random_int(10,99),9,'0',STR_PAD_LEFT),
             'mileage'=>$this->mileage,
             'certificate_number'=>$cert_number,
             'inspection_date'=>$this->inspection_date,

@@ -134,7 +134,7 @@ class LicenseDetailsStep extends StepComponent
         } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
-            $zmBill->control_number = rand(2000070001000, 2000070009999);
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
             $zmBill->save();
         }
         $application->update(['dl_application_status_id' => DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_PENDING_PAYMENT])->id]);

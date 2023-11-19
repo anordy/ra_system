@@ -60,7 +60,7 @@ trait PaymentsTrait
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = 'pending';
-                $bill->control_number = rand(2000070001000, 2000070009999);
+                $bill->control_number = random_int(2000070001000, 2000070009999);
                 $bill->save();
 
                 $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
@@ -137,7 +137,7 @@ trait PaymentsTrait
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $bill->zan_status = 'pending';
-            $bill->control_number = rand(2000070001000, 2000070009999);
+            $bill->control_number = random_int(2000070001000, 2000070009999);
             $bill->save();
 
             $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
@@ -235,7 +235,7 @@ trait PaymentsTrait
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $bill->zan_status = 'pending';
-            $bill->control_number = rand(2000070001000, 2000070009999);
+            $bill->control_number = random_int(2000070001000, 2000070009999);
             $bill->save();
 
             // $this->flash('success', 'Your landLease was submitted, you will receive your payment information shortly - test');
@@ -310,7 +310,7 @@ trait PaymentsTrait
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $bill->zan_status = 'pending';
-            $bill->control_number = rand(2000070001000, 2000070009999);
+            $bill->control_number = random_int(2000070001000, 2000070009999);
             $bill->save();
 
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly - test');
@@ -374,7 +374,7 @@ trait PaymentsTrait
             // Simulate successful control no generation
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
-            $zmBill->control_number = rand(2000070001000, 2000070009999);
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
             $zmBill->save();
         }
     }
@@ -473,7 +473,7 @@ trait PaymentsTrait
             // Simulate successful control no generation
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
-            $zmBill->control_number = rand(2000070001000, 2000070009999);
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
             $zmBill->save();
         }
     }
@@ -551,7 +551,7 @@ trait PaymentsTrait
             // Simulate successful control no generation
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
-            $zmBill->control_number = rand(2000070001000, 2000070009999);
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
             $zmBill->save();
         }
     }
@@ -788,7 +788,7 @@ trait PaymentsTrait
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = 'pending';
-                $bill->control_number = rand(2000070001000, 2000070009999);
+                $bill->control_number = random_int(2000070001000, 2000070009999);
                 $bill->save();
 
                 $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
@@ -900,7 +900,7 @@ trait PaymentsTrait
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $zmBill->zan_status = 'pending';
-                $zmBill->control_number = rand(2000070001000, 2000070009999);
+                $zmBill->control_number = random_int(2000070001000, 2000070009999);
                 $zmBill->save();
                 $this->customAlert('success', 'A control number for this verification has been generated successfully');
             }
@@ -967,7 +967,7 @@ trait PaymentsTrait
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $bill->zan_status = 'pending';
-            $bill->control_number = rand(2000070001000, 2000070009999);
+            $bill->control_number = random_int(2000070001000, 2000070009999);
             $bill->save();
 
             $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
