@@ -160,15 +160,15 @@ class BusinessLocation extends Model implements Auditable
             switch ($this->region->location){
                 case Region::UNGUJA:
                     $vrn = $vrn . '07';
-                    $mainRegion = MainRegion::where('prefix', MainRegion::UNG)->firstOrFail();
                     break;
                 case Region::PEMBA:
                     $vrn = $vrn . '08';
-                    $mainRegion = MainRegion::where('prefix', MainRegion::PMB)->firstOrFail();
                     break;
                 default:
                     abort(404);
             }
+
+            $mainRegion = MainRegion::where('prefix', MainRegion::UNG)->firstOrFail();
 
             if(!$this->business->taxTypes->where('code', 'excise-duty-mno')->isEmpty()){
                 $vat_category = 3;
@@ -187,8 +187,13 @@ class BusinessLocation extends Model implements Auditable
             }
 
             $vrn = $vrn . $vat_category;
-            $mainRegion->$attribute = $value;
-            $mainRegion->save();
+
+            if ($mainRegion != null) {
+                $mainRegion->$attribute = $value;
+                $mainRegion->save();
+            } else {
+                abort(404);
+            }
 
             //Append Number 000001 - 999999
             $vrn = $vrn . str_pad($value, 5, "0", STR_PAD_LEFT);
