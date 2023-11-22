@@ -35,9 +35,9 @@ class CreatePropertiesTable extends Migration
             $table->string('ward_id');
             $table->string('street_id')->nullable();
 
-            $table->string('status', PropertyStatus::getConstants())->default('pending');
-            $table->string('type', PropertyTypeStatus::getConstants());
-            $table->string('usage_type', UnitUsageTypeStatus::getConstants());
+            $table->enum('status', PropertyStatus::getConstants())->default('pending');
+            $table->enum('type', PropertyTypeStatus::getConstants());
+            $table->enum('usage_type', UnitUsageTypeStatus::getConstants());
 
             $table->unsignedBigInteger('hotel_stars_id')->nullable();
             $table->unsignedBigInteger('taxpayer_id');
