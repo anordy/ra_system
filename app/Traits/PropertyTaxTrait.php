@@ -8,6 +8,7 @@ use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\PropertyTax\PaymentInterest;
 use App\Models\PropertyTax\Property;
+use App\Models\Region;
 use App\Models\SystemSetting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -171,7 +172,14 @@ trait PropertyTaxTrait
     }
 
     public function generateURN($property) {
-        $location = $property->region->location;
+        $region = Region::where('name', 'like', '%'. $property->region_id .'%')->first();
+
+        $location = $region->location;
+
+        if (!$region) {
+            $region = Region::first();
+            $location = 'unguja';
+        }
 
         if ($location === 'unguja') {
             $locationCode = '01';
@@ -181,9 +189,9 @@ trait PropertyTaxTrait
             throw new \Exception('Invalid Location Provided');
         }
 
-        $regionCode = sprintf("%02d", $property->region->id);
-        $districtCode = sprintf("%02d", $property->district->id);
-        $wardCode = sprintf("%02d", $property->ward->id);
+        $regionCode = sprintf("%02d", $region->id);
+        $districtCode = sprintf("%02d", random_int(1,99));
+        $wardCode = sprintf("%02d", random_int(1,99));
 
         $urn = "{$locationCode}{$regionCode}{$districtCode}{$wardCode}";
 

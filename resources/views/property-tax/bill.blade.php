@@ -88,7 +88,7 @@
   <span style="margin-top: 8px; font-weight: bold; font-size: 18px; display: block">P.O. BOX 2072</span>
     <span style="margin-top: 8px; font-weight: bold; font-size: 18px; display: block">Tel: 255242230639, Fax: 255242233904</span>
     <span style="margin-top: 8px; font-weight: bold; font-size: 18px; display: block">Email: zra@zanrevenue.org</span>
-    <span style="margin-top: 20px; font-weight: bold; font-size: 22px; display: block">Property Tax Bill</span>
+    <span style="margin-top: 20px; font-weight: bold; font-size: 22px; display: block">NOTICE OF ASSESSMENT OF PROPERTY TAX</span>
 </div>
 <br>
 <div class="center">
@@ -144,7 +144,7 @@
             <td colspan="2" class="td-content"></td>
         </tr>
         <tr>
-            <td colspan="2" class="padding-left td-title bold">Being Payment of Annual Property Tax for the Property
+            <td colspan="2" class="padding-left td-title bold">Being Payment of {{ $propertyPayment->year->name  }} Annual Property Tax for the Property
                 located
                 at
             </td>
@@ -167,7 +167,7 @@
         </tr>
         <tr>
             <td colspan="4" class="padding-left td-title">All payments (in Tanzania Shillings) should be addressed to
-                the Commissioner General Zanzibar Revenue Authority.
+                the Commissioner General Zanzibar Revenue Authority (ZRA).
             </td>
         </tr>
         <tr>
@@ -175,13 +175,15 @@
                 under Section 33 of the Tax Administration and Procedures Act No. 7 of 2009.
             </td>
         </tr>
-        <tr>
-            <td colspan="4" class="padding-left td-title">- Please make sure the payment is done under the name
-                of {{ $propertyPayment->property->taxpayer->fullname() }}</td>
-        </tr>
     </table>
 
     <table width="100%" style="margin-top: 20px">
+        <tr>
+            <td class="td-content align-center"><i>"Tulipe Kodi kwa Maendeleo ya Zanzibar"</i></td>
+        </tr>
+        <tr>
+            <td class="td-content align-center" height="10"></td>
+        </tr>
         <tr>
             <td class="td-content align-center">
                 <img class="signature" src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
@@ -194,11 +196,9 @@
             <td class="td-content align-center"><b>Commissioner General</b></td>
         </tr>
         <tr>
-            <td class="td-content align-center" height="10"></td>
+            <td class="td-content align-center"><b>Zanzibar Revenue Authority</b></td>
         </tr>
-        <tr>
-            <td class="td-content align-center"><i>"Lipa Kodi kwa Maendeleo ya Zanzibar"</i></td>
-        </tr>
+
     </table>
 </div>
 <div class="bottom align-center">

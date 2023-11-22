@@ -30,11 +30,11 @@
                             <i class="bi bi-download mr-3"></i><u>Download Property Tax Bill</u>
                         </a>
                     </p>
-                    <button class="btn btn-secondary btn-sm py-1 w-75 font-weight-bold"
-                        onclick="Livewire.emit('showModal', 'transfer-form.transfer-form-generator', '{{$payment->latestBill->currency}}', '{{  encrypt($payment->latestBill->id) }}')">
-                        <i class="bi bi-file-earmark-text"></i>
-                        Get Transfer Form
-                    </button>
+{{--                    <button class="btn btn-secondary btn-sm py-1 w-75 font-weight-bold"--}}
+{{--                        onclick="Livewire.emit('showModal', 'transfer-form.transfer-form-generator', '{{$payment->latestBill->currency}}', '{{  encrypt($payment->latestBill->id) }}')">--}}
+{{--                        <i class="bi bi-file-earmark-text"></i>--}}
+{{--                        Get Transfer Form--}}
+{{--                    </button>--}}
                 </div>
             @else
                 <div class="col-md-4">
