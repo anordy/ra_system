@@ -79,5 +79,43 @@ class PropertyTaxController extends Controller
 
     }
 
+    public function getNotice($id){
+        if (!Gate::allows('properties-registrations')) {
+            abort(403);
+        }
 
+        $propertyPayment = PropertyPayment::findOrFail(decrypt($id));
+
+        $url = env('TAXPAYER_URL');
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
+            ->data($url)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(207)
+            ->margin(0)
+            ->logoPath(public_path('/images/logo.png'))
+            ->logoResizeToHeight(36)
+            ->logoResizeToWidth(36)
+            ->labelText('')
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
+        header('Content-Type: ' . $result->getMimeType());
+
+        $dataUri = $result->getDataUri();
+
+        $signaturePath = SystemSetting::certificatePath();
+        $commissinerFullName = SystemSetting::commissinerFullName();
+
+
+        $pdf = PDF::loadView('property-tax.notice', compact('propertyPayment','dataUri', 'signaturePath', 'commissinerFullName'));
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
+
+        return $pdf->stream();
+
+    }
 }
