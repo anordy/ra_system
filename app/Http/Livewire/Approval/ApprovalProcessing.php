@@ -310,6 +310,13 @@ class ApprovalProcessing extends Component
                 }
 
                 foreach ($this->selectedTaxTypes as $type) {
+                    $tax = TaxType::findOrFail($type['tax_type_id']);
+
+                    if ($tax->code === TaxType::VAT && empty($type['sub_vat_id'])) {
+                        $this->customAlert('warning', 'Please assign VAT Category Type when VAT Tax Type is selected');
+                        return;
+                    }
+
                     DB::table('business_tax_type')->insert([
                         'business_id' => $business->id,
                         'tax_type_id' => $type['tax_type_id'],

@@ -118,7 +118,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             @endif
-                            @if(isset($properties[0]['owner']['passport']) && !is_null($properties[0]['owner']['passport']))
+{{--                            @if(isset($properties[0]['owner']['passport']) && !is_null($properties[0]['owner']['passport']))--}}
                                 <div class="col-md-4 mb-3">
                                     <label>Nationality *</label>
                                     <select class="form-control @error('nationality') is-invalid @enderror"

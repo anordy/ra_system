@@ -50,7 +50,7 @@ class SurveySolutionInternalService
                 curl_close($curl);
                 Log::error('FAILED');
                 return [
-                    'message' => 'failed',
+                    'message' => $response['data']['msg'],
                     'data' => null
                 ];
             } else {

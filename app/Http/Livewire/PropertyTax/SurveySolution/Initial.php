@@ -11,6 +11,9 @@ use App\Enum\PropertyTypeStatus;
 use App\Enum\UnitUsageTypeStatus;
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Jobs\PropertyTax\SendPropertyTaxApprovalMail;
+use App\Jobs\PropertyTax\SendPropertyTaxApprovalSMS;
+use App\Models\Business;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\District;
@@ -35,6 +38,7 @@ use App\Traits\PropertyTaxTrait;
 use App\Traits\VerificationTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -99,8 +103,8 @@ class Initial extends Component
         $this->validate([
             'ownershipType' => 'required',
             'institutionName' => ['nullable', 'strip_tag', 'required_if:ownershipType,' . PropertyOwnershipTypeStatus::RELIGIOUS . ',' . PropertyOwnershipTypeStatus::GOVERNMENT],
-            'nationality' => isset($this->properties[0]['owner']['passport']) && !is_null($this->properties[0]['owner']['passport']) ? 'required' : '',
-            'permitNumber' => isset($this->properties[0]['owner']['passport']) && !is_null($this->properties[0]['owner']['passport']) ? 'required|numeric' : '',
+            // 'nationality' => isset($this->properties[0]['owner']['passport']) && !is_null($this->properties[0]['owner']['passport']) ? 'required' : '',
+            // 'permitNumber' => isset($this->properties[0]['owner']['passport']) && !is_null($this->properties[0]['owner']['passport']) ? 'required|numeric' : '',
             'addWardId' => count($this->additionalProperties) > 0 ? 'required' : '',
             'addDistrictId' => count($this->additionalProperties) > 0 ? 'required' : '',
             'addRegionId' => count($this->additionalProperties) > 0 ? 'required' : '',
@@ -113,19 +117,29 @@ class Initial extends Component
 
             // Check if existing owner details exist, If yes associate with existing account otherwise create an account
             // Check via email, mobile, nida, zanid
-            $taxPayer = Taxpayer::where('email', $this->properties[0]['owner']['email_address'] ?? '')
-                ->orWhere('mobile', $this->properties[0]['owner']['phone_no'] ?? '')
-                ->orWhere('nida_no', $this->properties[0]['owner']['nida'] ?? '')
-                ->orWhere('zanid_no', $this->properties[0]['owner']['zanID'] ?? '')
-                ->orWhere('passport_no', $this->properties[0]['owner']['passport'] ?? '')
-                ->first();
+            $taxPayer = Taxpayer::where('mobile', str_replace('-', '', $this->properties[0]['owner']['phone_no']) ?? '')->first();
+
+            if (!is_null($this->properties[0]['owner']['tin']) || $this->properties[0]['owner']['tin'] != 0) {
+                $business = Business::where('tin', $this->properties[0]['owner']['tin'])->first();
+                if ($business) {
+                    $taxPayer = $business->responsiblePerson;
+                }
+            }
+
+            $isTaxpayerNew = true;
+            $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
+            $password = substr(str_shuffle($permitted_chars), 0, 8);
 
             if (!$taxPayer) {
                 $kyc = $this->createKYC();
 
+                if (!$kyc) {
+                    $this->customAlert('warning', 'Property Tax Account Could not be created, missing data');
+                    return;
+
+                }
+
                 $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at', 'verified_by', 'comments'])->toArray();
-                $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
-                $password = substr(str_shuffle($permitted_chars), 0, 8);
                 $data['password'] = Hash::make($password);
 
                 if (config('app.env') == 'local') {
@@ -153,11 +167,16 @@ class Initial extends Component
                     'region_id' => $data['region_id'],
                     'is_citizen' => $data['is_citizen'],
                     'country_id' => $data['country_id'],
+                    'biometric_verified_at' => Carbon::now()->toDateTimeString() // TOBEREMOVED
                 ]);
 
                 $taxPayer->generateReferenceNo();
 
+            } else {
+                $isTaxpayerNew = false;
             }
+
+            $createdProperties = [];
 
             // Save property information
             foreach ($this->properties as $i => $property) {
@@ -198,7 +217,9 @@ class Initial extends Component
 
                     'ownership_type_id' => $this->ownershipTypes->where('name', $this->ownershipType)->firstOrFail()->id, // Required
                     'institution_name' => $this->institutionName, // Required of ownership type is not private
+                    'staff_id' => Auth::id()
                 ]);
+
 
                 $owner = explode(' ', $property['owner']['fullName']);
                 PropertyOwner::create([
@@ -241,6 +262,8 @@ class Initial extends Component
                 $generatedProperty->urn = $this->generateURN($generatedProperty);
                 $generatedProperty->save();
 
+                $createdProperties[] = $generatedProperty;
+
                 $amount = $this->getPayableAmount($generatedProperty);
 
                 // Generate Bill
@@ -257,7 +280,7 @@ class Initial extends Component
                     'payment_category' => PropertyPaymentCategoryStatus::NORMAL,
                 ]);
 
-                $this->generatePropertyTaxControlNumber($propertyPayment);
+                // $this->generatePropertyTaxControlNumber($propertyPayment);
 
             }
 
@@ -321,7 +344,7 @@ class Initial extends Component
                     'payment_category' => PropertyPaymentCategoryStatus::NORMAL,
                 ]);
 
-                $this->generatePropertyTaxControlNumber($propertyPayment);
+                // $this->generatePropertyTaxControlNumber($propertyPayment);
             }
 
             DB::commit();
@@ -329,12 +352,20 @@ class Initial extends Component
             // sign taxpayer
             $this->sign($taxPayer);
 
-            if (!$taxPayer) {
+            if ($taxPayer) {
                 // Send email and password for OTP
-                event(new SendSms('taxpayer-registration', $taxPayer->id, ['code' => $password]));
-                if ($taxPayer->email) {
-                    event(new SendMail('taxpayer-registration', $taxPayer->id, ['code' => $password]));
+                if ($isTaxpayerNew) {
+                    event(new SendSms('taxpayer-registration', $taxPayer->id, ['code' => $password]));
+                    if ($taxPayer->email) {
+                        event(new SendMail('taxpayer-registration', $taxPayer->id, ['code' => $password]));
+                    }
                 }
+
+                foreach ($createdProperties as $createdProperty) {
+                    event(new SendSms(SendPropertyTaxApprovalSMS::SERVICE, $createdProperty));
+                    event(new SendMail(SendPropertyTaxApprovalMail::SERVICE, $createdProperty));
+                }
+
             }
 
             $this->customAlert('success', 'Owner properties have been registered successful');
@@ -350,8 +381,13 @@ class Initial extends Component
 
     private function createKYC()
     {
-        if (isset($this->properties[0]['owner']['phone_no']) && !is_null($this->properties[0]['owner']['phone_no'])) {
+        if (!$this->properties[0]['owner']['phone_no']) {
             $this->customAlert('warning', 'Owner must have a phone number');
+            return;
+        }
+
+        if (!$this->properties[0]['owner']['fullName'] || $this->properties[0]['owner']['fullName'] == 0) {
+            $this->customAlert('warning', 'Owner does not have a name');
             return;
         }
 
@@ -360,13 +396,13 @@ class Initial extends Component
             'first_name' => $owner[0],
             'middle_name' => $owner[1] ?? '',
             'last_name' => $owner[2],
-            'mobile' => $this->properties[0]['owner']['phone_no'],
-            'email' => $this->properties[0]['owner']['email_address'] ?? '',
-            'region_id' => $this->properties[0]['region'],
-            'district_id' => $this->properties[0]['district'],
-            'ward_id' => $this->properties[0]['locality'],
-            'street_id' => $this->properties[0]['region'],
-            'physical_address' => $this->properties[0]['post_code'],
+            'mobile' => str_replace('-', '', $this->properties[0]['owner']['phone_no']),
+            'email' => $this->properties[0]['owner']['email_address'] == 0 ? null : $this->properties[0]['owner']['email_address'],
+            'region_id' => 1,
+            'district_id' => 1,
+            'ward_id' => 1,
+            'street_id' => 1,
+            'physical_address' => $this->properties[0]['post_code'] ?? 'N/A',
             'is_citizen' => !is_null($this->properties[0]['owner']['passport']),
         ];
 
@@ -395,12 +431,6 @@ class Initial extends Component
         $data['country_id'] = $countryId;
 
         // If owner has passport a country input must be shown + permit number
-        if (!is_null($this->properties[0]['owner']['passport'])) {
-            $data['passport_no'] = $this->properties[0]['owner']['passport'];
-            $data['permit_number'] = $this->permitNumber; // Enter manually
-            $data['country_id'] = $this->nationality;
-            $idType = IDType::where('name', IDType::PASSPORT)->first()->id;
-        }
 
 
         $data['id_type'] = $idType;
@@ -423,6 +453,8 @@ class Initial extends Component
             ]
         );
 
+        $this->properties = [];
+
         $ssService = new SurveySolutionInternalService();
         $response = $ssService->getPropertyInformation($this->identifierType, $this->identifierNumber);
 
@@ -433,11 +465,13 @@ class Initial extends Component
                 $this->customAlert('warning', 'No Data Found');
                 return;
             }
+        }  else if ($response && isset($response['error'])) {
+            $this->customAlert('warning', $response['error'] ?? 'Something went wrong getting properties data, Please try again later');
+            return;
         } else {
             $this->customAlert('warning', 'Something went wrong, Please try again');
             return;
         }
-
 
         foreach ($datas as $property) {
             $this->properties[] = $property;

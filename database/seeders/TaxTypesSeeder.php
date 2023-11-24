@@ -47,7 +47,7 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Waiver and Objection', 'code' => TaxType::WAIVER_OBJECTION, 'category' => 'other']);
         TaxType::updateOrCreate(['is_approved' => 1, 'name' => 'eGovernment Fee', 'code' => TaxType::GOVERNMENT_FEE, 'category' => 'other']);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '113101030005', 'name' => 'Hotel Airbnb', 'code' => TaxType::AIRBNB]);
-        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '113101030005', 'name' => 'Property Tax', 'code' => TaxType::PROPERTY_TAX]);
+        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '0', 'name' => 'Property Tax', 'code' => TaxType::PROPERTY_TAX]);
 
     }
 }
