@@ -118,7 +118,7 @@ class CondominiumRegistration extends Component
             'ward_id' => 'required',
             'street_id' => 'required',
             'status' => 'required',
-            'storeys.*.*.name' => 'required|distinct|strip_tag',
+            'storeys.*.*.name' => 'required|strip_tag',
         ];
     }
 

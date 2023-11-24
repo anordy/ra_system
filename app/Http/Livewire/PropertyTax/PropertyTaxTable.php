@@ -74,6 +74,10 @@ class PropertyTaxTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return $value ?? 'N/A';
                 }),
+            Column::make('Responsible Person', 'taxpayer_id')
+                ->format(function ($value, $row) {
+                    return $row->taxpayer->fullname() ?? 'N/A';
+                }),
             Column::make('Date of Registration', 'created_at')
                 ->format(function ($value, $row) {
                     return $row->created_at->toFormattedDateString() ?? 'N/A';
