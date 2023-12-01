@@ -42,6 +42,8 @@ class CreateChassisNumbersTable extends Migration
             $table->string('engine_hp_capacity')->nullable();
             $table->string('plate_number')->nullable();
             $table->string('filter_code')->nullable();
+            $table->boolean('tra_registration_synced')->nullable();
+            $table->boolean('tra_deregistration_synced')->nullable();
             $table->timestamps();
         });
     }
