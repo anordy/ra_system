@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\DebtWaiverCategory;
 use App\Traits\VerificationTrait;
 use Exception;
 use Carbon\Carbon;
@@ -97,10 +98,24 @@ class ReturnDebtWaiverApprovalProcessing extends Component
 
         if ($this->checkTransition('crdm_complete')) {
             if (!$this->forwardToCommisioner) {
-                $this->validate([
-                    'interestPercent' => 'required',
-                    'penaltyPercent' => 'required',
-                ]);
+                if ($this->debt_waiver->category === DebtWaiverCategory::INTEREST) {
+                    $this->validate([
+                        'interestPercent' => 'required|numeric|min:1|max:50',
+                    ]);
+                } else if ($this->debt_waiver->category === DebtWaiverCategory::PENALTY) {
+                    $this->validate([
+                        'penaltyPercent' => 'required|numeric|min:1|max:100',
+                    ]);
+                } else if ($this->debt_waiver->category === DebtWaiverCategory::BOTH) {
+                    $this->validate([
+                        'interestPercent' => 'required|numeric|min:1|max:50',
+                        'penaltyPercent' => 'required|numeric|min:1|max:100',
+                    ]);
+                } else {
+                    $this->customAlert('warning', 'Invalid Debt Waiver Category');
+                    return;
+                }
+
                 DB::beginTransaction();
                 try {
                     $this->debt_waiver->update([
@@ -159,11 +174,25 @@ class ReturnDebtWaiverApprovalProcessing extends Component
         }
 
         if ($this->checkTransition('commissioner_complete')) {
+            if ($this->debt_waiver->category === DebtWaiverCategory::INTEREST) {
+                $this->validate([
+                    'interestPercent' => 'required|numeric|min:1|max:50',
+                ]);
+            } else if ($this->debt_waiver->category === DebtWaiverCategory::PENALTY) {
+                $this->validate([
+                    'penaltyPercent' => 'required|numeric|min:1|max:100',
+                ]);
+            } else if ($this->debt_waiver->category === DebtWaiverCategory::BOTH) {
+                $this->validate([
+                    'interestPercent' => 'required|numeric|min:1|max:50',
+                    'penaltyPercent' => 'required|numeric|min:1|max:100',
+                ]);
+            } else {
+                $this->customAlert('warning', 'Invalid Debt Waiver Category');
+                return;
+            }
 
-            $this->validate([
-                'interestPercent' => 'required',
-                'penaltyPercent' => 'required',
-            ]);
+
             DB::beginTransaction();
             try {
                 $this->debt_waiver->update([
