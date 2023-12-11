@@ -129,53 +129,86 @@ class EnrollFingerprint extends Component
                 $data['password'] = Hash::make('password');
             }
 
-            $taxpayer = Taxpayer::create([
-                'id_type' => $data['id_type'],
-                'nida_no' => $data['nida_no'],
-                'zanid_no' => $data['zanid_no'],
-                'tin_no' => $data['tin_no'],
-                'passport_no' => $data['passport_no'],
-                'permit_number' => $data['permit_number'],
-                'nida_verified_at' => $data['nida_verified_at'],
-                'zanid_verified_at' => $data['zanid_verified_at'],
-                'tin_verified_at' => $data['tin_verified_at'],
-                'passport_verified_at' => $data['passport_verified_at'],
-                'biometric_verified_at' => $data['biometric_verified_at'],
-                'first_name' => $data['first_name'],
-                'middle_name' => $data['middle_name'],
-                'last_name' => $data['last_name'],
-                'password' => $data['password'],
-                'physical_address' => $data['physical_address'],
-                'street_id' => $data['street_id'],
-                'district_id' => $data['district_id'],
-                'ward_id' => $data['ward_id'],
-                'email' => $data['email'],
-                'mobile' => $data['mobile'],
-                'alt_mobile' => $data['alt_mobile'],
-                'region_id' => $data['region_id'],
-                'is_citizen' => $data['is_citizen'],
-                'country_id' => $data['country_id']
-            ]);
+            $existingTaxpayer = Taxpayer::query()
+                ->where([
+                    'id_type' => $data['id_type'],
+                    'nida_no' => $data['nida_no'],
+                    'zanid_no' => $data['zanid_no'],
+                    'tin_no' => $data['tin_no'],
+                    'passport_no' => $data['passport_no'],
+                    'mobile' => $data['mobile'],
+                    'email' => $data['email'],
+                ])->first();
 
-            $taxpayer->generateReferenceNo();
-
-            // sign taxpayer
-            $this->sign($taxpayer);
-
-            // todo: this should before sending the email/Sms
-            if ($taxpayer) {
+            if ($existingTaxpayer){
+                $existingTaxpayer->biometric_verified_at = $data['biometric_verified_at'];
+                if (!$existingTaxpayer->save()){
+                    session()->flash("error", "Couldn't verify user.");
+                    throw new \Exception("Couldn't verify user");
+                }
                 $kyc->delete();
+
+                // Update Biometrics
+                Biometric::query()
+                    ->where('reference_no', $kyc->id)
+                    ->update([
+                        'taxpayer_id' => $existingTaxpayer->id
+                    ]);
             } else {
-                session()->flash("error", "Couldn't verify user.");
-                throw new \Exception("Couldn't verify user");
-            }
+                $taxpayer = Taxpayer::create([
+                    'id_type' => $data['id_type'],
+                    'nida_no' => $data['nida_no'],
+                    'zanid_no' => $data['zanid_no'],
+                    'tin_no' => $data['tin_no'],
+                    'passport_no' => $data['passport_no'],
+                    'permit_number' => $data['permit_number'],
+                    'nida_verified_at' => $data['nida_verified_at'],
+                    'zanid_verified_at' => $data['zanid_verified_at'],
+                    'tin_verified_at' => $data['tin_verified_at'],
+                    'passport_verified_at' => $data['passport_verified_at'],
+                    'biometric_verified_at' => $data['biometric_verified_at'],
+                    'first_name' => $data['first_name'],
+                    'middle_name' => $data['middle_name'],
+                    'last_name' => $data['last_name'],
+                    'password' => $data['password'],
+                    'physical_address' => $data['physical_address'],
+                    'street_id' => $data['street_id'],
+                    'district_id' => $data['district_id'],
+                    'ward_id' => $data['ward_id'],
+                    'email' => $data['email'],
+                    'mobile' => $data['mobile'],
+                    'alt_mobile' => $data['alt_mobile'],
+                    'region_id' => $data['region_id'],
+                    'is_citizen' => $data['is_citizen'],
+                    'country_id' => $data['country_id']
+                ]);
 
-            DB::commit();
+                $taxpayer->generateReferenceNo();
 
-            // Send email and password for OTP
-            event(new SendSms('taxpayer-registration', $taxpayer->id, ['code' => $password]));
-            if ($taxpayer->email) {
-                event(new SendMail('taxpayer-registration', $taxpayer->id, ['code' => $password]));
+                // sign taxpayer
+                $this->sign($taxpayer);
+
+                Biometric::query()
+                    ->where('reference_no', $kyc->id)
+                    ->update([
+                        'taxpayer_id' => $taxpayer->id
+                    ]);
+
+                // todo: this should before sending the email/Sms
+                if ($taxpayer) {
+                    $kyc->delete();
+                } else {
+                    session()->flash("error", "Couldn't verify user.");
+                    throw new \Exception("Couldn't verify user");
+                }
+
+                DB::commit();
+
+                // Send email and password for OTP
+                event(new SendSms('taxpayer-registration', $taxpayer->id, ['code' => $password]));
+                if ($taxpayer->email) {
+                    event(new SendMail('taxpayer-registration', $taxpayer->id, ['code' => $password]));
+                }
             }
 
             return redirect()->route('taxpayers.taxpayer.index');
