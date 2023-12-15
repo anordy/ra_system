@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class VatZeroRatedSale extends Model
+class VatReturnSalesDetail extends Model
 {
     use HasFactory, SoftDeletes;
+
     protected $guarded = [];
-    protected $table = 'vat_zero_rated_sales';
+    protected $table = 'vat_return_sales_details';
 }
