@@ -941,7 +941,7 @@ trait PaymentsTrait
         $bill = ZmCore::createBill(
             $billableId,
             $billableType,
-            $taxType->tax_type_id,
+            $taxType->id,
             $payer_id,
             $payer_type,
             $payer_name,

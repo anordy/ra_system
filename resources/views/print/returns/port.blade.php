@@ -180,9 +180,9 @@
     <table class="tbl-bordered tbl-p-6" style="width: 100%; margin-top: 10px;">
         <thead>
         <th style="width: 30%">Item Name</th>
-        <th style="width: 20%">Value ({{ $return->currency }})</th>
+        <th style="width: 20%">Value ({{ $return_->currency }})</th>
         <th style="width: 10%">Rate</th>
-        <th style="width: 20%">Tax ({{ $return->currency  }})</th>
+        <th style="width: 20%">Tax ({{ $return_->currency  }})</th>
         </thead>
         <tbody>
         @foreach ($return_->configReturns as $item)
@@ -213,7 +213,7 @@
             <th style="width: 20%">Total</th>
             <th style="width: 30%"></th>
             <th style="width: 25%"></th>
-            <th style="width: 25%">{{ number_format($return->total_amount_due, 2) }}</th>
+            <th style="width: 25%">{{ number_format($return_->total_amount_due, 2) }}</th>
         </tr>
         </tfoot>
     </table>

@@ -32,7 +32,7 @@ class CreateTinsTable extends Migration
             $table->string('vat_registration_number')->nullable();
             $table->longText('biometric', 8000)->nullable();
             $table->integer('tra_sync_status')->default(0)->comment('0-Not synced, 1-Synced');
-            $table->enum('tin_verification_status', ['pending', 'approved', 'unverified'])->default('pending')->after('created_at')->nullable();
+            $table->enum('tin_verification_status', ['pending', 'approved', 'unverified'])->default('pending')->nullable();
             $table->timestamp('registration_date');
             $table->string('nationality')->nullable();
             $table->string('postal_city')->nullable();

@@ -167,7 +167,6 @@ class Initial extends Component
                     'region_id' => $data['region_id'],
                     'is_citizen' => $data['is_citizen'],
                     'country_id' => $data['country_id'],
-                    'biometric_verified_at' => Carbon::now()->toDateTimeString() // TOBEREMOVED
                 ]);
 
                 $taxPayer->generateReferenceNo();
@@ -398,10 +397,6 @@ class Initial extends Component
             'last_name' => $owner[2],
             'mobile' => str_replace('-', '', $this->properties[0]['owner']['phone_no']),
             'email' => $this->properties[0]['owner']['email_address'] == 0 ? null : $this->properties[0]['owner']['email_address'],
-            'region_id' => 1,
-            'district_id' => 1,
-            'ward_id' => 1,
-            'street_id' => 1,
             'physical_address' => $this->properties[0]['post_code'] ?? 'N/A',
             'is_citizen' => !is_null($this->properties[0]['owner']['passport']),
         ];
