@@ -68,7 +68,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
         $preVettingPenaltyIterations = $penalties->count();
         $postVettingPenaltyIterations = floor($tax_return->periods);
 
-        $penaltyIterationsToBeAdded = $postVettingPenaltyIterations - $preVettingPenaltyIterations;
+        $penaltyIterationsToBeAdded = $tax_return->penatablemonths;
 
         try {
             return PenaltyForDebt::getPostVettingPenalties($tax_return, $penaltyIterationsToBeAdded);

@@ -53,8 +53,8 @@ class WorkflowPlaceUpdateModal extends Component
     {
         return [
             'operator_type' => 'in:user,role|strip_tag',
-            'role_id.*' => 'nullable|numeric',
-            'user_id.*' => 'nullable|numeric',
+            'role_id.*' => 'nullable',
+            'user_id.*' => 'nullable',
         ];
     }
 
