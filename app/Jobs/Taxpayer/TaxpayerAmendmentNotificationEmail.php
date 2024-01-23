@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 class TaxpayerAmendmentNotificationEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     public $payload;
     /**
      * Create a new job instance.
@@ -37,7 +38,8 @@ class TaxpayerAmendmentNotificationEmail implements ShouldQueue
         if ($this->payload['email']) {
             Mail::to($this->payload['email'])->send(new AmendmentNotification($this->payload));
         } else {
-            Log::error("User Information MAIL: { $this->payload['email'] } Invalid Email");
+            Log::info("User email not found");
+            Log::info(json_encode($this->payload));
         }
     }
 }
