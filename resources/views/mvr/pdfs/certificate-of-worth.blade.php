@@ -47,6 +47,9 @@
         td span{
             display: inline-block;
         }
+        .commissioner-name {
+            text-transform: capitalize;
+        }
     </style>
 </head>
     <body>
