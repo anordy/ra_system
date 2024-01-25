@@ -252,6 +252,11 @@ class InternalBusinessInfoChangeProcessing extends Component
 
             if ($this->checkTransition('director_of_trai_review')) {
                 
+            }
+
+
+            if ($this->checkTransition('cdt_review')) {
+                
                 // Update Hotel Star Rating
                 if ($this->subject->type === InternalInfoType::HOTEL_STARS) {
                     $businessHotel = BusinessHotel::where('location_id', $this->subject->location_id)->firstOrFail();
