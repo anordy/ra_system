@@ -21,6 +21,7 @@
                             <option value="lto">Business LTO Status</option>
                             <option value="currency">Business Currency</option>
                             <option value="taxRegion">Tax Region</option>
+                            <option value="businessOwnership">Business Ownership</option>
                         </select>
                         @error('informationType')
                         <span class="text-danger">{{ $message }}</span>
@@ -151,7 +152,7 @@
                     </div>
                 @endif
 
-                @if($taxRegionId)
+                @if($informationType == 'taxRegion' && $taxRegionId)
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="exampleFormControlTextarea1">Tax Region</label>
@@ -282,6 +283,35 @@
                     </div>
                 @endif
 
+                @if($informationType == 'businessOwnership' && $previousOwner)
+                    <div class="pr-3 pl-3 mb-4 mt-4"><span class="text-uppercase font-weight-normal">Previous Owner Details</span>
+                        <hr class="my-2">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="font-weight-bold">Business Name</label><br>
+                                <p>{{ $location->name }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="font-weight-bold">Taxpayer Name</label><br>
+                                <p>{{ $previousOwner->fullName }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="font-weight-bold">Taxpayer ZNO</label><br>
+                                <p>{{ $previousOwner->reference_no }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row pr-3 pl-3">
+                        <div class="form-group col-lg-6">
+                            <label class="font-weight-bold">New Owner ZNO</label>
+                            <input type="text" class="form-control" placeholder="ZXXXXXXXXXXX" wire:model="newOwnerZno">
+                            @error('newOwnerZno')
+                                <small class="text-danger pt-2">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

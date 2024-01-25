@@ -17,7 +17,6 @@
         }
 
         img.logo {
-            /*width: 140px;*/
             height: 120px;
             margin-bottom: 10px;
         }
@@ -73,7 +72,6 @@
 
         .letterhead {
             height: 80px;
-            /*padding: 0 30px;*/
         }
 
         ol li {
@@ -117,26 +115,26 @@
 <div>
     <ol>
         <li>
-            The approved staff of Zanzibar Revenue Authority (ZRA), have visited your property with number <b>{{ $propertyPayment->property->urn }}</b>, located at of <b>{{ $propertyPayment->property->ward_id }}</b>, <b>{{ $propertyPayment->property->district_id }}</b>, and thereby confirmed that Mr/Mrs <b>{{ $propertyPayment->property->taxpayer->fullname() }}</b> you are the OWNER of that property which is a
-            {{ formatEnum($propertyPayment->property->type) }} {{ $propertyPayment->property->storeys->count() ? $propertyPayment->property->storeys->count() . ", storey building." : "" }}
+            The approved staff of Zanzibar Revenue Authority (ZRA), have visited your property with number <b>{{ $propertyPayment->property->urn }}</b>, located at of <b>{{ $propertyPayment->property->ward_id }}</b>, <b>{{ $propertyPayment->property->district_id }}</b>, and thereby confirmed that <b>{{ $propertyPayment->property->taxpayer->fullname() }}</b> is the OWNER of that property which is a
+            {{ formatEnum($propertyPayment->property->type) }} {{ $propertyPayment->property->storeys->count() ? $propertyPayment->property->storeys->count() . ", storey building." : "." }}
         </li>
         <li>
-            In view of the aforesaid and as provided under section 4 of the Property Tax Act, No. 14 of 2008 (herein referred as the Act). Mr/Mrs <b>{{ $propertyPayment->property->taxpayer->fullname() }}</b> Is hereby registered as Taxpayer of Property Tax with registration number <b>{{ $propertyPayment->property->urn }}</b>
+            In view of the aforesaid and as provided under section 4 of the Property Tax Act, No. 14 of 2008 (herein referred as the Act),  <b>{{ $propertyPayment->property->taxpayer->fullname() }}</b> is hereby registered as Taxpayer of Property Tax with registration number <b>{{ $propertyPayment->property->urn }}</b>
         </li>
         <li>
             As a result of that, and by virtue of section 7  of the Act, read together with the issued Government Order number 78, of 2023, you are hereby assessed to pay annual property tax of  TZS. <b>{{ number_format($propertyPayment->total_amount, 2) }}</b> for the period of {{ $propertyPayment->year->name }}.
         </li>
         <li>
-            That according to section 10 of the Act, you are remined to pay the annual property tax amount of TZS. <b>{{ number_format($propertyPayment->total_amount, 2) }}</b> not later than 30th November 2023, through issued control number <b>{{ $propertyPayment->latestBill->control_number }}</b> at nearby PBZ branch/Agent, any other bank or via Mobile Network Operator (TIGO/ZANTEL) by dialing *150*01#, Select No 4, then select No. 8 (Government Payment) and place issued Control Number.
+            According to section 10 of the Act, you are reminded to pay the annual property tax amount of TZS. <b>{{ number_format($propertyPayment->total_amount, 2) }}</b> not later than 30th November 2023, through issued control number <b>{{ $propertyPayment->latestBill->control_number }}</b> at nearby PBZ branch/Agent, any other bank or via Mobile Network Operator (TIGO/ZANTEL) by dialing *150*01#, Select No 4, then select No. 8 (Government Payment) and place issued Control Number.
         </li>
         <li>
-            Failure to pay such sum within specified time is an offence and shall attract interest as provided under section 33 of the Tax Administrative and procedure Act, No 7 of 2009.
+            Failure to pay such sum within specified time is an offence and shall attract interest as provided under section 33 of the Tax Administrative and Procedure Act, No 7 of 2009.
         </li>
     </ol>
 </div>
 <div>
     <p style="font-size: 19px;">
-        If you aggrieved by this decision, you have right to object on the grounds of merit within five days from the date of receipt of this notice as provided by the law.
+        If you are aggrieved by this decision, you have right to object on the grounds of merit within five days from the date of receipt of this notice as provided by the law.
     </p>
     <p style="font-size: 19px;">
         Kindly be guided.
@@ -154,7 +152,7 @@
             </td>
         </tr>
         <tr>
-            <td class="td-content align-center"><b>{{$commissinerFullName}}</b></td>
+            <td class="td-content align-center" style="text-transform: capitalize;"><b>{{strtolower($commissinerFullName)}}</b></td>
         </tr>
         <tr>
             <td class="td-content align-center"><b>Commissioner General</b></td>
@@ -162,7 +160,7 @@
 
     </table>
 </div>
-<div class="bottom align-center" style="background-color: red; position:fixed; bottom: 0">
+<div class="align-center" style="background-color: red; position:fixed; bottom: 0">
     <img class="letterhead" src="{{ public_path() . '/images/letterhead.png'  }}">
 </div>
 </body>

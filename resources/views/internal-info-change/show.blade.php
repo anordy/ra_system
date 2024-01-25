@@ -49,6 +49,50 @@
                     <p class="my-1">{{ $info->approved_on ?? 'N/A' }}</p>
                 </div>
             </div>
+            @if ($info->type === \App\Enum\InternalInfoType::BUSINESS_OWNERSHIP)
+                <div class="card mx-2">
+                    <div class="card-header">
+                        Business Ownership Change
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-bordered table-striped table-sm">
+                                    <thead>
+                                    <th></th>
+                                    <th style="width: 35%">Current Owner</th>
+                                    <th style="width: 35%">New Owner</th>
+                                    <th style="width: 20%">Status</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th>Name</th>
+                                        <td>{{ json_decode($info->old_values)->name }}</td>
+                                        <td>{{ json_decode($info->new_values)->name }}</td>
+                                        @if (json_decode($info->old_values) == json_decode($info->new_values))
+                                            <td class="table-primary">Unchanged</td>
+                                        @else
+                                            <td class="table-success">Changed</td>
+                                        @endif
+                                    </tr>
+                                    <tr>
+                                        <th>ZNO</th>
+                                        <td>{{ json_decode($info->old_values)->reference_no }}</td>
+                                        <td>{{ json_decode($info->new_values)->reference_no }}</td>
+                                        @if (json_decode($info->old_values) == json_decode($info->new_values))
+                                            <td class="table-primary">Unchanged</td>
+                                        @else
+                                            <td class="table-success">Changed</td>
+                                        @endif
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
 
             @if ($info->status === \App\Enum\InternalInfoChangeStatus::APPROVED)
             <div class="row m-2 pt-3">
