@@ -142,6 +142,13 @@ class EnrollFingerprint extends Component
                 }
                 $kyc->delete();
                 DB::commit();
+
+                // Update Biometrics
+                Biometric::query()
+                    ->where('reference_no', $kyc->id)
+                    ->update([
+                        'taxpayer_id' => $existingTaxpayer->id
+                    ]);
             } else {
                 $taxpayer = Taxpayer::create([
                     'id_type' => $data['id_type'],
@@ -175,6 +182,12 @@ class EnrollFingerprint extends Component
 
                 // sign taxpayer
                 $this->sign($taxpayer);
+
+                Biometric::query()
+                    ->where('reference_no', $kyc->id)
+                    ->update([
+                        'taxpayer_id' => $taxpayer->id
+                    ]);
 
                 // todo: this should before sending the email/Sms
                 if ($taxpayer) {

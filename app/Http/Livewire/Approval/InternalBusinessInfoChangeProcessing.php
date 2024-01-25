@@ -17,6 +17,7 @@ use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
+use App\Models\Taxpayer;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use Exception;
@@ -54,6 +55,7 @@ class InternalBusinessInfoChangeProcessing extends Component
     public $current_isiic_i, $current_isiic_ii, $current_isiic_iii, $current_isiic_iv;
     public $isiic_i, $isiic_ii, $isiic_iii, $isiic_iv;
     public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList  = [];
+    public $newOwnerZno;
 
     public function mount($modelName, $modelId)
     {
@@ -107,6 +109,10 @@ class InternalBusinessInfoChangeProcessing extends Component
             $this->newTaxRegion = json_decode($this->info->new_values, TRUE);
             $this->currentTaxRegionId = $this->currentTaxRegion['tax_region_id'];
             $this->taxRegionId = $this->newTaxRegion['tax_region_id'];
+        }
+
+        if ($this->infoType === InternalInfoType::BUSINESS_OWNERSHIP) {
+            $this->newOwnerZno = json_decode($this->info->new_values, TRUE)['reference_no'];
         }
 
         if ($this->infoType === InternalInfoType::ISIC) {
@@ -321,6 +327,22 @@ class InternalBusinessInfoChangeProcessing extends Component
                         'isiic_ii' => $this->isiic_ii,
                         'isiic_iii' => $this->isiic_iii,
                         'isiic_iv' => $this->isiic_iv,
+                    ]);
+                }
+
+                if ($this->subject->type === InternalInfoType::BUSINESS_OWNERSHIP) {
+                    $business = $this->subject->business;
+                    $taxpayer = Taxpayer::where('reference_no', $this->newOwnerZno)->first();
+                    $business->update([
+                        'taxpayer_id' => $taxpayer->id,
+                    ]);
+
+                    // Push to business owner histories
+                    DB::table('business_owner_histories')->insert([
+                        'business_id' => $business->id,
+                        'reference_no' => $this->newOwnerZno,
+                        'removed_at' => Carbon::now(),
+                        'internal_information_change_id' => $this->subject->id
                     ]);
                 }
 

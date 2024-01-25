@@ -14,6 +14,7 @@ class InternalInfoType implements Status
     const ELECTRIC = 'electric';
     const TAX_REGION = 'tax_region';
     const CURRENCY = 'currency';
+    const BUSINESS_OWNERSHIP = 'business-ownership';
 
 
     static function getConstants(): array

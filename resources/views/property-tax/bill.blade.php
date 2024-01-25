@@ -17,8 +17,8 @@
         }
 
         img.logo {
-            width: 140px;
-            height: 140px;
+            height: 120px;
+            margin-bottom: 10px;
         }
 
         img.signature {
@@ -26,9 +26,15 @@
             height: 100px;
         }
 
-        .dashed-bottom {
-            border-bottom: 1px dashed black;
+
+        .yellow-bottom {
+            border-bottom: 4px solid #e7e149;
         }
+
+        .blue-bottom {
+            border-bottom: 4px solid #467fbc;
+        }
+
 
         table {
             border-collapse: collapse;
@@ -70,24 +76,24 @@
         td {
             padding: 5px;
         }
-
+        .letterhead {
+            height: 80px;
+        }
     </style>
 </head>
 
-<body style="font-size: 16px !important;">
+<body style="font-size: 17px !important;">
 <div class="align-center">
-    <img class="logo" src="{{ public_path() }}/images/logo.png" alt="ZRA Logo">
+    <img class="logo" src="{{ public_path() }}/images/logo-square.png" alt="ZRA Logo">
 </div>
-<table width="100%" class="dashed-bottom">
+<table width="100%" class="yellow-bottom">
     <tr>
-        <td width="50%" style="font-size: 22px" class="bold">Zanzibar Revenue Authority</td>
-        <td width="50%" style="font-size: 22px" class="bold align-right">Mamlaka ya Mapato Zanzibar</td>
+        <td width="100%" style="font-size: 28px; text-transform: uppercase;text-align: center;font-family: sans-serif; letter-spacing: 14px" class="bold">Zanzibar Revenue Authority</td>
     </tr>
 </table>
+<table width="100%" class="blue-bottom" style="margin: 5px 0 10px 0">
+</table>
 <div class="align-center">
-  <span style="margin-top: 8px; font-weight: bold; font-size: 18px; display: block">P.O. BOX 2072</span>
-    <span style="margin-top: 8px; font-weight: bold; font-size: 18px; display: block">Tel: 255242230639, Fax: 255242233904</span>
-    <span style="margin-top: 8px; font-weight: bold; font-size: 18px; display: block">Email: zra@zanrevenue.org</span>
     <span style="margin-top: 20px; font-weight: bold; font-size: 22px; display: block">NOTICE OF ASSESSMENT OF PROPERTY TAX</span>
 </div>
 <br>
@@ -190,20 +196,15 @@
             </td>
         </tr>
         <tr>
-            <td class="td-content align-center"><b>{{$commissinerFullName}}</b></td>
+            <td class="td-content align-center" style="text-transform: capitalize"><b>{{strtolower($commissinerFullName)}}</b></td>
         </tr>
         <tr>
             <td class="td-content align-center"><b>Commissioner General</b></td>
         </tr>
-        <tr>
-            <td class="td-content align-center"><b>Zanzibar Revenue Authority</b></td>
-        </tr>
-
     </table>
 </div>
-<div class="bottom align-center">
-    <p> Zanzibar Revenue Authority &copy; {{ date('Y') }} All Rights Reserved (ZRA)</p>
+<div class="align-center" style="background-color: red; position:fixed; bottom: 0">
+    <img class="letterhead" src="{{ public_path() . '/images/letterhead.png'  }}">
 </div>
 </body>
-
 </html>

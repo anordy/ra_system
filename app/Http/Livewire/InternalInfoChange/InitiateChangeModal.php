@@ -12,6 +12,7 @@ use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
+use App\Models\Taxpayer;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use Carbon\Carbon;
@@ -46,6 +47,8 @@ class InitiateChangeModal extends Component
     public $showElectric = false, $showLto = false;
     public $isiic_i, $isiic_ii, $isiic_iii, $isiic_iv;
     public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList  = [];
+    public $previousOwner;
+    public $newOwnerZno;
 
     public function mount() {
 
@@ -62,16 +65,27 @@ class InitiateChangeModal extends Component
             'electricStatus' => 'required_if:informationType,electric',
             'taxRegionId' => 'required_if:informationType,taxRegion',
             'businessCurrencyId' => 'required_if:informationType,currency',
-            'isiic_i' => 'required_if:informationType,isic|numeric|exists:isic1s,id',
-            'isiic_ii' => 'required_if:informationType,isic|numeric|exists:isic2s,id',
-            'isiic_iii' => 'required_if:informationType,isic|numeric|exists:isic3s,id',
-            'isiic_iv' => 'required_if:informationType,isic|numeric|exists:isic4s,id',
+            'isiic_i' => 'nullable|required_if:informationType,isic|numeric|exists:isic1s,id',
+            'isiic_ii' => 'nullable|required_if:informationType,isic|numeric|exists:isic2s,id',
+            'isiic_iii' => 'nullable|required_if:informationType,isic|numeric|exists:isic3s,id',
+            'isiic_iv' => 'nullable|required_if:informationType,isic|numeric|exists:isic4s,id',
+            'newOwnerZno' => [
+                'nullable',
+                'required_if:informationType,businessOwnership',
+                'exists:taxpayers,reference_no',
+                function ($attribute, $value, $fail) {
+                    if ($this->previousOwner->reference_no == $value){
+                        $fail('Please provide a different taxpayer number from the existing one.');
+                    }
+                }
+            ]
         ];
     }
 
     protected $messages = [
         'newHotelStarId.required_if' => 'Please select new hotel star rating',
         'newEffectiveDate.required_if' => 'Please enter effective date',
+        'newOwnerZno.exists' => 'Please provide a valid taxpayer ZNO.'
     ];
 
     public function submit()
@@ -227,6 +241,19 @@ class InitiateChangeModal extends Component
                     ]),
                 ]);
             }
+
+
+            if ($this->informationType === 'businessOwnership'){
+                $newOwner = Taxpayer::where('reference_no', $this->newOwnerZno)->firstOrFail();
+                $internalChange = InternalBusinessUpdate::create([
+                    'business_id' => $this->location->business_id,
+                    'location_id' => $this->location->id,
+                    'type' => InternalInfoType::BUSINESS_OWNERSHIP,
+                    'triggered_by' => Auth::id(),
+                    'old_values' => json_encode(['reference_no' => $this->previousOwner->reference_no, 'name' => $this->previousOwner->fullName]),
+                    'new_values' => json_encode(['reference_no' => $this->newOwnerZno, 'name' => $newOwner->fullName]),
+                ]);
+            }
          
             DB::commit();
 
@@ -301,6 +328,8 @@ class InitiateChangeModal extends Component
                 $this->taxRegionId = $this->location->tax_region_id;
             } else if ($this->informationType === 'isic') {
                 $this->isiiciList = ISIC1::all();
+            } else if ($this->informationType === 'businessOwnership'){
+                $this->previousOwner = $this->location->business->taxpayer;
             }
         } else {
             $this->customAlert('error', 'Invalid ZIN Number provided');

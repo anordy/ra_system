@@ -86,7 +86,7 @@
                         </li>
                     @endcan
                     @can('business-update-request-view')
-                        <li class="{{ request()->is('business/internal-info-change/index*') ? 'active' : '' }}">
+                        <li class="{{ request()->is('business/internal-info-change*') ? 'active' : '' }}">
                             <a href="{{ route('business.internal-info-change.index') }}">Internal Information Change</a>
                         </li>
                     @endcan
