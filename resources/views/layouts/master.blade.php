@@ -13,6 +13,7 @@
            @include('layouts.component.top-nav')
             <div class="container-fluid">
                 @include('layouts.component.messages')
+                @include('layouts.component.back-nav')
                 @yield('content')
             </div>
         </div>

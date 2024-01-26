@@ -108,7 +108,7 @@ class QualifiedTaxTypeController extends Controller
         return view('upgrade-tax-type.qualified.show', compact('return', 'return_id', 'sales', 'currency'));
     }
 
-    public function getCurrency($business_id, $tax_type_id)
+    public static function getCurrency($business_id, $tax_type_id)
     {
         $result = BusinessTaxType::where('business_id', $business_id)
             ->where('tax_type_id', $tax_type_id)->firstOrFail();

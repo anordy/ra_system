@@ -169,7 +169,7 @@
                 </div>
                 @if ($business->is_business_lto)
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">LTO Business</span>
+                        <span class="font-weight-bold text-uppercase">LTD Business</span>
                         <p class="my-1">Yes</p>
                     </div>
                 @endif

@@ -14,12 +14,6 @@
     <div class="card rounded-0">
         <div class="card-header d-flex justify-content-between">
             <div>Upgraded Tax Type Details</div>
-            <div>
-                <a class="btn btn-info" href="{{ route('business.upgraded-tax-types.index') }}">
-                    <i class="bi bi-arrow-return-left mr-2"></i>
-                    Back
-                </a>
-            </div>
         </div>
         <div class="card-body">
             <div class="row">
@@ -50,12 +44,16 @@
                             <td class="my-1">
                                 <span class="badge badge-danger py-1 px-2"
                                       style="border-radius: 1rem; background: #72DC3559; font-size: 85%; color: #319e0a;">
-                                    {{$tax_type_change->toTax->name }}-{{$tax_type_change->to_tax_type_currency}}
+                                    @if($tax_type_change->toTax->code === \App\Models\TaxType::VAT)
+                                        {{$tax_type_change->subvat->name }} - {{$tax_type_change->to_tax_type_currency}}
+                                    @else
+                                        {{$tax_type_change->toTax->name }} - {{$tax_type_change->to_tax_type_currency}}
+                                    @endif
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold text-uppercase">Reason</td>
+                            <td class="font-weight-bold text-uppercase">Recommendation/Grounds</td>
                             <td class="my-1">{{$tax_type_change->reason}}</td>
                         </tr>
 
@@ -79,11 +77,11 @@
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Date Upgraded</td>
-                            <td class="my-1">{{$tax_type_change->created_at }}</td>
+                            <td class="my-1">{{$tax_type_change->created_at ? \Carbon\Carbon::create($tax_type_change->created_at)->format('d M Y') : 'N/A' }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Effective Date</td>
-                            <td class="my-1">{{$tax_type_change->effective_date }}</td>
+                            <td class="my-1">{{$tax_type_change->effective_date ? \Carbon\Carbon::create($tax_type_change->effective_date)->format('d M Y') : 'N/A' }}</td>
                         </tr>
                         </tbody>
                     </table>

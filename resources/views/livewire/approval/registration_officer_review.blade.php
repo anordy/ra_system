@@ -127,7 +127,7 @@
                         <div class="form-group mb-0">
                             <label>
                                 <input type="checkbox" wire:model.lazy="isBusinessLTO">
-                                Is Business LTO
+                                Is Business LTD
                             </label>
                             @error('isBusinessLTO')
                                 <div class="invalid-feedback">

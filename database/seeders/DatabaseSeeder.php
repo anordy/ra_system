@@ -115,5 +115,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PropertyTaxHotelStarsSeeder::class);
         $this->call(WorkflowPropertyTaxExtensionApprovalSeeder::class);
         $this->call(PropertyOwnershipTypeSeeder::class);
+        $this->call(WorkflowUpgradeTaxTypeSeeder::class);
     }
 }
