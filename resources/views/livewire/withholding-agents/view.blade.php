@@ -70,6 +70,17 @@
                 @endif
                 </p>
             </div>
+            @if($withholding_agent->approval_letter != null)
+                    <div class="col-md-3">
+                            <a class="file-item" target="_blank"
+                               href="{{ route('withholdingAgents.file', [encrypt($withholding_agent->id), 'approval_letter']) }}">
+                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                <div style="font-weight: 500;" class="ml-1">
+                                    {{ __('Approval Letter') }}
+                                </div>
+                            </a>
+                    </div>
+                    @endif
         </div>
     </div>
     <div id="tab2" class="tab-pane fade m-2">

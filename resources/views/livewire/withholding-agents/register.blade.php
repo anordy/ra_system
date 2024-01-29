@@ -5,7 +5,11 @@
     <div class="card-body">
         <div class="pt-1">
             <div class="border-0">
-                <div class="row mx-4 mt-2">
+                <div class="row mx-4 mt-2" x-data="{ isUploading: false, progress: 0 }"
+                x-on:livewire-upload-start="isUploading = true"
+                x-on:livewire-upload-finish="isUploading = false"
+                x-on:livewire-upload-error="isUploading = false"
+                x-on:livewire-upload-progress="progress = $event.detail.progress">
                     <div class="col-md-4 form-group">
                         <label for="tin">Institution Taxpayer Identification Number (TIN) *</label>
                         <input type="number" maxlength="10" minlength="8" wire:model.defer="tin" required
@@ -158,6 +162,20 @@
                             <div class="invalid-feedback">
                                 {{ $errors->first('date_of_commencing') }}
                             </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="ApprovalLetter">{{__('Letter of Approval *')}}</label>
+                        <input type="file" name="approval_letter" accept="application/pdf"
+                               class="form-control form-control-lg {{ $errors->first('approval_letter') ? 'is-invalid' : '' }}"
+                               wire:model="approval_letter"/>
+                        <div x-show="isUploading">
+                            <progress max="100" x-bind:value="progress"></progress>
+                        </div>
+                        @error('approval_letter')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
                         @enderror
                     </div>
                 </div>

@@ -18,11 +18,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\CustomAlert;
-
+use Livewire\WithFileUploads;
 
 class WithholdingAgentRegistration extends Component
 {
-    use CustomAlert;
+    use CustomAlert,WithFileUploads;
 
     public $regions = [];
     public $districts = [];
@@ -35,6 +35,7 @@ class WithholdingAgentRegistration extends Component
     public $search_triggered = false;
     public $taxpayer, $ztnNumber;
     public $search_business = false;
+    public $approval_letter;
     public $business;
 
     protected $rules = [
@@ -52,6 +53,7 @@ class WithholdingAgentRegistration extends Component
         'ward_id' => 'required|exists:wards,id',
         'street_id' => 'required|exists:streets,id',
         'title' => 'required|strip_tag',
+        'approval_letter' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
         'position' => 'required|strip_tag',
         'date_of_commencing' => 'required|strip_tag',
     ];
@@ -101,7 +103,8 @@ class WithholdingAgentRegistration extends Component
                 'region_id' => $this->region_id,
                 'district_id' => $this->district_id,
                 'ward_id' => $this->ward_id,
-                'street_id' => $this->street_id
+                'street_id' => $this->street_id,
+                'approval_letter' => $this->approval_letter->store('/withholding_agents/approval_letter', "local-admin"),
             ];
             
             $withholding_agent = WithholdingAgent::create($withholding_agent);
