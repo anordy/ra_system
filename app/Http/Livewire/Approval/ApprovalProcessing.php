@@ -405,16 +405,23 @@ class ApprovalProcessing extends Component
         $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
-    public function reject($transition)
-    {
-        $transition = $transition['data']['transition'];
-        $this->validate([
-            'comments' => 'required|string|strip_tag',
+    public function rejectToCorrection($comments, $correctionPart){
+        $transition = 'application_filled_incorrect';
+        $this->subject->update([
+            'correction_part' => $correctionPart,
+            'status' => BusinessStatus::CORRECTION
         ]);
+        $this->doTransition($transition, ['status' => 'agree', 'comment' => $comments]);
+        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+    }
 
+    public function rejectToTransition($transition){
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
+
+                // If the first step, require part to correct and upscale comments
+
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
@@ -425,8 +432,42 @@ class ApprovalProcessing extends Component
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
+    public function reject($transition)
+    {
+
+        if ($this->checkTransition('application_filled_incorrect')) {
+            $this->subject->status = BusinessStatus::CORRECTION;
+
+            // Obtain comments
+            $comments = $this->comments;
+
+            // Send them to new modal
+            return $this->emit('showModal', 'approval.business.business-reject-modal', $comments);
+        }
+
+        // If not validate
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+
+        // Then confirm
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => 'rejectToTransition',
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition
+            ],
+        ]);
+    }
+
     protected $listeners = [
-        'approve', 'reject'
+        'approve', 'reject', 'rejectToCorrection'
     ];
 
     public function confirmPopUpModal($action, $transition)
