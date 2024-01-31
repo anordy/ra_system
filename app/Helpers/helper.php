@@ -184,6 +184,30 @@ function roundOff($amount, $currency)
 }
 
 // Helper function to convert integer to Roman numeral count
+
+
+function getHotelStarByBusinessId($business_id)
+{
+    $hotel_star = DB::table('business_hotels as b')
+        ->leftJoin('hotel_stars as h','b.hotel_star_id','=','h.id')
+        ->where('b.business_id','=',$business_id)
+        ->select('h.infrastructure_charged','no_of_stars')->first();
+    return $hotel_star;
+}
+
+function getTaxTypeName($taxTypeId) {
+    return \App\Models\TaxType::select('name')->findOrFail($taxTypeId)->name;
+}
+
+function getSubVatName($subVatId) {
+    return \App\Models\Returns\Vat\SubVat::select('name')->find($subVatId)->name ?? '';
+}
+
+function formatEnum($string) {
+    $string = str_replace( '_', ' ', $string);
+    return ucwords($string);
+}
+
 function romanNumeralCount($number)
 {
     // Define the Roman numeral symbols and their corresponding values
@@ -219,21 +243,4 @@ function romanNumeralCount($number)
     }
 
     return $result;
-}
-
-function getHotelStarByBusinessId($business_id)
-{
-    $hotel_star = DB::table('business_hotels as b')
-        ->leftJoin('hotel_stars as h','b.hotel_star_id','=','h.id')
-        ->where('b.business_id','=',$business_id)
-        ->select('h.infrastructure_charged','no_of_stars')->first();
-    return $hotel_star;
-}
-
-function getTaxTypeName($taxTypeId) {
-    return \App\Models\TaxType::select('name')->findOrFail($taxTypeId)->name;
-}
-
-function getSubVatName($subVatId) {
-    return \App\Models\Returns\Vat\SubVat::select('name')->find($subVatId)->name ?? '';
 }

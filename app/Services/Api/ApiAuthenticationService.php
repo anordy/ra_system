@@ -50,7 +50,6 @@ class ApiAuthenticationService
     }
 
 
-
     public function getVfmsAccessToken()
     {
         $loginApiUrl = config('modulesconfig.api_url') . '/vfms/login';

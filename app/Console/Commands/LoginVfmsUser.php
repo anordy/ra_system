@@ -41,7 +41,9 @@ class LoginVfmsUser extends Command
     {
         Log::channel('vfms')->info('Login Vfms User Started!');
         if ($this->confirm('By running this command auth token for VFMSAPI user will be generated and saved to database, so it must be shared to VFMS team?')) {
-            $access_token = (new ApiAuthenticationService)->getVfmsAccessToken();
+//            $access_token = (new ApiAuthenticationService)->getVfmsAccessToken();
+            $apiVfmsAuth = new ApiAuthenticationService();
+            $access_token = $apiVfmsAuth->getVfmsAccessToken();
             $this->line('access Token: '. $access_token);
         }
         Log::channel('vfms')->info('Login Vfms User Ended!');
