@@ -6,6 +6,7 @@ use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Taxpayer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -45,9 +46,9 @@ class TaxpayersTable extends DataTableComponent
                 ->sortable()
                 ->searchable(function (Builder $query, $searchTerm) {
                     return $query
-                        ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
-                        ->orWhere('middle_name', 'like', '%' . $searchTerm . '%')
-                        ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                        ->orWhereRaw(DB::raw("LOWER(first_name) like '%' || LOWER('$searchTerm') || '%'"))
+                        ->orWhereRaw(DB::raw("LOWER(middle_name) like '%' || LOWER('$searchTerm') || '%'"))
+                        ->orWhereRaw(DB::raw("LOWER(last_name) like '%' || LOWER('$searchTerm') || '%'"));
                 }),
             Column::make('Mobile No', 'mobile')->searchable(),
             Column::make('Email Address', 'email')->searchable(),
