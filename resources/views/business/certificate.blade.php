@@ -11,6 +11,13 @@
             background-size: cover;
             margin: -70px;
         }
+        .page-two {
+            background-image: url("{{ public_path() }}/images/certificate/back_page.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            /*margin: -70px;*/
+        }
         .embed {
             position: absolute;
             text-transform: uppercase;
@@ -37,6 +44,10 @@
         .taxpayer {
             font-size: 1.4em;
             top: 38%;
+        }
+        .taxpayer-alt {
+            font-size: 1.6em;
+            top: 39%;
         }
         .trading-as {
             font-size: 0.8em;
@@ -92,7 +103,7 @@
             width: 100%;
             padding-left: 70px;
             padding-right: 70px;
-            left: 40.5%;
+            left: 55.5%;
         }
         .commissioner-name {
             top: 80.5%;
@@ -104,7 +115,7 @@
             padding-left: 70px;
             padding-right: 70px;
             margin-left: 55px;
-            left: 37.5%;
+            left: 52.5%;
         }
         .commissioner-title {
             top: 82%;
@@ -115,7 +126,7 @@
             padding-left: 70px;
             padding-right: 70px;
             margin-left: 55px;
-            left: 35.5%;
+            left: 50.5%;
         }
         .qr-code {
             overflow: hidden;
@@ -148,11 +159,13 @@
         @if ($location->is_headquarter == 0)
             <div class="watermark">Branch Copy</div>
         @endif
-        <span class="embed taxpayer">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
         @if(isset($location->business->name) && isset($location->business->taxpayer_name) && strtolower(trim($location->business->name)) != strtolower(trim($location->business->taxpayer_name)))
+            <span class="embed taxpayer">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
             <span class="embed trading-as">T/A {{ $location->business->name }}</span>
+        @else
+            <span class="embed taxpayer-alt">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
         @endif
-        <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
+            <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
         @if($location->vrn)
             <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
             <span class="embed vrn-no">VRN NO: {{ $location->vrn ?? '' }}</span>
@@ -187,8 +200,7 @@
         <div class="qr-code">
             <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
         </div>
-        <div style="page-break-before: always">
-            hi
-        </div>
+    </body>
+    <body class="page-two" style="page-break-before: always">
     </body>
 </html>
