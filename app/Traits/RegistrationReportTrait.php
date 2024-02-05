@@ -11,11 +11,8 @@ trait RegistrationReportTrait
     {
         $businessLocations = BusinessLocation::distinct('business_locations.id')
             ->join('businesses', 'businesses.id', 'business_locations.business_id');
-        //get criteria                                
+        //get criteria
         switch ($parameters['criteria']) {
-            case 'All-Business':
-                $businessLocations = $businessLocations;
-                break;
             case 'Business-Reg-By-Nature':
                 $columnName = $this->getIsiicColumnName($parameters['isic_level']);
                 $businessLocations->whereIn($columnName, $parameters['isic_id']);
@@ -27,11 +24,12 @@ trait RegistrationReportTrait
                     $businessLocations->join('business_tax_type', 'business_tax_type.business_id', 'businesses.id')->where('business_tax_type.tax_type_id', $parameters['taxtype_id']);
                 }
                 break;
-            case 'Business-Reg-By-TaxPayer':
-                    $businessLocations = $businessLocations;
+            case 'Business-Reg-Without-ZNO':
+                    $businessLocations = $businessLocations->where('businesses.previous_zno', null)
+                        ->where('business_locations.is_headquarter', 1);
                 break;
         }
-     
+
         //get period
         if ($parameters['year'] != "all" && $parameters['year'] != "range") {
             $businessLocations->whereYear('business_locations.approved_on', '=', $parameters['year']);

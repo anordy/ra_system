@@ -18,6 +18,14 @@ class BusinessRegReportController extends Controller
         return view('reports.business.init');
     }
 
+    public function preview($parameters){
+        if (!Gate::allows('managerial-business-report-view')) {
+            abort(403);
+        }
+        $parameters = json_decode(decrypt($parameters),true);
+        return view('reports.business.preview', compact('parameters'));
+    }
+
     public function exportBusinessesReportPdf($data)
     {
         if (!Gate::allows('managerial-report-pdf')) {
@@ -25,6 +33,15 @@ class BusinessRegReportController extends Controller
         }
         $parameters = json_decode(decrypt($data),true);
         $records = $this->getBusinessBuilder($parameters)->get();
+
+        $optionReportTypes = [
+            'Business-Reg-By-Nature' => 'Registered Business By Nature of Business',
+            'Business-Reg-By-TaxType' => 'Registered Business By Tax Type',
+            'Business-Reg-By-TaxPayer' => 'Registered Business By Tax Payer',
+            'Business-Reg-Without-ZNO' => 'Registered Business With No ZITAS Number',
+            'All-Business' => 'All Registered Business'
+        ];
+        $parameters['criteria'] = $optionReportTypes[$parameters['criteria']];
 
         $pdf = PDF::loadView('exports.business.pdf.business',compact('records', 'parameters'));
         $pdf->setPaper('a4', 'landscape');
@@ -38,6 +55,14 @@ class BusinessRegReportController extends Controller
             abort(403);
         }
         $parameters = json_decode(decrypt($data),true);
+        $optionReportTypes = [
+            'Business-Reg-By-Nature' => 'Registered Business By Nature of Business',
+            'Business-Reg-By-TaxType' => 'Registered Business By Tax Type',
+            'Business-Reg-By-TaxPayer' => 'Registered Business By Tax Payer',
+            'Business-Reg-Without-ZNO' => 'Registered Business With No ZITAS Number',
+            'All-Business' => 'All Registered Business'
+        ];
+        $parameters['criteria'] = $optionReportTypes[$parameters['criteria']];
         $records = $this->getBusinessBuilder($parameters)->get();
         $recordsData = $records->groupBy('tax_type_id');
 
