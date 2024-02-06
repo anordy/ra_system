@@ -73,7 +73,7 @@ class DailyUpdateBillReconsiliation implements ShouldQueue
                             'payer_phone_number' => $reconTrans['DptCellNum'],
                             'payer_email' => $reconTrans['DptEmailAddr'],
                             'payer_name' => $reconTrans['DptName'],
-                            'psp_receipt_number' =>'RST' . rand(10000, 90000),
+                            'psp_receipt_number' =>'RST' . random_int(10000, 90000),
                             'psp_name' => $reconTrans['PspName'],
                             'ctr_acc_num' => $reconTrans['CtrAccNum'],
                             'created_by_recon' => true,

@@ -20,10 +20,6 @@ trait TaxReturnHistory
                 $version = $history->version + 1;
             }
 
-            foreach ($tax_return->return->items as $item) {
-                $item->config = $item->config;
-            }
-
             ReturnsTaxReturnHistory::create([
                 'tax_return_id' => $tax_return->id,
                 'return_info' => json_encode($tax_return),

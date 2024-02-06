@@ -6,24 +6,9 @@ use App\Enum\ReturnApplicationStatus;
 use App\Models\Returns\ReturnStatus;
 
 trait ReturnTrait{
-    public function canBeEdited(){
+    public function canBeEdited(): bool
+    {
         return false; // No return can be edited at the moment
-        if ($this->application_status === ReturnApplicationStatus::ADJUSTED){
-            return false;
-        }
-        if (\Carbon\Carbon::now()->greaterThan($this->financialMonth->due_date)){
-            return false;
-        }
-        if ($this->status === ReturnStatus::ON_CLAIM){
-            return false;
-        }
-
-        $adjusted = self::where('financial_month_id', $this->financial_month_id)->where('application_status', ReturnApplicationStatus::ADJUSTED)->count();
-        if ($adjusted){
-            return false;
-        }
-
-        return true;
     }
 
     public function getApplicationStatus(){

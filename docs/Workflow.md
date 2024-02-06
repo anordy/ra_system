@@ -128,7 +128,7 @@ In order to run the workflow you need to do the following
 - After the registration you can perform below action
     - Do transition from one place to another using the function *doTransition($transtion, $context)*
     - Check if the current transition is equal to the given transition name *checkTransition($transition_name)*
-    - Get all the enable transtion using the *getEnabledTranstions()*
+    - Get all the enable transtion using the *getEnabledTransitions()*
 - For custom action on the approval process you need to add the logics on *WorkflowSubscriber* class as currently all the notification and email notification of the approval are manually added in the class.
 
 ### WorkflowSubscriber class explanation

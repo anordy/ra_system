@@ -72,6 +72,7 @@ trait DepartmentalReportTrait
             }
         }
 
+        $returns = $model;
 
         if ($parameters['payment_status'] != 'all') {
             //get all paid returns
@@ -83,8 +84,6 @@ trait DepartmentalReportTrait
             if ($parameters['payment_status'] == 'unpaid') {
                 $returns = $model->where('tax_returns.payment_status', '!=', 'complete');
             }
-        } else {
-            $returns = $model;
         }
 
 

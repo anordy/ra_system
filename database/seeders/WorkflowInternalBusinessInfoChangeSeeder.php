@@ -33,6 +33,11 @@ class WorkflowInternalBusinessInfoChangeSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 6]
             ],
+            'cdt' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 6]
+            ],
             'completed' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -47,12 +52,22 @@ class WorkflowInternalBusinessInfoChangeSeeder extends Seeder
             ],
             'director_of_trai_review' => [
                 'from' => 'director_of_trai',
-                'to'   => 'completed',
+                'to'   => 'cdt',
                 'condition' => '',
             ],
             'director_of_trai_reject' => [
                 'from' => 'director_of_trai',
                 'to'   => 'registration_manager',
+                'condition' => '',
+            ],
+            'cdt_review' => [
+                'from' => 'cdt',
+                'to'   => 'completed',
+                'condition' => '',
+            ],
+            'cdt_reject' => [
+                'from' => 'cdt',
+                'to'   => 'director_of_trai',
                 'condition' => '',
             ]
         ];

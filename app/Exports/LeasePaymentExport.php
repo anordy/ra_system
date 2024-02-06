@@ -67,7 +67,7 @@ class LeasePaymentExport implements FromView, WithEvents,ShouldAutoSize
 
                 $months = $this->getMonthList($this->startDate, $this->endDate);
                 $years = $this->getYearList($this->startDate, $this->endDate);
-                $model = LeasePayment::query()
+                $leasePayments = LeasePayment::query()
                 ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
                 ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
                 ->whereIn("land_leases.{$this->date_type}", $months)
@@ -75,7 +75,7 @@ class LeasePaymentExport implements FromView, WithEvents,ShouldAutoSize
                 
             } elseif ($this->date_type == 'payment_year') {
                 $years = $this->getYearList($this->startDate, $this->endDate);
-                $model = clone $model
+                $leasePayments = clone $model
                 ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
                 ->whereIn("financial_years.code", $years);
 

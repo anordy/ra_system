@@ -82,7 +82,7 @@ class TaxVerificationApprovalProcessing extends Component
             if (gettype($operators) != "array") {
                 $operators = [];
             }
-            $roles = Role::whereIn('id', $operators)->get()->pluck('id')->toArray();
+            $roles = User::whereIn('id', $operators)->get()->pluck('id')->toArray();
 
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
             
@@ -353,7 +353,7 @@ class TaxVerificationApprovalProcessing extends Component
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $zmBill->zan_status = 'pending';
-                $zmBill->control_number = rand(2000070001000, 2000070009999);
+                $zmBill->control_number = random_int(2000070001000, 2000070009999);
                 $zmBill->save();
                 $this->customAlert('success', 'A control number for this verification has been generated successfully');
             }

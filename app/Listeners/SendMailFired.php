@@ -4,6 +4,9 @@ namespace App\Listeners;
 
 use App\Jobs\Vfms\ClientNotificationMail;
 use App\Jobs\Account\SendReferenceNumberMail;
+use App\Jobs\PropertyTax\SendPropertyTaxApprovalMail;
+use App\Jobs\PropertyTax\SendPropertyTaxCorrectionMail;
+use App\Jobs\PropertyTax\SendPropertyTaxExtensionApprovalMail;
 use App\Models\KYC;
 use App\Models\UserOtp;
 use App\Events\SendMail;
@@ -245,6 +248,12 @@ class SendMailFired
             SendReferenceNumberMail::dispatch($event->tokenId);
         } else if ($event->service === SendQuantityCertificateMail::SERVICE){
             SendQuantityCertificateMail::dispatch($event->tokenId);
+        } else if ($event->service === SendPropertyTaxApprovalMail::SERVICE){
+            SendPropertyTaxApprovalMail::dispatch($event->tokenId);
+        } else if ($event->service === SendPropertyTaxCorrectionMail::SERVICE){
+            SendPropertyTaxCorrectionMail::dispatch($event->tokenId);
+        } else if ($event->service === SendPropertyTaxExtensionApprovalMail::SERVICE){
+            SendPropertyTaxExtensionApprovalMail::dispatch($event->tokenId);
         }
     }
 }

@@ -452,6 +452,13 @@ class PermissionSeeder extends Seeder
             ['name' => 'vfms-associated-business-unit-edit', 'sys_module_id' => 31],
             ['name' => 'vfms-business-unit-update', 'sys_module_id' => 31],
 
+            # Property Tax
+            ['name' => 'survey-solution-registration', 'sys_module_id' => 31],
+            ['name' => 'condominium-registration', 'sys_module_id' => 31],
+            ['name' => 'registered-condominium', 'sys_module_id' => 31],
+            ['name' => 'properties-registrations', 'sys_module_id' => 31],
+            ['name' => 'property-payment-extension', 'sys_module_id' => 31],
+            ['name' => 'next-bills-preview', 'sys_module_id' => 31],
         ];
 
         foreach ($data as $row) {

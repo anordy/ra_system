@@ -26,6 +26,16 @@ class SystemSetting extends Model implements Auditable
     const INPUT_NUMBER = 'number';
     const ENABLE_OTP_ALTERNATIVE = 'enable-otp-alternative';
 
+    const RESIDENTIAL_STOREY_BUILDING = 'residential-storey-building-property-tax-amount';
+    const CONDOMINIUM_BUILDING = 'condominium-building-property-tax-amount';
+    const STOREY_BUSINESS_BUILDING = 'storey-business-building-property-tax-amount';
+    const OTHER_BUSINESS_BUILDING = 'other-business-building-property-tax-amount';
+
+    const NUMBER_OF_TIMES_INTEREST_IS_COMPOUNDED_IN_PROPERTY_TAX_PER_YEAR = 'number-of-times-interest-compounded-in-property-tax-per-year';
+    const PROPERTY_TAX_INTEREST_RATE = 'property-tax-interest-rate';
+    const PROPERTY_TAX_TIME_VARIABLE = 'property-tax-time-variable';
+
+
     protected $guarded = [];
     
     public function system_setting_category(){

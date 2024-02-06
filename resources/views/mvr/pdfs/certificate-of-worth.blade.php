@@ -47,6 +47,9 @@
         td span{
             display: inline-block;
         }
+        .commissioner-name {
+            text-transform: capitalize;
+        }
     </style>
 </head>
     <body>
@@ -70,8 +73,8 @@
             <table>
                 <tr>
                     <td>
-                        <div>Make: {{strtoupper($motor_vehicle->model->make->name)}}</div>
-                        <div>Year of Manufacture: {{$motor_vehicle->year_of_manufacture}}</div>
+                        <div>Make: {{strtoupper($motor_vehicle->chassis->make)}}</div>
+                        <div>Year of Manufacture: {{$motor_vehicle->chassis->year}}</div>
                         <div>Chassis: {{$motor_vehicle->chassis_number}}</div>
                         <div>Inspected Mileage: {{$motor_vehicle->mileage}} Km</div>
                         <div>Inspected Date: {{$motor_vehicle->inspection_date}}</div>
@@ -85,11 +88,11 @@
                         </div>
                     </td>
                     <td>
-                        <div><span style="width: 100px">Modal: </span> <span>{{strtoupper($motor_vehicle->model->name)}}</span></div>
-                        <div><span style="width: 100px">Capacity: </span> <span>{{$motor_vehicle->engine_capacity}} cc</span></div>
-                        <div><span style="width: 100px">Engine: </span> <span>{{$motor_vehicle->engine_number}}</span></div>
-                        <div><span style="width: 100px">Type: </span> <span>{{$motor_vehicle->body_type->name}}</span></div>
-                        <div><span style="width: 100px">Color: </span> <span>{{$motor_vehicle->color->name}}</span></div>
+                        <div><span style="width: 100px">Modal: </span> <span>{{strtoupper($motor_vehicle->chassis->model_type)}}</span></div>
+                        <div><span style="width: 100px">Capacity: </span> <span>{{$motor_vehicle->chassis->engine_cubic_capacity ?? 'N/A'}} cc</span></div>
+                        <div><span style="width: 100px">Engine: </span> <span>{{$motor_vehicle->chassis->engine_number}}</span></div>
+                        <div><span style="width: 100px">Type: </span> <span>{{$motor_vehicle->chassis->body_type}}</span></div>
+                        <div><span style="width: 100px">Color: </span> <span>{{$motor_vehicle->chassis->color}}</span></div>
                         <div><span style="width: 100px">Cert No.: </span> <span>{{$motor_vehicle->certificate_number}}</span></div>
                     </td>
                 </tr>

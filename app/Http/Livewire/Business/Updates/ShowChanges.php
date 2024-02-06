@@ -59,10 +59,6 @@ class ShowChanges extends Component
             return AccountType::find($id)->name ?? 'N/A';
         } else if ($type == 'street_id') {
             return Street::find($id)->name ?? 'N/A';
-        } else if ($type == 'bank_id') {
-            return Bank::find($id)->name ?? 'N/A';
-        } else if ($type == 'account_type_id') {
-            return AccountType::find($id)->name ?? 'N/A';
         } else if ($type == 'file_type_id') {
             return BusinessFileType::find($id)->name ?? 'N/A';
         } else if ($type == 'hotel_star_id') {

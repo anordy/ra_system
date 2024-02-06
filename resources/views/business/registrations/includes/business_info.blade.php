@@ -43,6 +43,12 @@
                         role="tab" aria-controls="bpra-information" aria-selected="false">BPRA Information</a>
                 </li>
         @endif
+        @if($business->tin && $business->tininformation && $business->tin_verification_status === \App\Enum\TinVerificationStatus::APPROVED)
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="tin-information-tab" data-toggle="tab" href="#tin-information"
+                   role="tab" aria-controls="tin-information" aria-selected="false">TIN Information</a>
+            </li>
+        @endif
     </ul>
 
     <div class="tab-content bg-white border shadow-sm" id="myTabContent">
@@ -163,7 +169,7 @@
                 </div>
                 @if ($business->is_business_lto)
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">LTO Business</span>
+                        <span class="font-weight-bold text-uppercase">LTD Business</span>
                         <p class="my-1">Yes</p>
                     </div>
                 @endif
@@ -970,6 +976,109 @@
                     </tbody>
                 </table>
             </div>
+        @endif
+
+        @if($business->tin && $business->tininformation && $business->tin_verification_status === \App\Enum\TinVerificationStatus::APPROVED)
+            <div class="tab-pane fade p-4" id="tin-information" role="tabpanel"
+             aria-labelledby="tin-information-tab">
+            <div class="pt-2">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-body mt-0 p-2">
+                            <div class="row my-2">
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">TIN</span>
+                                    <p class="my-1">{{ $business->tininformation->tin }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">First Name</span>
+                                    <p class="my-1">{{ $business->tininformation->first_name }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Middle Name</span>
+                                    <p class="my-1">{{ $business->tininformation->middle_name ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Last Name</span>
+                                    <p class="my-1">{{ $business->tininformation->last_name ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Email</span>
+                                    <p class="my-1">{{ $business->tininformation->email ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Mobile</span>
+                                    <p class="my-1">{{ $business->tininformation->mobile ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Gender</span>
+                                    <p class="my-1">{{ $business->tininformation->gender }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Date of Birth</span>
+                                    <p class="my-1">{{ $business->tininformation->date_of_birth ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Nationality</span>
+                                    <p class="my-1">{{ $business->tininformation->nationality ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Taxpayer Name</span>
+                                    <p class="my-1">{{ $business->tininformation->taxpayer_name ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Trading Name</span>
+                                    <p class="my-1">{{ $business->tininformation->trading_name ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">District</span>
+                                    <p class="my-1">{{ $business->tininformation->district }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Region</span>
+                                    <p class="my-1">{{ $business->tininformation->region }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Street</span>
+                                    <p class="my-1">{{ $business->tininformation->street }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Postal City</span>
+                                    <p class="my-1">{{ $business->tininformation->postal_city ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Plot Number</span>
+                                    <p class="my-1">{{ $business->tininformation->plot_number ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Block Number</span>
+                                    <p class="my-1">{{ $business->tininformation->block_number ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Vat Registration Number</span>
+                                    <p class="my-1">{{ $business->tininformation->vat_registration_number ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Status</span>
+                                    <p class="my-1">{{ $business->tininformation->status ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Is Business TIN</span>
+                                    <p class="my-1">{{ $business->tininformation->is_business_tin == 1 ? 'Yes' : 'No' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Is Entity TIN</span>
+                                    <p class="my-1">{{ $business->tininformation->is_entity_tin == 1 ? 'Yes' : 'No' }}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
         @endif
     </div>
 </div>

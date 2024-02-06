@@ -349,6 +349,43 @@ class ChangesApprovalProcessing extends Component
 
                     event(new SendMail('change-business-information-approval', $notification_payload));
                     event(new SendSms('change-business-information-approval', $notification_payload));
+                } else if ($this->business_update_data->type == 'transfer_ownership') {
+                    $new_values = json_decode($this->business_update_data->new_values, true);
+
+                    DB::beginTransaction();
+                    try {
+                        $business = Business::where('id', $this->business_update_data->business_id)->first();
+
+                        if (!$business) {
+                            $this->customAlert('warning', 'Business not found');
+                            return;
+                        }
+
+
+                        $business->update(
+                            [
+                                'taxpayer_id' => $new_values['taxpayer_id'],
+                                'responsible_person_id' => $new_values['responsible_person_id']
+                            ]
+                        );
+
+
+                        $this->subject->status = BusinessStatus::APPROVED;
+                        DB::commit();
+
+                        $notification_payload = [
+                            'business' => $business,
+                            'time' => Carbon::now()->format('d-m-Y')
+                        ];
+
+                        event(new SendMail('change-business-information-approval', $notification_payload));
+                        event(new SendSms('change-business-information-approval', $notification_payload));
+                    } catch (Exception $e) {
+                        Log::error($e);
+                        DB::rollBack();
+                        $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+                    }
+
                 }
             }
         } catch (Exception $e) {

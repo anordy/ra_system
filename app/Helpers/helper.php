@@ -79,10 +79,15 @@ function checkIfTaxTypeSaved($return)
     $tax_type_change = BusinessTaxTypeChange::query()
         ->where('business_id', $return->business_id)
         ->where('from_tax_type_id', $return->tax_type_id)
+        ->latest()
         ->first();
+
     if (empty($tax_type_change)) {
         return true;
     } else {
+        if ($tax_type_change->status == 'pending') {
+            return true;
+        }
         return false;
     }
 }

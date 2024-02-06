@@ -51,6 +51,11 @@ a:focus {
     height: 100vh;
 }
 
+.main-color {
+    background: #0080c1;
+    color: #fff;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 #sidebar::-webkit-scrollbar {
     display: none;

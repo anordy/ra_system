@@ -3,6 +3,7 @@
 namespace App\Services\Api;
 
 use App\Models\BillingStatus;
+use App\Models\PropertyTax\PropertyPayment;
 use App\Models\RenewTaxAgentRequest;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
@@ -28,7 +29,7 @@ class ZanMalipoInternalService
 
         if ($access_token == null) {
             $billable = $bill->billable;
-            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
+            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
                 $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
                 if ($bill->billable_type == TaxReturn::class && $billable->return) {
                     $billable->return->status = ReturnStatus::CN_GENERATION_FAILED;
@@ -63,7 +64,7 @@ class ZanMalipoInternalService
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_CONNECTTIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+           
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => json_encode($payload),
             CURLOPT_HTTPHEADER => array(
@@ -86,7 +87,7 @@ class ZanMalipoInternalService
         $billable = $bill->billable;
 
         if ($res['data']['status_code'] === 7101) {
-            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
+            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
                 $billable->payment_status = ReturnStatus::CN_GENERATING;
             } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
                 $billable->status = TaxAgentStatus::VERIFIED;
@@ -95,7 +96,7 @@ class ZanMalipoInternalService
                 $billable->status = ReturnStatus::CN_GENERATING;
             }
         } else {
-            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
+            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
                 $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
             } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
                 $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;
@@ -132,8 +133,7 @@ class ZanMalipoInternalService
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30000,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_TIMEOUT => 30,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => json_encode($payload),
             CURLOPT_HTTPHEADER => array(
@@ -178,8 +178,7 @@ class ZanMalipoInternalService
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30000,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_TIMEOUT => 30,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => json_encode($payload),
             CURLOPT_HTTPHEADER => array(
@@ -221,8 +220,8 @@ class ZanMalipoInternalService
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30000,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_TIMEOUT => 30,
+           
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => json_encode($payload),
             CURLOPT_HTTPHEADER => array(

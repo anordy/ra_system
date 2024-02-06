@@ -69,13 +69,12 @@ class DailyDebtCalculateCommand extends Command
          * CONDITION 2: The return is not be paid at all
          * date1 - date2: if date1 is greater than date2 the result will be positive
          */
-        $tax_returns = TaxReturn::selectRaw('tax_returns.*, ROUND(CURRENT_DATE - CAST(filing_due_date as date)) as days_passed')
+        $tax_returns = TaxReturn::selectRaw('tax_returns.*, ROUND(CURRENT_DATE - CAST(curr_payment_due_date as date)) as days_passed')
             ->whereIn('return_category', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
-            ->whereRaw("CURRENT_DATE - CAST(filing_due_date as date) > 31") // Since filing due date is of last month
+            ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0") // Since filing due date is of last month
             ->where('vetting_status', VettingStatus::VETTED)
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
-
 
         foreach ($tax_returns as $tax_return) {
             DB::beginTransaction();
@@ -85,7 +84,7 @@ class DailyDebtCalculateCommand extends Command
                      * 1. return_category from normal to debt
                      * 2. application_step from filing to debt
                      */
-                    if ($tax_return->days_passed < 60) {
+                    if ($tax_return->days_passed < 30) {
                         $tax_return->update([
                             'return_category' => ReturnCategory::DEBT,
                             'application_step' => ApplicationStep::DEBT
@@ -121,9 +120,9 @@ class DailyDebtCalculateCommand extends Command
     {
         Log::channel('dailyJobs')->info("Daily Debt marking for assessment process started");
 
-        $tax_assessments = TaxAssessment::selectRaw('tax_assessments.*, CURRENT_DATE - CAST(payment_due_date as date) as days_passed')
+        $tax_assessments = TaxAssessment::selectRaw('tax_assessments.*, CURRENT_DATE - CAST(curr_payment_due_date as date) as days_passed')
             ->whereIn('assessment_step', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
-            ->whereRaw("CURRENT_DATE - CAST(payment_due_date as date) > 30")
+            ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0")
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 
@@ -133,7 +132,7 @@ class DailyDebtCalculateCommand extends Command
                 /**
                  * Mark assessment process as debt if days_passed is less than 30
                  */
-                if ($tax_assessment->days_passed < 60) {
+                if ($tax_assessment->days_passed < 30) {
                     $tax_assessment->update([
                         'assessment_step' => ApplicationStep::DEBT
                     ]);

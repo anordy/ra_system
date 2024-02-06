@@ -62,7 +62,7 @@
         .commissioner-name {
             top: 93%;
             position: absolute;
-            text-transform: uppercase;
+            text-transform: capitalize;
             font-weight: bold;
             font-size: 20px;
             width: 100%;

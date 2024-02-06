@@ -53,6 +53,12 @@ class RegistrationsApprovalTable extends DataTableComponent
                 ->label(fn ($row) => $row->pinstance->reg_no ?? 'N/A')->sortable()->searchable(),
             Column::make('Mobile', 'pinstance_type')
                 ->label(fn ($row) => $row->pinstance->mobile ?? '')->sortable()->searchable(),
+            Column::make('Tax Region', 'pinstance.taxRegion')
+                ->label(fn ($row) => $row->pinstance->taxRegion ?? 'N/A')->sortable()->searchable(),
+            Column::make('Ward', 'pinstance')
+                ->label(fn ($row) => $row->pinstance->businessWardName() ?? '')->sortable()->searchable(),
+            Column::make('Street', 'pinstance')
+                ->label(fn ($row) =>  $row->pinstance->businessStreetName()  ?? '')->sortable()->searchable(),
             Column::make('Status', 'pinstance.mobile')
                 ->label(function ($row) {
                     return view('business.registrations.includes.approval_status', compact('row'));

@@ -12,7 +12,7 @@ class BusinessRegReportController extends Controller
     use RegistrationReportTrait;
 
     public function init(){
-        if (!Gate::allows('managerial-business-report-vie')) {
+        if (!Gate::allows('managerial-business-report-view')) {
             abort(403);
         }
         return view('reports.business.init');

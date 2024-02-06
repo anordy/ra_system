@@ -66,9 +66,7 @@ class EditReturnConfig extends Component
                 'rate_usd'=>$this->rate_usd,
             ];
 
-            if (key_exists('formular', $this->configs->attributesToArray())){
-                $payload['formular'] = $this->value_formular;
-            } else {
+            if (key_exists('value_formular', $this->configs->attributesToArray())){
                 $payload['value_formular'] = $this->value_formular;
             }
 

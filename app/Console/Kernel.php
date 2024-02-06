@@ -49,6 +49,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('daily:tax-effective-date')->dailyAt('00:00')->runInBackground();
         $schedule->command('daily:delete-draft-businesses-exceed-seven-days')->dailyAt('00:00')->runInBackground();
         $schedule->command('daily:recon')->dailyAt('00:00')->runInBackground();
+        $schedule->command('annual:property-tax-bill')->yearlyOn(7,1,'00:00')->runInBackground();
+        $schedule->command('monthly:property-tax-bill-reminder')->yearlyOn(7,1,'00:00')->runInBackground();
 
         // RUNNING AT SPECIFIC TIME & DAY
         // $schedule->command('daily:debt')->cron('51 14 04 01 *')->runInBackground();

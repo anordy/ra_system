@@ -23,7 +23,7 @@ trait TaxAssessmentDisputeTrait
     public function addDisputeToAssessment($assessment, $app_status, $principal_amount, $penalty, $interest, $paid_amount)
     {
 
-        if ($app_status == null || $app_status == null) {
+        if ($app_status == null) {
             throw new Exception('Assessment Object can not be null');
         } else {
 

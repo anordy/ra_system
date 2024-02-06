@@ -11,6 +11,10 @@
 |
  */
 
+use App\Http\Controllers\PropertyTax\CondominiumController;
+use App\Http\Controllers\PropertyTax\PropertyTaxController;
+use App\Http\Controllers\PropertyTax\SurveySolutionController;
+use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -177,6 +181,30 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
 
+    Route::prefix('property-tax')->name('property-tax.')->group(function () {
+        Route::get('/index', [PropertyTaxController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [PropertyTaxController::class, 'show'])->name('show');
+        Route::get('/index/next-bills', [PropertyTaxController::class, 'nextBills'])->name('next.bills');
+        Route::get('/get/bill/{id}', [PropertyTaxController::class, 'getBill'])->name('bill');
+        Route::get('/get/notice/{id}', [PropertyTaxController::class, 'getNotice'])->name('notice');
+
+        Route::prefix('survey-solution')->name('survey-solution.')->group(function () {
+            Route::get('/registration', [SurveySolutionController::class, 'init'])->name('initial');
+        });
+
+        Route::prefix('condominium')->name('condominium.')->group(function () {
+            Route::get('/registration', [CondominiumController::class, 'register'])->name('registration');
+            Route::get('/index', [CondominiumController::class, 'index'])->name('index');
+            Route::get('/show/{id}', [CondominiumController::class, 'show'])->name('show');
+            Route::get('/edit/{id}', [CondominiumController::class, 'edit'])->name('edit');
+        });
+
+        Route::prefix('payment-extension')->name('payment-extension.')->group(function () {
+            Route::get('/index', [\App\Http\Controllers\PropertyTax\PaymentExtensionController::class, 'index'])->name('index');
+            Route::get('/show/{id}', [\App\Http\Controllers\PropertyTax\PaymentExtensionController::class, 'show'])->name('show');
+        });
+    });
+
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::get('/account', [AccountController::class, 'show'])->name('account');
     Route::get('/account/security-questions', [AccountController::class, 'securityQuestions'])->name('account.security-questions');
@@ -277,6 +305,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register');
         Route::get('list', [WithholdingAgentController::class, 'index'])->name('list');
         Route::get('view/{id}', [WithholdingAgentController::class, 'view'])->name('view');
+        Route::get('file/{id}/{type}', [WithholdingAgentController::class, 'getWithholdingAgentFile'])->name('file');
         Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
     });
 
@@ -687,6 +716,20 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/show/{id}', [CasesController::class, 'show'])->name('show');
         Route::get('/appeals', [CasesController::class, 'appealsIndex'])->name('appeals');
         Route::get('/appeals/{id}', [CasesController::class, 'appealShow'])->name('appeal.show');
+    });
+
+    Route::prefix('tra')->as('tra.')->group(function () {
+        Route::get('/tins', [TraController::class, 'tins'])->name('tins');
+        Route::get('/tins/{id}', [TraController::class, 'showTin'])->name('tins.show');
+
+        Route::get('/efdms-receipts', [TraController::class, 'receipts'])->name('receipts');
+        Route::get('/efdms-receipts/{id}', [TraController::class, 'showReceipt'])->name('receipts.show');
+
+        Route::get('/chassis-numbers', [TraController::class, 'chassis'])->name('chassis');
+        Route::get('/chassis-numbers/{id}', [TraController::class, 'showChassis'])->name('chassis.show');
+
+        Route::get('/exited-goods', [TraController::class, 'goods'])->name('goods');
+        Route::get('/exited-goods/{id}', [TraController::class, 'showGoods'])->name('goods.show');
     });
 
     Route::get('/control-number/retry/{id}', [LicenseApplicationsController::class, 'retryControlNumber'])->name('control-number.retry');

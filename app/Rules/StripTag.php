@@ -31,6 +31,13 @@ class StripTag implements Rule
             return true;
         }
 
+        // Check for special characters: Allow only @,/,-,.,' as they can be used
+        $pattern = '/^[a-zA-Z0-9@\/\-.,]+$/';
+
+//        if (preg_match($pattern, $value)) {
+//            return false;
+//        }
+
         // Since strip tags always return string,
         // in order to apply this rule on non string values, like ID's,
         // the result should explicitly be converted to string or do a loose comparison ==
@@ -60,6 +67,6 @@ class StripTag implements Rule
      */
     public function message(): string
     {
-        return 'The :attribute must not contain tags.';
+        return 'The :attribute must not contain tags or has invalid characters.';
     }
 }

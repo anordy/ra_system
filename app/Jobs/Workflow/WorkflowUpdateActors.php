@@ -20,6 +20,8 @@ class WorkflowUpdateActors implements ShouldQueue
     public $workflow_id;
     public $place;
 
+    public $timeout = 320;
+
     /**
      * Create a new job instance.
      *

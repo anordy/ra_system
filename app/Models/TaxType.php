@@ -51,6 +51,8 @@ class TaxType extends Model implements Auditable
     public const DEBTS = 'debts';
     public const AIRBNB = 'hotel-airbnb';
 
+    public const PROPERTY_TAX = 'property-tax';
+
     protected $fillable = [
         'name', 'gfs_code', 'is_approved', 'is_updated'
     ];

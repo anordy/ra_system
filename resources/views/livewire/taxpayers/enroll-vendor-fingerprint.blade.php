@@ -43,39 +43,6 @@
                             <td colspan="5"><b>Left Hand</b></td>
                         </tr>
                         <tr>
-                            {{-- <th width="20%" align="center">
-                                Little <br>
-                                <i class="bi bi-fingerprint" style="font-size: 50px"></i><br>
-                                @if (!$this->enrolled('left', 'little'))
-                                    <button class="btn btn-outline-info btn-sm"
-                                        onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal', '{{ encrypt($kyc->id) }}','left','little')">Click
-                                        To Enroll</button>
-                                @else
-                                    <span class="badge badge-success">Enrolled</span>
-                                @endif
-                            </th>
-                            <th width="20%" align="center">
-                                Ring <br>
-                                <i class="bi bi-fingerprint" style="font-size: 50px"></i><br>
-                                @if (!$this->enrolled('left', 'ring'))
-                                    <button class="btn btn-outline-info btn-sm"
-                                        onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal','{{ encrypt($kyc->id) }}','left','ring')">Click
-                                        To Enroll</button>
-                                @else
-                                    <span class="badge badge-success">Enrolled</span>
-                                @endif
-                            </th>
-                            <th width="20%" align="center">
-                                Middle <br>
-                                <i class="bi bi-fingerprint" style="font-size: 50px"></i> <br>
-                                @if (!$this->enrolled('left', 'middle'))
-                                    <button class="btn btn-outline-info btn-sm"
-                                        onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal','{{ encrypt($kyc->id) }}','left','middle')">Click
-                                        To Enroll</button>
-                                @else
-                                    <span class="badge badge-success">Enrolled</span>
-                                @endif
-                            </th> --}}
                             <th width="20%" align="center">
                                 Index <br>
                                 <i class="bi bi-fingerprint" style="font-size: 50px"></i> <br>
@@ -109,39 +76,6 @@
                             <td colspan="5"><b>Right Hand</b></td>
                         </tr>
                         <tr>
-                            {{-- <th width="20%" align="center">
-                                Little <br>
-                                <i class="bi bi-fingerprint" style="font-size: 50px"></i><br>
-                                @if (!$this->enrolled('right', 'little'))
-                                    <button class="btn btn-outline-info btn-sm"
-                                        onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal', '{{ encrypt($kyc->id) }}','right','little')">Click
-                                        To Enroll</button>
-                                @else
-                                    <span class="badge badge-success">Enrolled</span>
-                                @endif
-                            </th>
-                            <th width="20%" align="center">
-                                Ring <br>
-                                <i class="bi bi-fingerprint" style="font-size: 50px"></i><br>
-                                @if (!$this->enrolled('right', 'ring'))
-                                    <button class="btn btn-outline-info btn-sm"
-                                        onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal','{{ encrypt($kyc->id) }}','right','ring')">Click
-                                        To Enroll</button>
-                                @else
-                                    <span class="badge badge-success">Enrolled</span>
-                                @endif
-                            </th>
-                            <th width="20%" align="center">
-                                Middle <br>
-                                <i class="bi bi-fingerprint" style="font-size: 50px"></i> <br>
-                                @if (!$this->enrolled('right', 'middle'))
-                                    <button class="btn btn-outline-info btn-sm"
-                                        onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal','{{ encrypt($kyc->id) }}','right','middle')">Click
-                                        To Enroll</button>
-                                @else
-                                    <span class="badge badge-success">Enrolled</span>
-                                @endif
-                            </th> --}}
                             <th width="20%" align="center">
                                 Index <br>
                                 <i class="bi bi-fingerprint" style="font-size: 50px"></i> <br>
@@ -157,8 +91,7 @@
                                 Thumb <br>
                                 <i class="bi bi-fingerprint" style="font-size: 50px"></i> <br>
                                 @if (!$this->enrolled('right', 'thumb'))
-                                    <button class="btn btn-outline-info btn-sm"
-                                        onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal','{{ encrypt($kyc->id) }}','right','thumb')">Click
+                                    <button class="btn btn-outline-info btn-sm" onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal','{{ encrypt($kyc->id) }}','right','thumb')">Click
                                         To Enroll</button>
                                 @else
                                     <span class="badge badge-success">Enrolled</span>

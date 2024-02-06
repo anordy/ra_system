@@ -53,6 +53,12 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'All settings related to filing minimum allowed amounts.',
                 'is_approved' => 1
             ],
+            [
+                'name' => 'Property Tax Amount',
+                'code' => 'property-tax-amount',
+                'description' => 'All settings related to property tax bill amounts.',
+                'is_approved' => 1
+            ],
         ];
 
         foreach ($categories as $category) {
@@ -139,6 +145,69 @@ class SystemSettingsSeeder extends Seeder
                 'code' => 'stamp-duty-minimum-filling-amount',
                 'description' => 'Stamp-duty Composition minimum amount required for filling a return.',
                 'value' => '135000',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Residential Storey Building Tax Amount per unit',
+                'code' => SystemSetting::RESIDENTIAL_STOREY_BUILDING,
+                'description' => 'Residential Storey Building Tax Amount per storey/unit.',
+                'value' => '10000',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Condominium Property Tax Amount Per Unit',
+                'code' => SystemSetting::CONDOMINIUM_BUILDING,
+                'description' => 'Condominium tax amount per storey/unit.',
+                'value' => '10000',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Storey Business Building Property Tax Amount',
+                'code' => SystemSetting::STOREY_BUSINESS_BUILDING,
+                'description' => 'Storey Business Building Property tax amount per storey.',
+                'value' => '50000',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Other Business Building Property Tax Amount',
+                'code' => SystemSetting::OTHER_BUSINESS_BUILDING,
+                'description' => 'Other Business Building Property tax amount per unit.',
+                'value' => '50000',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Number of Times Interest Is Compounded in Property Tax Per Year',
+                'code' => SystemSetting::NUMBER_OF_TIMES_INTEREST_IS_COMPOUNDED_IN_PROPERTY_TAX_PER_YEAR,
+                'description' => 'Number of Times Interest Is Compounded in Property Tax Per Year.',
+                'value' => '3',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Property Tax Interest Rate Value',
+                'code' => SystemSetting::PROPERTY_TAX_INTEREST_RATE,
+                'description' => 'Property Tax Interest Rate Value.',
+                'value' => '0.015',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Property Tax Time Variable',
+                'code' => SystemSetting::PROPERTY_TAX_TIME_VARIABLE,
+                'description' => 'Property Tax Time Variable.',
+                'value' => '0',
                 'unit' => 'number',
                 'is_approved' => 1
             ],

@@ -104,7 +104,7 @@
         .commissioner-name {
             top: 93%;
             position: absolute;
-            text-transform: uppercase;
+            text-transform: capitalize;
             font-weight: bold;
             font-size: 20px;
             width: 100%;
@@ -113,6 +113,7 @@
             margin-left: 55px;
             left: 30px;
         }
+     
     </style>
 </head>
 

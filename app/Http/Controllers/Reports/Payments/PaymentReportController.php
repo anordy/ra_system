@@ -14,7 +14,7 @@ class PaymentReportController extends Controller
 
     public function index()
     {
-        if (!Gate::allows('managerial-payment-report-vie')) {
+        if (!Gate::allows('managerial-payment-report-view')) {
             abort(403);
         }
         return view('reports.payments.index');

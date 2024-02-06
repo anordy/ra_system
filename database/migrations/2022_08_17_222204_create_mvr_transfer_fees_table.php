@@ -32,6 +32,6 @@ class CreateMvrTransferFeesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mvr_trasfer_fees');
+        Schema::dropIfExists('mvr_transfer_fees');
     }
 }

@@ -18,5 +18,6 @@ class IDTypesTableSeeder extends Seeder
         IDType::updateOrCreate(['name' => IDType::ZANID]);
         IDType::updateOrCreate(['name' => IDType::PASSPORT]);
         IDType::updateOrCreate(['name' => IDType::NIDA_ZANID]);
+        IDType::updateOrCreate(['name' => IDType::TIN]);
     }
 }

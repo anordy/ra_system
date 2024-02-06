@@ -1,5 +1,5 @@
 <div class="row px-3">
-    @foreach ($this->getEnabledTranstions() as $transition)
+    @foreach ($this->getEnabledTransitions() as $transition)
         <div class="col-md-6 card rounded-0">
             <div class="row my-2">
                 <div class="col-md-4 ">

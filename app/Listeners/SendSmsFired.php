@@ -4,6 +4,10 @@ namespace App\Listeners;
 
 use App\Jobs\Account\SendReferenceNumberMail;
 use App\Jobs\Account\SendReferenceNumberSMS;
+use App\Jobs\PropertyTax\SendPaymentExtensionApprovalSMS;
+use App\Jobs\PropertyTax\SendPropertyTaxApprovalSMS;
+use App\Jobs\PropertyTax\SendPropertyTaxCorrectionSMS;
+use App\Jobs\PropertyTax\SendPropertyTaxPaymentReminderApprovalSMS;
 use App\Jobs\SendZanMalipoSMS;
 use App\Jobs\Vfms\ClientNotificationSMS;
 use App\Models\KYC;
@@ -223,8 +227,16 @@ class SendSmsFired
             ClientNotificationSMS::dispatch($event->tokenId);
         } else if ($event->service === SendReferenceNumberMail::SERVICE) {
             SendReferenceNumberSMS::dispatch($event->tokenId);
-        }  else if ($event->service === SendQuantityCertificateSMS::SERVICE){
+        } else if ($event->service === SendQuantityCertificateSMS::SERVICE){
             SendQuantityCertificateSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendPropertyTaxApprovalSMS::SERVICE){
+            SendPropertyTaxApprovalSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendPropertyTaxPaymentReminderApprovalSMS::SERVICE){
+            SendPropertyTaxPaymentReminderApprovalSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendPropertyTaxCorrectionSMS::SERVICE){
+            SendPropertyTaxCorrectionSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendPaymentExtensionApprovalSMS::SERVICE){
+            SendPaymentExtensionApprovalSMS::dispatch($event->tokenId);
         }
     }
 }

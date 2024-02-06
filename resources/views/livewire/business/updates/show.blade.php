@@ -650,6 +650,42 @@
                 </table>
                 <br>
             </div>
+            @elseif ($business_update->type == 'transfer_ownership')
+                <div class="col-md-12">
+                    <table class="table table-striped table-sm">
+                        <label class="font-weight-bold text-uppercase">{{ $business_update->business->name }} Hotel Information</label>
+                        <thead>
+                        <th style="width: 30%">Property</th>
+                        <th style="width: 25%">Old Values</th>
+                        <th style="width: 25%">New Values</th>
+                        <th style="width: 20%">Status</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>Taxpayer Information</th>
+                            <td>{{ $old_values->taxpayer_name ?? 'N/A' }} - {{ $old_values->taxpayer_ref_no ?? 'N/A' }}</td>
+                            <td>{{ $new_values->taxpayer_name ?? 'N/A' }} - {{ $new_values->taxpayer_ref_no ?? 'N/A' }}</td>
+                            @if ($old_values->taxpayer_id == $new_values->taxpayer_id)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Responsible Person Information</th>
+                            <td>{{ $old_values->responsible_name ?? 'N/A' }} - {{ $old_values->responsible_ref_no ?? 'N/A' }}</td>
+                            <td>{{ $new_values->responsible_person_name ?? 'N/A' }} - {{ $new_values->responsible_ref_no ?? 'N/A' }}</td>
+                            @if ($old_values->responsible_person_id == $new_values->responsible_person_id)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
             @endif
 
             @livewire('business.updates.changes-approval-processing', ['modelName' => 'App\Models\BusinessUpdate', 'modelId' => encrypt($business_update->id), 'businessUpdate' => $business_update])

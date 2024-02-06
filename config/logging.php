@@ -119,6 +119,10 @@ return [
         'vfms' => [
             'driver' => 'daily',
             'path' => storage_path('logs/vfms/laravel.log'),
+        ],
+        'property-tax' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/jobs/property-tax/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
         ],

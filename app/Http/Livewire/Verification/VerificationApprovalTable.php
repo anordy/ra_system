@@ -31,12 +31,13 @@ class VerificationApprovalTable extends DataTableComponent
     {
         $returnTable = WorkflowTask::getTableName();
         $filter      = (new WorkflowTask)->newQuery();
-        $filter      = $this->dataFilter($filter, $this->data, $returnTable);
+        $filter      = $this->dataFilter($filter, $this->data, TaxVerification::getTableName());
 
         return $filter->with('pinstance', 'user')
             ->where('pinstance_type', TaxVerification::class)
-            ->where('status', '!=', 'completed')
+            ->where('workflow_tasks.status', '!=', 'completed')
             ->where('owner', 'staff')
+            ->leftJoin(TaxVerification::getTableName(), $returnTable.'.pinstance_id', TaxVerification::getTableName(). '.id')
             ->whereHas('actors', function($query){
                 $query->where('user_id', auth()->id());
             });

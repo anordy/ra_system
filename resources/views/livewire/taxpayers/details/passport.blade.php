@@ -11,7 +11,7 @@
         </div>
         {{-- TODO: Allow this when immigration integration has been done --}}
         @if (!empty($kyc->passport_verified_at))
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 mb-3 d-flex align-items-center">
                 <button wire:click="validatePassport" wire:loading.attr="disabled" class="btn btn-info btn-sm">
                     <div wire:loading wire:target="validatePassport">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">

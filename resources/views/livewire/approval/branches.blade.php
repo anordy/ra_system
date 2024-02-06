@@ -1,4 +1,4 @@
-@if (count($this->getEnabledTranstions()) > 1)
+@if (count($this->getEnabledTransitions()) > 1)
 <div class="card shadow-sm mb-2 bg-white">
     @if ($subject->business->previous_zno)
         <div class="card-header font-weight-bold">

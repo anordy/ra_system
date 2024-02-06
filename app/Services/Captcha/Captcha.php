@@ -309,7 +309,7 @@ class Captcha
      */
     protected function background(): string
     {
-        return $this->backgrounds[rand(0, count($this->backgrounds) - 1)];
+        return $this->backgrounds[random_int(0, count($this->backgrounds) - 1)];
     }
 
     /**
@@ -332,7 +332,7 @@ class Captcha
             $key .= '';
         } else {
             for ($i = 0; $i < $this->length; $i++) {
-                $char = $characters[rand(0, count($characters) - 1)];
+                $char = $characters[random_int(0, count($characters) - 1)];
                 $bag[] = $this->sensitive ? $char : $this->str->lower($char);
             }
             $key = implode('', $bag);
@@ -393,7 +393,7 @@ class Captcha
      */
     protected function font(): string
     {
-        return $this->fonts[rand(0, count($this->fonts) - 1)];
+        return $this->fonts[random_int(0, count($this->fonts) - 1)];
     }
 
     /**
@@ -403,7 +403,7 @@ class Captcha
      */
     protected function fontSize(): int
     {
-        return rand($this->image->height() - 10, $this->image->height());
+        return random_int($this->image->height() - 10, $this->image->height());
     }
 
     /**
@@ -414,9 +414,9 @@ class Captcha
     protected function fontColor(): string
     {
         if (!empty($this->fontColors)) {
-            $color = $this->fontColors[rand(0, count($this->fontColors) - 1)];
+            $color = $this->fontColors[random_int(0, count($this->fontColors) - 1)];
         } else {
-            $color = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+            $color = '#' . str_pad(dechex(random_int(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
         }
 
         return $color;
@@ -429,7 +429,7 @@ class Captcha
      */
     protected function angle(): int
     {
-        return rand((-1 * $this->angle), $this->angle);
+        return random_int((-1 * $this->angle), $this->angle);
     }
 
     /**
@@ -441,10 +441,10 @@ class Captcha
     {
         for ($i = 0; $i <= $this->lines; $i++) {
             $this->image->line(
-                rand(0, $this->image->width()) + $i * rand(0, $this->image->height()),
-                rand(0, $this->image->height()),
-                rand(0, $this->image->width()),
-                rand(0, $this->image->height()),
+                random_int(0, $this->image->width()) + $i * random_int(0, $this->image->height()),
+                random_int(0, $this->image->height()),
+                random_int(0, $this->image->width()),
+                random_int(0, $this->image->height()),
                 function ($draw) {
                     /* @var Font $draw */
                     $draw->color($this->fontColor());
@@ -492,7 +492,7 @@ class Captcha
      * @return string
      */
     protected function get_cache_key($key) {
-        return 'captcha_' . md5($key);
+        return 'captcha_' . hash('sha256', $key);
     }
 
     /**
