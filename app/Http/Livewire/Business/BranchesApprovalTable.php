@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Business;
 
 use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\BusinessLocation;
@@ -38,7 +39,12 @@ class BranchesApprovalTable extends DataTableComponent
     {
         return [
             Column::make("Business Name", "pinstance.business_id")
-                ->label(fn ($row) => $row->pinstance->business->name ?? '')->searchable(),
+                ->label(fn ($row) => $row->pinstance->business->name ?? '')
+                ->searchable(function (Builder $query, $searchTerm) {
+                    return $query->orWhereHas('pinstance', function ($query) use ($searchTerm) {
+                        $query->whereRaw(DB::raw("LOWER(name) like '%' || LOWER('$searchTerm') || '%'"));
+                    });
+                }),
             Column::make("Business Type", "pinstance.business.business_type")
                 ->label(fn ($row) => strtoupper($row->pinstance->business->business_type ?? '')),
             Column::make("Branch Name", "pinstance.is_headquarter")
