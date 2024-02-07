@@ -302,9 +302,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::resource('taxpayers', TaxpayersController::class);
 
     Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function () {
+        Route::get('request', [WithholdingAgentController::class, 'index'])->name('request');
         Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register');
-        Route::get('list', [WithholdingAgentController::class, 'index'])->name('list');
+        Route::get('list', [WithholdingAgentController::class, 'activeRequest'])->name('list');
         Route::get('view/{id}', [WithholdingAgentController::class, 'view'])->name('view');
+        Route::get('show/{id}', [WithholdingAgentController::class, 'show'])->name('show');
         Route::get('file/{id}/{type}', [WithholdingAgentController::class, 'getWithholdingAgentFile'])->name('file');
         Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
     });

@@ -185,6 +185,11 @@
                    class="dropdown-toggle">Withholding Agents</a>
                 <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}"
                     id="withholdingAgentsMenu">
+                    {{-- @can('withholding-agents-registration') --}}
+                    <li class="{{ request()->is('withholdingAgents/request*') ? 'active' : '' }}">
+                        <a href="{{ route('withholdingAgents.request') }}">Registration Request</a>
+                    </li>
+                    {{-- @endcan --}}
                     @can('withholding-agents-registration')
                         <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
                             <a href="{{ route('withholdingAgents.register') }}">Registration</a>
