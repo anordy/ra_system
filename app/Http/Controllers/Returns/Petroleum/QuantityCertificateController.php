@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Returns\Petroleum;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use PDF;
 use App\Http\Controllers\Controller;
 use App\Models\Returns\Petroleum\QuantityCertificate;
@@ -57,6 +58,10 @@ class QuantityCertificateController extends Controller
 
     public function certificate($id)
     {
+        if (!Gate::allows('certificate-of-quantity-view')) {
+            abort(403);
+        }
+
         $data = QuantityCertificate::with('business')->findOrFail(decrypt($id));
 
         $certificate = QuantityCertificate::with('business')->findOrFail(decrypt($id));
@@ -69,6 +74,22 @@ class QuantityCertificateController extends Controller
         $html = $view->render();
         $pdf = PDF::loadHTML($html);
         return $pdf->stream('id_' . time() . '.pdf');
+    }
+
+    public function getAttachedCertificateFile($certificateId){
+        if (!Gate::allows('certificate-of-quantity-view')) {
+            abort(403);
+        }
+
+        $file = QuantityCertificate::findOrFail(decrypt($certificateId));
+
+        // Check who can access the file
+        if ($file){
+            return Storage::disk('local-admin')->response($file->quantity_certificate_attachment);
+        }
+
+        // If they dont meet requirements, abort
+        return abort(404);
     }
 
     

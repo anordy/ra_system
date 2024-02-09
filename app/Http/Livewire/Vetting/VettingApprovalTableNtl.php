@@ -2,24 +2,24 @@
 
 namespace App\Http\Livewire\Vetting;
 
-use Carbon\Carbon;
-use App\Models\TaxType;
 use App\Enum\VettingStatus;
-use App\Models\Returns\TaxReturn;
-use App\Traits\ReturnFilterTrait;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Database\Eloquent\Builder;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
-use Rappasoft\LaravelLivewireTables\Views\Column;
+use App\Models\Returns\TaxReturn;
+use App\Models\TaxType;
+use App\Traits\ReturnFilterTrait;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class VettingApprovalTableNtl extends DataTableComponent
 {
     use  ReturnFilterTrait;
 
-    protected $model     = TaxReturn::class;
+    protected $model = TaxReturn::class;
 
     public $vettingStatus, $orderBy;
 
@@ -45,7 +45,7 @@ class VettingApprovalTableNtl extends DataTableComponent
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class'   => 'table-bordered table-sm',
+            'class' => 'table-bordered table-sm',
         ]);
     }
 
@@ -54,17 +54,17 @@ class VettingApprovalTableNtl extends DataTableComponent
         return [
             SelectFilter::make('Tax Region')
                 ->options([
-                    'all'    => 'All',
+                    'all' => 'All',
                     'Headquarter' => 'Head Quarter',
-                    'Mjini'  => 'Mjini',
-                    'Kaskazini Unguja'  => 'Kaskazini Unguja',
-                    'Kusini Unguja'  => 'Kusini Unguja',
-                    'Kaskazini Pemba'  => 'Kaskazini Pemba',
-                    'Kusini Pemba'  => 'Kusini Pemba',
+                    'Mjini' => 'Mjini',
+                    'Kaskazini Unguja' => 'Kaskazini Unguja',
+                    'Kusini Unguja' => 'Kusini Unguja',
+                    'Kaskazini Pemba' => 'Kaskazini Pemba',
+                    'Kusini Pemba' => 'Kusini Pemba',
                 ])
-                ->filter(function(Builder $builder, string $value) {
+                ->filter(function (Builder $builder, string $value) {
                     if ($value != 'all') {
-                        $builder->whereHas('location.taxRegion', function($query) use($value) {
+                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
                             $query->where('name', $value);
                         });
                     }
@@ -82,12 +82,18 @@ class VettingApprovalTableNtl extends DataTableComponent
                 TaxType::AIRPORT_SAFETY_FEE,
                 TaxType::SEAPORT_SERVICE_CHARGE,
                 TaxType::ROAD_LICENSE_FEE,
-                TaxType::INFRASTRUCTURE, 
+                TaxType::INFRASTRUCTURE,
                 TaxType::RDF
             ])
-            ->where('parent',0)
-            ->where('is_business_lto',false)
+            ->where('parent', 0)
+            ->where('is_business_lto', false)
             ->where('vetting_status', $this->vettingStatus)
+            ->whereHas('pinstance', function ($query) {
+                $query->where('status', '!=', 'completed');
+                $query->whereHas('actors', function ($query) {
+                    $query->where('user_id', auth()->id());
+                });
+            })
             ->orderBy('created_at', $this->orderBy);
     }
 

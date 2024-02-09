@@ -7,6 +7,7 @@ use App\Models\WorkflowTask;
 use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -45,7 +46,11 @@ class RegistrationsProgressApprovalTable extends DataTableComponent
                 ->sortable()->searchable(),
             Column::make('Business Name', 'pinstance.name')
                 ->label(fn ($row) => $row->pinstance->name ?? 'N/A')
-                ->sortable()->searchable(),
+                ->searchable(function (Builder $query, $searchTerm) {
+                    return $query->orWhereHas('pinstance', function ($query) use ($searchTerm) {
+                        $query->whereRaw(DB::raw("LOWER(name) like '%' || LOWER('$searchTerm') || '%'"));
+                    });
+                }),
             Column::make('TIN', 'pinstance.tin')
                 ->label(fn ($row) => $row->pinstance->tin ?? '')->sortable()->searchable(),
             Column::make('Buss. Reg. No.', 'pinstance.reg_no')

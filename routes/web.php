@@ -454,6 +454,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);
         Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
         Route::get('/certificateOfQuantityFile/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
+        Route::get('/certificateOfQuantityAttachment/{id}', [QuantityCertificateController::class, 'getAttachedCertificateFile'])->name('certificateOfQuantity.attachment');
     });
 
     Route::name('queries.')->prefix('queries')->group(function () {
@@ -507,6 +508,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
 
         Route::get('/business', [BusinessRegReportController::class, 'init'])->name('business.init');
+        Route::get('/business/preview/{parameters}', [BusinessRegReportController::class, 'preview'])->name('business.preview');
         Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
         Route::get('/taxtype/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesTaxtypeReportPdf'])->name('taxtype.download.pdf');
         Route::get('/taxpayer/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesTaxpayerReportPdf'])->name('taxpayer.download.pdf');

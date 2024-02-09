@@ -20,6 +20,7 @@ use App\Models\TaxType;
 use App\Models\Ward;
 use App\Traits\RegistrationReportTrait;
 use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -79,7 +80,7 @@ class Init extends Component
     public $showMoreFilters;
     public $hasData = false;
 
-    //paramenters
+    //parameters
     public $parameters = [];
 
     public function rules()
@@ -100,7 +101,7 @@ class Init extends Component
             'Business-Reg-By-Nature' => 'Registered Business By Nature of Business',
             'Business-Reg-By-TaxType' => 'Registered Business By Tax Type',
             'Business-Reg-By-TaxPayer' => 'Registered Business By Tax Payer',
-            // 'Business-Reg-By-Turn-Over' => 'Registered Business By Turn Over',
+            'Business-Reg-Without-ZNO' => 'Registered Business With No ZITAS Number',
         ];
         $this->optionIsic1s = ISIC1::all();
         $this->optionTaxTypes = TaxType::where('category', 'main')->get();
@@ -158,6 +159,7 @@ class Init extends Component
 
         //initialize data
         $this->selectReportType();
+
         $this->extraFilters();
         $records = $this->getBusinessBuilder($this->parameters);
         if($records->get()->count()<1){
@@ -233,8 +235,8 @@ class Init extends Component
         }else{
             $this->hasData = true;
         }
-        
-         return redirect()->route('reports.business.init',encrypt(json_encode($this->parameters)));
+
+         return redirect()->route('reports.business.preview',['parameters' => encrypt(json_encode($this->parameters))]);
     }
 
     //export excel
@@ -274,6 +276,7 @@ class Init extends Component
         $this->selectReportType();
         $this->extraFilters();
         $records = $this->getBusinessBuilder($this->parameters);
+
         if($records->get()->count()<1){
             $this->customAlert('error','No Data Found for selected options');
             return;
@@ -395,7 +398,10 @@ class Init extends Component
           
         } elseif($this->reportType == 'Business-Reg-By-TaxPayer') {
             $this->parameters['criteria'] = 'Business-Reg-By-TaxPayer';
+        } elseif($this->reportType == 'Business-Reg-Without-ZNO') {
+            $this->parameters['criteria'] = 'Business-Reg-Without-ZNO';
         }
+
         $this->parameters['year'] = $this->year;
         $this->parameters['range_start'] = date('Y-m-d 00:00:00', strtotime($this->range_start));
         $this->parameters['range_end'] = date('Y-m-d 23:59:59', strtotime($this->range_end));

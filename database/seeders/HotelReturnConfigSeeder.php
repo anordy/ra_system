@@ -366,7 +366,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'row_type' => 'unremovable',
                 'col_type' => 'total',
                 'value_calculated' => true,
-                'formular' => 'RS+OS+LP+IP',
+                'formular' => '(RS+OS+LP+IP)-LWRS',
                 'active' => true,
                 'tax_type_code' => TaxType::RESTAURANT,
                 'rate_applicable' => false,
@@ -396,6 +396,19 @@ class HotelReturnConfigSeeder extends Seeder
                 'active' => true,
                 'tax_type_code' => TaxType::AIRBNB,
                 'rate_applicable' => false,
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 12,
+                'code' => 'LWRS',
+                'name' => 'Less withheld Tax',
+                'row_type' => 'unremovable',
+                'col_type' => 'normal',
+                'value_calculated' => false,
+                'active' => true,
+                'tax_type_code' => TaxType::RESTAURANT,
+                'rate_applicable' => false,
+                'heading_type' => 'purchases'
             ],
         ];
 

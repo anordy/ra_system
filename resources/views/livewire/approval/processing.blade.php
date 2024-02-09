@@ -248,7 +248,7 @@
         @if ($this->checkTransition('registration_officer_review'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger"
-                    wire:click="confirmPopUpModal('reject','application_filled_incorrect')">
+                    wire:click="reject('application_filled_incorrect')">
                     <div wire:loading wire:target="reject">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
