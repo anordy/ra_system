@@ -451,6 +451,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);
         Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
         Route::get('/certificateOfQuantityFile/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
+        Route::get('/certificateOfQuantityAttachment/{id}', [QuantityCertificateController::class, 'getAttachedCertificateFile'])->name('certificateOfQuantity.attachment');
     });
 
     Route::name('queries.')->prefix('queries')->group(function () {
