@@ -25,6 +25,14 @@
         <div class="modal-footer p-2 m-0">
             <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filled Incorrect
                 return to Applicant</button>
+            <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve','return_vetting_officer_recommend')" wire:loading.attr="disabled">
+                <div wire:loading wire:target="approve('return_vetting_officer_recommend')">
+                    <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                Forward to Manager
+            </button>
             <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve','return_vetting_officer_review')" wire:loading.attr="disabled">
                     <div wire:loading wire:target="approve('return_vetting_officer_review')">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
@@ -32,6 +40,21 @@
                         </div>
                     </div>
                     Approve & Complete
+            </button>
+        </div>
+    @endif
+
+    @if ($this->checkTransition('return_vetting_manager_review'))
+        <div class="modal-footer p-2 m-0">
+            <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'return_vetting_manager_reject')">
+                Return to Officer</button>
+            <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve','return_vetting_manager_review')" wire:loading.attr="disabled">
+                <div wire:loading wire:target="approve('return_vetting_manager_review')">
+                    <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                Approve & Complete
             </button>
         </div>
     @endif

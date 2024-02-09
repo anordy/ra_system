@@ -89,6 +89,12 @@ class VettingApprovalTable extends DataTableComponent
             ->where('parent',0)
             ->where('is_business_lto',false)
             ->where('vetting_status', $this->vettingStatus)
+            ->whereHas('pinstance', function ($query) {
+                $query->where('status', '!=', 'completed');
+                $query->whereHas('actors', function ($query) {
+                    $query->where('user_id', auth()->id());
+                });
+            })
             ->orderBy('created_at', $this->orderBy);
     }
 

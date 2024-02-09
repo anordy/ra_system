@@ -38,6 +38,11 @@ class WorkflowTaxReturnVettingSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 3]
             ],
+            'return_vetting_manager' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 3]
+            ],
             'completed' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -55,6 +60,21 @@ class WorkflowTaxReturnVettingSeeder extends Seeder
                 'to'   => 'completed',
                 'condition' => '',
             ],
+            'return_vetting_officer_recommend' => [
+                'from' => 'return_vetting_officer',
+                'to'   => 'return_vetting_manager',
+                'condition' => '',
+            ],
+            'return_vetting_manager_review' => [
+                'from' => 'return_vetting_manager',
+                'to'   => 'completed',
+                'condition' => '',
+            ],
+            'return_vetting_manager_reject' => [
+                'from' => 'return_vetting_manager',
+                'to'   => 'return_vetting_officer',
+                'condition' => '',
+            ],
             'application_filled_incorrect' => [
                 'from' => 'return_vetting_officer',
                 'to'   => 'correct_application',
@@ -67,7 +87,11 @@ class WorkflowTaxReturnVettingSeeder extends Seeder
             ],
         ];
 
-        Workflow::updateOrCreate([
+        Workflow::updateOrCreate(
+            [
+                'code' => 'TAX_RETURN_VETTING'
+            ],
+            [
             'code' => 'TAX_RETURN_VETTING',
             'summary' => 'Tax return vetting modal',
             'name' => $name,
