@@ -92,7 +92,6 @@ class SubVatSeeder extends Seeder
         SubVat::updateOrCreate(['is_approved' => 1, 'gfs_code' => '114111760001', 'name' => SubVatConstant::FUMIGATIONSERVICES, 'code' => SubVatConstant::FUMIGATIONSERVICES]);
         SubVat::updateOrCreate(['is_approved' => 1, 'gfs_code' => '114111780001', 'name' => SubVatConstant::BOATCHARTERERS, 'code' => SubVatConstant::BOATCHARTERERS]);
         SubVat::updateOrCreate(['is_approved' => 1, 'gfs_code' => '114111730001', 'name' => SubVatConstant::ARCHITECTURAL, 'code' => SubVatConstant::ARCHITECTURAL]);
-        SubVat::updateOrCreate(['is_approved' => 1, 'gfs_code' => '114111880001', 'name' => SubVatConstant::HOTELLEVY, 'code' => SubVatConstant::HOTELLEVY]);
         SubVat::updateOrCreate(['is_approved' => 1, 'gfs_code' => '114111040003', 'name' => SubVatConstant::SOFTDRINKS, 'code' => SubVatConstant::SOFTDRINKS]);
         SubVat::updateOrCreate(['is_approved' => 1, 'gfs_code' => '114111080003', 'name' => SubVatConstant::SOAPSANDDETERGENTS, 'code' => SubVatConstant::SOAPSANDDETERGENTS]);
         SubVat::updateOrCreate(['is_approved' => 1, 'gfs_code' => '114111170003', 'name' => SubVatConstant::PAPERANDPAPERPRODUCTS, 'code' => SubVatConstant::PAPERANDPAPERPRODUCTS]);
