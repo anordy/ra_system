@@ -87,18 +87,22 @@ class TaxReturnsVettingApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
-        
-        if ($this->checkTransition('return_vetting_officer_review')) {
-            $this->validate(
-                [
-                    'comments' => ['nullable'],
-                ],
-            );
 
-            DB::beginTransaction();
+        if ($this->checkTransition('return_vetting_officer_recommend') && $transition === 'return_vetting_officer_recommend') {
             try {
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-                
+                $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+            } catch (Exception $exception) {
+                DB::rollBack();
+                Log::error($exception);
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            }
+        }
+
+        if ($this->checkTransition('return_vetting_officer_review') && $transition === 'return_vetting_officer_review') {
+            DB::beginTransaction();
+            try {
+
                 // Generate Penalties Additional Penalties
                 if ($this->return->return_type != PortReturn::class) {
                     $tax_return = $this->previewPenalties($this->return->id);
@@ -116,6 +120,97 @@ class TaxReturnsVettingApprovalProcessing extends Component
                         $tax_return_->return->save();
                     }
          
+                }
+
+                $this->return->vetting_status = VettingStatus::VETTED;
+                $this->return->return->vetting_status = VettingStatus::VETTED;
+                $this->return->save();
+                $this->return->return->save();
+
+                $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+
+                DB::commit();
+
+                // Trigger verification
+                $this->triggerTaxVerifications($this->return->return, auth()->user());
+
+                if ($tax_return->return_type != PortReturn::class) {
+                    $this->generateReturnControlNumber($tax_return);
+                } else {
+                    $this->generateReturnControlNumber($tax_return);
+                    $this->generateReturnControlNumber($tax_return_);
+                }
+
+                //triggering claim
+                if ($this->return->return_type == VatReturn::class) {
+                    if ($this->return->return->claim_status == 'claim') {
+
+                        $claim = $this->triggerClaim(abs($this->return->return->total_amount_due), $this->return->return->currency, $this->return->return);
+
+                        $taxpayer = Taxpayer::query()->where('id', $this->return->return->filed_by_id)->first();
+                        $taxpayer = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+                        $role = Role::query()->where('name', 'Administrator')->first();
+                        $admins = User::query()->where('role_id', $role->id)->get();
+                        foreach ($admins as $admin) {
+                            $admin->notify(new DatabaseNotification(
+                                $subject = 'TAX CLAIMING',
+                                $message = 'You have a new request for tax claim from ' . $taxpayer . '',
+                                $href = 'claims.show',
+                                $hrefText = 'View',
+                                $hrefParameters = $claim->id,
+                            ));
+                        }
+                    }
+                }
+                //saving credit brought forward(claim)
+
+                if ($this->return->return->credit_brought_forward > 0) {
+                    $this->claim_data = VatReturn::query()->selectRaw('payment_status, tax_credits.amount, payment_method, installments_count,
+        tax_credits.id as credit_id, tax_claims.old_return_id, tax_claims.old_return_type, tax_claims.currency')
+                        ->leftJoin('tax_claims', 'tax_claims.old_return_id', '=', 'vat_returns.id')
+                        ->leftJoin('tax_credits', 'tax_credits.claim_id', '=', 'tax_claims.id')
+                        ->where('vat_returns.claim_status', '=', TaxClaimStatus::CLAIM)
+                        ->where('vat_returns.business_location_id', $this->return->return->business_location_id)
+                        ->where('tax_claims.status', 'approved')
+                        ->where('tax_credits.payment_status', '!=', 'paid')
+                        ->orderBy('tax_credits.id')->limit(1)
+                        ->first();
+                    $this->savingClaimPayment($this->return->return->credit_brought_forward);
+                }
+
+                event(new SendSms(SendVettedReturnSMS::SERVICE, $this->return));
+                event(new SendMail(SendVettedReturnMail::SERVICE, $this->return));
+
+                $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            }
+        }
+
+        if ($this->checkTransition('return_vetting_manager_review') && $transition === 'return_vetting_manager_review') {
+            DB::beginTransaction();
+            try {
+                $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+
+                // Generate Penalties Additional Penalties
+                if ($this->return->return_type != PortReturn::class) {
+                    $tax_return = $this->previewPenalties($this->return->id);
+                } else {
+                    $tax_return = $this->previewPenalties($this->return->id);
+
+                    $child_return = TaxReturn::where('return_type', PortReturn::class)->where('parent',$tax_return->id)->first();
+
+                    if ($child_return) {
+                        $tax_return_ = $this->previewPenalties($child_return->id);
+
+                        $tax_return_->vetting_status = VettingStatus::VETTED;
+                        $tax_return_->return->vetting_status = VettingStatus::VETTED;
+                        $tax_return_->save();
+                        $tax_return_->return->save();
+                    }
+
                 }
 
                 $this->return->vetting_status = VettingStatus::VETTED;
@@ -215,6 +310,19 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
+
+        if ($this->checkTransition('return_vetting_manager_reject')) {
+
+            try {
+                $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+                $this->flash('success', 'Application returned to officer', [], redirect()->back()->getTargetUrl());
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            }
+        }
+
     }
 
 

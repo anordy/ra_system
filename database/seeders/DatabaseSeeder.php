@@ -116,5 +116,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowPropertyTaxExtensionApprovalSeeder::class);
         $this->call(PropertyOwnershipTypeSeeder::class);
         $this->call(WorkflowUpgradeTaxTypeSeeder::class);
+        $this->call(WorkflowWithholdingAgentSeeder::class);
     }
 }

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Workflow;
 use Illuminate\Database\Seeder;
 
-class WorkflowTaxReturnVettingSeeder extends Seeder
+class WorkflowWithholdingAgentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,86 +14,83 @@ class WorkflowTaxReturnVettingSeeder extends Seeder
      */
     public function run()
     {
-        $name = 'tax_return_vetting';
+        $name = 'withholding_agent_seeder';
         $type = 'workflow';
         $marking_store = [
             'type'      => 'multiple_state',
             'property'  => ['marking']
         ];
         $initial_marking = 'apply';
-        $supports =  ['App\Models\Returns\TaxReturn'];
-        $places =  [
+        $supports =  ['App\Models\WithholdingAgent'];
+        $places = [
             'apply' => [
                 'owner' => 'taxpayer',
                 'operator_type' => 'user',
-                'operators' => []
+                'operators' => [],
             ],
             'correct_application' => [
                 'owner' => 'taxpayer',
                 'operator_type' => 'user',
-                'operators' => []
+                'operators' => [],
             ],
-            'return_vetting_officer' => [
+            'registration_officer' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 3]
+                'operators' => [1, 2, 3],
             ],
-            'return_vetting_manager' => [
+            'registration_manager' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 3]
+                'operators' => [1, 2, 3],
+            ],
+            'rejected' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [],
             ],
             'completed' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => []
+                'operators' => [],
             ],
         ];
         $transitions = [
             'application_submitted' => [
                 'from' => 'apply',
-                'to'   => 'return_vetting_officer',
+                'to' => 'registration_officer',
                 'condition' => '',
             ],
-            'return_vetting_officer_review' => [
-                'from' => 'return_vetting_officer',
-                'to'   => 'completed',
-                'condition' => '',
-            ],
-            'return_vetting_officer_recommend' => [
-                'from' => 'return_vetting_officer',
-                'to'   => 'return_vetting_manager',
-                'condition' => '',
-            ],
-            'return_vetting_manager_review' => [
-                'from' => 'return_vetting_manager',
-                'to'   => 'completed',
-                'condition' => '',
-            ],
-            'return_vetting_manager_reject' => [
-                'from' => 'return_vetting_manager',
-                'to'   => 'return_vetting_officer',
+            'registration_officer_review' => [
+                'from' => 'registration_officer',
+                'to' => 'registration_manager',
                 'condition' => '',
             ],
             'application_filled_incorrect' => [
-                'from' => 'return_vetting_officer',
-                'to'   => 'correct_application',
+                'from' => 'registration_officer',
+                'to' => 'correct_application',
                 'condition' => '',
             ],
             'application_corrected' => [
                 'from' => 'correct_application',
-                'to'   => 'return_vetting_officer',
+                'to' => 'registration_officer',
+                'condition' => '',
+            ],
+            'registration_manager_reject' => [
+                'from' => 'registration_manager',
+                'to' => 'registration_officer',
+                'condition' => '',
+            ],
+            'registration_manager_review' => [
+                'from' => 'registration_manager',
+                'to' => 'completed',
                 'condition' => '',
             ],
         ];
 
-        Workflow::updateOrCreate(
-            [
-                'code' => 'TAX_RETURN_VETTING'
-            ],
-            [
-            'code' => 'TAX_RETURN_VETTING',
-            'summary' => 'Tax return vetting modal',
+
+        Workflow::updateOrCreate([
+            'code' => 'WITHHOLDING_AGENT_SEEDER',
+            'summary' => 'Withholding agent Workflow',
             'name' => $name,
             'type' => $type,
             'initial_marking' => $initial_marking,

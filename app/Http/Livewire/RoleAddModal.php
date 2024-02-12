@@ -31,7 +31,7 @@ class RoleAddModal extends Component
     {
         return [
             'name' => 'required|strip_tag|unique:roles',
-            'report_to' => 'nullable|strip_tag|unique:roles',
+            'report_to' => 'nullable|strip_tag|exists:roles,id',
         ];
     }
 

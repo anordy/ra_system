@@ -10,6 +10,7 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use PDF;
 
 class WithholdingAgentController extends Controller
@@ -22,12 +23,27 @@ class WithholdingAgentController extends Controller
         return view('withholding-agent.index');
     }
 
+    public function activeRequest()
+    {
+        if (!Gate::allows('withholding-agents-view')) {
+            abort(403);
+        }
+        return view('withholding-agent.active');
+    }
+
     public function view($id)
     {
         if (!Gate::allows('withholding-agents-view')) {
             abort(403);
         }
         return view('withholding-agent.view', compact('id'));
+    }
+    public function show($id)
+    {
+        if (!Gate::allows('withholding-agents-view')) {
+            abort(403);
+        }
+        return view('withholding-agent.show', compact('id'));
     }
 
     public function registration()
@@ -72,6 +88,18 @@ class WithholdingAgentController extends Controller
 
         return $pdf->stream();
   
+    }
+
+    public function getWithholdingAgentFile($agentId, $type)
+    {
+
+        $withholding_agent = WithholdingAgent::find(decrypt($agentId));
+        
+        if ($type == 'approval_letter') {
+            return Storage::disk('local-admin')->response($withholding_agent->approval_letter);
+        }
+
+        return abort(404);
     }
 
 }

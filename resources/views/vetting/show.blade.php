@@ -90,6 +90,10 @@
                             <p class="my-1">{{ $return->business->name }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Old ZRA Number</span>
+                            <p class="my-1">{{ $return->business->previous_zno }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Location</span>
                             <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
                         </div>

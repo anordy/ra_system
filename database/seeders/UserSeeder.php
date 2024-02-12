@@ -35,7 +35,8 @@ class UserSeeder extends Seeder
             'is_first_login' => false,
             'is_approved' => 1,
             'pass_expired_on' => Carbon::now()->addYear()
-        ], [
+        ],
+         [
             'fname' => "Tabitha",
             'lname' => "Mkude",
             'email' => "tabitha.mkude@ubx.co.tz",
@@ -113,7 +114,8 @@ class UserSeeder extends Seeder
             'is_first_login' => false,
             'is_approved' => 1,
             'pass_expired_on' => Carbon::now()->addYear()
-        ]];
+        ]
+    ];
 
         foreach ($users as $user) {
             User::updateOrCreate([
