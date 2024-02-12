@@ -39,10 +39,19 @@
                                 wire:model.lazy="settingReport">
                             @error('settingReport')
                                 <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        @endif
+                                @enderror
+                                @endif
+                            </div>
+                            
                     </div>
-                </div>
+                    <div class="text-secondary small">
+                        <span class="font-weight-bold">
+                            {{ __('Note') }}:
+                        </span>
+                            <span class="">
+                            {{ __('Uploaded Documents must be less than 3  MB in size') }}
+                        </span>
+                    </div>
             </div>
         </div>
     </div>

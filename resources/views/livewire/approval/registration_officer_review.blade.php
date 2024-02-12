@@ -73,6 +73,23 @@
 
                 <div class="col-md-6 ">
                     <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Department</label>
+                        <select class="form-control @error('selectedTaxRegion') is-invalid @enderror"
+                            wire:model.defer="selectedTaxRegion">
+                            <option value="null" disabled selected>Select</option>
+                            @foreach ($taxRegions as $region)
+                                <option value="{{ $region->id }}">{{ $region->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('selectedTaxRegion')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-6 ">
+                    <div class="form-group">
                         <label for="exampleFormControlTextarea1">Tax Region</label>
                         <select class="form-control @error('selectedTaxRegion') is-invalid @enderror"
                             wire:model.defer="selectedTaxRegion">

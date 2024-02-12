@@ -87,6 +87,15 @@
         </div>
 
     </div>
+        <div class="text-secondary small">
+            <span class="font-weight-bold">
+                {{ __('Note') }}:
+            </span>
+                <span class="">
+                {{ __('Uploaded Documents must be less than 3  MB in size') }}
+            </span>
+        </div>
+
 
         <div class="row mt-3">
             <div class="col-md-12 d-flex justify-content-end">

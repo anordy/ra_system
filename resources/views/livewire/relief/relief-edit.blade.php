@@ -147,7 +147,7 @@
                                     @enderror
                                 </div>
                             </td>
-                           
+
                             <td>
                                 <div class="input-group @error('item.' . $i) is-invalid @enderror">
                                     <input class="form-control @error('items.' . $i . '.quantity') is-invalid @enderror"
@@ -368,6 +368,15 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
+                                </div>
+                                
+                                <div class="text-secondary small">
+                                    <span class="font-weight-bold">
+                                        {{ __('Note') }}:
+                                    </span>
+                                    <span class="">
+                                        {{ __('Uploaded Documents must be less than 3  MB in size') }}
+                                    </span>
                                 </div>
                             </td>
 
