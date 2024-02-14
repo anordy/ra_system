@@ -110,6 +110,14 @@ class VettingApprovalTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return "{$row->location->name}";
                 }),
+                Column::make('Tax Payer', 'taxpayer.first_name')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    $firstName = $row->taxpayer->first_name ?? "";
+                    $lastName = $row->taxpayer->last_name ?? "";
+                    return "{$firstName} {$lastName}";
+                }),
             Column::make('Tax Region', 'location.tax_region_id')
                 ->sortable()
                 ->searchable()
