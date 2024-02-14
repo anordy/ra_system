@@ -101,6 +101,11 @@ class VettingApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('Taxpayer Name', 'business.taxpayer_name')
+            ->format(function ($value, $row) {
+                return $value ?? 'N/A';
+            })
+            ->sortable()->searchable(),
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
@@ -109,14 +114,6 @@ class VettingApprovalTable extends DataTableComponent
                 ->searchable()
                 ->format(function ($value, $row) {
                     return "{$row->location->name}";
-                }),
-                Column::make('Tax Payer', 'taxpayer.first_name')
-                ->sortable()
-                ->searchable()
-                ->format(function ($value, $row) {
-                    $firstName = $row->taxpayer->first_name ?? "";
-                    $lastName = $row->taxpayer->last_name ?? "";
-                    return "{$firstName} {$lastName}";
                 }),
             Column::make('Tax Region', 'location.tax_region_id')
                 ->sortable()
