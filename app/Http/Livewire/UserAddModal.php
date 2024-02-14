@@ -125,6 +125,8 @@ class UserAddModal extends Component
                 $query->where('name', 'Administrator');
             })->get();
 
+            // TODO: Create approval level id
+
             foreach ($admins as $admin) {
                 $admin->notify(new DatabaseNotification(
                     $subject = 'NEW USER CREATED',
