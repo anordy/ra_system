@@ -186,51 +186,51 @@
     </style>
 </head>
 <body>
-<span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
-@if ($location->is_headquarter == 0)
-    <div class="watermark">Branch Copy</div>
-@endif
-@if(isset($location->business->name) && isset($location->business->taxpayer_name) && strtolower(trim($location->business->name)) != strtolower(trim($location->business->taxpayer_name)))
-    <span class="embed taxpayer">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
-    <span class="embed trading-as">T/A {{ $location->business->name }}</span>
-@else
-    <span class="embed taxpayer-alt">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
-@endif
-<span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
-@if($location->vrn)
-    <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
-    <span class="embed vrn-no">VRN NO: {{ $location->vrn ?? '' }}</span>
-@else
-    <span class="embed reg-no">{{ $location->business->ztn_number ?? '' }}</span>
-@endif
-<span class="tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
-<span class="location">
-                    {{ $location->street->name }} - {{ $location->ward->name }}
-                </span>
-<span class="embed zra-location">
-                    {{ $location->region->location }}
-                </span>
-<span class="embed tax-region">
-                    {{ $location->taxRegion->name }}
-                </span>
-<span class="embed commencing-date">
-                    {{ $location->date_of_commencing->format('d F Y') }}
-                </span>
-<span class="on-hand-date">
-                    {{ now()->format('d F, Y') }}
-                </span>
-<span class="commissioner-signature">
-                    <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
-                </span>
-<span class="commissioner-name">
-                    {{$commissinerFullName}}
-                </span>
-<span class="commissioner-title">
-                    COMMISSIONER GENERAL
-                </span>
-<div class="qr-code">
-    <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
-</div>
+    <span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
+    @if ($location->is_headquarter == 0)
+        <div class="watermark">Branch Copy</div>
+    @endif
+    @if(isset($location->business->name) && isset($location->business->taxpayer_name) && strtolower(trim($location->business->name)) != strtolower(trim($location->business->taxpayer_name)))
+        <span class="embed taxpayer">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
+        <span class="embed trading-as">T/A {{ $location->business->name }}</span>
+    @else
+        <span class="embed taxpayer-alt">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
+    @endif
+    <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
+    @if($location->vrn)
+        <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
+        <span class="embed vrn-no">VRN NO: {{ $location->vrn ?? '' }}</span>
+    @else
+        <span class="embed reg-no">{{ $location->business->ztn_number ?? '' }}</span>
+    @endif
+    <span class="tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
+    <span class="location">
+        {{ $location->street->name }} - {{ $location->ward->name }}
+    </span>
+    <span class="embed zra-location">
+        {{ $location->region->location }}
+    </span>
+    <span class="embed tax-region">
+        {{ $location->taxRegion->name }}
+    </span>
+    <span class="embed commencing-date">
+        {{ $location->date_of_commencing->format('d F Y') }}
+    </span>
+    <span class="on-hand-date">
+        {{ now()->format('d F, Y') }}
+    </span>
+    <span class="commissioner-signature">
+        <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
+    </span>
+    <span class="commissioner-name">
+        {{$commissinerFullName}}
+    </span>
+    <span class="commissioner-title">
+        COMMISSIONER GENERAL
+    </span>
+    <div class="qr-code">
+        <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
+    </div>
 </body>
 <body class="page-two" style="page-break-before: always">
 </body>

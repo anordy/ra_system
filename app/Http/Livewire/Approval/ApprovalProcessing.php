@@ -40,7 +40,7 @@ class ApprovalProcessing extends Component
     public $isiic_iii;
     public $isiic_iv;
     public $taxTypes;
-    public $taxDepartment;
+    public $taxDepartment = [];
     public $selectedDepartment;
     public $selectedTaxTypes = [];
     public $taxRegions = [];
@@ -96,8 +96,8 @@ class ApprovalProcessing extends Component
 
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
 
-        $this->taxDepartment = TaxDepartment::all();
-        
+//        $this->taxDepartment = TaxDepartment::all();
+
         $this->vat_id = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
 
         foreach ($this->subject->taxTypes as $value) {
