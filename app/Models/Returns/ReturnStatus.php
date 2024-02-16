@@ -16,6 +16,7 @@ class ReturnStatus implements Status
     const COMPLETE = 'complete';
     public const ON_CLAIM = 'on-claim';
     public const PAID_BY_DEBT = 'paid-by-debt';
+    public const NILL = 'nill';
 
     static function getConstants(): array
     {

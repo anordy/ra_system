@@ -108,11 +108,12 @@ class TaxAuditApprovalProcessing extends Component
             if (gettype($operators) != "array") {
                 $operators = [];
             }
-            $roles = Role::whereIn('id', $operators)->get()->pluck('id')->toArray();
+            $roles = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
 
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
 
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
+
         }
 
     }
