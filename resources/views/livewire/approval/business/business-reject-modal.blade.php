@@ -34,12 +34,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" wire:click='submit' wire:loading.attr="disabled">
+                <button type="button" class="btn btn-danger" wire:click='submit' wire:loading.attr="disabled">
                     <div wire:loading.delay wire:target="submit">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                    </div>Save changes</button>
+                    </div>Filled Incorrect Return for Correction</button>
             </div>
         </div>
     </div>

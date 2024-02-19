@@ -16,6 +16,7 @@ use App\Models\ISIC4;
 use App\Models\LumpSumPayment;
 use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
+use App\Models\TaxDepartment;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Services\Api\TraInternalService;
@@ -39,8 +40,10 @@ class ApprovalProcessing extends Component
     public $isiic_iii;
     public $isiic_iv;
     public $taxTypes;
+    public $taxDepartment = [];
+    public $selectedDepartment;
     public $selectedTaxTypes = [];
-    public $taxRegions;
+    public $taxRegions = [];
     public $selectedTaxRegion, $effectiveDate;
     public $isBusinessElectric = false;
     public $isBusinessLTO = false;
@@ -93,7 +96,8 @@ class ApprovalProcessing extends Component
 
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
 
-        $this->taxRegions = TaxRegion::all();
+//        $this->taxDepartment = TaxDepartment::all();
+
         $this->vat_id = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
 
         foreach ($this->subject->taxTypes as $value) {
@@ -119,6 +123,15 @@ class ApprovalProcessing extends Component
         $this->directors = BusinessDirector::where('business_id', $this->subject->id)->get() ?? [];
         $this->shareholders = BusinessShareholder::where('business_id', $this->subject->id)->get() ?? [];
         $this->shares = BusinessShare::where('business_id', $this->subject->id)->get() ?? [];
+    }
+
+    public function selectedDepartment($value)
+    {
+        if (!is_null((int)$value)) {
+            $this->taxRegions = TaxRegion::where('department_id', $value)->get();
+        } else {
+            $this->taxRegions = [];
+        }
     }
 
     public function isiiciChange($value)

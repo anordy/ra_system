@@ -72,7 +72,11 @@ class WorkflowInternalBusinessInfoChangeSeeder extends Seeder
             ]
         ];
 
-        Workflow::updateOrCreate([
+        Workflow::updateOrCreate(
+            [
+                'code' => 'INTERNAL_BUSINESS_INFORMATION_CHANGE',
+            ],
+            [
             'code' => 'INTERNAL_BUSINESS_INFORMATION_CHANGE',
             'summary' => 'Internal Business Information Change Workflow',
             'name' => $name,

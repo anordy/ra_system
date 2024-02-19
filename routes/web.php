@@ -544,6 +544,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
         Route::get('/', [ClaimsController::class, 'index'])->name('index');
+        Route::get('/processed', [ClaimsController::class, 'processed'])->name('processed');
         Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
         Route::get('/{claim}/approve', [ClaimsController::class, 'approve'])->name('approve');
         Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');

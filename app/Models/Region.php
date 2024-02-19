@@ -13,6 +13,9 @@ class Region extends Model implements Auditable
 
     public const UNGUJA = 'unguja';
     public const PEMBA = 'pemba';
+    public const NTRD = 'NTRD';
+    public const DTD = 'DTD';
+    public const LTD = 'LTD';
 
     protected $fillable = [
         'code',

@@ -62,7 +62,7 @@ class RegistrationsApprovalTable extends DataTableComponent
             Column::make('Mobile', 'pinstance_type')
                 ->label(fn ($row) => $row->pinstance->mobile ?? '')->sortable(),
             Column::make('Tax Region', 'pinstance.taxRegion')
-                ->label(fn ($row) => $row->pinstance->taxRegion ?? 'N/A')->sortable(),
+                ->label(fn ($row) => $row->pinstance->headquarter->taxRegion->name ?? 'N/A')->sortable(),
             Column::make('Ward', 'pinstance')
                 ->label(fn ($row) => $row->pinstance->businessWardName() ?? '')->sortable(),
             Column::make('Street', 'pinstance')

@@ -84,13 +84,23 @@
     </div>
 @else
     <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
-        <div class="col-md-3">
+        @if($return->is_nill)
+            <div class="col-md-3">
+            <span class="font-weight-bold text-uppercase">
+                Return Status
+            </span>
+                <p class="my-1">NILL RETURN
+                </p>
+            </div>
+        @else
+            <div class="col-md-3">
             <span class="font-weight-bold text-uppercase">
                 Total Tax Payable
             </span>
-            <p class="my-1">{{ number_format($return->total_amount, 2) }} {{ $return->currency }}
-            </p>
-        </div>
+                <p class="my-1">{{ number_format($return->total_amount, 2) }} {{ $return->currency }}
+                </p>
+            </div>
+        @endif
         @if ($return->total_amount > 0)
             <div class="col-md-3">
                 <span class="font-weight-bold text-uppercase">Bill Status</span>
