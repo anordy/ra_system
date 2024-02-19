@@ -1,18 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Claims;
+namespace App\Http\Livewire\Claims\Submitted;
 
 use App\Enum\TaxClaimStatus;
 use App\Models\Claims\TaxClaim;
-use App\Models\WorkflowTask;
-use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LTOClaimsTable extends DataTableComponent
 {
-
 
     public $pending;
     public $rejected;
@@ -24,45 +21,64 @@ class LTOClaimsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-
-        $this->setAdditionalSelects('pinstance_type', 'user_type');
     }
 
     public function builder(): Builder
     {
-        return WorkflowTask::with('pinstance', 'user')
-            ->where('pinstance_type', TaxClaim::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
-            ->whereHas('actors', function($query){
-                $query->where('user_id', auth()->id());
+         return TaxClaim::with('business', 'location', 'taxType')
+             ->where('is_business_lto', true)
+             ->where('tax_claims.status', TaxClaimStatus::PENDING)
+             ->whereHas('pinstance', function ($query) {
+                $query->where('workflow_tasks.status', '!=', 'completed');
+                $query->whereHas('actors', function ($query) {
+                    $query->where('user_id', auth()->id());
+                });
             })
-            ->with('pinstance')->orderByDesc('id');
+            ->orderBy('tax_claims.created_at');
     }
 
     public function columns(): array
     {
         return [
-            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
-            Column::make('Business Name', 'pinstance.business.name')
-                ->label(fn ($row) => $row->pinstance->business->name ?? ''),
-            Column::make('Claimed Amount', 'pinstance.amount')
-                ->label(function ($row){
-                    $formattedAmount = number_format($row->pinstance->amount, 2);
-                    return "{$row->pinstance->currency}. {$formattedAmount}";
+            Column::make('Business Name', 'business.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Branch', 'location.name')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return $value ?? 'N/A';
                 }),
-            Column::make('Tax Type', 'pinstance.taxType.name')
-                ->label(fn ($row) => $row->pinstance->taxType->name ?? ''),
-            Column::make('Mobile', 'pinstance.mobile')
-                ->label(fn ($row) => $row->pinstance->business->mobile ?? 'N/A'),
+            Column::make('Claimed Amount', 'amount')
+                ->sortable()
+                ->format(function ($value, $row) {
+                    return number_format($value, 2);
+                })
+                ->searchable(),
+            Column::make('Currency', 'currency')
+                ->sortable()
+                ->searchable(),
+            Column::make('Tax Type', 'taxType.name')
+                ->sortable()
+                ->searchable()
+                ->format(function($value, $row){
+                    $t = 'taxtype.name';
+                    return $row->$t;
+                }),
+            Column::make('Mobile', 'business.mobile')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value){
+                    return $value ?? 'N/A';
+                }),
 
-            Column::make('Status', 'pinstance.mobile')
-                ->label(function ($row){
-                    return view('claims.includes.status', ['row' => $row->pinstance]);
+            Column::make('Status', 'status')
+                ->format(function ($vlaue, $row){
+                    return view('claims.includes.status', ['row' => $row]);
                 }),
             Column::make('Action', 'id')
-                ->label(function ($row){
-                    return view('claims.includes.actions', ['value' => $row->pinstance->id]);
+                ->format(function ($value, $row){
+                    return view('claims.includes.actions', ['value' => $row->id]);
                 }),
         ];
     }

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','Submitted Tax Claims')
+@section('title','Rejected Tax Claims')
 
 @section('content')
     <div class="card">
@@ -12,13 +12,13 @@
             </nav>
             <div class="tab-content px-2 pt-3 pb-2 border">
                 <div id="dtr" class="tab-pane fade active show  p-2">
-                    <livewire:claims.submitted.d-t-r-claims-table />
+                    <livewire:claims.rejected.d-t-r-claims-table />
                 </div>
                 <div id="lto" class="tab-pane fade  p-2">
-                    <livewire:claims.submitted.l-t-o-claims-table />
+                    <livewire:claims.rejected.l-t-o-claims-table />
                 </div>
                 <div id="ntr" class="tab-pane fade  p-2">
-                    <livewire:claims.submitted.n-t-r-claims-table />
+                    <livewire:claims.rejected.n-t-r-claims-table />
                 </div>
             </div>
         </div>

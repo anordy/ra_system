@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Claims\Submitted;
+namespace App\Http\Livewire\Claims\Rejected;
 
 use App\Enum\TaxClaimStatus;
 use App\Models\Claims\TaxClaim;
@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class DTRClaimsTable extends DataTableComponent
+class NTRClaimsTable extends DataTableComponent
 {
 
     public $pending;
@@ -27,8 +27,7 @@ class DTRClaimsTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxClaim::with('business', 'location', 'taxType')
-            ->where('is_business_lto', false)
-            ->whereNotIn('code', [
+            ->whereIn('code', [
                 TaxType::AIRPORT_SERVICE_CHARGE,
                 TaxType::SEAPORT_TRANSPORT_CHARGE,
                 TaxType::AIRPORT_SAFETY_FEE,
@@ -37,9 +36,8 @@ class DTRClaimsTable extends DataTableComponent
                 TaxType::INFRASTRUCTURE,
                 TaxType::RDF
             ])
-            ->where('tax_claims.status', TaxClaimStatus::PENDING)
+            ->where('tax_claims.status', TaxClaimStatus::REJECTED)
             ->whereHas('pinstance', function ($query) {
-                $query->where('workflow_tasks.status', '!=', 'completed');
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });

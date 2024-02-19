@@ -425,11 +425,14 @@
                 <ul class="collapse list-unstyled {{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'show' : '' }}"
                     id="tax-claim">
                     @can('tax-claim-view')
-                        <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
+                        <li class="{{ request()->is('tax-claims') ? 'active' : '' }}">
                             <a href="{{ route('claims.index') }}">Submitted Claims</a>
                         </li>
-                        <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
-                            <a href="{{ route('claims.processed') }}">Processed Claims</a>
+                        <li class="{{ request()->is('tax-claims/approved') ? 'active' : '' }}">
+                            <a href="{{ route('claims.approved') }}">Approved Claims</a>
+                        </li>
+                        <li class="{{ request()->is('tax-claims/rejected') ? 'active' : '' }}">
+                            <a href="{{ route('claims.rejected') }}">Rejected Claims</a>
                         </li>
                     @endcan
                     {{-- @can('tax-credit-view') --}}
