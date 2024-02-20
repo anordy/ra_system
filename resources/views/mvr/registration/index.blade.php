@@ -25,7 +25,7 @@
 
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane p-2 show active" id="all" role="tabpanel" aria-labelledby="to-print-tab">
-                    <livewire:mvr.motor-vehicles-table :status="null"/>
+                    <livewire:mvr.registration.mvr-approved-registrations-table />
                 </div>
                 @can('mvr_approve_registration')
                     <div class="tab-pane p-2" id="pending-approval" role="tabpanel" aria-labelledby="printed-tab">

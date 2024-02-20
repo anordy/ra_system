@@ -62,48 +62,6 @@ class MotorVehicleRegistrationController extends Controller
     }
 
 
-    // TODO: Shift to API upon payment completed
-    public function simulatePayment($id){
-        $id = decrypt($id);
-        $reg =  MvrMotorVehicle::query()
-            ->where(['id'=>$id])->first()->current_registration;
-        $reg_type = $reg->registration_type;
-        try {
-            DB::beginTransaction();
-            $status = MvrRegistrationStatus::query()
-                ->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING]);
-            $mv = MvrMotorVehicle::query()
-                ->findOrFail($id);
-            $mv->update([
-                    'mvr_registration_status_id'=>$status->id
-                ]);
-
-            if ($reg_type->name == MvrRegistrationType::TYPE_PRIVATE_GOLDEN){
-                $plate_number = $reg->plate_number;
-            }else if ($reg_type->external_defined != 1){
-                $plate_number = MvrMotorVehicleRegistration::getNexPlateNumber($reg_type,$mv->class);
-            }
-
-            if (!empty($reg->current_personalized_registration)){
-                $reg->current_personalized_registration->update(['status'=>'ACTIVE']);
-            }
-
-            $plate_status = MvrPlateNumberStatus::query()->firstOrCreate(['name' => MvrPlateNumberStatus::STATUS_GENERATED]);
-            $reg->update(['plate_number'=>$plate_number,'mvr_plate_number_status_id'=>$plate_status->id,'registration_date'=>date('Y-m-d')]);
-            DB::commit();
-
-            // TODO: Send Registration status as a job
-            $traService = new TraInternalService();
-            $traService->postPlateNumber($mv->chassis_number, $plate_number, 'registration');
-        }catch (\Exception $e){
-            session()->flash('error', 'Could not update status');
-            DB::rollBack();
-            Log::error($e);
-        }
-        return redirect()->route('mvr.show',encrypt($id));
-    }
-
-
     public function plateNumbers(){
         if (!Gate::allows('motor-vehicle-plate-number-printing')) {
             abort(403);
@@ -128,7 +86,7 @@ class MotorVehicleRegistrationController extends Controller
 
     public function registrationCertificate($id){
         $id = decrypt($id);
-        $motor_vehicle = MvrMotorVehicle::query()->findOrFail($id);
+        $motor_vehicle = MvrRegistration::query()->findOrFail($id);
 
         header('Content-Type: application/pdf' );
 

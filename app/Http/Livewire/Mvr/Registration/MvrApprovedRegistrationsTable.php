@@ -9,14 +9,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class MvrRegistrationsTable extends DataTableComponent
+class MvrApprovedRegistrationsTable extends DataTableComponent
 {
 
 	public function builder(): Builder
 	{
         return MvrRegistration::query()->whereIn('mvr_registrations.status', [
-            MvrRegistrationStatus::PENDING,
-            MvrRegistrationStatus::CORRECTION,
+            MvrRegistrationStatus::STATUS_REGISTERED,
+            MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING,
+            MvrRegistrationStatus::STATUS_PENDING_PAYMENT,
         ])->orderByDesc('mvr_registrations.created_at');
     }
 

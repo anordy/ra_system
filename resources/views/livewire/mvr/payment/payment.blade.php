@@ -41,7 +41,16 @@
                         Paid
                     </p>
                 </div>
-            @if($motorVehicle->payment_status === \App\Models\Returns\ReturnStatus::COMPLETE && !$motorVehicle->plate_number)
+                <div class="col-md-3">
+                    <span class="font-weight-bold text-uppercase"> </span>
+                    <p class="my-1">
+                        <a target="_blank" href="{{ route('mvr.registration.certificate', encrypt($motorVehicle->id)) }}"
+                           class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                            <i class="bi bi-download mr-3"></i><u>{{ __('Download Registration Certificate') }}</u>
+                        </a>
+                    </p>
+                </div>
+            @if(!$motorVehicle->plate_number)
                     <div class="col-md-4">
                         <p class="my-1">
                             <button target="_blank" wire:click="processRegistrationPlateNumber"

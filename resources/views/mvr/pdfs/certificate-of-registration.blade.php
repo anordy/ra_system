@@ -79,6 +79,12 @@
             left: 310px;
             background: #cecdc7;
         }
+        #engine{
+            position: fixed;
+            top: 920px;
+            left: 310px;
+            background: #cecdc7;
+        }
         #color{
             position: fixed;
             top: 830px;
@@ -97,15 +103,16 @@
 </head>
     <body>
 
-    <div id="owner-name">{{strtoupper($motor_vehicle->chassis->importer_name ?? 'N/A')}}</div>
+    <div id="owner-name">{{strtoupper($motor_vehicle->taxpayer->fullname ?? 'N/A')}}</div>
     <div id="reg-no">{{strtoupper($motor_vehicle->registration_number)}}</div>
-    <div id="reg-date">{{strtoupper(\Carbon\Carbon::parse($motor_vehicle->current_registration->registration_date)->format('d/m/Y'))}}</div>
-    <div id="plate">{{strtoupper($motor_vehicle->current_registration->plate_number)}}</div>
+    <div id="reg-date">{{strtoupper(\Carbon\Carbon::parse($motor_vehicle->registered_at)->format('d/m/Y'))}}</div>
+    <div id="plate">{{strtoupper($motor_vehicle->plate_number)}}</div>
     <div id="yom">{{strtoupper($motor_vehicle->chassis->year ?? '')}}</div>
     <div id="make">{{strtoupper($motor_vehicle->chassis->make)}}</div>
     <div id="model">{{strtoupper($motor_vehicle->chassis->model_type)}}</div>
     <div id="chassis">{{strtoupper($motor_vehicle->chassis_number)}}</div>
     <div id="style">{{strtoupper($motor_vehicle->chassis->body_type)}}</div>
+    <div id="engine">{{strtoupper($motor_vehicle->chassis->engine_number)}}</div>
     <div id="color">{{strtoupper($motor_vehicle->chassis->color)}}</div>
     <div id="capacity">{{strtoupper($motor_vehicle->chassis->engine_cubic_capacity)}} cc</div>
 

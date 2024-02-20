@@ -657,12 +657,13 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::prefix('mvr')->as('mvr.')->group(function () {
         Route::get('/registrations', [MotorVehicleRegistrationController::class, 'index'])->name('registration.index');
         Route::get('/registrations/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('registration.show');
+        Route::get('/registrations/certificate/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('registration.certificate');
 
         // TODO: Remove unused routes
+        Route::get('/certificate-of-registration/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('certificate-of-registration');
         Route::get('/plate-numbers', [MotorVehicleRegistrationController::class, 'plateNumbers'])->name('plate-numbers');
         Route::get('/change-status', [MotorVehicleRegistrationController::class, 'index'])->name('change-status');
         Route::get('/view/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('show');
-        Route::get('/certificate-of-registration/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('certificate-of-registration');
         Route::get('/certificate-of-worth/{id}', [MotorVehicleRegistrationController::class, 'printCertificateOfWorth'])->name('certificate-of-worth');
         Route::get('/de-registration-certificate/{id}', [MotorVehicleRegistrationController::class, 'deRegistrationCertificate'])->name('de-registration-certificate');
         Route::get('/submit-inspection/{id}', [MotorVehicleRegistrationController::class, 'submitInspection'])->name('submit-inspection');
@@ -692,7 +693,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
             ->name('internal-search-wo')->where('type', 'plate-number|chassis');
         Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
-        Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']); //todo: remove on production
         Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove on production
         Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove on production
         Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']); //todo: remove on production
