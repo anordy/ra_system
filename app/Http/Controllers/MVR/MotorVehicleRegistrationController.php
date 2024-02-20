@@ -8,6 +8,7 @@ use App\Models\MvrDeRegistrationRequest;
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleRegistration;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrRequestStatus;
@@ -28,33 +29,19 @@ use Illuminate\Support\Facades\Storage;
 class MotorVehicleRegistrationController extends Controller
 {
 
-
-    public function registeredIndex(){
-        if (!Gate::allows('motor-vehicle-registration')) {
-            abort(403);
-        }
-        return view('mvr.registered-index');
-    }
-
-
 	public function index(){
         if (!Gate::allows('motor-vehicle-registration')) {
             abort(403);
         }
-		return view('mvr.index');
-	}
+        return view('mvr.registration.index');
+    }
 
-    /**
-     * @param $id
-     * @return Application|Factory|View
-     */
     public function show($id){
         if (!Gate::allows('motor-vehicle-registration')) {
             abort(403);
         }
-        $id = decrypt($id);
-        $motor_vehicle = MvrMotorVehicle::query()->findOrFail($id);
-        return view('mvr.show',compact('motor_vehicle'));
+        $motorVehicle = MvrRegistration::findOrFail(decrypt($id));
+        return view('mvr.registration.show', compact('motorVehicle'));
     }
 
 

@@ -655,8 +655,10 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     });
 
     Route::prefix('mvr')->as('mvr.')->group(function () {
-        Route::get('/register', [MotorVehicleRegistrationController::class, 'index'])->name('register');
-        Route::get('/registered', [MotorVehicleRegistrationController::class, 'registeredIndex'])->name('registered');
+        Route::get('/registrations', [MotorVehicleRegistrationController::class, 'index'])->name('registration.index');
+        Route::get('/registrations/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('registration.show');
+
+        // TODO: Remove unused routes
         Route::get('/plate-numbers', [MotorVehicleRegistrationController::class, 'plateNumbers'])->name('plate-numbers');
         Route::get('/change-status', [MotorVehicleRegistrationController::class, 'index'])->name('change-status');
         Route::get('/view/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('show');

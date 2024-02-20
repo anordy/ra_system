@@ -582,8 +582,8 @@
                     Registration</a>
                 <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
                     @can('motor-vehicle-registration')
-                        <li class="{{ request()->is('mvr/register') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
+                        <li class="{{ request()->is('mvr/registration') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.registration.index') }}">Motor Vehicle Registration</a>
                         </li>
                     @endcan
 
