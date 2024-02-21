@@ -37,7 +37,9 @@ class BusinessAuditAddModal extends Component
     {
         return [
             'business_id' => 'required|numeric|exists:businesses,id',
+            'location_ids' => 'required|numeric',
             'location_ids.*' => 'required|numeric',
+            'tax_type_ids' => 'required|numeric',
             'tax_type_ids.*' => 'required|numeric',
             'intension' => 'required|strip_tag',
             'scope' => 'required|strip_tag',
@@ -69,6 +71,7 @@ class BusinessAuditAddModal extends Component
     public function submit()
     {
         $this->validate();
+
         $location_ids = $this->location_ids;
         $tax_type_ids = $this->tax_type_ids;
 
@@ -84,6 +87,7 @@ class BusinessAuditAddModal extends Component
 
         if ($check) {
             $this->customAlert('warning', 'The selected business location and tax type is already on auditing');
+            return;
         }
 
         DB::beginTransaction();
