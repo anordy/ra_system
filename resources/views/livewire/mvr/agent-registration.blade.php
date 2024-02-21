@@ -1,7 +1,7 @@
 <div class="row m-2">
     <div class="col-md-12 form-group">
         <label for="zin">Agent Reference/KYC Number</label>
-        <input type="text" wire:model.lazy="zin"
+        <input type="text" wire:model.defer="zin"
                class="form-control {{ $errors->has('zin') ? 'is-invalid' : '' }}">
         @error('zin')
         <div class="invalid-feedback">
@@ -11,12 +11,10 @@
     </div>
 
     <div class="col-md-12">
-        <button wire:click="lookup" wire:loading.attr="disabled" class="btn btn-primary">
-            <div wire:loading wire:target="submit">
-                <div class="spinner-border mr-1 spinner-border-sm text-light">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
+        <button class="btn btn-primary ml-1" wire:click="lookup">
+            <i class="bi bi-send mr-1" wire:loading.remove wire:target="lookup"></i>
+            <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
+               wire:target="lookup"></i>
             Lookup
         </button>
     </div>
@@ -34,11 +32,11 @@
                     <div class="row my-2">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Full Name</span>
-                            <p class="my-1">{{ "{$taxpayer->first_name} {$taxpayer->middle_name} {$taxpayer->last_name}" }}</p>
+                            <p class="my-1">{{ "{$taxpayer->fullname}" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Email Address</span>
-                            <p class="my-1">{{ $taxpayer->email }}</p>
+                            <p class="my-1">{{ $taxpayer->email ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Mobile</span>
@@ -46,7 +44,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Alternative Mobile</span>
-                            <p class="my-1">{{ $taxpayer->alt_mobile }}</p>
+                            <p class="my-1">{{ $taxpayer->alt_mobile ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Nationality</span>
@@ -70,6 +68,17 @@
                                 <p class="my-1">{{ $taxpayer->passport_no }}</p>
                             </div>
                         @endif
+
+                        <div class="col-md-6 mb-3 form-group">
+                            <label class="font-weight-bold">Agent's Company Name (Optional)</label>
+                            <input type="text" wire:model.defer="companyName"
+                                   class="form-control {{ $errors->has('companyName') ? 'is-invalid' : '' }}">
+                            @error('companyName')
+                            <div class="invalid-feedback">
+                                {{ $errors->first('companyName') }}
+                            </div>
+                            @enderror
+                        </div>
                     </div>
                 </div>
             </div>

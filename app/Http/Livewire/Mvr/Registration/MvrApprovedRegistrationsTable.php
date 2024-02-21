@@ -57,7 +57,10 @@ class MvrApprovedRegistrationsTable extends DataTableComponent
                 ->searchable(),
             Column::make(__("Registration Date"), "registered_at")
                 ->format(function ($value, $row) {
-                    return Carbon::create($row->registered_at)->format('d M Y')?? 'N/A';
+                    if ($row->registered_at) {
+                        return Carbon::create($row->registered_at)->format('d M Y');
+                    }
+                    return 'N/A';
                 }),
             Column::make(__('Status'), 'status')->view('mvr.registration.includes.status'),
             Column::make(__('Action'), 'id')->view('mvr.registration.includes.actions'),

@@ -4,7 +4,9 @@
 
 @section('content')
 
-    @livewire('mvr.payment.fee-payment', ['motorVehicle' => $motorVehicle])
+    @if($motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED)
+        @livewire('mvr.payment.fee-payment', ['motorVehicle' => $motorVehicle])
+    @endif
 
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">

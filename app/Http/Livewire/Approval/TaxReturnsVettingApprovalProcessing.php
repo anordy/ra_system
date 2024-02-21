@@ -62,13 +62,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
             ->get()
             ->firstOrFail();
 
-        // Before vetting only child return may have penalties
-        $penalties = $tax_return->return->penalties;
-
-        $preVettingPenaltyIterations = $penalties->count();
-        $postVettingPenaltyIterations = floor($tax_return->periods - 1);
-
-        $penaltyIterationsToBeAdded = $postVettingPenaltyIterations - $preVettingPenaltyIterations;
+        $penaltyIterationsToBeAdded = ($tax_return->penatablemonths) - 1;
 
         try {
             return PenaltyForDebt::getPostVettingPenalties($tax_return, $penaltyIterationsToBeAdded);
@@ -119,7 +113,6 @@ class TaxReturnsVettingApprovalProcessing extends Component
                         $tax_return_->save();
                         $tax_return_->return->save();
                     }
-         
                 }
 
                 $this->return->vetting_status = VettingStatus::VETTED;

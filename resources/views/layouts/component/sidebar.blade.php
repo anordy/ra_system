@@ -611,19 +611,13 @@
                         </li>
                     @endcan
 
-                    @can('motor-vehicle-status-written-off')
+                    @can('motor-vehicle-written-off')
                         <li class="{{ request()->is('mvr/written-off') ? 'active' : '' }}">
                             <a href="{{ route('mvr.written-off') }}">Written-off Vehicles</a>
                         </li>
                     @endcan
 
-                    @can('motor-vehicle-status-registered')
-                        <li class="{{ request()->is('mvr/registered') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.registered') }}">Registered Motor Vehicles</a>
-                        </li>
-                    @endcan
-
-                    @can('motor-vehicle-status-transport-agent')
+                    @can('motor-vehicle-transport-agent')
                         <li class="{{ request()->is('mvr/agent') ? 'active' : '' }}">
                             <a href="{{ route('mvr.agent') }}">Transport Agents</a>
                         </li>

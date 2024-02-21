@@ -23,6 +23,10 @@ class MvrRegistration extends Model
         return $this->belongsTo(Taxpayer::class, 'taxpayer_id');
     }
 
+    public function agent(){
+        return $this->hasOne(MvrAgent::class, 'taxpayer_id', 'taxpayer_id');
+    }
+
     public function platecolor(){
         return $this->belongsTo(MvrPlateNumberColor::class, 'plate_number_color_id');
     }
