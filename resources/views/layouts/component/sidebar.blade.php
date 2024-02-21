@@ -582,8 +582,8 @@
                     Registration</a>
                 <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
                     @can('motor-vehicle-registration')
-                        <li class="{{ request()->is('mvr/register') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
+                        <li class="{{ request()->is('mvr/registration') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.registration.index') }}">Motor Vehicle Registration</a>
                         </li>
                     @endcan
 
@@ -611,19 +611,13 @@
                         </li>
                     @endcan
 
-                    @can('motor-vehicle-status-written-off')
+                    @can('motor-vehicle-written-off')
                         <li class="{{ request()->is('mvr/written-off') ? 'active' : '' }}">
                             <a href="{{ route('mvr.written-off') }}">Written-off Vehicles</a>
                         </li>
                     @endcan
 
-                    @can('motor-vehicle-status-registered')
-                        <li class="{{ request()->is('mvr/registered') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.registered') }}">Registered Motor Vehicles</a>
-                        </li>
-                    @endcan
-
-                    @can('motor-vehicle-status-transport-agent')
+                    @can('motor-vehicle-transport-agent')
                         <li class="{{ request()->is('mvr/agent') ? 'active' : '' }}">
                             <a href="{{ route('mvr.agent') }}">Transport Agents</a>
                         </li>

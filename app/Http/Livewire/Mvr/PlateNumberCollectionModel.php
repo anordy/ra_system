@@ -2,24 +2,17 @@
 
 namespace App\Http\Livewire\Mvr;
 
-use App\Models\BusinessLocation;
-use App\Models\MvrDeRegistrationRequest;
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleRegistration;
-use App\Models\MvrOwnershipTransfer;
-use App\Models\MvrOwnershipTransferReason;
 use App\Models\MvrPlateNumberCollection;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationStatus;
-use App\Models\MvrRequestStatus;
-use App\Models\Taxpayer;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class PlateNumberCollectionModel extends Component
 {
@@ -34,11 +27,16 @@ class PlateNumberCollectionModel extends Component
     protected function rules()
     {
         return [
-            'collector_phone' => 'required|digits_between:9,15',
+            'collector_phone' => 'required|size:10',
             'collector_name' => 'required|strip_tag',
             'collection_date' => 'required|date|before_or_equal:today',
         ];
     }
+
+
+    protected $messages = [
+        'collector_phone.size' => 'Provide mobile number formatted as 0XXXXXXXX e.g. 0760000000.'
+    ];
 
     public function mount($mvr_registration_id)
     {
@@ -51,6 +49,7 @@ class PlateNumberCollectionModel extends Component
         $this->validate();
         try {
             DB::beginTransaction();
+
             MvrPlateNumberCollection::query()->create([
                 'mvr_registration_id' => $this->mvr_registration_id,
                 'collector_name' => $this->collector_name,
@@ -58,29 +57,18 @@ class PlateNumberCollectionModel extends Component
                 'collection_date'=>$this->collection_date,
             ]);
 
-            $plate_status = MvrPlateNumberStatus::query()->firstOrCreate(['name'=>MvrPlateNumberStatus::STATUS_ACTIVE]);
-            $mvr = MvrMotorVehicleRegistration::query()->find($this->mvr_registration_id);
+            $mvr = MvrRegistration::query()->find($this->mvr_registration_id);
+
             $mvr->update([
-                'mvr_plate_number_status_id' => $plate_status->id
+                'mvr_plate_number_status' => MvrPlateNumberStatus::STATUS_ACTIVE,
+                'status' => MvrRegistrationStatus::STATUS_REGISTERED
             ]);
-            MvrMotorVehicleRegistration::query()
-                ->where(['mvr_motor_vehicle_id'=>$mvr->mvr_motor_vehicle_id])
-                ->whereKeyNot($mvr->id)
-                ->update([
-                    'mvr_plate_number_status_id' =>  MvrPlateNumberStatus::query()->firstOrCreate(['name'=>MvrPlateNumberStatus::STATUS_RETIRED])->id
-                ]);
-            //update registration status
-            $reg_status = MvrRegistrationStatus::query()->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_REGISTERED]);
-            MvrMotorVehicle::query()
-                ->find($mvr->mvr_motor_vehicle_id)
-                ->update([
-                    'mvr_registration_status_id'=>$reg_status->id
-                ]);
+
             DB::commit();
             return redirect()->to(route('mvr.plate-numbers'));
         } catch (Exception $e) {
             DB::rollBack();
-            report($e);
+            Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

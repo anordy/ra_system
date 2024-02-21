@@ -15,6 +15,7 @@ use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxAudit\TaxAudit;
+use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Models\TransactionFee;
 use App\Models\ZmBill;
@@ -996,5 +997,55 @@ trait PaymentsTrait
         ];
 
         return $billItems;
+    }
+
+    public function generateMvrControlNumber($mvr, $fee) {
+        $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+        $exchangeRate = 1;
+        $zmBill = ZmCore::createBill(
+            $mvr->id,
+            get_class($mvr),
+            $taxType->id,
+            $mvr->taxpayer_id,
+            Taxpayer::class,
+            $mvr->taxpayer->fullname,
+            $mvr->taxpayer->email,
+            ZmCore::formatPhone($mvr->taxpayer->mobile),
+            Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
+            "{$fee->name} for chassis number {$mvr->chassis->chassis_number}",
+            ZmCore::PAYMENT_OPTION_EXACT,
+            'TZS',
+            $exchangeRate,
+            auth()->user()->id,
+            get_class(auth()->user()),
+            [
+                [
+                    'billable_id' => $mvr->id,
+                    'billable_type' => get_class($mvr),
+                    'tax_type_id' => $taxType->id,
+                    'amount' => $fee->amount,
+                    'currency' => 'TZS',
+                    'exchange_rate' => 1,
+                    'equivalent_amount' => $fee->amount,
+                    'gfs_code' => $taxType->gfs_code
+                ]
+            ]
+        );
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($zmBill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                session()->flash('success', 'A control number request was sent successful.');
+            } else {
+                session()->flash('error', 'Control number generation failed, try again later');
+            }
+        }else {
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
+            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
+            $zmBill->billable->save();
+            $zmBill->save();
+            $this->flash('success', 'A control number for this verification has been generated successfully');
+        }
     }
 }

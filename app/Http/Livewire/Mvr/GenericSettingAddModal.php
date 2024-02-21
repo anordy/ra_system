@@ -52,10 +52,10 @@ class GenericSettingAddModal extends Component
 
     private $fields = [
         MvrColor::class=>[['title'=>'Hex Value','field'=>'hex_value']],
-        MvrFee::class=>[['title'=>'Amount','field'=>'amount'],['title'=>'GFS Code','field'=>'gfs_code']],
-        MvrTransferFee::class=>[['title'=>'Amount','field'=>'amount','type'=>'number'],['title'=>'GFS Code','field'=>'gfs_code','type'=>'number']],
+        MvrFee::class=>[['title'=>'Amount','field'=>'amount']],
+        MvrTransferFee::class=>[['title'=>'Amount','field'=>'amount','type'=>'number']],
         DlLicenseDuration::class=>[['title'=>'Years','field'=>'number_of_years','type'=>'number'],['title'=>'Description','field'=>'description']],
-        DlFee::class=>[['title'=>'Amount','field'=>'amount','type'=>'number'],['title'=>'GFS Code','field'=>'gfs_code','type'=>'number']],
+        DlFee::class=>[['title'=>'Amount','field'=>'amount','type'=>'number']],
         DlLicenseClass::class=>[['title'=>'Description','field'=>'description']],
     ];
 
@@ -64,9 +64,9 @@ class GenericSettingAddModal extends Component
     ];
 
     private $rules = [
-        MvrFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required|numeric'],
-        MvrTransferFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required|numeric'],
-        DlFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required|numeric']
+        MvrFee::class=>['data.amount'=>'required|numeric'],
+        MvrTransferFee::class=>['data.amount'=>'required|numeric'],
+        DlFee::class=>['data.amount'=>'required|numeric']
     ];
 
     /**

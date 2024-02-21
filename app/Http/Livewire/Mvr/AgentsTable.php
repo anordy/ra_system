@@ -32,24 +32,26 @@ class AgentsTable extends DataTableComponent
 	      'default' => true,
 	      'class' => 'table-bordered table-sm',
 	    ]);
+
     }
 
     public function columns(): array
     {
         return [
             Column::make("Agent no.", "agent_number")
-                ->sortable(),
+                ->searchable(),
+            Column::make("Company Name", "company_name")
+                ->format(fn($value, $row)=> $row->company_name ?? 'N/A')
+                ->searchable(),
             Column::make("KYC no.", "taxpayer.reference_no")
-                ->sortable(),
+                ->searchable(),
             Column::make("Name", "taxpayer_id")
-                ->format(fn($taxpayer_id)=>Taxpayer::query()->find($taxpayer_id)->fullname())
-                ->sortable(),
-            Column::make("email", "taxpayer.email")
-                ->sortable(),
+                ->format(fn($value, $row)=> $row->taxpayer->fullname())
+                ->searchable(),
+            Column::make("email", "taxpayer.email"),
            Column::make("TIN", "taxpayer.tin")
-                ->sortable(),
-            Column::make("Reg. Date", "registration_date")
-                ->sortable(),
+                ->searchable(),
+            Column::make("Reg. Date", "registration_date"),
             Column::make("Status", "status")
                 ->sortable(),
             Column::make('Action', 'id')
