@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Claims\Submitted;
+namespace App\Http\Livewire\Claims\Rejected;
 
 use App\Enum\TaxClaimStatus;
 use App\Models\Claims\TaxClaim;
@@ -37,9 +37,8 @@ class DTRClaimsTable extends DataTableComponent
                 TaxType::INFRASTRUCTURE,
                 TaxType::RDF
             ])
-            ->where('tax_claims.status', TaxClaimStatus::PENDING)
+            ->where('tax_claims.status', TaxClaimStatus::REJECTED)
             ->whereHas('pinstance', function ($query) {
-                $query->where('workflow_tasks.status', '!=', 'completed');
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });
