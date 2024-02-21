@@ -990,6 +990,11 @@
                                 Reasons</a>
                         </li>
                     @endcan
+                        @can('setting-mvr-transfer-category-view')
+                            <li class="{{ request()->is('settings/mvr-generic/MvrPlateNumberColor') ? 'active' : '' }}">
+                                <a href="{{ route('settings.mvr-generic.index', 'MvrPlateNumberColor') }}">MVR Plate Number Color</a>
+                            </li>
+                        @endcan
                     @can('setting-mvr-transfer-category-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer
