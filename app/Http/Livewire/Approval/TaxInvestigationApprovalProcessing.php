@@ -103,8 +103,8 @@ class TaxInvestigationApprovalProcessing extends Component
 
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
            
-            // TODO: Get specified users on production
-            $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
+            $this->staffs = User::all();
+//            $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
         }
     }
 
@@ -148,7 +148,7 @@ class TaxInvestigationApprovalProcessing extends Component
             $this->validate(
                 [
                     'hasAssessment' => ['required', 'boolean'],
-                    'investigationReport' => ['required', 'max:1024'],
+                    'investigationReport' => ['required', 'mimes:pdf', 'max:1024', 'max_file_name_length:100'],
                     'workingsReport' => [new RequiredIf($this->hasAssessment == "1"), 'nullable'],
                     'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
                     'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
@@ -157,13 +157,13 @@ class TaxInvestigationApprovalProcessing extends Component
 
             if ($this->workingsReport != $this->subject->working_report) {
                 $this->validate([
-                    'workingsReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
+                    'workingsReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
                 ]);
             }
 
             if ($this->investigationReport != $this->subject->investigation_report) {
                 $this->validate([
-                    'investigationReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
+                    'investigationReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
                 ]);
             }
         }
