@@ -178,6 +178,7 @@ class RegistrationApprovalProcessing extends Component
             $this->generateMvrControlNumber($this->subject, $fee);
 
             DB::commit();
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);

@@ -92,3 +92,7 @@
 @if($reg->registrant_tin)
     @livewire('tra.tin-verification', ['tinNumber' => $reg->registrant_tin])
 @endif
+
+@if($reg->chassis_number_id)
+    @livewire('approval.mvr.zbs-verification', ['chassisNumber' => $reg->chassis->chassis_number])
+@endif

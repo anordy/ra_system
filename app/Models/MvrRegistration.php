@@ -45,7 +45,7 @@ class MvrRegistration extends Model
     }
 
     public function tin(){
-        return $this->belongsTo(Tin::class, 'tin');
+        return $this->hasOne(Tin::class, 'tin', 'registrant_tin');
     }
 
     public function latestBill()
