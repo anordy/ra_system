@@ -11,4 +11,8 @@ class Tin extends Model
 
     protected $guarded = [];
 
+    public function getFullNameAttribute(){
+        return "{$this->first_name} {$this->middle_name} {$this->last_name}";
+    }
+
 }

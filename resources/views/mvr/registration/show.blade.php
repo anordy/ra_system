@@ -4,7 +4,8 @@
 
 @section('content')
 
-    @if($motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED)
+    @if($motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED
+        || $motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING)
         @livewire('mvr.payment.fee-payment', ['motorVehicle' => $motorVehicle])
     @endif
 
