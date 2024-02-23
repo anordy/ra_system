@@ -126,7 +126,7 @@
 {{--                   </div>--}}
                    <div class="col-md-4 mb-3">
                        <span class="font-weight-bold text-uppercase">Registration Status</span>
-                       <p class="my-1"><span class="badge-info badge font-weight-bold">{{$motor_vehicle->registration_status->name}}</span></p>
+                       <p class="my-1"><span class="badge-info badge font-weight-bold">{{$motor_vehicle->registration_status}}</span></p>
                    </div>
                </div>
            </div>
@@ -183,7 +183,7 @@
    @else
        <div class="card mt-3">
            <div class="card-header">
-               <h5 class="text-uppercase">Search Results - {{$search_type}}: {{$number}}</h5>
+{{--               <h5 class="text-uppercase">Search Results - {{$search_type}}: {{$number}}</h5>--}}
                <div class="card-tools">
                    <button class="btn btn-info btn-sm"
                            onclick="Livewire.emit('showModal', 'mvr.chassis-number-internal-search','{{$result_route ?? 'mvr.internal-search'}}')"><i

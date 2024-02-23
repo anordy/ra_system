@@ -594,9 +594,9 @@
                     @endcan
 
                     @can('motor-vehicle-status-change-request')
-                        <li class="{{ request()->is('mvr/reg-change-requests') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.reg-change-requests') }}">Status Change Requests</a>
-                        </li>
+                            <li class="{{ request()->is('mvr/registration/status') ? 'active' : '' }}">
+                                <a href="{{ route('mvr.registration.status.index') }}">Status Change Request</a>
+                            </li>
                     @endcan
 
                     @can('motor-vehicle-transfer-ownership')

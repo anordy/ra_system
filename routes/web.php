@@ -659,6 +659,14 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/registrations/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('registration.show');
         Route::get('/registrations/certificate/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('registration.certificate');
 
+        /**
+         * Registration Status Change
+         */
+        Route::get('/registration/status/index', [\App\Http\Controllers\MVR\MotorVehicleRegistrationStatusChangeController::class, 'index'])->name('registration.status.index');
+        Route::get('/registration/status/show/{id}', [\App\Http\Controllers\MVR\MotorVehicleRegistrationStatusChangeController::class, 'show'])->name('registration.status.show');
+        Route::get('/registration/status/correct/{id}', [\App\Http\Controllers\MVR\MotorVehicleRegistrationStatusChangeController::class, 'update'])->name('registration.status.update');
+
+
         // TODO: Remove unused routes
         Route::get('/certificate-of-registration/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('certificate-of-registration');
         Route::get('/plate-numbers', [MotorVehicleRegistrationController::class, 'plateNumbers'])->name('plate-numbers');

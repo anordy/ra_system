@@ -21,5 +21,6 @@ class MvrFeeTypesTableSeeder extends Seeder
         MvrFeeType::query()->updateOrcreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
         MvrFeeType::query()->updateOrcreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
         MvrFeeType::query()->updateOrcreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
+        MvrFeeType::query()->updateOrcreate(['type' => MvrFeeType::STATUS_CHANGE]);
     }
 }
