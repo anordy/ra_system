@@ -1,34 +1,38 @@
 <?php
 
-namespace App\Http\Livewire\Tra;
+namespace App\Http\Livewire\Approval\Mvr;
 
-use App\Models\Tra\Tin;
-use App\Services\Api\TraInternalService;
+use App\Services\Api\ZbsInternalService;
 use App\Traits\CustomAlert;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
-class TinVerification extends Component
+class ZbsVerification extends Component
 {
     use CustomAlert;
 
-    public $tinNumber, $tinData;
+    public $chassisNumber, $zbsData;
 
-    public function mount($tinNumber)
+    public function mount($chassisNumber)
     {
-        $this->tinNumber = $tinNumber;
-        $this->tinData = Tin::where('tin', $tinNumber)->first();
+        $this->chassisNumber = $chassisNumber;
+        $this->zbsData = [
+            'cor_number' => random_int(1000000,9999999),
+            'mileage' => random_int(50000,130000),
+            'inspection_date' => Carbon::today()
+        ];
     }
 
-    public function verifyTin()
+    public function verifyZbs()
     {
         try {
-            $traService = new TraInternalService();
-            $response = $traService->getTinNumber($this->tinNumber);
+            $traService = new ZbsInternalService();
+            $response = $traService->fetchCorInformation($this->chassisNumber);
 
             if ($response && $response['data']) {
-                $this->tinData = $response['data'];
+                $this->zbsData = $response['data'];
             } else if ($response && $response['data'] == null) {
                 $this->customAlert('warning', $response['message']);
                 return;
@@ -47,6 +51,6 @@ class TinVerification extends Component
 
     public function render()
     {
-        return view('livewire.tra.tin-verification');
+        return view('livewire.mvr.zbs-verification');
     }
 }

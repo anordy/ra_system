@@ -9,6 +9,7 @@ use App\Jobs\SendCustomSMS;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistration;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
@@ -43,13 +44,23 @@ class RegistrationApprovalProcessing extends Component
             DB::beginTransaction();
 
             if ($this->checkTransition('mvr_registration_officer_review')) {
-
+                if ($this->subject->registrant_tin && !$this->subject->tin) {
+                    $this->customAlert('warning', 'Please Verify Registrant TIN Number');
+                    return;
+                }
             }
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
                 $this->subject->save();
+
+                $regType = $this->subject->regtype;
+
+                if (!$regType->initial_plate_number) {
+                    $this->customAlert('warning', 'Please make sure initial plate number for this registration type has been created');
+                    return;
+                }
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
@@ -167,6 +178,7 @@ class RegistrationApprovalProcessing extends Component
             $this->generateMvrControlNumber($this->subject, $fee);
 
             DB::commit();
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);

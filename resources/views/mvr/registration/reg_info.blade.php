@@ -51,6 +51,10 @@
                 <p class="my-1">{{ $reg->regtype->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Registration Class</span>
+                <p class="my-1">{{ $reg->class->name ?? 'N/A' }}</p>
+            </div>
+            <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Plate Number Size</span>
                 <p class="my-1">{{ $reg->platesize->name ?? 'N/A' }}</p>
             </div>
@@ -84,3 +88,11 @@
         </div>
     </div>
 </div>
+
+@if($reg->registrant_tin)
+    @livewire('tra.tin-verification', ['tinNumber' => $reg->registrant_tin])
+@endif
+
+@if($reg->chassis_number_id)
+    @livewire('approval.mvr.zbs-verification', ['chassisNumber' => $reg->chassis->chassis_number])
+@endif

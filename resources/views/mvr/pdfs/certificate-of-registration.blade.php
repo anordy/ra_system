@@ -103,7 +103,21 @@
 </head>
     <body>
 
-    <div id="owner-name">{{strtoupper($motor_vehicle->taxpayer->fullname ?? 'N/A')}}</div>
+    <div id="owner-name">
+        @if($motor_vehicle->agent)
+            @if($motor_vehicle->is_agent_registration)
+                    @if($motor_vehicle->use_company_name)
+                        {{strtoupper($motor_vehicle->agent->company_name ?? 'N/A')}}
+                    @else
+                        {{strtoupper($motor_vehicle->taxpayer->fullname ?? 'N/A')}}
+                    @endif
+            @else
+                {{strtoupper($motor_vehicle->tin->fullname ?? $motor_vehicle->tin->taxpayer_name )}}
+            @endif
+        @else
+            {{strtoupper($motor_vehicle->taxpayer->fullname ?? 'N/A')}}
+        @endif
+    </div>
     <div id="reg-no">{{strtoupper($motor_vehicle->registration_number)}}</div>
     <div id="reg-date">{{strtoupper(\Carbon\Carbon::parse($motor_vehicle->registered_at)->format('d/m/Y'))}}</div>
     <div id="plate">{{strtoupper($motor_vehicle->plate_number)}}</div>

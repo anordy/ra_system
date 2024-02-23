@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Tra\ChassisNumber;
+use App\Models\Tra\Tin;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,10 @@ class MvrRegistration extends Model
 
     public function class(){
         return $this->belongsTo(MvrClass::class, 'mvr_class_id');
+    }
+
+    public function tin(){
+        return $this->hasOne(Tin::class, 'tin', 'registrant_tin');
     }
 
     public function latestBill()

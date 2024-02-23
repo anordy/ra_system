@@ -21,12 +21,22 @@
                 @can('tax-returns-vetting-view-non-tax-revenue-taxpayers')
                     <a href="#non-tax-revenues" class="nav-item nav-link font-weight-bold">Non-Tax Revenue Returns (NTR)</a>
                 @endcan
+                @can('tax-returns-vetting-view-domestic-taxpayers')
+                    <a href="#pemba" class="nav-item nav-link font-weight-bold">Pemba</a>
+                @endcan
             </nav> <br>
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
                 @can('tax-returns-vetting-view-domestic-taxpayers')
                     <div id="domestic-tax-payers" class="tab-pane fade active show p-2">
                         <div class="card p-2">
                             <livewire:vetting.vetting-approval-table vettingStatus="{{ \App\Enum\VettingStatus::SUBMITTED }}" />
+                        </div>
+                    </div>
+                @endcan
+                @can('tax-returns-vetting-view-domestic-taxpayers')
+                    <div id="pemba" class="tab-pane fade show p-2">
+                        <div class="card p-2">
+                            <livewire:vetting.vetting-approval-table-pemba vettingStatus="{{ \App\Enum\VettingStatus::SUBMITTED }}" />
                         </div>
                     </div>
                 @endcan
