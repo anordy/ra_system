@@ -94,7 +94,7 @@ class TaxRegionsSeeder extends Seeder
                 'code' => 'hotel',
                 'name' => 'hotel',
                 'prefix' => '10',
-                'location' => Region::PEMBA,
+                'location' => Region::LTD,
             ],
         ];
 
