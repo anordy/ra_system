@@ -594,9 +594,9 @@
                     @endcan
 
                     @can('motor-vehicle-status-change-request')
-                        <li class="{{ request()->is('mvr/reg-change-requests') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.reg-change-requests') }}">Status Change Requests</a>
-                        </li>
+                            <li class="{{ request()->is('mvr/registration/status') ? 'active' : '' }}">
+                                <a href="{{ route('mvr.registration.status.index') }}">Status Change Request</a>
+                            </li>
                     @endcan
 
                     @can('motor-vehicle-transfer-ownership')
@@ -990,6 +990,11 @@
                                 Reasons</a>
                         </li>
                     @endcan
+                        @can('setting-mvr-transfer-category-view')
+                            <li class="{{ request()->is('settings/mvr-generic/MvrPlateNumberColor') ? 'active' : '' }}">
+                                <a href="{{ route('settings.mvr-generic.index', 'MvrPlateNumberColor') }}">MVR Plate Number Color</a>
+                            </li>
+                        @endcan
                     @can('setting-mvr-transfer-category-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer

@@ -1,7 +1,9 @@
 <div class="card mt-3">
-    <div class="card-header font-weight-bold bg-white">
-        {{ $reg->chassis->chassis_number  }} Registration Information
+    <div class="card-header font-weight-bold bg-white d-flex justify-content-between align-items-center">
+        <span> {{ $reg->chassis->chassis_number  }} Current Registration Information</span>
+
     </div>
+
     <div class="card-body">
         <div class="row my-2">
             <div class="col-md-3 mb-3">
@@ -35,10 +37,6 @@
                 </p>
             </div>
             <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Registerer Name</span>
-                <p class="my-1">{{ $reg->taxpayer->fullname ?? 'N/A' }}</p>
-            </div>
-            <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Registration Number</span>
                 <p class="my-1">{{ $reg->registration_number ?? 'N/A' }}</p>
             </div>
@@ -63,10 +61,6 @@
                 <p class="my-1">{{ $reg->platecolor->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Registered On</span>
-                <p class="my-1">{{ $reg->registered_at ?? 'N/A' }}</p>
-            </div>
-            <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Register Type</span>
                 <p class="my-1">{{ $reg->register_type ?? 'N/A' }}</p>
             </div>
@@ -85,14 +79,11 @@
                     <p class="my-1">{{ $reg->registrant_tin ?? 'N/A' }}</p>
                 </div>
             @endif
+
+            <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Registered On</span>
+                <p class="my-1">{{ $reg->registered_at ?? 'N/A' }}</p>
+            </div>
         </div>
     </div>
 </div>
-
-@if($reg->registrant_tin)
-    @livewire('tra.tin-verification', ['tinNumber' => $reg->registrant_tin])
-@endif
-
-@if($reg->chassis_number_id)
-    @livewire('approval.mvr.zbs-verification', ['chassisNumber' => $reg->chassis->chassis_number])
-@endif

@@ -4,9 +4,8 @@
 
 @section('content')
 
-    @if($motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED
-        || $motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING)
-        @livewire('mvr.payment.fee-payment', ['motorVehicle' => $motorVehicle])
+    @if($change_req->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $change_req->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED)
+        @livewire('mvr.payment.fee-payment', ['motorVehicle' => $change_req])
     @endif
 
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
@@ -25,14 +24,14 @@
     </ul>
     <div class="tab-content bg-white border shadow-sm" id="myTabContent">
         <div class="tab-pane fade p-3 show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            @include('mvr.registration.reg_info', ['reg' => $motorVehicle])
-            @include('mvr.registration.chassis_info', ['motor_vehicle' => $motorVehicle->chassis])
-            <livewire:approval.mvr.registration-approval-processing modelName='App\Models\MvrRegistration'
-                                                      modelId="{{ encrypt($motorVehicle->id) }}" />
+            @include('mvr.status.current_change_info', ['reg' => $motorVehicle])
+            @include('mvr.status.new_change_info', ['reg' => $change_req])
+            <livewire:approval.mvr.status-approval-processing modelName='App\Models\MvrRegistrationStatusChange'
+                                                      modelId="{{ encrypt($change_req->id) }}" />
         </div>
         <div class="tab-pane fade p-3" id="approval" role="tabpanel" aria-labelledby="approval-tab">
-            <livewire:approval.approval-history-table modelName='App\Models\MvrRegistration'
-                                                      modelId="{{ encrypt($motorVehicle->id) }}" />
+            <livewire:approval.approval-history-table modelName='App\Models\MvrRegistrationStatusChange'
+                                                      modelId="{{ encrypt($change_req->id) }}" />
         </div>
     </div>
 

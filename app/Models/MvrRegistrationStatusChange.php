@@ -3,18 +3,19 @@
 namespace App\Models;
 
 use App\Models\Tra\ChassisNumber;
-use App\Models\Tra\Tin;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
-class MvrRegistration extends Model
+class MvrRegistrationStatusChange extends Model
 {
     use HasFactory, SoftDeletes, WorkflowTrait;
 
     protected $guarded = [];
+
+    protected $table = 'mvr_registrations_status_change';
 
     public function chassis(){
         return $this->belongsTo(ChassisNumber::class, 'chassis_number_id');
@@ -44,10 +45,6 @@ class MvrRegistration extends Model
         return $this->belongsTo(MvrClass::class, 'mvr_class_id');
     }
 
-    public function tin(){
-        return $this->hasOne(Tin::class, 'tin', 'registrant_tin');
-    }
-
     public function latestBill()
     {
         return $this->morphOne(ZmBill::class, 'billable')->latest();
@@ -55,7 +52,7 @@ class MvrRegistration extends Model
 
     public static function getNexPlateNumber(mixed $regType, $class): mixed
     {
-        $last_reg = MvrRegistration::query()
+        $last_reg = MvrRegistrationStatusChange::query()
             ->where(['mvr_registration_type_id' => $regType->id])
             ->where(['mvr_class_id' => $class->id])
             ->whereNotNull('plate_number')
@@ -92,7 +89,7 @@ class MvrRegistration extends Model
                 MvrRegistrationType::TYPE_COMMERCIAL_TAXI,
             ])->pluck('id')->toArray();
 
-            $last_reg = MvrRegistration::query()
+            $last_reg = MvrRegistrationStatusChange::query()
                 ->whereIn('mvr_registration_type_id',$reg_type_ids)
                 ->whereNotNull('plate_number')
                 ->orderBy(DB::raw('CONCAT(SUBSTR(plate_number,5,2),SUBSTR(plate_number,2,3))'), 'desc')

@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire\Vetting;
 
-use App\Models\Region;
 use Carbon\Carbon;
+use App\Models\Region;
 use App\Models\TaxType;
 use App\Enum\VettingStatus;
 use App\Models\Returns\TaxReturn;
@@ -16,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
-class VettingApprovalTable extends DataTableComponent
+class VettingApprovalTablePemba extends DataTableComponent
 {
     use  ReturnFilterTrait;
 
@@ -44,11 +44,6 @@ class VettingApprovalTable extends DataTableComponent
         return [
             SelectFilter::make('Tax Region')
                 ->options([
-                    'all'    => 'All',
-                    'Headquarter' => 'Head Quarter',
-                    'Mjini'  => 'Mjini',
-                    'Kaskazini Unguja'  => 'Kaskazini Unguja',
-                    'Kusini Unguja'  => 'Kusini Unguja',
                     'Kaskazini Pemba'  => 'Kaskazini Pemba',
                     'Kusini Pemba'  => 'Kusini Pemba',
                 ])
@@ -88,10 +83,10 @@ class VettingApprovalTable extends DataTableComponent
                 TaxType::RDF
             ])
             ->where('parent',0)
-            ->where('is_business_lto',false) 
-            ->where('vetting_status', $this->vettingStatus)
+            ->where('is_business_lto',false)
+            ->where('is_business_lto',false)
             ->whereHas('location.taxRegion', function ($query) {
-                $query->where('location', Region::DTD); //this is filter by department
+                $query->where('location', Region::PEMBA); //this is filter by department
             })
             ->whereHas('pinstance', function ($query) {
                 $query->where('status', '!=', 'completed');
@@ -105,11 +100,6 @@ class VettingApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Taxpayer Name', 'business.taxpayer_name')
-            ->format(function ($value, $row) {
-                return $value ?? 'N/A';
-            })
-            ->sortable()->searchable(),
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
