@@ -15,7 +15,6 @@ class AddColumnZbsVerificationOnMvrRegistrationsTable extends Migration
     {
         Schema::table('mvr_registrations', function (Blueprint $table) {
             $table->boolean('is_zbs_verified')->default(false)->nullable();
-            $table->string('cor_number')->nullable();
         });
     }
 
