@@ -19,6 +19,7 @@ use App\Models\MvrFee;
 use App\Models\MvrMake;
 use App\Models\MvrModel;
 use App\Models\MvrOwnershipTransferReason;
+use App\Models\MvrPlateNumberColor;
 use App\Models\MvrPlateSize;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
@@ -56,7 +57,7 @@ class MvrGenericSettingController extends Controller
         } else if ($class === MvrTransferCategory::class) {
             $permission = 'setting-mvr-transfer-category-view';
         } else if ($class === MvrTransferFee::class) {
-            $permission = 'setting-mvr-transfer-dee-view';
+            $permission = 'setting-mvr-transfer-fee-view';
         } else if ($class === DlLicenseClass::class) {
             $permission = 'setting-dl-class-view';
         } else if ($class === DlLicenseDuration::class) {
@@ -73,7 +74,9 @@ class MvrGenericSettingController extends Controller
             $permission = 'setting-case-decision-view';
         } else if ($class === CourtLevel::class) {
             $permission = 'setting-court-level-view';
-        }
+        } else if ($class === MvrPlateNumberColor::class) {
+        $permission = 'setting-mvr-color-view';
+    }
 
         if (!Gate::allows($permission)) {
             abort(403);

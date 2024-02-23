@@ -2,95 +2,96 @@
 
 namespace App\Http\Livewire\Mvr;
 
-use App\Models\MvrMotorVehicle;
-use App\Models\MvrMotorVehicleRegistration;
+use App\Events\SendSms;
+use App\Jobs\SendCustomSMS;
 use App\Models\MvrPlateNumberStatus;
-use App\Models\MvrRegistrationStatus;
-use App\Models\TaxAgentStatus;
-use App\Traits\WithSearch;
+use App\Models\MvrRegistration;
+use App\Traits\CustomAlert;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Log;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\TaxAgent;
 
 class PlateNumbersTable extends DataTableComponent
 {
-	use CustomAlert;
+    use CustomAlert;
 
-    public $plate_number_status_id;
+    public $plate_number_status;
 
     protected $listeners = [
         'confirmUpdate'
     ];
 
-    public function builder(): Builder
-	{
-		return MvrMotorVehicleRegistration::query()
-            ->where(['mvr_plate_number_status_id'=>$this->plate_number_status_id]);
-	}
-
-    public function mount($plate_number_status){
-        $pn_status = MvrPlateNumberStatus::query()->where(['name'=>$plate_number_status])->first();
-        $this->plate_number_status_id = $pn_status->id ?? '';
+    public function mount($plate_number_status)
+    {
+        $this->plate_number_status = $plate_number_status;
     }
 
-	public function configure(): void
+    public function builder(): Builder
+    {
+        return MvrRegistration::query()
+            ->where(['mvr_plate_number_status' => $this->plate_number_status])
+            ->orderBy('mvr_registrations.created_at', 'ASC');
+    }
+
+
+    public function configure(): void
     {
         $this->setPrimaryKey('id');
 
-	    $this->setTableWrapperAttributes([
-	      'default' => true,
-	      'class' => 'table-bordered table-sm',
-	    ]);
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
+
+        $this->setAdditionalSelects(['mvr_plate_number_status']);
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Plate Number")
-                ->format(function ($id, $row){
-                    $mvr = MvrMotorVehicleRegistration::query()->find($row->id);
-                    return $mvr->current_personalized_registration ? $mvr->current_personalized_registration->plate_number: $mvr->plate_number;
+            Column::make(__("Chassis No"), "chassis.chassis_number")
+                ->searchable(),
+            Column::make(__("Plate No"), "plate_number")
+                ->format(function ($value, $row) {
+                    return $row->plate_number ?? 'PENDING';
                 })
-                ->sortable(),
-            Column::make("Size", "plate_size.name")
-                ->sortable(),
-            Column::make("Color", "registration_type.plate_number_color")
-                ->sortable(),
-            Column::make("Type", "registration_type.name")
-                ->sortable(),
-            Column::make("Vehicle Chassis No", "motor_vehicle.chassis_number")
-                ->sortable(),
-           Column::make("Status", "plate_number_status.name")
-                ->sortable()
-            ->format(function ($value){
-                return $value==MvrPlateNumberStatus::STATUS_GENERATED?'TO PRINT':$value;
-            }),
+                ->searchable(),
+            Column::make(__("Reg Type"), "regtype.name")
+                ->searchable(),
+            Column::make(__("Plate No Color"), "platecolor.name")
+                ->searchable(),
+            Column::make(__("Plate No Size"), "platesize.name")
+                ->searchable(),
+            Column::make(__("Registration Date"), "registered_at")
+                ->format(function ($value, $row) {
+                    return Carbon::create($row->registered_at)->format('d M Y') ?? 'N/A';
+                }),
             Column::make('Action', 'id')
-                ->format(function ($value) {
-                    $mvr =   MvrMotorVehicleRegistration::query()->find($value);
-                    if (MvrPlateNumberStatus::STATUS_GENERATED==$mvr->plate_number_status->name){
+                ->format(function ($value, $row) {
+                    if (MvrPlateNumberStatus::STATUS_GENERATED == $row->mvr_plate_number_status) {
                         return <<< HTML
                             <button class="btn btn-outline-primary btn-sm" wire:click="updateToPrinted($value)"><i class="fa fa-edit"></i> Update Status</button>
                         HTML;
-                    }elseif (MvrPlateNumberStatus::STATUS_PRINTED==$mvr->plate_number_status->name){
+                    } elseif (MvrPlateNumberStatus::STATUS_PRINTED == $row->mvr_plate_number_status) {
                         return <<< HTML
                             <button class="btn btn-outline-primary btn-sm" wire:click="updateToReceived($value)"><i class="fa fa-edit"></i> Update Status</button>
                         HTML;
-                    }elseif(MvrPlateNumberStatus::STATUS_RECEIVED==$mvr->plate_number_status->name){
+                    } elseif (MvrPlateNumberStatus::STATUS_RECEIVED == $row->mvr_plate_number_status) {
                         return <<< HTML
                             <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.plate-number-collection-model',$value)"><i class="fa fa-edit"></i> Update Status</button>
                         HTML;
                     }
                     return '';
-                    })
+                })
                 ->html()
         ];
     }
 
-    public function updateToPrinted($id){
+    public function updateToPrinted($id)
+    {
         $this->customAlert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Printed</span>?', [
             'position' => 'center',
             'toast' => false,
@@ -108,7 +109,8 @@ class PlateNumbersTable extends DataTableComponent
         ]);
     }
 
-    public function updateToReceived($id){
+    public function updateToReceived($id)
+    {
         $this->customAlert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Received</span>?', [
             'position' => 'center',
             'toast' => false,
@@ -126,7 +128,8 @@ class PlateNumbersTable extends DataTableComponent
         ]);
     }
 
-    public function updateToCollected($id){
+    public function updateToCollected($id)
+    {
         $this->customAlert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Collected</span>?', [
             'position' => 'center',
             'toast' => false,
@@ -144,34 +147,24 @@ class PlateNumbersTable extends DataTableComponent
         ]);
     }
 
-    public function confirmUpdate($value){
+    public function confirmUpdate($value)
+    {
         try {
             $data = (object) $value['data'];
-            $plate_status = MvrPlateNumberStatus::query()->firstOrCreate(['name'=>$data->status]);
-            $mvr = MvrMotorVehicleRegistration::query()->find($data->id);
-            $mvr->update([
-                'mvr_plate_number_status_id' => $plate_status->id
-            ]);
-            if ($plate_status->name == MvrPlateNumberStatus::STATUS_ACTIVE){
-                MvrMotorVehicleRegistration::query()
-                    ->where(['mvr_motor_vehicle_id'=>$mvr->mvr_motor_vehicle_id])
-                    ->whereKeyNot($mvr->id)
-                    ->update([
-                    'mvr_plate_number_status_id' =>  MvrPlateNumberStatus::query()->firstOrCreate(['name'=>MvrPlateNumberStatus::STATUS_RETIRED])->id
-                ]);
-                //update registration status
-                $reg_status = MvrRegistrationStatus::query()
-                    ->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_REGISTERED]);
-                MvrMotorVehicle::query()
-                    ->find($mvr->mvr_motor_vehicle_id)
-                    ->update([
-                        'mvr_registration_status_id'=>$reg_status->id
-                    ]);
 
+            $mvr = MvrRegistration::query()->find($data->id);
+            $mvr->update([
+                'mvr_plate_number_status' => $data->status
+            ]);
+
+            if ($data->status === MvrPlateNumberStatus::STATUS_PRINTED) {
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $mvr->taxpayer->mobile, 'message' => "
+                Hello {$mvr->taxpayer->fullname}, your plate number for motor vehicle registration for chassis number {$mvr->chassis->chassis_number} has been printed. You may visit ZRA offices after 3 days for collection of plate number"]));
             }
+
             $this->flash('success', 'Plate Number Status updated', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            report($e);
+            Log::error($e);
             $this->customAlert('warning', 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }

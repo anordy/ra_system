@@ -19,6 +19,20 @@ class ClaimsController extends Controller
         return view('claims.index');
     }
 
+    public function approved(){
+        if (!Gate::allows('tax-claim-view')) {
+            abort(403);
+        }
+        return view('claims.approved');
+    }
+
+    public function rejected(){
+        if (!Gate::allows('tax-claim-view')) {
+            abort(403);
+        }
+        return view('claims.rejected');
+    }
+
     public function show($claimId){
         if (!Gate::allows('tax-claim-view')) {
             abort(403);

@@ -45,10 +45,12 @@ class TaxpayersTable extends DataTableComponent
                 ->label(fn ($row) => $row->fullname())
                 ->sortable()
                 ->searchable(function (Builder $query, $searchTerm) {
-                    return $query
-                        ->orWhereRaw(DB::raw("LOWER(first_name) like '%' || LOWER('$searchTerm') || '%'"))
-                        ->orWhereRaw(DB::raw("LOWER(middle_name) like '%' || LOWER('$searchTerm') || '%'"))
-                        ->orWhereRaw(DB::raw("LOWER(last_name) like '%' || LOWER('$searchTerm') || '%'"));
+                    $searchTerms = explode(" ", $searchTerm);
+                    foreach ($searchTerms as $term) {
+                        $query->orWhereRaw(DB::raw("LOWER(first_name) like '%' || LOWER('$term') || '%'"))
+                            ->orWhereRaw(DB::raw("LOWER(middle_name) like '%' || LOWER('$term') || '%'"))
+                            ->orWhereRaw(DB::raw("LOWER(last_name) like '%' || LOWER('$term') || '%'"));
+                    }
                 }),
             Column::make('Mobile No', 'mobile')->searchable(),
             Column::make('Email Address', 'email')->searchable(),

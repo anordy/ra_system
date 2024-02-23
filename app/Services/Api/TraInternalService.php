@@ -65,7 +65,7 @@ class TraInternalService
         } else {
             Log::error('FAILED TO AUTHENTICATE');
             return [
-                'message' => 'failed',
+                'message' => 'Failed to Authenticate',
                 'data' => null
             ];
         }

@@ -10,7 +10,7 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Collection Date</label>
-                        <input type="date" class="form-control" wire:model.lazy="collection_date" id="collection_date">
+                        <input type="date" class="form-control" wire:model.defer="collection_date" id="collection_date">
                         @error('collection_date')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -21,7 +21,7 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Collector Full Name</label>
-                        <input type="text" class="form-control" wire:model.lazy="collector_name" id="collector_name">
+                        <input type="text" class="form-control" wire:model.defer="collector_name" id="collector_name">
                         @error('collector_name')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -31,7 +31,7 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Collector Phone Number</label>
-                        <input type="text" class="form-control" wire:model.lazy="collector_phone" id="collector_phone">
+                        <input type="text" class="form-control" wire:model.defer="collector_phone" id="collector_phone">
                         @error('collector_phone')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror

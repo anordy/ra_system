@@ -66,34 +66,52 @@
             top: 55%;
         }
         .tax-types {
-            font-size: 1.1em;
+            font-size: 1em;
             top: 60.3%;
-            left: -23%;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
+            width: 80%;
+            padding-left: 70px;
+            padding-right: 70px;
+            left: 15%;
         }
         .location {
-            font-size: 1.1em;
             top: 66.2%;
-            left: -8.0%;
+            font-size: 1em;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
+            width: 80%;
+            padding-left: 70px;
+            padding-right: 70px;
+            left: 29%;
         }
         .zra-location {
-            font-size: 1.1em;
+            font-size: 1em;
             top: 69.2%;
             left: -24%;
         }
         .tax-region {
-            font-size: 1.1em;
+            font-size: 1em;
             top: 72.1%;
             left: -22%;
         }
         .commencing-date {
-            font-size: 1.1em;
+            font-size: 1em;
             top: 63.25%;
             left: -12.0%;
         }
         .on-hand-date {
             font-size: 0.8em;
             top: 85.7%;
-            left: 15%;
+            left: 58%;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
+            width: 80%;
+            padding-left: 70px;
+            padding-right: 70px;
         }
         .commissioner-signature {
             top: 73%;
@@ -152,55 +170,68 @@
             left: -17%;
             top: 40%;
         }
+        .online-copy {
+            -webkit-transform: rotate(331deg);
+            -moz-transform: rotate(331deg);
+            -o-transform: rotate(331deg);
+            transform: rotate(331deg);
+            font-size: 6em;
+            color: rgba(255, 5, 5, 0.37);
+            position: absolute;
+            font-family: 'Denk One', sans-serif;
+            text-transform: uppercase;
+            padding-left: 10%;
+            top: 40%;
+        }
     </style>
 </head>
-    <body>
-        <span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
-        @if ($location->is_headquarter == 0)
-            <div class="watermark">Branch Copy</div>
-        @endif
-        @if(isset($location->business->name) && isset($location->business->taxpayer_name) && strtolower(trim($location->business->name)) != strtolower(trim($location->business->taxpayer_name)))
-            <span class="embed taxpayer">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
-            <span class="embed trading-as">T/A {{ $location->business->name }}</span>
-        @else
-            <span class="embed taxpayer-alt">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
-        @endif
-            <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
-        @if($location->vrn)
-            <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
-            <span class="embed vrn-no">VRN NO: {{ $location->vrn ?? '' }}</span>
-        @else
-            <span class="embed reg-no">{{ $location->business->ztn_number ?? '' }}</span>
-        @endif
-        <span class="embed tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
-        <span class="embed location">
-            {{ $location->street->name }} - {{ $location->ward->name }}
-        </span>
-        <span class="embed zra-location">
-            {{ $location->region->location }}
-        </span>
-        <span class="embed tax-region">
-            {{ $location->taxRegion->name }}
-        </span>
-        <span class="embed commencing-date">
-            {{ $location->date_of_commencing->format('d F Y') }}
-        </span>
-        <span class="embed on-hand-date">
-            {{ $location->date_of_commencing->format('d F, Y') }}
-        </span>
-        <span class="commissioner-signature">
-            <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
-        </span>
-        <span class="commissioner-name">
-            {{$commissinerFullName}}
-        </span>
-        <span class="commissioner-title">
-            COMMISSIONER GENERAL
-        </span>
-        <div class="qr-code">
-            <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
-        </div>
-    </body>
-    <body class="page-two" style="page-break-before: always">
-    </body>
+<body>
+    <span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
+    @if ($location->is_headquarter == 0)
+        <div class="watermark">Branch Copy</div>
+    @endif
+    @if(isset($location->business->name) && isset($location->business->taxpayer_name) && strtolower(trim($location->business->name)) != strtolower(trim($location->business->taxpayer_name)))
+        <span class="embed taxpayer">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
+        <span class="embed trading-as">T/A {{ $location->business->name }}</span>
+    @else
+        <span class="embed taxpayer-alt">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
+    @endif
+    <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
+    @if($location->vrn)
+        <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
+        <span class="embed vrn-no">VRN NO: {{ $location->vrn ?? '' }}</span>
+    @else
+        <span class="embed reg-no">{{ $location->business->ztn_number ?? '' }}</span>
+    @endif
+    <span class="tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
+    <span class="location">
+        {{ $location->street->name }} - {{ $location->ward->name }}
+    </span>
+    <span class="embed zra-location">
+        {{ $location->region->location }}
+    </span>
+    <span class="embed tax-region">
+        {{ $location->taxRegion->name }}
+    </span>
+    <span class="embed commencing-date">
+        {{ $location->date_of_commencing->format('d F Y') }}
+    </span>
+    <span class="on-hand-date">
+        {{ now()->format('d F, Y') }}
+    </span>
+    <span class="commissioner-signature">
+        <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
+    </span>
+    <span class="commissioner-name">
+        {{$commissinerFullName}}
+    </span>
+    <span class="commissioner-title">
+        COMMISSIONER GENERAL
+    </span>
+    <div class="qr-code">
+        <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
+    </div>
+</body>
+<body class="page-two" style="page-break-before: always">
+</body>
 </html>

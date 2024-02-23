@@ -9,6 +9,7 @@ use App\Models\GenericSettingModel;
 use App\Models\MvrColor;
 use App\Models\MvrFee;
 use App\Models\MvrModel;
+use App\Models\MvrPlateNumberColor;
 use App\Models\MvrTransferFee;
 use App\Traits\WithSearch;
 use Exception;

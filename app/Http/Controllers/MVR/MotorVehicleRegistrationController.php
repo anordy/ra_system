@@ -8,6 +8,7 @@ use App\Models\MvrDeRegistrationRequest;
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleRegistration;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrRequestStatus;
@@ -28,33 +29,19 @@ use Illuminate\Support\Facades\Storage;
 class MotorVehicleRegistrationController extends Controller
 {
 
-
-    public function registeredIndex(){
-        if (!Gate::allows('motor-vehicle-registration')) {
-            abort(403);
-        }
-        return view('mvr.registered-index');
-    }
-
-
 	public function index(){
         if (!Gate::allows('motor-vehicle-registration')) {
             abort(403);
         }
-		return view('mvr.index');
-	}
+        return view('mvr.registration.index');
+    }
 
-    /**
-     * @param $id
-     * @return Application|Factory|View
-     */
     public function show($id){
         if (!Gate::allows('motor-vehicle-registration')) {
             abort(403);
         }
-        $id = decrypt($id);
-        $motor_vehicle = MvrMotorVehicle::query()->findOrFail($id);
-        return view('mvr.show',compact('motor_vehicle'));
+        $motorVehicle = MvrRegistration::findOrFail(decrypt($id));
+        return view('mvr.registration.show', compact('motorVehicle'));
     }
 
 
@@ -71,48 +58,6 @@ class MotorVehicleRegistrationController extends Controller
             ->update([
                 'mvr_registration_status_id'=>$status->id
         ]);
-        return redirect()->route('mvr.show',encrypt($id));
-    }
-
-
-    // TODO: Shift to API upon payment completed
-    public function simulatePayment($id){
-        $id = decrypt($id);
-        $reg =  MvrMotorVehicle::query()
-            ->where(['id'=>$id])->first()->current_registration;
-        $reg_type = $reg->registration_type;
-        try {
-            DB::beginTransaction();
-            $status = MvrRegistrationStatus::query()
-                ->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING]);
-            $mv = MvrMotorVehicle::query()
-                ->findOrFail($id);
-            $mv->update([
-                    'mvr_registration_status_id'=>$status->id
-                ]);
-
-            if ($reg_type->name == MvrRegistrationType::TYPE_PRIVATE_GOLDEN){
-                $plate_number = $reg->plate_number;
-            }else if ($reg_type->external_defined != 1){
-                $plate_number = MvrMotorVehicleRegistration::getNexPlateNumber($reg_type,$mv->class);
-            }
-
-            if (!empty($reg->current_personalized_registration)){
-                $reg->current_personalized_registration->update(['status'=>'ACTIVE']);
-            }
-
-            $plate_status = MvrPlateNumberStatus::query()->firstOrCreate(['name' => MvrPlateNumberStatus::STATUS_GENERATED]);
-            $reg->update(['plate_number'=>$plate_number,'mvr_plate_number_status_id'=>$plate_status->id,'registration_date'=>date('Y-m-d')]);
-            DB::commit();
-
-            // TODO: Send Registration status as a job
-            $traService = new TraInternalService();
-            $traService->postPlateNumber($mv->chassis_number, $plate_number, 'registration');
-        }catch (\Exception $e){
-            session()->flash('error', 'Could not update status');
-            DB::rollBack();
-            Log::error($e);
-        }
         return redirect()->route('mvr.show',encrypt($id));
     }
 
@@ -141,7 +86,7 @@ class MotorVehicleRegistrationController extends Controller
 
     public function registrationCertificate($id){
         $id = decrypt($id);
-        $motor_vehicle = MvrMotorVehicle::query()->findOrFail($id);
+        $motor_vehicle = MvrRegistration::query()->findOrFail($id);
 
         header('Content-Type: application/pdf' );
 

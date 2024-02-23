@@ -49,7 +49,8 @@ class MvrAgent extends Model implements Auditable
 		'taxpayer_id',
 		'agent_number',
 		'registration_date',
-		'status'
+		'status',
+        'company_name'
 	];
 
 	public function taxpayer()

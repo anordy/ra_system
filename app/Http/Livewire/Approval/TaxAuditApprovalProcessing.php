@@ -87,7 +87,7 @@ class TaxAuditApprovalProcessing extends Component
         if(!isNullOrEmpty($this->subject->auditing_date)){
             $this->auditingDate = Carbon::create($this->subject->auditing_date)->format('Y-m-d');
         }
-      
+
         $this->exitMinutes = $this->subject->exit_minutes;
         $this->finalReport = $this->subject->final_report;
         $this->workingReport = $this->subject->working_report;
@@ -108,7 +108,7 @@ class TaxAuditApprovalProcessing extends Component
             if (gettype($operators) != "array") {
                 $operators = [];
             }
-            $roles = Role::whereIn('id', $operators)->get()->pluck('id')->toArray();
+            $roles = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
 
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
 
@@ -126,7 +126,7 @@ class TaxAuditApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
-        
+
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [
@@ -155,13 +155,13 @@ class TaxAuditApprovalProcessing extends Component
 
             if ($this->preliminaryReport != $this->subject->preliminary_report) {
                 $this->validate([
-                    'preliminaryReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
+                    'preliminaryReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
                 ]);
             }
 
             if ($this->workingReport != $this->subject->working_report) {
                 $this->validate([
-                    'workingReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
+                    'workingReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
                 ]);
             }
         }
@@ -179,13 +179,13 @@ class TaxAuditApprovalProcessing extends Component
 
             if ($this->exitMinutes != $this->subject->exit_minutes) {
                 $this->validate([
-                    'exitMinutes' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
+                    'exitMinutes' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
                 ]);
             }
 
             if ($this->finalReport != $this->subject->final_report) {
                 $this->validate([
-                    'finalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:' . config('constants.file_name_length')
+                    'finalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
                 ]);
             }
         };
@@ -310,7 +310,7 @@ class TaxAuditApprovalProcessing extends Component
             if ($this->subject->exit_minutes != null && $this->subject->preliminary_report != null) {
                 event(new SendMail('send-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
             }
-            
+
             if ($this->checkTransition('accepted')) {
                 // Notify audit manager to continue with business/location de-registration request if exists
                 $deregister = BusinessDeregistration::where('tax_audit_id', $this->subject->id)->get()->first();
@@ -372,7 +372,7 @@ class TaxAuditApprovalProcessing extends Component
                 if(is_null($taxType)){
                     abort(404);
                 }
-            }    
+            }
         } else {
             $taxType = $this->subject->taxType;
         }
@@ -531,3 +531,4 @@ class TaxAuditApprovalProcessing extends Component
         return view('livewire.approval.tax_audit');
     }
 }
+

@@ -180,7 +180,7 @@ class Show extends Component
 
     protected $rules = [
         'currency' => 'required|strip_tag',
-        'effective_date' => 'required|strip_tag',
+        'effective_date' => 'required',
     ];
 
     protected $messages = [
@@ -193,7 +193,7 @@ class Show extends Component
     {
         $transition = $transition['data']['transition'];
 
-        $this->validate(['comments' => 'required|strip_tag']);
+        $this->validate(['comment' => 'required|strip_tag']);
 
         try {
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comment]);

@@ -51,6 +51,11 @@ class SeaportReturnTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('Taxpayer Name', 'business.taxpayer_name')
+            ->format(function ($value, $row) {
+                return $value ?? 'N/A';
+            })
+            ->sortable()->searchable(),
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
