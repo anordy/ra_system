@@ -37,9 +37,9 @@ class BusinessAuditAddModal extends Component
     {
         return [
             'business_id' => 'required|numeric|exists:businesses,id',
-            'location_ids' => 'required|numeric',
+            'location_ids' => 'required',
             'location_ids.*' => 'required|numeric',
-            'tax_type_ids' => 'required|numeric',
+            'tax_type_ids' => 'required',
             'tax_type_ids.*' => 'required|numeric',
             'intension' => 'required|strip_tag',
             'scope' => 'required|strip_tag',
