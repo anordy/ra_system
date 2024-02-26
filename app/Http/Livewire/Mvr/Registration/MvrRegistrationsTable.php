@@ -18,6 +18,7 @@ class MvrRegistrationsTable extends DataTableComponent
             MvrRegistrationStatus::PENDING,
             MvrRegistrationStatus::CORRECTION,
         ])->orderByDesc('mvr_registrations.created_at');
+        
     }
 
     public function mount(){
