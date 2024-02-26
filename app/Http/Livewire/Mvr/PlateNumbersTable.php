@@ -6,6 +6,7 @@ use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistration;
+use App\Models\MvrRegistrationStatusChange;
 use App\Traits\CustomAlert;
 use Carbon\Carbon;
 use Exception;
@@ -156,6 +157,13 @@ class PlateNumbersTable extends DataTableComponent
             $mvr->update([
                 'mvr_plate_number_status' => $data->status
             ]);
+
+            if ($data->status === MvrPlateNumberStatus::STATUS_PRINTED) {
+            $mvrStatusChange = MvrRegistrationStatusChange::where('registration_number',$mvr->registration_number)->first();
+                $mvrStatusChange->mvr_plate_number_status = $data->status;
+                $mvrStatusChange->status = MvrPlateNumberStatus::STATUS_ACTIVE;
+            }
+
 
             if ($data->status === MvrPlateNumberStatus::STATUS_PRINTED) {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $mvr->taxpayer->mobile, 'message' => "
