@@ -1,0 +1,496 @@
+[2024-02-27 10:36:38] local.ERROR:   
+[2024-02-27 10:49:47] local.ERROR: Attempt to assign property "mvr_plate_number_status" on null {"userId":1,"exception":"[object] (Error(code: 0): Attempt to assign property \"mvr_plate_number_status\" on null at D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Livewire\\Mvr\\PlateNumbersTable.php:163)
+[stacktrace]
+#0 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Http\\Livewire\\Mvr\\PlateNumbersTable->confirmUpdate(Array)
+#1 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#2 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#3 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#4 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\HandlesActions.php(149): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array)
+#5 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\ReceivesEvents.php(77): Livewire\\Component->callMethod('confirmUpdate', Array, Object(Closure))
+#6 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\HydrationMiddleware\\PerformEventEmissions.php(20): Livewire\\Component->fireEvent('confirmUpdate', Array, 'o4i8')
+#7 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\LifecycleManager.php(89): Livewire\\HydrationMiddleware\\PerformEventEmissions::hydrate(Object(App\\Http\\Livewire\\Mvr\\PlateNumbersTable), Object(Livewire\\Request))
+#8 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\Connection\\ConnectionHandler.php(13): Livewire\\LifecycleManager->hydrate()
+#9 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\Controllers\\HttpConnectionHandler.php(20): Livewire\\Connection\\ConnectionHandler->handle(Array)
+#10 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(48): Livewire\\Controllers\\HttpConnectionHandler->__invoke('mvr.plate-numbe...')
+#11 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(262): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(Livewire\\Controllers\\HttpConnectionHandler), '__invoke')
+#12 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#13 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(721): Illuminate\\Routing\\Route->run()
+#14 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#15 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\CheckBanned.php(29): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\CheckBanned->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\FrameGuard.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Http\\Middleware\\FrameGuard->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\LanguageManager.php(24): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\LanguageManager->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\AuthenticateSession.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Session\\Middleware\\AuthenticateSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#31 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(723): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#38 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#39 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(662): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#40 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#41 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(167): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#42 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#43 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\DisableBrowserCache.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Livewire\\DisableBrowserCache->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\VerifyRefererMiddleware.php(56): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\VerifyRefererMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\VerifyHostMiddleware.php(34): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\VerifyHostMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\SecurityHeader.php(20): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\SecurityHeader->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#53 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#54 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#58 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#59 D:\\Office\\ZRA\\zrb-admin\\vendor\\fruitcake\\laravel-cors\\src\\HandleCors.php(38): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#61 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#62 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#63 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#64 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#65 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#66 D:\\Office\\ZRA\\zrb-admin\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#67 D:\\Office\\ZRA\\zrb-admin\\server.php(21): require_once('D:\\\\Office\\\\ZRA\\\\z...')
+#68 {main}
+"} 
+[2024-02-27 11:39:38] local.ERROR:   
+[2024-02-27 13:26:31] local.ERROR: Unmatched ')' (View: D:\Office\ZRA\zrb-admin\resources\views\mvr\registration\show.blade.php) {"view":{"view":"D:\\Office\\ZRA\\zrb-admin\\resources\\views/mvr/registration/show.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-2102262552 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#3404</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
+</samp>}
+</pre><script>Sfdump(\"sf-dump-2102262552\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","motorVehicle":"<pre class=sf-dump id=sf-dump-1630724601 data-indent-pad=\"  \"><span class=sf-dump-note>App\\Models\\MvrRegistration</span> {<a class=sf-dump-ref>#4160</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">connection</span>: \"<span class=sf-dump-str title=\"6 characters\">oracle</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">table</span>: \"<span class=sf-dump-str title=\"17 characters\">mvr_registrations</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">primaryKey</span>: \"<span class=sf-dump-str title=\"2 characters\">id</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">keyType</span>: \"<span class=sf-dump-str title=\"3 characters\">int</span>\"
+  +<span class=sf-dump-public title=\"Public property\">incrementing</span>: <span class=sf-dump-const>true</span>
+  #<span class=sf-dump-protected title=\"Protected property\">with</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">withCount</span>: []
+  +<span class=sf-dump-public title=\"Public property\">preventsLazyLoading</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">perPage</span>: <span class=sf-dump-num>15</span>
+  +<span class=sf-dump-public title=\"Public property\">exists</span>: <span class=sf-dump-const>true</span>
+  +<span class=sf-dump-public title=\"Public property\">wasRecentlyCreated</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+  #<span class=sf-dump-protected title=\"Protected property\">attributes</span>: <span class=sf-dump-note>array:22</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => \"<span class=sf-dump-str title=\"2 characters\">29</span>\"
+    \"<span class=sf-dump-key>plate_number</span>\" => \"<span class=sf-dump-str title=\"6 characters\">Z223AA</span>\"
+    \"<span class=sf-dump-key>registration_number</span>\" => \"<span class=sf-dump-str title=\"8 characters\">Z-000029</span>\"
+    \"<span class=sf-dump-key>register_type</span>\" => \"<span class=sf-dump-str title=\"8 characters\">TAXPAYER</span>\"
+    \"<span class=sf-dump-key>chassis_number_id</span>\" => \"<span class=sf-dump-str>7</span>\"
+    \"<span class=sf-dump-key>plate_number_color_id</span>\" => \"<span class=sf-dump-str>1</span>\"
+    \"<span class=sf-dump-key>cor_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>status</span>\" => \"<span class=sf-dump-str title=\"21 characters\">PLATE NUMBER PRINTING</span>\"
+    \"<span class=sf-dump-key>mvr_plate_number_status</span>\" => \"<span class=sf-dump-str title=\"9 characters\">GENERATED</span>\"
+    \"<span class=sf-dump-key>payment_status</span>\" => \"<span class=sf-dump-str title=\"22 characters\">status-change-complete</span>\"
+    \"<span class=sf-dump-key>mvr_registration_type_id</span>\" => \"<span class=sf-dump-str>1</span>\"
+    \"<span class=sf-dump-key>mvr_class_id</span>\" => \"<span class=sf-dump-str>3</span>\"
+    \"<span class=sf-dump-key>mvr_plate_size_id</span>\" => \"<span class=sf-dump-str>2</span>\"
+    \"<span class=sf-dump-key>taxpayer_id</span>\" => \"<span class=sf-dump-str>1</span>\"
+    \"<span class=sf-dump-key>registered_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-02-27 00:00:00</span>\"
+    \"<span class=sf-dump-key>marking</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-02-27 09:45:24</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-02-27 10:06:41</span>\"
+    \"<span class=sf-dump-key>deleted_at</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>is_agent_registration</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>registrant_tin</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>use_company_name</span>\" => <span class=sf-dump-const>null</span>
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">original</span>: <span class=sf-dump-note>array:22</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>id</span>\" => \"<span class=sf-dump-str title=\"2 characters\">29</span>\"
+    \"<span class=sf-dump-key>plate_number</span>\" => \"<span class=sf-dump-str title=\"6 characters\">Z223AA</span>\"
+    \"<span class=sf-dump-key>registration_number</span>\" => \"<span class=sf-dump-str title=\"8 characters\">Z-000029</span>\"
+    \"<span class=sf-dump-key>register_type</span>\" => \"<span class=sf-dump-str title=\"8 characters\">TAXPAYER</span>\"
+    \"<span class=sf-dump-key>chassis_number_id</span>\" => \"<span class=sf-dump-str>7</span>\"
+    \"<span class=sf-dump-key>plate_number_color_id</span>\" => \"<span class=sf-dump-str>1</span>\"
+    \"<span class=sf-dump-key>cor_id</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>status</span>\" => \"<span class=sf-dump-str title=\"21 characters\">PLATE NUMBER PRINTING</span>\"
+    \"<span class=sf-dump-key>mvr_plate_number_status</span>\" => \"<span class=sf-dump-str title=\"9 characters\">GENERATED</span>\"
+    \"<span class=sf-dump-key>payment_status</span>\" => \"<span class=sf-dump-str title=\"22 characters\">status-change-complete</span>\"
+    \"<span class=sf-dump-key>mvr_registration_type_id</span>\" => \"<span class=sf-dump-str>1</span>\"
+    \"<span class=sf-dump-key>mvr_class_id</span>\" => \"<span class=sf-dump-str>3</span>\"
+    \"<span class=sf-dump-key>mvr_plate_size_id</span>\" => \"<span class=sf-dump-str>2</span>\"
+    \"<span class=sf-dump-key>taxpayer_id</span>\" => \"<span class=sf-dump-str>1</span>\"
+    \"<span class=sf-dump-key>registered_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-02-27 00:00:00</span>\"
+    \"<span class=sf-dump-key>marking</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>created_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-02-27 09:45:24</span>\"
+    \"<span class=sf-dump-key>updated_at</span>\" => \"<span class=sf-dump-str title=\"19 characters\">2024-02-27 10:06:41</span>\"
+    \"<span class=sf-dump-key>deleted_at</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>is_agent_registration</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>registrant_tin</span>\" => <span class=sf-dump-const>null</span>
+    \"<span class=sf-dump-key>use_company_name</span>\" => <span class=sf-dump-const>null</span>
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">changes</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">casts</span>: <span class=sf-dump-note>array:1</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>deleted_at</span>\" => \"<span class=sf-dump-str title=\"8 characters\">datetime</span>\"
+  </samp>]
+  #<span class=sf-dump-protected title=\"Protected property\">classCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">attributeCastCache</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dates</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dateFormat</span>: <span class=sf-dump-const>null</span>
+  #<span class=sf-dump-protected title=\"Protected property\">appends</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">dispatchesEvents</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">observables</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">relations</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">touches</span>: []
+  +<span class=sf-dump-public title=\"Public property\">timestamps</span>: <span class=sf-dump-const>true</span>
+  #<span class=sf-dump-protected title=\"Protected property\">hidden</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">visible</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">fillable</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">guarded</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">forceDeleting</span>: <span class=sf-dump-const>false</span>
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1630724601\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+"}},"userId":1,"exception":"[object] (Facade\\Ignition\\Exceptions\\ViewException(code: 0): Unmatched ')' (View: D:\\Office\\ZRA\\zrb-admin\\resources\\views\\mvr\\registration\\show.blade.php) at D:\\Office\\ZRA\\zrb-admin\\resources\\views/mvr/registration/show.blade.php:7)
+[stacktrace]
+#0 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#1 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#2 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(69): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#3 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Livewire\\CompilerEngineForIgnition->evaluatePath('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#4 D:\\Office\\ZRA\\zrb-admin\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#5 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(35): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#6 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Livewire\\CompilerEngineForIgnition->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#7 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#8 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#9 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(820): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#12 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(789): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#13 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(721): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#14 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#15 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\Check2FA.php(35): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\Check2FA->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\CheckBanned.php(29): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\CheckBanned->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\FrameGuard.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Http\\Middleware\\FrameGuard->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\LanguageManager.php(24): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\LanguageManager->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\AuthenticateSession.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Session\\Middleware\\AuthenticateSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(44): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#35 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(723): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#42 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#43 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(662): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#44 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#45 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(167): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#46 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#47 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\DisableBrowserCache.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Livewire\\DisableBrowserCache->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\VerifyRefererMiddleware.php(56): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\VerifyRefererMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\VerifyHostMiddleware.php(34): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\VerifyHostMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#53 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\SecurityHeader.php(20): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#54 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\SecurityHeader->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#58 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#59 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#60 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#61 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#62 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#63 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#64 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#65 D:\\Office\\ZRA\\zrb-admin\\vendor\\fruitcake\\laravel-cors\\src\\HandleCors.php(38): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#66 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#67 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#68 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#69 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#70 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#71 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#72 D:\\Office\\ZRA\\zrb-admin\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#73 D:\\Office\\ZRA\\zrb-admin\\server.php(21): require_once('D:\\\\Office\\\\ZRA\\\\z...')
+#74 {main}
+
+[previous exception] [object] (ParseError(code: 0): Unmatched ')' at D:\\Office\\ZRA\\zrb-admin\\storage\\framework\\views\\3fe229ce4aef776c7d17fd48bb184c20bf86da29.php:7)
+[stacktrace]
+#0 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#1 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#2 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(69): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#3 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Livewire\\CompilerEngineForIgnition->evaluatePath('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#4 D:\\Office\\ZRA\\zrb-admin\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#5 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(35): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#6 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Livewire\\CompilerEngineForIgnition->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#7 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#8 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#9 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(820): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#12 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(789): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#13 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(721): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#14 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#15 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\Check2FA.php(35): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\Check2FA->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\CheckBanned.php(29): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\CheckBanned->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\FrameGuard.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Http\\Middleware\\FrameGuard->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\LanguageManager.php(24): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\LanguageManager->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\AuthenticateSession.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Session\\Middleware\\AuthenticateSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(44): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#35 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(723): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#42 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#43 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(662): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#44 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#45 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(167): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#46 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#47 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\DisableBrowserCache.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Livewire\\DisableBrowserCache->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\VerifyRefererMiddleware.php(56): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\VerifyRefererMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\VerifyHostMiddleware.php(34): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\VerifyHostMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#53 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\SecurityHeader.php(20): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#54 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\SecurityHeader->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#58 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#59 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#60 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#61 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#62 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#63 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#64 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#65 D:\\Office\\ZRA\\zrb-admin\\vendor\\fruitcake\\laravel-cors\\src\\HandleCors.php(38): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#66 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#67 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#68 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#69 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#70 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#71 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#72 D:\\Office\\ZRA\\zrb-admin\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#73 D:\\Office\\ZRA\\zrb-admin\\server.php(21): require_once('D:\\\\Office\\\\ZRA\\\\z...')
+#74 {main}
+"} 
+[2024-02-27 16:54:11] local.ERROR: syntax error, unexpected token "else", expecting end of file (View: D:\Office\ZRA\zrb-admin\resources\views\livewire\mvr\payment\payment.blade.php) {"view":{"view":"D:\\Office\\ZRA\\zrb-admin\\storage\\framework\\views\\b8fb12ac89290224bbe62d68ebe4f54a571c0d65.php","data":[]},"userId":1,"exception":"[object] (Facade\\Ignition\\Exceptions\\ViewException(code: 0): syntax error, unexpected token \"else\", expecting end of file (View: D:\\Office\\ZRA\\zrb-admin\\resources\\views\\livewire\\mvr\\payment\\payment.blade.php) at D:\\Office\\ZRA\\zrb-admin\\storage\\framework\\views\\b8fb12ac89290224bbe62d68ebe4f54a571c0d65.php:16)
+[stacktrace]
+#0 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(84): App\\Http\\Livewire\\Mvr\\Payment\\FeePayment->Livewire\\ComponentConcerns\\{closure}()
+#1 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(59): Livewire\\CompilerEngineForIgnition->evaluatePath('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#2 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Livewire\\CompilerEngineForIgnition->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#3 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#4 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#5 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\Component.php(235): Illuminate\\View\\View->render()
+#6 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\HydrationMiddleware\\RenderView.php(14): Livewire\\Component->output()
+#7 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\LifecycleManager.php(141): Livewire\\HydrationMiddleware\\RenderView::dehydrate(Object(App\\Http\\Livewire\\Mvr\\Payment\\FeePayment), Object(Livewire\\Response))
+#8 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\LivewireManager.php(109): Livewire\\LifecycleManager->initialDehydrate()
+#9 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(261): Livewire\\LivewireManager->mount('mvr.payment.fee...', Array)
+#10 D:\\Office\\ZRA\\zrb-admin\\resources\\views/mvr/registration/show.blade.php(11): Illuminate\\Support\\Facades\\Facade::__callStatic('mount', Array)
+#11 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(107): require('D:\\\\Office\\\\ZRA\\\\z...')
+#12 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#13 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#14 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(69): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#15 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Livewire\\CompilerEngineForIgnition->evaluatePath('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#16 D:\\Office\\ZRA\\zrb-admin\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#17 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(35): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#18 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Livewire\\CompilerEngineForIgnition->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#19 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#20 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#21 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#22 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#23 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(820): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#24 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(789): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#25 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(721): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#26 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#27 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\Check2FA.php(35): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\Check2FA->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\CheckBanned.php(29): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\CheckBanned->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\FrameGuard.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Http\\Middleware\\FrameGuard->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\LanguageManager.php(24): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\LanguageManager->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#37 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#38 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\AuthenticateSession.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Session\\Middleware\\AuthenticateSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(44): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#47 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(723): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#54 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#55 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(662): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#56 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#57 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(167): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#58 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#59 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\DisableBrowserCache.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Livewire\\DisableBrowserCache->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#61 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\VerifyRefererMiddleware.php(56): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#62 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\VerifyRefererMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#63 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\VerifyHostMiddleware.php(34): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#64 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\VerifyHostMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#65 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\SecurityHeader.php(20): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#66 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\SecurityHeader->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#67 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#68 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#69 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#70 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#71 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#72 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#73 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#74 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#75 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#76 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#77 D:\\Office\\ZRA\\zrb-admin\\vendor\\fruitcake\\laravel-cors\\src\\HandleCors.php(38): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#78 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#79 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#80 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#81 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#82 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#83 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#84 D:\\Office\\ZRA\\zrb-admin\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#85 D:\\Office\\ZRA\\zrb-admin\\server.php(21): require_once('D:\\\\Office\\\\ZRA\\\\z...')
+#86 {main}
+
+[previous exception] [object] (ParseError(code: 0): syntax error, unexpected token \"else\", expecting end of file at D:\\Office\\ZRA\\zrb-admin\\storage\\framework\\views\\b8fb12ac89290224bbe62d68ebe4f54a571c0d65.php:16)
+[stacktrace]
+#0 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(84): App\\Http\\Livewire\\Mvr\\Payment\\FeePayment->Livewire\\ComponentConcerns\\{closure}()
+#1 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(59): Livewire\\CompilerEngineForIgnition->evaluatePath('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#2 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Livewire\\CompilerEngineForIgnition->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#3 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#4 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#5 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\Component.php(235): Illuminate\\View\\View->render()
+#6 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\HydrationMiddleware\\RenderView.php(14): Livewire\\Component->output()
+#7 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\LifecycleManager.php(141): Livewire\\HydrationMiddleware\\RenderView::dehydrate(Object(App\\Http\\Livewire\\Mvr\\Payment\\FeePayment), Object(Livewire\\Response))
+#8 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\LivewireManager.php(109): Livewire\\LifecycleManager->initialDehydrate()
+#9 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(261): Livewire\\LivewireManager->mount('mvr.payment.fee...', Array)
+#10 D:\\Office\\ZRA\\zrb-admin\\storage\\framework\\views\\3fe229ce4aef776c7d17fd48bb184c20bf86da29.php(11): Illuminate\\Support\\Facades\\Facade::__callStatic('mount', Array)
+#11 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(107): require('D:\\\\Office\\\\ZRA\\\\z...')
+#12 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#13 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#14 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(69): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#15 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Livewire\\CompilerEngineForIgnition->evaluatePath('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#16 D:\\Office\\ZRA\\zrb-admin\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#17 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\ComponentConcerns\\RendersLivewireComponents.php(35): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#18 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Livewire\\CompilerEngineForIgnition->get('D:\\\\Office\\\\ZRA\\\\z...', Array)
+#19 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#20 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#21 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#22 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#23 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(820): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#24 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(789): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#25 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(721): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#26 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#27 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\Check2FA.php(35): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\Check2FA->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\CheckBanned.php(29): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\CheckBanned->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\FrameGuard.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Http\\Middleware\\FrameGuard->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\LanguageManager.php(24): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\LanguageManager->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#37 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#38 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\AuthenticateSession.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Session\\Middleware\\AuthenticateSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(44): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#47 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(723): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#54 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#55 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(662): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#56 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#57 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(167): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#58 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#59 D:\\Office\\ZRA\\zrb-admin\\vendor\\livewire\\livewire\\src\\DisableBrowserCache.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Livewire\\DisableBrowserCache->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#61 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\VerifyRefererMiddleware.php(56): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#62 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\VerifyRefererMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#63 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\VerifyHostMiddleware.php(34): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#64 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\VerifyHostMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#65 D:\\Office\\ZRA\\zrb-admin\\app\\Http\\Middleware\\SecurityHeader.php(20): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#66 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): App\\Http\\Middleware\\SecurityHeader->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#67 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#68 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#69 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#70 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#71 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#72 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#73 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#74 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#75 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#76 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#77 D:\\Office\\ZRA\\zrb-admin\\vendor\\fruitcake\\laravel-cors\\src\\HandleCors.php(38): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#78 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#79 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#80 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#81 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#82 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#83 D:\\Office\\ZRA\\zrb-admin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#84 D:\\Office\\ZRA\\zrb-admin\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#85 D:\\Office\\ZRA\\zrb-admin\\server.php(21): require_once('D:\\\\Office\\\\ZRA\\\\z...')
+#86 {main}
+"} 

@@ -14,6 +14,7 @@ class MvrRegistrationStatus implements Status
     const STATUS_INSPECTION = 'INSPECTION';
     const STATUS_DE_REGISTERED = 'DE REGISTERED';
     const STATUS_RETIRED = 'RETIRED';
+    const STATUS_CHANGE = 'STATUS CHANGE';
 
 
     static function getConstants(): array
