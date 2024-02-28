@@ -48,6 +48,10 @@ class MvrRegistration extends Model
         return $this->hasOne(Tin::class, 'tin', 'registrant_tin');
     }
 
+    public function cor(){
+        return $this->hasOne(Cor::class);
+    }
+
     public function latestBill()
     {
         return $this->morphOne(ZmBill::class, 'billable')->latest();
