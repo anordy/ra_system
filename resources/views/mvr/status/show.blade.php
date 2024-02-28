@@ -1,10 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'Show Motor Vehicle Registration')
+@section('title', 'Show Motor Vehicle Status Change')
 
 @section('content')
 
-    @if($change_req->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $change_req->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED)
+    @if($change_req->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $change_req->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED
+|| $change_req->status === \App\Enum\MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING)
         @livewire('mvr.payment.fee-payment', ['motorVehicle' => $change_req])
     @endif
 

@@ -183,6 +183,8 @@ class StatusApprovalProcessing extends Component
             $this->generateMvrControlNumber($this->subject, $fee);
 
             DB::commit();
+
+            $this->flash('success', 'Approved Successful', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);

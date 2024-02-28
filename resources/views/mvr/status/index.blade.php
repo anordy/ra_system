@@ -13,7 +13,7 @@
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="to-print-link" data-toggle="tab" href="#all" role="tab"
-                       aria-controls="home" aria-selected="true">All Motor Vehicles</a>
+                       aria-controls="home" aria-selected="true">All Status change</a>
                 </li>
                 @can('mvr_approve_registration')
                     <li class="nav-item" role="presentation">
