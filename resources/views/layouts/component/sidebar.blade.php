@@ -606,8 +606,8 @@
                     @endcan
 
                     @can('motor-vehicle-deregistration')
-                        <li class="{{ request()->is('mvr/de-register-requests*') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.de-register-requests') }}">De-registration</a>
+                        <li class="{{ request()->is('mvr/de-registrations*') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.de-registration.index') }}">De-registration</a>
                         </li>
                     @endcan
 

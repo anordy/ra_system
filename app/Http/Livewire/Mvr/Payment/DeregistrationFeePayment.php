@@ -4,50 +4,46 @@ namespace App\Http\Livewire\Mvr\Payment;
 
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
-use App\Models\MvrRegistration;
-use App\Models\MvrRegistrationStatusChange;
 use App\Services\ZanMalipo\GepgResponse;
-use Exception;
-use Illuminate\Support\Facades\DB;
-use Livewire\Component;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 
-class FeePayment extends Component
+class DeregistrationFeePayment extends Component
 {
     use CustomAlert, PaymentsTrait, GepgResponse;
 
-    public $motorVehicle, $fee, $feeType;
+    public $deregistration, $fee, $feeType;
 
-    public function mount($motorVehicle){
-        $this->motorVehicle = $motorVehicle;
+    public function mount($deregistration)
+    {
+        $this->deregistration = $deregistration;
 
-        if(get_class($this->motorVehicle) == MvrRegistrationStatusChange::class) {
-            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
-        } elseif (get_class($this->motorVehicle) == MvrRegistration::class) {
-            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
-        } else {
-            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
-        }
+        $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
 
         $this->fee = MvrFee::query()->where([
-            'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
+            'mvr_registration_type_id' => $this->deregistration->registration->mvr_registration_type_id,
             'mvr_fee_type_id' => $this->feeType->id,
-            'mvr_class_id' => $this->motorVehicle->mvr_class_id
+            'mvr_class_id' => $this->deregistration->registration->mvr_class_id
         ])->first();
+
     }
 
-    public function refresh(){
-        $this->motorVehicle = get_class($this->motorVehicle)::find($this->motorVehicle->id);
-        if(is_null($this->motorVehicle)){
+    public function refresh()
+    {
+        $this->deregistration = get_class($this->deregistration)::find($this->deregistration->id);
+        if (is_null($this->deregistration)) {
             abort(404);
         }
     }
 
-    public function regenerate(){
-        $response = $this->regenerateControlNo($this->motorVehicle->bill);
-        if ($response){
+    public function regenerate()
+    {
+        $response = $this->regenerateControlNo($this->deregistration->bill);
+        if ($response) {
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             return redirect(request()->header('Referer'));
         }
@@ -57,7 +53,8 @@ class FeePayment extends Component
     /**
      * A Safety Measure to Generate a bill that has not been generated
      */
-    public function generateBill(){
+    public function generateBill()
+    {
         try {
 
             if (empty($this->fee)) {
@@ -66,7 +63,7 @@ class FeePayment extends Component
                 return;
             }
 
-            $this->generateMvrControlNumber($this->motorVehicle, $this->fee);
+            $this->generateMvrDeregistrationControlNumber($this->deregistration, $this->fee);
             $this->customAlert('success', 'Your request was submitted, you will receive your payment information shortly.');
             return redirect(request()->header('Referer'));
         } catch (Exception $e) {
@@ -80,7 +77,8 @@ class FeePayment extends Component
         return $this->getResponseCodeStatus($code)['message'];
     }
 
-    public function render(){
-        return view('livewire.mvr.payment.payment');
+    public function render()
+    {
+        return view('livewire.mvr.payment.deregistration-payment');
     }
 }
