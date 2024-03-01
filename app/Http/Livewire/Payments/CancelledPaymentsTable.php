@@ -89,6 +89,8 @@ class CancelledPaymentsTable extends DataTableComponent
             ->sortable()
             ->searchable(),
             Column::make('Status', 'status'),
+            Column::make('PBZ Status', 'pbz_status')
+                ->format(fn($value) => $value ?? 'N/A'),
             Column::make('Actions', 'id')
                 ->view('payments.includes.actions'),
         ];

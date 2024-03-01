@@ -10,6 +10,10 @@ class PBZTransaction extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'transaction_time' => 'datetime'
+    ];
+
     public function bill(){
         return $this->belongsTo(ZmBill::class, 'control_number', 'control_number');
     }
