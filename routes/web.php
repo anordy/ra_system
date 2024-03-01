@@ -659,6 +659,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/registrations/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('registration.show');
         Route::get('/registrations/certificate/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('registration.certificate');
 
+        Route::get('/de-registrations', [DeRegistrationController::class, 'index'])->name('de-registration.index');
+        Route::get('/de-registrations/{id}', [DeRegistrationController::class, 'show'])->name('de-registration.show');
+        Route::get('/de-registrations/certificate/{id}', [DeRegistrationController::class, 'deRegistrationCertificate'])->name('de-registration.certificate');
+        Route::get('/de-registrations/file/{path}', [DeRegistrationController::class, 'file'])->name('de-registration.file');
+
         /**
          * Registration Status Change
          */
