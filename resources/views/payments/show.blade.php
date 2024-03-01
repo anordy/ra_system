@@ -63,21 +63,35 @@
         </div>
         <div class="card-body p-2">
             <div class="row ">
-                <div class="col-md-3 mb-0">
+                <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">PBZ Status</span>
                     <p class="my-1 text-uppercase">{{ $bill->pbz_status ?? 'N/A' }}</p>
                 </div>
                 @if($tnx = $bill->pbzTransaction)
-                    <div class="col-md-3 mb-0">
-                        <span class="font-weight-bold text-uppercase">PBZ Amount</span>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Paid Amount</span>
                         <p class="my-1 text-uppercase">{{ $bill->pbz_amount ?? 'N/A' }} {{ $bill->pbz_currency }}</p>
                     </div>
-                    <div class="col-md-3 mb-0">
-                        <span class="font-weight-bold text-uppercase">Bank Ref</span>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Transaction Ref</span>
                         <p class="my-1 text-uppercase">{{ $tnx->bank_ref ?? 'N/A' }}</p>
                     </div>
-                    <div class="col-md-3 mb-0">
+                    <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Paid At</span>
+                        <p class="my-1 text-uppercase">{{ $tnx->transaction_time?->toDayDateTimeString() ?? 'N/A' }}</p>
+                    </div>
+                @endif
+                @if($tnx = $bill->pbzReversal)
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Reversed Amount</span>
+                        <p class="my-1 text-uppercase">{{ $bill->pbz_amount ?? 'N/A' }} {{ $bill->pbz_currency }}</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Reversal Ref</span>
+                        <p class="my-1 text-uppercase">{{ $tnx->bank_ref ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Reversed At</span>
                         <p class="my-1 text-uppercase">{{ $tnx->transaction_time?->toDayDateTimeString() ?? 'N/A' }}</p>
                     </div>
                 @endif

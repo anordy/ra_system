@@ -95,6 +95,6 @@ class ZmBill extends Model implements Auditable, PayloadInterface
     }
 
     public function pbzReversal(){
-        return $this->belongsTo(PBZTransaction::class, 'control_number', 'control_number');
+        return $this->belongsTo(PBZReversal::class, 'control_number', 'control_number');
     }
 }
