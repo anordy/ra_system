@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Taxpayers;
 use App\Models\Biometric;
 use App\Models\KYC;
 use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class BioEnrollVendorModal extends Component
@@ -34,7 +35,13 @@ class BioEnrollVendorModal extends Component
 
     public function mount($kyc, $hand, $finger)
     {
-        $this->kyc = KYC::find(decrypt($kyc));
+        try {
+            $this->kyc = KYC::find(decrypt($kyc));
+        } catch (\Exception $exception) {
+            Log::error($exception);
+            abort(500);
+        }
+
         if(is_null($this->kyc)){
             abort(404);
         }

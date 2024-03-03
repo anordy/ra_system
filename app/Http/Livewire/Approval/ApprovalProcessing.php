@@ -96,7 +96,7 @@ class ApprovalProcessing extends Component
 
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
 
-//        $this->taxDepartment = TaxDepartment::all();
+        $this->taxDepartment = TaxDepartment::all();
 
         $this->vat_id = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
 
@@ -160,6 +160,11 @@ class ApprovalProcessing extends Component
 
     public function updated($property)
     {
+        if (!isset($property)) {
+            Log::error('Missing property definition');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            return;
+        }
 
         $property = explode('.', $property);
 
@@ -420,15 +425,32 @@ class ApprovalProcessing extends Component
 
     public function rejectToCorrection($comments, $correctionPart){
         $transition = 'application_filled_incorrect';
-        $this->subject->update([
-            'correction_part' => $correctionPart,
-            'status' => BusinessStatus::CORRECTION
-        ]);
-        $this->doTransition($transition, ['status' => 'agree', 'comment' => $comments]);
-        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+        try {
+            DB::beginTransaction();
+            $this->subject->update([
+                'correction_part' => $correctionPart,
+                'status' => BusinessStatus::CORRECTION
+            ]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $comments]);
+            DB::commit();
+            $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error($exception);
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+        }
+
     }
 
     public function rejectToTransition($transition){
+        if (!isset($transition['data']['transition'])) {
+            Log::error('Transition not defined');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            return;
+        }
+
+        $transition = $transition['data']['transition'];
+
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
@@ -447,6 +469,13 @@ class ApprovalProcessing extends Component
 
     public function reject($transition)
     {
+        if (!isset($transition['data']['transition'])) {
+            Log::error('Transition not defined');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            return;
+        }
+
+        $transition = $transition['data']['transition'];
 
         if ($this->checkTransition('application_filled_incorrect')) {
             $this->subject->status = BusinessStatus::CORRECTION;
@@ -480,7 +509,7 @@ class ApprovalProcessing extends Component
     }
 
     protected $listeners = [
-        'approve', 'reject', 'rejectToCorrection'
+        'approve', 'reject', 'rejectToCorrection', 'rejectToTransition'
     ];
 
     public function confirmPopUpModal($action, $transition)

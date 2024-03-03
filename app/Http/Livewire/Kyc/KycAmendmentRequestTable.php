@@ -42,20 +42,18 @@ class KycAmendmentRequestTable extends DataTableComponent
 
     public function builder(): Builder
     {
+        $query = KycAmendmentRequest::query();
         if ($this->status == KycAmendmentRequest::PENDING) {
-            return KycAmendmentRequest::where('kyc_amendment_requests.status', KycAmendmentRequest::PENDING)->orderBy('kyc_amendment_requests.created_at', 'DESC')
-                ->with('kyc');
+            $query->where('kyc_amendment_requests.status', KycAmendmentRequest::PENDING);
         } else if ($this->status == KycAmendmentRequest::APPROVED) {
-            return KycAmendmentRequest::where('kyc_amendment_requests.status', KycAmendmentRequest::APPROVED)->orderBy('kyc_amendment_requests.created_at', 'DESC')
-                ->with('kyc');
+            $query->where('kyc_amendment_requests.status', KycAmendmentRequest::APPROVED);
         } else if ($this->status == KycAmendmentRequest::REJECTED) {
-            return KycAmendmentRequest::where('kyc_amendment_requests.status', KycAmendmentRequest::REJECTED)->orderBy('kyc_amendment_requests.created_at', 'DESC')
-                ->with('kyc');
+            $query->where('kyc_amendment_requests.status', KycAmendmentRequest::REJECTED);
         }else if ($this->status == KycAmendmentRequest::TEMPERED) {
-            return KycAmendmentRequest::where('kyc_amendment_requests.status', KycAmendmentRequest::TEMPERED)->orderBy('kyc_amendment_requests.created_at', 'DESC')
-                ->with('kyc');
+            $query->where('kyc_amendment_requests.status', KycAmendmentRequest::TEMPERED);
         }
-        return KycAmendmentRequest::query();
+        return $query->orderBy('kyc_amendment_requests.created_at', 'DESC')
+            ->with('kyc');
     }
 
     public function columns(): array

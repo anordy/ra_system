@@ -55,7 +55,6 @@ class ImmigrationController extends Controller
             ));
 
             $response = curl_exec($curl);
-            $err = curl_error($curl);
             if (curl_errno($curl)) {
                 $err = curl_error($curl);
                 Log::error($err);

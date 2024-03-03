@@ -18,9 +18,6 @@ trait VerificationTrait
 
     public function verify(PayloadInterface $object): bool
     {
-        if (config('app.env') == 'local') {
-            return true;
-        }
 
         $stringData = "";
 
@@ -70,9 +67,6 @@ trait VerificationTrait
 
     public function sign(PayloadInterface $object): bool
     {
-        if (config('app.env') == 'local') {
-            return true;
-        }
 
         $stringData = "";
 

@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Kyc;
 
 use App\Models\KycAmendmentRequest;
-use App\Models\TaxpayerAmendmentRequest;
 use App\Models\User;
 use Livewire\Component;
 

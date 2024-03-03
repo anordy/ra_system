@@ -8,7 +8,6 @@ use App\Models\Biometric;
 use App\Models\IDType;
 use App\Models\KYC;
 use App\Models\Taxpayer;
-use App\Traits\Taxpayer\KYCTrait;
 use App\Traits\VerificationTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +20,7 @@ use Livewire\Component;
 
 class EnrollFingerprint extends Component
 {
-    use KYCTrait, CustomAlert, VerificationTrait;
+    use CustomAlert, VerificationTrait;
 
     public $kyc;
     public $error;
@@ -93,14 +92,12 @@ class EnrollFingerprint extends Component
         }
         $kyc = $this->kyc;
 
-        if (config('app.env') != 'local') {
-            $biometrics = Biometric::where('reference_no', $kyc->id)
+        $biometrics = Biometric::where('reference_no', $kyc->id)
                 ->get();
 
-            if (count($biometrics) != 4) {
-                $this->customAlert('error', 'Enroll four fingers');
-                return;
-            }
+        if (count($biometrics) != 4) {
+            $this->customAlert('error', 'Enroll four fingers');
+            return;
         }
 
         if ($this->kyc->tin && !$this->kyc->tin_verified_at){

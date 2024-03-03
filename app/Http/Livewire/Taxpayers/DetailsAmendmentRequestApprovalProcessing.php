@@ -10,6 +10,7 @@ use App\Traits\VerificationTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
 use Livewire\Component;
@@ -36,8 +37,16 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
 
     public function approve($transition)
     {
+        if (!isset($transition['data']['transition'])) {
+            Log::error('Transition data not found');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            return;
+        }
         $transition = $transition['data']['transition'];
         try {
+            DB::beginTransaction();
+            $taxpayer = Taxpayer::findOrFail($this->taxpayer_id);
+
             if ($this->checkTransition('registration_manager_review')) {
 
                     $new_values = json_decode($this->amendmentRequest->new_values, true);
@@ -45,15 +54,10 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
                     $taxpayer_details = $new_values;
 
                     /** Update taxpayer information */
-
-                    $taxpayer = Taxpayer::findOrFail($this->taxpayer_id);
                     if ($this->verify($taxpayer)){
                         $taxpayer->update($taxpayer_details);
                         $this->sign($taxpayer);
                         $this->subject->status = TaxpayerAmendmentRequest::APPROVED;
-
-                        $message = 'We are writing to inform you that some of your ZIDRAS taxpayer personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
-                        $this->sendEmailToUser($taxpayer, $message);
                     } else {
                         $this->subject->status = TaxpayerAmendmentRequest::TEMPERED;
                         $this->doTransition('tempered_information_detected', ['status' => 'agree', 'comment' => $this->comments]);
@@ -62,8 +66,15 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
                     }
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+            DB::commit();
+
+            if ($this->subject->status = TaxpayerAmendmentRequest::APPROVED) {
+                $message = 'We are writing to inform you that some of your ZIDRAS taxpayer personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                $this->sendEmailToUser($taxpayer, $message);
+            }
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
@@ -71,21 +82,28 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
 
     public function reject($transition)
     {
+        if (!isset($transition['data']['transition'])) {
+            Log::error('Transition data not found');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            return;
+        }
         $transition = $transition['data']['transition'];
         $this->validate(['comments' => 'required|strip_tag']);
         $taxpayer = Taxpayer::findOrFail($this->taxpayer_id);
 
         try {
+            DB::beginTransaction();
             if ($this->checkTransition('registration_manager_reject')) {
                 $this->subject->status = TaxpayerAmendmentRequest::REJECTED;
-                
-                $message = 'We are writing to inform you that some of your Request for ZIDRAS taxpayer personal information has been rejected.';
-                $this->sendEmailToUser($taxpayer, $message);
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+            DB::commit();
+            $message = 'We are writing to inform you that some of your Request for ZIDRAS taxpayer personal information has been rejected.';
+            $this->sendEmailToUser($taxpayer, $message);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::commit();
             Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
@@ -117,7 +135,7 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
     {
         $smsPayload = [
             'phone' => $data->phone,
-            'message' => 'Hello, {$data->first_name}. {$message}',
+            'message' => "Hello, {$data->first_name}. {$message}",
         ];
 
         $emailPayload = [

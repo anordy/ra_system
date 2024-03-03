@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Biometric;
 use App\Models\KYC;
 use App\Models\Taxpayer;
-use App\Traits\Taxpayer\KYCTrait;
 use App\Traits\VerificationTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +19,7 @@ use Illuminate\Support\Str;
 
 class RegistrationsController extends Controller
 {
-    use KYCTrait, VerificationTrait;
+    use VerificationTrait;
 
     public function index()
     {

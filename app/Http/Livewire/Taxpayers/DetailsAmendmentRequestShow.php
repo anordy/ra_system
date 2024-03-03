@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Taxpayers;
 use App\Models\Taxpayer;
 use App\Models\TaxpayerAmendmentRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class DetailsAmendmentRequestShow extends Component
@@ -17,7 +18,13 @@ class DetailsAmendmentRequestShow extends Component
     public $createdBy;
 
     public function mount($id){
-        $this->amendmentRequest = TaxpayerAmendmentRequest::findOrFail(decrypt($id));
+        try {
+            $id = decrypt($id);
+        } catch (\Exception $exception) {
+            Log::error($exception);
+            abort(500);
+        }
+        $this->amendmentRequest = TaxpayerAmendmentRequest::findOrFail($id);
         $this->createdBy = User::findorFail($this->amendmentRequest->created_by)->fullname();
         $this->old_values = json_decode($this->amendmentRequest->old_values);
         $this->taxpayer_id = $this->amendmentRequest->taxpayer_id;
