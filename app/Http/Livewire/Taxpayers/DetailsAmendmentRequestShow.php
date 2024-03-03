@@ -20,16 +20,15 @@ class DetailsAmendmentRequestShow extends Component
     public function mount($id){
         try {
             $id = decrypt($id);
+            $this->amendmentRequest = TaxpayerAmendmentRequest::findOrFail($id);
+            $this->createdBy = User::findorFail($this->amendmentRequest->created_by)->fullname();
+            $this->old_values = json_decode($this->amendmentRequest->old_values);
+            $this->taxpayer_id = $this->amendmentRequest->taxpayer_id;
+            $this->new_values = json_decode($this->amendmentRequest->new_values);
         } catch (\Exception $exception) {
             Log::error($exception);
-            abort(500);
+            abort(500, 'Something went wrong, please contact your system administrator.');
         }
-        $this->amendmentRequest = TaxpayerAmendmentRequest::findOrFail($id);
-        $this->createdBy = User::findorFail($this->amendmentRequest->created_by)->fullname();
-        $this->old_values = json_decode($this->amendmentRequest->old_values);
-        $this->taxpayer_id = $this->amendmentRequest->taxpayer_id;
-        $this->new_values = json_decode($this->amendmentRequest->new_values);
-
     }
 
     public function render()

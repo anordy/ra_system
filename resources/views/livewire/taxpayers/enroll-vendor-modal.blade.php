@@ -7,8 +7,6 @@
             text-align: center;
         }
 
-
-
         img {
             vertical-align: middle;
         }

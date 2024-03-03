@@ -37,17 +37,16 @@ class BioEnrollModal extends Component
     {
         try {
             $this->kyc = KYC::find(decrypt($kyc));
+
+            if(is_null($this->kyc)){
+                abort(404);
+            }
+            $this->finger = $finger;
+            $this->hand = $hand;
         } catch (\Exception $exception) {
             Log::error($exception);
-            abort(500);
+            abort(500, 'Something went wrong, please contact your system administrator.');
         }
-
-        if(is_null($this->kyc)){
-            abort(404);
-        }
-        $this->finger = $finger;
-        $this->hand = $hand;
-
     }
 
     public function submit(){

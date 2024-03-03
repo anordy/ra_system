@@ -28,11 +28,16 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
 
     public function mount($modelName, $modelId, $amendmentRequest)
     {
-        $this->modelName = $modelName;
-        $this->modelId = decrypt($modelId);
-        $this->amendmentRequest = $amendmentRequest;
-        $this->taxpayer_id = $amendmentRequest->taxpayer_id;
-        $this->registerWorkflow($modelName, $this->modelId);
+        try {
+            $this->modelName = $modelName;
+            $this->modelId = decrypt($modelId);
+            $this->amendmentRequest = $amendmentRequest;
+            $this->taxpayer_id = $amendmentRequest->taxpayer_id;
+            $this->registerWorkflow($modelName, $this->modelId);
+        } catch (\Exception $exception){
+            Log::error($exception);
+            abort(500, 'Something went wrong, please contact your system administrator.');
+        }
     }
 
     public function approve($transition)
@@ -133,19 +138,21 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
 
     public function sendEmailToUser($data, $message)
     {
-        $smsPayload = [
-            'phone' => $data->phone,
-            'message' => "Hello, {$data->first_name}. {$message}",
-        ];
+        if ($data && $message){
+            $smsPayload = [
+                'phone' => $data->phone,
+                'message' => "Hello, {$data->first_name}. {$message}",
+            ];
 
-        $emailPayload = [
-            'email' => $data->email,
-            'userName' => $data->first_name,
-            'message' => $message,
-        ];
+            $emailPayload = [
+                'email' => $data->email,
+                'userName' => $data->first_name,
+                'message' => $message,
+            ];
 
-        event(new SendMail('taxpayer-amendment-notification', $emailPayload));
-        event(new SendSms('taxpayer-amendment-notification', $smsPayload));
+            event(new SendMail('taxpayer-amendment-notification', $emailPayload));
+            event(new SendSms('taxpayer-amendment-notification', $smsPayload));
+        }
     }
 
     public function render()

@@ -49,55 +49,60 @@ class KycAmendmentRequestAddModal extends Component
 
     public function mount($id)
     {
-        $this->kyc = KYC::find(decrypt($id));
-        if(is_null($this->kyc)){
-            abort(404);
-        }
-        $this->kyc_id = $this->kyc->id;
-        $this->first_name = $this->kyc->first_name;
-        $this->middle_name = $this->kyc->middle_name;
-        $this->last_name = $this->kyc->last_name;
-        $this->email = $this->kyc->email;
-        $this->mobile = $this->kyc->mobile;
-        $this->alt_mobile = $this->kyc->alt_mobile;
-        $this->physical_address = $this->kyc->physical_address;
-        $this->is_citizen = $this->kyc->is_citizen;
-        $this->nida = $this->kyc->nida_no;
-        $this->passportNo = $this->kyc->passport_no;
-        $this->permitNumber = $this->kyc->permit_number;
-        $this->nationality = $this->kyc->country_id;
-        $this->zanid = $this->kyc->zanid_no;
-        $this->region = $this->kyc->region_id;
-        $this->district = $this->kyc->district_id;
-        $this->ward = $this->kyc->ward_id;
-        $this->street = $this->kyc->street_id;
-        $this->id_type = $this->kyc->id_type;
-        $this->countries = Country::select('id', 'nationality')->where('name', '!=', Country::TANZANIA)->where('is_approved', DualControl::APPROVE)->get();
-        $this->regions = Region::where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
-        $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
-        $this->wards = Ward::where('district_id', $this->district)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
-        $this->streets = Street::where('ward_id', $this->ward)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+        try {
+            $this->kyc = KYC::find(decrypt($id));
+            if(is_null($this->kyc)){
+                abort(404);
+            }
+            $this->kyc_id = $this->kyc->id;
+            $this->first_name = $this->kyc->first_name;
+            $this->middle_name = $this->kyc->middle_name;
+            $this->last_name = $this->kyc->last_name;
+            $this->email = $this->kyc->email;
+            $this->mobile = $this->kyc->mobile;
+            $this->alt_mobile = $this->kyc->alt_mobile;
+            $this->physical_address = $this->kyc->physical_address;
+            $this->is_citizen = $this->kyc->is_citizen;
+            $this->nida = $this->kyc->nida_no;
+            $this->passportNo = $this->kyc->passport_no;
+            $this->permitNumber = $this->kyc->permit_number;
+            $this->nationality = $this->kyc->country_id;
+            $this->zanid = $this->kyc->zanid_no;
+            $this->region = $this->kyc->region_id;
+            $this->district = $this->kyc->district_id;
+            $this->ward = $this->kyc->ward_id;
+            $this->street = $this->kyc->street_id;
+            $this->id_type = $this->kyc->id_type;
+            $this->countries = Country::select('id', 'nationality')->where('name', '!=', Country::TANZANIA)->where('is_approved', DualControl::APPROVE)->get();
+            $this->regions = Region::where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->wards = Ward::where('district_id', $this->district)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->streets = Street::where('ward_id', $this->ward)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
 
-        $this->old_values = [
-            'first_name' => $this->first_name,
-            'middle_name' => $this->middle_name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'mobile' => $this->mobile,
-            'alt_mobile' => $this->alt_mobile,
-            'physical_address' => $this->physical_address,
-            'region_id' => $this->region,
-            'district_id' => $this->district,
-            'ward_id' => $this->ward,
-            'street_id' => $this->street,
-            'is_citizen' => $this->is_citizen,
-            'nida_no' => $this->nida,
-            'zanid_no' => $this->zanid,
-            'permit_number' => $this->permitNumber,
-            'passport_no' => $this->passportNo,
-            'country_id' => $this->nationality,
-            'id_type' => $this->id_type,
-        ];
+            $this->old_values = [
+                'first_name' => $this->first_name,
+                'middle_name' => $this->middle_name,
+                'last_name' => $this->last_name,
+                'email' => $this->email,
+                'mobile' => $this->mobile,
+                'alt_mobile' => $this->alt_mobile,
+                'physical_address' => $this->physical_address,
+                'region_id' => $this->region,
+                'district_id' => $this->district,
+                'ward_id' => $this->ward,
+                'street_id' => $this->street,
+                'is_citizen' => $this->is_citizen,
+                'nida_no' => $this->nida,
+                'zanid_no' => $this->zanid,
+                'permit_number' => $this->permitNumber,
+                'passport_no' => $this->passportNo,
+                'country_id' => $this->nationality,
+                'id_type' => $this->id_type,
+            ];
+        } catch (\Exception $exception){
+            Log::error($exception);
+            abort(500, 'Something went wrong, please contact your system administrator for support.');
+        }
     }
 
     public function updated($propertyName)
@@ -127,12 +132,12 @@ class KycAmendmentRequestAddModal extends Component
     protected function rules()
     {
         return  [
-            'first_name' => 'required|strip_tag',
-            'middle_name' => 'nullable|strip_tag',
-            'last_name' => 'required|strip_tag',
+            'first_name' => 'required|alpha',
+            'middle_name' => 'nullable|alpha',
+            'last_name' => 'required|alpha',
             'email' => 'nullable:email|unique:kycs,email,' . $this->kyc->id . ',id',
-            'mobile' => 'required|unique:kycs,mobile,'. $this->kyc->id . ',id|size:10',
-            'alt_mobile' => 'nullable|size:10',
+            'mobile' => 'required|unique:kycs,mobile,'. $this->kyc->id . ',id|phone_no',
+            'alt_mobile' => 'nullable|phone_no',
             'physical_address' => 'required|strip_tag',
             'region' => 'required|numeric|exists:regions,id',
             'district' => 'required|numeric|exists:districts,id',
@@ -224,8 +229,10 @@ class KycAmendmentRequestAddModal extends Component
 
             DB::commit();
 
-            $message = 'We are writing to inform you that some of your ZIDRAS kyc personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
-            $this->sendEmailToUser($this->kyc, $message);
+            if ($kyc_amendment){
+                $message = 'We are writing to inform you that some of your ZIDRAS kyc personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                $this->sendEmailToUser($this->kyc, $message);
+            }
 
             session()->flash('success', 'Amendment details submitted. Waiting approval.');
             $this->redirect(route('kycs-amendment.index'));
@@ -239,18 +246,20 @@ class KycAmendmentRequestAddModal extends Component
 
     public function sendEmailToUser($data, $message)
     {
-        $smsPayload = [
-            'phone' => $data->phone,
-            'message' => 'Hello, {$data->first_name}. {$message}',
-        ];
+        if ($message && $data){
+            $smsPayload = [
+                'phone' => $data->phone,
+                'message' => 'Hello, {$data->first_name}. {$message}',
+            ];
 
-        $emailPayload = [
-            'email' => $data->email,
-            'userName' => $data->first_name,
-            'message' => $message,
-        ];
+            $emailPayload = [
+                'email' => $data->email,
+                'userName' => $data->first_name,
+                'message' => $message,
+            ];
 
-        event(new SendSms('taxpayer-amendment-notification', $smsPayload));
-        event(new SendMail('taxpayer-amendment-notification', $emailPayload));
+            event(new SendSms('taxpayer-amendment-notification', $smsPayload));
+            event(new SendMail('taxpayer-amendment-notification', $emailPayload));
+        }
     }
 }

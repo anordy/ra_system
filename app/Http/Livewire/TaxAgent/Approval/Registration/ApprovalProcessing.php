@@ -37,12 +37,10 @@ class ApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
-//        todo: encrypt modelID
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
         $this->agent = TaxAgent::findOrFail($this->subject->id);
-
     }
 
 
@@ -54,11 +52,17 @@ class ApprovalProcessing extends Component
         }
 
         $type = 'Registration Fee';
-//        // todo: check if queried objects exist
         $duration = TaPaymentConfiguration::select('id', 'category', 'duration', 'is_citizen')
-            ->where('category', $type)->where('is_citizen', $this->agent->taxpayer->is_citizen)->first();
+            ->where('category', $type)->where('is_citizen', $this->agent->taxpayer->is_citizen)
+            ->first();
+
         if ($duration == null) {
             $this->customAlert('error', 'The duration for consultant registration does not exist');
+            return;
+        }
+
+        if (!isset($transition['data']['transition'])){
+            $this->customAlert('error', 'Something went wrong, please contact your system administrator for support.');
             return;
         }
 

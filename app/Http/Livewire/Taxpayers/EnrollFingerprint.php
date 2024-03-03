@@ -36,20 +36,25 @@ class EnrollFingerprint extends Component
 
     public function mount()
     {
-        // Allow unverified passport and nida number
-        if ($this->kyc->zanid_verified_at || empty($this->kyc->passport_verified_at) || empty($this->kyc->nida_verified_at)) {
-            $this->userVerified = true;
-        } else {
-            $this->userVerified = false;
-            $this->verifyingUser = true;
-        }
+        try {
+            // Allow unverified passport and nida number
+            if ($this->kyc->zanid_verified_at || empty($this->kyc->passport_verified_at) || empty($this->kyc->nida_verified_at)) {
+                $this->userVerified = true;
+            } else {
+                $this->userVerified = false;
+                $this->verifyingUser = true;
+            }
 
-        $count = Biometric::where('reference_no', $this->kyc->id)
-            ->where('template', '!=', null)
-            ->count();
+            $count = Biometric::where('reference_no', $this->kyc->id)
+                ->where('template', '!=', null)
+                ->count();
 
-        if ($count){
-            $this->selectedStep = 'biometric';
+            if ($count){
+                $this->selectedStep = 'biometric';
+            }
+        } catch (\Exception $exception){
+            Log::error($exception);
+            abort(500, 'Something went wrong, please contact your system administrator.');
         }
     }
 
@@ -90,7 +95,11 @@ class EnrollFingerprint extends Component
         if (!Gate::allows('kyc_view')) {
             abort(403);
         }
-        $kyc = $this->kyc;
+
+        if (!$kyc = $this->kyc){
+            $this->customAlert('error', 'Something went wrong, please contact your system administrator for support.');
+            return;
+        }
 
         $biometrics = Biometric::where('reference_no', $kyc->id)
                 ->get();

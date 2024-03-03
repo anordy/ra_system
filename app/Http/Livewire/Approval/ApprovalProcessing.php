@@ -70,59 +70,64 @@ class ApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
-        $this->modelName = $modelName;
-        $this->modelId   = decrypt($modelId);
-        $this->registerWorkflow($modelName, $this->modelId);
-        $this->isiiciList = ISIC1::all();
-        $this->taxTypes   = TaxType::main()->get();
+        try {
+            $this->modelName = $modelName;
+            $this->modelId   = decrypt($modelId);
+            $this->registerWorkflow($modelName, $this->modelId);
+            $this->isiiciList = ISIC1::all();
+            $this->taxTypes   = TaxType::main()->get();
 
-        $this->isiic_i = $this->subject->isiic_i ?? null;
+            $this->isiic_i = $this->subject->isiic_i ?? null;
 
-        if ($this->isiic_i) {
-            $this->isiiciChange($this->isiic_i);
+            if ($this->isiic_i) {
+                $this->isiiciChange($this->isiic_i);
+            }
+            $this->isiic_ii = $this->subject->isiic_ii ?? null;
+            if ($this->isiic_ii) {
+                $this->isiiciiChange($this->isiic_ii);
+            }
+            $this->isiic_iii = $this->subject->isiic_iii ?? null;
+
+            if ($this->isiic_iii) {
+                $this->isiiciiiChange($this->isiic_iii);
+            }
+
+            $this->effectiveDate = $this->subject->headquarter->effective_date ? $this->subject->headquarter->effective_date->format('Y-m-d') : null;
+            $this->selectedTaxRegion = $this->subject->headquarter->tax_region_id;
+
+            $this->isiic_iv = $this->subject->isiic_iv ?? null;
+
+            $this->taxDepartment = TaxDepartment::all();
+
+            $this->vat_id = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
+
+            foreach ($this->subject->taxTypes as $value) {
+                $subVat = $value->pivot->sub_vat_id ? SubVat::where('id', $value->pivot->sub_vat_id)->where('is_approved', 1)->firstOrFail('name'): null;
+                $this->selectedTaxTypes[] = [
+                    'currency'    => $value->pivot->currency ?? '',
+                    'tax_type_id' => $value->id,
+                    'sub_vat_id' => $value->pivot->sub_vat_id,
+                    'sub_vat_name' => $value->pivot->sub_vat_id ? $subVat['name'] : null,
+                    'show_hide_options'=> false,
+                ];
+            }
+            if (count($this->selectedTaxTypes) < 1) {
+                $this->selectedTaxTypes[] = [
+                    'tax_type_id' => '',
+                    'currency'    => '',
+                    'sub_vat_id'  => '',
+                    'sub_vat_name'  => '',
+                    'show_hide_options' => true
+                ];
+            }
+
+            $this->directors = BusinessDirector::where('business_id', $this->subject->id)->get() ?? [];
+            $this->shareholders = BusinessShareholder::where('business_id', $this->subject->id)->get() ?? [];
+            $this->shares = BusinessShare::where('business_id', $this->subject->id)->get() ?? [];
+        } catch (\Exception $exception){
+            Log::error($exception);
+            abort(500, 'Something went wrong, please contact your system administrator for support.');
         }
-        $this->isiic_ii = $this->subject->isiic_ii ?? null;
-        if ($this->isiic_ii) {
-            $this->isiiciiChange($this->isiic_ii);
-        }
-        $this->isiic_iii = $this->subject->isiic_iii ?? null;
-
-        if ($this->isiic_iii) {
-            $this->isiiciiiChange($this->isiic_iii);
-        }
-
-        $this->effectiveDate = $this->subject->headquarter->effective_date ? $this->subject->headquarter->effective_date->format('Y-m-d') : null;
-        $this->selectedTaxRegion = $this->subject->headquarter->tax_region_id;
-
-        $this->isiic_iv = $this->subject->isiic_iv ?? null;
-
-        $this->taxDepartment = TaxDepartment::all();
-
-        $this->vat_id = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
-
-        foreach ($this->subject->taxTypes as $value) {
-            $subVat = $value->pivot->sub_vat_id ? SubVat::where('id', $value->pivot->sub_vat_id)->where('is_approved', 1)->firstOrFail('name'): null;
-            $this->selectedTaxTypes[] = [
-                'currency'    => $value->pivot->currency ?? '',
-                'tax_type_id' => $value->id,
-                'sub_vat_id' => $value->pivot->sub_vat_id,
-                'sub_vat_name' => $value->pivot->sub_vat_id ? $subVat['name'] : null,
-                'show_hide_options'=> false,
-            ];
-        }
-        if (count($this->selectedTaxTypes) < 1) {
-            $this->selectedTaxTypes[] = [
-                'tax_type_id' => '',
-                'currency'    => '',
-                'sub_vat_id'  => '',
-                'sub_vat_name'  => '',
-                'show_hide_options' => true
-            ];
-        }
-
-        $this->directors = BusinessDirector::where('business_id', $this->subject->id)->get() ?? [];
-        $this->shareholders = BusinessShareholder::where('business_id', $this->subject->id)->get() ?? [];
-        $this->shares = BusinessShare::where('business_id', $this->subject->id)->get() ?? [];
     }
 
     public function selectedDepartment($value)
@@ -257,6 +262,11 @@ class ApprovalProcessing extends Component
 
     public function approve($transition)
     {
+        if (!isset($transition['data']['transition'])){
+            $this->customAlert('error', 'Something went wrong, please contact your system administrator for support');
+            return;
+        }
+
         $transition = $transition['data']['transition'];
         if ($this->checkTransition('registration_officer_review')) {
 
