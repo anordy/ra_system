@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Rules\NidaRule;
+use App\Rules\ValidPhoneNo;
 use Livewire\Livewire;
 use App\Rules\StripTag;
 use App\Services\Captcha\Captcha;
@@ -46,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
         Livewire::component('drivers-license.wizard.license-details-step', LicenseDetailsStep::class);
         Validator::extend(StripTag::handle(), StripTag::class);
         Validator::extend(NidaRule::handle(), NidaRule::class);
+        Validator::extend(ValidPhoneNo::name(), ValidPhoneNo::class);
         Validator::extend('max_file_name_length', function ($attribute, $value, $parameters, $validator) {
             return (new MaxFileNameLengthRule($parameters[0]))->passes($attribute, $value);
         });
