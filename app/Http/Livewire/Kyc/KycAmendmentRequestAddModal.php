@@ -138,7 +138,7 @@ class KycAmendmentRequestAddModal extends Component
             'district' => 'required|numeric|exists:districts,id',
             'ward' => 'required|numeric|exists:wards,id',
             'street' => 'required|numeric|exists:streets,id',
-            'nida' => 'exclude_if:is_citizen,0|required_without:zanid|nullable|digits:20|unique:kycs,nida_no,' . $this->kyc->id . ',id|unique:taxpayers,nida_no',
+            'nida' => 'exclude_if:is_citizen,0|required_without:zanid|nullable|nida|unique:kycs,nida_no,' . $this->kyc->id . ',id|unique:taxpayers,nida_no',
             'zanid' => 'exclude_if:is_citizen,0|required_without:nida|nullable|digits:9|unique:kycs,zanid_no,' . $this->kyc->id . ',id|unique:taxpayers,zanid_no',
             'nationality' => 'required_if:is_citizen,0|exists:countries,id',
             'passportNo' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:kycs,passport_no,' . $this->kyc->id . ',id|unique:taxpayers,passport_no|digits_between:8,15',
