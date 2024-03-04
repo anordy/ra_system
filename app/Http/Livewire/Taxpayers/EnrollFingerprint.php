@@ -5,9 +5,8 @@ namespace App\Http\Livewire\Taxpayers;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Biometric;
-use App\Models\IDType;
-use App\Models\KYC;
 use App\Models\Taxpayer;
+use App\Traits\CustomAlert;
 use App\Traits\VerificationTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use App\Traits\CustomAlert;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class EnrollFingerprint extends Component
@@ -122,18 +121,13 @@ class EnrollFingerprint extends Component
         DB::beginTransaction();
 
         try {
-
             $kyc->biometric_verified_at = Carbon::now()->toDateTimeString();
             $kyc->verified_by = Auth::id();
-            $kyc->save(); // todo: unless the exception tha would occur below will not affect this record, i suggest to put this inside trx
+            $kyc->save();
             $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at', 'verified_by', 'comments'])->toArray();
-            $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
-            $password = substr(str_shuffle($permitted_chars), 0, 8);
-            $data['password'] = Hash::make($password);
 
-            if (config('app.env') == 'local') {
-                $data['password'] = Hash::make('password');
-            }
+            $password = Str::random(8);
+            $data['password'] = Hash::make($password);
 
             $existingTaxpayer = Taxpayer::query()
                 ->where('mobile', $data['mobile'])
