@@ -1,16 +1,7 @@
 <div>
-    <style>
-        .box {
-            width: 256px;
-            height: 360px;
-            border: 1px solid #000;
-            text-align: center;
-        }
-
-        img {
-            vertical-align: middle;
-        }
-    </style>
+    @push('styles')
+        <link href="{{ asset('css/registration.css') }}" rel="stylesheet">
+    @endpush
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -37,7 +28,7 @@
 
                     <div class="col-md-12">
                         <p align="center">
-                        <table align="center" bordercolor="#000000" style="width:256px;height:360px;" border="1"
+                        <table align="center" bordercolor="#000000" class="rg-table" border="1"
                             cellspacing="0" cellpadding="1">
                             <tbody>
                                 <tr>
@@ -45,10 +36,10 @@
                                         <div class="box">
                                             @if ($image)
                                                 <img src="data:image/png;base64,{{ $image }}" alt=""
-                                                    align="middle" />
+                                                    class="vertical-img" />
                                             @else
-                                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAYAAABIdFAMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHhJREFUeNo8zjsOxCAMBFB/KEAUFFR0Cbng3nQPw68ArZdAlOZppPFIBhH5EAB8b+Tlt9MYQ6i1BuqFaq1CKSVcxZ2Acs6406KUgpt5/LCKuVgz5BDCSb13ZO99ZOdcZGvt4mJjzMVKqcha68iIePB86GAiOv8CDADlIUQBs7MD3wAAAABJRU5ErkJggg=="
-                                                    style="width:100%;" align="middle" />
+                                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAYAAABIdFAMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHhJREFUeNo8zjsOxCAMBFB/KEAUFFR0Cbng3nQPw68ArZdAlOZppPFIBhH5EAB8b+Tlt9MYQ6i1BuqFaq1CKSVcxZ2Acs6406KUgpt5/LCKuVgz5BDCSb13ZO99ZOdcZGvt4mJjzMVKqcha68iIePB86GAiOv8CDADlIUQBs7MD3wAAAABJRU5ErkJggg=="  class="vertical-img"
+                                                     align="middle" />
                                             @endif
                                         </div>
                                     </td>
