@@ -78,6 +78,18 @@
         .mv-details-wrapper tr td:first-child {
             padding: 8px;
         }
+
+        .qr-code {
+            overflow: hidden;
+            position:absolute;
+            top: 70%;
+            right: 1%;
+            background: white;
+            border-radius: 5px;
+            height: 180px;
+            width: 180px;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
@@ -201,6 +213,10 @@ The vehicle described above has been {{$deregistration->reason->name ?? 'N/A'}}
     <br>
     Issued by Zanzibar Revenue Authority and signed by <strong>{{strtoupper(auth()->user()->fullname())}}</strong>
 
+</div>
+
+<div class="qr-code">
+    <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
 </div>
 
 </body>

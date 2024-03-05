@@ -112,7 +112,11 @@
                         {{strtoupper($motor_vehicle->taxpayer->fullname ?? 'N/A')}}
                     @endif
             @else
-                {{strtoupper($motor_vehicle->tin->fullname ?? $motor_vehicle->tin->taxpayer_name )}}
+                @if($motor_vehicle->tin)
+                    {{strtoupper($motor_vehicle->tin->fullname ?? $motor_vehicle->tin->taxpayer_name )}}
+                @else
+                    {{ 'N/A'  }}
+                @endif
             @endif
         @else
             {{strtoupper($motor_vehicle->taxpayer->fullname ?? 'N/A')}}

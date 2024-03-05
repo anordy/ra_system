@@ -20,6 +20,7 @@ class TaxRegionsSeeder extends Seeder
 
         $regions = [
             [
+                'department_id' => null,
                 'code' => 'headquarter',
                 'name' => 'Headquarter',
                 'prefix' => '01',
@@ -99,7 +100,18 @@ class TaxRegionsSeeder extends Seeder
         ];
 
         foreach ($regions as $region) {
-            TaxRegion::create($region);
+            TaxRegion::updateOrCreate(
+                [
+                    'code' => $region['code']
+                ],
+                [
+                    'department_id' => $region['department_id'],
+                    'code' => $region['code'],
+                    'name' => $region['name'],
+                    'prefix' => $region['prefix'],
+                    'location' => $region['location'],
+                ]
+            );
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BusinessLocation;
+use App\Models\MvrDeregistration;
 use App\Models\TaxAgent;
 use App\Models\TaxType;
 use App\Models\WithholdingAgent;
@@ -123,6 +124,27 @@ class QRCodeCheckController extends Controller
             // "billRsv01" => "ZANZIBAR REVENUE AUTHORITY | {$name}"
         ];
         
+        return view('qr-check.index', ['code' => $code]);
+    }
+
+    public function mvrDeregistrationCertificate($id)
+    {
+        $id = base64_decode($id);
+
+        if (!$id) {
+            return view('qr-check.error');
+        }
+
+        $deRegistration = MvrDeregistration::findOrFail($id);
+
+        $code = [
+            'Chassis Number' => $deRegistration->registration->chassis->chassis_number,
+            'Model' => $deRegistration->registration->chassis->model_type ?? 'N/A',
+            'Plate Number' => $deRegistration->registration->plate_number,
+            'Registration Number' => $deRegistration->registration->registration_number,
+            'Date of Deregistration' => Carbon::create($deRegistration->deregistered_at)->format('d M, Y'),
+        ];
+
         return view('qr-check.index', ['code' => $code]);
     }
 }
