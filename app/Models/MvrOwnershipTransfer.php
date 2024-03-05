@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -39,7 +40,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class MvrOwnershipTransfer extends Model
 {
-	use SoftDeletes;
+	use SoftDeletes, WorkflowTrait;
 	protected $table = 'mvr_ownership_transfer';
 
 	protected $casts = [
@@ -78,12 +79,10 @@ class MvrOwnershipTransfer extends Model
 	{
 		return $this->belongsTo(Taxpayer::class, 'owner_taxpayer_id');
 	}
-
-    public function agent()
-    {
-        return $this->belongsTo(MvrAgent::class, 'mvr_agent_id');
-    }
-
+	public function previous_owner()
+	{
+		return $this->belongsTo(Taxpayer::class, 'agent_taxpayer_id');
+	}
 	public function motor_vehicle()
 	{
 		return $this->belongsTo(MvrMotorVehicle::class,'mvr_motor_vehicle_id');

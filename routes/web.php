@@ -158,7 +158,6 @@ Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
     Route::get('/taxagents-certificate/{id}', [QRCodeCheckController::class, 'taxAgentsCertificate'])->name('taxagents.certificate');
     Route::get('/invoice/{id}', [QRCodeCheckController::class, 'invoice'])->name('invoice');
     Route::get('/transfer/{billId}', [QRCodeCheckController::class, 'transfer'])->name('transfer');
-    Route::get('/mvr/de-registration/{id}', [QRCodeCheckController::class, 'mvrDeregistrationCertificate'])->name('mvr.de-registration');
 });
 
 Route::middleware('auth')->group(function () {
@@ -660,11 +659,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/registrations/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('registration.show');
         Route::get('/registrations/certificate/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('registration.certificate');
 
-        Route::get('/de-registrations', [DeRegistrationController::class, 'index'])->name('de-registration.index');
-        Route::get('/de-registrations/{id}', [DeRegistrationController::class, 'show'])->name('de-registration.show');
-        Route::get('/de-registrations/certificate/{id}', [DeRegistrationController::class, 'deRegistrationCertificate'])->name('de-registration.certificate');
-        Route::get('/de-registrations/file/{path}', [DeRegistrationController::class, 'file'])->name('de-registration.file');
-
         /**
          * Registration Status Change
          */
@@ -673,12 +667,12 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/registration/status/correct/{id}', [\App\Http\Controllers\MVR\MotorVehicleRegistrationStatusChangeController::class, 'update'])->name('registration.status.update');
 
         /**
-         * Particulars  Change
+         * Ownership Transfer
          */
-        Route::get('/registration/particular/index', [\App\Http\Controllers\MVR\RegistrationParticularChangeController::class, 'index'])->name('registration.particular.index');
-        Route::get('/registration/particular/show/{id}', [\App\Http\Controllers\MVR\RegistrationParticularChangeController::class, 'show'])->name('registration.particular.show');
-        Route::get('/registration/particular/correct/{id}', [\App\Http\Controllers\MVR\RegistrationParticularChangeController::class, 'update'])->name('registration.particular.update');
-
+        Route::get('/transfer-ownership', [OwnershipTransferController::class, 'index'])->name('transfer-ownership');
+        Route::get('/transfer-ownership/approve/{id}', [OwnershipTransferController::class, 'approve'])->name('transfer-ownership.approve');
+        Route::get('/transfer-ownership/reject/{id}', [OwnershipTransferController::class, 'reject'])->name('transfer-ownership.reject');
+        Route::get('/transfer-ownership/{id}', [OwnershipTransferController::class, 'show'])->name('transfer-ownership.show');
 
 
         // TODO: Remove unused routes
@@ -689,10 +683,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/certificate-of-worth/{id}', [MotorVehicleRegistrationController::class, 'printCertificateOfWorth'])->name('certificate-of-worth');
         Route::get('/de-registration-certificate/{id}', [MotorVehicleRegistrationController::class, 'deRegistrationCertificate'])->name('de-registration-certificate');
         Route::get('/submit-inspection/{id}', [MotorVehicleRegistrationController::class, 'submitInspection'])->name('submit-inspection');
-        Route::get('/transfer-ownership', [OwnershipTransferController::class, 'index'])->name('transfer-ownership');
-        Route::get('/transfer-ownership/approve/{id}', [OwnershipTransferController::class, 'approve'])->name('transfer-ownership.approve');
-        Route::get('/transfer-ownership/reject/{id}', [OwnershipTransferController::class, 'reject'])->name('transfer-ownership.reject');
-        Route::get('/transfer-ownership/{id}', [OwnershipTransferController::class, 'show'])->name('transfer-ownership.show');
         Route::get('/de-register-requests', [DeRegistrationController::class, 'index'])->name('de-register-requests');
         Route::get('/de-register-requests/approve/{id}', [DeRegistrationController::class, 'approve'])->name('de-register-requests.approve');
         Route::get('/de-register-requests/reject/{id}', [DeRegistrationController::class, 'reject'])->name('de-register-requests.reject');

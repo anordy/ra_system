@@ -9,9 +9,11 @@ use App\Http\Controllers\Controller;
 use App\Models\MvrMotorVehicleOwner;
 use App\Models\MvrOwnershipStatus;
 use App\Models\MvrOwnershipTransfer;
+use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationChangeRequest;
 use App\Models\MvrRequestStatus;
 use App\Models\MvrTransferFee;
+use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
@@ -33,7 +35,7 @@ class OwnershipTransferController extends Controller
         if (!Gate::allows('motor-vehicle-transfer-ownership')) {
             abort(403);
         }
-        return view('mvr.ownership-transfer-index');
+        return view('mvr.transfer.index');
     }
 
     /**
@@ -48,8 +50,11 @@ class OwnershipTransferController extends Controller
         $id = decrypt($id);
         /** @var MvrRegistrationChangeRequest $change_req */
         $request = MvrOwnershipTransfer::query()->findOrFail($id);
-        $motor_vehicle = $request->motor_vehicle;
-        return view('mvr.ownership-transfer-show', compact('motor_vehicle', 'request'));
+        $motor_vehicle = MvrRegistration::findOrFail($request->mvr_motor_vehicle_id);
+        $newOwner = Taxpayer::with('region:id,name', 'district:id,name', 'ward:id,name', 'street:id,name')->findOrFail($request->owner_taxpayer_id);
+        $previousOwner = Taxpayer::with('region:id,name', 'district:id,name', 'ward:id,name', 'street:id,name')->findOrfail($request->agent_taxpayer_id);
+
+        return view('mvr.transfer.show', compact('motor_vehicle', 'request','newOwner','previousOwner'));
     }
 
     public function search($type, $number)
