@@ -48,7 +48,7 @@ class OwnershipTransferController extends Controller
             abort(403);
         }
         $id = decrypt($id);
-        /** @var MvrRegistrationChangeRequest $change_req */
+
         $request = MvrOwnershipTransfer::query()->findOrFail($id);
         $motor_vehicle = MvrRegistration::findOrFail($request->mvr_motor_vehicle_id);
         $newOwner = Taxpayer::with('region:id,name', 'district:id,name', 'ward:id,name', 'street:id,name')->findOrFail($request->owner_taxpayer_id);

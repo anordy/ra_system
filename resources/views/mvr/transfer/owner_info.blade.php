@@ -2,7 +2,7 @@
 
     <div class="card-body">
             <div class="card-header bg-white font-weight-bold">
-                New Owner Registration Details
+                @if ($owner == 'previous') Previous @else New @endif Owner  Details
             </div>
             <div class="card-body">
                 <div class="row my-2">

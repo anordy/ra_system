@@ -25,8 +25,8 @@
     <div class="tab-content bg-white border shadow-sm" id="myTabContent">
         <div class="tab-pane fade p-3 show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             @include('mvr.transfer.mvr_info', ['reg' => $motor_vehicle])
-            @include('mvr.transfer.previous_owner_info', ['taxPayer' => $previousOwner])
-            @include('mvr.transfer.new_owner_info', ['taxPayer' => $newOwner])
+            @include('mvr.transfer.owner_info', ['taxPayer' => $previousOwner,'owner'=>'previous'])
+            @include('mvr.transfer.owner_info', ['taxPayer' => $newOwner,'owner'=>'new'])
             <livewire:approval.mvr.transfer-approval-processing modelName='App\Models\MvrOwnershipTransfer'
                                                       modelId="{{ encrypt($request->id) }}" />
         </div>
