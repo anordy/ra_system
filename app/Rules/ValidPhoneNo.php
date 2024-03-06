@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 use \libphonenumber\PhoneNumberUtil;
 
 class ValidPhoneNo implements Rule
@@ -43,6 +44,17 @@ class ValidPhoneNo implements Rule
             return false;
         }
         return true;
+    }
+
+    public function validate(string $attribute, $value, $params, Validator $validator): bool
+    {
+        $handle = $this->handle();
+
+        $validator->setCustomMessages([
+            $handle => $this->message(),
+        ]);
+
+        return $this->passes($attribute, $value);
     }
 
     /**

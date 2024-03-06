@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Business;
 
+use App\Enum\CustomMessage;
+use App\Enum\TaxTypePrefixStatus;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessFile;
 use App\Models\BusinessLocation;
 use App\Models\BusinessTaxType;
+use App\Models\BusinessType;
 use App\Models\SystemSetting;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
@@ -83,7 +86,7 @@ class BusinessFileController extends Controller
 
         $taxTypeId = decrypt($taxTypeId);
         $locationId = decrypt($locationId);
-          
+
         $location = BusinessLocation::with('business', 'business.taxpayer')->findOrFail($locationId);
         $tax = TaxType::findOrFail($taxTypeId);
         $taxType = BusinessTaxType::where('business_id', $location->business->id)->where('tax_type_id', $taxTypeId)->firstOrFail();
@@ -129,11 +132,10 @@ class BusinessFileController extends Controller
         $ztn_location_number = $location->ztn_location_number;
 
         //If business is hotel and tax type is VAT change to Hotel VAT Prefix
-        if ($location->business->business_type == 'hotel' && $taxTypePrefix == 'A') {
-            $taxTypePrefix = 'B';
+        if ($location->business->business_type == BusinessType::HOTEL && $taxTypePrefix == TaxTypePrefixStatus::A) {
+            $taxTypePrefix = TaxTypePrefixStatus::B;
         }
-        
-        $certificateNumber = $certificateNumber.'-'.$taxRegionPrefix.$taxTypePrefix.$ztn_location_number;
-        return $certificateNumber;
+
+        return $certificateNumber.'-'.$taxRegionPrefix.$taxTypePrefix.$ztn_location_number;
     }
 }

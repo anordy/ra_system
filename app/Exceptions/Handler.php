@@ -2,9 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Enum\CustomMessage;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -48,6 +51,11 @@ class Handler extends ExceptionHandler
         if ($exception instanceof ModelNotFoundException){
             $model = explode('\\', $exception->getModel());
             abort(404, end($model));
+        }
+
+        if ($exception instanceof DecryptException) {
+            Log::error('DECRYPTION-FAILURE', [$exception]);
+            abort(500, CustomMessage::ERROR);
         }
 
         return parent::render($request, $exception);

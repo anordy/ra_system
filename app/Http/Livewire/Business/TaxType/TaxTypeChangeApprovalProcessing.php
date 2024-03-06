@@ -38,23 +38,29 @@ class TaxTypeChangeApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
-        $this->modelName = $modelName;
-        $this->modelId = decrypt($modelId);
-        $this->registerWorkflow($modelName, $this->modelId);
-        $this->taxchange = BusinessTaxTypeChange::find($this->modelId);
-        if (is_null($this->taxchange)) {
-            abort(404);
-        }
-        $this->to_tax_type_id = $this->taxchange->to_tax_type_id;
-        $this->from_tax_type_id = $this->taxchange->from_tax_type_id;
-        $this->to_tax_type_currency = $this->taxchange->to_tax_type_currency;
-        $this->taxTypes   = TaxType::select('id', 'name')->where('category', 'main')->get();
-        $this->today = Carbon::today()->addDay()->format('Y-m-d');
+        try {
+            $this->modelName = $modelName;
+            $this->modelId = decrypt($modelId);
+            $this->registerWorkflow($modelName, $this->modelId);
+            $this->taxchange = BusinessTaxTypeChange::find($this->modelId);
+            if (is_null($this->taxchange)) {
+                abort(404);
+            }
+            $this->to_tax_type_id = $this->taxchange->to_tax_type_id;
+            $this->from_tax_type_id = $this->taxchange->from_tax_type_id;
+            $this->to_tax_type_currency = $this->taxchange->to_tax_type_currency;
+            $this->taxTypes   = TaxType::select('id', 'name')->where('category', 'main')->get();
+            $this->today = Carbon::today()->addDay()->format('Y-m-d');
 
-        if ($this->taxchange->toTax->code == TaxType::VAT) {
-            $this->subVatOptions = SubVat::all();
-            $this->showSubVatOptions = true;
+            if ($this->taxchange->toTax->code == TaxType::VAT) {
+                $this->subVatOptions = SubVat::all();
+                $this->showSubVatOptions = true;
+            }
+        } catch (Exception $exception) {
+            Log::error('TAX-TYPE-CHANGE-APPROVAL', [$exception->getMessage()]);
+            abort(500, 'Something went wrong, please contact your system administrator for support.');
         }
+
     }
 
     public function updated($property)

@@ -12,7 +12,7 @@ class LocationReturnsSummary extends Component
     public function mount($locationId){
         $this->location = BusinessLocation::find(decrypt($locationId));
         if (is_null($this->location)){
-            abort(404, 'Location not found.');
+            abort(404);
         }
         $this->total = $this->location->taxReturns()->where('currency', 'TZS')->sum('total_amount');
         $this->totalUSD = $this->location->taxReturns()->where('currency', 'USD')->sum('total_amount');

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Rules\AlphaSpaceRule;
+use App\Rules\ArrayNumberRule;
 use App\Rules\NidaRule;
 use App\Rules\ValidPhoneNo;
 use Livewire\Livewire;
@@ -48,6 +50,8 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend(StripTag::handle(), StripTag::class);
         Validator::extend(NidaRule::handle(), NidaRule::class);
         Validator::extend(ValidPhoneNo::name(), ValidPhoneNo::class);
+        Validator::extend(AlphaSpaceRule::handle(), AlphaSpaceRule::class);
+        Validator::extend(ArrayNumberRule::handle(), ArrayNumberRule::class);
         Validator::extend('max_file_name_length', function ($attribute, $value, $parameters, $validator) {
             return (new MaxFileNameLengthRule($parameters[0]))->passes($attribute, $value);
         });

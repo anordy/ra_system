@@ -67,10 +67,5 @@ class BusinessController extends Controller
         }
         return view('business.updates.show', ['updateId' => $id]);
     }
-
-    public function approve(){
-        $businessId = 1;
-        event(new SendSms('business-registration-approved', $businessId));
-        event(new SendMail('business-registration-approved', $businessId));
-    }
+    
 }
