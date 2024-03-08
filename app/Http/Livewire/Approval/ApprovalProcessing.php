@@ -479,13 +479,11 @@ class ApprovalProcessing extends Component
 
     public function reject($transition)
     {
-        if (!isset($transition['data']['transition'])) {
+        if (!$transition) {
             Log::error('Transition not defined');
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
-
-        $transition = $transition['data']['transition'];
 
         if ($this->checkTransition('application_filled_incorrect')) {
             $this->subject->status = BusinessStatus::CORRECTION;
