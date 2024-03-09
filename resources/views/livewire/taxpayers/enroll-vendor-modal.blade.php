@@ -83,7 +83,7 @@
 
 <script src="{{ asset('plugins/jquery/dist/jquery.min.js') }}"></script>
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="custom_script">
     var ws;
     $(document).ready(function() {
 
