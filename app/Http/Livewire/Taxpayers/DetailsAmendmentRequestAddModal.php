@@ -85,7 +85,7 @@ class DetailsAmendmentRequestAddModal extends Component
     public function updated($propertyName)
     {
 
-        if (!isset($property)) {
+        if (!isset($propertyName)) {
             Log::error('Missing property definition');
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
