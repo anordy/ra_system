@@ -165,7 +165,11 @@ class DetailsAmendmentRequestAddModal extends Component
             DB::commit();
 
             $message = 'We are writing to inform you that some of your ZIDRAS taxpayer personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
-            $this->sendEmailToUser($this->taxpayer, $message);
+            $state = $this->sendEmailToUser($this->taxpayer, $message);
+
+            if (!$state) {
+                $this->customAlert('warning', 'Amendment request has been added successful but a notification to taxpayer has not been sent due to missing information');
+            }
 
             session()->flash('success', 'Amendment details submitted. Waiting approval.');
             $this->redirect(route('taxpayers.taxpayer.index'));
@@ -182,7 +186,7 @@ class DetailsAmendmentRequestAddModal extends Component
         if ($data && $message){
             $smsPayload = [
                 'phone' => $data->phone,
-                'message' => 'Hello, {$data->first_name}. {$message}',
+                'message' => "Hello, {$data->first_name}. {$message}",
             ];
 
             $emailPayload = [
@@ -193,6 +197,11 @@ class DetailsAmendmentRequestAddModal extends Component
 
             event(new SendSms('taxpayer-amendment-notification', $smsPayload));
             event(new SendMail('taxpayer-amendment-notification', $emailPayload));
+
+            return true;
+        } else {
+            Log::error('TAXPAYER-DETAILS-AMMENDMENT-ADD-MODAL', ['Failed to send email to user, Missing recipient data or message']);
+            return false;
         }
     }
 }

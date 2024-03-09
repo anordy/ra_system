@@ -76,9 +76,10 @@ class KycAmendmentRequestApprovalProcessing extends Component
 
         $transition = $transition['data']['transition'];
         $this->validate(['comments' => 'required']);
-        $kyc = KYC::findOrFail($this->kyc_id);
 
         try {
+            $kyc = KYC::findOrFail($this->kyc_id);
+
             if ($this->checkTransition('registration_manager_reject')) {
                 $this->subject->status = KycAmendmentRequest::REJECTED;
 
