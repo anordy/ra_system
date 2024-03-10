@@ -248,19 +248,16 @@ class TaxInvestigationApprovalProcessing extends Component
                 }
 
 
-                $investigationReport = "";
-                if ($this->investigationReport != $this->subject->investigation_report) {
-                    $investigationReport = $this->investigationReport->store('investigation', 'local');
-                }
+                // Update investigation report if changed
+                $this->subject->investigation_report = ($this->investigationReport != $this->subject->investigation_report)
+                    ? $this->investigationReport->store('investigation', 'local')
+                    : $this->subject->investigation_report;
 
-                $workingsReport = "";
-                if ($this->workingsReport != $this->subject->working_report) {
-                    $workingsReport = $this->investigationReport->store('investigation', 'local');
-                }
+                // Update workings report if changed
+                $this->subject->working_report = ($this->workingsReport != $this->subject->working_report)
+                    ? $this->workingsReport->store('investigation', 'local')
+                    : $this->subject->working_report;
 
-
-                $this->subject->working_report = $workingsReport;
-                $this->subject->investigation_report = $investigationReport;
                 $this->subject->save();
             }
 
