@@ -120,7 +120,7 @@ class DeregisterApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('BUSINESS-DEREGISTER-APPROVAL-PROCESSING', [$e->getMessage()]);
+            Log::error('BUSINESS-DEREGISTER-APPROVAL-PROCESSING-APPROVE', [$e]);
             $this->customAlert('error', CustomMessage::ERROR);
         }
     }
@@ -153,7 +153,7 @@ class DeregisterApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error('BUSINESS-DEREGISTER-APPROVAL-PROCESSING', [$e->getMessage()]);
+            Log::error('BUSINESS-DEREGISTER-APPROVAL-PROCESSING-REJECT', [$e->getMessage()]);
             $this->customAlert('error', CustomMessage::ERROR);
         }
     }

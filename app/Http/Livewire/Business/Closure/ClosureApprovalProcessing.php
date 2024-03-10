@@ -88,7 +88,7 @@ class ClosureApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('BUSINESS-CLOSURE-APPROVAL-PROCESSING', [$e->getMessage()]);
+            Log::error('BUSINESS-CLOSURE-APPROVAL-PROCESSING-APPROVE', [$e]);
             $this->customAlert('error', CustomMessage::ERROR);
         }
     }
@@ -118,7 +118,7 @@ class ClosureApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('BUSINESS-CLOSURE-APPROVAL-PROCESSING', [$e->getMessage()]);
+            Log::error('BUSINESS-CLOSURE-APPROVAL-PROCESSING-REJECT', [$e]);
             $this->customAlert('error', CustomMessage::ERROR);
         }
     }
