@@ -26,22 +26,30 @@ class KycAmendmentRequestApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
-        $amendmentRequest = KycAmendmentRequest::find(decrypt($modelId));
-        $this->modelName = $modelName;
-        $this->modelId = decrypt($modelId);
-        $this->amendmentRequest = $amendmentRequest;
-        $this->kyc_id = $amendmentRequest->kyc_id;
-        $this->registerWorkflow($modelName, $this->modelId);
+        try {
+            $amendmentRequest = KycAmendmentRequest::find(decrypt($modelId));
+            $this->modelName = $modelName;
+            $this->modelId = decrypt($modelId);
+            $this->amendmentRequest = $amendmentRequest;
+            $this->kyc_id = $amendmentRequest->kyc_id;
+            $this->registerWorkflow($modelName, $this->modelId);
+        } catch (\Exception $exception){
+            Log::error($exception);
+            abort(500, 'Something went wrong, please contact your system administrator for support.');
+        }
     }
 
     public function approve($transition)
     {
+        if (!isset($transition['data']['transition'])){
+            $this->customAlert('Something went wrong, please contact your system administrator for support.');
+            return;
+        }
+
         $transition = $transition['data']['transition'];
         try {
             if ($this->checkTransition('registration_manager_review')) {
-
                 $new_values = json_decode($this->amendmentRequest->new_values, true);
-
                 $kyc_details = $new_values;
 
                 /** Update kyc information */
@@ -61,11 +69,17 @@ class KycAmendmentRequestApprovalProcessing extends Component
 
     public function reject($transition)
     {
+        if (!isset($transition['data']['transition'])){
+            $this->customAlert('Something went wrong, please contact your system administrator for support.');
+            return;
+        }
+
         $transition = $transition['data']['transition'];
         $this->validate(['comments' => 'required']);
-        $kyc = KYC::findOrFail($this->kyc_id);
 
         try {
+            $kyc = KYC::findOrFail($this->kyc_id);
+
             if ($this->checkTransition('registration_manager_reject')) {
                 $this->subject->status = KycAmendmentRequest::REJECTED;
 
@@ -105,19 +119,21 @@ class KycAmendmentRequestApprovalProcessing extends Component
 
     public function sendEmailToUser($data, $message)
     {
-        $smsPayload = [
-            'phone' => $data->phone,
-            'message' => 'Hello, {$data->first_name}. {$message}',
-        ];
+        if ($data && $message) {
+            $smsPayload = [
+                'phone' => $data->phone,
+                'message' => 'Hello, {$data->first_name}. {$message}',
+            ];
 
-        $emailPayload = [
-            'email' => $data->email,
-            'userName' => $data->first_name,
-            'message' => $message,
-        ];
+            $emailPayload = [
+                'email' => $data->email,
+                'userName' => $data->first_name,
+                'message' => $message,
+            ];
 
-        event(new SendMail('taxpayer-amendment-notification', $emailPayload));
-        event(new SendSms('taxpayer-amendment-notification', $smsPayload));
+            event(new SendMail('taxpayer-amendment-notification', $emailPayload));
+            event(new SendSms('taxpayer-amendment-notification', $smsPayload));
+        }
     }
 
     public function render()

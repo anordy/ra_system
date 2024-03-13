@@ -17,6 +17,7 @@
         "eddytim/auditlog": "^1.0",
         "endroid/qr-code": "^4.5",
         "fruitcake/laravel-cors": "^2.0",
+        "giggsey/libphonenumber-for-php": "^8.13",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
         "jantinnerezo/livewire-alert": "^2.2",

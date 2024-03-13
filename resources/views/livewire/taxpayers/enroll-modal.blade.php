@@ -1,31 +1,7 @@
 <div>
-    <style type="text/css">
-        #console_wrapper {
-            background-color: black;
-            color: white;
-        }
-
-        #console p {
-            padding: 0;
-            margin: 0;
-            color: white
-        }
-
-        #console .success {
-            color: green;
-        }
-
-        #console .error {
-            color: red;
-        }
-
-        .box {
-            width: 256px;
-            height: 360px;
-            border: 1px solid #000;
-            text-align: center;
-        }
-    </style>
+    @push('styles')
+        <link href="{{ asset('css/registration.css') }}" rel="stylesheet">
+    @endpush
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -105,7 +81,7 @@
 </div>
 
 <script src="{{ asset('plugins/jquery/dist/jquery.min.js') }}"></script>
-<script type="text/javascript">
+<script type="text/javascript" nonce="custom_script">
     var ws;
     $(document).ready(function() {
 

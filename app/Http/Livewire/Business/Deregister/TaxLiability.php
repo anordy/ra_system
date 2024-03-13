@@ -57,7 +57,7 @@ class TaxLiability extends Component
             ->where('payment_status', '!=', ReturnStatus::COMPLETE)
             ->with('installment')
             ->get();
-        
+
         // Verify Tax Returns
         foreach ($this->return_debts as $return) {
             $this->verify($return);

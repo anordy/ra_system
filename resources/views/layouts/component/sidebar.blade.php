@@ -1119,7 +1119,7 @@
             </li>
         @endcan
 
-        @can('system')
+        @canany(['system-audit-trail-view', 'system-workflow-view', 'setting-dual-control-activities-view'])
             <li class="{{ request()->is('system*') ? 'active' : '' }}">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
                 <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">

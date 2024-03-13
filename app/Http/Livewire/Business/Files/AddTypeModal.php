@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Business\Files;
 
 use App\Models\BusinessCategory;
 use App\Models\BusinessFileType;
-use App\Models\Country;
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
 use Exception;
@@ -26,8 +25,8 @@ class AddTypeModal extends Component
         'name' => 'required|strip_tag',
         'short_name' => 'required|strip_tag',
         'description' => 'nullable|strip_tag',
-        'is_required' => 'required',
-        'business_category' => 'required',
+        'is_required' => 'required|boolean',
+        'business_category' => 'required|strip_tag',
     ];
 
     protected function mount(){
@@ -37,8 +36,8 @@ class AddTypeModal extends Component
     public function submit()
     {
         $this->validate();
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $file_type = BusinessFileType::create([
                 'name' => $this->name,
                 'short_name' => $this->short_name,
@@ -53,7 +52,7 @@ class AddTypeModal extends Component
             return redirect()->route('settings.business-files.index');
         } catch(Exception $e){
             DB::rollBack();
-            Log::error($e);
+            Log::error('BUSINESS-FILES-ADD-TYPE-MODAL', [$e->getMessage()]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.business-files.index');
         }

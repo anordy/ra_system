@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Business\Updates;
 
+use App\Enum\CustomMessage;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Bank;
@@ -111,6 +112,8 @@ class ChangesApprovalProcessing extends Component
         try {
             if ($this->checkTransition('registration_manager_review')) {
 
+                $business = Business::findOrFail($this->business_id);
+
                 if ($this->business_update_data->type == 'business_information') {
                     $new_values = json_decode($this->business_update_data->new_values, true);
 
@@ -118,7 +121,6 @@ class ChangesApprovalProcessing extends Component
                     $business_location_data = $new_values['business_location'];
 
                     /** Update business information */
-                    $business = Business::findOrFail($this->business_id);
 
                     DB::beginTransaction();
                     try {
@@ -159,7 +161,6 @@ class ChangesApprovalProcessing extends Component
                 } else if ($this->business_update_data->type == 'responsible_person') {
                     /** Update business information */
                     $new_values = json_decode($this->business_update_data->new_values, true);
-                    $business = Business::findOrFail($this->business_id);
 
                     DB::beginTransaction();
                     try {
@@ -240,9 +241,6 @@ class ChangesApprovalProcessing extends Component
                 } else if ($this->business_update_data->type == 'bank_information') {
                     $new_values = json_decode($this->business_update_data->new_values);
 
-                    /** Update business information */
-                    $business = Business::findOrFail($this->business_id);
-
                     DB::beginTransaction();
                     try {
                         $business->banks()->forceDelete();
@@ -275,8 +273,6 @@ class ChangesApprovalProcessing extends Component
                     event(new SendSms('change-business-information-approval', $notification_payload));
                 } else if ($this->business_update_data->type == 'business_attachments') {
                     $new_values = json_decode($this->business_update_data->new_values);
-
-                    $business = Business::findOrFail($this->business_id);
 
                     DB::beginTransaction();
                     try {
@@ -325,6 +321,7 @@ class ChangesApprovalProcessing extends Component
                     event(new SendMail('change-business-information-approval', $notification_payload));
                     event(new SendSms('change-business-information-approval', $notification_payload));
                 } else if ($this->business_update_data->type == 'hotel_information') {
+
                     $new_values = json_decode($this->business_update_data->new_values, true);
 
                     DB::beginTransaction();
@@ -337,9 +334,9 @@ class ChangesApprovalProcessing extends Component
                         $this->subject->status = BusinessStatus::APPROVED;
                         DB::commit();
                     } catch (Exception $e) {
-                        Log::error($e);
                         DB::rollBack();
-                        $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+                        Log::error('CHANGE-BUSINESS-INFO-APPROVE', [$e->getMessage()]);
+                        $this->customAlert('error', CustomMessage::error());
                     }
 
                     $notification_payload = [
@@ -381,16 +378,15 @@ class ChangesApprovalProcessing extends Component
                         event(new SendMail('change-business-information-approval', $notification_payload));
                         event(new SendSms('change-business-information-approval', $notification_payload));
                     } catch (Exception $e) {
-                        Log::error($e);
                         DB::rollBack();
-                        $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
-                    }
+                        Log::error('CHANGE-BUSINESS-INFO-APPROVE', [$e->getMessage()]);
+                        $this->customAlert('error', CustomMessage::error());                    }
 
                 }
             }
         } catch (Exception $e) {
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            Log::error('CHANGE-BUSINESS-INFO-APPROVE', [$e->getMessage()]);
+            $this->customAlert('error', CustomMessage::error());
             return;
         }
 
@@ -398,8 +394,8 @@ class ChangesApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            Log::error('CHANGE-BUSINESS-INFO-APPROVE', [$e->getMessage()]);
+            $this->customAlert('error', CustomMessage::error());
         }
     }
 
@@ -431,7 +427,7 @@ class ChangesApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('CHANGE-BUSINESS-INFO-APPROVE', [$e->getMessage()]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

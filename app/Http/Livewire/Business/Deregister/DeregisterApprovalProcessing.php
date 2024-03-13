@@ -2,9 +2,12 @@
 
 namespace App\Http\Livewire\Business\Deregister;
 
+use App\Enum\BusinessDeRegTypeStatus;
+use App\Enum\CustomMessage;
 use Exception;
 use Carbon\Carbon;
 use App\Events\SendSms;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Events\SendMail;
 use App\Models\Business;
@@ -40,7 +43,7 @@ class DeregisterApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', CustomMessage::ARE_YOU_SURE, [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -58,11 +61,18 @@ class DeregisterApprovalProcessing extends Component
 
     public function approve($transition)
     {
+        if (!isset($transition['data']['transition'])){
+            $this->customAlert('error', CustomMessage::ERROR);
+            return;
+        }
+
         $transition = $transition['data']['transition'];
+
         try {
+            DB::beginTransaction();
             if ($this->checkTransition('commissioner_review')) {
 
-                if ($this->subject->deregistration_type == 'all') {
+                if ($this->subject->deregistration_type == BusinessDeRegTypeStatus::ALL) {
                     $business = Business::find($this->subject->business_id);
                     if(is_null($business)){
                         abort(404);
@@ -82,7 +92,7 @@ class DeregisterApprovalProcessing extends Component
                     // Deregister one location
                     $location = BusinessLocation::findOrFail($this->subject->location_id);
 
-                    // Get new head quarter
+                    // Get new head-quarter
                     if ($this->subject->new_headquarter_id != null) {
                         $selectedHeadQuarter = BusinessLocation::findOrFail($this->subject->new_headquarter_id);
                         $selectedHeadQuarter->update([
@@ -98,20 +108,30 @@ class DeregisterApprovalProcessing extends Component
                 $this->subject->status = BusinessStatus::APPROVED;
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
 
-                event(new SendSms('business-deregister-approval', $this->subject));
-                event(new SendMail('business-deregister-approval', $this->subject));
-
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+            DB::commit();
+
+            if ($this->subject->status === BusinessStatus::APPROVED) {
+                event(new SendSms('business-deregister-approval', $this->subject));
+                event(new SendMail('business-deregister-approval', $this->subject));
+            }
+
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            DB::rollBack();
+            Log::error('BUSINESS-DEREGISTER-APPROVAL-PROCESSING-APPROVE', [$e]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
     }
 
     public function reject($transition)
     {
+        if (!isset($transition['data']['transition'])){
+            $this->customAlert('error', CustomMessage::ERROR);
+            return;
+        }
+
         $transition = $transition['data']['transition'];
         $this->validate(['comments' => 'required|strip_tag']);
         try {
@@ -129,15 +149,12 @@ class DeregisterApprovalProcessing extends Component
                 event(new SendSms('business-deregister-rejected', $this->subject));
                 event(new SendMail('business-deregister-rejected', $this->subject));
             } 
-            
-            if ($this->checkTransition('commissioner_reject')) {
-                
-            }
+
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            Log::error('BUSINESS-DEREGISTER-APPROVAL-PROCESSING-REJECT', [$e->getMessage()]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
     }
 
