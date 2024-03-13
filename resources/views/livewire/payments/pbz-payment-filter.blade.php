@@ -11,7 +11,7 @@
                     <option value="USD">USD</option>
                 </select>
             </div>
-            
+
             <div class="col-md-6 form-group">
                 <label class="d-flex justify-content-between">
                     <span>Start Date</span>
@@ -36,7 +36,7 @@
             </div>
 
 
-            <div class="col-md-12 text-center">
+            <div class="col-md-6 text-center">
                 <div class="d-flex justify-content-end">
 
                     <button class="btn btn-primary ml-2" wire:click="filter " wire:loading.attr="disabled">
@@ -44,12 +44,12 @@
                         <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="filter"></i>
                             Filter
                     </button>
-    
-                    <button class="btn btn-success ml-2" wire:click="pdf" wire:loading.attr="disabled">
-                        <i class="fas fa-file-pdf ml-1" wire:loading.remove wire:target="pdf"></i>
-                        <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="pdf"></i>
-                            Export summary
-                    </button>      
+{{--    --}}
+{{--                    <button class="btn btn-success ml-2" wire:click="pdf" wire:loading.attr="disabled">--}}
+{{--                        <i class="fas fa-file-pdf ml-1" wire:loading.remove wire:target="pdf"></i>--}}
+{{--                        <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="pdf"></i>--}}
+{{--                            Export summary--}}
+{{--                    </button>      --}}
                 </div>
             </div>
 
