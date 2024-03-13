@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\Payments\PBZController;
 use App\Http\Controllers\PropertyTax\CondominiumController;
 use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
@@ -651,6 +652,9 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/daily-payments/{taxTypeId}', [PaymentsController::class, 'dailyPaymentsPerTaxType'])->name('daily-payments.tax-type');
         Route::get('/ega-charges/index', [PaymentsController::class, 'egaCharges'])->name('ega-charges.index');
         Route::get('/departmental-reports/index', [PaymentsController::class, 'departmentalReports'])->name('departmental-reports.index');
+        Route::get('/pbz', [PBZController::class, 'index'])->name('pbz.index');
+        Route::get('/pbz/payment/{transaction}', [PBZController::class, 'payment'])->name('pbz.payment');
+        Route::get('/pbz/reversal/{transaction}', [PBZController::class, 'reversal'])->name('pbz.reversal');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 
