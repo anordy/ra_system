@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Business\TaxType;
 
+use App\Enum\CustomMessage;
 use Exception;
 use Carbon\Carbon;
 use App\Events\SendSms;
@@ -38,23 +39,29 @@ class TaxTypeChangeApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
-        $this->modelName = $modelName;
-        $this->modelId = decrypt($modelId);
-        $this->registerWorkflow($modelName, $this->modelId);
-        $this->taxchange = BusinessTaxTypeChange::find($this->modelId);
-        if (is_null($this->taxchange)) {
-            abort(404);
-        }
-        $this->to_tax_type_id = $this->taxchange->to_tax_type_id;
-        $this->from_tax_type_id = $this->taxchange->from_tax_type_id;
-        $this->to_tax_type_currency = $this->taxchange->to_tax_type_currency;
-        $this->taxTypes   = TaxType::select('id', 'name')->where('category', 'main')->get();
-        $this->today = Carbon::today()->addDay()->format('Y-m-d');
+        try {
+            $this->modelName = $modelName;
+            $this->modelId = decrypt($modelId);
+            $this->registerWorkflow($modelName, $this->modelId);
+            $this->taxchange = BusinessTaxTypeChange::find($this->modelId);
+            if (is_null($this->taxchange)) {
+                abort(404);
+            }
+            $this->to_tax_type_id = $this->taxchange->to_tax_type_id;
+            $this->from_tax_type_id = $this->taxchange->from_tax_type_id;
+            $this->to_tax_type_currency = $this->taxchange->to_tax_type_currency;
+            $this->taxTypes   = TaxType::select('id', 'name')->where('category', 'main')->get();
+            $this->today = Carbon::today()->addDay()->format('Y-m-d');
 
-        if ($this->taxchange->toTax->code == TaxType::VAT) {
-            $this->subVatOptions = SubVat::all();
-            $this->showSubVatOptions = true;
+            if ($this->taxchange->toTax->code == TaxType::VAT) {
+                $this->subVatOptions = SubVat::all();
+                $this->showSubVatOptions = true;
+            }
+        } catch (Exception $exception) {
+            Log::error('TAX-TYPE-CHANGE-APPROVAL', [$exception->getMessage()]);
+            abort(500, 'Something went wrong, please contact your system administrator for support.');
         }
+        
     }
 
     public function updated($property)
@@ -109,14 +116,13 @@ class TaxTypeChangeApprovalProcessing extends Component
 
                 event(new SendMail('change-tax-type-approval', $notification_payload));
                 event(new SendSms('change-tax-type-approval', $notification_payload));
-
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollback();
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            Log::error('TAX-TYPE-CHANGE-APPROVE', [$e->getMessage()]);
+            $this->customAlert('error', CustomMessage::error());
         }
     }
 
@@ -131,8 +137,8 @@ class TaxTypeChangeApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            Log::error('TAX-TYPE-CHANGE-REJECT', [$e->getMessage()]);
+            $this->customAlert('error', CustomMessage::error());
         }
     }
 
@@ -154,7 +160,6 @@ class TaxTypeChangeApprovalProcessing extends Component
             'data' => [
                 'transition' => $transition
             ],
-
         ]);
     }
 

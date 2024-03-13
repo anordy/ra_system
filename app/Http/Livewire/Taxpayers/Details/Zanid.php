@@ -109,21 +109,25 @@ class Zanid extends Component
      */
     public function reject($value)
     {
-        $comments = $value['value'];
-        DB::beginTransaction();
-        try {
-            $this->kyc->comments = $comments;
-            $this->kyc->save();
-            $kyc = $this->kyc;
-            $this->kyc->delete();
-            DB::commit();
-            event(new SendMail('kyc-reject', $kyc));
-            event(new SendSms('kyc-reject', $kyc));
-            $this->customAlert('success', 'KYC has been rejected!');
-            return redirect()->route('taxpayers.registrations.index');
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error($e);
+        if (isset($value['value'])) {
+            $comments = $value['value'];
+            DB::beginTransaction();
+            try {
+                $this->kyc->comments = $comments;
+                $this->kyc->save();
+                $kyc = $this->kyc;
+                $this->kyc->delete();
+                DB::commit();
+                event(new SendMail('kyc-reject', $kyc));
+                event(new SendSms('kyc-reject', $kyc));
+                $this->customAlert('success', 'KYC has been rejected!');
+                return redirect()->route('taxpayers.registrations.index');
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
+            }
+        } else {
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
         }
     }

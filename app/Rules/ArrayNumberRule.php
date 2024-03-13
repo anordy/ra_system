@@ -5,7 +5,7 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Validator;
 
-class StripTag implements Rule
+class ArrayNumberRule implements Rule
 {
     /**
      * Create a new rule instance.
@@ -14,7 +14,7 @@ class StripTag implements Rule
      */
     public static function handle(): string
     {
-        return 'strip_tag';
+        return 'arr_num';
     }
 
     /**
@@ -26,27 +26,15 @@ class StripTag implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        // Since strip_tags will return false for null values.
         if (is_null($value)){
             return true;
         }
 
-        // Check for special characters: Allow only @,/,-,.,' as they can be used
-        $pattern = '/^[a-zA-Z0-9@\/\-._, ]+$/';
-
-        if (!preg_match($pattern, $value)) {
+        if (is_array($value) || is_numeric($value)) {
+            return true;
+        } else {
             return false;
         }
-
-        // Since strip tags always return string,
-        // in order to apply this rule on non string values, like ID's,
-        // the result should explicitly be converted to string or do a loose comparison ==
-
-        if (is_array($value)) { // strip tags from an array 
-            $strippedArray = array_map('strip_tags', $value);
-            return $strippedArray === array_map('strval', $strippedArray);
-        }
-        return strip_tags($value) === (string)$value;
     }
 
     public function validate(string $attribute, $value, $params, Validator $validator): bool
@@ -67,6 +55,6 @@ class StripTag implements Rule
      */
     public function message(): string
     {
-        return 'The :attribute must not contain tags or has invalid characters.';
+        return 'The :attribute must contain be either array or number';
     }
 }

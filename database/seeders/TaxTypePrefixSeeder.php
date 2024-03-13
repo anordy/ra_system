@@ -37,9 +37,8 @@ class TaxTypePrefixSeeder extends Seeder
                     $prefix = 'N';
                     break;
                 case 7:
-                    $prefix = 'K';
-                    break;
                 case 8:
+                case 14:
                     $prefix = 'K';
                     break;
                 case 9:
@@ -53,9 +52,6 @@ class TaxTypePrefixSeeder extends Seeder
                     break;
                 case 13:
                     $prefix = 'D';
-                    break;
-                case 14:
-                    $prefix = 'K';
                     break;
                 case 15:
                     $prefix = 'O';

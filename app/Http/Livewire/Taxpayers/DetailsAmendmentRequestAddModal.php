@@ -11,6 +11,8 @@ use App\Models\Street;
 use App\Models\Taxpayer;
 use App\Models\TaxpayerAmendmentRequest;
 use App\Models\Ward;
+use App\Rules\ValidPhoneNo;
+use App\Traits\PhoneUtil;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +22,7 @@ use Livewire\Component;
 
 class DetailsAmendmentRequestAddModal extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait;
+    use CustomAlert, PhoneUtil, WorkflowProcesssingTrait;
 
     public $taxpayer;
     public $taxpayer_id;
@@ -39,44 +41,56 @@ class DetailsAmendmentRequestAddModal extends Component
 
     public function mount($id)
     {
-        $this->taxpayer = Taxpayer::find(decrypt($id));
-        if (is_null($this->taxpayer)) {
-            abort(404);
-        }
-        $this->taxpayer_id = $this->taxpayer->id;
-        $this->first_name = $this->taxpayer->first_name;
-        $this->middle_name = $this->taxpayer->middle_name;
-        $this->last_name = $this->taxpayer->last_name;
-        $this->email = $this->taxpayer->email;
-        $this->mobile = $this->taxpayer->mobile;
-        $this->alt_mobile = $this->taxpayer->alt_mobile;
-        $this->physical_address = $this->taxpayer->physical_address;
-        $this->region = $this->taxpayer->region_id;
-        $this->district = $this->taxpayer->district_id;
-        $this->ward = $this->taxpayer->ward_id;
-        $this->street = $this->taxpayer->street_id;
-        $this->regions = Region::where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
-        $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
-        $this->wards = Ward::where('district_id', $this->district)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
-        $this->streets = Street::where('ward_id', $this->ward)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+        try {
+            $this->taxpayer = Taxpayer::find(decrypt($id));
+            if (is_null($this->taxpayer)) {
+                abort(404);
+            }
+            $this->taxpayer_id = $this->taxpayer->id;
+            $this->first_name = $this->taxpayer->first_name;
+            $this->middle_name = $this->taxpayer->middle_name;
+            $this->last_name = $this->taxpayer->last_name;
+            $this->email = $this->taxpayer->email;
+            $this->mobile = $this->taxpayer->mobile;
+            $this->alt_mobile = $this->taxpayer->alt_mobile;
+            $this->physical_address = $this->taxpayer->physical_address;
+            $this->region = $this->taxpayer->region_id;
+            $this->district = $this->taxpayer->district_id;
+            $this->ward = $this->taxpayer->ward_id;
+            $this->street = $this->taxpayer->street_id;
+            $this->regions = Region::where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->wards = Ward::where('district_id', $this->district)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->streets = Street::where('ward_id', $this->ward)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
 
-        $this->old_values = [
-            'first_name' => $this->first_name,
-            'middle_name' => $this->middle_name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'mobile' => $this->mobile,
-            'alt_mobile' => $this->alt_mobile,
-            'physical_address' => $this->physical_address,
-            'region_id' => $this->region,
-            'district_id' => $this->district,
-            'ward_id' => $this->ward,
-            'street_id' => $this->street,
-        ];
+            $this->old_values = [
+                'first_name' => $this->first_name,
+                'middle_name' => $this->middle_name,
+                'last_name' => $this->last_name,
+                'email' => $this->email,
+                'mobile' => $this->mobile,
+                'alt_mobile' => $this->alt_mobile,
+                'physical_address' => $this->physical_address,
+                'region_id' => $this->region,
+                'district_id' => $this->district,
+                'ward_id' => $this->ward,
+                'street_id' => $this->street,
+            ];
+        } catch (\Exception $exception){
+            Log::error($exception);
+            abort(500, 'Something went wrong, please contact your system administrator.');
+        }
     }
 
     public function updated($propertyName)
     {
+
+        if (!isset($propertyName)) {
+            Log::error('Missing property definition');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            return;
+        }
+
         if ($propertyName === 'region') {
             $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
             $this->reset('district','ward','wards','street','streets');
@@ -102,12 +116,12 @@ class DetailsAmendmentRequestAddModal extends Component
     protected function rules()
     {
         return  [
-            'first_name' => 'required|strip_tag',
-            'middle_name' => 'nullable|strip_tag',
-            'last_name' => 'required|strip_tag',
+            'first_name' => 'required|alpha|max:30',
+            'middle_name' => 'nullable|alpha|max:30',
+            'last_name' => 'required|alpha|max:30',
             'email' => 'nullable|email|unique:taxpayers,email,' . $this->taxpayer->id . ',id',
-            'mobile' => 'required|unique:taxpayers,mobile,'. $this->taxpayer->id . ',id|size:10',
-            'alt_mobile' => 'nullable|size:10',
+            'mobile' => ['required', 'string', 'unique:taxpayers,mobile,'. $this->taxpayer->id . ',id', new ValidPhoneNo()],
+            'alt_mobile' => ['nullable', 'string', new ValidPhoneNo()],
             'physical_address' => 'required',
             'region' => 'required|numeric',
             'district' => 'required|numeric',
@@ -125,8 +139,8 @@ class DetailsAmendmentRequestAddModal extends Component
                 'middle_name' => $this->middle_name,
                 'last_name' => $this->last_name,
                 'email' => $this->email,
-                'mobile' => $this->mobile,
-                'alt_mobile' => $this->alt_mobile,
+                'mobile' => $this->getNationalFormat($this->mobile),
+                'alt_mobile' => $this->getNationalFormat($this->alt_mobile),
                 'physical_address' => $this->physical_address,
                 'region_id' => $this->region,
                 'district_id' => $this->district,
@@ -151,7 +165,11 @@ class DetailsAmendmentRequestAddModal extends Component
             DB::commit();
 
             $message = 'We are writing to inform you that some of your ZIDRAS taxpayer personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
-            $this->sendEmailToUser($this->taxpayer, $message);
+            $state = $this->sendEmailToUser($this->taxpayer, $message);
+
+            if (!$state) {
+                $this->customAlert('warning', 'Amendment request has been added successful but a notification to taxpayer has not been sent due to missing information');
+            }
 
             session()->flash('success', 'Amendment details submitted. Waiting approval.');
             $this->redirect(route('taxpayers.taxpayer.index'));
@@ -165,18 +183,25 @@ class DetailsAmendmentRequestAddModal extends Component
 
     public function sendEmailToUser($data, $message)
     {
-        $smsPayload = [
-            'phone' => $data->phone,
-            'message' => 'Hello, {$data->first_name}. {$message}',
-        ];
+        if ($data && $message){
+            $smsPayload = [
+                'phone' => $data->phone,
+                'message' => "Hello, {$data->first_name}. {$message}",
+            ];
 
-        $emailPayload = [
-            'email' => $data->email,
-            'userName' => $data->first_name,
-            'message' => $message,
-        ];
+            $emailPayload = [
+                'email' => $data->email,
+                'userName' => $data->first_name,
+                'message' => $message,
+            ];
 
-        event(new SendSms('taxpayer-amendment-notification', $smsPayload));
-        event(new SendMail('taxpayer-amendment-notification', $emailPayload));
+            event(new SendSms('taxpayer-amendment-notification', $smsPayload));
+            event(new SendMail('taxpayer-amendment-notification', $emailPayload));
+
+            return true;
+        } else {
+            Log::error('TAXPAYER-DETAILS-AMMENDMENT-ADD-MODAL', ['Failed to send email to user, Missing recipient data or message']);
+            return false;
+        }
     }
 }

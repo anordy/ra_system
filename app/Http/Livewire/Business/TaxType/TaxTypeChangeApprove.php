@@ -16,11 +16,16 @@ class TaxTypeChangeApprove extends Component
 
     public function mount($taxchangeId)
     {
-        $taxchange = BusinessTaxTypeChange::find(decrypt($taxchangeId));
-        if (is_null($taxchange)){
-            abort(404);
+        try {
+            $taxchange = BusinessTaxTypeChange::find(decrypt($taxchangeId));
+            if (is_null($taxchange)){
+                abort(404);
+            }
+            $this->taxchange = $taxchange;
+        } catch (\Exception $exception){
+            Log::error($exception);
+            abort(500, 'Something went wrong, please contact your system administrator.');
         }
-        $this->taxchange = $taxchange;
     }
 
     public function render()

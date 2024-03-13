@@ -12,12 +12,12 @@
                         <label class="control-label">Section Requiring Correction</label>
                         <select type="text" class="form-control" wire:model.defer="correctionType" id="correctionType">
                             <option value="none">N/A</option>
-                            <option value="business-information-step">Business Information</option>
-                            <option value="business-location-step">Business Location</option>
-                            <option value="hotel-information-step">Hotel Information</option>
-                            <option value="contact-person-step">Responsible Person</option>
-                            <option value="bank-account-info-step">Bank A/C Information</option>
-                            <option value="attachments-upload-step">Business Attachments</option>
+                            <option value="{{ \App\Enum\BusinessCorrectionType::INFORMATION }}">Business Information</option>
+                            <option value="{{ \App\Enum\BusinessCorrectionType::LOCATION }}">Business Location</option>
+                            <option value="{{ \App\Enum\BusinessCorrectionType::HOTEL }}">Hotel Information</option>
+                            <option value="{{ \App\Enum\BusinessCorrectionType::CONTACT }}">Responsible Person</option>
+                            <option value="{{ \App\Enum\BusinessCorrectionType::BANK }}">Bank A/C Information</option>
+                            <option value="{{ \App\Enum\BusinessCorrectionType::ATTACHMENTS }}">Business Attachments</option>
                         </select>
                         @error('correctionType')
                         <span class="text-danger">{{ $message }}</span>

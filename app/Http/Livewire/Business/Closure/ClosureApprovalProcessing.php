@@ -2,27 +2,28 @@
 
 namespace App\Http\Livewire\Business\Closure;
 
-use Exception;
-use Carbon\Carbon;
-use App\Events\SendSms;
-use Livewire\Component;
+use App\Enum\BusinessDeRegTypeStatus;
+use App\Enum\CustomMessage;
 use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\BusinessStatus;
-use App\Models\BusinessTempClosure;
-use App\Traits\WorkflowProcesssingTrait;
-use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
+use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 
 class ClosureApprovalProcessing extends Component
 {
     use WorkflowProcesssingTrait, CustomAlert;
+
     public $modelId;
     public $modelName;
     public $comments;
-    public $officer_id;
-
 
     public $officers = [];
 
@@ -37,25 +38,31 @@ class ClosureApprovalProcessing extends Component
 
     public function approve($transition)
     {
+        if (!isset($transition['data']['transition'])) {
+            $this->customAlert('error', CustomMessage::ERROR);
+            return;
+        }
         $transition = $transition['data']['transition'];
         try {
+            DB::beginTransaction();
             if ($this->checkTransition('compliance_officer_review')) {
 
-                if ($this->subject->closure_type == 'all') {
+                if ($this->subject->closure_type == BusinessDeRegTypeStatus::ALL) {
                     $business = Business::find($this->subject->business_id);
-                    if(is_null($business)){
+
+                    if (is_null($business)) {
                         abort(404);
                     }
+
                     $business->update([
                         'status' => BusinessStatus::TEMP_CLOSED
                     ]);
 
                     // Close all locations
-                    foreach ($business->locations as $location) {
-                        $location->update([
-                            'status' => BusinessStatus::TEMP_CLOSED
-                        ]);
-                    }
+                    $business->locations()->update([
+                        'status' => BusinessStatus::TEMP_CLOSED
+                    ]);
+
 
                 } else {
                     // Close one location
@@ -69,54 +76,50 @@ class ClosureApprovalProcessing extends Component
                 $this->subject->status = BusinessStatus::APPROVED;
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
 
+            }
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+            DB::commit();
+
+            if ($this->subject->status === BusinessStatus::APPROVED) {
                 event(new SendSms('business-closure-approval', $this->subject));
                 event(new SendMail('business-closure-approval', $this->subject));
             }
-            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            DB::rollBack();
+            Log::error('BUSINESS-CLOSURE-APPROVAL-PROCESSING-APPROVE', [$e]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
     }
 
     public function reject($transition)
     {
+        if (!isset($transition['data']['transition'])) {
+            $this->customAlert('error', CustomMessage::ERROR);
+            return;
+        }
+
         $transition = $transition['data']['transition'];
         $this->validate(['comments' => 'required|strip_tag']);
 
         try {
-
-            if ($this->checkTransition('compliance_officer_reject')) {
-
-            }
-            // if ($this->checkTransition('compliance_officer_reject')) {
-            //     $this->subject->rejected_on = Carbon::now()->toDateTimeString();
-            //     $this->subject->status = BusinessStatus::REJECTED;
-
-            //     if ($this->subject->extended_from_id != null) {
-            //         $previous_closure = BusinessTempClosure::findOrFail($this->subject->extended_from_id);
-            //         $previous_closure->update([
-            //             'show_extension' => true,
-            //             'status' => 'approved'
-            //         ]);
-            //     }
-            //     event(new SendSms('business-closure-rejected', $this->subject));
-            //     event(new SendMail('business-closure-rejected', $this->subject));
-            // } 
-            
+            DB::beginTransaction();
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->rejected_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::CORRECTION;
+            }
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+            DB::commit();
+            if ($this->subject->status = BusinessStatus::CORRECTION) {
                 event(new SendSms('business-closure-correction', $this->subject));
                 event(new SendMail('business-closure-correction', $this->subject));
             }
-
-            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            DB::rollBack();
+            Log::error('BUSINESS-CLOSURE-APPROVAL-PROCESSING-REJECT', [$e]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
     }
 
@@ -126,7 +129,7 @@ class ClosureApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', CustomMessage::ARE_YOU_SURE, [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

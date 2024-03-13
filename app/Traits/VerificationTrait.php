@@ -18,9 +18,6 @@ trait VerificationTrait
 
     public function verify(PayloadInterface $object): bool
     {
-        if (config('app.env') == 'local') {
-            return true;
-        }
 
         $stringData = "";
 
@@ -56,7 +53,9 @@ trait VerificationTrait
                     'data' => json_encode($object)
                 ]);
 
-                event(new SendMail('failed-verification', $verification));
+                if ($verification){
+                    event(new SendMail('failed-verification', $verification));
+                }
 
                 return false;
             }
@@ -70,9 +69,6 @@ trait VerificationTrait
 
     public function sign(PayloadInterface $object): bool
     {
-        if (config('app.env') == 'local') {
-            return true;
-        }
 
         $stringData = "";
 
