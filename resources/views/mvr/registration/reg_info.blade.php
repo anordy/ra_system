@@ -90,14 +90,39 @@
                     <p class="my-1">{{ $reg->registrant_tin ?? 'N/A' }}</p>
                 </div>
             @endif
+
+            @if($reg->inspection->inspection_mileage)
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Inspection Mileage</span>
+                    <p class="my-1">{{ number_format($reg->inspection->inspection_mileage) }} KM</p>
+                </div>
+            @endif
+
+            @if($reg->inspection->inspection_date)
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Inspection Date</span>
+                    <p class="my-1">{{ Carbon\Carbon::parse($reg->inspection->inspection_date)->format('d M Y') }}</p>
+                </div>
+            @endif
+
+            @if ($reg->report_path)
+                <div class="col-md-4">
+                    <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
+                         class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <a target="_blank"
+                           href="{{ route('mvr.files', encrypt($reg->report_path)) }}"
+                           class="ml-1">
+                            Inspection Report
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>
 
 @if($reg->registrant_tin)
     @livewire('tra.tin-verification', ['tinNumber' => $reg->registrant_tin])
-@endif
-
-@if($reg->chassis_number_id)
-    @livewire('approval.mvr.zbs-verification', ['chassisNumber' => $reg->chassis->chassis_number])
 @endif

@@ -48,6 +48,10 @@ class MvrRegistration extends Model
         return $this->hasOne(Tin::class, 'tin', 'registrant_tin');
     }
 
+    public function inspection(){
+        return $this->hasOne(MvrInspectionReport::class, 'mvr_registration_id');
+    }
+
     public function cor(){
         return $this->hasOne(Cor::class);
     }

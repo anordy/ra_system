@@ -45,22 +45,6 @@ class MotorVehicleRegistrationController extends Controller
     }
 
 
-    /**
-     * @param $id
-     * @return RedirectResponse
-     */
-    public function submitInspection($id){
-        $id = decrypt($id);
-        $status = MvrRegistrationStatus::query()
-            ->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_REVENUE_OFFICER_APPROVAL]);
-        MvrMotorVehicle::query()
-            ->where(['id'=>$id])
-            ->update([
-                'mvr_registration_status_id'=>$status->id
-        ]);
-        return redirect()->route('mvr.show',encrypt($id));
-    }
-
 
     public function plateNumbers(){
         if (!Gate::allows('motor-vehicle-plate-number-printing')) {

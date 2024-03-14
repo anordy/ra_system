@@ -8,40 +8,78 @@ use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
+use App\Models\MvrInspectionReport;
 use App\Models\MvrPlateNumberStatus;
-use App\Models\MvrRegistration;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class RegistrationApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
 
     public $modelId;
     public $modelName;
     public $comments;
+    public $mileage, $inspectionReport, $inspectionDate, $inspection;
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId   = decrypt($modelId);
+        $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
+        $this->inspection = MvrInspectionReport::select('report_path', 'inspection_date', 'inspection_mileage')
+            ->where('mvr_registration_id', $this->modelId)
+            ->first();
+
+        if ($this->inspection) {
+            $this->inspectionDate = Carbon::create($this->inspection->inspection_date)->format('Y-m-d');
+            $this->mileage = $this->inspection->inspection_mileage;
+            $this->inspectionReport = $this->inspection->report_path;
+        }
     }
 
-    public function approve($transition) {
+    public function approve($transition)
+    {
         $transition = $transition['data']['transition'];
 
         $this->validate([
             'comments' => 'required|strip_tag',
         ]);
 
+        if ($this->checkTransition('zbs_officer_review')) {
+            $this->validate([
+                'inspectionDate' => 'required|date',
+                'inspectionReport' => [$this->inspectionReport != ($this->inspection->report_path ?? null) ? 'required' : 'nullable', 'valid_pdf', 'max:1024', 'max_file_name_length:100'],
+                'mileage' => 'required|numeric',
+            ]);
+        }
+
         try {
             DB::beginTransaction();
+
+            if ($this->checkTransition('zbs_officer_review')) {
+                $inspectionReport = $this->inspectionReport;
+                if ($this->inspectionReport != ($this->inspection->inspectionReport ?? null)) {
+                    $inspectionReport = $this->inspectionReport->store('mvr', 'local');
+                }
+
+                MvrInspectionReport::updateOrCreate(
+                    [
+                        'mvr_registration_id' => $this->subject->id
+                    ], [
+                    'inspection_date' => $this->inspectionDate,
+                    'report_path' => $inspectionReport,
+                    'inspection_mileage' => $this->mileage,
+                    'mvr_registration_id' => $this->subject->id
+                ]);
+            }
 
             if ($this->checkTransition('mvr_registration_officer_review')) {
                 if ($this->subject->registrant_tin && !$this->subject->tin) {
@@ -92,7 +130,8 @@ class RegistrationApprovalProcessing extends Component
 
     }
 
-    public function reject($transition) {
+    public function reject($transition)
+    {
         $transition = $transition['data']['transition'];
 
         $this->validate([
@@ -152,7 +191,8 @@ class RegistrationApprovalProcessing extends Component
         ]);
     }
 
-    public function generateControlNumber() {
+    public function generateControlNumber()
+    {
         try {
             DB::beginTransaction();
 
