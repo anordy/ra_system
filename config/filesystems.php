@@ -31,21 +31,21 @@ return [
     'disks' => [
 
         'local' => [
-            'driver' => 'sftp',
+            'driver' => secEnv('DEFAULT_DRIVER', 'sftp'),
             'host' => secEnv('SFTP_HOST'),
             'username' => secEnv('SFTP_USERNAME'),
             'password' => secEnv('SFTP_PASSWORD'),
             'port' => secEnv('SFTP_PORT', 22),
-            'root' => secEnv('SFTP_ROOT'),
+            'root' => secEnv('SFTP_ROOT', storage_path('app')),
         ],
 
         'local-admin' => [
-            'driver' => 'sftp',
+            'driver' => secEnv('DEFAULT_DRIVER', 'sftp'),
             'host' => secEnv('SFTP_HOST'),
             'username' => secEnv('SFTP_USERNAME'),
             'password' => secEnv('SFTP_PASSWORD'),
             'port' => secEnv('SFTP_PORT', 22),
-            'root' => secEnv('SFTP_ROOT'),
+            'root' => secEnv('SFTP_ROOT', storage_path('app')),
         ],
 
         'public' => [
