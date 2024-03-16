@@ -105,8 +105,8 @@
 
             </div>
 
-            {{--            <livewire:approval.property-tax-approval-processing modelName="{{ get_class($registration) }}"--}}
-            {{--                                                                modelId="{{ encrypt($registration->id) }}"></livewire:approval.property-tax-approval-processing>--}}
+            <livewire:approval.mvr.public-service-registration-approval-processing modelName="{{ get_class($registration) }}"
+                                                                            modelId="{{ encrypt($registration->id) }}"></livewire:approval.mvr.public-service-registration-approval-processing>
 
         </div>
 

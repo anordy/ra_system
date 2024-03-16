@@ -5,15 +5,15 @@
         </div>
         <div class="card-body">
             @if($this->checkTransition('public_service_registration_manager_review'))
-                @if($this->subject->payment)
+                @if($subject->payment)
                     <div class="row m-2 pt-3">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Third Schedule</span>
-                            <p class="my-1"></p>
+                            <p class="my-1">{{ $subject->payment->paymentCategory->name  }} - TZS {{ number_format($subject->payment->paymentCategory->turnover_tax, 2)  }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Payment Months</span>
-                            <p class="my-1"></p>
+                            <p class="my-1">{{ $subject->payment->payment_months ?? 'N/A'  }} Months</p>
                         </div>
                     </div>
                 @endif
@@ -25,12 +25,12 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Select Third Schedule Turnover</label>
+                            <label>Select Third Schedule Turnover *</label>
                             <select class="form-control @error('psPaymentCategoryId') is-invalid @enderror"
                                      wire:model.defer="psPaymentCategoryId">
                                 <option value="null" disabled selected>Select</option>
                                 @foreach ($psPaymentCategories as $row)
-                                    <option value="{{ $row->id }}">{{ $row->name }}</option>
+                                    <option value="{{ $row->id }}">{{ $row->name }} - TZS {{ number_format($row->turnover_tax, 2)  }}</option>
                                 @endforeach
                             </select>
                             @error('psPaymentCategoryId')
@@ -42,12 +42,12 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Select Payment Months</label>
+                            <label>Select Payment Months *</label>
                             <select class="form-control @error('psPaymentMonthId') is-invalid @enderror"
                                     wire:model.defer="psPaymentMonthId">
                                 <option value="null" disabled selected>Select</option>
                                 @foreach ($psPaymentMonths as $row)
-                                    <option value="{{ $row->id }}">{{ $row->value }} Month</option>
+                                    <option value="{{ $row->id }}">{{ $row->value }} Months</option>
                                 @endforeach
                             </select>
                             @error('psPaymentMonthId')
