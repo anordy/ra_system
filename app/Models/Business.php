@@ -79,17 +79,6 @@ class Business extends Model implements Auditable
     public function locations(){
         return $this->hasMany(BusinessLocation::class, 'business_id');
     }
-  
-
-    public function businessWardName()
-    {
-        return $this->locations->first()->ward->name;
-    }
-
-    public function businessStreetName()
-    {
-        return $this->locations->first()->street->name;
-    }
 
     public function headquarter(){
         return $this->hasOne(BusinessLocation::class)->where('is_headquarter', true);
@@ -197,8 +186,19 @@ class Business extends Model implements Auditable
         return $locationIds;
     }
 
-    public function tininformation() {
-        return $this->belongsTo(Tin::class, 'tin', 'tin');
+    public function businessWardName()
+    {
+        if ($this->locations->first() && $this->locations->first()->ward){
+            return $this->locations->first()->ward->name;
+        }
+        return null;
     }
-    
+
+    public function businessStreetName()
+    {
+        if ($this->locations->first() && $this->locations->first()->street){
+            return $this->locations->first()->street->name;
+        }
+        return null;
+    }
 }
