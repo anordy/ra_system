@@ -10,6 +10,7 @@ class PublicServiceMotorStatus implements Status
     const REGISTERED = 'registered';
     const DEREGISTERED = 'de-registered';
     const TEMP_CLOSED = 'temp-closed';
+    const CORRECTION = 'correction';
 
 
     static function getConstants(): array

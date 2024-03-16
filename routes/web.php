@@ -14,6 +14,7 @@
 use App\Http\Controllers\PropertyTax\CondominiumController;
 use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
+use App\Http\Controllers\PublicService\PublicServiceController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -768,5 +769,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::name('finance.')->prefix('finance')->group(function () {
         Route::get('/taxpayer/ledger', [FinanceController::class, 'taxpayerLedgersList'])->name('taxpayer.ledgers');
         Route::get('/taxpayer/ledger/{id}', [FinanceController::class, 'taxpayerLedger'])->name('taxpayer.ledger.details');
+    });
+
+    Route::prefix('public-service')->as('public-service.')->group(function () {
+        Route::get('/public-service/registrations', [PublicServiceController::class, 'registrations'])->name('registrations.index');
+        Route::get('/public-service/registrations/{id}', [PublicServiceController::class, 'showRegistration'])->name('registrations.show');
+        Route::get('/public-service/registrations/{id}/file', [PublicServiceController::class, 'showFile'])->name('registrations.file');
     });
 });

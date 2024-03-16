@@ -5,12 +5,13 @@ namespace App\Models\PublicService;
 use App\Models\Business;
 use App\Models\MvrRegistration;
 use App\Models\Taxpayer;
+use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PublicServiceMotor extends Model
 {
-    use HasFactory;
+    use HasFactory, WorkflowTrait;
 
     protected $guarded = [];
 
@@ -24,6 +25,10 @@ class PublicServiceMotor extends Model
 
     public function mvr(){
         return $this->belongsTo(MvrRegistration::class, 'mvr_registration_id');
+    }
+
+    public function payment(){
+        return $this->hasOne(PublicServicePayment::class, 'public_service_motor_id');
     }
 
 }
