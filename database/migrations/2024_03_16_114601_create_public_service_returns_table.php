@@ -20,7 +20,7 @@ class CreatePublicServiceReturnsTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('taxpayer_id');
             $table->decimal('amount');
-            $table->dateTime('paid_at');
+            $table->timestamp('paid_at')->nullable();
             $table->string('payment_status');
             $table->timestamps();
         });
