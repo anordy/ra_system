@@ -34,7 +34,7 @@ class PBZPaymentsTable extends DataTableComponent
             $query->WhereBetween('transaction_time', [$data['range_start'],$data['range_end']]);
         }
 
-        return $query->with('bill');
+        return $query->with('bill')->orderBy('created_at', 'desc');
     }
 
     public function configure(): void

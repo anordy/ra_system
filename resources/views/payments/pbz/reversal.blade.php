@@ -14,11 +14,11 @@
                     <p class="my-1 text-uppercase">{{ $reversal->amount ?? 'N/A' }} {{ $reversal->currency }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Transaction Ref</span>
+                    <span class="font-weight-bold text-uppercase">Reversal Ref</span>
                     <p class="my-1 text-uppercase">{{ $reversal->bank_ref ?? 'N/A' }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Paid At</span>
+                    <span class="font-weight-bold text-uppercase">Reversed At</span>
                     <p class="my-1 text-uppercase">{{ $reversal->transaction_time?->toDayDateTimeString() ?? 'N/A' }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
