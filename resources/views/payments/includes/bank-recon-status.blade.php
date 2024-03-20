@@ -1,5 +1,5 @@
 @if ($row->recon_status === \App\Enum\BankReconStatus::SUCCESS)
-    <span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+    <span class="badge badge-success py-1 px-2 green-status">
         Complete
     </span>
 @elseif($row->recon_status === \App\Enum\BankReconStatus::AMOUNT_MISMATCH)

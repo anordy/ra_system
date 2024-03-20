@@ -10,4 +10,5 @@
 <link rel="icon" href="{{ asset('favicon.ico') }}" />
 @yield('css')
 @stack('styles')
-@livewireStyles()
+@livewireStyles(['nonce' => 'custom_style'])
+@livewireScripts(['nonce' => 'custom_script'])

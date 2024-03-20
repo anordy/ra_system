@@ -8,7 +8,7 @@
     </div>
 
     <div class="card">
-        <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+        <ul class="nav nav-tabs shadow-sm mb-0">
             <li class="nav-item" role="presentation">
                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#lease-infos" role="tab"
                     aria-controls="lease-infos" aria-selected="true">Lease Informations</a>
@@ -196,8 +196,8 @@
                         <div class="col-4">
                             <a class="file-item" target="_blank"
                                 href="{{ route('land-lease.get.lease.document', ['path' => encrypt($landLease->lease_agreement_path)]) }}">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                <div style="font-weight: 500;" class="ml-1">
+                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                <div class="ml-1 font-weight-bold">
                                     Lease Agreement Document
                                 </div>
                             </a>

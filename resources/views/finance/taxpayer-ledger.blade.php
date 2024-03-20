@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="card-body mt-0 p-2">
-        <ul class="nav nav-tabs shadow-sm" id="taxpayerLedger" role="tablist" style="margin-bottom: 0;">
+        <ul class="nav nav-tabs shadow-sm mb-0" id="taxpayerLedger" role="tablist">
             <li class="nav-item" role="presentation">
                 <a class="nav-link active" id="taxclearance-info-tab" data-toggle="tab" href="#taxclearance-info"
                     role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearence Information </a>
@@ -156,7 +156,7 @@
                         Business Location Tax Returns
                     </div>
                     <div class="card-body">
-                        <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+                        <ul class="nav nav-tabs shadow-sm mb-0">
                             @foreach ($business->locations as $location)
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link {{ $loop->first ? 'active' : '' }}"

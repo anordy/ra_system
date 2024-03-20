@@ -87,12 +87,11 @@
 
                         @if ($verification->assessment_report)
                             <div class="col-md-3">
-                                <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                    class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                     <a target="_blank"
                                         href="{{ route('tax_verifications.files.show', encrypt($verification->assessment_report)) }}"
-                                        style="font-weight: 500;" class="ml-1">
+                                        class="ml-1 font-weight-bold">
                                         Verification Report
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
@@ -132,12 +131,12 @@
                             </div>
                             @if ($verification->assessment->report_path)
                                 <div class="col-md-4">
-                                    <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                        class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                    <div
+                                        class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                         <a target="_blank"
                                             href="{{ route('tax_verifications.files.show', encrypt($verification->assessment->report_path)) }}"
-                                            style="font-weight: 500;" class="ml-1">
+                                            class="ml-1 font-weight-bold">
                                             Verification Report
                                             <i class="bi bi-arrow-up-right-square ml-1"></i>
                                         </a>

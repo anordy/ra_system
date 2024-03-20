@@ -79,8 +79,8 @@
                     <div class="col-4">
                         <a class="file-item" target="_blank"
                             href="{{ route('reliefs.get.attachment', ['path' => encrypt($reliefAttachment->file_path)]) }}">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <div style="font-weight: 500;" class="ml-1">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <div class="ml-1 font-weight-bold">
                                 {{ $reliefAttachment->file_name }}
                             </div>
                         </a>

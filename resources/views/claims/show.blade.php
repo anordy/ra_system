@@ -11,7 +11,7 @@
             <div class="row">
 
                 <div class="col-md-12 mt-3">
-                    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+                    <ul class="nav nav-tabs shadow-sm mb-0">
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active" id="claim-details-tab" data-toggle="tab" href="#claim-details"
                                role="tab" aria-controls="claim-details" aria-selected="true">Claim Details</a>
@@ -41,8 +41,7 @@
                                role="tab" aria-controls="approval-history" aria-selected="true">Approval History</a>
                         </li>
                     </ul>
-                    <div class="tab-content bg-white border shadow-sm" id="myTabContent"
-                         style="padding: 1rem !important;">
+                    <div class="tab-content bg-white border shadow-sm px-2" id="myTabContent">
                         <div class="tab-pane fade  show active" id="claim-details" role="tabpanel"
                              aria-labelledby="claim-details-tab">
                             <div class="row">
@@ -143,12 +142,12 @@
                 <div class="row">
                     @if ($claim->assessment->report_path)
                         <div class="col-md-4">
-                            <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                 class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <div
+                                 class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                 <a target="_blank"
                                    href="{{ route('claims.files.show', encrypt($claim->assessment->report_path)) }}"
-                                   style="font-weight: 500;" class="ml-1">
+                                   class="ml-1 font-weight-bold">
                                     Assessment Report
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>
                                 </a>

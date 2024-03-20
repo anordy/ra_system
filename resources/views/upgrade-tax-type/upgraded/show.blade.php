@@ -32,8 +32,7 @@
                         <tr>
                             <td class="font-weight-bold text-uppercase">Upgraded From Tax Type</td>
                             <td class="my-1">
-                                <span class="badge badge-danger py-1 px-2"
-                                      style="border-radius: 1rem; background: #72DC3559; font-size: 85%; color: #319e0a;">
+                                <span class="badge badge-info py-1 px-2">
                                     {{$tax_type_change->fromTax->name }}-{{$tax_type_change->from_tax_type_currency}}
                                 </span>
                             </td>
@@ -42,8 +41,7 @@
                         <tr>
                             <td class="font-weight-bold text-uppercase">Upgraded To</td>
                             <td class="my-1">
-                                <span class="badge badge-danger py-1 px-2"
-                                      style="border-radius: 1rem; background: #72DC3559; font-size: 85%; color: #319e0a;">
+                                <span class="badge badge-info py-1 px-2">
                                     @if($tax_type_change->toTax->code === \App\Models\TaxType::VAT)
                                         {{$tax_type_change->subvat->name }} - {{$tax_type_change->to_tax_type_currency}}
                                     @else

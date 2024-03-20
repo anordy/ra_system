@@ -115,7 +115,7 @@
                         </tbody>
                     </table>
                     <div class="card-body mt-0 p-2">
-                        <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+                        <ul class="nav nav-tabs shadow-sm mb-0">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active" id="directors-tab" data-toggle="tab" href="#directors"
                                     role="tab" aria-controls="directors" aria-selected="true">Directors</a>

@@ -903,3 +903,44 @@ div.table-bordered {
     background-color: #007bff;
     color: #FFFFFF;
 }
+
+.font-x-large {
+    font-size: x-large;
+}
+
+.font-large {
+font-size: large;
+}
+
+.file-blue-border {
+background: #faf5f5; 
+color: #036a9e; 
+border: .5px solid #036a9e24;
+}
+
+.green-status {
+border-radius: 1rem;
+background: #72DC3559; 
+color: #319e0a; 
+font-size: 85%
+}
+
+.pending-status {
+border-radius: 1rem; 
+background: rgba(53,220,220,0.35); 
+color: #1caecf; 
+font-size: 85%
+}
+
+.draft-status {
+border-radius: 1rem; 
+background: rgba(220,181,53,0.35); 
+color: #cfa51c; font-size: 85%
+}
+
+.danger-status {
+border-radius: 1rem; 
+background: rgba(220,53,53,0.35); 
+color: #cf1c1c; 
+font-size: 85%"
+}

@@ -12,7 +12,7 @@
             Business Location Tax Returns
         </div>
         <div class="card-body">
-            <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+            <ul class="nav nav-tabs shadow-sm mb-0">
                 @foreach($business->locations as $location)
                     <li class="nav-item" role="presentation">
                         <a class="nav-link {{ $loop->first ? 'active' : '' }}"

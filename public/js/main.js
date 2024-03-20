@@ -8,4 +8,11 @@ $(document).ready(function() {
     $(".nav-tabs a").click(function() {
         $(this).tab('show');
     });
+
+    $('a.logout-link').on('click', function(event) {
+        event.preventDefault();
+        $('#logout-form').submit();
+    });
 });
+
+

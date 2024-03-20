@@ -1,5 +1,5 @@
 <div class="pt-3 px-2">
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    <ul class="nav nav-tabs shadow-sm mb-0">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Business Information</a>
@@ -230,7 +230,7 @@
         <div class="tab-pane fade" id="location" role="tabpanel" aria-labelledby="location-tab">
             @if ($location = $business->headquarter)
                 <div class="col-md-12 mt-3">
-                    <h6 class="mb-0 font-weight-bold" style="flex: 1;">Headquarter</h6>
+                    <h6 class="mb-0 font-weight-bold">Headquarter</h6>
                     <hr class="mt-2 mb-3" />
                 </div>
                 <div class="row m-2">
@@ -502,7 +502,7 @@
                             @endif
                         </div>
                     </div>
-                    <hr style="margin-top: -16px" class="mx-3" />
+                    <hr class="mx-3" />
                 @endforeach
             @endif
         </div>
@@ -612,7 +612,7 @@
             </div>
             <div class="row m-2">
                 <div class="col-md-12">
-                    <span class="mb-0 font-weight-bold" style="flex: 1;">Business Registered By</span>
+                    <span class="mb-0 font-weight-bold">Business Registered By</span>
                     <hr class="mt-2 mb-3" />
                 </div>
                 <div class="col-md-4 mb-3">
@@ -732,8 +732,8 @@
                     <div class="col-md-4">
                         <a class="file-item" target="_blank"
                             href="{{ route('business.file', encrypt($file->id)) }}">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <div style="font-weight: 500;" class="ml-1">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <div class="ml-1 font-weight-bold">
                                 {{ $file->type->name ?? 'N/A' }}
                                 @if ($file->type->short_name === \App\Models\BusinessFileType::TIN)
                                     - {{ $file->taxpayer->full_name }} (<b>{{ $file->taxpayer->reference_no }}</b>)
@@ -745,12 +745,11 @@
                 @foreach ($business->partners as $partner)
                     @if ($partner->tin)
                         <div class="col-md-4">
-                            <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                 <a target="_blank"
                                     href="{{ route('business.tin.file', encrypt($partner->taxpayer_id)) }}"
-                                    style="font-weight: 500;" class="ml-1">
+                                    class="ml-1 font-weight-bold">
                                     TIN Certificate - {{ $partner->taxpayer->full_name }}
                                     (<b>{{ $partner->taxpayer->reference_no }}</b>)
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -761,12 +760,11 @@
                 @endforeach
                 @if ($business->taxpayer->tin_location)
                     <div class="col-md-4">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
                                 href="{{ route('business.tin.file', encrypt($business->taxpayer_id)) }}"
-                                style="font-weight: 500;" class="ml-1">
+                                class="ml-1 font-weight-bold">
                                 TIN Certificate - {{ $business->taxpayer->full_name }}
                                 (<b>{{ $business->taxpayer->reference_no }}</b>)
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -796,24 +794,21 @@
                             <span class="font-weight-bold text-uppercase">Status</span>
                             @if ($business->bpra_verification_status === \App\Models\BusinessStatus::PENDING)
                                 <p class="my-1">
-                                    <span class="badge badge-danger py-1 px-2 text-capitalize"
-                                        style="border-radius: 1rem; background: #9ca3af; color: #374151; font-size: 85%">
+                                    <span class="badge badge-danger py-1 px-2 text-capitalize pending-status">
                                         <i class="bi bi-record-circle mr-1"></i>
                                         {{ $business->bpra_verification_status }}
                                     </span>
                                 </p>
                             @elseif ($business->bpra_verification_status === \App\Models\BusinessStatus::PBRA_UNVERIFIED)
                                 <p class="my-1">
-                                    <span class="badge badge-danger py-1 px-2 text-capitalize"
-                                        style="border-radius: 1rem; background: #fde047; color: #a16207; font-size: 85%">
+                                    <span class="badge badge-danger py-1 px-2 text-capitalize pending-status">
                                         <i class="bi bi-record-circle mr-1"></i>
                                         {{ $business->bpra_verification_status }}
                                     </span>
                                 </p>
                             @elseif($business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED)
                                 <p class="my-1">
-                                    <span class="badge badge-success py-1 px-2"
-                                        style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                    <span class="badge badge-success py-1 px-2 green-status">
                                         <i class="bi bi-check-circle-fill mr-1"></i>
                                         Verification Successful
                                     </span>
@@ -929,11 +924,11 @@
                     <label class="font-weight-bold text-uppercase mt-2">Shares &
                         Distribution</label>
                     <thead>
-                        <th style="width: 30%">Ower Name</th>
-                        <th style="width: 14%">No Of Shares</th>
-                        <th style="width: 5%">Currency</th>
-                        <th style="width: 23%">Shares Taken</th>
-                        <th style="width: 23%">Shares Paid</th>
+                        <th>Ower Name</th>
+                        <th>No Of Shares</th>
+                        <th>Currency</th>
+                        <th>Shares Taken</th>
+                        <th>Shares Paid</th>
                     </thead>
                     <tbody>
                         @if (count($shares) > 0)

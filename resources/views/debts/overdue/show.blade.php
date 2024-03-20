@@ -19,7 +19,7 @@
                                 <hr>
                                 @if ($debt->recoveryMeasures)
                                     <div class="card-tools">
-                                            <a href="{{ route('debts.debt.recovery', encrypt($debt->id)) }}"  class="btn btn-info btn-sm text-white" style="color: white !important;"><i
+                                            <a href="{{ route('debts.debt.recovery', encrypt($debt->id)) }}"  class="btn btn-info btn-sm text-white"><i
                                                 class="fa fa-plus text-white"></i>
                                                 Assign Recovery Measure
                                             </a>

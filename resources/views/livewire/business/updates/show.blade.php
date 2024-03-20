@@ -359,8 +359,8 @@
                                     <div class="col-md-12">
                                         <a class="file-item" target="_blank"
                                             href="{{ route('business.file', encrypt($file->id)) }}">
-                                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                            <div style="font-weight: 500;" class="ml-1">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                            <div class="ml-1 font-weight-bold">
                                                 {{ $this->getNameById('file_type_id',$file->business_file_type_id) ?? 'N/A' }}
                                             </div>
                                         </a>
@@ -376,8 +376,8 @@
                                         <div class="col-md-12">
                                             <a class="file-item" target="_blank"
                                                 href="{{ route('business.file-location', encrypt($file->location)) }}">
-                                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                                <div style="font-weight: 500;" class="ml-1">
+                                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                                <div class="ml-1 font-weight-bold">
                                                     {{ $file->name ?? 'N/A' }}
                                                 </div>
                                             </a>
@@ -387,8 +387,8 @@
                                         <div class="col-md-12">
                                             <a class="file-item" target="_blank"
                                                 href="{{ route('business.file-location', encrypt($file->tin_location)) }}">
-                                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                                <div style="font-weight: 500;" class="ml-1">
+                                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                                <div class="ml-1 font-weight-bold">
                                                 TIN for {{ $file->reference_no ?? 'N/A' }}
                                                 </div>
                                             </a>
@@ -485,8 +485,8 @@
                     <div class="col-md-3">
                         <a class="file-item" target="_blank"
                            href="{{ route('business.contract.file', encrypt($business_update->id)) }}">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <div style="font-weight: 500;" class="ml-1">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <div class="ml-1 font-weight-bold">
                                 View Agent Contract
                             </div>
                         </a>

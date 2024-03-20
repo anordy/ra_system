@@ -129,21 +129,18 @@
                                     <span class="font-weight-bold text-uppercase">Return Application Status</span>
                                     <p class="my-1">
                                         @if($return->application_status == \App\Enum\ReturnApplicationStatus::SUBMITTED)
-                                            <span class="badge badge-success py-1 px-2"
-                                                  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
+                                            <span class="badge badge-success py-1 px-2 green-status"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
                                                 Submitted
                                             </span>
 
                                         @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::ADJUSTED)
-                                            <span class="badge badge-danger py-1 px-2"
-                                                  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
+                                            <span class="badge badge-danger py-1 px-2 green-status"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
                                                 Adjusted
                                             </span>
                                         @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::SELF_ASSESSMENT)
-                                            <span class="badge badge-success py-1 px-2"
-                                                  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
+                                            <span class="badge badge-success py-1 px-2 green-status"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
                                                 self Assessment
                                             </span>
@@ -362,9 +359,8 @@
                                             <div class="col-md-3">
                                                 <a class="file-item" target="_blank"
                                                    href="{{ route('returns.vat-return.withheld-file', [encrypt($file->id), 'withheld']) }}">
-                                                    <i class="bi bi-file-earmark-pdf-fill px-2"
-                                                       style="font-size: x-large"></i>
-                                                    <div style="font-weight: 500;" class="ml-1">
+                                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                                    <div class="ml-1 font-weight-bold">
                                                         View Attachment
                                                     </div>
                                                 </a>

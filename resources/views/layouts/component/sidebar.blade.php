@@ -1153,8 +1153,7 @@
                     <a href="{{ route('account.security-questions') }}">{{ __("Security Questions") }}</a>
                 </li> --}}
                 <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
-                    <a href="{{ route('logout') }}"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a href="{{ route('logout') }}" class="logout-link">
                         {{ __("Log out") }}
                     </a>
                 </li>
@@ -1174,9 +1173,8 @@
         </a>
 
         <div class="pr-1">
-            <a class="text-white" href="{{ route('logout') }}"
-               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="fa fa-sign-out-alt"></i>
+            <a class="text-white logout-link" href="{{ route('logout') }}">
+                <i class="fa fa-car"></i>
             </a>
 
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
