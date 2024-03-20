@@ -1012,7 +1012,7 @@ trait PaymentsTrait
             $mvr->taxpayer->email,
             ZmCore::formatPhone($mvr->taxpayer->mobile),
             Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
-            "{$fee->name} for chassis number {$mvr->chassis->chassis_number}",
+            "{$fee->name} for chassis number {$mvr->registration->chassis->chassis_number}",
             ZmCore::PAYMENT_OPTION_EXACT,
             'TZS',
             $exchangeRate,

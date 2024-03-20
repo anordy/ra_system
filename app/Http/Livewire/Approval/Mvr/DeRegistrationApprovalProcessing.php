@@ -95,7 +95,7 @@ class DeRegistrationApprovalProcessing extends Component
             }
 
 
-            if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
+            if ($this->checkTransition('zbs_officer_review') && $transition === 'zbs_officer_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
             }
 
@@ -107,7 +107,7 @@ class DeRegistrationApprovalProcessing extends Component
 
             if ($this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'zbs_officer_review') {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle de-registration request for chassis number {$this->subject->chassis->chassis_number} has been approved, you will receive your payment control number shortly."]));
+                Hello {$this->subject->taxpayer->fullname}, your motor vehicle de-registration request for {$this->subject->registration->plate_number} has been approved, you will receive your payment control number shortly."]));
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
@@ -152,7 +152,7 @@ class DeRegistrationApprovalProcessing extends Component
             if ($this->subject->status = MvrRegistrationStatus::CORRECTION) {
                 // Send correction email/sms
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for plate number {$this->subject->registration->plate_numer} requires correction, please login to the system to perform data update."]));
+                Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for {$this->subject->registration->plate_number} requires correction, please login to the system to perform data update."]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());

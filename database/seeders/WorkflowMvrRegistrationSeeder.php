@@ -87,7 +87,7 @@ class WorkflowMvrRegistrationSeeder extends Seeder
             ],
             'application_corrected' => [
                 'from' => 'correct_application',
-                'to' => 'mvr_registration_officer',
+                'to' => 'zbs_officer',
                 'condition' => '',
             ],
             'mvr_registration_manager_reject' => [

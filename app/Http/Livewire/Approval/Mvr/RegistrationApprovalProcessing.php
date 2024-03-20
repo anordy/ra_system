@@ -56,7 +56,7 @@ class RegistrationApprovalProcessing extends Component
         if ($this->checkTransition('zbs_officer_review')) {
             $this->validate([
                 'inspectionDate' => 'required|date',
-                'inspectionReport' => [$this->inspectionReport != ($this->inspection->report_path ?? null) ? 'required' : 'nullable', 'valid_pdf', 'max:1024', 'max_file_name_length:100'],
+                'inspectionReport' => [$this->inspectionReport === ($this->inspection->report_path ?? null) ? 'required' : 'nullable', 'max:1024'],
                 'mileage' => 'required|numeric',
             ]);
         }
@@ -66,7 +66,7 @@ class RegistrationApprovalProcessing extends Component
 
             if ($this->checkTransition('zbs_officer_review')) {
                 $inspectionReport = $this->inspectionReport;
-                if ($this->inspectionReport != ($this->inspection->inspectionReport ?? null)) {
+                if ($this->inspectionReport === ($this->inspection->inspectionReport ?? null)) {
                     $inspectionReport = $this->inspectionReport->store('mvr', 'local');
                 }
 
@@ -82,10 +82,10 @@ class RegistrationApprovalProcessing extends Component
             }
 
             if ($this->checkTransition('mvr_registration_officer_review')) {
-                if ($this->subject->registrant_tin && !$this->subject->tin) {
-                    $this->customAlert('warning', 'Please Verify Registrant TIN Number');
-                    return;
-                }
+//                if ($this->subject->registrant_tin && !$this->subject->tin) {
+//                    $this->customAlert('warning', 'Please Verify Registrant TIN Number');
+//                    return;
+//                }
             }
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
@@ -141,13 +141,9 @@ class RegistrationApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('mvr_registration_officer_review')) {
+            if ($this->checkTransition('zbs_officer_review')) {
                 $this->subject->status = MvrRegistrationStatus::CORRECTION;
                 $this->subject->save();
-            }
-
-            if ($this->checkTransition('mvr_registration_manager_review')) {
-
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);

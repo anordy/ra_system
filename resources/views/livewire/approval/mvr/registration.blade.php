@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="form-group col-lg-4">
                         <label class="control-label">Inspection Report @if (!$this->inspectionReport) * @endif</label>
-                        <input type="file" class="form-control" wire:model.lazy="inspectionReport" id="inspectionReport">
+                        <input type="file" class="form-control" wire:model="inspectionReport" id="inspectionReport">
                         @error('inspectionReport')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
