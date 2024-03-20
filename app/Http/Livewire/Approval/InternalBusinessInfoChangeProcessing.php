@@ -56,6 +56,7 @@ class InternalBusinessInfoChangeProcessing extends Component
     public $isiic_i, $isiic_ii, $isiic_iii, $isiic_iv;
     public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList  = [];
     public $newOwnerZno;
+    public $defaultSubVatOptions = [];
 
     public function mount($modelName, $modelId)
     {
@@ -252,18 +253,11 @@ class InternalBusinessInfoChangeProcessing extends Component
 
             if ($this->checkTransition('director_of_trai_review')) {
                 
-            }
-
-
-            if ($this->checkTransition('cdt_review')) {
-                
                 // Update Hotel Star Rating
                 if ($this->subject->type === InternalInfoType::HOTEL_STARS) {
                     $businessHotel = BusinessHotel::where('location_id', $this->subject->location_id)->firstOrFail();
                     $businessHotel->update(['hotel_star_id' => json_decode($this->subject->new_values)->id]);
                 }
-
-                // Future: Update ISIC Codes
 
                 // Update Effective Date
                 if ($this->subject->type === InternalInfoType::EFFECTIVE_DATE) {

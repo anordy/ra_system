@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Returns\Petroleum\PetroleumReturn;
 use Exception;
 use Carbon\Carbon;
 use App\Models\PenaltyRate;
@@ -75,7 +76,11 @@ class PenaltyForDebt
         if (count($tax_return->return->penalties) > 0) {
             $outstanding_amount = $tax_return->return->penalties->last()->penalty_amount;
         } else {
-            $outstanding_amount = $tax_return->principal + $tax_return->infrastructure;
+            if ($tax_return->return_type != PetroleumReturn::class) {
+                $outstanding_amount = $tax_return->principal;
+            } else {
+                $outstanding_amount = $tax_return->principal + $tax_return->infrastructure;
+            }
         }
 
         // If return has waiver, use the waived amount as outstanding amount
