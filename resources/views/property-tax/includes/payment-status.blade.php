@@ -1,5 +1,5 @@
 @if($row->payment_status == \App\Models\Returns\ReturnStatus::COMPLETE)
-    <span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #35dcb5; color: #0a9e99; font-size: 85%">
+    <span class="badge badge-success py-1 px-2 green-status">
         <i class="bi bi bi-check-circle-fill mr-1"></i>
         {{ __('PAID') }}
     </span>

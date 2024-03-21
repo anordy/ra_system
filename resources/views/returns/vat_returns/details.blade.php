@@ -3,7 +3,7 @@
         <h6 class="text-uppercase mt-2 ml-2">Filled Return Details For {{ $return->taxtype->name }}</h6>
         <hr>
         <div>
-            <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
+            <ul  class="nav nav-tabs" id="myTab" role="tablist">
 
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="academic-tab" data-toggle="tab" href="#academic" role="tab"
@@ -55,14 +55,14 @@
                        aria-selected="false">Exempt Supplies</a>
                 </li>
             </ul>
-            <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
+            <div  class="tab-content" id="myTabContent">
 
                 <div class="tab-pane p-2 show active" id="academic" role="tabpanel" aria-labelledby="academic-tab">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
 
-                                <div class="pb-2" style="width: 160px">
+                                <div class="pb-2 w-160">
                                     <label>{{ __('Exemption Method Used') }}</label>
                                     <input readonly class="form-control" type="text"
                                            value="{{ $return->method_used ?? 'No Method Used' }}">
@@ -72,10 +72,10 @@
 
                             <table class="table table-bordered ">
                                 <thead>
-                                <th style="width: 40%">Item Name</th>
-                                <th style="width: 20%">Value</th>
-                                <th style="width: 20%">Rate</th>
-                                <th class="text-right" style="width: 20%">VAT</th>
+                                <th>Item Name</th>
+                                <th>Value</th>
+                                <th>Rate</th>
+                                <th class="text-right">VAT</th>
                                 </thead>
                                 <tbody>
                                 @foreach ($return->items as $item)

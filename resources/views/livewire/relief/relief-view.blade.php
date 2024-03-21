@@ -92,7 +92,7 @@
         </div>
 
         <div class="card-footer">
-            <div class="row" style="background-color: #faecec">
+            <div class="row">
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Registered By</span>
                     <p class="my-1">{{ $relief->createdBy->fname ?? '' }} {{ $relief->createdBy->mname ?? '' }}

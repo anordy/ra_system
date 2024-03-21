@@ -9,14 +9,12 @@
         Rejected
     </span>
 @elseif($row->status == "draft")
-    <span class="badge badge-warning py-1 px-2"
-        style="border-radius: 1rem; background: #f9c83559; color: #f9c835; font-size: 85%">
+    <span class="badge badge-warning py-1 px-2 draft-status">
         <i class="bi bi-file-text-fill mr-1"></i>
         Draft
     </span>
 @elseif($row->status == "pending")
-    <span class="badge badge-info py-1 px-2"
-        style="border-radius: 1rem; background: #f9c83559; color: #f8bb02; font-size: 85%">
+    <span class="badge badge-info py-1 px-2 pending-status">
         <i class="bi bi-clock-fill mr-1"></i>
         Pending
     </span>

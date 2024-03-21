@@ -66,11 +66,11 @@
         </div>
 
 
-        <div class="col-6 p-3" style="border: 1px solid #ede6e6;">
+        <div class="col-6 p-3 border border-white">
             <div class="row">
                 <div class="col-12">
                     <br>
-                    <h5 class="text-center pb-2" style="border-bottom: 1px solid silver">Applicant Details</h5>
+                    <h5 class="text-center pb-2 border border-white">Applicant Details</h5>
                     <br>
                 </div>
                 <hr>

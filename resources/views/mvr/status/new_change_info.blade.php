@@ -1,6 +1,6 @@
 <div class="card mt-3">
     <div class="card-header font-weight-bold bg-white d-flex justify-content-between align-items-center">
-        <span> {{ $reg->chassis->chassis_number  }}  Status Change Information</span>
+        <span> {{ $reg->chassis->chassis_number }} Status Change Information</span>
 
     </div>
 
@@ -9,30 +9,26 @@
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Status</span>
                 <p class="my-1">
-                    @if($reg->status === \App\Enum\MvrRegistrationStatus::PENDING)
-                        <span class="badge badge-info py-1 px-2"
-                              style="font-size: 85%">
-                <i class="bi bi-check-circle-fill mr-1"></i>
-                {{ __('Pending') }}
-            </span>
+                    @if ($reg->status === \App\Enum\MvrRegistrationStatus::PENDING)
+                        <span class="badge badge-info py-1 px-2">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            {{ __('Pending') }}
+                        </span>
                     @elseif($reg->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED)
-                        <span class="badge badge-success py-1 px-2"
-                              style="font-size: 85%">
-                <i class="bi bi-check-circle-fill mr-1"></i>
-                {{ __('Registered') }}
-            </span>
+                        <span class="badge badge-success py-1 px-2">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            {{ __('Registered') }}
+                        </span>
                     @elseif($reg->status === \App\Enum\MvrRegistrationStatus::CORRECTION)
-                        <span class="badge badge-warning py-1 px-2"
-                              style="font-size: 85%">
-                <i class="bi bi-check-circle-fill mr-1"></i>
-                {{ __('For Corrections') }}
-            </span>
+                        <span class="badge badge-warning py-1 px-2">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            {{ __('For Corrections') }}
+                        </span>
                     @else
-                        <span class="badge badge-primary py-1 px-2"
-                              style="font-size: 85%">
-                <i class="bi bi-check-circle-fill mr-1"></i>
-                {{ $reg->status }}
-            </span>
+                        <span class="badge badge-primary py-1 px-2">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            {{ $reg->status }}
+                        </span>
                     @endif
                 </p>
             </div>
@@ -65,7 +61,7 @@
                 <p class="my-1">{{ $reg->register_type ?? 'N/A' }}</p>
             </div>
 
-            @if($reg->agent)
+            @if ($reg->agent)
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Is Registration For Agent?</span>
                     <p class="my-1">{{ $reg->is_agent_registration ? 'Yes' : 'No' }}</p>
@@ -97,12 +93,12 @@
             <div class="row">
                 @if ($reg->approval_report)
                     <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                             class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <div
+                            class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
                             <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
-                               href="{{ route('assesments.waiver.files', encrypt($reg->approval_report)) }}"
-                               class="ml-1 font-weight-bold">
+                                href="{{ route('assesments.waiver.files', encrypt($reg->approval_report)) }}"
+                                class="ml-1 font-weight-bold">
                                 Approval Report
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>

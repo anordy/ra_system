@@ -29,7 +29,7 @@
                     @endcan
                 @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_ACCEPTED)
                     <a href="{{route('mvr.certificate-of-registration',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
-                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
+                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection"><i
                                 class="fa fa-print text-white"></i>
                         New Certificate of Registration</a><!--- todo: Missing format for cert fo registration - NCR -->
                 @endif

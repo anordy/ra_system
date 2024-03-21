@@ -7,13 +7,13 @@
         <div class="card-body">
             <table class="table table-striped table-sm table-bordered">
                 <thead>
-                <th style="width: 18%">Property</th>
+                <th>Property</th>
                 @if ($new_values)
-                    <th style="width: 37%">Old Data</th>
-                    <th style="width: 35%">New Data</th>
-                    <th style="width: 10%">Status</th>
+                    <th>Old Data</th>
+                    <th>New Data</th>
+                    <th>Status</th>
                 @else
-                    <th style="width: 82%">Data</th>
+                    <th>Data</th>
                 @endif
                 </thead>
                 <tbody>

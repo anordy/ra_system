@@ -2,10 +2,10 @@
     <h6 class="text-uppercase mt-4 mb-2 font-weight-bold">Stamp duty return details</h6>
     <table class="table table-bordered">
         <thead>
-        <th style="width: 30%">Item Name</th>
-        <th style="width: 20%">Value</th>
-        <th style="width: 10%">Rate</th>
-        <th style="width: 20%">TAX</th>
+        <th>Item Name</th>
+        <th>Value</th>
+        <th>Rate</th>
+        <th>TAX</th>
         </thead>
         <tbody>
         @foreach ($return->items as $item)
@@ -49,10 +49,10 @@
         </tbody>
         <tfoot>
         <tr>
-            <th style="width: 20%">Total Amount Without Penalties</th>
-            <th style="width: 30%"></th>
-            <th style="width: 25%"></th>
-            <th style="width: 25%">{{ number_format($return->total_amount_due, 2) }}</th>
+            <th>Total Amount Without Penalties</th>
+            <th></th>
+            <th></th>
+            <th>{{ number_format($return->total_amount_due, 2) }}</th>
         </tr>
         </tfoot>
     </table>

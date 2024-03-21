@@ -45,7 +45,7 @@
             </div>
             <div class="form-group col-lg-6">
                 <label class="control-label">Quantity of Certificate Attachment: *</label>
-                    <div style="flex: 1" class="mr-2" x-init="isUploading = false" x-data="{ isUploading: false, progress: 0 }"
+                    <div class="mr-2 flex-1" x-init="isUploading = false" x-data="{ isUploading: false, progress: 0 }"
                         x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false"
                         x-on:livewire-upload-error="isUploading = false"
                         x-on:livewire-upload-progress="progress = $event.detail.progress">

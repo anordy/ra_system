@@ -16,10 +16,10 @@
                                 <strong>{{ $business_update->created_at->toFormattedDateString() }}</strong></label>
                         </div>
                         <thead>
-                            <th style="width: 20%">Property</th>
-                            <th style="width: 30%">Old Values</th>
-                            <th style="width: 30%">New Values</th>
-                            <th style="width: 20%">Status</th>
+                            <th>Property</th>
+                            <th>Old Values</th>
+                            <th>New Values</th>
+                            <th>Status</th>
                         </thead>
                         <tbody>
                             <tr>
@@ -142,10 +142,10 @@
                     <table class="table table-bordered table-striped table-sm">
                         <label class="font-weight-bold text-uppercase">Business Location</label>
                         <thead>
-                            <th style="width: 20%">Property</th>
-                            <th style="width: 30%">Old Values</th>
-                            <th style="width: 30%">New Values</th>
-                            <th style="width: 20%">Status</th>
+                            <th>Property</th>
+                            <th>Old Values</th>
+                            <th>New Values</th>
+                            <th>Status</th>
                         </thead>
                         <tbody>
                             <tr>
@@ -300,8 +300,8 @@
                             <strong>{{ $business_update->created_at->toFormattedDateString() }}</strong></label>
                     </div>
                     <thead>
-                        <th style="width: 50%">Old Bank Information</th>
-                        <th style="width: 50%">Updated Bank Information</th>
+                        <th>Old Bank Information</th>
+                        <th>Updated Bank Information</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -347,8 +347,8 @@
                             <strong>{{ $business_update->created_at->toFormattedDateString() }}</strong></label>
                     </div>
                     <thead>
-                        <th style="width: 50%">Old Attachments</th>
-                        <th style="width: 50%">Updated Attachments</th>
+                        <th>Old Attachments</th>
+                        <th>Updated Attachments</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -405,10 +405,10 @@
                     <table class="table table-striped table-sm">
                         <label class="font-weight-bold text-uppercase">{{ $business_update->business->name }} Consultant / Preparer</label>
                         <thead>
-                            <th style="width: 30%">Property</th>
-                            <th style="width: 25%">Old Values</th>
-                            <th style="width: 25%">New Values</th>
-                            <th style="width: 20%">Status</th>
+                            <th>Property</th>
+                            <th>Old Values</th>
+                            <th>New Values</th>
+                            <th>Status</th>
                         </thead>
                         <tbody>
 
@@ -500,10 +500,10 @@
                 <table class="table table-striped table-sm">
                     <label class="font-weight-bold text-uppercase">{{ $business_update->business->name }} Hotel Information</label>
                     <thead>
-                        <th style="width: 30%">Property</th>
-                        <th style="width: 25%">Old Values</th>
-                        <th style="width: 25%">New Values</th>
-                        <th style="width: 20%">Status</th>
+                        <th>Property</th>
+                        <th>Old Values</th>
+                        <th>New Values</th>
+                        <th>Status</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -655,10 +655,10 @@
                     <table class="table table-striped table-sm">
                         <label class="font-weight-bold text-uppercase">{{ $business_update->business->name }} Hotel Information</label>
                         <thead>
-                        <th style="width: 30%">Property</th>
-                        <th style="width: 25%">Old Values</th>
-                        <th style="width: 25%">New Values</th>
-                        <th style="width: 20%">Status</th>
+                        <th>Property</th>
+                        <th>Old Values</th>
+                        <th>New Values</th>
+                        <th>Status</th>
                         </thead>
                         <tbody>
                         <tr>

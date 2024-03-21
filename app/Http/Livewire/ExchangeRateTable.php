@@ -68,16 +68,16 @@ class ExchangeRateTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Approved</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                            <span class="badge badge-success p-2 rounded-0" >Approved</span>
                         HTML;
                     }
                     elseif ($value == 2) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                            <span class="badge badge-danger p-2 rounded-0" >Rejected</span>
                         HTML;
                     }
 
@@ -86,15 +86,15 @@ class ExchangeRateTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Updated</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                            <span class="badge badge-success p-2 rounded-0" >Updated</span>
                         HTML;
                     } elseif ($value == 2) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge danger p-2" >Rejected</span>
+                            <span class="badge badge-success p-2 rounded-0" >Rejected</span>
                         HTML;
                     }
                 })

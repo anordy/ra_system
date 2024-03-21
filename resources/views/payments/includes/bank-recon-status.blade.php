@@ -3,19 +3,19 @@
         Complete
     </span>
 @elseif($row->recon_status === \App\Enum\BankReconStatus::AMOUNT_MISMATCH)
-    <span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #dc354559; color: #cf1c2d;; font-size: 85%">
+    <span class="badge badge-success py-1 px-2 danger-status">
         Amount Mismatch
     </span>
 @elseif($row->recon_status === \App\Enum\BankReconStatus::NOT_FOUND)
-    <span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #dc354559; color: #cf1c2d;; font-size: 85%">
+    <span class="badge badge-success py-1 px-2 danger-status">
         Not Found
     </span>
 @elseif($row->recon_status === \App\Enum\BankReconStatus::FAILED)
-    <span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #dc354559; color: #cf1c2d;; font-size: 85%">
+    <span class="badge badge-success py-1 px-2 danger-status">
         Failed
     </span>
 @elseif($row->recon_status === \App\Enum\BankReconStatus::PENDING)
-    <span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: rgba(220,128,53,0.35); color: #cf871c;; font-size: 85%">
+    <span class="badge badge-success py-1 px-2 pending-status">
         Pending
     </span>
 @endif

@@ -11,7 +11,7 @@
                 <div class="card-tools">
                     @if($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_REGISTERED)
                     <a href="{{route('mvr.certificate-of-registration',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
-                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
+                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection"><i
                                 class="fa fa-print text-white"></i>
                         Certificate of Registration</a>
                     @endif
@@ -118,12 +118,12 @@
             <div class="card-tools">
                 @if($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_INSPECTION)
                     <a href="{{route('mvr.certificate-of-worth',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
-                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
+                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection"><i
                                 class="fa fa-print text-white"></i>
                         Certificate of Worth</a>
                     @can('mvr_initiate_registration')
                         <a href="{{route('mvr.submit-inspection',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
-                           data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
+                           data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection"><i
                                     class="fa fa-upload text-white"></i>
                             Submit</a>
                     @endcan
@@ -135,7 +135,7 @@
                             Approve</button>
                     @endcan
                     <a href="{{route('mvr.certificate-of-worth',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
-                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
+                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection"><i
                                 class="fa fa-print text-white"></i>
                         Certificate of Worth</a>
                 @endif

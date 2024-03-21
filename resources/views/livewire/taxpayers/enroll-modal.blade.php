@@ -50,7 +50,7 @@
 
                             <tr>
                                 <td align="center" class="p-2">
-                                    <input type="text" id="state" value="" readonly style="width: 50%"
+                                    <input type="text" id="state" value="" readonly
                                         class="form-control text-center" />
                                 </td>
                             </tr>

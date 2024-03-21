@@ -30,8 +30,8 @@
             </div>
             @if($certificate->quantity_certificate_attachment)
                 <div class="form-group col-lg-6">
-                    <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                         class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                    <div
+                         class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
                         <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                         <a target="_blank"
                            href="{{ route('petroleum.certificateOfQuantity.attachment', encrypt($certificate->id)) }}"

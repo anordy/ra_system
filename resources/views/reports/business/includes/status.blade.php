@@ -4,8 +4,7 @@
         Rejected
     </span>
 @elseif($value === \App\Models\BusinessStatus::PENDING)
-    <span class="badge badge-success py-1 px-2"
-        style="border-radius: 1rem; background: #37382a59; color: #d1d87259; font-size: 85%">
+    <span class="badge badge-success py-1 px-2 pending-status">
         <i class="bi bi-clock mr-1"></i>
         Pending
     </span>

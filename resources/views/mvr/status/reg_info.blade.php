@@ -1,36 +1,32 @@
 <div class="card mt-3">
     <div class="card-header font-weight-bold bg-white">
-        {{ $reg->chassis->chassis_number  }} Registration Information
+        {{ $reg->chassis->chassis_number }} Registration Information
     </div>
     <div class="card-body">
         <div class="row my-2">
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Status</span>
                 <p class="my-1">
-                    @if($reg->status === \App\Enum\MvrRegistrationStatus::PENDING)
-                        <span class="badge badge-info py-1 px-2"
-                              style="font-size: 85%">
-                <i class="bi bi-check-circle-fill mr-1"></i>
-                {{ __('Pending') }}
-            </span>
+                    @if ($reg->status === \App\Enum\MvrRegistrationStatus::PENDING)
+                        <span class="badge badge-info py-1 px-2">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            {{ __('Pending') }}
+                        </span>
                     @elseif($reg->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED)
-                        <span class="badge badge-success py-1 px-2"
-                              style="font-size: 85%">
-                <i class="bi bi-check-circle-fill mr-1"></i>
-                {{ __('Registered') }}
-            </span>
+                        <span class="badge badge-success py-1 px-2">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            {{ __('Registered') }}
+                        </span>
                     @elseif($reg->status === \App\Enum\MvrRegistrationStatus::CORRECTION)
-                        <span class="badge badge-warning py-1 px-2"
-                              style="font-size: 85%">
-                <i class="bi bi-check-circle-fill mr-1"></i>
-                {{ __('For Corrections') }}
-            </span>
+                        <span class="badge badge-warning py-1 px-2">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            {{ __('For Corrections') }}
+                        </span>
                     @else
-                        <span class="badge badge-primary py-1 px-2"
-                              style="font-size: 85%">
-                <i class="bi bi-check-circle-fill mr-1"></i>
-                {{ $reg->status }}
-            </span>
+                        <span class="badge badge-primary py-1 px-2">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            {{ $reg->status }}
+                        </span>
                     @endif
                 </p>
             </div>
@@ -67,7 +63,7 @@
                 <p class="my-1">{{ $reg->register_type ?? 'N/A' }}</p>
             </div>
 
-            @if($reg->agent)
+            @if ($reg->agent)
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Is Registration For Agent?</span>
                     <p class="my-1">{{ $reg->is_agent_registration ? 'Yes' : 'No' }}</p>
