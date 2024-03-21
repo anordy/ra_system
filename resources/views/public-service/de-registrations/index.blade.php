@@ -1,13 +1,12 @@
 @extends('layouts.master')
 
-@section('title', 'Public Service Registrations')
+@section('title', 'Public Service De-registrations')
 
 @section('content')
     <div class="card mt-3">
         <div class="card-header">
-            Public Service Registrations
+            Public Service De-registrations
         </div>
-
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -18,17 +17,22 @@
                     <a class="nav-link" id="printed-link" data-toggle="tab" href="#pending-approval" role="tab"
                        aria-controls="profile" aria-selected="false">Pending Approval</a>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="printed-link" data-toggle="tab" href="#rejected" role="tab"
+                       aria-controls="rejected" aria-selected="false">Rejected</a>
+                </li>
             </ul>
-
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane p-2 show active" id="all" role="tabpanel" aria-labelledby="to-print-tab">
-                    @livewire('public-service.registration.registration-table', ['status' => null])
+                    @livewire('public-service.de-registration.de-registrations-table')
                 </div>
                 <div class="tab-pane p-2" id="pending-approval" role="tabpanel" aria-labelledby="printed-tab">
-                    @livewire('public-service.registration.registration-table', ['status' => \App\Enum\PublicServiceMotorStatus::PENDING])
+                    @livewire('public-service.de-registration.de-registrations-table', ['status' => \App\Enum\PublicService\TemporaryClosureStatus::PENDING])
+                </div>
+                <div class="tab-pane p-2" id="rejected" role="tabpanel" aria-labelledby="printed-tab">
+                    @livewire('public-service.de-registration.de-registrations-table', ['status' => \App\Enum\PublicService\TemporaryClosureStatus::REJECTED])
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

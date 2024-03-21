@@ -213,6 +213,12 @@
                 <li class="{{ request()->is('public-service/registrations*') ? 'active' : '' }}">
                     <a href="{{ route('public-service.registrations.index') }}">Registrations</a>
                 </li>
+                <li class="{{ request()->is('public-service/temporary-closures*') ? 'active' : '' }}">
+                    <a href="{{ route('public-service.temporary-closures') }}">Temporary Closures</a>
+                </li>
+                <li class="{{ request()->is('public-service/de-registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('public-service.de-registrations') }}">De-registrations</a>
+                </li>
             </ul>
         </li>
 

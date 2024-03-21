@@ -14,7 +14,9 @@
 use App\Http\Controllers\PropertyTax\CondominiumController;
 use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
+use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
+use App\Http\Controllers\PublicService\TemporaryClosuresController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -775,5 +777,9 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/public-service/registrations', [PublicServiceController::class, 'registrations'])->name('registrations.index');
         Route::get('/public-service/registrations/{id}', [PublicServiceController::class, 'showRegistration'])->name('registrations.show');
         Route::get('/public-service/registrations/{id}/file', [PublicServiceController::class, 'showFile'])->name('registrations.file');
+        Route::get('/temporary-closures', [TemporaryClosuresController::class, 'index'])->name('temporary-closures');
+        Route::get('/temporary-closures/{closure}', [TemporaryClosuresController::class, 'show'])->name('temporary-closures.show');
+        Route::get('/de-registrations', [DeRegistrationsController::class, 'index'])->name('de-registrations');
+        Route::get('/de-registrations/{de_registration}', [DeRegistrationsController::class, 'show'])->name('de-registrations.show');
     });
 });
