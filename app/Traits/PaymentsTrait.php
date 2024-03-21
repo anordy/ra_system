@@ -648,25 +648,25 @@ trait PaymentsTrait
         }
 
         if ($tax_return->return_type == PetroleumReturn::class) {
-            if ($tax_return->rdf_tax > 0) {
+            if ($tax_return->rdf_fee > 0) {
                 $rdfTax = $taxTypes->where('code', TaxType::RDF)->firstOrFail();
                 $billItems[] = [
                     'billable_id' => $tax_return->id,
                     'billable_type' => get_class($tax_return),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $tax_return->rdf_tax,
+                    'amount' => $tax_return->rdf_fee,
                     'currency' => $tax_return->currency,
                     'gfs_code' => $rdfTax->gfs_code,
                     'tax_type_id' => $rdfTax->id
                 ];
             }
-            if ($tax_return->road_lincence_fee > 0) {
+            if ($tax_return->road_license_fee > 0) {
                 $rlfTax = $taxTypes->where('code', TaxType::ROAD_LICENSE_FEE)->firstOrFail();
                 $billItems[] = [
                     'billable_id' => $tax_return->id,
                     'billable_type' => get_class($tax_return),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $tax_return->road_lincence_fee,
+                    'amount' => $tax_return->road_license_fee,
                     'currency' => $tax_return->currency,
                     'gfs_code' => $rlfTax->gfs_code,
                     'tax_type_id' => $rlfTax->id
