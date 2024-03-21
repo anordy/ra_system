@@ -29,7 +29,10 @@ class SecurityHeader
             $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
             $response->headers->set('Permissions-Policy', 'autoplay=(self), camera=(), encrypted-media=(self), fullscreen=(), geolocation=(self), gyroscope=(self), magnetometer=(), microphone=(), midi=(), payment=(), sync-xhr=(self), usb=()');
             $response->headers->set('Connection', 'off');
-//            $response->headers->set('Content-Security-Policy', " 'frame-ancestors 'self'; form-action 'self'; default-src 'self'; style-src fonts.googleapis.com 'self' 'nonce-custom_style'; script-src 'self' 'unsafe-eval' 'nonce-custom_script'; font-src 'self' fonts.gstatic.com; img-src 'self' data:'");
+
+            if ($this->checkRoute($request->route()->getName())) {
+                $response->headers->set('Content-Security-Policy', "frame-ancestors 'self'; form-action 'self'; default-src 'self'; style-src fonts.googleapis.com 'self' 'nonce-custom_style'; script-src 'self' 'nonce-custom_script'; font-src 'self' fonts.gstatic.com; img-src 'self' data:'");
+            }
         }
 
         return $response;
@@ -43,5 +46,14 @@ class SecurityHeader
         foreach ($headers as $header) {
             header_remove($header);
         }
+    }
+
+    private function checkRoute($routeName) {
+        return in_array($routeName, [
+            null,
+            '/',
+            'password.request',
+            'password.reset'
+        ]);
     }
 }
