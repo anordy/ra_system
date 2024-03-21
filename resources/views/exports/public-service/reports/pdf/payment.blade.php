@@ -15,10 +15,6 @@
         thead {
             text-align: center
         }
-        .tax {
-            /* background-color: rgb(182, 193, 208); */
-            padding-top: 50px;
-        }
 
         .tableHead {
             background-color: rgb(182, 193, 208);
@@ -51,49 +47,38 @@
             border: 1px solid black;
             width: 100%;
             border-collapse: collapse;
+            background: transparent;
+            table-layout: fixed;
+        }
+
+        table td {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
     </style>
 </head>
 
-<body style="font-size: 6pt">
+<body style="font-size: 8pt">
+
     <table style="border-collapse:collapse; width:100%">
         <thead>
             <tr>
-                <th style="text-align:center;" colspan="10">
-                    <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
-                    <strong>Business Tax Payer Registration Report on </strong>
-                    @if(array_key_exists('tax_type_name',$parameters))
-                      <strong> {{$parameters['tax_type_name']}}  </strong>
-                    @endif
-                    @if ($parameters['year'] === 'all')
-                        <strong>overall period of time</strong>
-                    @elseif ($parameters['year'] === 'range')
-                        <strong>From {{ $parameters['range_start'] }} To {{ $parameters['range_end'] }} </strong>
-                    @else
-                        <strong>{{ $parameters['year'] }}</strong>
+                <th style="text-align:center;" colspan="15">
+                    <strong>ZANZIBAR Revenue Authority</strong><br>
+                    <strong>Report of {{ $parameters['payment_type']  }} Public Service Payments </strong><br>
+                    @if($parameters['range_start'] && $parameters['range_end'])
+                        <strong>From {{ date("M, d Y", strtotime($parameters['range_start'])) }} To {{ date("M, d Y",
+                    strtotime($parameters['range_end'])) }} </strong><br>
                     @endif
 
-                    {{-- <strong>RELIEF APPLLICATIONS</strong><br> --}}
-                    {{-- <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong>  --}}
+
+                    <strong>Total Number of Records: {{ $records->count() }} </strong>
                 </th>
             </tr>
         </thead>
     </table>
     <br>
-    @foreach($recordsData as $group => $records)
-    <table style="border-collapse:collapse; width:100%;">
-        <thead>
-            <tr>
-                <th style="text-align:left;" colspan="10">
-                    <strong class="tax" > {{ $records[0]->taxpayer->fullname }}</strong><br>
-                   
-                </th>
-            </tr>
-        </thead>
-    </table>
-    
     <table class="table">
-        
         <thead class="tableHead">
             <tr>
                 <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
@@ -103,44 +88,30 @@
                     <strong>Business</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Location</strong>
+                    <strong>Plate Number</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Tax Region</strong>
+                    <strong>Registration Type</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Business Category</strong>
-                </th>
-
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Taxpayer</strong>
-                </th>
-             
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Effective Date</strong>
+                    <strong>Currency</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    
-                    <strong>Region</strong>
+                    <strong>Amount</strong>
                 </th>
-
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>District</strong>
+                <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
+                    <strong>Start Date</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Ward</strong>
+                    <strong>End Date</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Physical Address</strong>
-                </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Status</strong>
+                    <strong>Payment Status</strong>
                 </th>
             </tr>
         </thead>
         <tbody>
-           
-            @foreach ($records as $index => $record) 
+            @foreach ($records as $index => $record)
                 <tr>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $index + 1 }}
@@ -149,44 +120,35 @@
                         {{ $record->business->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->name }}
+                        {{ $record->motor->mvr->plate_number ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->taxRegion->name ?? '-' }}
+                        {{ $record->motor->mvr->regtype->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->business->category->name ?? '-' }}
+                        {{ $record->currency ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->taxpayer->fullname ?? '-' }}
-                    </td>
-                 
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ date('M, d Y', strtotime($record->effective_date)) ?? '-' }}
+                        {{ $record->amount ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->region->name ?? '-' }}
+                        {{ date('M, d Y', strtotime($record->start_date)) }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->district->name ?? '-' }}
+                        {{ $record->end_date==null?'-':date('M, d Y', strtotime($record->end_date)) }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->ward->name ?? '-' }}
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->physical_address ?? '-' }}
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ ucfirst($record->business->status ?? '') ?? '-' }}
+                        @if (!$record->paid_at)
+                            Not Paid
+                        @else
+                            Paid
+                        @endif
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    @endforeach
-
-
-    <br>
 </body>
+
 
 </html>

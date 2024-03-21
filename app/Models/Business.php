@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Disputes\Objection;
 use App\Models\Disputes\Waiver;
+use App\Models\PublicService\PublicServiceMotor;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\Tra\Tin;
 use App\Traits\WorkflowTrait;
@@ -200,5 +201,9 @@ class Business extends Model implements Auditable
             return $this->locations->first()->street->name;
         }
         return null;
+    }
+
+    public function motors(){
+        return $this->hasMany(PublicServiceMotor::class, 'business_id');
     }
 }

@@ -541,6 +541,10 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/payments/download-report-pdf/{data}', [PaymentReportController::class, 'exportPaymentReportPdf'])->name('payments.download.pdf');
 
         Route::get('/departmental', [DepartmentalReportController::class, 'index'])->name('departmental');
+
+        Route::get('/public-service/report/payment/{parameters}', [\App\Http\Controllers\Reports\PublicService\PublicServiceReportController::class, 'exportPaymentReportPdf'])->name('public-service.payment.pdf');
+        Route::get('/public-service/report/registration/{parameters}', [\App\Http\Controllers\Reports\PublicService\PublicServiceReportController::class, 'exportRegistrationReportPdf'])->name('public-service.registration.pdf');
+
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -775,5 +779,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/public-service/registrations', [PublicServiceController::class, 'registrations'])->name('registrations.index');
         Route::get('/public-service/registrations/{id}', [PublicServiceController::class, 'showRegistration'])->name('registrations.show');
         Route::get('/public-service/registrations/{id}/file', [PublicServiceController::class, 'showFile'])->name('registrations.file');
+        Route::get('/payments', [PublicServiceController::class, 'payments'])->name('payments.index');
+        Route::get('/payments/{id}', [PublicServiceController::class, 'showPayment'])->name('payments.show');
+        Route::get('/reports', [PublicServiceController::class, 'report'])->name('report.index');
     });
 });

@@ -19,7 +19,7 @@ class RegistrationTable extends DataTableComponent
     public function builder(): Builder
     {
         return PublicServiceMotor::query()
-//            ->where('public_service_motors.status', $this->status)
+            ->where('public_service_motors.status', $this->status)
             ->orderByDesc('public_service_motors.created_at');
     }
 
