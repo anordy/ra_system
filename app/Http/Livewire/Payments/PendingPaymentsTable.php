@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Payments;
 
+use App\Enum\GeneralConstant;
 use App\Enum\PaymentStatus;
 use App\Models\TaxType;
 use App\Models\ZmBill;
@@ -29,14 +30,26 @@ class PendingPaymentsTable extends DataTableComponent
         $data   = $this->data;
         $filter = (new ZmBill())->newQuery();
 
-        if (isset($data['tax_type_id']) && $data['tax_type_id'] != 'All') {
+        if (isset($data['tax_type_id']) && $data['tax_type_id'] != GeneralConstant::ALL) {
             $filter->Where('tax_type_id', $data['tax_type_id']);
         }
-        if (isset($data['currency']) && $data['currency'] != 'All') {
+        if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
             $filter->Where('currency', $data['currency']);
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
+        }
+
+        if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::NOT_APPLICABLE){
+            $filter->whereNull('pbz_status');
+        }
+
+        if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::PAID){
+            $filter->where('pbz_status', 'paid');
+        }
+
+        if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::REVERSED){
+            $filter->where('pbz_status', 'reversed');
         }
 
         return $filter->with('billable')->whereIn('status', [PaymentStatus::PENDING])->orderBy('created_at', 'DESC');

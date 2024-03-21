@@ -6,9 +6,9 @@
                     <span>Currency</span>
                 </label>
                 <select name="currency" class="form-control" wire:model="currency">
-                    <option value="All">All</option>
-                    <option value="TZS">TZS</option>
-                    <option value="USD">USD</option>
+                    <option value="{{ \App\Enum\GeneralConstant::ALL }}">All</option>
+                    <option value="{{ \App\Enum\Currencies::TZS }}">TZS</option>
+                    <option value="{{ \App\Enum\Currencies::USD }}">USD</option>
                 </select>
             </div>
 
@@ -16,7 +16,7 @@
                 <label class="d-flex justify-content-between">
                     <span>Start Date</span>
                 </label>
-                <input type="date" max="{{ now()->format('Y-m-d') }}" class="form-control" wire:model="range_start">
+                <input type="date" max="{{ now()->format('Y-m-d') }}" class="form-control" wire:model.defer="range_start">
                 @error('range_start')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -27,29 +27,38 @@
                 <label class="d-flex justify-content-between'">
                     <span>End Date</span>
                 </label>
-                <input type="date" min="{{ date('Y-m-d', strtotime($range_start))}}" max="{{ now()->format('Y-m-d') }}" class="form-control" wire:model="range_end">
+                <input type="date" min="{{ date('Y-m-d', strtotime($range_start))}}" max="{{ now()->format('Y-m-d') }}" class="form-control" wire:model.defer="range_end">
                 @error('range_end')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror
             </div>
+            <div class="col-md-6 form-group">
+                <label for="has_bill" class="d-flex justify-content-between'">
+                    <span>Has ZanMalipo Bill</span>
+                </label>
+                <select name="has_bill" class="form-control" wire:model.defer="has_bill">
+                    <option value="{{ \App\Enum\GeneralConstant::ALL }}">All</option>
+                    <option value="{{ \App\Enum\GeneralConstant::YES }}">Yes</option>
+                    <option value="{{ \App\Enum\GeneralConstant::NO }}">No</option>
+                </select>
+            </div>
 
-
-            <div class="col-md-6 text-center">
+            <div class="col-md-12 text-center">
                 <div class="d-flex justify-content-end">
 
                     <button class="btn btn-primary ml-2" wire:click="filter " wire:loading.attr="disabled">
-                        <i class="bi bi-filter ml-1" wire:loading.remove wire:target="filter"></i>
+                        <i class="bi bi-filter mr-2" wire:loading.remove wire:target="filter"></i>
                         <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="filter"></i>
-                            Filter
+                            Apply Filter
                     </button>
-{{--    --}}
-{{--                    <button class="btn btn-success ml-2" wire:click="pdf" wire:loading.attr="disabled">--}}
-{{--                        <i class="fas fa-file-pdf ml-1" wire:loading.remove wire:target="pdf"></i>--}}
-{{--                        <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="pdf"></i>--}}
-{{--                            Export summary--}}
-{{--                    </button>      --}}
+
+                    <button class="btn btn-success ml-2" wire:click="pdf" wire:loading.attr="disabled">
+                        <i class="fas fa-file-pdf ml-1" wire:loading.remove wire:target="pdf"></i>
+                        <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="pdf"></i>
+                            Export Report
+                    </button>
                 </div>
             </div>
 

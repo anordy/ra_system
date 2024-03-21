@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Payments;
 
+use App\Enum\GeneralConstant;
+use App\Models\PBZTransaction;
 use App\Models\ZmBill;
 use App\Traits\CustomAlert;
 use Carbon\Carbon;
@@ -14,10 +16,11 @@ class PBZPaymentFilter extends Component
 
     public $tableName;
     public $data;
-    public $currency = 'All';
+    public $currency = GeneralConstant::ALL;
     public $range_start;
     public $range_end;
     public $status;
+    public $has_bill;
 
     protected $rules = [
         'range_start' => 'required|strip_tag',
@@ -39,6 +42,7 @@ class PBZPaymentFilter extends Component
             'currency'    => $this->currency,
             'range_start' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
             'range_end'   => date('Y-m-d 23:59:59', strtotime($this->range_end)),
+            'has_bill' => $this->has_bill
         ];
 
         $this->data = $filters;
@@ -55,31 +59,35 @@ class PBZPaymentFilter extends Component
         $this->filter();
 
         $data   = $this->data;
-        $filter = (new ZmBill())->newQuery();
-        $status = $this->status;
+        $query = (new PBZTransaction())->newQuery();
 
-        if (isset($data['tax_type_id']) && $data['tax_type_id'] != 'All') {
-            $filter->Where('tax_type_id', $data['tax_type_id']);
-        }
-        if (isset($data['currency']) && $data['currency'] != 'All') {
-            $filter->Where('currency', $data['currency']);
+        if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
+            $query->Where('currency', $data['currency']);
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
-            $filter->WhereBetween('created_at', [$data['range_start'], $data['range_end']]);
+            $query->WhereBetween('transaction_time', [$data['range_start'],$data['range_end']]);
         }
 
-        $records  = $filter->with('billable')->where('status', $this->status)->orderBy('created_at', 'DESC')->get();
+        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::YES){
+            $query->whereHas('bill');
+        }
+
+        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::NO){
+            $query->whereDoesntHave('bill');
+        }
+
+        $records = $query->with('bill')->orderBy('created_at', 'desc')->get();
 
         if ($records->count() < 1) {
             $this->customAlert('error', 'No Data Found for selected options');
             return;
         }
 
-        $fileName = $status. '_payments' . '_' . $data['currency'] . '.pdf';
-        $title = $status. 'pending_payments' . '_' . $data['currency'] . '.pdf';
+        $fileName = 'pbz_payments' . '_' . $data['currency'] . '.pdf';
+        $title = 'pbz_pending_payments' . '_' . $data['currency'] . '.pdf';
 
         $parameters    = $data;
-        $pdf = PDF::loadView('exports.payments.pdf.payments', compact('records', 'title', 'parameters', 'status'));
+        $pdf = PDF::loadView('exports.payments.pdf.pbz-payments', compact('records', 'title', 'parameters'));
         $pdf->setPaper('a4', 'landscape');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Payments;
 
+use App\Enum\GeneralConstant;
 use App\Enum\PaymentStatus;
 use App\Models\PBZReversal;
 use App\Models\PBZTransaction;
@@ -31,11 +32,19 @@ class PBZReversalsTable extends DataTableComponent
         $data   = $this->data;
         $query = (new PBZReversal())->newQuery();
 
-        if (isset($data['currency']) && $data['currency'] != 'All') {
-            $query->Where('currency', $data['currency']);
+        if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
+            $query->where('currency', $data['currency']);
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
-            $query->WhereBetween('transaction_time', [$data['range_start'],$data['range_end']]);
+            $query->whereBetween('transaction_time', [$data['range_start'], $data['range_end']]);
+        }
+
+        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::YES){
+            $query->whereHas('bill');
+        }
+
+        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::NO){
+            $query->whereDoesntHave('bill');
         }
 
         return $query->with('bill');

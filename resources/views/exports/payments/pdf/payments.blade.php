@@ -107,6 +107,9 @@
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Status</strong>
                 </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>PBZ Status</strong>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -146,6 +149,9 @@
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ strtoupper($record->status ?? '') ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ strtoupper($record->pbz_status ?? '') ?? '-' }}
                     </td>
                 </tr>
             @endforeach
