@@ -57,6 +57,7 @@ class GenericSettingAddModal extends Component
         DlLicenseDuration::class=>[['title'=>'Years','field'=>'number_of_years','type'=>'number'],['title'=>'Description','field'=>'description']],
         DlFee::class=>[['title'=>'Amount','field'=>'amount','type'=>'number']],
         DlLicenseClass::class=>[['title'=>'Description','field'=>'description']],
+        MvrRegistrationType::class=>[['title'=>'Initial Plate Number','field'=>'initial_plate_number']],
     ];
 
     private $no_name_column = [
@@ -66,7 +67,8 @@ class GenericSettingAddModal extends Component
     private $rules = [
         MvrFee::class=>['data.amount'=>'required|numeric'],
         MvrTransferFee::class=>['data.amount'=>'required|numeric'],
-        DlFee::class=>['data.amount'=>'required|numeric']
+        DlFee::class=>['data.amount'=>'required|numeric'],
+        MvrRegistrationType::class=>['data.initial_plate_number' => 'required|alpha_num']
     ];
 
     /**

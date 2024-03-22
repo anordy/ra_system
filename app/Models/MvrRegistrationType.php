@@ -38,9 +38,11 @@ class MvrRegistrationType extends Model
     const TYPE_MILITARY = 'Military';
 
     use SoftDeletes;
+
 	protected $table = 'mvr_registration_types';
 
 	protected $fillable = [
-		'name'
+		'name',
+        'initial_plate_number'
 	];
 }

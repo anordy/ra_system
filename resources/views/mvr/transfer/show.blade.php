@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @if($request->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $request->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED)
+    @if($request->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $request->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED || $request->status === \App\Models\MvrRequestStatus::STATUS_RC_ACCEPTED)
         @livewire('mvr.payment.fee-payment', ['motorVehicle' => $request])
     @endif
 
@@ -24,7 +24,7 @@
     </ul>
     <div class="tab-content bg-white border shadow-sm" id="myTabContent">
         <div class="tab-pane fade p-3 show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            @include('mvr.transfer.mvr_info', ['reg' => $motor_vehicle])
+            @include('mvr.transfer.mvr_info', ['reg' => $motor_vehicle, 'request' => $request])
             @include('mvr.transfer.owner_info', ['taxPayer' => $previousOwner,'owner'=>'previous'])
             @include('mvr.transfer.owner_info', ['taxPayer' => $newOwner,'owner'=>'new'])
             <livewire:approval.mvr.transfer-approval-processing modelName='App\Models\MvrOwnershipTransfer'

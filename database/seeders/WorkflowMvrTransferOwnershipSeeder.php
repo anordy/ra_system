@@ -33,7 +33,12 @@ class WorkflowMvrTransferOwnershipSeeder extends Seeder
                 'operator_type' => 'user',
                 'operators' => [],
             ],
-            'mvr_zartsa' => [
+            'zbs_officer' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2, 3],
+            ],
+            'bpra_officer' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2, 3],
@@ -62,22 +67,32 @@ class WorkflowMvrTransferOwnershipSeeder extends Seeder
         $transitions = [
             'application_submitted' => [
                 'from' => 'apply',
-                'to' => 'mvr_zartsa',
+                'to' => 'bpra_officer',
                 'condition' => '',
             ],
             'application_filled_incorrect' => [
-                'from' => 'mvr_zartsa',
+                'from' => 'bpra_officer',
                 'to' => 'correct_application',
                 'condition' => '',
             ],
             'application_corrected' => [
                 'from' => 'correct_application',
-                'to' => 'mvr_zartsa',
+                'to' => 'bpra_officer',
                 'condition' => '',
             ],
-            'mvr_zartsa_review' => [
-                'from' => 'mvr_zartsa',
+            'bpra_officer_review' => [
+                'from' => 'bpra_officer',
+                'to' => 'zbs_officer',
+                'condition' => '',
+            ],
+            'zbs_officer_review' => [
+                'from' => 'zbs_officer',
                 'to' => 'mvr_registration_officer',
+                'condition' => '',
+            ],
+            'zbs_officer_reject' => [
+                'from' => 'zbs_officer',
+                'to' => 'bpra_officer',
                 'condition' => '',
             ],
             'mvr_registration_officer_review' => [
@@ -87,10 +102,9 @@ class WorkflowMvrTransferOwnershipSeeder extends Seeder
             ],
             'mvr_registration_officer_reject' => [
                 'from' => 'mvr_registration_officer',
-                'to' => 'mvr_zartsa',
+                'to' => 'zbs_officer',
                 'condition' => '',
             ],
-
             'mvr_registration_manager_reject' => [
                 'from' => 'mvr_registration_manager',
                 'to' => 'mvr_registration_officer',

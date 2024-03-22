@@ -88,6 +88,28 @@
                 <span class="font-weight-bold text-uppercase">Registered On</span>
                 <p class="my-1">{{ $reg->registered_at ?? 'N/A' }}</p>
             </div>
+
+            @if($request->agreement_contract_path)
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Contract of Sales/Oath</span>
+                    <p class="my-1"><a class="btn btn-primary btn-sm" href="{{route('mvr.files',encrypt($request->agreement_contract_path))}}">Preview</a></p>
+                </div>
+            @endif
+
+            @if($request->inspection_report)
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Inspection Report</span>
+                    <p class="my-1"><a class="btn btn-primary btn-sm" href="{{route('mvr.files',encrypt($request->inspection_report))}}">Preview</a></p>
+                </div>
+            @endif
+
+            @if($request->transfer_category)
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Transferring to</span>
+                    <p class="my-1">{{ $request->transfer_category->name ?? 'N/A' }}</p>
+                </div>
+            @endif
+
         </div>
     </div>
 </div>

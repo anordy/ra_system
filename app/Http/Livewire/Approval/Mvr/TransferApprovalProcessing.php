@@ -3,12 +3,14 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\CustomMessage;
 use App\Enum\MvrRegistrationStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrTransferFee;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
@@ -25,7 +27,7 @@ class TransferApprovalProcessing extends Component
     public $modelId;
     public $modelName;
     public $comments;
-    public $approvalReport;
+    public $approvalReport, $agreementContract, $vehicleInspectionReport;
 
     public function mount($modelName, $modelId)
     {
@@ -42,19 +44,34 @@ class TransferApprovalProcessing extends Component
 
         try {
             DB::beginTransaction();
-            if ($this->checkTransition('mvr_zartsa_review')) {
+            if ($this->checkTransition('bpra_officer_review')) {
 
                 $this->validate(
                     [
-                        'approvalReport' => 'nullable|mimes:pdf|max:1024|max_file_name_length:100',
+                        'agreementContract' => 'nullable|mimes:pdf|max:3072|max_file_name_length:100',
                     ]
                 );
 
-                $approvalReport = "";
-                if ($this->approvalReport) {
-                    $approvalReport = $this->approvalReport->store('mvrZartsaReport', 'local');
+                $agreementContract = "";
+                if ($this->agreementContract) {
+                    $agreementContract = $this->agreementContract->store('mvrZartsaReport', 'local');
                 }
-                $this->subject->approval_report = $approvalReport;
+                $this->subject->agreement_contract_path = $agreementContract;
+                $this->subject->save();
+            }
+
+            if ($this->checkTransition('zbs_officer_review')) {
+                $this->validate(
+                    [
+                        'vehicleInspectionReport' => 'nullable|mimes:pdf|valid_pdf|max:3072|max_file_name_length:100',
+                    ]
+                );
+
+                $inspectionReport = "";
+                if ($this->vehicleInspectionReport) {
+                    $inspectionReport = $this->vehicleInspectionReport->store('mvrZartsaReport', 'local');
+                }
+                $this->subject->inspection_report = $inspectionReport;
                 $this->subject->save();
             }
 
@@ -91,6 +108,7 @@ class TransferApprovalProcessing extends Component
                 $this->generateControlNumber();
             } catch (Exception $exception) {
                 $this->customAlert('error', 'Failed to generate control number, please try again');
+                $this->flash('error', CustomMessage::ERROR, [], redirect()->back()->getTargetUrl());
             }
         }
 
@@ -106,7 +124,7 @@ class TransferApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('mvr_zartsa_review')) {
+            if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = MvrRegistrationStatus::CORRECTION;
                 $this->subject->save();
             }
@@ -122,7 +140,7 @@ class TransferApprovalProcessing extends Component
             if ($this->subject->status = MvrRegistrationStatus::CORRECTION) {
                 // Send correction email/sms
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->previous_owner->mobile, 'message' => "
-                Hello {$this->subject->previous_owner->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} requires correction, please login to the system to perform data update."]));
+                Hello {$this->subject->previous_owner->fullname}, your transfer ownership request for chassis number {$this->subject->motor_vehicle->chassis->chassis_number} requires correction, please login to the system to perform data update."]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -140,7 +158,7 @@ class TransferApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', CustomMessage::ARE_YOU_SURE, [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -163,15 +181,9 @@ class TransferApprovalProcessing extends Component
             $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
             $this->subject->payment_status = BillStatus::CN_GENERATING;
 
-            //Generate control number
-            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TRANSFER_OWNERSHIP]);
-
-            $fee = MvrFee::query()->where([
-                'mvr_registration_type_id' => $this->subject->category_id,
-                'mvr_fee_type_id' => $feeType->id,
-                'mvr_class_id' => $this->subject->mvr_class_id
+            $fee = MvrTransferFee::query()->where([
+                'mvr_transfer_category_id' => $this->subject->mvr_transfer_category_id,
             ])->first();
-
 
             if (empty($fee)) {
                 $this->customAlert('error', "Ownership Transfer fee is not configured");
@@ -180,7 +192,7 @@ class TransferApprovalProcessing extends Component
                 return;
             }
 
-            $this->generateMvrControlNumber($this->subject, $fee);
+            $this->generateMvrControlNumber($this->subject->motor_vehicle, $fee);
 
             DB::commit();
         } catch (Exception $e) {

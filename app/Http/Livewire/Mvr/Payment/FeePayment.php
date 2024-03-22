@@ -4,8 +4,10 @@ namespace App\Http\Livewire\Mvr\Payment;
 
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
+use App\Models\MvrOwnershipTransfer;
 use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationStatusChange;
+use App\Models\MvrTransferFee;
 use App\Services\ZanMalipo\GepgResponse;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +38,13 @@ class FeePayment extends Component
             'mvr_fee_type_id' => $this->feeType->id,
             'mvr_class_id' => $this->motorVehicle->mvr_class_id
         ])->first();
+
+        if (get_class($this->motorVehicle) == MvrOwnershipTransfer::class) {
+            $this->fee = MvrTransferFee::query()->where([
+                'mvr_transfer_category_id' => $this->motorVehicle->mvr_transfer_category_id,
+            ])->first();
+        }
+
     }
 
     public function refresh(){
@@ -66,7 +75,11 @@ class FeePayment extends Component
                 return;
             }
 
-            $this->generateMvrControlNumber($this->motorVehicle, $this->fee);
+            if (get_class($this->motorVehicle) != MvrOwnershipTransfer::class) {
+                $this->generateMvrControlNumber($this->motorVehicle, $this->fee);
+            } else {
+                $this->generateMvrTransferOwnershipControlNumber($this->motorVehicle, $this->fee);
+            }
             $this->customAlert('success', 'Your request was submitted, you will receive your payment information shortly.');
             return redirect(request()->header('Referer'));
         } catch (Exception $e) {

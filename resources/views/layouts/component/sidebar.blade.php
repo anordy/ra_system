@@ -207,7 +207,8 @@
         {{-- TODO: Add permissions --}}
         <li class="{{ request()->is('public-service*') ? 'active' : '' }}">
             <a href="#publicServiceSubmenu" data-toggle="collapse"
-               aria-expanded="{{ request()->is('public-service*') ? 'true' : 'false' }}" class="dropdown-toggle">Public Service</a>
+               aria-expanded="{{ request()->is('public-service*') ? 'true' : 'false' }}" class="dropdown-toggle">Public
+                Service</a>
             <ul class="collapse list-unstyled {{ request()->is('public-service*') ? 'show' : '' }}"
                 id="publicServiceSubmenu">
                 <li class="{{ request()->is('public-service/registrations*') ? 'active' : '' }}">
@@ -629,12 +630,6 @@
                         </li>
                     @endcan
 
-                    @can('motor-vehicle-written-off')
-                        <li class="{{ request()->is('mvr/written-off') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.written-off') }}">Written-off Vehicles</a>
-                        </li>
-                    @endcan
-
                     @can('motor-vehicle-transport-agent')
                         <li class="{{ request()->is('mvr/agent') ? 'active' : '' }}">
                             <a href="{{ route('mvr.agent') }}">Transport Agents</a>
@@ -988,6 +983,12 @@
                         <li class="{{ request()->is('settings/mvr-generic/MvrPlateSize') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrPlateSize') }}">Motor Vehicle Plate
                                 Size</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-plate-size-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrRegistrationType') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrRegistrationType') }}">Motor Vehicle Initial Plates
+                                </a>
                         </li>
                     @endcan
                     @can('setting-mvr-fee-view')
