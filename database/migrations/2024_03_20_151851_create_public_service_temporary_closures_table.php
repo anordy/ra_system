@@ -21,6 +21,7 @@ class CreatePublicServiceTemporaryClosuresTable extends Migration
             $table->date('opening_date');
             $table->date('re_opening_date')->nullable();
             $table->text('reason');
+            $table->text('grounds_path');
             $table->enum('status', DeRegistrationStatus::getConstants());
             $table->unsignedBigInteger('created_by');
             $table->text('marking')->nullable();

@@ -785,6 +785,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/temporary-closures/{closure}', [TemporaryClosuresController::class, 'show'])->name('temporary-closures.show');
         Route::get('/de-registrations', [DeRegistrationsController::class, 'index'])->name('de-registrations');
         Route::get('/de-registrations/{de_registration}', [DeRegistrationsController::class, 'show'])->name('de-registrations.show');
+        Route::get('/de-registrations/file/{de_registration}', [DeRegistrationsController::class, 'file'])->name('de-registrations.file');
         Route::get('/payments', [PublicServiceController::class, 'payments'])->name('payments.index');
         Route::get('/payments/{id}', [PublicServiceController::class, 'showPayment'])->name('payments.show');
         Route::get('/reports', [PublicServiceController::class, 'report'])->name('report.index');

@@ -9,8 +9,8 @@
         Pending
     </span>
 @elseif($row->status === \App\Enum\PublicServiceMotorStatus::DEREGISTERED)
-    <span class="badge badge-warning py-1 px-2">
-        <i class="bi bi-clock-history mr-1"></i>
+    <span class="badge badge-danger py-1 px-2">
+        <i class="bi bi-x-circle-fill mr-1"></i>
         De-registered
     </span>
 @elseif($row->status === \App\Enum\PublicServiceMotorStatus::TEMP_CLOSED)
