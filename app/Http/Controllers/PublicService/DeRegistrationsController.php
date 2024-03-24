@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class DeRegistrationsController extends Controller
 {
+    // Todo: Add permissions
     public function index(){
         return view('public-service.de-registrations.index');
     }

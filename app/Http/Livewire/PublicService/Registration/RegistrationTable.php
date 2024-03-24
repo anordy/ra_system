@@ -11,16 +11,20 @@ class RegistrationTable extends DataTableComponent
 {
     public $status;
 
-    public function mount($status)
+    public function mount($status = '')
     {
         $this->status = $status;
     }
 
     public function builder(): Builder
     {
-        return PublicServiceMotor::query()
-            ->where('public_service_motors.status', $this->status)
-            ->orderByDesc('public_service_motors.created_at');
+        $query = PublicServiceMotor::query();
+
+        if ($this->status){
+            $query->where('public_service_motors.status', $this->status);
+        }
+
+        return $query->orderByDesc('public_service_motors.created_at');
     }
 
     public function configure(): void

@@ -22,7 +22,7 @@
 
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane p-2 show active" id="all" role="tabpanel" aria-labelledby="to-print-tab">
-                    @livewire('public-service.registration.registration-table', ['status' => \App\Enum\PublicServiceMotorStatus::REGISTERED])
+                    @livewire('public-service.registration.registration-table')
                 </div>
                 <div class="tab-pane p-2" id="pending-approval" role="tabpanel" aria-labelledby="printed-tab">
                     @livewire('public-service.registration.registration-table', ['status' => \App\Enum\PublicServiceMotorStatus::PENDING])
