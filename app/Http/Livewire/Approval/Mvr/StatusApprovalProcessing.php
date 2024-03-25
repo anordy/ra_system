@@ -180,7 +180,7 @@ class StatusApprovalProcessing extends Component
                 return;
             }
 
-            $this->generateMvrControlNumber($this->subject, $fee);
+            $this->generateMvrStatusChangeConntrolNumber($this->subject, $fee);
 
             DB::commit();
 

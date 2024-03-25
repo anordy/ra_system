@@ -65,7 +65,7 @@ class MvrApprovedRegistrationsParticularChangeTable extends DataTableComponent
                     return 'N/A';
                 }),
             Column::make(__('Status'), 'status')->view('mvr.particular.includes.status'),
-            Column::make(__('Action'), 'id')->view('mvr.particualr.includes.actions'),
+            Column::make(__('Action'), 'id')->view('mvr.particular.includes.actions'),
         ];
     }
 

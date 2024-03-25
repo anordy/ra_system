@@ -88,7 +88,7 @@
     </div>
 </div>
 
-@if ($reg->approval_report)
+{{-- @if ($reg->approval_report)
     <div class="card my-4 rounded-0">
         <div class="card-header font-weight-bold bg-white">
             Approval Report
@@ -112,4 +112,4 @@
             </div>
         </div>
     </div>
-@endif
+@endif --}}
