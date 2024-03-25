@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Reports\PublicService;
 
+use App\Enum\MvrRegistrationStatus;
+use App\Enum\PublicServiceMotorStatus;
 use App\Enum\ReportStatus;
 use App\Models\FinancialYear;
 use App\Models\MvrRegistrationType;
@@ -39,6 +41,10 @@ class PublicServiceReport extends Component
     public $regTypeName = ReportStatus::PS_REG_REPORT;
     public $paymentTypeName = ReportStatus::PS_PAYMENT_REPORT;
     public $filter_type = 'custom';
+    public $mvrRegistrationStates;
+    public $publicServiceStates;
+    public $mvrRegistrationStatus;
+    public $publicServiceStatus;
 
     protected function rules()
     {
@@ -69,6 +75,8 @@ class PublicServiceReport extends Component
         $this->optionSemiAnnuals = [ReportStatus::FIRST_SEMI_ANNUAL, ReportStatus::SECOND_SEMI_ANNUAL];
         $this->optionQuarters = [ReportStatus::FIRST_QUARTER, ReportStatus::SECOND_QUARTER, ReportStatus::THIRD_QUARTER, ReportStatus::FOURTH_QUARTER];
         $this->optionMonths = ReportStatus::MONTHS_DESC;
+        $this->mvrRegistrationStates = array_diff(MvrRegistrationStatus::getConstants(), [MvrRegistrationStatus::CORRECTION, MvrRegistrationStatus::PENDING]);
+        $this->publicServiceStates = array_diff(PublicServiceMotorStatus::getConstants(), [PublicServiceMotorStatus::CORRECTION, PublicServiceMotorStatus::PENDING]);
     }
 
     public function updated($propertyName)
@@ -170,6 +178,8 @@ class PublicServiceReport extends Component
             'dates' => $this->getStartEndDate(),
             'range_start' => $this->range_start,
             'range_end' => $this->range_end,
+            'mvr_status' => $this->mvrRegistrationStatus,
+            'public_service_status' => $this->publicServiceStatus
         ];
     }
 

@@ -24,23 +24,56 @@
         @if($report_type === $regTypeName)
             <div class="col-md-4 form-group">
                 <label for="registration_type" class="d-flex justify-content-between'">
-                <span>
                     Registration Type
-                </span>
                 </label>
                 <select name="registration_type" id="registration_type" wire:model="registration_type"
                         class="form-control {{ $errors->has('registration_type') ? 'is-invalid' : '' }}">
                     <option>Choose Registration Type</option>
-                    <option value="All">All</option>
+                    <option value="{{ \App\Enum\ReportStatus::All }}">All</option>
                     @foreach ($optionRegTypes as $type)
                         <option value={{ $type->id }}>
                             {{ $type->name }}</option>
                     @endforeach
                 </select>
                 @error('registration_type')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+            <div class="col-md-4 form-group">
+                <label for="registration_type" class="d-flex justify-content-between'">
+                    MVR Status
+                </label>
+                <select wire:model="mvrRegistrationStatus" class="form-control {{ $errors->has('mvrRegistrationStatus') ? 'is-invalid' : '' }}">
+                    <option>Choose Registration Type</option>
+                    <option value="{{ \App\Enum\ReportStatus::All }}">All</option>
+                    @foreach ($mvrRegistrationStates as $type)
+                        <option value={{ $type }}>
+                            {{ $type }}</option>
+                    @endforeach
+                </select>
+                @error('mvrRegistrationStatus')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+            <div class="col-md-4 form-group">
+                <label for="registration_type" class="d-flex justify-content-between'">
+                    Public Service Status
+                </label>
+                <select wire:model="publicServiceStatus" class="form-control {{ $errors->has('publicServiceStatus') ? 'is-invalid' : '' }}">
+                    <option>Choose Registration Type</option>
+                    <option value="{{ \App\Enum\ReportStatus::All }}">All</option>
+                    @foreach ($publicServiceStates as $state)
+                        <option value={{ $state }}>{{ strtoupper($state) }}</option>
+                    @endforeach
+                </select>
+                @error('publicServiceStatus')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
                 @enderror
             </div>
         @endif

@@ -14,18 +14,7 @@
     </tr>
     </thead>
 </table>
-
-@foreach($records as $i => $business)
-    <table style="border-collapse:collapse; width:100%;">
-        <thead>
-        <tr>
-            <th style="text-align:left;" colspan="10">
-                <strong class="tax" > {{ $business->name }} ({{$business->motors->count()}} Vehicle(s))</strong><br>
-            </th>
-        </tr>
-        </thead>
-    </table>
-    <table class="table">
+<table class="table">
         <thead class="tableHead">
         <tr>
             <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
@@ -49,35 +38,46 @@
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Registered On</strong>
             </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Public Service Status</strong>
+            </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>MVR Status</strong>
+            </th>
         </tr>
         </thead>
         <tbody>
-        @foreach ($business->motors as $index => $record)
+        @foreach ($records as $i => $record)
             <tr>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $index + 1 }}
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;width: 10px">
+                    {{ $i + 1 }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->business->name ?? '-' }}
+                    {{ $record->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->mvr->plate_number ?? '-' }}
+                    {{ $record->plate_number ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->payment->payment_months ?? '-' }}
+                    {{ $record->payment_months ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->mvr->regtype->name ?? '-' }}
+                    {{ $record->registration_type ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->mvr->class->name ?? '-' }}
+                    {{ $record->class_name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ date('M, d Y', strtotime($record->approved_on)) }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    {{ $record->public_service_status ? strtoupper($record->public_service_status) : '-' }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    {{ $record->mvr_status ?? '-' }}
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
-@endforeach
 </html>
