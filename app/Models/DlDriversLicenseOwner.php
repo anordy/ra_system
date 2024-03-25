@@ -72,6 +72,10 @@ class DlDriversLicenseOwner extends Model implements Auditable
 		return $this->hasMany(DlDriversLicense::class,'dl_drivers_license_owner_id');
 	}
 
+	public function fullname(){
+        return $this->first_name. ' '. $this->middle_name. ' '. $this->last_name;
+    }
+
 	public function dl_license_applications()
 	{
 		return $this->hasMany(DlLicenseApplication::class);

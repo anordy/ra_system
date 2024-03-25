@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
 use App\Models\DlDriversLicenseClass;
+use App\Models\DlDriversLicenseOwner;
 use App\Models\DlFee;
 use App\Models\DlLicenseApplication;
 use App\Models\MvrMotorVehicle;
@@ -72,7 +73,7 @@ class LicenseApplicationsController extends Controller
                 DB::beginTransaction();
                 $application->update(['dl_application_status_id' => DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_PENDING_PAYMENT])->id]);
                 $fee = DlFee::query()->where(['type' => $application->type])->first();
-                if (empty($fee)) {
+                if (empty ($fee)) {
                     session()->flash('error', "Fee for Drivers license application ({$application->type}) is not configured");
                     return redirect()->back();
                 }
@@ -142,68 +143,19 @@ class LicenseApplicationsController extends Controller
         }
         $id = decrypt($id);
         $application = DlLicenseApplication::query()->findOrFail($id);
+        $applicant = DlDriversLicenseOwner::query()->findOrFail($application->dl_drivers_license_owner_id);
         $title = ['fresh' => 'New License Application', 'renew' => 'License Renewal Application', 'duplicate' => 'License Duplicate Application'][strtolower($application->type)];
-        return view('driver-license.license-applications-show', compact('application', 'title'));
+        return view('driver-license.license-applications-show', compact('application', 'title', 'applicant'));
     }
 
-    public function simulatePayment($id)
-    {
-        $id = decrypt($id);
-        $application = DlLicenseApplication::query()->findOrFail($id);
-        try {
-            DB::beginTransaction();
-            if (strtolower($application->type) == 'fresh' || strtolower($application->type) == 'renew') {
-                $application->dl_application_status_id =  DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_TAKING_PICTURE])->id;
-            } else {
-                $application->dl_application_status_id =  DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_LICENSE_PRINTING])->id;
-                $latest_license = DlDriversLicense::query()
-                    ->where(['dl_drivers_license_owner_id' => $application->dl_drivers_license_owner_id])
-                    ->latest()
-                    ->firstOrFail();
-                /** @var DlDriversLicense $license */
-                $latest_license->update(['status' => DlDriversLicense::STATUS_DAMAGED_OR_LOST]);
-                $latest_license->save();
-                $license = DlDriversLicense::query()->create([
-                    'dl_drivers_license_owner_id' => $application->dl_drivers_license_owner_id,
-                    'license_number' => $latest_license->license_number,
-                    'dl_license_duration_id' => $application->dl_license_duration_id,
-                    'issued_date' => date('Y-m-d'),
-                    'expiry_date' => date('Y-m-d', strtotime("+{$application->license_duration->number_of_years} years")),
-                    'license_restrictions' => $latest_license->license_restrictions,
-                    'dl_license_application_id' => $application->id,
-                    'status' => 'ACTIVE'
-                ]);
-
-                $latest_license = DlDriversLicense::query()
-                    ->where(['dl_drivers_license_owner_id' => $application->dl_drivers_license_owner_id])
-                    ->latest()
-                    ->firstOrFail();
-                foreach ($latest_license->drivers_license_classes as $class) {
-                    DlDriversLicenseClass::query()->create(
-                        [
-                            'dl_drivers_license_id' => $license->id,
-                            'dl_license_class_id' => $class->dl_license_class_id
-                        ]
-                    );
-                }
-            }
-            $application->save();
-            $bill = $application->get_latest_bill();
-            $bill->update(['status' => 'paid']);
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-        }
-        return redirect()->route('drivers-license.applications.show', encrypt($id));
-    }
 
     public function printed($id)
     {
         $id = decrypt($id);
+
         $application = DlLicenseApplication::query()->findOrFail($id);
         try {
-            $application->dl_application_status_id =  DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_COMPLETED])->id;
+            $application->status = DlApplicationStatus::STATUS_COMPLETED; // 
             $application->save();
         } catch (Exception $e) {
             report($e);
@@ -225,7 +177,8 @@ class LicenseApplicationsController extends Controller
         return $pdf->stream();
     }
 
-    public function getFile($location){
+    public function getFile($location)
+    {
         if ($location) {
             try {
                 return Storage::disk('local')->response(decrypt($location));
@@ -237,26 +190,19 @@ class LicenseApplicationsController extends Controller
         return abort(404);
     }
 
-    public function retryControlNumber($id){
-        $response = ZmCore::sendBill(decrypt($id));
-        if ($response->status === ZmResponse::SUCCESS) {
-            $this->flash('success', 'A control number has been generated successful.');
-        } else {
-            session()->flash('error', 'Control number generation failed, try again later');
-        }
-        return redirect()->back();
-    }
 
 
-    public function showLicense($id){
+    public function showLicense($id)
+    {
         if (!Gate::allows('driver-licences-view')) {
             abort(403);
         }
         $license = DlDriversLicense::query()->findOrFail(decrypt($id));
-        return view('driver-license.licenses-show',compact('license'));
+        return view('driver-license.licenses-show', compact('license'));
     }
 
-    public function indexLicense(){
+    public function indexLicense()
+    {
         if (!Gate::allows('driver-licences-view')) {
             abort(403);
         }

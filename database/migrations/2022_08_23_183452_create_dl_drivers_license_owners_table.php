@@ -16,26 +16,27 @@ class CreateDlDriversLicenseOwnersTable extends Migration
         Schema::create('dl_drivers_license_owners', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('taxpayer_id');
-            $table->unsignedBigInteger('dl_blood_group_id');
+            $table->string('blood_group',5);
+            
+            $table->string('first_name');
+            $table->string('middle_name')->nullable();
+            $table->string('last_name');
+            $table->string('physical_address');
+
+            $table->string('email')->unique()->nullable();
+            $table->string('mobile')->unique();
+            $table->string('alt_mobile')->nullable();
+
             $table->date('dob');
-            $table->string('competence_number',50);
-            $table->string('certificate_number',50);
-            $table->string('confirmation_number',50);
-            $table->string('photo_path',100);
+            $table->string('certificate_number',50)->nullable();
+            $table->longText('certificate_path')->nullable();
+            $table->longText('photo_path')->nullable();
             $table->timestamps();
 
-            $table->foreign('dl_blood_group_id')->references('id')->on('dl_blood_groups');
             $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
 
         });
     }
-
-    /**
-    6 CONFIRMATION NUMBER
-     *competence_id
-     *
-    7 PHOTO_IMAGE
-     */
 
     /**
      * Reverse the migrations.

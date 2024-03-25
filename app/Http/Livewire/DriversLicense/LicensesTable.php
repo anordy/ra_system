@@ -37,10 +37,10 @@ class LicensesTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Driver's Name", "drivers_license_owner.taxpayer_id")
-                ->format(fn($id)=>Taxpayer::query()->find($id)->fullname() ?? 'N/A')
-                ->sortable()
-                ->searchable(),
+            // Column::make("Driver's Name", "drivers_license_owner.taxpayer_id")
+            //     ->format(fn($id)=>Taxpayer::query()->find($id)->fullname() ?? 'N/A')
+            //     ->sortable()
+            //     ->searchable(),
             Column::make("License Number", "license_number")
                 ->sortable()
                 ->searchable(),

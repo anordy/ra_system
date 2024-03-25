@@ -53,6 +53,8 @@ class DlDriversLicense extends Model implements Auditable
 	protected $fillable = [
 		'dl_drivers_license_owner_id',
 		'license_number',
+		'license_duration',
+		'taxpayer_id',
 		'dl_license_duration_id',
 		'dl_license_application_id',
 		'issued_date',

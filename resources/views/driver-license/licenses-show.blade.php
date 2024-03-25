@@ -84,45 +84,42 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">name</span>
-                            <p class="my-1">{{ $license->drivers_license_owner->taxpayer->fullname() }}</p>
+                            <p class="my-1">{{ $license->drivers_license_owner->fullname() }}</p>
                         </div>
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">TIN</span>
-                            <p class="my-1">{{ $license->drivers_license_owner->taxpayer->tin }}</p>
+                            <p class="my-1">{{ $license->drivers_license_owner->tin }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Email Address</span>
-                            <p class="my-1">{{ $license->drivers_license_owner->taxpayer->email }}</p>
+                            <p class="my-1">{{ $license->drivers_license_owner->email }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Mobile</span>
-                            <p class="my-1">{{ $license->drivers_license_owner->taxpayer->mobile }}</p>
+                            <p class="my-1">{{ $license->drivers_license_owner->mobile }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Alternative</span>
-                            <p class="my-1">{{ $license->drivers_license_owner->taxpayer->alt_mobile }}</p>
+                            <p class="my-1">{{ $license->drivers_license_owner->alt_mobile }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Nationality</span>
-                            <p class="my-1">{{ $license->drivers_license_owner->taxpayer->country->nationality }}</p>
-                        </div>
-                        @if ($license->drivers_license_owner->taxpayer->zanid_no)
+                        
+                        @if ($license->drivers_license_owner->zanid_no)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">ZANID No.</span>
-                                <p class="my-1">{{ $license->drivers_license_owner->taxpayer->zanid_no }}</p>
+                                <p class="my-1">{{ $license->drivers_license_owner->zanid_no }}</p>
                             </div>
                         @endif
-                        @if ($license->drivers_license_owner->taxpayer->nida_no)
+                        @if ($license->drivers_license_owner->nida_no)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">NIDA No.</span>
-                                <p class="my-1">{{ $license->drivers_license_owner->taxpayer->nida_no }}</p>
+                                <p class="my-1">{{ $license->drivers_license_owner->nida_no }}</p>
                             </div>
                         @endif
-                        @if ($license->drivers_license_owner->taxpayer->passport_no)
+                        @if ($license->drivers_license_owner->passport_no)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Passport No.</span>
-                                <p class="my-1">{{ $license->drivers_license_owner->taxpayer->passport_no }}</p>
+                                <p class="my-1">{{ $license->drivers_license_owner->passport_no }}</p>
                             </div>
                         @endif
                         <div class="col-md-4 mb-3">

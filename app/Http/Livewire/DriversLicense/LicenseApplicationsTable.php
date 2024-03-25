@@ -4,6 +4,7 @@ namespace App\Http\Livewire\DriversLicense;
 
 use App\Models\DlApplicationStatus;
 use App\Models\DlLicenseApplication;
+use App\Models\DlDriversLicenseOwner;
 use App\Models\Taxpayer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -45,18 +46,21 @@ class LicenseApplicationsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Applicants Name", "taxpayer_id")
-                ->format(fn($id)=>Taxpayer::query()->find($id)->fullname() ?? 'N/A')
+            Column::make(__("Applicant's Name"), "dl_drivers_license_owner_id")
+                ->format(function ($dl_drivers_license_owner_id) {
+                    $owner = DlDriversLicenseOwner::find($dl_drivers_license_owner_id);
+                    return $owner ? $owner->fullname() : null;
+                })
                 ->sortable(),
-            Column::make("Applicants TIN", "taxpayer.tin")
-                ->sortable(),
+            // Column::make("Applicants TIN", "taxpayer.tin")
+            //     ->sortable(),
             Column::make("Type", "type")
                 ->format(fn($type)=>ucwords(strtolower($type)))
                 ->sortable(),
             Column::make("Application Date", "created_at")
                 ->format(fn($date)=>Carbon::parse($date)->format('Y-m-d'))
                 ->sortable(),
-            Column::make("Status", "application_status.name")
+            Column::make("Status", "status")
                 ->sortable(),
             Column::make('Action', 'id')
                 ->format(function ($value) {
