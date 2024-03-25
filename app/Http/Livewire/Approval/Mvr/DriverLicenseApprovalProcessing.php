@@ -43,21 +43,7 @@ class DriverLicenseApprovalProcessing extends Component
 
         try {
             DB::beginTransaction();
-            // if ($this->checkTransition('mvr_zartsa_review')) {
 
-            //     $this->validate(
-            //         [
-            //             'approvalReport' => 'nullable|mimes:pdf|max:1024|max_file_name_length:100',
-            //         ]
-            //     );
-
-            //     $approvalReport = "";
-            //     if ($this->approvalReport) {
-            //         $approvalReport = $this->approvalReport->store('mvrZartsaReport', 'local');
-            //     }
-            //     $this->subject->approval_report = $approvalReport;
-            //     $this->subject->save();
-            // }
 
             if ($this->checkTransition('mvr_registration_officer_review')) {
 
@@ -68,7 +54,6 @@ class DriverLicenseApprovalProcessing extends Component
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-
 
 
             // Send correction email/sms
@@ -83,11 +68,7 @@ class DriverLicenseApprovalProcessing extends Component
 
             // Generate Control Number after MVR SC Approval
             if ($this->subject->status == DlApplicationStatus::STATUS_PENDING_PAYMENT && $transition === 'transport_officer_review') {
-                try {
-                    $this->generateControlNumber();
-                } catch (Exception $exception) {
-                    $this->customAlert('error', 'Failed to generate control number, please try again');
-                }
+                $this->generateControlNumber();
             }
 
             DB::commit();
@@ -180,34 +161,29 @@ class DriverLicenseApprovalProcessing extends Component
     public function generateControlNumber()
     {
         try {
-            DB::beginTransaction();
 
             // Fetch the fee
             $fee = DlFee::query()->where('dl_license_duration_id', $this->subject->license_duration_id)
-                                ->where('type', $this->subject->type)
-                                ->first();
+                ->where('type', $this->subject->type)
+                ->first();
 
             if (empty ($fee)) {
                 // Fee not configured, display error and return
-                $errorMessage = "Driver License fee is not configured for duration of: " . $this->subject->duration . " Years";
+                $errorMessage = "Driver License fee for this application is not configured";
                 $this->customAlert('error', $errorMessage);
                 DB::rollBack();
                 return;
             } else {
 
-
                 // Generate control number
                 $this->generateDLicenseControlNumber($this->subject, $fee);
 
                 // Update application status and payment status
-                $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->payment_status = BillStatus::CN_GENERATING;
 
             }
-
-            DB::commit();
         } catch (Exception $e) {
-            DB::rollBack();
+
             Log::error('Error generating control number: ' . $e->getMessage(), [
                 'subject_id' => $this->subject->id,
                 'license_duration_id' => $this->subject->license_duration_id,
