@@ -102,12 +102,12 @@
                     {{-- @if (isset($verified))
                         @if ($verified == 'verified')
                             <span class="font-weight-light text-success">
-                                <i class="fa fa-check" aria-hidden="true"></i>
+                                <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
                                 TIN Number Verified
                             </span>
                         @else
                             <span class="font-weight-light text-danger">
-                                <i class="fa fa-times" aria-hidden="true"></i>
+                                <i class="bi bi-x-circle-fill" aria-hidden="true"></i>
                                 {{ $verified }}
                             </span>
                         @endif

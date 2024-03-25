@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <h5 class="modal-title text-uppercase">Approve Motor Vehicle Registration</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
-                        class="fa fa-times-circle"></i></button>
+                        class="bi bi-x-circle-fill"></i></button>
             </div>
             <div class="modal-body">
                 @include('layouts.component.messages')

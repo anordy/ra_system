@@ -59,7 +59,7 @@ class RegisteredMotorVehiclesTable extends DataTableComponent
                  ->format(function ($value) {
                      $url = route('mvr.show',encrypt($value));
                      return <<< HTML
-                     <a class="btn btn-outline-primary btn-sm" href="$url"><i class="fa fa-eye"></i>View</a>
+                     <a class="btn btn-outline-primary btn-sm" href="$url"><i class="bi bi-eye-fill"></i>View</a>
                  HTML;})
                  ->html()
         ];

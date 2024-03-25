@@ -94,11 +94,11 @@ class UsersTable extends DataTableComponent
                         return "";
                     } else if ($row->status == 1 && Gate::allows('setting-user-change-status')) {
                         return <<< HTML
-                            <button class="btn btn-info btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock-open"></i> </button>
+                            <button class="btn btn-info btn-sm" wire:click="activate($row->id, $row->status)"><i class="bi bi-unlock-fill"></i> </button>
                         HTML;
                     } else if ($row->status != 1 && Gate::allows('setting-user-change-status')) {
                         return  <<< HTML
-                            <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock"></i> </button>
+                            <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="bi bi-lock-fill"></i> </button>
                         HTML;
                     }
                 })
@@ -131,28 +131,28 @@ class UsersTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker') ) {
                             $edit = <<< HTML
-                                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal', $value)"><i class="fa fa-edit"></i> </button>
+                                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal', $value)"><i class="bi bi-pencil-square"></i> </button>
                                     HTML;
                         }
                     }
 
                     if (Gate::allows('setting-user-change-password')) {
                         $changePwd = <<< HTML
-                                    <button class="btn btn-warning btn-sm" onclick="Livewire.emit('showModal', 'user-change-password-modal',$value)"><i class="fa fa-key"></i> </button>
+                                    <button class="btn btn-warning btn-sm" onclick="Livewire.emit('showModal', 'user-change-password-modal',$value)"><i class="bi bi-key-fill"></i> </button>
                                 HTML;
                     }
 
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-delete') && $value != auth()->user()->id && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete = <<< HTML
-                                        <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                                        <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash-fill"></i> </button>
                                     HTML;
                         }
                     }
 
                     if ($row->is_first_login == 1) {
                         $mail = <<< HTML
-                            <button class="btn btn-secondary btn-sm" wire:click="resendCredential($value)"><i class="fa fa-envelope"></i> </button>
+                            <button class="btn btn-secondary btn-sm" wire:click="resendCredential($value)"><i class="bi bi-envelope-fill"></i> </button>
                         HTML;
                     }
 
@@ -167,7 +167,7 @@ class UsersTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-change-role')) {
                             return <<< HTML
-                                        <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal', $value)"><i class="fa fa-user-tag"></i> </button>
+                                        <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal', $value)"><i class="bi bi-person"></i> </button>
                                     HTML;
                         }
                     }

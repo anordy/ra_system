@@ -71,8 +71,8 @@ class GenericSettingsTable extends DataTableComponent
             ->format(function ($value){
                 $model = preg_replace('/\\\\/','\\\\\\',$this->model);
                 return <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'mvr.generic-setting-add-modal','$model',$value)"><i class="fa fa-edit"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'mvr.generic-setting-add-modal','$model',$value)"><i class="bi bi-pencil-square"></i> </button>
+                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash-fill"></i> </button>
                 HTML;
                     })->html()]);
     }

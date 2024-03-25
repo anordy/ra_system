@@ -56,11 +56,11 @@ class ApiUsersTable extends DataTableComponent
                 ->label(function ($row) {
                      if ($row->status == 1 && Gate::allows('setting-user-change-status')) {
                         return <<< HTML
-                            <button class="btn btn-info btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock-open"></i> </button>
+                            <button class="btn btn-info btn-sm" wire:click="activate($row->id, $row->status)"><i class="bi bi-unlock-fill"></i> </button>
                         HTML;
                     } else if ($row->status != 1 && Gate::allows('setting-user-change-status')) {
                         return  <<< HTML
-                            <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock"></i> </button>
+                            <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="bi bi-lock-fill"></i> </button>
                         HTML;
                     }
                 })
@@ -108,7 +108,7 @@ class ApiUsersTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-role-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit =  <<< HTML
-                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'settings.api-users.edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'settings.api-users.edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
                                 HTML;
                         }
                     }

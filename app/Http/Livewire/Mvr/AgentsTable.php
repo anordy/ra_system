@@ -58,11 +58,11 @@ class AgentsTable extends DataTableComponent
                 ->format(function ($value,$row) {
                     if ($row->status == 'ACTIVE') {
                         return <<< HTML
-                        <button class="btn btn-info btn-sm" wire:click="changeStatus($row->id, '$row->status')"><i class="fa fa-lock-open"></i> </button>
+                        <button class="btn btn-info btn-sm" wire:click="changeStatus($row->id, '$row->status')"><i class="bi bi-unlock-fill"></i> </button>
                     HTML;
                     } else {
                         return <<< HTML
-                        <button class="btn btn-danger btn-sm" wire:click="changeStatus($row->id, '$row->status')"><i class="fa fa-lock"></i> </button>
+                        <button class="btn btn-danger btn-sm" wire:click="changeStatus($row->id, '$row->status')"><i class="bi bi-lock-fill"></i> </button>
                     HTML;
                     }
                 })

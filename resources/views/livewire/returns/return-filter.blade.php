@@ -93,7 +93,7 @@
                     <button type="submit" class=" btn btn-primary ml-2 px-5" wire:click='fillter()'
                         wire:loading.attr="disabled">
                         <div wire:loading.remove wire:target='fillter'>
-                            <i class="fa fa-filter"></i>
+                            <i class="bi bi-filter"></i>
                             Fillter
                         </div>
                         <div wire:loading wire:target='fillter'>

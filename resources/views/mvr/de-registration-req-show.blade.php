@@ -12,26 +12,26 @@
                     @can('mvr_approve_de_registration')
                     <a href="{{route('mvr.de-register-requests.approve',encrypt($request->id))}}">
                        <button class="btn btn-info btn-sm">
-                           <i class="fa fa-check"></i>Approve
+                           <i class="bi bi-check-circle-fill"></i>Approve
                         </button>
                     </a>
 
                         <a href="{{route('mvr.de-register-requests.reject',encrypt($request->id))}}">
                             <button class="btn btn-danger btn-sm">
-                                <i class="fa fa-check"></i>Reject
+                                <i class="bi bi-check-circle-fill"></i>Reject
                             </button>
                         </a>
                     @endcan
                 @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_INITIATED)
                     @can('mvr_initiate_de_registration')
                         <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'upload-de-registration-inspection-report',{{$request->id}})">
-                            <i class="fa fa-check"></i>Submit
+                            <i class="bi bi-check-circle-fill"></i>Submit
                         </button>
                     @endcan
                 @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_ACCEPTED)
                     <a href="{{route('mvr.de-registration-certificate',encrypt($request->mvr_motor_vehicle_id))}}">
                         <button class="btn btn-info btn-sm">
-                            <i class="fa fa-print"></i> Certificate of De-registration
+                            <i class="bi bi-printer-fill"></i> Certificate of De-registration
                         </button>
                     </a>
                 @endif

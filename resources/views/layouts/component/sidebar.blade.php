@@ -1174,7 +1174,7 @@
 
         <div class="pr-1">
             <a class="text-white logout-link" href="{{ route('logout') }}">
-                <i class="fa fa-car"></i>
+                <i class="bi bi-box"></i>
             </a>
 
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

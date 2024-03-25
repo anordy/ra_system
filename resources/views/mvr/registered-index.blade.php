@@ -10,7 +10,7 @@
                 @can('mvr_initiate_registration')
                     <button class="btn btn-info btn-sm"
                             onclick="Livewire.emit('showModal', 'mvr.chassis-number-search','mvr.chassis-search')"><i
-                                class="fa fa-plus-circle"></i>
+                                class="bi bi-plus-circle-fill"></i>
                         Register Motor Vehicle</button>
                 @endcan
             </div>

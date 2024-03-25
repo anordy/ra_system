@@ -12,7 +12,7 @@
                     @if($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_REGISTERED)
                     <a href="{{route('mvr.certificate-of-registration',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
                        data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection"><i
-                                class="fa fa-print text-white"></i>
+                                class="bi bi-printer-fill text-white"></i>
                         Certificate of Registration</a>
                     @endif
                 </div>
@@ -119,24 +119,24 @@
                 @if($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_INSPECTION)
                     <a href="{{route('mvr.certificate-of-worth',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
                        data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection"><i
-                                class="fa fa-print text-white"></i>
+                                class="bi bi-printer-fill text-white"></i>
                         Certificate of Worth</a>
                     @can('mvr_initiate_registration')
                         <a href="{{route('mvr.submit-inspection',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
                            data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection"><i
-                                    class="fa fa-upload text-white"></i>
+                                    class="bi bi-cloud-upload-fill text-white"></i>
                             Submit</a>
                     @endcan
                 @elseif($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_REVENUE_OFFICER_APPROVAL)
                     @can('mvr_approve_registration')
                         <button class="btn btn-info btn-sm"
                                 onclick="Livewire.emit('showModal', 'mvr.approve-registration',{{$motor_vehicle->id}})"><i
-                                    class="fa fa-check"></i>
+                                    class="bi bi-check-circle-fill"></i>
                             Approve</button>
                     @endcan
                     <a href="{{route('mvr.certificate-of-worth',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
                        data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection"><i
-                                class="fa fa-print text-white"></i>
+                                class="bi bi-printer-fill text-white"></i>
                         Certificate of Worth</a>
                 @endif
             </div>

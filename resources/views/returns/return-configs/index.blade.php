@@ -17,7 +17,7 @@
         <div class="card-header bg-white text-uppercase font-weight-bold">
             {{ $code }} return configurations
             {{--            <div class="card-tools"> --}}
-            {{--                <a href="{{route('settings.return-config.create', [encrypt($id), encrypt($code)])}}" class="btn btn-info btn-sm"><i class="fa fa-plus-circle"></i> --}}
+            {{--                <a href="{{route('settings.return-config.create', [encrypt($id), encrypt($code)])}}" class="btn btn-info btn-sm"><i class="bi bi-plus-circle-fill"></i> --}}
             {{--                    New Configuration</a> --}}
             {{--            </div> --}}
         </div>

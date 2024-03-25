@@ -11,11 +11,11 @@
                <div class="card-tools">
                    <button class="btn btn-info btn-sm"
                            onclick="Livewire.emit('showModal', 'mvr.chassis-number-internal-search','{{$result_route ?? 'mvr.internal-search'}}')"><i
-                               class="fa fa-plus-circle"></i>
+                               class="bi bi-plus-circle-fill"></i>
                        New Search</button>
                    <button class="btn btn-primary btn-sm"
                            onclick="Livewire.emit('showModal', '{{$action}}',{{$motor_vehicle->id}})"><i
-                               class="fa fa-forward"></i>
+                               class="bi bi-arrow-right"></i>
                        Initiate Request</button>
                </div>
            </div>
@@ -187,7 +187,7 @@
                <div class="card-tools">
                    <button class="btn btn-info btn-sm"
                            onclick="Livewire.emit('showModal', 'mvr.chassis-number-internal-search','{{$result_route ?? 'mvr.internal-search'}}')"><i
-                               class="fa fa-plus-circle"></i>
+                               class="bi bi-plus-circle-fill"></i>
                        New Search</button>
                </div>
            </div>
@@ -195,7 +195,7 @@
 
                <div class="row">
                    <div class="col-md-12 mb-3">
-                       <div class="text-center m-3 text-center h3"><i class="fa fa-search text-danger"></i></div>
+                       <div class="text-center m-3 text-center h3"><i class="bi bi-search text-danger"></i></div>
                        @if(\Route::currentRouteName() === 'mvr.internal-search-dr')
                            <h3 class="font-weight-bold text-center m-3 text-danger">Motor Vehicle with {{$search_type}} {{$number}} has not been processed for Deregistration or has not been Registered</h3>
                        @else

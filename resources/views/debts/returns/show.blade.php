@@ -14,7 +14,7 @@
                 @if (($tax_return->recoveryMeasure->status ?? '') != 'unassigned' && $tax_return->return_category == 'overdue')
                     <a href="{{ route('debts.debt.recovery', encrypt($tax_return->id)) }}"
                         class="btn btn-info btn-sm text-white"><i
-                            class="fa fa-plus text-white"></i>
+                            class="bi bi-plus-circle-fill text-white"></i>
                         Assign Recovery Measure
                     </a>
                 @endif

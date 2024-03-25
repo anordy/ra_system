@@ -8,7 +8,7 @@
             <h5>Applications</h5>
             <div class="card-tools">
                 <a href="{{ route('drivers-license.applications.create') }}">
-                    <button class="btn btn-info btn-sm"><i class="fa fa-plus-circle"></i>
+                    <button class="btn btn-info btn-sm"><i class="bi bi-plus-circle-fill"></i>
                         New Application</button>
                 </a>
             </div>

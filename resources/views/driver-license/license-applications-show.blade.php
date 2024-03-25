@@ -188,7 +188,7 @@
                                 @if ($application->application_status->name === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
                                     <button class="btn btn-primary btn-sm btn-block"
                                         onclick="Livewire.emit('showModal', 'drivers-license.capture-passport-modal',{{ $application->id }})">
-                                        <i class="fa fa-camera"></i>
+                                        <i class="bi bi-camera-fill"></i>
                                         Capture Passport
                                     </button>
                                 @endif
@@ -254,7 +254,7 @@
                                 @if ($application->application_status->name === \App\Models\DlApplicationStatus::STATUS_INITIATED ||
                                     $application->application_status->name === \App\Models\DlApplicationStatus::STATUS_DETAILS_CORRECTION)
                                     <a href="{{ route('drivers-license.applications.submit', encrypt($application->id)) }}">
-                                        <button class="btn btn-primary btn-sm "><i class="fa fa-check"></i>
+                                        <button class="btn btn-primary btn-sm "><i class="bi bi-check-circle-fill"></i>
                                             Submit
                                         </button>
                                     </a>

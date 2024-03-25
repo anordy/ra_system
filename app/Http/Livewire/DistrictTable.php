@@ -92,13 +92,13 @@ class DistrictTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-district-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'district-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'district-edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
                             HTML;
                         }
 
                         if (Gate::allows('setting-district-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete = <<<HTML
-                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash-fill"></i> </button>
                             HTML;
                         }
                     }

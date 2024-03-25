@@ -1,10 +1,7 @@
 <livewire:modals />
-<script src="{{ asset('plugins/jquery/dist/jquery.min.js') }}"></script>
+<script  src="{{ asset('plugins/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('plugins/sweetalert/sweetalert2.min.js') }}"></script>
-<script src="{{ asset('plugins/fontawesome/js/fontawesome.min.js') }}"></script>
-<script src="{{ asset('plugins/fontawesome/js/solid.min.js') }}"></script>
-<script src="{{ asset('plugins/fontawesome/js/regular.js') }}"></script>
 <script src="{{ asset('js/x-mask.js') }}" defer></script>
 <script src="{{ asset('js/alpine.min.js') }}" defer></script>
 <script src="{{ asset('js/modals.js') }}"></script>

@@ -14,5 +14,5 @@
 @endif
 
 @if ($row->is_first_login == 1)
-    <button class="m-1 btn btn-outline-secondary btn-sm" wire:click="resendCredential({{$row->id}})"><i class="fa fa-envelope"></i> Send credentials</button>
+    <button class="m-1 btn btn-outline-secondary btn-sm" wire:click="resendCredential({{$row->id}})"><i class="bi bi-envelope-fill"></i> Send credentials</button>
 @endif
