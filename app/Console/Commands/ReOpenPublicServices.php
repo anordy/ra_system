@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Enum\PublicService\TemporaryClosureStatus;
 use App\Enum\PublicServiceMotorStatus;
+use App\Events\SendSms;
+use App\Jobs\SendCustomSMS;
 use App\Models\PublicService\PublicServiceMotor;
 use App\Models\PublicService\TemporaryClosure;
 use Carbon\Carbon;
@@ -67,6 +69,14 @@ class ReOpenPublicServices extends Command
             $temp->update([
                 're_opening_date' => Carbon::now()->toDateString()
             ]);
+
+            // Send notification.
+            if ($publicMotor->taxpayer->mobile) {
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                    'phone' => $publicMotor->taxpayer->mobile,
+                    'message' => "Hello {$publicMotor->taxpayer->fullname}, your public service temporary closure of {$publicMotor->mvr->plate_number} has ended, Please log in into your account to generate your sticker payment."
+                ]));
+            }
         }
 
         return 0;
