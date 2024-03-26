@@ -10,4 +10,7 @@ class MvrPlateNumberColor extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    protected $table = 'mvr_plate_number_colors';
+
 }

@@ -285,6 +285,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-mvr-fee-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-deregistration-reason-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-deregistration-fee-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-registration-type-view', 'sys_module_id' => 18],
 
             ['name' => 'setting-mvr-ownership-transfer-reason-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-category-view', 'sys_module_id' => 18],

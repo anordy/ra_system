@@ -31,6 +31,7 @@ class CreateMvrOwnershipTransferTable extends Migration
             $table->string('marking')->nullable();
             $table->string('payment_status')->nullable();
             $table->string('approval_report',255)->nullable();
+            $table->string('inspection_report',255)->nullable();
             $table->string('status',255)->nullable();
             $table->timestamps();
             $table->softDeletes();

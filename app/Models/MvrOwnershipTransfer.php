@@ -72,7 +72,9 @@ class MvrOwnershipTransfer extends Model
 		'agreement_contract_path',
 		'mvr_agent_id',
 		'owner_taxpayer_id',
-		'mvr_request_status_id'
+		'mvr_request_status_id',
+        'inspection_report',
+        'old_plate_number'
 	];
 
 	public function new_owner()
@@ -85,7 +87,7 @@ class MvrOwnershipTransfer extends Model
 	}
 	public function motor_vehicle()
 	{
-		return $this->belongsTo(MvrMotorVehicle::class,'mvr_motor_vehicle_id');
+		return $this->belongsTo(MvrRegistration::class,'mvr_motor_vehicle_id');
 	}
 
 	public function ownership_transfer_reason()
@@ -98,6 +100,10 @@ class MvrOwnershipTransfer extends Model
         return $this->belongsTo(MvrTransferCategory::class,'mvr_transfer_category_id');
     }
 
+    public function regtype(){
+        return $this->belongsTo(MvrRegistrationType::class, 'mvr_registration_type_id');
+    }
+
 
 	public function request_status()
 	{
@@ -108,5 +114,10 @@ class MvrOwnershipTransfer extends Model
     {
         $bill_item = $this->morphOne(ZmBillItem::class,'billable')->latest()->first();
         return $bill_item->bill ??  null;
+    }
+
+    public function latestBill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 }

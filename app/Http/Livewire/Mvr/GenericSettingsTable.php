@@ -10,6 +10,7 @@ use App\Models\MvrColor;
 use App\Models\MvrFee;
 use App\Models\MvrModel;
 use App\Models\MvrPlateNumberColor;
+use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferFee;
 use App\Traits\WithSearch;
 use Exception;
@@ -62,6 +63,15 @@ class GenericSettingsTable extends DataTableComponent
             $name_column =  [
                 Column::make("Name", "name")
                 ->sortable()
+            ];
+        }
+
+        if ($this->model === MvrRegistrationType::class){
+            $name_column =  [
+                Column::make("Name", "name")
+                    ->sortable(),
+                Column::make("Initial Plate Number", "initial_plate_number")
+                    ->sortable()
             ];
         }
         return array_merge(
