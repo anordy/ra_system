@@ -20,7 +20,6 @@ class CreateDlFeesTable extends Migration
             $table->enum('type',['FRESH','DUPLICATE', 'RENEW']);
             $table->string('gfs_code')->default(116101);
             $table->integer('duration')->nullable();
-            $table->unsignedBigInteger('DL_LICENSE_DURATION_ID');
             $table->timestamps();
         });
     }

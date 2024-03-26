@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,33 +14,21 @@ class AddAdditionalColumnsToDlLicenseApplicationsTable extends Migration
     public function up()
     {
         Schema::table('dl_license_applications', function (Blueprint $table) {
-
-            // Drop foreign key constraints
-            $table->dropForeign(['dl_application_status_id']);
-            $table->dropForeign(['taxpayer_id']);
-            $table->dropForeign(['dl_blood_group_id']);
-            $table->dropForeign(['dl_drivers_license_owner_id']);
-            $table->dropForeign(['dl_license_duration_id']);
-
-          // Drop existing columns
-            $table->dropColumn('taxpayer_id');
-            $table->dropColumn('dl_blood_group_id');
-            $table->dropColumn('dl_license_duration_id');
-            $table->dropColumn('dob');
-            $table->dropColumn('photo_path');
-            $table->dropColumn('dl_application_status_id');
-
+            // Drop columns that are no longer needed
+            $table->dropColumn(['taxpayer_id', 'dl_blood_group_id', 'dl_license_duration_id', 'dob', 'certificate_number', 'confirmation_number', 'photo_path']);
+            
             // Add new columns
-            $table->unsignedBigInteger('dl_application_status_id')->nullable();
             $table->unsignedBigInteger('driving_school_id');
             $table->unsignedBigInteger('license_duration_id');
             $table->unsignedBigInteger('license_duration');
             $table->longText('completion_certificate')->nullable();
             $table->longText('lost_report')->nullable();
-            $table->string('license_restrictions')->nullable();
-            $table->string('marking')->nullable();
             $table->string('payment_status')->nullable();
             $table->string('status', 255)->nullable();
+            
+            // Modify existing column to match new schema
+            $table->unsignedBigInteger('dl_drivers_license_owner_id')->change();
+            
         });
     }
 
@@ -52,14 +40,22 @@ class AddAdditionalColumnsToDlLicenseApplicationsTable extends Migration
     public function down()
     {
         Schema::table('dl_license_applications', function (Blueprint $table) {
-
+            // Revert changes made in the up() method if needed
             $table->unsignedBigInteger('taxpayer_id');
-            $table->unsignedBigInteger('dl_drivers_license_owner_id')->nullable();
             $table->unsignedBigInteger('dl_blood_group_id');
-            $table->unsignedBigInteger('dl_license_duration_id')->nullable();
-            $table->date('dob')->nullable();
+            $table->unsignedBigInteger('dl_license_duration_id');
+            $table->date('dob');
+            $table->string('competence_number', 50)->nullable();
+            $table->string('certificate_number', 50)->nullable();
+            $table->string('confirmation_number', 50)->nullable();
             $table->string('photo_path', 100)->nullable();
-            $table->unsignedBigInteger('dl_application_status_id');
+            $table->dropColumn(['driving_school_id', 'license_duration_id', 'license_duration', 'completion_certificate', 'lost_report', 'payment_status', 'status']);
+            
+            // Modify existing column to match previous schema
+            $table->unsignedBigInteger('dl_drivers_license_owner_id')->change();
+            
+            // Drop foreign key constraint
+            $table->dropForeign(['dl_drivers_license_owner_id']);
         });
     }
 }

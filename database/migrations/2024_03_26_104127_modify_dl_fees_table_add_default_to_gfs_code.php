@@ -14,7 +14,7 @@ class ModifyDlFeesTableAddDefaultToGfsCode extends Migration
     public function up()
     {
         Schema::table('dl_fees', function (Blueprint $table) {
-            // Modify the gfs_code column to have a default value of '116101'
+
             $table->string('gfs_code')->default('116101')->change();
         });
     }
