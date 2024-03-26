@@ -65,8 +65,6 @@ class CapturePassportModal extends Component
         } catch (Exception $exception) {
             DB::rollBack();
 
-            dd($exception);
-
             Log::error('Error creating driver license: ' . $exception->getMessage(), [
                 'subject_id' => $dla->id,
                 'exception' => $exception,

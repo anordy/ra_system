@@ -15,6 +15,8 @@ class ModifyDlDriversLicenseOwnersTable extends Migration
     {
         Schema::table('dl_drivers_license_owners', function (Blueprint $table) {
             
+            $table->dropColumn(['confirmation_number', 'certificate_number', 'dl_blood_group_id']);
+
             $table->string('blood_group', 5)->nullable();
             $table->string('first_name');
             $table->string('middle_name')->nullable();
@@ -23,6 +25,7 @@ class ModifyDlDriversLicenseOwnersTable extends Migration
             $table->string('email')->nullable()->unique();
             $table->string('mobile')->unique();
             $table->string('alt_mobile')->nullable();
+            $table->string('photo_path',100)->nullable()->change();
         });
     }
 

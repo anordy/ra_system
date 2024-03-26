@@ -15,13 +15,13 @@ class AddAdditionalColumnsToDlLicenseApplicationsTable extends Migration
     {
         Schema::table('dl_license_applications', function (Blueprint $table) {
             // Drop columns that are no longer needed
-            $table->dropColumn(['taxpayer_id', 'dl_blood_group_id', 'dl_license_duration_id', 'dob', 'certificate_number', 'confirmation_number', 'photo_path']);
+            $table->dropColumn(['taxpayer_id','dl_application_status_id', 'dl_blood_group_id', 'dl_license_duration_id', 'dob', 'confirmation_number', 'photo_path']);
             
             // Add new columns
             $table->unsignedBigInteger('driving_school_id');
             $table->unsignedBigInteger('license_duration_id');
             $table->unsignedBigInteger('license_duration');
-            $table->longText('completion_certificate')->nullable();
+            $table->longText('completion_certificate_path')->nullable();
             $table->longText('lost_report')->nullable();
             $table->string('payment_status')->nullable();
             $table->string('status', 255)->nullable();
