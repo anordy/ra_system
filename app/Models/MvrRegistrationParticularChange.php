@@ -50,6 +50,10 @@ class MvrRegistrationParticularChange extends Model
         return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 
+    public function change(){
+        return $this->hasOne(ChassisNumberChange::class, 'particular_change_id');
+    }
+
     public static function getNexPlateNumber(mixed $regType, $class): mixed
     {
         $last_reg = MvrRegistrationParticularChange::query()

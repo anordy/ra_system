@@ -1,7 +1,6 @@
 <div class="card mt-3">
     <div class="card-header font-weight-bold bg-white d-flex justify-content-between align-items-center">
         <span> {{ $reg->chassis->chassis_number  }}  Status Change Information</span>
-
     </div>
 
     <div class="card-body">
@@ -88,7 +87,7 @@
     </div>
 </div>
 
-{{-- @if ($reg->approval_report)
+ @if ($reg->approval_report)
     <div class="card my-4 rounded-0">
         <div class="card-header font-weight-bold bg-white">
             Approval Report
@@ -112,4 +111,4 @@
             </div>
         </div>
     </div>
-@endif --}}
+@endif

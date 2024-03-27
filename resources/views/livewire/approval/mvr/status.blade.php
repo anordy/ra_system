@@ -6,6 +6,10 @@
         <div class="card-body">
             @include('livewire.approval.transitions')
 
+            @if ($this->checkTransition('mvr_zartsa_review'))
+                @include('livewire.approval.mvr.status.zartsa_review')
+            @endif
+
             @if ($this->checkTransition('zbs_officer_review'))
                 @include('livewire.approval.mvr.status.zbs_review')
             @endif
@@ -35,6 +39,14 @@
                     Incorrect
                     return to Applicant</button>
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'bpra_officer_review')">Approve
+                    & Forward</button>
+            </div>
+        @elseif ($this->checkTransition('mvr_zartsa_review'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filled
+                    Incorrect
+                    return to Applicant</button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'mvr_zartsa_review')">Approve
                     & Forward</button>
             </div>
         @elseif  ($this->checkTransition('zbs_officer_review'))
