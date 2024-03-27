@@ -1,6 +1,6 @@
 <div class="card mt-3">
     <div class="card-header font-weight-bold bg-white d-flex justify-content-between align-items-center">
-        <span> {{ $reg->chassis->chassis_number  }}  Status Change Information</span>
+        <span> {{ $reg->chassis->chassis_number  }}  Particular Change Information</span>
 
     </div>
 
@@ -95,20 +95,35 @@
         </div>
         <div class="card-body">
             <div class="row">
-                @if ($reg->approval_report)
-                    <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                             class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <a target="_blank"
-                               href="{{ route('assesments.waiver.files', encrypt($reg->approval_report)) }}"
-                               style="font-weight: 500;" class="ml-1">
-                                Approval Report
-                                <i class="bi bi-arrow-up-right-square ml-1"></i>
-                            </a>
-                        </div>
+                <div class="col-md-3">
+                    <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
+                         class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <a target="_blank"
+                           href="{{ route('assesments.waiver.files', encrypt($reg->approval_report)) }}"
+                           style="font-weight: 500;" class="ml-1">
+                            Approval Report
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
                     </div>
-                @endif
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">New Chassis Number</span>
+                    <p class="my-1">{{ $reg->change->chassis_number ?? 'N/A' }}</p>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">New Engine Number</span>
+                    <p class="my-1">{{ $reg->change->engine_number ?? 'N/A' }}</p>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">New Body Style</span>
+                    <p class="my-1">{{ $reg->change->body_style ?? 'N/A' }}</p>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">New Color</span>
+                    <p class="my-1">{{ $reg->change->color ?? 'N/A' }}</p>
+                </div>
             </div>
         </div>
     </div>

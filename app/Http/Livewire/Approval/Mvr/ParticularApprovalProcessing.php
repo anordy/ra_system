@@ -6,6 +6,7 @@ use App\Enum\BillStatus;
 use App\Enum\MvrRegistrationStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
+use App\Models\ChassisNumberChange;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrPlateNumberStatus;
@@ -26,13 +27,22 @@ class ParticularApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $approvalReport;
+    public $engineNo, $chassisNo, $bodyStyle, $color;
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId   = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
+
+        if ($this->subject->change) {
+            $this->engineNo = $this->subject->change->engine_number;
+            $this->color = $this->subject->change->color;
+            $this->chassisNo = $this->subject->change->chassis_number;
+            $this->bodyStyle = $this->subject->change->body_style;
+        }
     }
+
     public function approve($transition) {
         $transition = $transition['data']['transition'];
 
@@ -40,15 +50,19 @@ class ParticularApprovalProcessing extends Component
             'comments' => 'required|strip_tag',
         ]);
 
+        if ($this->checkTransition('mvr_zartsa_review')) {
+            $this->validate([
+                'engineNo' => 'nullable|alpha_num',
+                'chassisNo' => 'nullable|alpha_num',
+                'bodyStyle' => 'nullable|alpha',
+                'color' => 'nullable|alpha',
+                'approvalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
+            ]);
+        }
+
         try {
             DB::beginTransaction();
             if ($this->checkTransition('mvr_zartsa_review')) {
-
-                $this->validate(
-                    [
-                        'approvalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
-                    ]
-                );
 
                 $approvalReport = "";
                 if ($this->approvalReport) {
@@ -56,6 +70,18 @@ class ParticularApprovalProcessing extends Component
                 }
                 $this->subject->approval_report = $approvalReport;
                 $this->subject->save();
+
+                ChassisNumberChange::updateOrCreate(
+                    [
+                        'particular_change_id' => $this->subject->id,
+                    ],[
+                    'color' => $this->color,
+                    'engine_number' => $this->engineNo,
+                    'chassis_number' => $this->chassisNo,
+                    'body_style' => $this->bodyStyle,
+                    'chassis_number_id' => $this->subject->chassis->id,
+                    'particular_change_id' => $this->subject->id,
+                ]);
             }
 
             if ($this->checkTransition('mvr_registration_officer_review')) {
@@ -194,6 +220,6 @@ class ParticularApprovalProcessing extends Component
 
     public function render()
     {
-        return view('livewire.approval.mvr.status');
+        return view('livewire.approval.mvr.particular-change');
     }
 }
