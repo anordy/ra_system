@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -13,19 +13,28 @@ class ModifyDlDriversLicenseOwnersTable extends Migration
      */
     public function up()
     {
-        Schema::table('dl_drivers_license_owners', function (Blueprint $table) {
-            
-            $table->dropColumn(['confirmation_number', 'certificate_number', 'dl_blood_group_id']);
+        Schema::create('dl_drivers_license_owners', function (Blueprint $table) {
+            // Add new columns
+		$table->id();
 
-            $table->string('blood_group', 5)->nullable();
+            $table->unsignedBigInteger('taxpayer_id');
+            $table->string('blood_group',5);
+
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->string('physical_address');
-            $table->string('email')->nullable()->unique();
+
+            $table->string('email')->unique()->nullable();
             $table->string('mobile')->unique();
             $table->string('alt_mobile')->nullable();
-            $table->string('photo_path',100)->nullable()->change();
+
+            $table->date('dob');
+            $table->string('certificate_number',50)->nullable();
+            $table->longText('certificate_path')->nullable();
+            $table->longText('photo_path')->nullable();
+            $table->timestamps();
+
         });
     }
 
@@ -36,17 +45,6 @@ class ModifyDlDriversLicenseOwnersTable extends Migration
      */
     public function down()
     {
-        Schema::table('dl_drivers_license_owners', function (Blueprint $table) {
-            // Revert changes made in the up() method if needed
-            $table->string('competence_number', 50)->after('taxpayer_id');
-            $table->string('certificate_number', 50)->after('competence_number');
-            $table->string('confirmation_number', 50)->after('certificate_number');
-            $table->string('photo_path', 100)->after('confirmation_number');
-
-            $table->dropColumn(['blood_group', 'first_name', 'middle_name', 'last_name', 'physical_address', 'email', 'mobile', 'alt_mobile', 'certificate_path', 'photo_path']);
-            
-            // Modify existing column to match previous schema
-            $table->date('dob')->change();
-        });
+        Schema::dropIfExists('dl_drivers_license_owners');
     }
 }

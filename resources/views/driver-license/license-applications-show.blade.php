@@ -9,16 +9,16 @@
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="to-print-link" data-toggle="tab" href="#all" role="tab"
-                        aria-controls="home" aria-selected="true">Application</a>
+                       aria-controls="home" aria-selected="true">Application</a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="approval" data-toggle="tab" href="#approval" role="tab"
-                        aria-controls="home" aria-selected="true">Approval History</a>
+                       aria-controls="home" aria-selected="true">Approval History</a>
                 </li>
                 @if (!empty($application->drivers_license))
                     <li class=x"nav-item" role="presentation">
                         <a class="nav-link" id="to-print-link" data-toggle="tab" href="#license" role="tab"
-                            aria-controls="home" aria-selected="true">License</a>
+                           aria-controls="home" aria-selected="true">License</a>
                     </li>
                 @endif
             </ul>
@@ -33,7 +33,7 @@
 
                         <div class="col-md-12 mb-3">
                             @if (
-                                $application->payment_status === \App\Enum\PaymentStatus::CN_GENERATED ||
+                                $application->status === \App\Models\DlApplicationStatus::STATUS_PENDING_PAYMENT ||
                                     $application->payment_status === \App\Enum\PaymentStatus::PENDING)
                                 @livewire('drivers-license.payment.fee-payment', ['license' => $application])
                             @endif
@@ -54,7 +54,7 @@
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Loss Report</span>
                                 <p class="my-1"><a class="btn btn-sm btn-success"
-                                        href="{{ url('storage/' . $application->loss_report_path) }}">View/Download</a></p>
+                                                   href="{{ url('storage/' . $application->loss_report_path) }}">View/Download</a></p>
                             </div>
                         @endif
 
@@ -62,7 +62,7 @@
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Certificate of competence</span>
                                 <p class="my-1"><a
-                                        href="{{ route('mvr.files', encrypt($application->certificate_path)) }}">Preview</a>
+                                            href="{{ route('mvr.files', encrypt($application->certificate_path)) }}">Preview</a>
                                 </p>
                             </div>
 
@@ -144,22 +144,22 @@
                             <div style="width: 250px;">
                                 @if (strtolower($application->type) == 'fresh' && empty($application->photo_path))
                                     <div
-                                        style="border: 1px solid silver; width: 100%; border-radius: 3px; margin-bottom: 3px; padding: 3px">
+                                            style="border: 1px solid silver; width: 100%; border-radius: 3px; margin-bottom: 3px; padding: 3px">
                                         <img src="{{ url('/images/profile.png') }}" style="width: 100%;">
                                     </div>
                                 @else
                                     <div
-                                        style="border: 1px solid silver; width: 100%; border-radius: 3px; margin-bottom: 3px; padding: 3px">
+                                            style="border: 1px solid silver; width: 100%; border-radius: 3px; margin-bottom: 3px; padding: 3px">
                                         <img src="{{ route('drivers-license.license.file', encrypt($application->photo_path ?? $application->drivers_license_owner->photo_path)) }}"
-                                            style="width: 100%;">
+                                             style="width: 100%;">
                                     </div>
                                 @endif
-                                @if ($application->status === \App\Models\DlApplicationStatus::STATUS_PENDING_PAYMENT)
-                                <button class="btn btn-primary btn-sm btn-block"
-                                    onclick="Livewire.emit('showModal', 'drivers-license.capture-passport-modal',{{ $application->id }})">
-                                    <i class="fa fa-camera"></i>
-                                    Capture Passport
-                                </button>
+                                @if ($application->status === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
+                                    <button class="btn btn-primary btn-sm btn-block"
+                                            onclick="Livewire.emit('showModal', 'drivers-license.capture-passport-modal',{{ $application->id }})">
+                                        <i class="fa fa-camera"></i>
+                                        Capture Passport
+                                    </button>
                                 @endif
                             </div>
                         </div>
@@ -201,13 +201,13 @@
 
                     <div class="tab-content bg-white border shadow-sm" id="myTabContent">
                         <div class="tab-pane fade p-3 show active" id="home" role="tabpanel"
-                            aria-labelledby="home-tab">
+                             aria-labelledby="home-tab">
                             <livewire:approval.mvr.driver-license-approval-processing
-                                modelName='App\Models\DlLicenseApplication' modelId="{{ encrypt($application->id) }}" />
+                                    modelName='App\Models\DlLicenseApplication' modelId="{{ encrypt($application->id) }}" />
                         </div>
                         <div class="tab-pane fade p-3" id="approval" role="tabpanel" aria-labelledby="approval-tab">
                             <livewire:approval.approval-history-table modelName='App\Models\DlLicenseApplication'
-                                modelId="{{ encrypt($application->id) }}" />
+                                                                      modelId="{{ encrypt($application->id) }}" />
                         </div>
                     </div>
 
@@ -256,7 +256,7 @@
                                             <span class="font-weight-bold text-uppercase">Print Drivers License</span>
                                             <p class="my-1">
                                                 <a
-                                                    href="{{ route('drivers-license.license.print', encrypt($application->drivers_license->id)) }}">
+                                                        href="{{ route('drivers-license.license.print', encrypt($application->drivers_license->id)) }}">
                                                     <button class="btn btn-sm btn-success">Print</button>
                                                 </a>
                                             </p>
@@ -270,8 +270,8 @@
                                 <div class="col-12">
                                     <div class="modal-footer">
                                         <a
-                                            href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}"><button
-                                                class="btn btn-primary">Update as printed</button></a>
+                                                href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}"><button
+                                                    class="btn btn-primary">Update as printed</button></a>
                                     </div>
                                 </div>
                             </div>
@@ -280,8 +280,8 @@
                                 <div class="col-12">
                                     <div class="modal-footer">
                                         <a
-                                            href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}"><button
-                                                class="btn btn-primary">Renew License</button></a>
+                                                href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}"><button
+                                                    class="btn btn-primary">Renew License</button></a>
                                     </div>
                                 </div>
                             </div>
