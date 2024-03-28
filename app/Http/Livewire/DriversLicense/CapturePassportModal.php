@@ -46,7 +46,7 @@ class CapturePassportModal extends Component
         ];
     }
 
-    
+
     public function submit()
     {
         $dla = DlLicenseApplication::findOrFail($this->application_id);
@@ -91,11 +91,11 @@ class CapturePassportModal extends Component
         $dla->drivers_license_owner->save();
 
     }
-    
+
     private function generateLicense(DlLicenseApplication $dla)
     {
         $owner = $dla->drivers_license_owner;
-    
+
         $originalLicense = DlDriversLicense::query()
             ->where('dl_drivers_license_owner_id', $dla->dl_drivers_license_owner_id)
             ->latest()
@@ -105,16 +105,16 @@ class CapturePassportModal extends Component
 
             $newLicense = clone $originalLicense;
             $newLicense->status = DlApplicationStatus::ACTIVE;
-    
+
             if ($dla->type === DlApplicationStatus::RENEW) {
                 $newLicense->license_duration = $dla->license_duration;
                 $newLicense->issued_date = date('Y-m-d');
                 $newLicense->expiry_date = date('Y-m-d', strtotime("+{$dla->license_duration} years"));
             }
-            
+
             // Delete existing license class associations
             $newLicense->drivers_license_classes()->delete();
-    
+
             $newLicense->save();
 
         } else {
@@ -131,7 +131,7 @@ class CapturePassportModal extends Component
             ]);
         }
 
-    
+
         // Associate License Classes with the new License
         foreach ($dla->application_license_classes()->get() as $class) {
             DlDriversLicenseClass::query()->create([
@@ -143,8 +143,8 @@ class CapturePassportModal extends Component
         // dd($newLicense->drivers_license_classes);
 
         $this->licenseId = $newLicense->id;
-    
+
         return $newLicense;
     }
-    
+
 }

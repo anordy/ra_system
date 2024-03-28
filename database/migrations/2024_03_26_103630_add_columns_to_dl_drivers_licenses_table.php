@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,14 +14,9 @@ class AddColumnsToDlDriversLicensesTable extends Migration
     public function up()
     {
         Schema::table('dl_drivers_licenses', function (Blueprint $table) {
-            
-            $table->unsignedBigInteger('taxpayer_id')->after('dl_drivers_license_owner_id');
-            $table->unsignedBigInteger('license_duration')->after('taxpayer_id');
-            $table->unsignedBigInteger('dl_license_application_id')->nullable()->change();
-            $table->unsignedBigInteger('dl_license_duration_id')->nullable()->change();
-            
-            // Add foreign key constraint
-            $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
+            $table->unsignedBigInteger('taxpayer_id');
+            $table->unsignedBigInteger('license_duration');
+
         });
     }
 
@@ -32,12 +28,8 @@ class AddColumnsToDlDriversLicensesTable extends Migration
     public function down()
     {
         Schema::table('dl_drivers_licenses', function (Blueprint $table) {
-            // Revert changes made in the up() method if needed
-            $table->unsignedBigInteger('dl_license_duration_id');
-            $table->unsignedBigInteger('dl_license_application_id');
-            $table->dropColumn(['taxpayer_id', 'license_duration']);
-            
+            $table->dropColumn('taxpayer_id');
+            $table->dropColumn('license_duration');
         });
     }
 }
-
