@@ -2,13 +2,9 @@
 
 namespace App\Http\Livewire\DriversLicense;
 
-use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
-use App\Models\DlLicenseApplication;
-use App\Models\Taxpayer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -37,10 +33,6 @@ class LicensesTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            // Column::make("Driver's Name", "drivers_license_owner.taxpayer_id")
-            //     ->format(fn($id)=>Taxpayer::query()->find($id)->fullname() ?? 'N/A')
-            //     ->sortable()
-            //     ->searchable(),
             Column::make("License Number", "license_number")
                 ->sortable()
                 ->searchable(),

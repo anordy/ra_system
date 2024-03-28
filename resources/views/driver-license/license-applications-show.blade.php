@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', $title)
+@section('title', $title ?? 'N/A')
 
 @section('content')
     <div class="card mt-3">
@@ -41,13 +41,13 @@
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Application Type</span>
-                            <p class="my-1">{{ $application->type }}</p>
+                            <p class="my-1">{{ $application->type ?? 'N/A' }}</p>
                         </div>
 
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Application Date</span>
-                            <p class="my-1">{{ $application->created_at }}</p>
+                            <p class="my-1">{{ $application->created_at ?? 'N/A' }}</p>
                         </div>
 
                         @if (!empty($application->loss_report_path))
@@ -68,27 +68,30 @@
 
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Certificate of competence number</span>
-                                <p class="my-1">{{ $application->certificate_number }}</p>
+                                <p class="my-1">{{ $application->certificate_number ?? 'N/A'}}</p>
                             </div>
 
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Confirmation Number</span>
-                                <p class="my-1">{{ $application->confirmation_number }}</p>
+                                <p class="my-1">{{ $application->confirmation_number ?? 'N/A' }}</p>
                             </div>
                         @endif
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">License Duration</span>
-                            <p class="my-1">{{ $application->license_duration }} Years</p>
+                            <p class="my-1">{{ $application->license_duration ?? 'N/A' }} Years</p>
 
                         </div>
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">License Classes</span>
                             <p class="my-1">
-                                @foreach ($application->application_license_classes as $class)
-                                    {{ $class->license_class->name }},
-                                @endforeach
+                                @if($application->application_license_classes)
+                                    @foreach ($application->application_license_classes as $class)
+                                        {{ $class->license_class->name ?? 'N/A' }},
+                                    @endforeach
+                                @endif
+
                             </p>
                         </div>
 
@@ -141,17 +144,17 @@
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <div style="width: 250px;">
+                            <div class="width-px-250">
                                 @if (strtolower($application->type) == 'fresh' && empty($application->photo_path))
                                     <div
-                                            style="border: 1px solid silver; width: 100%; border-radius: 3px; margin-bottom: 3px; padding: 3px">
-                                        <img src="{{ url('/images/profile.png') }}" style="width: 100%;">
+                                            class="dl-photo">
+                                        <img src="{{ url('/images/profile.png') }}" class="width-percent-100">
                                     </div>
                                 @else
                                     <div
-                                            style="border: 1px solid silver; width: 100%; border-radius: 3px; margin-bottom: 3px; padding: 3px">
+                                            class="dl-photo">
                                         <img src="{{ route('drivers-license.license.file', encrypt($application->photo_path ?? $application->drivers_license_owner->photo_path)) }}"
-                                             style="width: 100%;">
+                                             class="width-percent-100">
                                     </div>
                                 @endif
                                 @if ($application->status === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
@@ -168,30 +171,30 @@
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">{{ __('name') }}</span>
                                     <p class="my-1">
-                                        {{ $applicant->first_name . ' ' . $applicant->middle_name . ' ' . $applicant->last_name }}
+                                        {{ $applicant->first_name ?? 'N/A' }} {{ $applicant->middle_name ?? ''}} {{ $applicant->last_name ?? 'N/A' }}
                                     </p>
                                 </div>
 
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">{{ __('TIN') }}</span>
-                                    <p class="my-1">{{ $applicant->tin ?? 'n/a' }}</p>
+                                    <p class="my-1">{{ $applicant->tin ?? 'N/A' }}</p>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">{{ __('Email Address') }}</span>
-                                    <p class="my-1">{{ $applicant->email }}</p>
+                                    <p class="my-1">{{ $applicant->email ?? 'N/A' }}</p>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">{{ __('Mobile') }}</span>
-                                    <p class="my-1">{{ $applicant->mobile }}</p>
+                                    <p class="my-1">{{ $applicant->mobile ?? 'N/A' }}</p>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">{{ __('Alternative') }}</span>
-                                    <p class="my-1">{{ $applicant->alt_mobile ?? 'n/a' }}</p>
+                                    <p class="my-1">{{ $applicant->alt_mobile ?? 'N/A' }}</p>
                                 </div>
 
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">{{ __('Date of birth') }}</span>
-                                    <p class="my-1">{{ Carbon\Carbon::parse($applicant->dob)->format('d-m-Y') ?? '' }}
+                                    <p class="my-1">{{ $applicant->dob ? Carbon\Carbon::parse($applicant->dob)->format('d-m-Y') : 'N/A' }}
                                     </p>
                                 </div>
                             </div>
@@ -216,39 +219,44 @@
                 @if (!empty($application->drivers_license))
                     <div class="tab-pane p-2" id="license" role="tabpanel" aria-labelledby="to-print-tab">
                         <div class="row mb-2">
-                            <div class="col-4 ">
-                                <div style="width: 250px;  max-height: 250px; overflow: hidden;border: 1px solid silver;">
-                                    <div style=" width: 100%; border-radius: 3px; margin-bottom: 3px; padding: 3px">
-                                        <img src="{{ url('storage/' . $application->photo_path) }}" style="width: 100%;">
+                            @if($application->photo_path)
+                                <div class="col-4 ">
+                                    <div class="dl-photo-2">
+                                        <div class="dl-photo">
+                                            <img src="{{ url('storage/' . $application->photo_path) }}" class="width-percent-100">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
+
                             <div class="col-6">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <span class="font-weight-bold text-uppercase">License Number</span>
-                                        <p class="my-1">{{ $application->drivers_license->license_number }}</p>
+                                        <p class="my-1">{{ $application->drivers_license->license_number ?? 'N/A' }}</p>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <span class="font-weight-bold text-uppercase">License Classes</span>
                                         <p class="my-1">
-                                            @foreach ($application->application_license_classes as $class)
-                                                {{ $class->license_class->name }},
-                                            @endforeach
+                                            @if($application->application_license_classes)
+                                                @foreach ($application->application_license_classes as $class)
+                                                    {{ $class->license_class->name ?? 'N/A' }},
+                                                @endforeach
+                                            @endif
                                         </p>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <span class="font-weight-bold text-uppercase">Issued Date</span>
                                         <p class="my-1">
-                                            {{ $application->drivers_license->issued_date->format('Y-m-d') }}</p>
+                                            {{ $application->drivers_license->issued_date ? $application->drivers_license->issued_date->format('Y-m-d') : 'N/A' }}</p>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <span class="font-weight-bold text-uppercase">Expire Date</span>
                                         <p class="my-1">
-                                            {{ $application->drivers_license->expiry_date->format('Y-m-d') }}</p>
+                                            {{ $application->drivers_license->expiry_date ? $application->drivers_license->expiry_date->format('Y-m-d') : 'N/A' }}</p>
                                     </div>
 
                                     @if ($application->status === \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)

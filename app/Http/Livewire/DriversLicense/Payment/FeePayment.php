@@ -2,14 +2,10 @@
 
 namespace App\Http\Livewire\DriversLicense\Payment;
 
+use App\Enum\CustomMessage;
 use App\Models\DlFee;
-use App\Models\MvrFee;
-use App\Models\MvrFeeType;
-use App\Models\MvrRegistration;
-use App\Models\MvrRegistrationStatusChange;
 use App\Services\ZanMalipo\GepgResponse;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
@@ -19,13 +15,13 @@ class FeePayment extends Component
 {
     use CustomAlert, PaymentsTrait, GepgResponse;
 
-    public $license, $fee, $feeType;
+    public $license, $fee;
 
     public function mount($license){
         $this->license = $license;
 
         // Fetch the fee
-        $this->fee = DlFee::query()
+        $this->fee = DlFee::select('id', 'amount')
             ->where('dl_license_duration_id', $this->license->license_duration_id)
             ->where('type', $license->type)
             ->first();
@@ -41,10 +37,10 @@ class FeePayment extends Component
     public function regenerate(){
         $response = $this->regenerateControlNo($this->license->get_latest_bill);
         if ($response){
-            session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
+            session()->flash('success', CustomMessage::RECEIVE_PAYMENT_SHORTLY);
             return redirect(request()->header('Referer'));
         }
-        $this->customAlert('error', 'Control number could not be generated, please try again later.');
+        $this->customAlert('error', CustomMessage::FAILED_TO_GENERATE_CONTROL_NUMBER);
     }
 
     /**
@@ -54,17 +50,16 @@ class FeePayment extends Component
         try {
 
             if (empty($this->fee)) {
-                $this->customAlert('error', "Fee for the selected registration type is not configured");
-                DB::rollBack();
+                $this->customAlert('error', CustomMessage::FEE_NOT_CONFIGURED);
                 return;
             }
 
             $this->generateDLicenseControlNumber($this->license, $this->fee);
-            $this->customAlert('success', 'Your request was submitted, you will receive your payment information shortly.');
+            $this->customAlert('success', CustomMessage::RECEIVE_PAYMENT_SHORTLY);
             return redirect(request()->header('Referer'));
         } catch (Exception $e) {
-            $this->customAlert('error', 'Bill could not be generated, please try again later.');
-            Log::error($e);
+            $this->customAlert('error', CustomMessage::FAILED_TO_GENERATE_CONTROL_NUMBER);
+            Log::error('DRIVERS-LICENSE-PAYMENT-FEE-PAYMENT', [$e]);
         }
     }
 

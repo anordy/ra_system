@@ -5,10 +5,8 @@ namespace App\Http\Livewire\DriversLicense;
 use App\Models\DlApplicationStatus;
 use App\Models\DlLicenseApplication;
 use App\Models\DlDriversLicenseOwner;
-use App\Models\Taxpayer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -24,12 +22,13 @@ class LicenseApplicationsTable extends DataTableComponent
         if (empty($this->status_id)){
             return DlLicenseApplication::query();
         }else{
-            return DlLicenseApplication::query()->whereIn('dl_application_status_id',[$this->status_id]);
+            return DlLicenseApplication::query()
+                ->whereIn('dl_application_status_id',[$this->status_id]);
         }
 	}
 
     public function mount($status){
-        $application_status = DlApplicationStatus::query()->where(['name'=>$status])->first();
+        $application_status = DlApplicationStatus::select('id')->where(['name'=>$status])->first();
         $this->status_id = $application_status->id ?? '';
     }
 

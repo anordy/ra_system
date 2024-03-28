@@ -16,41 +16,41 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">License Number</span>
-                            <p class="my-1">{{ $license->license_number }}</p>
+                            <p class="my-1">{{ $license->license_number ?? 'N/A' }}</p>
                         </div>
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">License Classes</span>
                             <p class="my-1">
                                 @foreach($license->drivers_license_classes as $class)
-                                    {{ $class->license_class->name }},
+                                    {{ $class->license_class->name ?? 'N/A' }},
                                 @endforeach
                             </p>
                         </div>
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Issued Date</span>
-                            <p class="my-1">{{ $license->issued_date->format('Y-m-d') }}</p>
+                            <p class="my-1">{{ $license->issued_date ? $license->issued_date->format('Y-m-d') : 'N/A' }}</p>
                         </div>
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Expire Date</span>
-                            <p class="my-1">{{ $license->expiry_date->format('Y-m-d') }}</p>
+                            <p class="my-1">{{ $license->expiry_date ? $license->expiry_date->format('Y-m-d') : 'N/A' }}</p>
                         </div>
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Certificate Number</span>
-                            <p class="my-1">{{ $license->drivers_license_owner->certificate_number }}</p>
+                            <p class="my-1">{{ $license->drivers_license_owner->certificate_number ?? 'N/A'}}</p>
                         </div>
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Confirmation Number</span>
-                            <p class="my-1">{{ $license->drivers_license_owner->confirmation_number }}</p>
+                            <p class="my-1">{{ $license->drivers_license_owner->confirmation_number ?? 'N/A' }}</p>
                         </div>
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Competence Number</span>
-                            <p class="my-1">{{ $license->drivers_license_owner->competence_number }}</p>
+                            <p class="my-1">{{ $license->drivers_license_owner->competence_number ?? 'N/A' }}</p>
                         </div>
 
                         <div class="col-md-4 mb-3">
@@ -74,9 +74,9 @@
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <div style="width: 250px;">
-                        <div style="border: 1px solid silver; width: 100%; border-radius: 3px; margin-bottom: 3px; padding: 3px">
-                            <img src="{{ route('drivers-license.license.file', encrypt($license->drivers_license_owner->photo_path)) }}" style="width: 100%;">
+                    <div class="width-px-250">
+                        <div class="dl-photo">
+                            <img class="width-percent-100" src="{{ route('drivers-license.license.file', encrypt($license->drivers_license_owner->photo_path)) }}">
                         </div>
                     </div>
                 </div>

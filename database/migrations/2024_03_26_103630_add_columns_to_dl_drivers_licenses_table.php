@@ -16,7 +16,6 @@ class AddColumnsToDlDriversLicensesTable extends Migration
         Schema::table('dl_drivers_licenses', function (Blueprint $table) {
             $table->unsignedBigInteger('taxpayer_id');
             $table->unsignedBigInteger('license_duration');
-
         });
     }
 

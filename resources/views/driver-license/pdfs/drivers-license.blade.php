@@ -115,7 +115,7 @@
 <body>
 
     <div id="image">
-        <img src="{{ public_path() . '/storage/' . $license->drivers_license_owner->photo_path }}" alt="">
+        <img src="{{ public_path() . '/storage/' . $license->drivers_license_owner->photo_path }}" alt="Passport Size">
     </div>
     <div id="owner-name">{{ strtoupper($license->drivers_license_owner->fullname()) }}</div>
     <div id="sex">{{ strtoupper($license->drivers_license_owner->sex ?? 'Male') }}</div>

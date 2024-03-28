@@ -3,11 +3,9 @@
 namespace App\Http\Livewire\DriversLicense;
 
 
-use App\Enum\MvrRegistrationStatus;
 use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
 use App\Models\DlDriversLicenseClass;
-use App\Models\DlDriversLicenseOwner;
 use App\Models\DlLicenseApplication;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
@@ -24,14 +22,13 @@ class CapturePassportModal extends Component
 
     use CustomAlert, WithFileUploads, WorkflowProcesssingTrait;
 
-
-    public string $application_id;
+    public $application_id;
     /**
      * @var  TemporaryUploadedFile
      */
     public $photo;
     public $licenseId;
-    private ?string $photo_path = null;
+    private $photo_path = null;
 
 
     public function mount($application_id)
@@ -86,10 +83,14 @@ class CapturePassportModal extends Component
 
     private function updateDriverPhoto(DlLicenseApplication $dla)
     {
-        $photoPath = $this->photo->storeAs('dl_passport', "dl-passport-{$this->application_id}-" . date('YmdHis') . '-' . random_int(10000, 99999) . '.' . $this->photo->extension());
-        $dla->drivers_license_owner->photo_path = $photoPath;
-        $dla->drivers_license_owner->save();
-
+        try {
+            $photoPath = $this->photo->storeAs('dl_passport', "dl-passport-{$this->application_id}-" . date('YmdHis') . '-' . random_int(10000, 99999) . '.' . $this->photo->extension());
+            $dla->drivers_license_owner->photo_path = $photoPath;
+            $dla->drivers_license_owner->save();
+        } catch (Exception $exception) {
+            Log::error('DRIVERS-LICENSE-CAPTURE-PASSPORT-MODAL-UPDATE-DRIVER-PHOTO', [$exception]);
+            throw $exception;
+        }
     }
 
     private function generateLicense(DlLicenseApplication $dla)
@@ -112,17 +113,21 @@ class CapturePassportModal extends Component
                 $newLicense->expiry_date = date('Y-m-d', strtotime("+{$dla->license_duration} years"));
             }
 
-            // Delete existing license class associations
-            $newLicense->drivers_license_classes()->delete();
+            try {
+                // Delete existing license class associations
+                $newLicense->drivers_license_classes()->delete();
+                $newLicense->save();
 
-            $newLicense->save();
+            } catch (Exception $exception) {
+                Log::error('DRIVERS-LICENSE-CAPTURE-PASSPORT-MODAL-GENERATE-LICENSE', [$exception]);
+                throw $exception;
+            }
 
         } else {
             $newLicense = DlDriversLicense::create([
                 'dl_drivers_license_owner_id' => $owner->id,
                 'taxpayer_id' => $owner->taxpayer_id,
                 'license_number' => DlDriversLicense::getNextLicenseNumber(),
-                // 'dl_license_duration_id' =>(int) $dla->license_duration_id, 
                 'license_duration' => $dla->license_duration,
                 'issued_date' => date('Y-m-d'),
                 'expiry_date' => date('Y-m-d', strtotime("+{$dla->license_duration} years")),
@@ -131,6 +136,9 @@ class CapturePassportModal extends Component
             ]);
         }
 
+        if (!$newLicense) {
+            throw new Exception('Failed to save new license into database');
+        }
 
         // Associate License Classes with the new License
         foreach ($dla->application_license_classes()->get() as $class) {
@@ -139,8 +147,6 @@ class CapturePassportModal extends Component
                 'dl_license_class_id' => $class->dl_license_class_id
             ]);
         }
-
-        // dd($newLicense->drivers_license_classes);
 
         $this->licenseId = $newLicense->id;
 
