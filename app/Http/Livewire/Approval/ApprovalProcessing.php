@@ -408,8 +408,8 @@ class ApprovalProcessing extends Component
                 DB::commit();
 
                 // TODO: Make it as a job
-                $traService = new TraInternalService();
-                $traService->postZNumber($this->subject->id);
+                // $traService = new TraInternalService();
+                // $traService->postZNumber($this->subject->id);
 
             } catch (Exception $exception){
                 DB::rollBack();
@@ -484,6 +484,12 @@ class ApprovalProcessing extends Component
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
+
+        if (is_string($transition)) {
+            $transition = ['data' => ['transition' =>  $transition]];
+        }
+
+        $transition = $transition['data']['transition'];
 
         if ($this->checkTransition('application_filled_incorrect')) {
             $this->subject->status = BusinessStatus::CORRECTION;
