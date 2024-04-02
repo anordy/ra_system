@@ -12,6 +12,7 @@ use App\Models\MvrModel;
 use App\Models\MvrPlateNumberColor;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferFee;
+use App\Models\TaxRefund\PortLocation;
 use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -153,6 +154,9 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("Type", "type")->sortable(),
                 Column::make("Duration", "license_duration.number_of_years")->sortable(),
             ],
+            PortLocation::class => [
+                Column::make("Region", "region.name")->sortable(),
+            ]
         ];
 
         return $model_extra_columns[$this->model]??[];

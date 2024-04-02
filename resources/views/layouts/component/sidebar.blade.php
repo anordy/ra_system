@@ -835,6 +835,31 @@
             </li>
         @endcan
 
+        @can('tax-refund')
+            <li class="{{ request()->is('tax-refund*') ? 'active' : '' }}">
+                <a href="#tax-refund" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    Tax Refund
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('tax-refund*') ? 'show' : '' }}" id="tax-refund">
+                    @can('port-location-view')
+                        <li class="{{ request()->is('settings/mvr-generic/PortLocation') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'PortLocation') }}">Port Locations</a>
+                        </li>
+                    @endcan
+                    @can('port-location-view')
+                        <li class="{{ request()->is('tax-refund/initiate') ? 'active' : '' }}">
+                            <a href="{{ route('tax-refund.init') }}">Initiate</a>
+                        </li>
+                    @endcan
+                    @can('port-location-view')
+                        <li class="{{ request()->is('tax-refund/index') ? 'active' : '' }}">
+                            <a href="{{ route('tax-refund.index') }}">Tax Refunds</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+
         @can('tra-information')
             <li class="{{ request()->is('tra*') ? 'active' : '' }}">
                 <a href="#tra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
@@ -987,8 +1012,9 @@
                     @endcan
                     @can('setting-mvr-plate-size-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrRegistrationType') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrRegistrationType') }}">Motor Vehicle Initial Plates
-                                </a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrRegistrationType') }}">Motor Vehicle
+                                Initial Plates
+                            </a>
                         </li>
                     @endcan
                     @can('setting-mvr-fee-view')

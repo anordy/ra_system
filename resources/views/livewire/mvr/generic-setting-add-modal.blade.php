@@ -6,6 +6,7 @@
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                         class="fa fa-times-circle"></i></button>
             </div>
+            @include('components.errors')
             <div class="modal-body">
                 @if($this->hasNameColumn())
                 <div class="row pr-3 pl-3">

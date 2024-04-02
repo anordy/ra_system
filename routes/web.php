@@ -15,6 +15,7 @@ use App\Http\Controllers\PropertyTax\CondominiumController;
 use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\PublicServiceController;
+use App\Http\Controllers\TaxRefund\TaxRefundController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -242,7 +243,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor|MvrRegistrationType');
+                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor|MvrRegistrationType|PortLocation');
         });
         Route::name('return-config.')->prefix('return-config')->group(function () {
             Route::get('/', [ReturnController::class, 'taxTypes'])->name('index');
@@ -273,6 +274,12 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     });
     Route::name('verification.')->prefix('verification')->group(function () {
         Route::get('tin/{business}', [VerificationController::class, 'tin'])->name('tin');
+    });
+
+    Route::name('tax-refund.')->prefix('tax-refund')->group(function () {
+        Route::get('tax-refund/index', [TaxRefundController::class, 'index'])->name('index');
+        Route::get('tax-refund/initiate', [TaxRefundController::class, 'init'])->name('init');
+        Route::get('tax-refund/view/{id}', [TaxRefundController::class, 'show'])->name('show');
     });
 
     Route::prefix('system')->name('system.')->group(function () {

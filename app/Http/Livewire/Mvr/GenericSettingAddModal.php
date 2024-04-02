@@ -17,6 +17,8 @@ use App\Models\MvrModel;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
+use App\Models\Region;
+use App\Models\TaxRefund\PortLocation;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -42,6 +44,7 @@ class GenericSettingAddModal extends Component
             ['title'=>'Fee Type/Category','class'=>MvrFeeType::class,'field'=>'mvr_fee_type_id']
         ],
         DlFee::class=>[['title'=>'License Duration','field'=>'dl_license_duration_id', 'class'=>DlLicenseDuration::class,'value_field'=>'number_of_years']],
+        PortLocation::class=>[['title'=>'Region','field'=>'region_id', 'class'=>Region::class,'value_field'=>'region_id']],
     ];
 
     private array $enums = [
@@ -68,7 +71,8 @@ class GenericSettingAddModal extends Component
         MvrFee::class=>['data.amount'=>'required|numeric'],
         MvrTransferFee::class=>['data.amount'=>'required|numeric'],
         DlFee::class=>['data.amount'=>'required|numeric'],
-        MvrRegistrationType::class=>['data.initial_plate_number' => 'required|alpha_num']
+        MvrRegistrationType::class=>['data.initial_plate_number' => 'required|alpha_num'],
+//        PortLocation::class=>['data.region_id' => 'required|exists:regions,id']
     ];
 
     /**
