@@ -648,25 +648,25 @@ trait PaymentsTrait
         }
 
         if ($tax_return->return_type == PetroleumReturn::class) {
-            if ($tax_return->rdf_tax > 0) {
+            if ($tax_return->rdf_fee > 0) {
                 $rdfTax = $taxTypes->where('code', TaxType::RDF)->firstOrFail();
                 $billItems[] = [
                     'billable_id' => $tax_return->id,
                     'billable_type' => get_class($tax_return),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $tax_return->rdf_tax,
+                    'amount' => $tax_return->rdf_fee,
                     'currency' => $tax_return->currency,
                     'gfs_code' => $rdfTax->gfs_code,
                     'tax_type_id' => $rdfTax->id
                 ];
             }
-            if ($tax_return->road_lincence_fee > 0) {
+            if ($tax_return->road_license_fee > 0) {
                 $rlfTax = $taxTypes->where('code', TaxType::ROAD_LICENSE_FEE)->firstOrFail();
                 $billItems[] = [
                     'billable_id' => $tax_return->id,
                     'billable_type' => get_class($tax_return),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $tax_return->road_lincence_fee,
+                    'amount' => $tax_return->road_license_fee,
                     'currency' => $tax_return->currency,
                     'gfs_code' => $rlfTax->gfs_code,
                     'tax_type_id' => $rlfTax->id
@@ -927,8 +927,8 @@ trait PaymentsTrait
         $description = "Property Tax Payment for {$property->urn} - {$propertyPayment->year->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = $propertyPayment->currency->iso;
-        $createdby_type = get_class(Auth::user());
-        $createdby_id = Auth::id();
+        $createdby_type = Auth::user() ? get_class(Auth::user()) : 'job';
+        $createdby_id = Auth::id() ?? 0;
         $expire_date = $propertyPayment->curr_payment_date;
         $billableId = $propertyPayment->id;
         $billableType = get_class($propertyPayment);
@@ -978,7 +978,6 @@ trait PaymentsTrait
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
 
-            $this->flash('success', 'Your return was submitted, you will receive your payment information shortly - test');
         }
     }
     public function generatePropertyTaxBillItems($propertyPayment, $taxType)
@@ -989,7 +988,7 @@ trait PaymentsTrait
             'billable_id' => $propertyPayment->id,
             'billable_type' => get_class($property),
             'use_item_ref_on_pay' => 'N',
-            'amount' => $propertyPayment->amount,
+            'amount' => $propertyPayment->total_amount,
             'currency' => $propertyPayment->currency->iso,
             'gfs_code' => $taxType->gfs_code,
             'tax_type_id' => $taxType->id,

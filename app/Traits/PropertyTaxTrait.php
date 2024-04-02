@@ -20,19 +20,21 @@ trait PropertyTaxTrait
     public function generateMonthlyInterest($propertyPayment) {
         // Check if payment due date diff in days btn now is 30 days
         $currentPaymentDate = Carbon::parse($propertyPayment->curr_payment_date);
+        $paymentDate = Carbon::parse($propertyPayment->payment_date);
+        $initialDate = Carbon::parse($propertyPayment->created_at);
         $currentDate = Carbon::now();
 
-        $period = $currentDate->diffInMonths($currentPaymentDate);
+        $period = $currentDate->floatDiffInMonths($paymentDate);
 
         // TODO: Add condition to calculate interest whenever viable but not everyday
-        if ($currentDate->diffInDays($currentPaymentDate) === 30) {
+        if ($initialDate->diffInMonths($paymentDate) >= 3 && $currentDate->gt($currentPaymentDate)) {
 
             try {
                 DB::beginTransaction();
 
                 // Calculate interest and add it to current payment with new total amount
                 $principalTaxAmount = $propertyPayment->amount + $propertyPayment->interest;
-                $interest = $this->calculatePaymentInterest($principalTaxAmount, $period);
+                $interest = roundOff($this->calculatePaymentInterest($principalTaxAmount, round($period)), 'TZS');
                 $totalAmount = $propertyPayment->amount + $interest;
 
                 $newPaymentDate = $currentPaymentDate->addDays(30);
@@ -74,7 +76,7 @@ trait PropertyTaxTrait
     private function calculatePaymentInterest($taxAmount, $period){
         $rate = SystemSetting::where('code', SystemSetting::PROPERTY_TAX_INTEREST_RATE)->firstOrFail()->value;
         $numberOfTimesInterestIsCompounded = SystemSetting::where('code', SystemSetting::NUMBER_OF_TIMES_INTEREST_IS_COMPOUNDED_IN_PROPERTY_TAX_PER_YEAR)->firstOrFail()->value;
-        return $taxAmount * pow((1 + ($rate/$numberOfTimesInterestIsCompounded)), ($period));
+        return $taxAmount * pow((1 + ($rate/$numberOfTimesInterestIsCompounded)), ($period)) - $taxAmount;
     }
 
     private function getCurrentPropertyTaxFinancialMonth() {

@@ -32,7 +32,7 @@ class StripTag implements Rule
         }
 
         // Check for special characters: Allow only @,/,-,.,' as they can be used
-        $pattern = '/^[a-zA-Z0-9@\/\-._, ]+$/';
+        $pattern = '/^[a-zA-Z0-9@\/\-._,&() ]+$/';
 
         if (!preg_match($pattern, $value)) {
             return false;
