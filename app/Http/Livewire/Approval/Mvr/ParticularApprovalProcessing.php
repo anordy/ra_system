@@ -34,7 +34,15 @@ class ParticularApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId   = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
+
+        if ($this->subject->change) {
+            $this->engineNo = $this->subject->change->engine_number;
+            $this->color = $this->subject->change->color;
+            $this->chassisNo = $this->subject->change->chassis_number;
+            $this->bodyStyle = $this->subject->change->body_style;
+        }
     }
+
     public function approve($transition) {
         $transition = $transition['data']['transition'];
 
@@ -63,7 +71,10 @@ class ParticularApprovalProcessing extends Component
                 $this->subject->approval_report = $approvalReport;
                 $this->subject->save();
 
-                ChassisNumberChange::create([
+                ChassisNumberChange::updateOrCreate(
+                    [
+                        'particular_change_id' => $this->subject->id,
+                    ],[
                     'color' => $this->color,
                     'engine_number' => $this->engineNo,
                     'chassis_number' => $this->chassisNo,
