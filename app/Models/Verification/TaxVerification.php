@@ -2,6 +2,7 @@
 
 namespace App\Models\Verification;
 
+use App\Models\RiskIndicator;
 use App\Models\TaxType;
 use App\Models\Business;
 use App\Traits\WorkflowTrait;
@@ -67,4 +68,9 @@ class TaxVerification extends Model implements Auditable
     {
         return $this->hasMany(TaxVerificationOfficer::class, 'verification_id', 'id');
     }
+
+     public function riskIndicators()
+     {
+         return $this->belongsToMany(RiskIndicator::class, 'tax_verification_risk_indicator', 'verification_id', 'risk_indicator_id');
+     }
 }
