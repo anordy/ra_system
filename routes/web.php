@@ -89,7 +89,6 @@ use App\Http\Controllers\Setting\ApprovalLevelController;
 use App\Http\Controllers\Audit\TaxAuditApprovalController;
 use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\MVR\RegistrationChangeController;
-use App\Http\Controllers\MVR\WrittenOffVehiclesController;
 use App\Http\Controllers\Setting\SystemSettingsController;
 use App\Http\Controllers\Setting\ZrbBankAccountController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
@@ -703,7 +702,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/reg-change-requests/approve/{id}', [RegistrationChangeController::class, 'approve'])->name('reg-change-requests.approve');
         Route::get('/reg-change-requests/reject/{id}', [RegistrationChangeController::class, 'reject'])->name('reg-change-requests.reject');
         Route::get('/reg-change-requests/{id}', [RegistrationChangeController::class, 'show'])->name('reg-change-requests.show');
-        Route::get('/written-off', [WrittenOffVehiclesController::class, 'index'])->name('written-off');
         Route::get('/chassis-search/{chassis}', [TRAChassisSearchController::class, 'search'])->name('chassis-search');
         Route::get('/agent', [AgentsController::class, 'index'])->name('agent');
         Route::get('/agent/create', [AgentsController::class, 'create'])->name('agent.create');
@@ -713,8 +711,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
             ->name('internal-search-dr')->where('type', 'plate-number|chassis');
         Route::get('/ownership-transfer-chassis-search/{type}/{number}', [OwnershipTransferController::class, 'search'])
             ->name('internal-search-ot')->where('type', 'plate-number|chassis');
-        Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
-            ->name('internal-search-wo')->where('type', 'plate-number|chassis');
         Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
         Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove on production
         Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove on production

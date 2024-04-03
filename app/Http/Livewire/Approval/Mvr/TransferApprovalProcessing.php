@@ -7,9 +7,6 @@ use App\Enum\CustomMessage;
 use App\Enum\MvrRegistrationStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
-use App\Models\MvrFee;
-use App\Models\MvrFeeType;
-use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrTransferFee;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
@@ -48,7 +45,7 @@ class TransferApprovalProcessing extends Component
 
                 $this->validate(
                     [
-                        'agreementContract' => 'nullable|mimes:pdf|max:3072|max_file_name_length:100',
+                        'agreementContract' => 'nullable|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
                     ]
                 );
 
@@ -75,10 +72,6 @@ class TransferApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            if ($this->checkTransition('mvr_registration_officer_review')) {
-
-            }
-
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->save();
@@ -97,7 +90,7 @@ class TransferApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            Log::error('MVR-TRANSFER-APPROVAL-APPROVE', [$exception]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }
@@ -129,10 +122,6 @@ class TransferApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            if ($this->checkTransition('mvr_registration_manager_review')) {
-
-            }
-
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
             DB::commit();
@@ -146,7 +135,7 @@ class TransferApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            Log::error('MVR-TRANSFER-APPROVAL-REJECT', [$exception]);
             $this->customAlert('error', 'Something went wrong');
         }
 
@@ -176,14 +165,13 @@ class TransferApprovalProcessing extends Component
 
     public function generateControlNumber() {
         try {
-            DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-
             $fee = MvrTransferFee::query()->where([
                 'mvr_transfer_category_id' => $this->subject->mvr_transfer_category_id,
             ])->first();
+
+            DB::beginTransaction();
+            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+            $this->subject->payment_status = BillStatus::CN_GENERATING;
 
             if (empty($fee)) {
                 $this->customAlert('error', "Ownership Transfer fee is not configured");
@@ -195,10 +183,9 @@ class TransferApprovalProcessing extends Component
             $this->generateMvrControlNumber($this->subject->motor_vehicle, $fee);
 
             DB::commit();
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             DB::rollBack();
-            Log::error($e);
-
+            Log::error('MVR-TRANSFER-APPROVAL-CN-GENERATION', [$exception]);
             $this->customAlert('error', 'Failed to generate control number, please try again');
         }
     }

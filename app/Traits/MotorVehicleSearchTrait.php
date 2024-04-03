@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enum\GeneralConstant;
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleRegistration;
 use App\Models\MvrRegistration;
@@ -15,24 +16,27 @@ trait MotorVehicleSearchTrait
 
     public function searchRegistered($type, $number)
     {
-        $status = MvrRegistrationStatus::query()->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_REGISTERED]);
-        if ($type=='chassis'){
-                $mv = MvrMotorVehicle::query()
-                    ->where(['chassis_number'=>$number])
-                    ->where(['mvr_registration_status_id'=>$status->id])
-                    ->first();
+        $status = MvrRegistrationStatus::query()->firstOrCreate([
+            'name' => MvrRegistrationStatus::STATUS_REGISTERED
+        ]);
 
-                if (!$mv) {
-                    return null;
-                }
+        if ($type == GeneralConstant::CHASSIS) {
+            $mv = MvrMotorVehicle::query()
+                ->where(['chassis_number' => $number])
+                ->where(['mvr_registration_status_id' => $status->id])
+                ->first();
 
-                return $mv;
-        }else{
+            if (!$mv) {
+                return null;
+            }
+
+            return $mv;
+        } else {
             $motor_vehicle = MvrRegistration::query()
-                    ->where(['plate_number'=>$number])
-                    ->first();
+                ->where(['plate_number' => $number])
+                ->first();
 
-            if($motor_vehicle == null){
+            if ($motor_vehicle == null) {
                 return null;
             }
 
@@ -42,25 +46,25 @@ trait MotorVehicleSearchTrait
 
     public function searchDeRegistered($type, $number)
     {
-        $status = MvrRegistrationStatus::query()->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_REGISTERED]);
-        if ($type=='chassis'){
+        $status = MvrRegistrationStatus::query()->firstOrCreate(['name' => MvrRegistrationStatus::STATUS_REGISTERED]);
+        if ($type == 'chassis') {
             $isReadyForDeregistration = ChassisNumber::where('chassis_number', $number)->where('status', 2)->first();
             if ($isReadyForDeregistration) {
                 return MvrMotorVehicle::query()
-                    ->where(['chassis_number'=>$number])
-                    ->where(['mvr_registration_status_id'=>$status->id])
+                    ->where(['chassis_number' => $number])
+                    ->where(['mvr_registration_status_id' => $status->id])
                     ->first();
             }
             return null;
-        }else{
+        } else {
             $motor_vehicle = MvrMotorVehicleRegistration::query()
-                ->where(['plate_number'=>$number])
+                ->where(['plate_number' => $number])
                 ->first()->motor_vehicle ?? null;
-            if($motor_vehicle == null){
+            if ($motor_vehicle == null) {
                 return null;
             }
 
-            return ($motor_vehicle->mvr_registration_status_id ?? null) == $status->id ? $motor_vehicle: null;
+            return ($motor_vehicle->mvr_registration_status_id ?? null) == $status->id ? $motor_vehicle : null;
         }
     }
 

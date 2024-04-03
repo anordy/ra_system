@@ -22,8 +22,6 @@ class MvrApprovedRegistrationsTable extends DataTableComponent
         ])->orderByDesc('mvr_registrations.created_at');
     }
 
-    public function mount(){
-    }
 
 	public function configure(): void
     {

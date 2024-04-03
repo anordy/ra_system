@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\MVR;
 
+use App\Enum\Currencies;
+use App\Enum\GeneralConstant;
+use App\Enum\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
@@ -14,6 +17,7 @@ use App\Models\MvrRequestStatus;
 use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\ExchangeRateTrait;
 use App\Traits\MotorVehicleSearchTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
@@ -21,11 +25,12 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class RegistrationChangeController extends Controller
 {
 
-    use MotorVehicleSearchTrait;
+    use MotorVehicleSearchTrait, ExchangeRateTrait;
 
     public function index()
     {
@@ -45,8 +50,7 @@ class RegistrationChangeController extends Controller
             abort(403);
         }
         $id = decrypt($id);
-        /** @var MvrRegistrationChangeRequest $change_req */
-        $change_req = MvrRegistrationChangeRequest::query()->findOrFail($id);
+        $change_req = MvrRegistrationChangeRequest::query()->with('current_registration')->findOrFail($id);
         $motor_vehicle = $change_req->current_registration->motor_vehicle;
         return view('mvr.reg-change-req-show', compact('motor_vehicle', 'change_req'));
     }
@@ -63,27 +67,36 @@ class RegistrationChangeController extends Controller
     public function approve($id)
     {
         Gate::authorize('mvr_approve_registration_change');
-        $id = decrypt($id);
-        //Generate control number
-        $change_req = MvrRegistrationChangeRequest::query()->findOrFail($id);
-        $fee_type = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
-
-        $fee = MvrFee::query()->where([
-            'mvr_registration_type_id' => $change_req->requested_registration_type_id,
-            'mvr_fee_type_id' => $fee_type->id,
-        ])->first();
-
-        if (empty($fee)) {
-            session()->flash('error', "Fee for selected registration type (change) is not configured");
-            return redirect()->route('mvr.reg-change-requests.show', encrypt($id));
-        }
-        $exchange_rate = 1;
-        $amount = $fee->amount;
-        $gfs_code = $fee->gfs_code;
 
         try {
+            $id = decrypt($id);
+            //Generate control number
+            $change_req = MvrRegistrationChangeRequest::query()->findOrFail($id);
+            $fee_type = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
+
+            $fee = MvrFee::query()
+                ->select([
+                    'id',
+                    'amount',
+                    'gfs_code',
+                    'description'
+                ])
+                ->where([
+                    'mvr_registration_type_id' => $change_req->requested_registration_type_id,
+                    'mvr_fee_type_id' => $fee_type->id,
+                ])
+                ->first();
+
+            if (empty($fee)) {
+                session()->flash(GeneralConstant::ERROR, "Fee for selected registration type (change) is not configured");
+                return redirect()->route('mvr.reg-change-requests.show', encrypt($id));
+            }
+            $exchange_rate = self::getExchangeRate(Currencies::TZS);
+            $amount = $fee->amount;
+            $gfs_code = $fee->gfs_code;
+            $taxType = TaxType::query()->select('id')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+
             DB::beginTransaction();
-            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
             $bill = ZmCore::createBill(
                 $change_req->id,
                 get_class($change_req),
@@ -96,7 +109,7 @@ class RegistrationChangeController extends Controller
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
                 ZmCore::PAYMENT_OPTION_EXACT,
-                'TZS',
+                Currencies::TZS,
                 1,
                 auth()->user()->id,
                 get_class(auth()->user()),
@@ -115,29 +128,33 @@ class RegistrationChangeController extends Controller
                     ]
                 ]
             );
-            $change_req->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
+            $change_req->update([
+                'mvr_request_status_id' => MvrRequestStatus::query()
+                    ->select('id')
+                    ->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])
+                    ->id
+            ]);
 
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($bill);
                 if ($response->status != ZmResponse::SUCCESS) {
-                    session()->flash("success", 'Request Approved!');
-                    session()->flash("error", 'Control Number request failed');
+                    session()->flash(GeneralConstant::SUCCESS, 'Request Approved!');
                 } else {
-                    session()->flash("success", 'Request Approved, Control Number request sent');
+                    session()->flash(GeneralConstant::ERROR, 'Control Number request failed');
                 }
             } else {
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = 'pending';
                 $bill->control_number = random_int(2000070001000, 2000070009999);
                 $bill->save();
-                session()->flash("success", 'Request Approved, Control Number request sent');
+                session()->flash(GeneralConstant::SUCCESS, 'Request Approved, Control Number request sent');
             }
 
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            report($e);
-            session()->flash('warning', 'Approval failed, could not update data');
+            Log::error('MVR-REGISTRATION-APPROVE', [$e]);
+            session()->flash(GeneralConstant::ERROR, 'Approval failed, could not update data');
         }
 
 
@@ -158,9 +175,14 @@ class RegistrationChangeController extends Controller
             DB::beginTransaction();
             $reg_type = $change_req->requested_registration_type;
             $bill = $change_req->get_latest_bill();
-            $bill->update(['status' => 'Paid']);
+            $bill->update(['status' => PaymentStatus::PAID]);
 
-            $change_req->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_ACCEPTED])->id]);
+            $change_req->update([
+                'mvr_request_status_id' => MvrRequestStatus::query()
+                    ->select('id')
+                    ->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_ACCEPTED])->id
+            ]);
+
             if ($reg_type->external_defined == 1) {
                 $plate_number = $change_req->custom_plate_number;
             } else {
@@ -169,8 +191,8 @@ class RegistrationChangeController extends Controller
             if (
                 $reg_type->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED &&
                 !empty($change_req->current_registration) &&
-                ($change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_GOLDEN  ||
-                    $change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_ORDINARY  ||
+                ($change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_GOLDEN ||
+                    $change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_ORDINARY ||
                     $change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED)
             ) {
                 //In this case we do not need to insert a new registration
@@ -205,9 +227,9 @@ class RegistrationChangeController extends Controller
             DB::commit();
             return redirect()->route('mvr.reg-change-requests.show', encrypt($id));
         } catch (\Exception $e) {
-            session()->flash('error', 'Could not update status');
+            session()->flash(GeneralConstant::ERROR, 'Could not update status');
             DB::rollBack();
-            report($e);
+            Log::error('MVR-REGISTRATION-SIMULATE-PAYMENT', [$e]);
             return redirect()->route('mvr.reg-change-requests.show', encrypt($id));
         }
     }

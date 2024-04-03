@@ -2,25 +2,12 @@
 
 namespace App\Http\Livewire\Mvr;
 
-use App\Models\Bank;
-use App\Models\MvrFee;
-use App\Models\MvrFeeType;
-use App\Models\MvrMotorVehicle;
-use App\Models\MvrMotorVehicleRegistration;
+use App\Enum\GeneralConstant;
 use App\Models\MvrOwnershipTransfer;
-use App\Models\MvrPlateNumberStatus;
-use App\Models\MvrRegistrationStatus;
-use App\Models\MvrRegistrationType;
-use App\Models\MvrRequestStatus;
-use App\Models\ZmBill;
-use App\Services\TRA\ServiceRequest;
-use App\Services\ZanMalipo\ZmCore;
-use Carbon\Carbon;
+use App\Traits\CustomAlert;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ApproveOwnershipTransfer extends Component
@@ -41,7 +28,7 @@ class ApproveOwnershipTransfer extends Component
 
     public function mount($request_id)
     {
-        $this->request_id = $request_id;
+        $this->request_id = decrypt($request_id);
     }
 
 
@@ -49,13 +36,13 @@ class ApproveOwnershipTransfer extends Component
     {
         $this->validate();
         try {
-            $request = MvrOwnershipTransfer::query()->find($this->request_id);
+            $request = MvrOwnershipTransfer::query()->findOrFail($this->request_id);
             $request->update(['mvr_transfer_category_id'=>$this->transfer_category_id]);
             return redirect()->to(route('mvr.transfer-ownership.approve', encrypt($this->request_id)));
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            Log::error('MVR-APPROVE-OWNERSHIP-TRANSFER', [$e]);
+            $this->customAlert(GeneralConstant::ERROR, 'Something went wrong, please contact the administrator for help');
         }
     }
 

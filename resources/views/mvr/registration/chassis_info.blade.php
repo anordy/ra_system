@@ -93,36 +93,6 @@
                 <span class="font-weight-bold text-uppercase">TIN</span>
                 <p class="my-1">{{ $motor_vehicle['importer_tin'] }}</p>
             </div>
-            {{--                            <div class="col-md-3 mb-3">--}}
-            {{--                                <span class="font-weight-bold text-uppercase">State/City</span>--}}
-            {{--                                <p class="my-1">{{ $motor_vehicle['owner']['city'] }}</p>--}}
-            {{--                            </div>--}}
-            {{--                            <div class="col-md-3 mb-3">--}}
-            {{--                                <span class="font-weight-bold text-uppercase">Address</span>--}}
-            {{--                                <p class="my-1">{{ $motor_vehicle['owner']['address'] }}</p>--}}
-            {{--                            </div>--}}
-            {{--                            <div class="col-md-3 mb-3">--}}
-            {{--                                <span class="font-weight-bold text-uppercase">Street</span>--}}
-            {{--                                <p class="my-1">{{ $motor_vehicle['owner']['street'] }}</p>--}}
-            {{--                            </div>--}}
-            {{--                            <div class="col-md-3 mb-3">--}}
-            {{--                                <span class="font-weight-bold text-uppercase">Shehia</span>--}}
-            {{--                                <p class="my-1">{{ $motor_vehicle['owner']['shehia'] }}</p>--}}
-            {{--                            </div>--}}
-            {{--                            <div class="col-md-3 mb-3">--}}
-            {{--                                <span class="font-weight-bold text-uppercase">Postal Address</span>--}}
-            {{--                                <p class="my-1">{{ $motor_vehicle['owner']['postal_address'] }}</p>--}}
-            {{--                            </div>--}}
-            {{--                            <div class="col-md-3 mb-3">--}}
-            {{--                                <span class="font-weight-bold text-uppercase">Office Number</span>--}}
-            {{--                                <p class="my-1">{{ $motor_vehicle['owner']['office_number'] }}</p>--}}
-            {{--                            </div>--}}
-            {{--                            <div class="col-md-3 mb-3">--}}
-            {{--                                <span class="font-weight-bold text-uppercase">Email</span>--}}
-            {{--                                <p class="my-1">{{ $motor_vehicle['owner']['email'] }}</p>--}}
-            {{--                            </div>--}}
         </div>
-
-
     </div>
 </div>

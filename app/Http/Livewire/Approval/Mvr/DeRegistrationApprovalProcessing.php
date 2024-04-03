@@ -12,10 +12,10 @@ use App\Models\MvrFeeType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -48,8 +48,8 @@ class DeRegistrationApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|strip_tag',
             'reasonsForLost' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::LOST ? 'required|strip_tag' : 'nullable',
-            'clearanceEvidence' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::OUT_OF_ZANZIBAR ? ($this->clearanceEvidence === $this->subject->clearance_evidence ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100') : 'nullable',
-            'zicEvidence' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::SERVIER_ACCIDENT ? ($this->zicEvidence === $this->subject->zic_evidence ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100') : 'nullable'
+            'clearanceEvidence' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::OUT_OF_ZANZIBAR ? ($this->clearanceEvidence === $this->subject->clearance_evidence ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf') : 'nullable',
+            'zicEvidence' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::SERVIER_ACCIDENT ? ($this->zicEvidence === $this->subject->zic_evidence ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf') : 'nullable'
         ]);
 
         try {
@@ -113,7 +113,16 @@ class DeRegistrationApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+
+            if (isset($zicEvidence) && $zicEvidence && Storage::exists($zicEvidence)){
+                Storage::delete($zicEvidence);
+            }
+
+            if (isset($clearanceEvidence) && $clearanceEvidence && Storage::exists($clearanceEvidence)){
+                Storage::delete($clearanceEvidence);
+            }
+
+            Log::error('DE-REGISTRATION-APPROVE', [$exception]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }
@@ -123,6 +132,7 @@ class DeRegistrationApprovalProcessing extends Component
             try {
                 $this->generateControlNumber();
             } catch (Exception $exception) {
+                Log::error('DE-REGISTRATION-APPROVE-CN-GEN', [$exception]);
                 $this->flash('error', 'Failed to generate control number, please try again', [], redirect()->back()->getTargetUrl());
             }
         }
@@ -158,7 +168,7 @@ class DeRegistrationApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            Log::error('DE-REGISTRATION-REJECT', [$exception]);
             $this->customAlert('error', 'Something went wrong');
         }
 
@@ -189,13 +199,14 @@ class DeRegistrationApprovalProcessing extends Component
     public function generateControlNumber()
     {
         try {
+            //Generate control number
+            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
+
             DB::beginTransaction();
 
             $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
             $this->subject->payment_status = BillStatus::CN_GENERATING;
 
-            //Generate control number
-            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
 
             $fee = MvrFee::query()->where([
                 'mvr_registration_type_id' => $this->subject->registration->mvr_registration_type_id,
@@ -214,9 +225,9 @@ class DeRegistrationApprovalProcessing extends Component
 
             DB::commit();
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('DE-REGISTRATION-CN-GENERATION', [$exception]);
             $this->customAlert('error', 'Failed to generate control number, please try again');
         }
     }

@@ -9,7 +9,7 @@
         @livewire('mvr.payment.deregistration-fee-payment', ['deregistration' => $mvrDeregistration])
     @endif
 
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    <ul class="nav nav-tabs shadow-sm mb-0" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" aria-controls="home" role="tab"
                aria-selected="true">

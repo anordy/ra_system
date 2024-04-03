@@ -56,7 +56,7 @@ class RegistrationApprovalProcessing extends Component
         if ($this->checkTransition('zbs_officer_review')) {
             $this->validate([
                 'inspectionDate' => 'required|date',
-                'inspectionReport' => [$this->inspectionReport === ($this->inspection->report_path ?? null) ? 'required' : 'nullable', 'max:1024'],
+                'inspectionReport' => [$this->inspectionReport === ($this->inspection->report_path ?? null) ? 'required' : 'nullable', 'max:1024', 'valid_pdf'],
                 'mileage' => 'required|numeric',
             ]);
         }
@@ -70,7 +70,7 @@ class RegistrationApprovalProcessing extends Component
                     $inspectionReport = $this->inspectionReport->store('mvr', 'local');
                 }
 
-                MvrInspectionReport::updateOrCreate(
+                $report = MvrInspectionReport::updateOrCreate(
                     [
                         'mvr_registration_id' => $this->subject->id
                     ], [
@@ -79,13 +79,10 @@ class RegistrationApprovalProcessing extends Component
                     'inspection_mileage' => $this->mileage,
                     'mvr_registration_id' => $this->subject->id
                 ]);
-            }
 
-            if ($this->checkTransition('mvr_registration_officer_review')) {
-//                if ($this->subject->registrant_tin && !$this->subject->tin) {
-//                    $this->customAlert('warning', 'Please Verify Registrant TIN Number');
-//                    return;
-//                }
+                if (!$report){
+                    throw new Exception("Could not persist MVR Inspection report into the database.");
+                }
             }
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
@@ -114,7 +111,7 @@ class RegistrationApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            Log::error('MVR-REGISTRATION-APPROVAL-APPROVE', [$exception]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }
@@ -159,7 +156,7 @@ class RegistrationApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            Log::error('MVR-REGISTRATION-APPROVAL-REJECT', [$exception]);
             $this->customAlert('error', 'Something went wrong');
         }
 
@@ -190,13 +187,13 @@ class RegistrationApprovalProcessing extends Component
     public function generateControlNumber()
     {
         try {
+            //Generate control number
+            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
+
             DB::beginTransaction();
 
             $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
             $this->subject->payment_status = BillStatus::CN_GENERATING;
-
-            //Generate control number
-            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
 
             $fee = MvrFee::query()->where([
                 'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
@@ -215,9 +212,9 @@ class RegistrationApprovalProcessing extends Component
 
             DB::commit();
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('MVR-REGISTRATION-APPROVAL-CN-GENERATION', [$exception]);
             $this->customAlert('error', 'Failed to generate control number, please try again');
         }
     }
