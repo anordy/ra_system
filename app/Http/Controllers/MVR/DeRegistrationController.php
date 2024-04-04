@@ -4,13 +4,16 @@ namespace App\Http\Controllers\MVR;
 
 use App\Http\Controllers\Controller;
 use App\Models\MvrDeregistration;
-use App\Models\MvrDeRegistrationRequest;
-use App\Models\MvrMotorVehicle;
-use App\Models\MvrRequestStatus;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class DeRegistrationController extends Controller
@@ -39,7 +42,7 @@ class DeRegistrationController extends Controller
             try {
                 return Storage::disk('local')->response(decrypt($path));
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('MVR-DE-REGISTRATION-SHOW-FILE', [$e]);
                 abort(404);
             }
         }
@@ -49,12 +52,40 @@ class DeRegistrationController extends Controller
 
     public function deRegistrationCertificate($id){
         $id = decrypt($id);
-        $deregistration = MvrDeregistration::query()->findOrFail($id);
+
+        $deregistration = MvrDeregistration::query()
+            ->select([
+                'mvr_registration_id',
+                'deregistered_at',
+                'taxpayer_id',
+                'mvr_de_registration_reason_id'
+            ])
+            ->findOrFail($id);
 
         header('Content-Type: application/pdf' );
 
-        $pdf = PDF::loadView('mvr.pdfs.certificate-of-de-registration', compact('deregistration',));
+        $url = env('TAXPAYER_URL') . route('qrcode-check.mvr.de-registration', ['id' =>  base64_encode(strval($id))], 0);
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
+            ->data($url)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(207)
+            ->margin(0)
+            ->logoPath(public_path('/images/logo.png'))
+            ->logoResizeToHeight(36)
+            ->logoResizeToWidth(36)
+            ->labelText('')
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
+        $dataUri = $result->getDataUri();
+
+        $pdf = PDF::loadView('mvr.pdfs.certificate-of-de-registration', compact('deregistration', 'dataUri'));
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
         return $pdf->stream();
     }
 

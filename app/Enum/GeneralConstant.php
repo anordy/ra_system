@@ -6,6 +6,12 @@ use ReflectionClass;
 
 class GeneralConstant implements Status
 {
+    const CHASSIS = 'chassis';
+    const ERROR = 'error';
+    const SUCCESS = 'success';
+    const WARNING = 'warning';
+    const QUESTION = 'question';
+
     const ZERO = '0';
     const ONE = '1';
     const TWO = '2';
@@ -21,6 +27,19 @@ class GeneralConstant implements Status
     const NOT_APPLICABLE = 'not_applicable';
     const PAID = 'paid';
     const REVERSED = 'reversed';
+
+
+    const CHASSIS_REGISTRATION = 1;
+
+    const CHASSIS_DE_REGISTRATION = 2;
+    const AGENT = 'AGENT';
+    const TAXPAYER = 'TAXPAYER';
+
+    const APPLICANT_DETAILS = 'Applicant Details';
+    const FRESH = 'fresh';
+    const DUPLICATE = 'duplicate';
+    const LOST = 'lost';
+
 
     public static function getConstants(): array
     {

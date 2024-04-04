@@ -21,6 +21,7 @@ use App\Models\MvrModel;
 use App\Models\MvrOwnershipTransferReason;
 use App\Models\MvrPlateNumberColor;
 use App\Models\MvrPlateSize;
+use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
 use App\Models\MvrTransmissionType;
@@ -75,8 +76,10 @@ class MvrGenericSettingController extends Controller
         } else if ($class === CourtLevel::class) {
             $permission = 'setting-court-level-view';
         } else if ($class === MvrPlateNumberColor::class) {
-        $permission = 'setting-mvr-color-view';
-    }
+            $permission = 'setting-mvr-color-view';
+        } else if ($class === MvrRegistrationType::class) {
+            $permission = 'setting-mvr-color-view';
+        }
 
         if (!Gate::allows($permission)) {
             abort(403);

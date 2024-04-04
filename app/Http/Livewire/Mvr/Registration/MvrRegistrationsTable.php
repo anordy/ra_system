@@ -21,9 +21,6 @@ class MvrRegistrationsTable extends DataTableComponent
         
     }
 
-    public function mount(){
-    }
-
 	public function configure(): void
     {
         $this->setPrimaryKey('id');

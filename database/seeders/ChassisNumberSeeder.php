@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enum\GeneralConstant;
 use App\Models\Tra\ChassisNumber;
 use Carbon\Carbon;
 use Faker\Factory;
@@ -48,7 +49,7 @@ class ChassisNumberSeeder extends Seeder
                 'usage_type' => $faker->randomElements(['Private', 'Commercial', 'Government'])[0],
                 'imported_from' => $faker->randomElements(['Japan', 'Singapore', 'South Africa'])[0],
                 'tansad_number' => random_int(100000000, 999999999),
-                'status' => 2,
+                'status' => GeneralConstant::CHASSIS_REGISTRATION,
                 'engine_cubic_capacity' => $faker->randomElements([1990, 2300, 2500])[0]
             ]);
         }

@@ -48,6 +48,10 @@ class MvrRegistration extends Model
         return $this->hasOne(Tin::class, 'tin', 'registrant_tin');
     }
 
+    public function inspection(){
+        return $this->hasOne(MvrInspectionReport::class, 'mvr_registration_id');
+    }
+
     public function cor(){
         return $this->hasOne(Cor::class);
     }
@@ -69,21 +73,21 @@ class MvrRegistration extends Model
 
         if ($regType->name == MvrRegistrationType::TYPE_CORPORATE){
             if (empty($last_reg)) {
-                $number = str_pad( '1', 4, '0', STR_PAD_LEFT);
-                $plate_number = 'SLS' . $number.$class->name;
+                $number = str_pad( '1', 3, '0', STR_PAD_LEFT);
+                $plate_number = 'SLS' . $number.$class->category;
             } else {
-                $number = preg_replace('/SLS(\d{4}){}/', '$1', $last_reg->plate_number);
-                $plate_number = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
-                $plate_number = preg_replace('/SLS(.+)(.)$/', 'SMZ' . $plate_number . '$2', $last_reg->plate_number);
+                $number = preg_replace('/SLS(\d{3})([A-Z]{1})/', '$1', $last_reg->plate_number);
+                $plate_number = str_pad($number + 1, 3, '0', STR_PAD_LEFT).$class->category;
+                $plate_number = 'SLS'.$plate_number;
             }
         }elseif ($regType->name == MvrRegistrationType::TYPE_GOVERNMENT){
             if (empty($last_reg)) {
-                $number = str_pad( '1', 4, '0', STR_PAD_LEFT);
-                $plate_number = 'SMZ' . $number.$class->name;
+                $number = str_pad( '1', 3, '0', STR_PAD_LEFT);
+                $plate_number = 'SMZ' . $number.$class->category;
             } else {
-                $number = preg_replace('/SMZ(\d{4}){}/', '$1', $last_reg->plate_number);
-                $plate_number = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
-                $plate_number = preg_replace('/SMZ(.+)(.)$/', 'SMZ' . $plate_number . '$2', $last_reg->plate_number);
+                $number = preg_replace('/SMZ(\d{3})([A-Z]{1})/', '$1', $last_reg->plate_number);
+                $plate_number = str_pad($number + 1, 3, '0', STR_PAD_LEFT).$class->category;
+                $plate_number = 'SMZ'.$plate_number;
             }
         }else{
             $reg_type_ids = MvrRegistrationType::query()->whereIn('name',[

@@ -3,17 +3,12 @@
 namespace App\Http\Livewire\Mvr;
 
 use App\Models\MvrAgent;
-use App\Models\MvrMotorVehicle;
 use App\Models\MvrRegistrationChangeRequest;
-use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
-use App\Models\TaxAgentStatus;
-use App\Models\Taxpayer;
-use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\TaxAgent;
 
 class RegistrationChangeRequestsTable extends DataTableComponent
 {

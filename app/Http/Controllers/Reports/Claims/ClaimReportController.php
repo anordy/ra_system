@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Reports\Claims;
 
+use App\Enum\CustomMessage;
 use App\Http\Controllers\Controller;
 use App\Traits\ClaimReportTrait;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use PDF;
 
 class ClaimReportController extends Controller
@@ -24,8 +25,15 @@ class ClaimReportController extends Controller
         if (!Gate::allows('managerial-claim-report-preview')) {
             abort(403);
         }
-        $parameters = json_decode(decrypt($parameters), true);
-        return view('reports.claims.preview', compact('parameters'));
+
+        try {
+            $parameters = json_decode(decrypt($parameters), true);
+            return view('reports.claims.preview', compact('parameters'));
+        } catch (\Exception $exception){
+            Log::error($exception);
+            session()->flash('error', CustomMessage::error());
+            return back();
+        }
     }
 
     public function exportClaimReportPdf($parameters)
@@ -33,35 +41,37 @@ class ClaimReportController extends Controller
         if (!Gate::allows('managerial-claim-report-pdf')) {
             abort(403);
         }
-        $parameters = json_decode(decrypt($parameters), true);
-        $records = $this->getRecords($parameters);
 
-        if ($parameters['duration'] == 'yearly') {
-            if ($parameters['year'] == 'all') {
-                $fileName = 'claim_report.pdf';
-                $title = 'All Claim reports';
+        try {
+            $parameters = json_decode(decrypt($parameters), true);
+            $records = $this->getRecords($parameters);
+
+            if ($parameters['duration'] == 'yearly') {
+                if ($parameters['year'] == 'all') {
+                    $title = 'All Claim reports';
+                } else {
+                    if ($parameters['status'] != 'both') {
+                        $title = $parameters['status'] . ' claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
+                    } else {
+                        $title = 'All claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
+                    }
+                }
             } else {
                 if ($parameters['status'] != 'both') {
-                    $fileName = 'claim_report.pdf';
-                    $title = $parameters['status'] . ' claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
+                    $title = $parameters['status'] . ' claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
                 } else {
-                    $fileName = 'claim_report.pdf';
-                    $title = 'All claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
+                    $title = 'All Claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
                 }
             }
-        } else {
-            if ($parameters['status'] != 'both') {
-                $fileName = 'claim_report.pdf';
-                $title = $parameters['status'] . ' claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
-            } else {
-                $fileName = 'claim_report.pdf';
-                $title = 'All Claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
-            }
+            $records = $records->get();
+            $pdf = PDF::loadView('exports.claims.reports.pdf.claim', compact('records', 'title', 'parameters'));
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+            return $pdf->download('Claims Report.pdf');
+        } catch (\Exception $exception){
+            Log::error($exception);
+            session()->flash('error', CustomMessage::error());
+            return back();
         }
-        $records = $records->get();
-        $pdf = PDF::loadView('exports.claims.reports.pdf.claim', compact('records', 'title', 'parameters'));
-        $pdf->setPaper('a4', 'landscape');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
-        return $pdf->download($fileName);
     }
 }

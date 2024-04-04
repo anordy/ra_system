@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use App\Models\Tra\ChassisNumber;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -44,4 +45,8 @@ class MvrRegistrationStatus extends Model
 	{
 		return $this->hasMany(MvrMotorVehicle::class);
 	}
+
+	public function chassis(){
+        return $this->belongsTo(ChassisNumber::class, 'chassis_number_id');
+    }
 }

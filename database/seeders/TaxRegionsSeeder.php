@@ -20,6 +20,7 @@ class TaxRegionsSeeder extends Seeder
 
         $regions = [
             [
+                'department_id' => null,
                 'code' => 'headquarter',
                 'name' => 'Headquarter',
                 'prefix' => '01',
@@ -52,7 +53,7 @@ class TaxRegionsSeeder extends Seeder
                 'name' => 'Kusini Unguja',
                 'prefix' => '05',
                 'location' => Region::DTD,
-                
+
             ],
             [
                 'department_id' => $departments->where('code', 'NTRD')->first()->id,
@@ -99,7 +100,9 @@ class TaxRegionsSeeder extends Seeder
         ];
 
         foreach ($regions as $region) {
-            TaxRegion::create($region);
+            TaxRegion::updateOrCreate([
+                'code' => $region['code']
+            ], $region);
         }
     }
 }

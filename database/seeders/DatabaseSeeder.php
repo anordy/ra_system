@@ -118,5 +118,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PropertyOwnershipTypeSeeder::class);
         $this->call(WorkflowUpgradeTaxTypeSeeder::class);
         $this->call(WorkflowWithholdingAgentSeeder::class);
+        $this->call(WorkflowPublicServiceDeRegistrationSeeder::class);
+        $this->call(PublicServicePaymentCategorySeeder::class);
+        $this->call(PublicServicePaymentsIntervalSeeder::class);
     }
 }

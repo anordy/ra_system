@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Mvr\Status;
 
 use App\Enum\MvrRegistrationStatus;
-use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationStatusChange;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,9 +19,6 @@ class MvrApprovedRegistrationsStatusChangeTable extends DataTableComponent
             MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING,
             MvrRegistrationStatus::STATUS_PENDING_PAYMENT,
         ])->orderByDesc('mvr_registrations_status_change.created_at');
-    }
-
-    public function mount(){
     }
 
 	public function configure(): void

@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire\Mvr\Payment;
 
+use App\Enum\GeneralConstant;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Services\ZanMalipo\GepgResponse;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
@@ -44,10 +44,10 @@ class DeregistrationFeePayment extends Component
     {
         $response = $this->regenerateControlNo($this->deregistration->bill);
         if ($response) {
-            session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
+            session()->flash(GeneralConstant::SUCCESS, 'Your request was submitted, you will receive your payment information shortly.');
             return redirect(request()->header('Referer'));
         }
-        $this->customAlert('error', 'Control number could not be generated, please try again later.');
+        $this->customAlert(GeneralConstant::ERROR, 'Control number could not be generated, please try again later.');
     }
 
     /**
@@ -56,19 +56,17 @@ class DeregistrationFeePayment extends Component
     public function generateBill()
     {
         try {
-
             if (empty($this->fee)) {
-                $this->customAlert('error', "Fee for the selected registration type is not configured");
-                DB::rollBack();
+                $this->customAlert(GeneralConstant::ERROR, "Fee for the selected registration type is not configured");
                 return;
             }
 
             $this->generateMvrDeregistrationControlNumber($this->deregistration, $this->fee);
-            $this->customAlert('success', 'Your request was submitted, you will receive your payment information shortly.');
+            $this->customAlert(GeneralConstant::SUCCESS, 'Your request was submitted, you will receive your payment information shortly.');
             return redirect(request()->header('Referer'));
-        } catch (Exception $e) {
-            $this->customAlert('error', 'Bill could not be generated, please try again later.');
-            Log::error($e);
+        } catch (Exception $exception) {
+            $this->customAlert(GeneralConstant::ERROR, 'Bill could not be generated, please try again later.');
+            Log::error('DE-REGISTRATION-FEE-PAYMENT-GN-BILL', [$exception]);
         }
     }
 

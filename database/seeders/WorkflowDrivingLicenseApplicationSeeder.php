@@ -24,16 +24,16 @@ class WorkflowDrivingLicenseApplicationSeeder extends Seeder
         $supports =  ['App\Models\DlLicenseApplication'];
         $places =  [
             'initiate' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1,2,3]
+                'owner' => 'taxpayer',
+                'operator_type' => 'user',
+                'operators' => []
             ],
             'correct_application' => [
-                'owner' => 'staff',
+                'owner' => 'taxpayer',
                 'operator_type' => 'user',
-                'operators' => [1,2,3]
+                'operators' => []
             ],
-            'revenue_officer' => [
+            'transport_officer' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1,2,3]
@@ -47,22 +47,22 @@ class WorkflowDrivingLicenseApplicationSeeder extends Seeder
         $transitions = [
             'application_submitted' => [
                 'from' => 'initiate',
-                'to'   => 'revenue_officer',
+                'to'   => 'transport_officer',
                 'condition' => '',
             ],
-            'revenue_officer_review' => [
-                'from' => 'revenue_officer',
+            'transport_officer_review' => [
+                'from' => 'transport_officer',
                 'to'   => 'completed',
                 'condition' => '',
             ],
             'application_filled_incorrect' => [
-                'from' => 'revenue_officer',
+                'from' => 'transport_officer',
                 'to'   => 'correct_application',
                 'condition' => '',
             ],
             'application_corrected' => [
                 'from' => 'correct_application',
-                'to'   => 'revenue_officer',
+                'to'   => 'transport_officer',
                 'condition' => '',
             ],
         ];

@@ -1,16 +1,16 @@
 <div class="px-3">
     @if($motorVehicle->origin === \App\Enum\MvrRegistrationStatus::STATUS_CHANGE)
-            <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
-                <div class="col-md-3">
-                    <span class="font-weight-bold text-uppercase"> </span>
-                    <p class="my-1">
-                        <a target="_blank" href="{{ route('mvr.registration.certificate', encrypt($motorVehicle->id)) }}"
-                           class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
-                            <i class="bi bi-download mr-3"></i><u>{{ __('Download Registration Certificate') }}</u>
-                        </a>
-                    </p>
-                </div>
+        <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
+            <div class="col-md-3">
+                <span class="font-weight-bold text-uppercase"> </span>
+                <p class="my-1">
+                    <a target="_blank" href="{{ route('mvr.registration.certificate', encrypt($motorVehicle->id)) }}"
+                       class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                        <i class="bi bi-download mr-3"></i><u>{{ __('Download Registration Certificate') }}</u>
+                    </a>
+                </p>
             </div>
+        </div>
     @else
         @if(!empty($motorVehicle->latestBill))
             <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
@@ -54,25 +54,27 @@
                             Paid
                         </p>
                     </div>
-                @if(get_class($motorVehicle) != 'App\Models\MvrRegistrationStatusChange')
-                    <div class="col-md-3">
-                        <span class="font-weight-bold text-uppercase"> </span>
-                        <p class="my-1">
-                            <a target="_blank" href="{{ route('mvr.registration.certificate', encrypt($motorVehicle->id)) }}"
-                               class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
-                                <i class="bi bi-download mr-3"></i><u>{{ __('Download Registration Certificate') }}</u>
-                            </a>
-                        </p>
-                    </div>
+                    @if(get_class($motorVehicle) === 'App\Models\MvrRegistrationStatusChange')
+                        <div class="col-md-3">
+                            <span class="font-weight-bold text-uppercase"> </span>
+                            <p class="my-1">
+                                <a target="_blank"
+                                   href="{{ route('mvr.registration.certificate', encrypt($motorVehicle->id)) }}"
+                                   class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                                    <i class="bi bi-download mr-3"></i><u>{{ __('Download Registration Certificate') }}</u>
+                                </a>
+                            </p>
+                        </div>
                     @endif
-                    @if(!$motorVehicle->plate_number)
+                    @if(!$motorVehicle->plate_number && (get_class($motorVehicle) === \App\Models\MvrRegistration::class))
                         <div class="col-md-4">
                             <p class="my-1">
                                 <button target="_blank" wire:click="processRegistrationPlateNumber"
                                         class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
                                     <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
                                        wire:target="processRegistrationPlateNumber"></i>
-                                    <i class="bi bi-arrow-repeat mr-2" wire:loading.remove wire:target="processRegistrationPlateNumber"></i>Generate
+                                    <i class="bi bi-arrow-repeat mr-2" wire:loading.remove
+                                       wire:target="processRegistrationPlateNumber"></i>Generate
                                     Plate Number
                                 </button>
                             </p>

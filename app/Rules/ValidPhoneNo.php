@@ -24,6 +24,11 @@ class ValidPhoneNo implements Rule
         return "phone_no";
     }
 
+    public static function handle(): string
+    {
+        return "phone_no";
+    }
+
     /**
      * Determine if the validation rule passes.
      *

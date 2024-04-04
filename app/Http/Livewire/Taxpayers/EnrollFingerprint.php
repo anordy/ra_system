@@ -131,7 +131,7 @@ class EnrollFingerprint extends Component
 
             $existingTaxpayer = Taxpayer::query()
                 ->where('mobile', $data['mobile'])
-                ->orWhere('email', $data['email'])
+                ->orWhere('email', $data['email'] ?? '')
                 ->first();
 
             if ($existingTaxpayer){

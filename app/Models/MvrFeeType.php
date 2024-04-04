@@ -29,6 +29,7 @@ class MvrFeeType extends Model implements Auditable
 
     const TYPE_REGISTRATION = 'Registration';
     const STATUS_CHANGE = 'Status Change';
+    const TRANSFER_OWNERSHIP = 'Transfer Ownership';
     const TYPE_DE_REGISTRATION = 'De-Registration';
     const TYPE_CHANGE_REGISTRATION = 'Change of Registration Particulars';
 
