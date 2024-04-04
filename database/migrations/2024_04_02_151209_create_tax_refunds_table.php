@@ -15,6 +15,8 @@ class CreateTaxRefundsTable extends Migration
     {
         Schema::create('tax_refunds', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('port_id');
+            $table->unsignedBigInteger('business_location_id')->nullable();
             $table->decimal('total_exclusive_tax_amount', 20, 2);
             $table->decimal('total_payable_amount', 20, 2);
             $table->decimal('rate');
@@ -22,6 +24,7 @@ class CreateTaxRefundsTable extends Migration
             $table->string('receipt_number')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('ztn_number')->nullable();
+            $table->string('currency');
             $table->string('payment_status');
             $table->timestamp('paid_at')->nullable();
             $table->timestamp('payment_due_date');

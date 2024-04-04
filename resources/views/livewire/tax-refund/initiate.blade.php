@@ -155,7 +155,9 @@
                         Total Amount Excluding Tax: {{ number_format($totalPayableAmount, 2)}}
                     </div>
                     <div class="col-md-12">
-                        Total Payable Tax: {{ number_format($totalPayableAmount, 2)}} * 15% = {{ number_format($totalPayableAmount * 0.15, 2)  }}
+                        Total Payable Tax: {{ number_format($totalPayableAmount, 2)}}
+                        * {{ $rate->value ?? 'Rate Not Configured'  }}
+                        = {{ number_format($totalPayableAmount * ($rate->value ?? 0), 2)  }}
                     </div>
                     <div class="col-md-12">
                         <hr/>
@@ -190,26 +192,17 @@
                 @foreach($allItems as $i => $item)
                     <div class="row mx-3">
                         <div class="form-group col-md-3">
-                            <label>TANSAD Number *</label>
-                            <input type="text" wire:model.defer="allItems.{{$i}}.tansad_number"
-                                   class="form-control @error('allItems.' . $i . '.tansad_number') is-invalid @enderror">
-                            @error('allItems.' . $i . '.tansad_number')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group col-md-3">
-                            <label>EFD Number *</label>
-                            <input type="text" wire:model.defer="allItems.{{$i}}.efd_number"
-                                   class="form-control @error('allItems.' . $i . '.efd_number') is-invalid @enderror">
-                            @error('allItems.' . $i . '.efd_number')
+                            <label>Item Name *</label>
+                            <input type="text" wire:model.defer="allItems.{{$i}}.item_name"
+                                   class="form-control @error('allItems.' . $i . '.item_name') is-invalid @enderror">
+                            @error('allItems.' . $i . '.item_name')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group col-md-3">
                             <label>Amount *</label>
-                            <input type="text" disabled wire:model.defer="allItems.{{$i}}.excl_tax_amount"
+                            <input type="text" wire:model.defer="allItems.{{$i}}.excl_tax_amount"
                                    class="form-control @error('allItems.' . $i . '.excl_tax_amount')) is-invalid @enderror">
                             @error('allItems.' . $i . '.excl_tax_amount')
                             <span class="text-danger">{{ $message }}</span>
@@ -245,7 +238,8 @@
                         Total Amount Excluding Tax: {{ number_format($totalPayableAmount, 2)}}
                     </div>
                     <div class="col-md-12">
-                        Total Payable Tax: {{ number_format($totalPayableAmount, 2)}} * 15% = {{ number_format($totalPayableAmount * 0.15, 2)  }}
+                        Total Payable Tax: {{ number_format($totalPayableAmount, 2)}} * 15%
+                        = {{ number_format($totalPayableAmount * 0.15, 2)  }}
                     </div>
                     <div class="col-md-12">
                         <hr/>

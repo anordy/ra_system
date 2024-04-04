@@ -2,6 +2,7 @@
 
 namespace App\Models\TaxRefund;
 
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,5 +15,15 @@ class TaxRefund extends Model
 
     public function items() {
         return $this->hasMany(TaxRefundItem::class, 'refund_id');
+    }
+
+    public function bill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable');
+    }
+
+    public function latestBill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 }

@@ -3,6 +3,13 @@
 @section('title', 'Show Tax Refunds')
 
 @section('content')
+
+    <div class="row mx-1">
+        <div class="col-md-12">
+            <livewire:tax-refund.tax-refund-payment :taxRefund="$taxRefund" />
+        </div>
+    </div>
+
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
@@ -91,6 +98,10 @@
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Total Payable Amount</span>
                             <p class="my-1">{{ $taxRefund->total_payable_amount ? number_format($taxRefund->total_payable_amount, 2) : 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Receipt Number</span>
+                            <p class="my-1">{{ $taxRefund->receipt_number ?? 'N/A' }}</p>
                         </div>
 
                     </div>

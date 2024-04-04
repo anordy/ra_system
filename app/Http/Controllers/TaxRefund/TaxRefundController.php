@@ -17,7 +17,7 @@ class TaxRefundController extends Controller
     }
 
     public function show($id) {
-        $taxRefund = TaxRefund::with(['items'])->findOrFail(decrypt($id), ['id', 'payment_status', 'payment_due_date', 'total_exclusive_tax_amount', 'total_payable_amount', 'importer_name', 'ztn_number', 'phone_number', 'rate']);
+        $taxRefund = TaxRefund::with(['items'])->findOrFail(decrypt($id), ['id', 'payment_status', 'payment_due_date', 'total_exclusive_tax_amount', 'total_payable_amount', 'importer_name', 'ztn_number', 'phone_number', 'rate', 'receipt_number']);
         return view('tax-refund.show', compact('taxRefund'));
     }
 }
