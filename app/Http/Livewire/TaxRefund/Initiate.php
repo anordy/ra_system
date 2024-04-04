@@ -125,6 +125,12 @@ class Initiate extends Component
         } else if ($propertyName === 'isZraRegistered') {
             $this->reset('ztnNumber', 'allItems', 'importerName', 'phoneNumber');
         }
+
+        $exploded = explode('.', $propertyName);
+        if (count($exploded) == 3 && $exploded['0'] == 'allItems' && ($exploded[2] == 'item_name' || $exploded[2] == 'excl_tax_amount')){
+            $this->addItem($exploded[1], false);
+        }
+
     }
 
 
@@ -133,13 +139,13 @@ class Initiate extends Component
         $this->reset('isZraRegistered', 'hasRefundDocument', 'ztnNumber');
     }
 
-    public function addItem($i)
+    public function addItem($i, $addRow = true)
     {
         // TODO: Remove hardcoded validation variables
         $this->validate([
             'allItems.*.tansad_number' => 'required_if:hasRefundDocument,1|min:4|max:14|alpha_num|exists:exited_goods,tansad_number',
             'allItems.*.efd_number' => 'required_if:hasRefundDocument,1|min:4|max:14|alpha_num|exists:efdms_receipts,receipt_number',
-            'allItems.*.item_name' => 'required_if:hasRefundDocument,0|alpha_space',
+            'allItems.*.item_name' => 'required_if:hasRefundDocument,0|alpha_num_space',
             'allItems.*.excl_tax_amount' => 'required_if:hasRefundDocument,0|numeric',
         ], [
             'allItems.*.tansad_number.required' => 'Tansad number is required',
@@ -170,12 +176,14 @@ class Initiate extends Component
             $this->totalPayableAmount += $item['excl_tax_amount'];
         }
 
-        $this->allItems[] = [
-            'tansad_number' => '',
-            'efd_number' => '',
-            'excl_tax_amount' => '',
-            'item_name' => ''
-        ];
+        if($addRow){
+            $this->allItems[] = [
+                'tansad_number' => '',
+                'efd_number' => '',
+                'excl_tax_amount' => '',
+                'item_name' => ''
+            ];
+        }
     }
 
     public function removeItem($i)

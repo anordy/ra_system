@@ -72,7 +72,7 @@ class GenericSettingAddModal extends Component
         MvrTransferFee::class=>['data.amount'=>'required|numeric'],
         DlFee::class=>['data.amount'=>'required|numeric'],
         MvrRegistrationType::class=>['data.initial_plate_number' => 'required|alpha_num'],
-//        PortLocation::class=>['data.region_id' => 'required|exists:regions,id']
+        PortLocation::class=>['relation_data.region_id' => 'required|exists:regions,id', 'name' => 'alpha_num_space']
     ];
 
     /**

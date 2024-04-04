@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Rules\AlphaNumSpaceRule;
 use App\Rules\AlphaSpaceRule;
 use App\Rules\ArrayNumberRule;
 use App\Rules\NidaRule;
@@ -52,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend(NidaRule::handle(), NidaRule::class);
         Validator::extend(ValidPhoneNo::handle(), ValidPhoneNo::class);
         Validator::extend(AlphaSpaceRule::handle(), AlphaSpaceRule::class);
+        Validator::extend(AlphaNumSpaceRule::handle(), AlphaNumSpaceRule::class);
         Validator::extend(ArrayNumberRule::handle(), ArrayNumberRule::class);
         Validator::extend(ValidPdfContent::handle(), ValidPdfContent::class);
         Validator::extend('max_file_name_length', function ($attribute, $value, $parameters, $validator) {

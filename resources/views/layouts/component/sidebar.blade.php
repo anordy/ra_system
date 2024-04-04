@@ -836,11 +836,11 @@
         @endcan
 
         @can('tax-refund')
-            <li class="{{ request()->is('tax-refund*') ? 'active' : '' }}">
+            <li class="{{ request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'active' : '' }}">
                 <a href="#tax-refund" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     Tax Refund
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('tax-refund*') ? 'show' : '' }}" id="tax-refund">
+                <ul class="collapse list-unstyled {{ request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'show' : '' }}" id="tax-refund">
                     @can('port-location-view')
                         <li class="{{ request()->is('settings/mvr-generic/PortLocation') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'PortLocation') }}">Port Locations</a>
@@ -896,9 +896,9 @@
 
 
         @can('setting')
-            <li class="{{ request()->is('settings*') ? 'active' : '' }}">
+            <li class="{{ request()->is('settings*') && !request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'active' : '' }}">
                 <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
-                <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
+                <ul class="collapse list-unstyled {{ request()->is('settings*') && !request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'show' : '' }}" id="settings">
                     @can('setting-user-view')
                         <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
                             <a href="{{ route('settings.users.index') }}">Users</a>

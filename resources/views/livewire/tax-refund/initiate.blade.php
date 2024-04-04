@@ -193,7 +193,7 @@
                     <div class="row mx-3">
                         <div class="form-group col-md-3">
                             <label>Item Name *</label>
-                            <input type="text" wire:model.defer="allItems.{{$i}}.item_name"
+                            <input type="text" wire:model.lazy="allItems.{{$i}}.item_name"
                                    class="form-control @error('allItems.' . $i . '.item_name') is-invalid @enderror">
                             @error('allItems.' . $i . '.item_name')
                             <span class="text-danger">{{ $message }}</span>
@@ -202,7 +202,7 @@
 
                         <div class="form-group col-md-3">
                             <label>Amount *</label>
-                            <input type="text" wire:model.defer="allItems.{{$i}}.excl_tax_amount"
+                            <input type="text" wire:model.lazy="allItems.{{$i}}.excl_tax_amount"
                                    class="form-control @error('allItems.' . $i . '.excl_tax_amount')) is-invalid @enderror">
                             @error('allItems.' . $i . '.excl_tax_amount')
                             <span class="text-danger">{{ $message }}</span>

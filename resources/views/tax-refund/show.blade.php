@@ -131,7 +131,7 @@
                                             <td>{{ $item->efd_number ?? 'N/A' }}</td>
                                             <td>{{ $item->exclusive_tax_amount ? number_format($item->exclusive_tax_amount, 2) : 'N/A' }}</td>
                                             <td>{{ $item->rate ? number_format($item->rate, 2) : 'N/A' }}</td>
-                                            <td>{{ $item->payable_amount ?? 'N/A' }}</td>
+                                            <td>{{ $item->exclusive_tax_amount * $item->rate }}</td>
                                         </tr>
                                     @endforeach
                                 @else
