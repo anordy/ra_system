@@ -19,7 +19,7 @@
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="text-uppercase">Public Service Information</h5>
+                    Public Service Information
                 </div>
                 <div class="card-body">
                     <div class="row m-2 pt-3">

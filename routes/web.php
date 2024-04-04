@@ -14,7 +14,9 @@
 use App\Http\Controllers\PropertyTax\CondominiumController;
 use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
+use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
+use App\Http\Controllers\PublicService\TemporaryClosuresController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -540,6 +542,10 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/payments/download-report-pdf/{data}', [PaymentReportController::class, 'exportPaymentReportPdf'])->name('payments.download.pdf');
 
         Route::get('/departmental', [DepartmentalReportController::class, 'index'])->name('departmental');
+
+        Route::get('/public-service/report/payment/{parameters}', [\App\Http\Controllers\Reports\PublicService\PublicServiceReportController::class, 'exportPaymentReportPdf'])->name('public-service.payment.pdf');
+        Route::get('/public-service/report/registration/{parameters}', [\App\Http\Controllers\Reports\PublicService\PublicServiceReportController::class, 'exportRegistrationReportPdf'])->name('public-service.registration.pdf');
+
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -771,5 +777,13 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/public-service/registrations', [PublicServiceController::class, 'registrations'])->name('registrations.index');
         Route::get('/public-service/registrations/{id}', [PublicServiceController::class, 'showRegistration'])->name('registrations.show');
         Route::get('/public-service/registrations/{id}/file', [PublicServiceController::class, 'showFile'])->name('registrations.file');
+        Route::get('/temporary-closures', [TemporaryClosuresController::class, 'index'])->name('temporary-closures');
+        Route::get('/temporary-closures/{closure}', [TemporaryClosuresController::class, 'show'])->name('temporary-closures.show');
+        Route::get('/de-registrations', [DeRegistrationsController::class, 'index'])->name('de-registrations');
+        Route::get('/de-registrations/{de_registration}', [DeRegistrationsController::class, 'show'])->name('de-registrations.show');
+        Route::get('/de-registrations/file/{de_registration}', [DeRegistrationsController::class, 'file'])->name('de-registrations.file');
+        Route::get('/payments', [PublicServiceController::class, 'payments'])->name('payments.index');
+        Route::get('/payments/{id}', [PublicServiceController::class, 'showPayment'])->name('payments.show');
+        Route::get('/reports', [PublicServiceController::class, 'report'])->name('report.index');
     });
 });

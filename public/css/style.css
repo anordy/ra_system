@@ -907,3 +907,8 @@ div.table-bordered {
     background-color: #007bff;
     color: #FFFFFF;
 }
+
+.badge {
+    border-radius: 1.25rem !important;
+    font-size: 85% !important;
+}
