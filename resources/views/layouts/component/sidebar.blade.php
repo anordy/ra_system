@@ -169,11 +169,11 @@
                             <a href="{{ route('property-tax.payment-extension.index') }}">Payment Extension Request</a>
                         </li>
                     @endcan
-{{--                    @can('next-bills-preview')--}}
-{{--                        <li class="{{ request()->is('property-tax/next-bills') ? 'active' : '' }}">--}}
-{{--                            <a href="{{ route('property-tax.next.bills') }}">Next Bills Preview</a>--}}
-{{--                        </li>--}}
-{{--                    @endcan--}}
+                    {{--                    @can('next-bills-preview')--}}
+                    {{--                        <li class="{{ request()->is('property-tax/next-bills') ? 'active' : '' }}">--}}
+                    {{--                            <a href="{{ route('property-tax.next.bills') }}">Next Bills Preview</a>--}}
+                    {{--                        </li>--}}
+                    {{--                    @endcan--}}
                 </ul>
             </li>
         @endcan
@@ -203,6 +203,19 @@
                 </ul>
             </li>
         @endcan
+
+        {{-- TODO: Add permissions --}}
+        <li class="{{ request()->is('public-service*') ? 'active' : '' }}">
+            <a href="#publicServiceSubmenu" data-toggle="collapse"
+               aria-expanded="{{ request()->is('public-service*') ? 'true' : 'false' }}" class="dropdown-toggle">Public
+                Service</a>
+            <ul class="collapse list-unstyled {{ request()->is('public-service*') ? 'show' : '' }}"
+                id="publicServiceSubmenu">
+                <li class="{{ request()->is('public-service/registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('public-service.registrations.index') }}">Registrations</a>
+                </li>
+            </ul>
+        </li>
 
         @can('tax-return')
             <li class="{{ request()->is('e-filling*') ? 'active' : '' }}">
@@ -594,10 +607,16 @@
                     @endcan
 
                     @can('motor-vehicle-status-change-request')
-                            <li class="{{ request()->is('mvr/registration/status') ? 'active' : '' }}">
-                                <a href="{{ route('mvr.registration.status.index') }}">Status Change Request</a>
-                            </li>
+                        <li class="{{ request()->is('mvr/registration/status') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.registration.status.index') }}">Status Change Request</a>
+                        </li>
                     @endcan
+                    {{--                        @can('motor-vehicle-status-change-request')--}}
+                    <li class="{{ request()->is('mvr/registration/particular') ? 'active' : '' }}">
+                        <a href="{{ route('mvr.registration.particular.index') }}">Particular Change Request</a>
+                    </li>
+                    {{--                        @endcan--}}
+
 
                     @can('motor-vehicle-transfer-ownership')
                         <li class="{{ request()->is('mvr/transfer-ownership*') ? 'active' : '' }}">
@@ -606,14 +625,8 @@
                     @endcan
 
                     @can('motor-vehicle-deregistration')
-                        <li class="{{ request()->is('mvr/de-register-requests*') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.de-register-requests') }}">De-registration</a>
-                        </li>
-                    @endcan
-
-                    @can('motor-vehicle-written-off')
-                        <li class="{{ request()->is('mvr/written-off') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.written-off') }}">Written-off Vehicles</a>
+                        <li class="{{ request()->is('mvr/de-registrations*') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.de-registration.index') }}">De-registration</a>
                         </li>
                     @endcan
 
@@ -972,6 +985,12 @@
                                 Size</a>
                         </li>
                     @endcan
+                    @can('setting-mvr-plate-size-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrRegistrationType') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrRegistrationType') }}">Motor Vehicle Initial Plates
+                                </a>
+                        </li>
+                    @endcan
                     @can('setting-mvr-fee-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrFee') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrFee') }}">Motor Vehicle Fees</a>
@@ -990,11 +1009,12 @@
                                 Reasons</a>
                         </li>
                     @endcan
-                        @can('setting-mvr-transfer-category-view')
-                            <li class="{{ request()->is('settings/mvr-generic/MvrPlateNumberColor') ? 'active' : '' }}">
-                                <a href="{{ route('settings.mvr-generic.index', 'MvrPlateNumberColor') }}">MVR Plate Number Color</a>
-                            </li>
-                        @endcan
+                    @can('setting-mvr-transfer-category-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrPlateNumberColor') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrPlateNumberColor') }}">MVR Plate Number
+                                Color</a>
+                        </li>
+                    @endcan
                     @can('setting-mvr-transfer-category-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer

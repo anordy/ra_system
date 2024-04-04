@@ -16,13 +16,12 @@ class MvrApprovedRegistrationsTable extends DataTableComponent
 	{
         return MvrRegistration::query()->whereIn('mvr_registrations.status', [
             MvrRegistrationStatus::STATUS_REGISTERED,
+            MvrRegistrationStatus::STATUS_RETIRED,
             MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING,
             MvrRegistrationStatus::STATUS_PENDING_PAYMENT,
         ])->orderByDesc('mvr_registrations.created_at');
     }
 
-    public function mount(){
-    }
 
 	public function configure(): void
     {

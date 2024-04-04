@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -39,7 +40,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class MvrOwnershipTransfer extends Model
 {
-	use SoftDeletes;
+	use SoftDeletes, WorkflowTrait;
 	protected $table = 'mvr_ownership_transfer';
 
 	protected $casts = [
@@ -71,22 +72,22 @@ class MvrOwnershipTransfer extends Model
 		'agreement_contract_path',
 		'mvr_agent_id',
 		'owner_taxpayer_id',
-		'mvr_request_status_id'
+		'mvr_request_status_id',
+        'inspection_report',
+        'old_plate_number'
 	];
 
 	public function new_owner()
 	{
 		return $this->belongsTo(Taxpayer::class, 'owner_taxpayer_id');
 	}
-
-    public function agent()
-    {
-        return $this->belongsTo(MvrAgent::class, 'mvr_agent_id');
-    }
-
+	public function previous_owner()
+	{
+		return $this->belongsTo(Taxpayer::class, 'agent_taxpayer_id');
+	}
 	public function motor_vehicle()
 	{
-		return $this->belongsTo(MvrMotorVehicle::class,'mvr_motor_vehicle_id');
+		return $this->belongsTo(MvrRegistration::class,'mvr_motor_vehicle_id');
 	}
 
 	public function ownership_transfer_reason()
@@ -99,6 +100,10 @@ class MvrOwnershipTransfer extends Model
         return $this->belongsTo(MvrTransferCategory::class,'mvr_transfer_category_id');
     }
 
+    public function regtype(){
+        return $this->belongsTo(MvrRegistrationType::class, 'mvr_registration_type_id');
+    }
+
 
 	public function request_status()
 	{
@@ -109,5 +114,10 @@ class MvrOwnershipTransfer extends Model
     {
         $bill_item = $this->morphOne(ZmBillItem::class,'billable')->latest()->first();
         return $bill_item->bill ??  null;
+    }
+
+    public function latestBill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 }

@@ -8,10 +8,7 @@
             <h5>Requests</h5>
             <div class="card-tools">
                 @can('mvr_initiate_registration_change')
-                <button class="btn btn-info btn-sm"
-                        onclick="Livewire.emit('showModal', 'mvr.chassis-number-internal-search','mvr.internal-search')"><i
-                            class="fa fa-plus-circle"></i>
-                    New Requests</button>
+                    New Requests
                 @endcan
             </div>
         </div>

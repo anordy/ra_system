@@ -14,6 +14,7 @@
 use App\Http\Controllers\PropertyTax\CondominiumController;
 use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
+use App\Http\Controllers\PublicService\PublicServiceController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -88,7 +89,6 @@ use App\Http\Controllers\Setting\ApprovalLevelController;
 use App\Http\Controllers\Audit\TaxAuditApprovalController;
 use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\MVR\RegistrationChangeController;
-use App\Http\Controllers\MVR\WrittenOffVehiclesController;
 use App\Http\Controllers\Setting\SystemSettingsController;
 use App\Http\Controllers\Setting\ZrbBankAccountController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
@@ -241,7 +241,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor');
+                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor|MvrRegistrationType');
         });
         Route::name('return-config.')->prefix('return-config')->group(function () {
             Route::get('/', [ReturnController::class, 'taxTypes'])->name('index');
@@ -659,6 +659,12 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/registrations/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('registration.show');
         Route::get('/registrations/certificate/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('registration.certificate');
 
+        // De-registration
+        Route::get('/de-registrations', [DeRegistrationController::class, 'index'])->name('de-registration.index');
+        Route::get('/de-registrations/{id}', [DeRegistrationController::class, 'show'])->name('de-registration.show');
+        Route::get('/de-registrations/certificate/{id}', [DeRegistrationController::class, 'deRegistrationCertificate'])->name('de-registration.certificate');
+        Route::get('/de-registrations/file/{path}', [DeRegistrationController::class, 'file'])->name('de-registration.file');
+
         /**
          * Registration Status Change
          */
@@ -666,6 +672,18 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/registration/status/show/{id}', [\App\Http\Controllers\MVR\MotorVehicleRegistrationStatusChangeController::class, 'show'])->name('registration.status.show');
         Route::get('/registration/status/correct/{id}', [\App\Http\Controllers\MVR\MotorVehicleRegistrationStatusChangeController::class, 'update'])->name('registration.status.update');
 
+        /**
+         * Ownership Transfer
+         */
+        Route::get('/transfer-ownership', [OwnershipTransferController::class, 'index'])->name('transfer-ownership');
+        Route::get('/transfer-ownership/approve/{id}', [OwnershipTransferController::class, 'approve'])->name('transfer-ownership.approve');
+        Route::get('/transfer-ownership/reject/{id}', [OwnershipTransferController::class, 'reject'])->name('transfer-ownership.reject');
+        Route::get('/transfer-ownership/{id}', [OwnershipTransferController::class, 'show'])->name('transfer-ownership.show');
+
+        // Particular change
+        Route::get('/registration/particular/index', [\App\Http\Controllers\MVR\RegistrationParticularChangeController::class, 'index'])->name('registration.particular.index');
+        Route::get('/registration/particular/show/{id}', [\App\Http\Controllers\MVR\RegistrationParticularChangeController::class, 'show'])->name('registration.particular.show');
+        Route::get('/registration/particular/correct/{id}', [\App\Http\Controllers\MVR\RegistrationParticularChangeController::class, 'update'])->name('registration.particular.update');
 
         // TODO: Remove unused routes
         Route::get('/certificate-of-registration/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('certificate-of-registration');
@@ -675,10 +693,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/certificate-of-worth/{id}', [MotorVehicleRegistrationController::class, 'printCertificateOfWorth'])->name('certificate-of-worth');
         Route::get('/de-registration-certificate/{id}', [MotorVehicleRegistrationController::class, 'deRegistrationCertificate'])->name('de-registration-certificate');
         Route::get('/submit-inspection/{id}', [MotorVehicleRegistrationController::class, 'submitInspection'])->name('submit-inspection');
-        Route::get('/transfer-ownership', [OwnershipTransferController::class, 'index'])->name('transfer-ownership');
-        Route::get('/transfer-ownership/approve/{id}', [OwnershipTransferController::class, 'approve'])->name('transfer-ownership.approve');
-        Route::get('/transfer-ownership/reject/{id}', [OwnershipTransferController::class, 'reject'])->name('transfer-ownership.reject');
-        Route::get('/transfer-ownership/{id}', [OwnershipTransferController::class, 'show'])->name('transfer-ownership.show');
         Route::get('/de-register-requests', [DeRegistrationController::class, 'index'])->name('de-register-requests');
         Route::get('/de-register-requests/approve/{id}', [DeRegistrationController::class, 'approve'])->name('de-register-requests.approve');
         Route::get('/de-register-requests/reject/{id}', [DeRegistrationController::class, 'reject'])->name('de-register-requests.reject');
@@ -688,7 +702,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/reg-change-requests/approve/{id}', [RegistrationChangeController::class, 'approve'])->name('reg-change-requests.approve');
         Route::get('/reg-change-requests/reject/{id}', [RegistrationChangeController::class, 'reject'])->name('reg-change-requests.reject');
         Route::get('/reg-change-requests/{id}', [RegistrationChangeController::class, 'show'])->name('reg-change-requests.show');
-        Route::get('/written-off', [WrittenOffVehiclesController::class, 'index'])->name('written-off');
         Route::get('/chassis-search/{chassis}', [TRAChassisSearchController::class, 'search'])->name('chassis-search');
         Route::get('/agent', [AgentsController::class, 'index'])->name('agent');
         Route::get('/agent/create', [AgentsController::class, 'create'])->name('agent.create');
@@ -698,8 +711,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
             ->name('internal-search-dr')->where('type', 'plate-number|chassis');
         Route::get('/ownership-transfer-chassis-search/{type}/{number}', [OwnershipTransferController::class, 'search'])
             ->name('internal-search-ot')->where('type', 'plate-number|chassis');
-        Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
-            ->name('internal-search-wo')->where('type', 'plate-number|chassis');
         Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
         Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove on production
         Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove on production
@@ -754,5 +765,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::name('finance.')->prefix('finance')->group(function () {
         Route::get('/taxpayer/ledger', [FinanceController::class, 'taxpayerLedgersList'])->name('taxpayer.ledgers');
         Route::get('/taxpayer/ledger/{id}', [FinanceController::class, 'taxpayerLedger'])->name('taxpayer.ledger.details');
+    });
+
+    Route::prefix('public-service')->as('public-service.')->group(function () {
+        Route::get('/public-service/registrations', [PublicServiceController::class, 'registrations'])->name('registrations.index');
+        Route::get('/public-service/registrations/{id}', [PublicServiceController::class, 'showRegistration'])->name('registrations.show');
+        Route::get('/public-service/registrations/{id}/file', [PublicServiceController::class, 'showFile'])->name('registrations.file');
     });
 });

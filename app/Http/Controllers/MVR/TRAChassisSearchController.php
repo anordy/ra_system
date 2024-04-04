@@ -4,7 +4,6 @@ namespace App\Http\Controllers\MVR;
 
 use App\Http\Controllers\Controller;
 use App\Services\TRA\ServiceRequest;
-use App\Traits\CustomAlert;
 
 class TRAChassisSearchController extends Controller
 {
