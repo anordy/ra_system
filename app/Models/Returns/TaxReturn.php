@@ -15,6 +15,7 @@ use App\Models\Debts\DemandNotice;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\Debts\RecoveryMeasure;
 use App\Models\Installment\Installment;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Extension\ExtensionRequest;
 use App\Models\Installment\InstallmentRequest;
@@ -42,7 +43,8 @@ class TaxReturn extends Model implements PayloadInterface
         return $this->belongsTo(TaxType::class, 'tax_type_id');
     }
 
-    public function subvat() {
+    public function subvat()
+    {
         return $this->belongsTo(SubVat::class, 'sub_vat_id');
     }
 
@@ -92,15 +94,18 @@ class TaxReturn extends Model implements PayloadInterface
     }
 
 
-    public function extensionRequest(){
+    public function extensionRequest()
+    {
         return $this->morphOne(ExtensionRequest::class, 'extensible');
     }
 
-    public function installmentRequest(){
+    public function installmentRequest()
+    {
         return $this->morphOne(InstallmentRequest::class, 'installable');
     }
 
-    public function installment(){
+    public function installment()
+    {
         return $this->morphOne(Installment::class, 'installable');
     }
 
@@ -115,15 +120,18 @@ class TaxReturn extends Model implements PayloadInterface
         return $this->morphMany(DemandNotice::class, 'debt');
     }
 
-    public function waiver(){
+    public function waiver()
+    {
         return $this->morphOne(DebtWaiver::class, 'debt');
     }
 
-    public function rollback(){
+    public function rollback()
+    {
         return $this->morphOne(DebtRollback::class, 'debt');
     }
 
-    public function penalties(){
+    public function penalties()
+    {
         return $this->morphMany(DebtPenalty::class, 'debt');
     }
 
@@ -132,7 +140,8 @@ class TaxReturn extends Model implements PayloadInterface
         return $this->morphOne(DebtPenalty::class, 'debt')->latest();
     }
 
-    public function editReturnHistories(){
+    public function editReturnHistories()
+    {
         return $this->hasMany(TaxReturnHistory::class, 'tax_return_id');
     }
     public static function getPayloadColumns(): array
@@ -155,4 +164,18 @@ class TaxReturn extends Model implements PayloadInterface
     {
         return 'tax_returns';
     }
+
+    public function scopePreviousReturns(Builder $query, int $count)
+    {
+        return $query->where('business_id', $this->business_id)
+            ->where('financial_month_id', '<', $this->financial_month_id)
+            ->orderBy('financial_month_id', 'desc')
+            ->limit($count);
+    }
+
+    public function getPreviousReturns(int $count = 2)
+    {
+        return $this->scopePreviousReturns((new static)->newQuery(), $count)->get();
+    }
+
 }

@@ -90,9 +90,9 @@ class VettingApprovalTable extends DataTableComponent
             ->where('parent',0)
             ->where('is_business_lto',false) 
             ->where('vetting_status', $this->vettingStatus)
-            ->whereHas('location.taxRegion', function ($query) {
-                $query->where('location', Region::DTD); //this is filter by department
-            })
+            // ->whereHas('location.taxRegion', function ($query) {
+            //     $query->where('location', Region::DTD); //this is filter by department
+            // })
             ->whereHas('pinstance', function ($query) {
                 $query->where('status', '!=', 'completed');
                 $query->whereHas('actors', function ($query) {

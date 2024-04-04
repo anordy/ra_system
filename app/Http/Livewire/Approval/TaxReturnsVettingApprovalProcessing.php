@@ -121,11 +121,11 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->return->return->save();
 
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-
-                DB::commit();
-
+                
                 // Trigger verification
-                $this->triggerTaxVerifications($this->return->return, auth()->user());
+                $this->triggerTaxVerifications($this->return, auth()->user());
+                
+                DB::commit(); 
 
                 if ($tax_return->return_type != PortReturn::class) {
                     $this->generateReturnControlNumber($tax_return);
@@ -211,10 +211,10 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->return->save();
                 $this->return->return->save();
 
-                DB::commit();
-
                 // Trigger verification
                 $this->triggerTaxVerifications($this->return->return, auth()->user());
+                
+                DB::commit();
 
                 if ($tax_return->return_type != PortReturn::class) {
                     $this->generateReturnControlNumber($tax_return);
@@ -267,6 +267,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error($e);
+
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }

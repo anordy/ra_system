@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use RiskIndicatorsSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -121,5 +122,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowPublicServiceRegistrationSeeder::class);
         $this->call(PublicServicePaymentCategorySeeder::class);
         $this->call(PublicServicePaymentsIntervalSeeder::class);
+        $this->call(RiskIndicatorsSeeder::class);
     }
 }
