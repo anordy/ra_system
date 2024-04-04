@@ -912,3 +912,26 @@ div.table-bordered {
     border-radius: 1.25rem !important;
     font-size: 85% !important;
 }
+
+.width-px-250 {
+    width: 250px;
+}
+
+.width-percent-100 {
+    width: 100%;
+}
+
+.dl-photo {
+    border: 1px solid silver;
+    width: 100%;
+    border-radius: 3px;
+    margin-bottom: 3px;
+    padding: 3px;
+}
+
+.dl-photo-2 {
+    width: 250px;
+    max-height: 250px;
+    overflow: hidden;
+    border: 1px solid silver;
+}

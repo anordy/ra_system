@@ -727,12 +727,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/license', [LicenseApplicationsController::class, 'indexLicense'])->name('licenses');
         Route::get('/license/{id}', [LicenseApplicationsController::class, 'showLicense'])->name('licenses.show');
         Route::get('/applications', [LicenseApplicationsController::class, 'index'])->name('applications');
-        Route::get('/applications/create', [LicenseApplicationsController::class, 'create'])->name('applications.create');
-        Route::get('/applications/submit/{id}', [LicenseApplicationsController::class, 'submit'])->name('applications.submit');
-        Route::get('/applications/approve/{id}', [LicenseApplicationsController::class, 'approve'])->name('applications.approve');
         Route::get('/applications/printed/{id}', [LicenseApplicationsController::class, 'printed'])->name('applications.printed');
         Route::get('/applications/{id}', [LicenseApplicationsController::class, 'show'])->name('applications.show');
-        Route::get('/applications/sp/{id}', [LicenseApplicationsController::class, 'simulatePayment'])->name('applications.sp');
         Route::get('/applications/license/{id}', [LicenseApplicationsController::class, 'license'])->name('license.print');
         Route::get('/applications/file/{location}', [LicenseApplicationsController::class, 'getFile'])->name('license.file');
     });
