@@ -11,6 +11,7 @@ use App\Models\PublicService\PublicServicePaymentCategory;
 use App\Models\PublicService\PublicServicePaymentInterval;
 use App\Traits\CustomAlert;
 use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -102,6 +103,7 @@ class PublicServiceRegistrationApprovalProcessing extends Component
                 DB::beginTransaction();
 
                 $this->subject->status = PublicServiceMotorStatus::REGISTERED;
+                $this->subject->approved_on = Carbon::now();
                 $this->subject->save();
 
                 DB::commit();

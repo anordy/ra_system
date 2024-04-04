@@ -7,6 +7,7 @@ use ReflectionClass;
 class MvrRegistrationStatus implements Status
 {
     const PENDING = 'PENDING';
+    const INITIATED = 'Initiated';
     const APPROVED = 'APPROVED';
     const CORRECTION = 'CORRECTION';
     const STATUS_REGISTERED = 'REGISTERED';

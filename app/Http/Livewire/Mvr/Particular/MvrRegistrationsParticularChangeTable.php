@@ -3,9 +3,7 @@
 namespace App\Http\Livewire\Mvr\Particular;
 
 use App\Enum\MvrRegistrationStatus;
-use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationParticularChange;
-use App\Models\MvrRegistrationStatusChange;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -20,9 +18,6 @@ class MvrRegistrationsParticularChangeTable extends DataTableComponent
             MvrRegistrationStatus::PENDING,
             MvrRegistrationStatus::CORRECTION,
         ])->orderByDesc('mvr_registrations_particular_change.created_at');
-    }
-
-    public function mount(){
     }
 
 	public function configure(): void

@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enum\BusinessReportType;
 use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -9,22 +10,39 @@ trait RegistrationReportTrait
 {
     public function getBusinessBuilder($parameters): Builder
     {
+
+        // Check if all required keys are present in the $parameters array
+        if (!isset($parameters['criteria']) ||
+            !isset($parameters['year']) ||
+            !isset($parameters['month']) ||
+            !isset($parameters['range_start']) ||
+            !isset($parameters['range_end']) ||
+            !isset($parameters['tax_regions']) ||
+            !isset($parameters['category_ids']) ||
+            !isset($parameters['activity_ids']) ||
+            !isset($parameters['consultants']) ||
+            !isset($parameters['region']) ||
+            !isset($parameters['district']) ||
+            !isset($parameters['ward'])) {
+            throw new \InvalidArgumentException("Missing required parameters");
+        }
+
         $businessLocations = BusinessLocation::distinct('business_locations.id')
             ->join('businesses', 'businesses.id', 'business_locations.business_id');
-        //get criteria
+
         switch ($parameters['criteria']) {
-            case 'Business-Reg-By-Nature':
+            case BusinessReportType::NATURE:
                 $columnName = $this->getIsiicColumnName($parameters['isic_level']);
                 $businessLocations->whereIn($columnName, $parameters['isic_id']);
                 break;
-            case 'Business-Reg-By-TaxType':
+            case BusinessReportType::TAX_TYPE:
                 if($parameters['taxtype_id'] == 'all') {
                     $businessLocations = $businessLocations->join('business_tax_type', 'business_tax_type.business_id', 'businesses.id');
                 } else {
                     $businessLocations->join('business_tax_type', 'business_tax_type.business_id', 'businesses.id')->where('business_tax_type.tax_type_id', $parameters['taxtype_id']);
                 }
                 break;
-            case 'Business-Reg-Without-ZNO':
+            case BusinessReportType::WO_ZNO:
                     $businessLocations = $businessLocations->where('businesses.previous_zno', null)
                         ->where('business_locations.is_headquarter', 1);
                 break;

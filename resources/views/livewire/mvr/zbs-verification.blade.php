@@ -27,8 +27,7 @@
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Status</span>
                         <p class="my-1">
-                        <span class="badge badge-success py-1 px-2"
-                              style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                        <span class="badge badge-success py-1 px-2">
                             <i class="bi bi-check-circle-fill mr-1"></i>
                             COR PASS
                         </span>

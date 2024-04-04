@@ -214,6 +214,18 @@
                 <li class="{{ request()->is('public-service/registrations*') ? 'active' : '' }}">
                     <a href="{{ route('public-service.registrations.index') }}">Registrations</a>
                 </li>
+                <li class="{{ request()->is('public-service/temporary-closures*') ? 'active' : '' }}">
+                    <a href="{{ route('public-service.temporary-closures') }}">Temporary Closures</a>
+                </li>
+                <li class="{{ request()->is('public-service/de-registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('public-service.de-registrations') }}">De-registrations</a>
+                </li>
+                <li class="{{ request()->is('public-service/payments*') ? 'active' : '' }}">
+                    <a href="{{ route('public-service.payments.index') }}">Returns Payments</a>
+                </li>
+                <li class="{{ request()->is('public-service/reports*') ? 'active' : '' }}">
+                    <a href="{{ route('public-service.report.index') }}">Reports</a>
+                </li>
             </ul>
         </li>
 

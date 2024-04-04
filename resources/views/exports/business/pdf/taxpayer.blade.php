@@ -17,7 +17,7 @@
         }
         .tax {
             /* background-color: rgb(182, 193, 208); */
-            padding-top: 50px%;
+            padding-top: 50px;
         }
 
         .tableHead {

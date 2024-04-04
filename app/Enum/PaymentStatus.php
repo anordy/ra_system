@@ -9,6 +9,8 @@ class PaymentStatus implements Status
     const PAID = 'paid';
     const PARTIALLY = 'partially';
     const PENDING = 'pending';
+
+    const CN_GENERATED = 'control-number-generated';
     const CANCELLED = 'cancelled';
     const FAILED = 'failed';
 

@@ -4,9 +4,6 @@ namespace App\Http\Controllers\MVR;
 
 use App\Http\Controllers\Controller;
 use App\Models\MvrDeregistration;
-use App\Models\MvrDeRegistrationRequest;
-use App\Models\MvrMotorVehicle;
-use App\Models\MvrRequestStatus;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -15,8 +12,8 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class DeRegistrationController extends Controller
@@ -45,7 +42,7 @@ class DeRegistrationController extends Controller
             try {
                 return Storage::disk('local')->response(decrypt($path));
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('MVR-DE-REGISTRATION-SHOW-FILE', [$e]);
                 abort(404);
             }
         }
@@ -56,7 +53,14 @@ class DeRegistrationController extends Controller
     public function deRegistrationCertificate($id){
         $id = decrypt($id);
 
-        $deregistration = MvrDeregistration::query()->findOrFail($id);
+        $deregistration = MvrDeregistration::query()
+            ->select([
+                'mvr_registration_id',
+                'deregistered_at',
+                'taxpayer_id',
+                'mvr_de_registration_reason_id'
+            ])
+            ->findOrFail($id);
 
         header('Content-Type: application/pdf' );
 

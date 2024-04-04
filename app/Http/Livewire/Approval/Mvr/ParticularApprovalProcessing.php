@@ -16,6 +16,7 @@ use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -56,7 +57,7 @@ class ParticularApprovalProcessing extends Component
                 'chassisNo' => 'nullable|alpha_num',
                 'bodyStyle' => 'nullable|alpha',
                 'color' => 'nullable|alpha',
-                'approvalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
+                'approvalReport' => 'required|mimes:pdf|valid_pdf|max:1024|max_file_name_length:100',
             ]);
         }
 
@@ -84,10 +85,6 @@ class ParticularApprovalProcessing extends Component
                 ]);
             }
 
-            if ($this->checkTransition('mvr_registration_officer_review')) {
-
-            }
-
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
@@ -107,7 +104,10 @@ class ParticularApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            if (isset($approvalReport) && $approvalReport && Storage::exists($approvalReport)){
+                Storage::delete($approvalReport);
+            }
+            Log::error('PARTICULAR-APPROVAL-APPROVE', [$exception]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }
@@ -117,6 +117,7 @@ class ParticularApprovalProcessing extends Component
             try {
                 $this->generateControlNumber();
             } catch (Exception $exception) {
+                Log::error('PARTICULAR-APPROVAL-CN-GENERATION', [$exception]);
                 $this->customAlert('error', 'Failed to generate control number, please try again');
             }
         }
@@ -138,10 +139,6 @@ class ParticularApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            if ($this->checkTransition('mvr_registration_manager_review')) {
-
-            }
-
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
             DB::commit();
@@ -155,7 +152,7 @@ class ParticularApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            Log::error('PARTICULAR-APPROVAL-REJECT', [$exception]);
             $this->customAlert('error', 'Something went wrong');
         }
 
@@ -185,13 +182,12 @@ class ParticularApprovalProcessing extends Component
 
     public function generateControlNumber() {
         try {
+            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
+
             DB::beginTransaction();
 
             $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
             $this->subject->payment_status = BillStatus::CN_GENERATING;
-
-            //Generate control number
-            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
 
             $fee = MvrFee::query()->where([
                 'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
@@ -211,9 +207,9 @@ class ParticularApprovalProcessing extends Component
             DB::commit();
 
             $this->flash('success', 'Approved Successful', [], redirect()->back()->getTargetUrl());
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('PARTICULAR-APPROVAL-CN-GENERATION', [$exception]);
             $this->customAlert('error', 'Failed to generate control number, please try again');
         }
     }

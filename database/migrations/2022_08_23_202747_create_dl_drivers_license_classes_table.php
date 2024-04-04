@@ -19,8 +19,8 @@ class CreateDlDriversLicenseClassesTable extends Migration
             $table->unsignedBigInteger('dl_license_class_id');
             $table->timestamps();
 
-            $table->foreign('dl_license_class_id')->references('id')->on('dl_license_classes');
-            $table->foreign('dl_drivers_license_id')->references('id')->on('dl_drivers_licenses');
+            // $table->foreign('dl_license_class_id')->references('id')->on('dl_license_classes');
+            // $table->foreign('dl_drivers_license_id')->references('id')->on('dl_drivers_licenses');
 
         });
     }

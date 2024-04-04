@@ -39,6 +39,7 @@ class InitiateChangeModal extends Component
     public $currentEffectiveDate, $newEffectiveDate;
     public $selectedTaxTypes = [], $taxTypes = [];
     public $subVatOptions = [];
+    public $defaultSubVatOptions = [];
     public $showLumpsumOptions = false;
     public $vat_id;
     public $oldTaxes = [];

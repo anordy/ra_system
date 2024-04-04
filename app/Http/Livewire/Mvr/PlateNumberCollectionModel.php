@@ -2,22 +2,23 @@
 
 namespace App\Http\Livewire\Mvr;
 
-use App\Models\MvrMotorVehicle;
-use App\Models\MvrMotorVehicleRegistration;
+use App\Enum\GeneralConstant;
 use App\Models\MvrPlateNumberCollection;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationStatus;
+use App\Rules\ValidPhoneNo;
+use App\Traits\CustomAlert;
+use App\Traits\PhoneUtil;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use App\Traits\CustomAlert;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class PlateNumberCollectionModel extends Component
 {
 
-    use CustomAlert;
+    use CustomAlert, PhoneUtil;
 
     public $mvr_registration_id;
     public $collection_date;
@@ -27,8 +28,8 @@ class PlateNumberCollectionModel extends Component
     protected function rules()
     {
         return [
-            'collector_phone' => 'required|size:10',
-            'collector_name' => 'required|strip_tag',
+            'collector_phone' => ['required', 'string', new ValidPhoneNo()],
+            'collector_name' => 'required|string|strip_tag',
             'collection_date' => 'required|date|before_or_equal:today',
         ];
     }
@@ -40,7 +41,7 @@ class PlateNumberCollectionModel extends Component
 
     public function mount($mvr_registration_id)
     {
-        $this->mvr_registration_id = $mvr_registration_id;
+        $this->mvr_registration_id = decrypt($mvr_registration_id);
     }
 
 
@@ -48,16 +49,15 @@ class PlateNumberCollectionModel extends Component
     {
         $this->validate();
         try {
-            DB::beginTransaction();
+            $mvr = MvrRegistration::query()->findOrFail($this->mvr_registration_id);
 
+            DB::beginTransaction();
             MvrPlateNumberCollection::query()->create([
                 'mvr_registration_id' => $this->mvr_registration_id,
                 'collector_name' => $this->collector_name,
-                'collector_phone' => $this->collector_phone,
+                'collector_phone' => $this->getNationalFormat($this->collector_phone),
                 'collection_date'=>$this->collection_date,
             ]);
-
-            $mvr = MvrRegistration::query()->find($this->mvr_registration_id);
 
             $mvr->update([
                 'mvr_plate_number_status' => MvrPlateNumberStatus::STATUS_ACTIVE,
@@ -68,8 +68,8 @@ class PlateNumberCollectionModel extends Component
             return redirect()->to(route('mvr.plate-numbers'));
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            Log::error('PLATE-NUMBER-COLLECTION-MODEL', [$e]);
+            $this->customAlert(GeneralConstant::ERROR, 'Something went wrong, please contact the administrator for help');
         }
     }
 
