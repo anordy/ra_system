@@ -2,19 +2,20 @@
 
 namespace App\Http\Livewire\Reports\Returns;
 
+use App\Enum\CustomMessage;
+use App\Enum\ReportStatus;
 use App\Exports\ReturnReportExport;
 use App\Models\District;
-use App\Models\FinancialYear;
 use App\Models\Region;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Models\Ward;
-use Livewire\Component;
 use App\Traits\CustomAlert;
-
 use App\Traits\ReturnReportTrait;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReturnReport extends Component
@@ -44,7 +45,7 @@ class ReturnReport extends Component
 
     //extra filters
     public $optionTaxRegions = [];
-    public $selectedTaxReginIds=[];
+    public $selectedTaxReginIds = [];
     public $regions;
     public $districts;
     public $wards;
@@ -53,21 +54,23 @@ class ReturnReport extends Component
     public $district;
     public $ward;
 
-
-
     public $returnName;
     public $parameters;
 
     protected function rules()
     {
         return [
-            'tax_type_id' => 'required',
-            'type' => 'required',
-            'vat_type' => $this->tax_type_code == 'vat' ? 'required' : '',
-            'range_start' => 'required',
-            'range_end' => 'required',
-            'filing_report_type' => $this->type == 'Filing' ? 'required' : '',
-            'payment_report_type' => $this->type == 'Payment' ? 'required' : '',
+            'tax_type_id' => 'required|alpha_num',
+            'type' => ['required', Rule::in($this->optionReportTypes)],
+            'vat_type' => $this->tax_type_code == 'vat' ? ['required', 'alpha_num'] : 'nullable',
+            'range_start' => 'required|date',
+            'range_end' => 'required|date',
+            'filing_report_type' => $this->type == 'Filing' ? ['required', Rule::in($this->optionFilingTypes)] : 'nullable',
+            'payment_report_type' => $this->type == 'Payment' ? ['required', Rule::in($this->optionPaymentTypes)] : 'nullable',
+            'selectedTaxReginIds' => ['sometimes', 'array'],
+            'region' => ['sometimes', 'alpha_num'],
+            'district' => ['sometimes', 'alpha_num'],
+            'ward' => ['sometimes', 'alpha_num'],
         ];
     }
 
@@ -76,10 +79,10 @@ class ReturnReport extends Component
         $this->today = date('Y-m-d');
         $this->range_start = $this->today;
         $this->range_end = $this->today;
-        $this->optionTaxTypes = TaxType::where('category', 'main')->get();
-        $this->optionReportTypes = ['Filing', 'Payment'];
-        $this->optionFilingTypes = ['All-Filings', 'On-Time-Filings', 'Late-Filings', 'Tax-Claims', 'Nill-Returns'];
-        $this->optionPaymentTypes = ['All-Paid-Returns', 'On-Time-Paid-Returns', 'Late-Paid-Returns', 'Unpaid-Returns'];
+        $this->optionTaxTypes = TaxType::where('category', ReportStatus::TAX_TYPE_CAT_MAIN)->get();
+        $this->optionReportTypes = ReportStatus::RETURN_REPORT_TYPES;
+        $this->optionFilingTypes = ReportStatus::RETURN_FILLING_TYPES;
+        $this->optionPaymentTypes = ReportStatus::RETURN_PAYMENT_TYPES;
 
         //extra filters
         $this->optionTaxRegions = TaxRegion::pluck('name', 'id')->toArray();
@@ -88,9 +91,9 @@ class ReturnReport extends Component
         $this->districts = [];
         $this->wards = [];
 
-        $this->region = 'all';
-        $this->district = 'all';
-        $this->ward = 'all';
+        $this->region = ReportStatus::all;
+        $this->district = ReportStatus::all;
+        $this->ward = ReportStatus::all;
 
         //toggle filter
         $this->showMoreFilters = false;
@@ -101,40 +104,46 @@ class ReturnReport extends Component
 
     public function updated($propertyName)
     {
-        if ($propertyName == 'tax_type_id') {
-            if($this->tax_type_id != 'all'){
-                $this->tax_type_code = TaxType::findOrFail($this->tax_type_id)->code;
+        try {
+            if ($propertyName == ReportStatus::TAX_TYPE_ID) {
+                if ($this->tax_type_id != ReportStatus::all) {
+                    $this->tax_type_code = TaxType::findOrFail($this->tax_type_id)->code;
 
-                if($this->tax_type_code == TaxType::VAT) {
-                    $this->subVatOptions = SubVat::select('id', 'name')->get();
+                    if ($this->tax_type_code == TaxType::VAT) {
+                        $this->subVatOptions = SubVat::select('id', 'name')->get();
+                    }
+                } else {
+                    $this->tax_type_code = ReportStatus::all;
                 }
-            }else{
-                $this->tax_type_code = 'all';
+                $this->reset('vat_type');
             }
-            $this->reset('vat_type');
+
+            if ($propertyName == ReportStatus::TYPE) {
+                $this->reset('filing_report_type', 'payment_report_type');
+            }
+
+            //Physical Location
+            if ($propertyName === ReportStatus::REGION) {
+                $this->wards = [];
+                $this->districts = [];
+                if ($this->region != ReportStatus::all) {
+                    $this->districts = District::where('region_id', $this->region)->select('id', 'name')->get();
+                }
+                $this->ward = ReportStatus::all;
+                $this->district = ReportStatus::all;
+            }
+            if ($propertyName === ReportStatus::DISTRICT) {
+                $this->wards = [];
+                if ($this->district != ReportStatus::all) {
+                    $this->wards = Ward::where('district_id', $this->district)->select('id', 'name')->get();
+                }
+                $this->ward = ReportStatus::all;
+            }
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-RETURNS-RETURN-REPORT-UPDATED', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
 
-        if ($propertyName == 'type') {
-            $this->reset('filing_report_type', 'payment_report_type');
-        }
-
-        //Physical Location
-        if ($propertyName === 'region') {
-            $this->wards = [];
-            $this->districts = [];
-            if ($this->region != 'all') {
-                $this->districts = District::where('region_id', $this->region)->select('id', 'name')->get();
-            }
-            $this->ward = 'all';
-            $this->district = 'all';
-        }
-        if ($propertyName === 'district') {
-            $this->wards = [];
-            if ($this->district != 'all') {
-                $this->wards = Ward::where('district_id', $this->district)->select('id', 'name')->get();
-            }
-            $this->ward = 'all';
-        }
     }
 
     //preview report
@@ -152,26 +161,40 @@ class ReturnReport extends Component
     public function exportPdf()
     {
         $this->validate();
-        $this->parameters = $this->getParameters();
-        $this->exportPdfReport($this->parameters);
+        try {
+            $this->parameters = $this->getParameters();
+            $this->exportPdfReport($this->parameters);
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-RETURNS-RETURN-REPORT-EXPORT-PDF', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
+        }
     }
 
     //export excel report
     public function exportExcel()
     {
         $this->validate();
-        $this->parameters = $this->getParameters();
-        // $this->exportExcelReport($this->parameters);
-        $records = $this->getRecords($this->parameters);
-        if ($records->count() < 1) {
-            $this->customAlert('error', 'No Records Found in the selected criteria');
-            return;
-        }
+        try {
+            $this->parameters = $this->getParameters();
+            $records = $this->getRecords($this->parameters);
 
-        $fileName = $this->parameters['tax_type_name'] . '_' . $this->parameters['filing_report_type'] . ' - ' . '.xlsx';
-        $title    = $this->parameters['filing_report_type'] . ' For' . $this->parameters['tax_type_name'];
-        $this->customAlert('success', 'Exporting Excel File');
-        return Excel::download(new ReturnReportExport($records, $title, $this->parameters), $fileName);
+            if ($records->count() < 1) {
+                $this->customAlert('error', 'No Records Found in the selected criteria');
+                return;
+            }
+
+            if (!isset($this->parameters['tax_type_name']) && !isset($this->parameters['filing_report_type'])) {
+                throw new \Exception('Missing tax_type_name or filing_report_type keys in parameters');
+            }
+
+            $fileName = $this->parameters['tax_type_name'] . '_' . $this->parameters['filing_report_type'] . ' - ' . '.xlsx';
+            $title = $this->parameters['filing_report_type'] . ' For' . $this->parameters['tax_type_name'];
+            $this->customAlert('success', 'Exporting Excel File');
+            return Excel::download(new ReturnReportExport($records, $title, $this->parameters), $fileName);
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-RETURNS-RETURN-REPORT-EXPORT-EXCEL', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
+        }
     }
 
 
@@ -190,7 +213,7 @@ class ReturnReport extends Component
             'district' => $this->district,
             'ward' => $this->ward,
             'range_start' => $this->range_start,
-            'range_end' =>  $this->range_end,
+            'range_end' => $this->range_end,
         ];
     }
 
@@ -198,8 +221,8 @@ class ReturnReport extends Component
     {
         //tax regions
         $taxRegionSeletected = false;
-        foreach ($this->selectedTaxReginIds as $id => $value) {
-            if ($value == false) {
+        foreach ($this->selectedTaxReginIds as $value) {
+            if (!$value) {
                 continue;
             } else {
                 $taxRegionSeletected = true;
@@ -212,6 +235,7 @@ class ReturnReport extends Component
 
         return true;
     }
+
     public function removeItemsOnFalse($items)
     {
         foreach ($items as $key => $item) {
@@ -221,6 +245,7 @@ class ReturnReport extends Component
         }
         return $items;
     }
+
     public function toggleFilters()
     {
         $this->showMoreFilters = !$this->showMoreFilters;

@@ -49,15 +49,33 @@
             border-collapse: collapse;
             background: transparent;
         }
+
+        .border {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .font-size-8 {
+            font-size: 8pt;
+        }
+
+        .top-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
     </style>
 </head>
 
-<body style="font-size: 8pt">
+<body class="font-size-8">
 
-    <table style="border-collapse:collapse; width:100%">
+    <table class="top-table">
         <thead>
             <tr>
-                <th style="text-align:center;" colspan="15">
+                <th class="text-center" colspan="15">
                     <strong>ZANZIBAR Revenue Authority</strong><br>
                     <strong>Report of {{ strtoupper($status) }} PAYMENTS</strong><br>
                     <strong>From {{ date("M, d Y", strtotime($parameters['range_start'])) }} To {{ date("M, d Y",
@@ -72,39 +90,39 @@
     <table class="table">
         <thead class="tableHead">
             <tr>
-                <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>S/N</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Control No.</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Bill Amount</strong>
                 </th>
                 @if ($status == 'paid')
-                    <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>Paid Amount</strong>
                     </th>
-                    <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>PSP Name</strong>
                     </th>
                 @endif
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Currency </strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Business Name</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Payer Name</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Payer Phone Number</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Description</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Status</strong>
                 </th>
             </tr>
@@ -112,39 +130,39 @@
         <tbody>
             @foreach ($records as $index => $record)
                 <tr>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $index + 1 }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->control_number ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ number_format($record->amount,2) ?? '-' }}
                     </td>
                     @if ($status == 'paid')
-                        <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        <td class="text-center border">
                             {{ number_format($record->paid_amount,2) ?? '-' }}
                         </td>
-                        <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        <td class="text-center border">
                             {{ $record->payment->psp_name ?? '-' }}
                         </td>
                     @endif
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->currency ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->billable->business->name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->payer_name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->payer_phone_number ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->description ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ strtoupper($record->status ?? '') ?? '-' }}
                     </td>
                 </tr>

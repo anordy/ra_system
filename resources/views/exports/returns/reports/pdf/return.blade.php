@@ -55,15 +55,33 @@
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
+
+        .border {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .font-size-8 {
+            font-size: 8pt;
+        }
+
+        .top-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
     </style>
 </head>
 
-<body style="font-size: 8pt">
+<body class="font-size-8">
 
-    <table style="border-collapse:collapse; width:100%">
+    <table class="top-table">
         <thead>
             <tr>
-                <th style="text-align:center;" colspan="15">
+                <th class="text-center" colspan="15">
                     <strong>ZANZIBAR Revenue Authority</strong><br>
                     {{-- <strong>{{ $title }}</strong><br> --}}
                     <strong>Report of
@@ -111,58 +129,58 @@
     <table class="table">
         <thead class="tableHead">
             <tr>
-                <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>S/N</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Business</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Location</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Tax Type</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Reporting Month</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Filed By</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Currency</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Principal Amount</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Interest Amount</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Penalty Amount</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Total Amount</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Outstanding Amount</strong>
                 </th>
-                <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Filing Date</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Filing Due Date</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Payment Date</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Payment Due Date</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Filing Status</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Payment Status</strong>
                 </th>
             </tr>
@@ -170,67 +188,67 @@
         <tbody>
             @foreach ($records as $index => $record)
                 <tr>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $index + 1 }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->business->name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->location->name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->taxType->name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         @if ($record->taxType->code == 'lumpsum-payment')
                             {{ \App\Models\Returns\LumpSum\LumpSumReturn::where('id', $record->return_id)->first()->quarter_name ?? '-' }}
                         @else
                             {{ $record->financialMonth->name ?? '-' }}
                         @endif
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->taxpayer->full_name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->currency ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->principal === null ? '-' : number_format($record->principal, 2) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->interest === null ? '-' : number_format($record->interest, 2) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->penalty === null ? '-' : number_format($record->penalty, 2) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->total_amount === null ? '-' : number_format($record->total_amount, 2) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->outstanding_amount === null ? '-' : number_format($record->outstanding_amount, 2) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ date('d/m/Y', strtotime($record->created_at)) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->filing_due_date == null ? '-' : date('d/m/Y', strtotime(\Carbon\Carbon::create($record->filing_due_date)->addMonth())) }}
                     </td>
 
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->paid_at == null ? '-' : date('d/m/Y', strtotime($record->paid_at)) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->curr_payment_due_date == null ? '-' : date('d/m/Y', strtotime($record->curr_payment_due_date)) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         @if ($record->created_at > \Carbon\Carbon::create($record->filing_due_date)->addMonth())
                             Late Filing
                         @else
                             In-Time Filing
                         @endif
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         @if (!$record->paid_at)
                             Not Paid
                         @elseif($record->paid_at > $record->curr_payment_due_date)

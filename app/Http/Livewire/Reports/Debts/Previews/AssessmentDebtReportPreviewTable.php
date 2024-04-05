@@ -74,7 +74,7 @@ class AssessmentDebtReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         return number_format($value, 2);
                     }
                 ),
@@ -92,7 +92,7 @@ class AssessmentDebtReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         return number_format($value, 2);
                     }
                 ),

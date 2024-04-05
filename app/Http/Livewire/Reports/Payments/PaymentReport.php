@@ -2,52 +2,55 @@
 
 namespace App\Http\Livewire\Reports\Payments;
 
-use App\Exports\ReturnReportExport;
+use App\Enum\CustomMessage;
+use App\Enum\ReportStatus;
 use App\Models\District;
 use App\Models\FinancialYear;
 use App\Models\Region;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Models\Ward;
-use App\Traits\PaymentReportTrait;
-use Livewire\Component;
 use App\Traits\CustomAlert;
-
-use App\Traits\ReturnReportTrait;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Traits\GenericReportTrait;
+use App\Traits\PaymentReportTrait;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
 
 class PaymentReport extends Component
 {
 
-    use CustomAlert, PaymentReportTrait;
+    use CustomAlert, PaymentReportTrait, GenericReportTrait;
 
-    public $optionYears;
-    public $optionPeriods;
-    public $optionSemiAnnuals;
-    public $optionQuarters;
-    public $optionMonths;
-    public $optionTaxTypes;
-    public $optionReportTypes;
-    public $optionFilingTypes;
-    public $optionPaymentReportTypes;
+    public $optionYears = [];
+    public $optionPeriods = [];
+    public $optionSemiAnnuals = [];
+    public $optionQuarters = [];
+    public $optionMonths = [];
+    public $optionTaxTypes = [];
+    public $optionReportTypes = [];
+    public $optionFilingTypes = [];
+    public $optionPaymentReportTypes = [];
     public $showPreviewTable = false;
     public $activateButtons = false;
-    public $optionVatTypes;
+    public $optionVatTypes = [];
 
     public $payment_category;
-    public $year = 'all';
+    public $year = ReportStatus::all;
     public $month;
     public $period;
     public $quater;
     public $semiAnnual;
-    public $tax_type_id = 'all';
-    public $tax_type_code = 'all';
+    public $tax_type_id = ReportStatus::all;
+    public $tax_type_code = ReportStatus::all;
     public $status;
     public $filing_report_type = 'All-Filings';
     public $payment_report_type;
     public $range_start;
     public $range_end;
     public $vat_type = 'All-VAT-Returns';
+    public $reportType;
+    public $optionPaymentTypes = [];
 
     //extra filters
     public $optionTaxRegions = [];
@@ -69,34 +72,26 @@ class PaymentReport extends Component
     protected function rules()
     {
         return [
-            'payment_category' => 'required',
-            'tax_type_id' => $this->payment_category == 'returns' ? 'required' : '',
-            'year' => 'required',
-            'period' => 'required',
-            'vat_type' => $this->tax_type_code == 'vat' ? 'required' : '',
-            'range_start' => $this->year == 'range' ? 'required' : '',
-            'range_end' => $this->year == 'range' ? 'required' : '',
-            'filing_report_type' => $this->status == 'Filing' ? 'required' : '',
-            'payment_report_type' => $this->status == 'Payment' ? 'required' : '',
-            'period' => $this->year != 'all' && $this->year != 'range' ? 'required' : '',
-            'month' => $this->period == 'Monthly' ? 'required' : '',
-            'quater' => $this->period == 'Quarterly' ? 'required' : '',
-            'semiAnnual' => $this->period == 'Semi-Annual' ? 'required' : '',
+            'payment_category' => 'required|alpha_gen',
+            'tax_type_id' => $this->payment_category == 'returns' ? 'required|alpha_gen' : 'nullable',
+            'year' => 'required|alpha_num',
+            'vat_type' => $this->tax_type_code == 'vat' ? 'required|alpha_gen' : 'nullable',
+            'range_start' => $this->year == ReportStatus::RANGE ? 'required|date' : 'nullable',
+            'range_end' => $this->year == ReportStatus::RANGE ? 'required|date' : 'nullable',
+            'filing_report_type' => $this->status == 'Filing' ? ['required', 'alpha_gen'] : 'nullable',
+            'payment_report_type' => $this->status == 'Payment' ? ['required', 'alpha_gen'] : 'nullable',
+            'period' => $this->year != ReportStatus::all && $this->year != 'range' ? ['required', Rule::in([ReportStatus::MONTHLY, ReportStatus::QUARTERLY, ReportStatus::SEMI_ANNUAL, ReportStatus::ANNUAL])] : 'nullable',
+            'month' => $this->period == ReportStatus::MONTHLY ? ['required', 'alpha_gen'] : 'nullable',
+            'quater' => $this->period == ReportStatus::QUARTERLY ? ['required', Rule::in([ReportStatus::FIRST_QUARTER, ReportStatus::SECOND_QUARTER, ReportStatus::THIRD_QUARTER, ReportStatus::FOURTH_QUARTER])] : '',
+            'semiAnnual' => $this->period == ReportStatus::SEMI_ANNUAL ? 'required|alpha_gen' : 'nullable',
         ];
     }
 
     public function mount()
     {
-        $this->optionYears = FinancialYear::orderBy('code', 'DESC')->pluck('code');
-        $this->optionPeriods = ["Monthly", "Quarterly", "Semi-Annual", "Annual"];
-        $this->optionSemiAnnuals = ["1st-Semi-Annual", "2nd-Semi-Annual"];
-        $this->optionQuarters = ["1st-Quarter", "2nd-Quarter", "3rd-Quarter", "4th-Quarter"];
-        $this->optionMonths = [1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"];
-        $this->optionTaxTypes = TaxType::where('category', 'main')->select('id', 'name')->orderBy('name')->get();
-        $this->optionReportTypes = ['Filing', 'Payment'];
-        $this->optionFilingTypes = ['All-Filings', 'On-Time-Filings', 'Late-Filings', 'Tax-Claims', 'Nill-Returns'];
-        $this->optionPaymentTypes = ['All-Paid-Returns', 'On-Time-Paid-Returns', 'Late-Paid-Returns', 'Unpaid-Returns'];
-        $this->optionVatTypes = ['All-VAT-Returns', 'Hotel-VAT-Returns', 'Electricity-VAT-Returns', 'Local-VAT-Returns'];
+        $this->optionTaxTypes = TaxType::where('category', ReportStatus::TAX_TYPE_CAT_MAIN)->select('id', 'name')->orderBy('name')->get();
+
+        $this->initializeOptions();
 
         //extra filters
         $this->optionTaxRegions = TaxRegion::pluck('name', 'id')->toArray();
@@ -105,9 +100,9 @@ class PaymentReport extends Component
         $this->districts = [];
         $this->wards = [];
 
-        $this->region = 'all';
-        $this->district = 'all';
-        $this->ward = 'all';
+        $this->region = ReportStatus::all;
+        $this->district = ReportStatus::all;
+        $this->ward = ReportStatus::all;
 
         //toggle filter
         $this->showMoreFilters = false;
@@ -115,47 +110,53 @@ class PaymentReport extends Component
 
     public function updated($propertyName)
     {
-        if ($propertyName == 'tax_type_id') {
-            if ($this->tax_type_id != 'all') {
-                $this->tax_type_code = TaxType::findOrFail($this->tax_type_id)->code;
-                if(is_null($this->tax_type_code)){
-                    abort(404);
+        try {
+            if ($propertyName == ReportStatus::TAX_TYPE_ID) {
+                if ($this->tax_type_id != ReportStatus::all) {
+                    $this->tax_type_code = TaxType::findOrFail($this->tax_type_id)->code;
+                    if (is_null($this->tax_type_code)) {
+                        abort(404);
+                    }
+                } else {
+                    $this->tax_type_code = ReportStatus::all;
                 }
-            } else {
-                $this->tax_type_code = 'all';
+                $this->reset('vat_type');
             }
-            $this->reset('vat_type');
-        }
 
-        if ($propertyName == 'period') {
-            $this->reset('month', 'quater', 'semiAnnual');
-        }
-
-        if ($propertyName == 'year') {
-            $this->reset('month', 'quater', 'semiAnnual', 'period');
-        }
-
-        if ($propertyName == 'status') {
-            $this->reset('month', 'quater', 'semiAnnual', 'period', 'year');
-        }
-
-        //Physical Location
-        if ($propertyName === 'region') {
-            $this->wards = [];
-            $this->districts = [];
-            if ($this->region != 'all') {
-                $this->districts = District::where('region_id', $this->region)->select('id', 'name')->get();
+            if ($propertyName == 'period') {
+                $this->reset('month', 'quater', 'semiAnnual');
             }
-            $this->ward = 'all';
-            $this->district = 'all';
-        }
-        if ($propertyName === 'district') {
-            $this->wards = [];
-            if ($this->district != 'all') {
-                $this->wards = Ward::where('district_id', $this->district)->select('id', 'name')->get();
+
+            if ($propertyName == 'year') {
+                $this->reset('month', 'quater', 'semiAnnual', 'period');
             }
-            $this->ward = 'all';
+
+            if ($propertyName == 'status') {
+                $this->reset('month', 'quater', 'semiAnnual', 'period', 'year');
+            }
+
+            //Physical Location
+            if ($propertyName === ReportStatus::REGION) {
+                $this->wards = [];
+                $this->districts = [];
+                if ($this->region != ReportStatus::all) {
+                    $this->districts = District::where('region_id', $this->region)->select('id', 'name')->get();
+                }
+                $this->ward = ReportStatus::all;
+                $this->district = ReportStatus::all;
+            }
+            if ($propertyName === ReportStatus::DISTRICT) {
+                $this->wards = [];
+                if ($this->district != ReportStatus::all) {
+                    $this->wards = Ward::where('district_id', $this->district)->select('id', 'name')->get();
+                }
+                $this->ward = ReportStatus::all;
+            }
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-PAYMENTS-PAYMENT-REPORT-UPDATED', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
+
     }
 
     //preview report
@@ -184,16 +185,27 @@ class PaymentReport extends Component
     public function exportPdf()
     {
         $this->validate();
-        $this->parameters = $this->getParameters();
-        $this->exportPdfReport($this->parameters);
+        try {
+            $this->parameters = $this->getParameters();
+            $this->exportPdfReport($this->parameters);
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-PAYMENTS-PAYMENT-REPORT-EXPORT-PDF', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
+        }
     }
 
     //export excel report
     public function exportExcel()
     {
         $this->validate();
-        $this->parameters = $this->getParameters();
-        $this->exportExcelReport($this->parameters);
+        try {
+            $this->parameters = $this->getParameters();
+            $this->exportExcelReport($this->parameters);
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-PAYMENTS-PAYMENT-REPORT-EXPORT-EXCEL', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
+        }
+
     }
 
 
@@ -201,9 +213,9 @@ class PaymentReport extends Component
     {
         return [
             'payment_category' => $this->payment_category,
-            'tax_type_id' => $this->tax_type_id ?? 'all',
-            'tax_type_code' => $this->tax_type_id == 'all' ? 'all' : TaxType::find($this->tax_type_id)->code ?? 'N/A',
-            'tax_type_name' => $this->tax_type_id == 'all' ? 'All Tax Types Returns' : TaxType::find($this->tax_type_id)->name ?? 'N/A',
+            'tax_type_id' => $this->tax_type_id ?? ReportStatus::all,
+            'tax_type_code' => $this->tax_type_id == ReportStatus::all ? ReportStatus::all : TaxType::find($this->tax_type_id)->code ?? 'N/A',
+            'tax_type_name' => $this->tax_type_id == ReportStatus::all ? 'All Tax Types Returns' : TaxType::find($this->tax_type_id)->name ?? 'N/A',
             'vat_type' => $this->vat_type,
             'status' => $this->status,
             'year' => $this->year,
@@ -222,79 +234,84 @@ class PaymentReport extends Component
 
     public function getStartEndDate()
     {
-        if ($this->year == "all") {
-            return [
-                'startDate' => null,
-                'endDate' => null,
-            ];
-        } elseif ($this->year == "range") {
-            return [
-                'startDate' => date('Y-m-d', strtotime($this->range_start)),
-                'endDate' => date('Y-m-d', strtotime($this->range_end)),
-                'from' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
-                'end' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
-            ];
-        } elseif ($this->month) {
-            $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
-            $start = $date->startOfMonth()->format('Y-m-d H:i:s');
-            $end = $date->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $date->startOfMonth()->format('Y-m-d');
-            $to = $date->endOfMonth()->format('Y-m-d');
-            return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
-        } elseif ($this->quater) {
-            if ($this->quater == '1st-Quarter') {
-                $this->startMonth = 1;
-                $this->endMonth = 3;
-            } elseif ($this->quater == '2nd-Quarter') {
-                $this->startMonth = 4;
-                $this->endMonth = 6;
-            } elseif ($this->quater == '3rd-Quarter') {
-                $this->startMonth = 7;
-                $this->endMonth = 9;
-            } elseif ($this->quater == '4th-Quarter') {
-                $this->startMonth = 10;
-                $this->endMonth = 12;
-            }
+        try {
+            if ($this->year == ReportStatus::all) {
+                return [
+                    'startDate' => null,
+                    'endDate' => null,
+                ];
+            } elseif ($this->year == ReportStatus::RANGE) {
+                return [
+                    'startDate' => date('Y-m-d', strtotime($this->range_start)),
+                    'endDate' => date('Y-m-d', strtotime($this->range_end)),
+                    'from' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
+                    'end' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
+                ];
+            } elseif ($this->month) {
+                $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
+                $start = $date->startOfMonth()->format('Y-m-d H:i:s');
+                $end = $date->endOfMonth()->format('Y-m-d H:i:s');
+                $from = $date->startOfMonth()->format('Y-m-d');
+                $to = $date->endOfMonth()->format('Y-m-d');
+                return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
+            } elseif ($this->quater) {
+                if ($this->quater == ReportStatus::FIRST_QUARTER) {
+                    $this->startMonth = ReportStatus::ONE;
+                    $this->endMonth = ReportStatus::THREE;
+                } elseif ($this->quater == ReportStatus::SECOND_QUARTER) {
+                    $this->startMonth = ReportStatus::FOUR;
+                    $this->endMonth = ReportStatus::SIX;
+                } elseif ($this->quater == ReportStatus::THIRD_QUARTER) {
+                    $this->startMonth = ReportStatus::SEVEN;
+                    $this->endMonth = ReportStatus::NINE;
+                } elseif ($this->quater == ReportStatus::FOURTH_QUARTER) {
+                    $this->startMonth = ReportStatus::TEN;
+                    $this->endMonth = ReportStatus::TWELVE;
+                }
 
-            $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
-            $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
-            $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
-            $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $startDate->format('Y-m-d');
-            $to = $endDate->format('Y-m-d');
-            return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
-        } elseif ($this->semiAnnual) {
-            if ($this->semiAnnual == '1st-Semi-Annual') {
-                $this->startMonth = 1;
-                $this->endMonth = 6;
-            } elseif ($this->semiAnnual == '2nd-Semi-Annual') {
-                $this->startMonth = 7;
-                $this->endMonth = 12;
+                $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
+                $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
+                $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
+                $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
+                $from = $startDate->format('Y-m-d');
+                $to = $endDate->format('Y-m-d');
+                return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
+            } elseif ($this->semiAnnual) {
+                if ($this->semiAnnual == ReportStatus::FIRST_SEMI_ANNUAL) {
+                    $this->startMonth = ReportStatus::ONE;
+                    $this->endMonth = ReportStatus::SIX;
+                } elseif ($this->semiAnnual == ReportStatus::SECOND_SEMI_ANNUAL) {
+                    $this->startMonth = ReportStatus::SEVEN;
+                    $this->endMonth = ReportStatus::TWELVE;
+                }
+                $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
+                $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
+                $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
+                $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
+                $from = $startDate->format('Y-m-d');
+                $to = $endDate->format('Y-m-d');
+                return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
+            } else {
+                $startDate = \Carbon\Carbon::parse($this->year . "-" . "01" . "-01");
+                $endDate = \Carbon\Carbon::parse($this->year . "-" . "12" . "-01");
+                $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
+                $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
+                $from = $startDate->format('Y-m-d');
+                $to = $endDate->format('Y-m-d');
+                return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
             }
-            $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
-            $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
-            $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
-            $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $startDate->format('Y-m-d');
-            $to = $endDate->format('Y-m-d');
-            return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
-        } else {
-            $startDate = \Carbon\Carbon::parse($this->year . "-" . "01" . "-01");
-            $endDate = \Carbon\Carbon::parse($this->year . "-" . "12" . "-01");
-            $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
-            $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $startDate->format('Y-m-d');
-            $to = $endDate->format('Y-m-d');
-            return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
+        } catch (\Exception $exception) {
+            throw $exception;
         }
+
     }
 
     public function checkCheckboxes()
     {
         //tax regions
         $taxRegionSeletected = false;
-        foreach ($this->selectedTaxReginIds as $id => $value) {
-            if ($value == false) {
+        foreach ($this->selectedTaxReginIds as $value) {
+            if (!$value) {
                 continue;
             } else {
                 $taxRegionSeletected = true;

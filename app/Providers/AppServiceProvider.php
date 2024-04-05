@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Rules\AlphaGenericRule;
 use App\Rules\AlphaSpaceRule;
 use App\Rules\ArrayNumberRule;
 use App\Rules\NidaRule;
@@ -45,15 +46,13 @@ class AppServiceProvider extends ServiceProvider
 
         Paginator::useBootstrap();
         Livewire::component('modals', Modals::class);
-        Livewire::component('drivers-license.wizard.application-initial-step', ApplicationInitialStep::class);
-        Livewire::component('drivers-license.wizard.application-details-step', ApplicationDetailsStep::class);
-        Livewire::component('drivers-license.wizard.license-details-step', LicenseDetailsStep::class);
         Validator::extend(StripTag::handle(), StripTag::class);
         Validator::extend(NidaRule::handle(), NidaRule::class);
         Validator::extend(ValidPhoneNo::handle(), ValidPhoneNo::class);
         Validator::extend(AlphaSpaceRule::handle(), AlphaSpaceRule::class);
         Validator::extend(ArrayNumberRule::handle(), ArrayNumberRule::class);
         Validator::extend(ValidPdfContent::handle(), ValidPdfContent::class);
+        Validator::extend(AlphaGenericRule::handle(), AlphaGenericRule::class);
         Validator::extend('max_file_name_length', function ($attribute, $value, $parameters, $validator) {
             return (new MaxFileNameLengthRule($parameters[0]))->passes($attribute, $value);
         });

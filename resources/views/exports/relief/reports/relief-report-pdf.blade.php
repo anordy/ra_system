@@ -46,16 +46,38 @@
             width: 100%;
             border-collapse: collapse;
         }
+
+        .border {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .font-size-6 {
+            font-size: 6pt;
+        }
+
+        .top-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        .plain-border {
+            border: 1px solid black;
+        }
         
     </style>
 </head>
 
-<body style="font-size: 6pt">
+<body class="font-size-6">
   
-        <table style="border-collapse:collapse; width:100%">
+        <table class="top-table">
             <thead>
                 <tr>
-                    <th style="text-align:center;" colspan="10" >
+                    <th class="text-center" colspan="10" >
                         <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
                         <strong>RELIEF APPLLICATIONS</strong><br>
                         <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong>
@@ -76,34 +98,34 @@
         <table class="table">
             <thead class="tableHead">
                 <tr>
-                    <th style="text-align:center; border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>S/N</strong>
                     </th>
-                    <th style="text-align:center; border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>Project Name</strong>
                     </th>
-                    <th style="text-align:center;border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>Project Description</strong>
                     </th>
-                    <th style="text-align:center; border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>Project Section</strong>
                     </th>
-                    <th style="text-align:center; border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>VAT amount</strong>
                     </th>
-                    <th style="text-align:center; border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>Relieved amount</strong>
                     </th>
-                    <th style="text-align:center; border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>Rate</strong>
                     </th>
-                    <th style="text-align:center; border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>Supplier Name</strong>
                     </th>
-                    <th style="text-align:center; border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>Supplier Location</strong>
                     </th>
-                    <th style="text-align:center; border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>Registered Date</strong>
                     </th>
                 </tr>
@@ -111,23 +133,23 @@
             <tbody>
                 @foreach ($reliefs as $index => $relief)
                     <tr>
-                        <td style="border: 1px solid black;">{{ $index + 1 }}</td>
-                        <td style=" border: 1px solid black;">{{ $relief->project->name }}</td>
-                        <td style=" border: 1px solid black;">
+                        <td class="plain-border">{{ $index + 1 }}</td>
+                        <td class="plain-border">{{ $relief->project->name }}</td>
+                        <td class="plain-border">
                             {{ $relief->project->description }}</td>
-                        <td style=" border: 1px solid black;">
+                        <td class="plain-border">
                             {{ $relief->projectSection->name }}</td>
-                        <td style=" border: 1px solid black;">
+                        <td class="plain-border">
                             {{ number_format($relief->vat_amount, 1) }}
                         </td>
-                        <td style=" border: 1px solid black;">
+                        <td class="plain-border">
                             {{ number_format($relief->relieved_amount, 1) }}</td>
-                        <td style=" border: 1px solid black;">{{ number_format($relief->rate,1) }}%</td>
-                        <td style=" border: 1px solid black;">{{ $relief->business->name }}
+                        <td class="plain-border">{{ number_format($relief->rate,1) }}%</td>
+                        <td class="plain-border">{{ $relief->business->name }}
                         </td>
-                        <td style=" border: 1px solid black;">{{ $relief->location->name }}
+                        <td class="plain-border">{{ $relief->location->name }}
                         </td>
-                        <td style=" border: 1px solid black;">{{ $relief->created_at }}</td>
+                        <td class="plain-border">{{ $relief->created_at }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -136,7 +158,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th style="text-align:center;" colspan="{{ count($projectSectionsArray) + 2 }}">
+                    <th class="text-center" colspan="{{ count($projectSectionsArray) + 2 }}">
                         <strong>RELIEVED AMOUNT SUMMARY</strong>
                     </th>
                 </tr>
@@ -145,12 +167,12 @@
         <table class="table">
             <thead class="tableHead">
                 <tr>
-                    <th style="text-align:center;border: 1px solid black;"></th>
+                    <th class="text-center border"></th>
                     @foreach ($projectSectionsArray as $project)
-                        <th style="text-align:center;border: 1px solid black;"> <strong>{{ $project['name'] }}</strong>
+                        <th class="text-center border"> <strong>{{ $project['name'] }}</strong>
                         </th>
                     @endforeach
-                    <th class="total" style="text-align:center;border: 1px solid black;"><strong>TOTAL</strong>
+                    <th class="text-center border total"><strong>TOTAL</strong>
                     </th>
                 </tr>
             </thead>
@@ -160,7 +182,7 @@
             <tbody>
                 @foreach ($data as $month => $content)
                     <tr class="text-center">
-                        <td style="text-align:center;border: 1px solid black;">
+                        <td class="text-center border">
                             {{ $month }}
                         </td>
                         @php
@@ -170,7 +192,7 @@
                             @php
                                 $sumProjectSection[$key] = $sumProjectSection[$key] ?? 0;
                             @endphp
-                            <td style="text-align:center;border: 1px solid black;">
+                            <td class="text-center border">
                                 {{ $projectSection['relievedAmount'] == 0 ? '-' : number_format($projectSection['relievedAmount'], 1) }}
                             </td>
                             <!--append the sum -->
@@ -180,7 +202,7 @@
                                 $totalAllMonths = $totalAllMonths + $projectSection['relievedAmount'];
                             @endphp
                         @endforeach
-                        <td class="total" style="text-align:center;border: 1px solid black;">
+                        <td class="text-center border total">
                             {{ $sumAmountMonth[$month] == 0 ? '-' : number_format($sumAmountMonth[$month], 1) }}
                         </td>
                     </tr>
@@ -188,15 +210,15 @@
             </tbody>
             <tfoot>
                 <tr class="text-center">
-                    <td class="total" style="text-align:center;border: 1px solid black;">
+                    <td class="text-center border total">
                         TOTAL
                     </td>
                     @foreach ($sumProjectSection as $key => $value)
-                        <td class="total" style="text-align:center;border: 1px solid black;">
+                        <td class="text-center border total">
                             {{ $value == 0 ? '-' : number_format($value, 1) }}
                         </td>
                     @endforeach
-                    <td class="total" style="text-align:center;border: 1px solid black;">
+                    <td class="text-center border total">
                         {{ $totalAllMonths == 0 ? '-' : number_format($totalAllMonths, 1) }}
                     </td>
                 </tr>
@@ -206,7 +228,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th style="text-align:center;" colspan="{{ count($projectSectionsArray) + 2 }}">
+                    <th class="text-center" colspan="{{ count($projectSectionsArray) + 2 }}">
                         <strong>RELIEF COUNTS SUMMARY</strong>
                     </th>
                 </tr>
@@ -215,12 +237,12 @@
         <table class="table" >
             <thead class="tableHead">
                 <tr>
-                    <th style="text-align:center;border: 1px solid black;"></th>
+                    <th class="text-center border"></th>
                     @foreach ($projectSectionsArray as $project)
-                        <th style="text-align:center;border: 1px solid black;"> <strong>{{ $project['name'] }}</strong>
+                        <th class="text-center border"> <strong>{{ $project['name'] }}</strong>
                         </th>
                     @endforeach
-                    <th class="total" style="text-align:center;border: 1px solid black;"><strong>TOTAL</strong>
+                    <th class="text-center border total"><strong>TOTAL</strong>
                     </th>
                 </tr>
             </thead>
@@ -230,7 +252,7 @@
             <tbody>
                 @foreach ($data as $month => $content)
                     <tr class="text-center">
-                        <td style="text-align:center;border: 1px solid black;">
+                        <td class="text-center border">
                             {{ $month }}
                         </td>
                         @php
@@ -240,7 +262,7 @@
                             @php
                                 $sumAmountProjectSection[$key] = $sumAmountProjectSection[$key] ?? 0;
                             @endphp
-                            <td style="text-align:center;border: 1px solid black;">
+                            <td class="text-center border">
                                 {{ $projectSection['count'] == 0 ? '-' : number_format($projectSection['count']) }}
                             </td>
                             <!--append the sum -->
@@ -250,7 +272,7 @@
                                 $totalAmountMonths = $totalAmountMonths + $projectSection['count'];
                             @endphp
                         @endforeach
-                        <td class="total" style="text-align:center;border: 1px solid black;">
+                        <td class="text-center border total">
                             {{ $sumMonth[$month] == 0 ? '-' : number_format($sumMonth[$month]) }}
                         </td>
                     </tr>
@@ -258,15 +280,15 @@
             </tbody>
             <tfoot>
                 <tr class="text-center">
-                    <td class="total" style="text-align:center;border: 1px solid black;">
+                    <td class="text-center border total">
                         TOTAL
                     </td>
                     @foreach ($sumAmountProjectSection as $key => $value)
-                        <td class="total" style="text-align:center;border: 1px solid black;">
+                        <td class="text-center border total">
                             {{ $value == 0 ? '-' : number_format($value) }}
                         </td>
                     @endforeach
-                    <td class="total" style="text-align:center;border: 1px solid black;">
+                    <td class="text-center border total">
                         {{ $totalAmountMonths == 0 ? '-' : number_format($totalAmountMonths) }}
                     </td>
                 </tr>

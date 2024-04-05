@@ -3,8 +3,8 @@
 namespace App\Traits;
 
 use App\Enum\BillStatus;
+use App\Enum\ReportStatus;
 use App\Exports\PaymentReportExport;
-use App\Exports\ReturnReportExport;
 use App\Models\RenewTaxAgentRequest;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
@@ -25,55 +25,77 @@ use Maatwebsite\Excel\Facades\Excel;
 
 trait PaymentReportTrait
 {
+
     public function getRecords($parameters)
     {
-        if ($parameters['payment_category'] == 'consultant') {
-            $model = ZmBill::query()->whereIn('billable_type', [TaxAgent::class, RenewTaxAgentRequest::class]);
-            if ($parameters['status'] == 'paid') {
-                $data = clone $model->where('status', $parameters['status']);
-            } elseif ($parameters['status'] == 'pending') {
-                $data = clone $model->where('status', $parameters['status'])->get();
+        try {
+            if (isset($parameters['payment_category']) && $parameters['payment_category'] == 'consultant') {
+                $model = ZmBill::query()->whereIn('billable_type', [TaxAgent::class, RenewTaxAgentRequest::class]);
+                if ($parameters['status'] == ReportStatus::paid) {
+                    $data = clone $model->where('status', $parameters['status']);
+                } elseif ($parameters['status'] == ReportStatus::pending) {
+                    $data = clone $model->where('status', $parameters['status'])->get();
+                } else {
+                    $data = clone $model->whereIn('status', [ReportStatus::pending, ReportStatus::paid]);
+                }
             } else {
-                $data = clone $model->whereIn('status', ['pending', 'paid']);
+                if (isset($parameters['tax_type_id']) && $parameters['tax_type_id'] == ReportStatus::all) {
+                    $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id');
+                } else {
+                    $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
+                }
+                if (isset($parameters['status']) && $parameters['status'] == ReportStatus::paid) {
+                    $data = clone $model->where('payment_status', BillStatus::COMPLETE);
+                } elseif (isset($parameters['status']) && $parameters['status'] == ReportStatus::pending) {
+                    $data = clone $model->where('payment_status', BillStatus::CN_GENERATED);
+                } else {
+                    $data = clone $model->whereIn('payment_status', [BillStatus::CN_GENERATED, BillStatus::COMPLETE]);
+                }
             }
-        } else {
-            if ($parameters['tax_type_id'] == 'all') {
-                $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id');
-            } else {
-                $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
-            }
-            if ($parameters['status'] == 'paid') {
-                $data = clone $model->where('payment_status', BillStatus::COMPLETE);
-            } elseif ($parameters['status'] == 'pending') {
-                $data = clone $model->where('payment_status', BillStatus::CN_GENERATED);
-            } else {
-                $data = clone $model->whereIn('payment_status', [BillStatus::CN_GENERATED, BillStatus::COMPLETE]);
-            }
+            return $this->getSelectedRecords($data, $parameters);
+        } catch (\Exception $exception) {
+            throw $exception;
         }
-        return $this->getSelectedRecords($data, $parameters);
     }
 
+    /**
+     * Get selected records
+     * @throws \Exception
+     */
     public function getSelectedRecords($data, $parameters)
     {
-        $dates = $parameters['dates'];
-        if ($dates == []) {
-            if ($parameters['payment_category'] == 'returns') {
-                return $data->orderBy('tax_returns.created_at', 'asc');
-            } else {
-                return $data->orderBy('created_at', 'asc');
+        try {
+            if (!isset($parameters['dates'])) {
+                throw new \Exception('Missing dates key in parameters on PaymentReportTrait in getSelectedRecords()');
             }
-        }
-        if ($dates['startDate'] == null || $dates['endDate'] == null) {
-            if ($parameters['payment_category'] == 'returns') {
-                return $data->orderBy('tax_returns.created_at', 'asc');
-            } else {
-                return $data->orderBy('created_at', 'asc');
+
+            $dates = $parameters['dates'];
+            if ($dates == []) {
+                if ($parameters['payment_category'] == ReportStatus::returns) {
+                    return $data->orderBy('tax_returns.created_at', 'asc');
+                } else {
+                    return $data->orderBy('created_at', 'asc');
+                }
             }
-        }
-        if ($parameters['payment_category'] == 'returns') {
-            return $data->whereBetween('tax_returns.created_at', [$dates['startDate'], $dates['endDate']])->orderBy('tax_returns.created_at', 'asc');
-        } else {
-            return $data->whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->orderBy('created_at', 'asc');
+
+            if (!isset($parameters['startDate']) && !isset($parameters['endDate'])) {
+                throw new \Exception('Missing startDate and endDate keys in parameters on PaymentReportTrait in getSelectedRecords()');
+            }
+
+            if ($dates['startDate'] == null || $dates['endDate'] == null) {
+                if (isset($parameters['payment_category']) && $parameters['payment_category'] == ReportStatus::returns) {
+                    return $data->orderBy('tax_returns.created_at', 'asc');
+                } else {
+                    return $data->orderBy('created_at', 'asc');
+                }
+            }
+            if (isset($parameters['payment_category']) && $parameters['payment_category'] == ReportStatus::returns) {
+                return $data->whereBetween('tax_returns.created_at', [$dates['startDate'], $dates['endDate']])->orderBy('tax_returns.created_at', 'asc');
+            } else {
+                return $data->whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->orderBy('created_at', 'asc');
+            }
+        } catch (\Exception $exception) {
+            throw $exception;
         }
     }
 
@@ -85,7 +107,11 @@ trait PaymentReportTrait
             return;
         }
 
-        if ($parameters['year'] == 'all') {
+        if (!isset($parameters['status']) && !isset($parameters['payment_category'])) {
+            throw new \Exception('Missing status or payment_category key in parameters on PaymentReportTrait in getSelectedRecords()');
+        }
+
+        if (isset($parameters['year']) && $parameters['year'] == ReportStatus::all) {
             $fileName = $parameters['status'] . ' ' . $parameters['payment_category'] . '.xlsx';
             $title = $parameters['status'] . ' ' . $parameters['payment_category'];
         } else {
@@ -101,7 +127,6 @@ trait PaymentReportTrait
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
             $this->customAlert('error', 'No Records Found in the selected criteria');
-
             return;
         }
         $this->customAlert('success', 'Exporting Pdf File');
@@ -129,37 +154,45 @@ trait PaymentReportTrait
 
     public function getEgaChargesQuery($range_start, $range_end, $currency, $payment_status, $charges_type)
     {
-        $query = ZmEgaCharge::join('zm_bills', 'zm_ega_charges.zm_bill_id', 'zm_bills.id')->whereBetween('zm_ega_charges.created_at', [
-            Carbon::parse($range_start)->startOfDay()->toDateTimeString(),
-            Carbon::parse($range_end)->endOfDay()->toDateTimeString()
-        ]);
+        try {
+            $query = ZmEgaCharge::join('zm_bills', 'zm_ega_charges.zm_bill_id', 'zm_bills.id')->whereBetween('zm_ega_charges.created_at', [
+                Carbon::parse($range_start)->startOfDay()->toDateTimeString(),
+                Carbon::parse($range_end)->endOfDay()->toDateTimeString()
+            ]);
 
-        if ($currency != 'all') {
-            $query->where('zm_ega_charges.currency', $currency);
-        }
-
-        if ($payment_status != 'all') {
-            switch ($payment_status) {
-                case 'paid':
-                    $query->where('zm_bills.paid_amount', '>', 0);
-                    break;
-                case 'unpaid':
-                    $query->where('zm_bills.paid_amount', '<=', 0);
-                    break;
+            if ($currency != ReportStatus::all) {
+                $query->where('zm_ega_charges.currency', $currency);
             }
-        }
 
-        if ($charges_type != 'all') {
-            switch ($charges_type) {
-                case 'charges-included':
-                    $query->where('zm_ega_charges.ega_charges_included', true);
-                    break;
-                case 'charges-excluded':
-                    $query->where('zm_ega_charges.ega_charges_included', false);
-                    break;
+            if ($payment_status != ReportStatus::all) {
+                switch ($payment_status) {
+                    case ReportStatus::paid:
+                        $query->where('zm_bills.paid_amount', '>', 0);
+                        break;
+                    case ReportStatus::unpaid:
+                        $query->where('zm_bills.paid_amount', '<=', 0);
+                        break;
+                    default:
+                }
             }
+
+            if ($charges_type != ReportStatus::all) {
+                switch ($charges_type) {
+                    case ReportStatus::CHARGES_INCLUDED:
+                        $query->where('zm_ega_charges.ega_charges_included', true);
+                        break;
+                    case ReportStatus::CHARGES_EXCLUDED:
+                        $query->where('zm_ega_charges.ega_charges_included', false);
+                        break;
+                    default:
+                }
+            }
+
+            return $query;
+        } catch (\Exception $exception) {
+            throw $exception;
         }
 
-        return $query;
     }
+
 }

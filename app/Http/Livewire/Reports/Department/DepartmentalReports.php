@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Reports\Department;
 
+use App\Enum\CustomMessage;
+use App\Enum\ReportStatus;
 use App\Exports\Departmental\DepartmentalReportExport;
 use App\Models\Business;
 use App\Models\Region;
@@ -11,7 +13,6 @@ use App\Models\TaxType;
 use App\Models\ZmBill;
 use App\Traits\CustomAlert;
 use App\Traits\DailyPaymentTrait;
-use App\Traits\ManagerialReportTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,7 @@ use PDF;
 
 class DepartmentalReports extends Component
 {
-    use CustomAlert, DailyPaymentTrait, ManagerialReportTrait;
+    use CustomAlert, DailyPaymentTrait;
 
     public $today;
     public $range_start;
@@ -51,8 +52,8 @@ class DepartmentalReports extends Component
     public $report;
 
     protected $rules =[
-        'range_start'=>'required|strip_tag',
-        'range_end' => 'required|strip_tag',
+        'range_start'=>'required|date',
+        'range_end' => 'required|date',
     ];
 
     public function mount()
@@ -67,7 +68,7 @@ class DepartmentalReports extends Component
             'non-tax-revenue' => 'Non-Tax Revenue Department'
         ];
 
-        $this->optionTaxTypes = TaxType::where('category', 'main')->get();
+        $this->optionTaxTypes = TaxType::select('id', 'name', 'code')->where('category', 'main')->get();
         $this->nonRevenueTaxTypes = TaxType::query()
             ->select(['id', 'name'])
             ->where('category', 'other')
@@ -99,48 +100,53 @@ class DepartmentalReports extends Component
 
     public function updated($propertyName){
 
-        if ($propertyName == 'tax_type_id') {
-            if ($this->tax_type_id != 'all') {
-                $this->tax_type_code = TaxType::findOrFail($this->tax_type_id)->code;
+        try {
+            if ($propertyName == ReportStatus::TAX_TYPE_ID) {
+                if ($this->tax_type_id != ReportStatus::all) {
+                    $this->tax_type_code = TaxType::findOrFail($this->tax_type_id)->code;
 
-                if ($this->tax_type_code == TaxType::VAT) {
-                    $this->subVatOptions = SubVat::select('id', 'name')->get();
+                    if ($this->tax_type_code == TaxType::VAT) {
+                        $this->subVatOptions = SubVat::select('id', 'name')->get();
+                    }
+                }
+                $this->reset('vat_type');
+            }
+
+            if ($propertyName == ReportStatus::LOCATION){
+                $query = TaxRegion::query()->select('name', 'id');
+
+                if ($this->location != ReportStatus::all){
+                    $query->where('location', $this->location);
+                }
+
+                $this->taxRegions = $query->get()->pluck('name', 'id');
+
+                $this->selectedTaxReginIds = $this->taxRegions;
+
+                // LTD
+                if ($this->location == Region::UNGUJA && $this->department_type == ReportStatus::LARGE_TAX_PAYER){
+                    $this->filteringForLto = true;
+                } else {
+                    $this->filteringForLto = false;
                 }
             }
-            $this->reset('vat_type');
-        }
 
-        if ($propertyName == 'location'){
-            $query = TaxRegion::query()->select('name', 'id');
+            if ($propertyName == ReportStatus::DEPARTMENT_TYPE){
+                $this->selectedTaxReginIds = $this->taxRegions;
 
-            if ($this->location != 'all'){
-                $query->where('location', $this->location);
+                // LTD
+                if ($this->location == Region::UNGUJA && $this->department_type == ReportStatus::LARGE_TAX_PAYER){
+                    $this->filteringForLto = true;
+                } else {
+                    $this->filteringForLto = false;
+                }
             }
 
-            $this->taxRegions = $query->get()->pluck('name', 'id');
-
-            $this->selectedTaxReginIds = $this->taxRegions;
-
-            // LTD
-            if ($this->location == Region::UNGUJA && $this->department_type == 'large-taxpayer'){
-                $this->filteringForLto = true;
-            } else {
-                $this->filteringForLto = false;
-            }
+            $this->search();
+        } catch (Exception $exception) {
+            Log::error('REPORTS-DEPARTMENT-DEPARTMENTAL-REPORTS-UPDATED', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
-
-        if ($propertyName == 'department_type'){
-            $this->selectedTaxReginIds = $this->taxRegions;
-
-            // LTD
-            if ($this->location == Region::UNGUJA && $this->department_type == 'large-taxpayer'){
-                $this->filteringForLto = true;
-            } else {
-                $this->filteringForLto = false;
-            }
-        }
-
-        $this->search();
 
     }
 
@@ -163,21 +169,26 @@ class DepartmentalReports extends Component
             );
         }catch(Exception $e){
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
-            Log::error($e);
+            Log::error('REPORTS-DEPARTMENT-DEPARTMENTAL-REPORTS-DOWNLOAD-PDF', [$e]);
         }
     }
 
     public function exportExcel()
     {
-        $fileName = 'departmental_report_' . now()->format('d-m-Y') . '.xlsx';
-        $title = 'Managerial Departmental Report';
-        $this->customAlert('success', 'Exporting Excel File');
-        return Excel::download(new DepartmentalReportExport($this->report, $title, $this->nonRevenueTaxTypes, $this->domesticTaxTypes, [
-            'range_start' => $this->range_start,
-            'range_end' => $this->range_end,
-            'location' => $this->location,
-            'departmentType' => $this->department_type
-        ]), $fileName);
+        try {
+            $fileName = 'departmental_report_' . now()->format('d-m-Y') . '.xlsx';
+            $title = 'Managerial Departmental Report';
+            $this->customAlert('success', 'Exporting Excel File');
+            return Excel::download(new DepartmentalReportExport($this->report, $title, $this->nonRevenueTaxTypes, $this->domesticTaxTypes, [
+                'range_start' => $this->range_start,
+                'range_end' => $this->range_end,
+                'location' => $this->location,
+                'departmentType' => $this->department_type
+            ]), $fileName);
+        } catch (Exception $exception) {
+            Log::error('REPORTS-DEPARTMENT-DEPARTMENTAL-REPORTS-EXPORT-EXCEL', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
+        }
     }
 
     protected function getReport($currency = 'USD'){
@@ -258,18 +269,6 @@ class DepartmentalReports extends Component
         }
 
         return $report;
-    }
-    protected function getInvolvedTaxes($starts, $ends, $location, $regions, $department){
-        $this->start = Carbon::parse($starts)->startOfDay()->toDateTimeString();
-        $this->end = Carbon::parse($ends)->endOfDay()->toDateTimeString();
-
-        $query = TaxType::whereIn('id', function ($query) {
-            $query->select('zm_bills.tax_type_id')
-                ->from('zm_payments')
-                ->leftJoin('zm_bills', 'zm_payments.zm_bill_id', 'zm_bills.id')
-                ->whereBetween('zm_payments.trx_time', [$this->start, $this->end])
-                ->distinct();
-        })->query();
     }
 
     public function render()

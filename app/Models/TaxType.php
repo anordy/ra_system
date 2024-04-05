@@ -53,6 +53,7 @@ class TaxType extends Model implements Auditable
 
     public const PROPERTY_TAX = 'property-tax';
 
+
     protected $fillable = [
         'name', 'gfs_code', 'is_approved', 'is_updated'
     ];
