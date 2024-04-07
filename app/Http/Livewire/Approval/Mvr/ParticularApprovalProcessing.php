@@ -134,8 +134,8 @@ class ParticularApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('mvr_zartsa_review')) {
-                $this->subject->status = MvrRegistrationStatus::CORRECTION;
+            if ($this->checkTransition('application_rejected')) {
+                $this->subject->status = MvrRegistrationStatus::REJECTED;
                 $this->subject->save();
             }
 
@@ -143,10 +143,10 @@ class ParticularApprovalProcessing extends Component
 
             DB::commit();
 
-            if ($this->subject->status = MvrRegistrationStatus::CORRECTION) {
+            if ($this->subject->status = MvrRegistrationStatus::REJECTED) {
                 // Send correction email/sms
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} requires correction, please login to the system to perform data update."]));
+                Hello {$this->subject->taxpayer->fullname}, your motor vehicle particular change request for chassis number {$this->subject->chassis->chassis_number} has been rejected. Please re-submit new application."]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Mvr\Payment;
 
 use App\Enum\GeneralConstant;
+use App\Enum\MvrRegistrationStatus;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrOwnershipTransfer;
@@ -26,10 +27,15 @@ class FeePayment extends Component
     public function mount($motorVehicle){
         $this->motorVehicle = $motorVehicle;
 
+
         if(get_class($this->motorVehicle) == MvrRegistrationStatusChange::class) {
             $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
         } elseif (get_class($this->motorVehicle) == MvrRegistration::class) {
-            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
+            if ($this->motorVehicle->origin == MvrRegistrationStatus::STATUS_CHANGE) {
+                $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
+            } else {
+                $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
+            }
         } else {
             $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
         }
