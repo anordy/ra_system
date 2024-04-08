@@ -3,14 +3,17 @@
 namespace App\Traits;
 
 use App\Enum\BusinessReportType;
+use App\Enum\ReportStatus;
 use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Builder;
 
 trait RegistrationReportTrait
 {
+    /**
+     * @throws \Exception
+     */
     public function getBusinessBuilder($parameters): Builder
     {
-
         // Check if all required keys are present in the $parameters array
         if (!isset($parameters['criteria']) ||
             !isset($parameters['year']) ||
@@ -36,7 +39,7 @@ trait RegistrationReportTrait
                 $businessLocations->whereIn($columnName, $parameters['isic_id']);
                 break;
             case BusinessReportType::TAX_TYPE:
-                if($parameters['taxtype_id'] == 'all') {
+                if($parameters['taxtype_id'] == ReportStatus::all) {
                     $businessLocations = $businessLocations->join('business_tax_type', 'business_tax_type.business_id', 'businesses.id');
                 } else {
                     $businessLocations->join('business_tax_type', 'business_tax_type.business_id', 'businesses.id')->where('business_tax_type.tax_type_id', $parameters['taxtype_id']);
@@ -48,37 +51,35 @@ trait RegistrationReportTrait
                 break;
         }
 
-        //get period
-        if ($parameters['year'] != "all" && $parameters['year'] != "range") {
+        if ($parameters['year'] != ReportStatus::all && $parameters['year'] != ReportStatus::range) {
             $businessLocations->whereYear('business_locations.approved_on', '=', $parameters['year']);
-            if ($parameters['month'] != 'all') {
+            if ($parameters['month'] != ReportStatus::all) {
                 $businessLocations->whereMonth('business_locations.approved_on', '=', $parameters['month']);
             }
         }
-        if ($parameters['year'] == "range") {
+
+        if ($parameters['year'] == ReportStatus::range) {
             $businessLocations->whereBetween('business_locations.approved_on', [$parameters['range_start'], $parameters['range_end']]);
         }
-        //get tax regions
+
         $businessLocations->whereIn('business_locations.tax_region_id', $parameters['tax_regions']);
-        //get business category
         $businessLocations->whereIn('businesses.business_category_id', $parameters['category_ids']);
-        //get business activities
         $businessLocations->whereIn('businesses.business_activities_type_id', $parameters['activity_ids']);
-        //get business consultant type
+
         if (count($parameters['consultants']) < 2) {
-            if (array_key_exists("own", $parameters['consultants'])) {
+            if (array_key_exists(ReportStatus::own, $parameters['consultants'])) {
                 $businessLocations->where('businesses.is_own_consultant', true);
             }
-            if (array_key_exists("other", $parameters['consultants'])) {
+            if (array_key_exists(ReportStatus::other, $parameters['consultants'])) {
                 $businessLocations->where('businesses.is_own_consultant', false);
             }
         }
-        //get physical location
-        if ($parameters['region'] !== "all") {
+
+        if ($parameters['region'] !== ReportStatus::all) {
             $businessLocations->where('business_locations.region_id', $parameters['region']);
-            if ($parameters['district'] !== "all") {
+            if ($parameters['district'] !== ReportStatus::all) {
                 $businessLocations->where('business_locations.district_id', $parameters['district']);
-                if ($parameters['ward'] !== "all") {
+                if ($parameters['ward'] !== ReportStatus::all) {
                     $businessLocations->where('business_locations.ward_id', $parameters['ward']);
                 }
             }
@@ -89,13 +90,13 @@ trait RegistrationReportTrait
     public function getIsiicColumnName($level)
     {
         if ($level == 1) {
-            return 'isiic_i';
+            return ReportStatus::ISIIC_1;
         } elseif ($level == 2) {
-            return 'isiic_ii';
+            return ReportStatus::ISIIC_2;
         } elseif ($level == 3) {
-            return 'isiic_iii';
+            return ReportStatus::ISIIC_3;
         } elseif ($level == 4) {
-            return 'isiic_iv';
+            return ReportStatus::ISIIC_4;
         }
     }
 }

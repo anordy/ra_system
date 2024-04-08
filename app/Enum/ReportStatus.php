@@ -25,6 +25,20 @@ class ReportStatus implements Status
     const UNPAID = 'Unpaid';
 
     const all = 'all';
+    const range = 'range';
+    const own = 'own';
+    const other = 'other';
+
+    const ALL_BUSINESS = 'All-Business';
+    const ISIIC_1 = 'isiic_i';
+    const ISIIC_2 = 'isiic_ii';
+    const ISIIC_3 = 'isiic_iii';
+    const ISIIC_4 = 'isiic_iv';
+
+    const ISIIC1 = 1;
+    const ISIIC2 = 2;
+    const ISIIC3 = 3;
+    const ISIIC4 = 4;
     const MONTHS_DESC = [
         1 => "January",
         2 => "February",
@@ -40,8 +54,24 @@ class ReportStatus implements Status
         12 => "December"
     ];
 
+    const January = 1;
+    const February = 2;
+    const March = 3;
+    const April = 4;
+    const May = 5;
+    const June = 6;
+    const July = 7;
+    const August = 8;
+    const September = 9;
+    const October = 10;
+    const November = 11;
+    const December = 12;
     const PS_REG_REPORT = 'Registration-Type-Report';
     const PS_PAYMENT_REPORT = 'Payment-Report';
+    const DPI_150 = 150;
+
+    const LAST_12_MONTHS = 'Last-12-Months';
+    const NEXT_12_MONTHS = 'Next-12-Months';
 
     static function getConstants(): array
     {
