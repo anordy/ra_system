@@ -11,16 +11,15 @@
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
-            margin: -70px;
+            margin: -74px;
             color: blue;
             font-weight: bold;
-            font-size: 75px;
+            font-size: 70px;
         }
         #owner-name{
             position: fixed;
             top: 190px;
             left: -30px;
-            background: #f1e5d4;
             width: 1000px;
         }
 
@@ -28,75 +27,64 @@
             position: fixed;
             top: 380px;
             left: -30px;
-            background: #f1e5d4;
             width: 500px;
         }
         #reg-date{
             position: fixed;
             top: 380px;
             left: 650px;
-            background: #f1e5d4;
             width: 500px;
         }
         #plate{
             position: fixed;
             top: 380px;
             left: 1350px;
-            background: #f1e5d4;
             width: 500px;
         }
         #yom{
             position: fixed;
             top: 560px;
             left: -30px;
-            background: #f1e5d4;
             width: 300px;
         }
         #make{
             position: fixed;
             top: 560px;
             left: 310px;
-            background: #f1e5d4;
             width: 300px;
         }
         #model{
             position: fixed;
             top: 650px;
             left: 310px;
-            background: #f1e5d4;
             width: 300px;
         }
         #chassis{
             position: fixed;
             top: 740px;
             left: 310px;
-            background: #cecdc7;
             width: 900px;
         }
         #style{
             position: fixed;
             top: 830px;
             left: 310px;
-            background: #cecdc7;
         }
         #engine{
             position: fixed;
             top: 920px;
             left: 310px;
-            background: #cecdc7;
         }
         #color{
             position: fixed;
             top: 830px;
             left: 1350px;
-            background: #cecdc7;
             padding-right: 30px;
         }
         #capacity{
             position: fixed;
             top: 920px;
             left: 1350px;
-            background: #cecdc7;
             width: 300px;
         }
     </style>
@@ -128,7 +116,7 @@
     <div id="yom">{{strtoupper($motor_vehicle->chassis->year ?? '')}}</div>
     <div id="make">{{strtoupper($motor_vehicle->chassis->make)}}</div>
     <div id="model">{{strtoupper($motor_vehicle->chassis->model_type)}}</div>
-    <div id="chassis">{{strtoupper($motor_vehicle->chassis_number)}}</div>
+    <div id="chassis">{{strtoupper($motor_vehicle->chassis->chassis_number)}}</div>
     <div id="style">{{strtoupper($motor_vehicle->chassis->body_type)}}</div>
     <div id="engine">{{strtoupper($motor_vehicle->chassis->engine_number)}}</div>
     <div id="color">{{strtoupper($motor_vehicle->chassis->color)}}</div>
