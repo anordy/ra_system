@@ -31,7 +31,7 @@ class SecurityHeader
             $response->headers->set('Connection', 'off');
 
             if ($this->checkRoute($request->route() ? $request->route()->getName() : null)) {
-                $response->headers->set('Content-Security-Policy', "frame-ancestors 'self'; form-action 'self'; default-src 'self'; style-src fonts.googleapis.com 'self' 'nonce-custom_style'; script-src 'self' 'nonce-custom_script'; font-src 'self' fonts.gstatic.com; img-src 'self' data:");
+                $response->headers->set('Content-Security-Policy', "frame-ancestors 'self'; form-action 'self'; default-src 'self'; style-src fonts.googleapis.com 'self' 'nonce-custom_style'; script-src 'self' 'nonce-custom_script' 'unsafe-eval'; font-src 'self' fonts.gstatic.com; img-src 'self' data:");
             }
         }
 
