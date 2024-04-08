@@ -2,18 +2,22 @@
 
 namespace App\Http\Livewire\Reports\Claims;
 
+use App\Enum\CustomMessage;
+use App\Enum\ReportStatus;
+use App\Enum\TaxClaimStatus;
 use App\Exports\ClaimsReportExport;
-use App\Models\FinancialYear;
 use App\Models\Taxpayer;
 use App\Traits\ClaimReportTrait;
+use App\Traits\GenericReportTrait;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ClaimsReport extends Component
 {
-    use CustomAlert, ClaimReportTrait;
+    use CustomAlert, ClaimReportTrait, GenericReportTrait;
 
     public $optionYears;
     public $optionPeriods;
@@ -38,50 +42,48 @@ class ClaimsReport extends Component
     public $from;
     public $to;
     public $today;
+    public $startMonth;
+    public $endMonth;
 
     protected function rules()
     {
         return [
-            'status' => 'required|strip_tag',
-            'duration' => 'required|strip_tag',
-            'year' => $this->duration == 'yearly' ? 'required' : '',
-            'from' => $this->duration == 'date_range' ? 'required|date' : '',
-            'to' => $this->duration == 'date_range' ? 'required|date|after:from' : '',
-            'payment_status' => $this->status == 'approved' || $this->status == 'all' ? 'required' : '',
-            'payment_method'=> $this->status == 'approved' || $this->status == 'all' ? 'required' : '',
-            'period' => $this->year != 'all' && !empty($this->year) ? 'required' : '',
-            'month' => $this->period == 'Monthly' ? 'required' : '',
-            'quater' => $this->period == 'Quarterly' ? 'required' : '',
-            'semiAnnual' => $this->period == 'Semi-Annual' ? 'required' : '',
+            'status' => 'required|alpha_gen',
+            'duration' => 'required|alpha_gen',
+            'year' => $this->duration == ReportStatus::yearly ? 'required|alpha_gen' : 'nullable',
+            'from' => $this->duration == ReportStatus::date_range ? 'required|date' : 'nullable',
+            'to' => $this->duration == ReportStatus::date_range ? 'required|date|after:from' : 'nullable',
+            'payment_status' => $this->status == TaxClaimStatus::APPROVED || $this->status == ReportStatus::all ? 'required|alpha_gen' : 'nullable',
+            'payment_method'=> $this->status == TaxClaimStatus::APPROVED || $this->status == ReportStatus::all ? 'required|alpha_gen' : 'nullable',
+            'period' => $this->year != ReportStatus::all && !empty($this->year) ? 'required' : 'nullable',
+            'month' => $this->period == ReportStatus::MONTHLY ? 'required|alpha_gen' : 'nullable',
+            'quater' => $this->period == ReportStatus::QUARTERLY ? 'required|alpha_gen' : 'nullable',
+            'semiAnnual' => $this->period == ReportStatus::SEMI_ANNUAL ? 'required|alpha_gen' : 'nullable',
         ];
     }
 
     public function mount()
     {
         $this->today = date('Y-m-d');
-        $this->optionYears = FinancialYear::orderBy('code', 'DESC')->pluck('code');
-        $this->optionPeriods = ["Monthly", "Quarterly", "Semi-Annual", "Annual"];
-        $this->optionSemiAnnuals = ["1st-Semi-Annual", "2nd-Semi-Annual"];
-        $this->optionQuarters = ["1st-Quarter", "2nd-Quarter", "3rd-Quarter", "4th-Quarter"];
-        $this->optionMonths = [1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"];
+        $this->initializeOptions();
         $this->optionTaxPayers = Taxpayer::query()->select('id', 'first_name', 'middle_name', 'last_name')->orderBy('first_name')->get();
     }
 
     public function updated($propertyName)
     {
-        if ($propertyName == 'period') {
+        if ($propertyName == ReportStatus::Period) {
             $this->reset('month', 'quater', 'semiAnnual');
         }
-        if ($propertyName == 'year') {
+        if ($propertyName == ReportStatus::yearly) {
             $this->reset('month', 'quater', 'semiAnnual', 'period');
         }
 
-        if ($this->status == 'rejected' or $this->status == 'pending') {
+        if ($this->status == TaxClaimStatus::REJECTED or $this->status == TaxClaimStatus::PENDING) {
             $this->payment_status = '';
             $this->payment_method = '';
         }
 
-        if ($this->duration == 'yearly') {
+        if ($this->duration ==  ReportStatus::yearly) {
             $this->from = '';
             $this->to = '';
         } else {
@@ -95,13 +97,19 @@ class ClaimsReport extends Component
             abort(403);
         }
         $this->validate();
-        $parameters = $this->getParameters();
-        $records = $this->getRecords($parameters);
-        if ($records->count() < 1) {
-            $this->customAlert('error', 'No Records Found in the selected criteria');
-            return;
+        try {
+            $parameters = $this->getParameters();
+            $records = $this->getRecords($parameters);
+            if ($records->count() < 1) {
+                $this->customAlert('error', 'No Records Found in the selected criteria');
+                return;
+            }
+            return redirect()->route('reports.claims.preview', encrypt(json_encode($this->getParameters())));
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-CLAIMS-CLAIMS-REPORT-PREVIEW', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
-        return redirect()->route('reports.claims.preview', encrypt(json_encode($this->getParameters())));
+
     }
 
     public function exportPdf()
@@ -110,14 +118,20 @@ class ClaimsReport extends Component
             abort(403);
         }
         $this->validate();
-        $parameters = $this->getParameters();
-        $records = $this->getRecords($parameters);
-        if ($records->count() < 1) {
-            $this->customAlert('error', 'No Records Found in the selected criteria');
-            return;
+        try {
+            $parameters = $this->getParameters();
+            $records = $this->getRecords($parameters);
+            if ($records->count() < 1) {
+                $this->customAlert('error', 'No Records Found in the selected criteria');
+                return;
+            }
+            $this->customAlert('success', 'Exporting Pdf File');
+            return redirect()->route('reports.claim.download.pdf', encrypt(json_encode($parameters)));
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-CLAIMS-CLAIMS-REPORT-EXPORT-PDF', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
-        $this->customAlert('success', 'Exporting Pdf File');
-        return redirect()->route('reports.claim.download.pdf', encrypt(json_encode($parameters)));
+
     }
 
     public function exportExcel()
@@ -126,45 +140,57 @@ class ClaimsReport extends Component
             abort(403);
         }
         $this->validate();
-        $parameters = $this->getParameters();
-        $records = $this->getRecords($parameters);
-        if ($records->count() < 1) {
-            $this->customAlert('error', 'No Records Found in the selected criteria');
-            return;
-        }
 
-        if ($parameters['duration'] == 'yearly') {
-            if ($parameters['year'] == 'all') {
-                $fileName = 'claim_report.xlsx';
-                $title = 'All Claim reports';
+        try {
+            $parameters = $this->getParameters();
+            $records = $this->getRecords($parameters);
+            if ($records->count() < 1) {
+                $this->customAlert('error', 'No Records Found in the selected criteria');
+                return;
+            }
+
+            if (!array_key_exists('from', $parameters['dates']) && !array_key_exists('to', $parameters['dates'])) {
+                throw new \Exception('Missing from and to keys in parameters');
+            }
+
+            if (isset($parameters['duration']) && $parameters['duration'] == ReportStatus::yearly) {
+                if (isset($parameters['year']) && $parameters['year'] == ReportStatus::all) {
+                    $fileName = 'claim_report.xlsx';
+                    $title = 'All Claim reports';
+                } else {
+
+                    if (isset($parameters['status']) && $parameters['status'] != ReportStatus::all) {
+                        $fileName = $parameters['status'].'_claim_report.xlsx';
+                        $title = $parameters['status'] . ' claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
+                    } else {
+                        $fileName = 'claim_report.xlsx';
+                        $title = 'All claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
+                    }
+                }
             } else {
-                if ($parameters['status'] != 'all') {
+                if (isset($parameters['status']) && $parameters['status'] != ReportStatus::all) {
                     $fileName = $parameters['status'].'_claim_report.xlsx';
-                    $title = $parameters['status'] . ' claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
+                    $title = $parameters['status'] . ' claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
                 } else {
                     $fileName = 'claim_report.xlsx';
-                    $title = 'All claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
+                    $title = 'All Claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
                 }
             }
-        } else {
-            if ($parameters['status'] != 'all') {
-                $fileName = $parameters['status'].'_claim_report.xlsx';
-                $title = $parameters['status'] . ' claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
-            } else {
-                $fileName = 'claim_report.xlsx';
-                $title = 'All Claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
-            }
+
+            $this->customAlert('success', 'Exporting Excel File');
+            return Excel::download(new ClaimsReportExport($records, $title, $parameters), $fileName);
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-CLAIMS-CLAIMS-REPORT-EXPORT-EXCEL', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
 
-        $this->customAlert('success', 'Exporting Excel File');
-        return Excel::download(new ClaimsReportExport($records, $title, $parameters), $fileName);
     }
 
 
     public function getParameters()
     {
         return [
-            'tax_payer_id' => $this->taxpayer ?? 'all',
+            'tax_payer_id' => $this->taxpayer ?? ReportStatus::all,
             'status' => $this->status,
             'duration' => $this->duration,
             'payment_status' => $this->payment_status,
@@ -183,12 +209,12 @@ class ClaimsReport extends Component
 
     public function getStartEndDate()
     {
-        if ($this->year == "all") {
+        if ($this->year == ReportStatus::all) {
             return [
                 'startDate' => null,
                 'endDate' => null,
             ];
-        } elseif ($this->month) {
+        } elseif ($this->month >= 1 & $this->month <= 12) {
             $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
             $start = $date->startOfMonth()->format('Y-m-d H:i:s');
             $end = $date->endOfMonth()->format('Y-m-d H:i:s');
@@ -196,18 +222,18 @@ class ClaimsReport extends Component
             $to = $date->endOfMonth()->format('Y-m-d');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         } elseif ($this->quater) {
-            if ($this->quater == '1st-Quarter') {
-                $this->startMonth = 1;
-                $this->endMonth = 3;
-            } elseif ($this->quater == '2nd-Quarter') {
-                $this->startMonth = 4;
-                $this->endMonth = 6;
-            } elseif ($this->quater == '3rd-Quarter') {
-                $this->startMonth = 7;
-                $this->endMonth = 9;
-            } elseif ($this->quater == '4th-Quarter') {
-                $this->startMonth = 10;
-                $this->endMonth = 12;
+            if ($this->quater == ReportStatus::FIRST_QUARTER) {
+                $this->startMonth = ReportStatus::ONE;
+                $this->endMonth = ReportStatus::THREE;
+            } elseif ($this->quater == ReportStatus::SECOND_QUARTER) {
+                $this->startMonth = ReportStatus::FOUR;
+                $this->endMonth = ReportStatus::SIX;
+            } elseif ($this->quater == ReportStatus::THIRD_QUARTER) {
+                $this->startMonth = ReportStatus::SEVEN;
+                $this->endMonth = ReportStatus::NINE;
+            } elseif ($this->quater == ReportStatus::FOURTH_QUARTER) {
+                $this->startMonth = ReportStatus::TEN;
+                $this->endMonth = ReportStatus::TWELVE;
             }
 
             $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
@@ -218,12 +244,12 @@ class ClaimsReport extends Component
             $to = $endDate->format('Y-m-d');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         } elseif ($this->semiAnnual) {
-            if ($this->semiAnnual == '1st-Semi-Annual') {
-                $this->startMonth = 1;
-                $this->endMonth = 6;
-            } elseif ($this->semiAnnual == '2nd-Semi-Annual') {
-                $this->startMonth = 7;
-                $this->endMonth = 12;
+            if ($this->semiAnnual == ReportStatus::FIRST_SEMI_ANNUAL) {
+                $this->startMonth = ReportStatus::ONE;
+                $this->endMonth = ReportStatus::SIX;
+            } elseif ($this->semiAnnual == ReportStatus::SECOND_SEMI_ANNUAL) {
+                $this->startMonth = ReportStatus::SEVEN;
+                $this->endMonth = ReportStatus::TWELVE;
             }
             $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
             $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");

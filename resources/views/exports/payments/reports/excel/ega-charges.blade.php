@@ -48,29 +48,29 @@
                     {{ $index + 1 }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->bill->control_number ?? '-' }}
+                    {{ $record->control_number ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->currency ?? '-' }}
+                    {{ $record->charge_currency ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ number_format($record->amount,2) ?? '-' }}
+                    {{ number_format($record->charge,2) ?? '-' }}
                 </td>
     
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->bill->status ?? '-' }}
+                    {{ $record->status ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->bill->description ?? '-' }}
+                    {{ $record->description ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->bill->payer_name ?? '-' }}
+                    {{ $record->payer_name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->bill->payer_email ?? '-' }}
+                    {{ $record->payer_email ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->bill->payer_phone_number ?? '-' }}
+                    {{ $record->payer_phone_number ?? '-' }}
                 </td>
             </tr>
         @endforeach

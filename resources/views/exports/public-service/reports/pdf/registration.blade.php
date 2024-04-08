@@ -54,15 +54,39 @@
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
+
+        .border {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .font-size-8 {
+            font-size: 8pt;
+        }
+
+        .top-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .border-width-10 {
+           border-collapse:collapse;
+            border: 1px solid black;
+            width: 10px;
+        }
     </style>
 </head>
 
-<body style="font-size: 8pt">
+<body class="font-size-8">
 
-<table style="border-collapse:collapse; width:100%">
+<table class="top-table">
     <thead>
     <tr>
-        <th style="text-align:center;" colspan="15">
+        <th class="text-center" colspan="15">
             <strong>ZANZIBAR Revenue Authority</strong><br>
             <strong>Report of {{ $parameters['reg_type']  }} Public Service Registration </strong><br>
             @if($parameters['range_start'] && $parameters['range_end'])
@@ -79,31 +103,31 @@
     <table class="table">
         <thead class="tableHead">
         <tr>
-            <th style="text-align:center; border-collapse:collapse;border: 1px solid black;width: 10px">
+            <th class="text-center border-width-10">
                 <strong>S/N</strong>
             </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <th class="text-center border">
                 <strong>Business</strong>
             </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <th class="text-center border">
                 <strong>Plate Number</strong>
             </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <th class="text-center border">
                 <strong>Payment Months</strong>
             </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <th class="text-center border">
                 <strong>Registration Type</strong>
             </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <th class="text-center border">
                 <strong>Vehicle Class</strong>
             </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <th class="text-center border">
                 <strong>Registered On</strong>
             </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <th class="text-center border">
                 <strong>Public Service Status</strong>
             </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <th class="text-center border">
                 <strong>MVR Status</strong>
             </th>
         </tr>
@@ -111,31 +135,31 @@
         <tbody>
         @foreach($records as $i => $record)
             <tr>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;width: 10px">
+                <td class="text-center border-width-10">
                     {{ $i + 1 }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->name ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->plate_number ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->payment_months ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->registration_type ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->class_name ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ date('M, d Y', strtotime($record->approved_on)) }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->public_service_status ? strtoupper($record->public_service_status) : '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->mvr_status ?? '-' }}
                 </td>
             </tr>

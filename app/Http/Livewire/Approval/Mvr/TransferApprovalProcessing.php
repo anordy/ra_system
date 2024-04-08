@@ -117,8 +117,8 @@ class TransferApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('application_filled_incorrect')) {
-                $this->subject->status = MvrRegistrationStatus::CORRECTION;
+            if ($this->checkTransition('application_rejected')) {
+                $this->subject->status = MvrRegistrationStatus::REJECTED;
                 $this->subject->save();
             }
 
@@ -126,10 +126,10 @@ class TransferApprovalProcessing extends Component
 
             DB::commit();
 
-            if ($this->subject->status = MvrRegistrationStatus::CORRECTION) {
+            if ($this->subject->status = MvrRegistrationStatus::REJECTED) {
                 // Send correction email/sms
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->previous_owner->mobile, 'message' => "
-                Hello {$this->subject->previous_owner->fullname}, your transfer ownership request for chassis number {$this->subject->motor_vehicle->chassis->chassis_number} requires correction, please login to the system to perform data update."]));
+                Hello {$this->subject->previous_owner->fullname}, your transfer ownership request for chassis number {$this->subject->motor_vehicle->chassis->chassis_number} has been rejected. Please create a new application and submit your information again."]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
