@@ -73,6 +73,10 @@ class TaxType extends Model implements Auditable
     }
 
     public function getTotalPaymentsPerCurrency($currency, $range_start, $range_end){
-        return $this->getTotalCollectionPerTaxTypeAndCurrency($this->id,$currency, $range_start, $range_end);
+        if ($range_start && $range_end && $currency) {
+            return $this->getTotalCollectionPerTaxTypeAndCurrency($this->id,$currency, $range_start, $range_end);
+        } else {
+            return null;
+        }
     }
 }

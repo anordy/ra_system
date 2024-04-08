@@ -78,7 +78,7 @@ trait PaymentReportTrait
                 }
             }
 
-            if (!isset($parameters['startDate']) && !isset($parameters['endDate'])) {
+            if (!array_key_exists('startDate', $dates) && !array_key_exists('endDate', $dates)) {
                 throw new \Exception('Missing startDate and endDate keys in parameters on PaymentReportTrait in getSelectedRecords()');
             }
 
@@ -155,10 +155,14 @@ trait PaymentReportTrait
     public function getEgaChargesQuery($range_start, $range_end, $currency, $payment_status, $charges_type)
     {
         try {
-            $query = ZmEgaCharge::join('zm_bills', 'zm_ega_charges.zm_bill_id', 'zm_bills.id')->whereBetween('zm_ega_charges.created_at', [
-                Carbon::parse($range_start)->startOfDay()->toDateTimeString(),
-                Carbon::parse($range_end)->endOfDay()->toDateTimeString()
-            ]);
+            $query = ZmEgaCharge::select('zm_bills.id as billId', 'zm_bills.control_number', 'zm_bills.payer_name', 'zm_bills.payer_phone_number', 'zm_bills.payer_email', 'zm_bills.description', 'zm_bills.status', 'zm_ega_charges.amount as charge', 'zm_ega_charges.currency as charge_currency')
+                ->join('zm_bills', 'zm_ega_charges.zm_bill_id', 'zm_bills.id')
+                ->whereBetween('zm_ega_charges.created_at', [
+                        Carbon::parse($range_start)->startOfDay()->toDateTimeString(),
+                        Carbon::parse($range_end)->endOfDay()->toDateTimeString()
+                    ]
+                );
+
 
             if ($currency != ReportStatus::all) {
                 $query->where('zm_ega_charges.currency', $currency);

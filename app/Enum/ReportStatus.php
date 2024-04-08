@@ -11,6 +11,7 @@ class ReportStatus implements Status
     const SEMI_ANNUAL = 'Semi-Annual';
     const MONTHLY = 'Monthly';
     const YEARLY = 'Yearly';
+    const yearly = 'yearly';
 
     const All = 'All';
     const FIRST_SEMI_ANNUAL = '1st-Semi-Annual';
@@ -83,6 +84,8 @@ class ReportStatus implements Status
     const CHARGES_INCLUDED = 'charges-included';
     const CHARGES_EXCLUDED = 'charges-excluded';
     const paid = 'paid';
+    const approved = 'approved';
+    const rejected = 'rejected';
     const pending = 'pending';
     const unpaid = 'unpaid';
     const FILING = 'Filing';
@@ -90,6 +93,8 @@ class ReportStatus implements Status
     const Vat = 'vat';
     const Year = 'year';
     const Period = 'period';
+    const both = 'both';
+    const date_range = 'date_range';
 
     const PAYMENT_VAT_TYPES = [
 

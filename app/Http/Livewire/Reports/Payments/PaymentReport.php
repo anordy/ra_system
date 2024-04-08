@@ -163,22 +163,29 @@ class PaymentReport extends Component
     public function preview()
     {
         $this->validate();
-        if (!$this->checkCheckboxes()) {
-            return;
-        };
-        $this->parameters = $this->getParameters();
-        $records = $this->getRecords($this->parameters)->limit(5)->get();
-        if ($records->count() < 1) {
-            $this->customAlert('error', 'No Records Found in the selected criteria');
-            return;
+
+        try {
+            if (!$this->checkCheckboxes()) {
+                return;
+            };
+            $this->parameters = $this->getParameters();
+            $records = $this->getRecords($this->parameters)->limit(5)->get();
+            if ($records->count() < 1) {
+                $this->customAlert('error', 'No Records Found in the selected criteria');
+                return;
+            }
+            if (isset($this->parameters['payment_category']) && $this->parameters['payment_category'] == 'returns') {
+                $this->previewData = $records;
+                $this->isReturn = true;
+            } else {
+                $this->previewData = $records;
+                $this->isConsultant = true;
+            }
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-PAYMENTS-PAYMENT-REPORT-PREVIEW', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
-        if ($this->parameters['payment_category'] == 'returns') {
-            $this->previewData = $records;
-            $this->isReturn = true;
-        } else {
-            $this->previewData = $records;
-            $this->isConsultant = true;
-        }
+
     }
 
     //export pdf report
@@ -247,7 +254,7 @@ class PaymentReport extends Component
                     'from' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
                     'end' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
                 ];
-            } elseif ($this->month) {
+            } elseif ($this->month >= 1 & $this->month <= 12) {
                 $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
                 $start = $date->startOfMonth()->format('Y-m-d H:i:s');
                 $end = $date->endOfMonth()->format('Y-m-d H:i:s');

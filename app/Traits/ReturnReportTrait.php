@@ -16,9 +16,9 @@ trait ReturnReportTrait
             }
 
             if ($parameters['tax_type_id'] == ReportStatus::all) {
-                $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id');
+                $model = TaxReturn::join('business_locations', 'tax_returns.location_id', 'business_locations.id');
             } elseif ($parameters['tax_type_code'] == ReportStatus::Vat) {
-                $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')
+                $model = TaxReturn::join('business_locations', 'tax_returns.location_id', 'business_locations.id')
                     ->leftJoin('vat_returns', 'vat_returns.id', 'tax_returns.return_id')
                     ->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
 
@@ -27,7 +27,7 @@ trait ReturnReportTrait
                 }
 
             } else {
-                $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
+                $model = TaxReturn::join('business_locations', 'tax_returns.location_id', 'business_locations.id')->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
             }
 
             if (!array_key_exists('type', $parameters)) {

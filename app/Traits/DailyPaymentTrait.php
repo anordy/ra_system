@@ -16,13 +16,16 @@ trait DailyPaymentTrait
     {
 
         try {
+            if (!$range_start && !$range_end) {
+                throw new \Exception('Missing or Invalid Parameters Passed');
+            }
             $this->start = Carbon::parse($range_start)->startOfDay()->toDateTimeString();
             $this->end = Carbon::parse($range_end)->endOfDay()->toDateTimeString();
 
             $taxTypes = TaxType::whereIn('id', function ($query) {
                 $query->select('zm_bills.tax_type_id')
                     ->from('zm_payments')
-                    ->leftJoin('zm_bills', 'zm_payments.zm_bill_id', 'zm_bills.id')
+                    ->join('zm_bills', 'zm_payments.zm_bill_id', 'zm_bills.id')
                     ->whereBetween('zm_payments.trx_time', [$this->start, $this->end])
                     ->distinct();
             })->get();
@@ -38,6 +41,9 @@ trait DailyPaymentTrait
     public function getTotalCollectionPerTaxTypeAndCurrency($taxTypeId, $currency, $range_start, $range_end)
     {
         try {
+            if (!$range_start && !$range_end && !$currency && !$taxTypeId) {
+                throw new \Exception('Missing or Invalid Parameters Passed');
+            }
             $start = Carbon::parse($range_start)->startOfDay()->toDateTimeString();
             $end = Carbon::parse($range_end)->endOfDay()->toDateTimeString();
 

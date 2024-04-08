@@ -73,10 +73,10 @@ class DebtReport extends Component
 
     public function updated($propertyName)
     {
-        if ($propertyName == 'period') {
+        if ($propertyName == ReportStatus::Period) {
             $this->reset('month', 'quater', 'semiAnnual');
         }
-        if ($propertyName == 'year') {
+        if ($propertyName == ReportStatus::Year) {
             $this->reset('month', 'quater', 'semiAnnual', 'period');
         }
     }
@@ -188,7 +188,7 @@ class DebtReport extends Component
                 'startDate' => null,
                 'endDate' => null,
             ];
-        } elseif ($this->month) {
+        } elseif ($this->month >= 1 && $this->month <= 12) {
             $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
             $start = $date->startOfMonth()->format('Y-m-d H:i:s');
             $end = $date->endOfMonth()->format('Y-m-d H:i:s');

@@ -40,7 +40,7 @@ trait DisputeReportTrait
                 return $model->orderBy("disputes.created_at", 'asc');
             }
 
-            if (!isset($parameters['startDate']) && !isset($parameters['endDate'])) {
+            if (!array_key_exists('startDate', $dates) && !array_key_exists('endDate', $dates)) {
                 throw new \Exception('Missing startDate and endDate keys in parameters on DisputeReportTrait in getSelectedRecords()');
             }
 

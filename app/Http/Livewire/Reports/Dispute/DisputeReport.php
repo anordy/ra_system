@@ -166,7 +166,7 @@ class DisputeReport extends Component
                 'startDate' => null,
                 'endDate' => null,
             ];
-        } elseif ($this->month) {
+        } elseif ($this->month >= 1 & $this->month <= 12) {
             $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
             $start = $date->startOfMonth()->format('Y-m-d H:i:s');
             $end = $date->endOfMonth()->format('Y-m-d H:i:s');
