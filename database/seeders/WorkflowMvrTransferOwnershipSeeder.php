@@ -75,11 +75,6 @@ class WorkflowMvrTransferOwnershipSeeder extends Seeder
                 'to' => 'application_rejected',
                 'condition' => '',
             ],
-            'application_corrected' => [
-                'from' => 'correct_application',
-                'to' => 'bpra_officer',
-                'condition' => '',
-            ],
             'bpra_officer_review' => [
                 'from' => 'bpra_officer',
                 'to' => 'zbs_officer',

@@ -24,7 +24,7 @@
                     <livewire:mvr.ownership-transfer-requests-table :status="null"/>
                 </div>
                 <div class="tab-pane p-2" id="printed" role="tabpanel" aria-labelledby="printed-tab">
-                    <livewire:mvr.ownership-transfer-requests-table :status="App\Models\MvrRequestStatus::STATUS_RC_PENDING_APPROVAL"/>
+                    <livewire:mvr.ownership-transfer-requests-table :status="App\Models\MvrRequestStatus::STATUS_RC_INITIATED"/>
                 </div>
             </div>
 

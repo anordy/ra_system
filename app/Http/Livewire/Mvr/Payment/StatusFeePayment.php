@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Mvr\Payment;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrRegistration;
+use App\Models\MvrRegistrationParticularChange;
 use App\Models\MvrRegistrationStatusChange;
 use App\Services\ZanMalipo\GepgResponse;
 use Exception;
@@ -27,6 +28,8 @@ class StatusFeePayment extends Component
             $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
         } elseif (get_class($this->motorVehicle) == MvrRegistration::class) {
             $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
+        } else if (get_class($this->motorVehicle) == MvrRegistrationParticularChange::class) {
+            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
         } else {
             $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
         }
