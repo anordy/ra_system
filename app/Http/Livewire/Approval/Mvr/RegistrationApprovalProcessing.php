@@ -187,13 +187,7 @@ class RegistrationApprovalProcessing extends Component
     public function generateControlNumber()
     {
         try {
-            //Generate control number
             $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
-
-            DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
 
             $fee = MvrFee::query()->where([
                 'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
@@ -203,14 +197,20 @@ class RegistrationApprovalProcessing extends Component
 
             if (empty($fee)) {
                 $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                DB::rollBack();
-                Log::error($fee);
                 return;
             }
 
+            DB::beginTransaction();
+
+            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+            $this->subject->payment_status = BillStatus::CN_GENERATING;
+            $this->subject->save();
+
+            //Generate control number
             $this->generateMvrControlNumber($this->subject, $fee);
 
             DB::commit();
+
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $exception) {
             DB::rollBack();

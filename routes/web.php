@@ -161,6 +161,7 @@ Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
     Route::get('/taxagents-certificate/{id}', [QRCodeCheckController::class, 'taxAgentsCertificate'])->name('taxagents.certificate');
     Route::get('/invoice/{id}', [QRCodeCheckController::class, 'invoice'])->name('invoice');
     Route::get('/transfer/{billId}', [QRCodeCheckController::class, 'transfer'])->name('transfer');
+    Route::get('/mvr/de-registration/{id}', [QRCodeCheckController::class, 'mvrDeregistrationCertificate'])->name('mvr.de-registration');
 });
 
 Route::middleware('auth')->group(function () {
@@ -698,36 +699,17 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/registration/particular/show/{id}', [\App\Http\Controllers\MVR\RegistrationParticularChangeController::class, 'show'])->name('registration.particular.show');
         Route::get('/registration/particular/correct/{id}', [\App\Http\Controllers\MVR\RegistrationParticularChangeController::class, 'update'])->name('registration.particular.update');
 
-        // TODO: Remove unused routes
-        Route::get('/certificate-of-registration/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('certificate-of-registration');
         Route::get('/plate-numbers', [MotorVehicleRegistrationController::class, 'plateNumbers'])->name('plate-numbers');
         Route::get('/change-status', [MotorVehicleRegistrationController::class, 'index'])->name('change-status');
         Route::get('/view/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('show');
         Route::get('/certificate-of-worth/{id}', [MotorVehicleRegistrationController::class, 'printCertificateOfWorth'])->name('certificate-of-worth');
-        Route::get('/de-registration-certificate/{id}', [MotorVehicleRegistrationController::class, 'deRegistrationCertificate'])->name('de-registration-certificate');
-        Route::get('/submit-inspection/{id}', [MotorVehicleRegistrationController::class, 'submitInspection'])->name('submit-inspection');
         Route::get('/de-register-requests', [DeRegistrationController::class, 'index'])->name('de-register-requests');
-        Route::get('/de-register-requests/approve/{id}', [DeRegistrationController::class, 'approve'])->name('de-register-requests.approve');
-        Route::get('/de-register-requests/reject/{id}', [DeRegistrationController::class, 'reject'])->name('de-register-requests.reject');
-        Route::get('/de-register-requests/submit/{id}', [DeRegistrationController::class, 'zbsSubmit'])->name('de-register-requests.submit');
         Route::get('/de-register-requests/{id}', [DeRegistrationController::class, 'show'])->name('de-register-requests.show');
         Route::get('/reg-change-requests', [RegistrationChangeController::class, 'index'])->name('reg-change-requests');
-        Route::get('/reg-change-requests/approve/{id}', [RegistrationChangeController::class, 'approve'])->name('reg-change-requests.approve');
-        Route::get('/reg-change-requests/reject/{id}', [RegistrationChangeController::class, 'reject'])->name('reg-change-requests.reject');
         Route::get('/reg-change-requests/{id}', [RegistrationChangeController::class, 'show'])->name('reg-change-requests.show');
-        Route::get('/chassis-search/{chassis}', [TRAChassisSearchController::class, 'search'])->name('chassis-search');
         Route::get('/agent', [AgentsController::class, 'index'])->name('agent');
         Route::get('/agent/create', [AgentsController::class, 'create'])->name('agent.create');
-        Route::get('/reg-change-chassis-search/{type}/{number}', [RegistrationChangeController::class, 'search'])
-            ->name('internal-search')->where('type', 'plate-number|chassis');
-        Route::get('/de-registration-chassis-search/{type}/{number}', [DeRegistrationController::class, 'search'])
-            ->name('internal-search-dr')->where('type', 'plate-number|chassis');
-        Route::get('/ownership-transfer-chassis-search/{type}/{number}', [OwnershipTransferController::class, 'search'])
-            ->name('internal-search-ot')->where('type', 'plate-number|chassis');
         Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
-        Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove on production
-        Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove on production
-        Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']); //todo: remove on production
     });
 
     Route::prefix('drivers-license')->as('drivers-license.')->group(function () {

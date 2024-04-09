@@ -10,13 +10,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class DeregistrationsTable extends DataTableComponent
+class PendingDeregistrationsTable extends DataTableComponent
 {
 	use CustomAlert;
 
 	public function builder(): Builder
 	{
-        return MvrDeregistration::where('mvr_deregistrations.status', MvrDeRegistrationStatus::APPROVED)
+        return MvrDeregistration::where('mvr_deregistrations.status', MvrDeRegistrationStatus::PENDING)
             ->orderBy('mvr_deregistrations.created_at', 'desc');
     }
 

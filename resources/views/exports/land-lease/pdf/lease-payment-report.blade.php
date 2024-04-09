@@ -48,14 +48,32 @@
             width: 100%;
             border-collapse: collapse;
         }
+
+        .border {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .font-size-8 {
+            font-size: 8pt;
+        }
+
+        .top-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
     </style>
 </head>
 
-<body style="font-size: 8pt">
-    <table style="border-collapse:collapse; width:100%">
+<body class="font-size-8">
+    <table class="top-table">
         <thead>
             <tr>
-                <th style="text-align:center;" colspan="18" >
+                <th class="text-center" colspan="18" >
                     <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
                     <strong>Land Lease Payments Report</strong><br>
                     <strong>From {{ $startDate }} To {{ $endDate }} </strong>
@@ -66,46 +84,46 @@
     <table class="table">
         <thead class="tableHead">
             <tr>
-                <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>S/N</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>DP Number</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Name</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Payment Year</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Payment Month</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Applicant Category</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>ZRA No/ Zin No.</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Status</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Principal Amount (USD)</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>total Amount (USD)</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Total Penalties (USD)</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Outstanding Amount (USD)</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Ward</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Phone</strong>
                 </th>
             </tr>
@@ -113,36 +131,36 @@
         <tbody>
             @foreach ($leasePayments as $index => $leasePayment)
             <tr>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $index + 1 }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $leasePayment->landLease->dp_number ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     @if ($leasePayment->landLease->category == 'business')
                         {{ $leasePayment->landLease->businessLocation->business->name }} | {{ $leasePayment->landLease->businessLocation->name }}
                     @else
                         {{ $leasePayment->landLease->is_registered == 1 ? $leasePayment->landLease->taxpayer->first_name . ' ' . $leasePayment->landLease->taxpayer->last_name : $leasePayment->landLease->name }}
                     @endif
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $leasePayment->financialYear->code ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $leasePayment->landLease->payment_month ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ ucwords($leasePayment->landLease->category) }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     @if ($leasePayment->landLease->category == 'business')
                         {{ $leasePayment->landLease->businessLocation->zin }}
                     @else
                         {{ $leasePayment->landLease->taxpayer->reference_no }}
                     @endif
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     @if ($leasePayment->status === \App\Enum\LeaseStatus::IN_ADVANCE_PAYMENT)
                             Paid In Advance
                     @elseif ($leasePayment->status === \App\Enum\LeaseStatus::ON_TIME_PAYMENT)
@@ -163,22 +181,22 @@
                             Debt
                     @endif
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ round($leasePayment->total_amount, 2) ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ round($leasePayment->total_amount_with_penalties, 2) ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ round($leasePayment->penalty, 2) ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ round($leasePayment->outstanding_amount, 2) ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $leasePayment->landLease->ward->name ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     @if ($leasePayment->landLease->category == 'business')
                         {{ $leasePayment->landLease->businessLocation->business->mobile }}
                     @else

@@ -48,15 +48,34 @@
             border-collapse: collapse;
             background: transparent;
         }
+
+        .border {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+
+        .font-size-8 {
+            font-size: 8pt;
+        }
+
+        .top-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
     </style>
 </head>
 
-<body style="font-size: 8pt">
+<body class="font-size-8">
 
-<table style="border-collapse:collapse; width:100%">
+<table class="top-table">
     <thead>
     <tr>
-        <th style="text-align:center;" colspan="15">
+        <th class="text-center" colspan="15">
             <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
             <strong>{{ $title }}</strong><br>
         </th>
@@ -67,49 +86,49 @@
 <table class="table">
     <thead class="tableHead">
     <tr>
-        <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>S/N</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Tax Payer</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Business</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Location</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Tax Type</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Currency</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Amount</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Financial Month</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Financial Year</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Created At</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Claim Status</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Approved On</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Payment Method</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Installments Count</strong>
         </th>
-        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+        <th class="text-center border">
             <strong>Payment Status</strong>
         </th>
     </tr>
@@ -117,49 +136,49 @@
     <tbody>
     @foreach ($records as $index => $record)
         <tr>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $index + 1 }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->business->taxpayer->first_name.' '.$record->business->taxpayer->middle_name.' '.$record->business->taxpayer->last_name ?? '-' }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->business->name ?? '-' }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->location->name ?? '-' }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->taxType->name ?? '-' }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->currency ?? '-' }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->amount===null?'-':number_format($record->amount, 2) }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->financialMonth->name ?? '-'}}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->financialMonth->year->code ?? '-'}}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->created_at ?? '-' }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->status ?? '-' }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->approved_on ?? '-' }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->payment_method ?? '-' }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->installments_count ?? '-' }}
             </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <td class="text-center border">
                 {{ $record->payment_status ?? '-' }}
             </td>
 

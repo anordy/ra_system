@@ -82,7 +82,7 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make('Action', 'id')
             ->format(function ($value){
                 $model = preg_replace('/\\\\/','\\\\\\',$this->model);
-                return view('mvr.generic-settings.actions', compact('model'));
+                return view('mvr.generic-settings.actions', compact('model', 'value'));
             })]);
     }
 

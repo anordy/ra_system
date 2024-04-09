@@ -10,10 +10,12 @@ use App\Events\SendSms;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserApprovalLevel;
 use App\Notifications\DatabaseNotification;
 use App\Traits\DualControlActivityTrait;
 use App\Traits\VerificationTrait;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -116,16 +118,19 @@ class UserAddModal extends Component
                 'override_otp' => $this->override_otp
             ]);
 
-            // Sign user
-            $this->sign($user);
+            UserApprovalLevel::create([
+               'role_id' => $this->role,
+               'user_id' => $user->id,
+               'approval_level_id' => $this->level_id,
+               'created_by' => Auth::user()->id
+            ]);
+
 
             $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding new user '.$this->fname.' '.$this->lname.'');
 
             $admins = User::whereHas('role', function ($query) {
                 $query->where('name', 'Administrator');
             })->get();
-
-            // TODO: Create approval level id
 
             foreach ($admins as $admin) {
                 $admin->notify(new DatabaseNotification(
@@ -136,6 +141,9 @@ class UserAddModal extends Component
             }
 
             DB::commit();
+
+            // Sign user
+            $this->sign($user);
 
             event(new SendSms('user_add', $user->id));
             event(new SendMail('user_add', $user->id));

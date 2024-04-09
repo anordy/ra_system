@@ -2,20 +2,25 @@
 
 namespace App\Http\Livewire\Reports\Debts;
 
+use App\Enum\CustomMessage;
+use App\Enum\ReportStatus;
 use App\Exports\Debts\AssessmentDebtReportExport;
 use App\Exports\Debts\DebtReturnReportExport;
 use App\Exports\Debts\DebtWaiverReportExport;
 use App\Exports\Debts\DemandNoticeReportExport;
 use App\Exports\Debts\InstallmentReportExport;
 use App\Models\FinancialYear;
-use App\Traits\DebtReportTrait;
 use App\Traits\CustomAlert;
+use App\Traits\DebtReportTrait;
+use App\Traits\GenericReportTrait;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DebtReport extends Component
 {
-    use CustomAlert, DebtReportTrait;
+    use CustomAlert, DebtReportTrait, GenericReportTrait;
 
     public $optionYears;
     public $optionPeriods;
@@ -45,15 +50,15 @@ class DebtReport extends Component
     protected function rules()
     {
         return [
-            'report_type' => 'required',
-            'filter_type' => 'required',
-            'year' => 'nullable',
-            'period' => $this->year != 'all' ? 'required_if:filter_type,yearly' : '',
-            'month' => $this->period == 'Monthly' ? 'required' : '',
-            'quater' => $this->period == 'Quarterly' ? 'required' : '',
-            'semiAnnual' => $this->period == 'Semi-Annual' ? 'required' : '',
-            'range_start' => 'required',
-            'range_end' => 'required',
+            'report_type' => 'required|alpha_gen',
+            'filter_type' => 'required|alpha_gen',
+            'year' => 'nullable|alpha_gen',
+            'period' => $this->year != ReportStatus::all ? 'required_if:filter_type,yearly|alpha_gen' : 'nullable',
+            'month' => $this->period == ReportStatus::MONTHLY ? ['required', 'digits_between:1,12'] : 'nullable',
+            'quater' => $this->period == ReportStatus::QUARTERLY ? ['required', Rule::in([ReportStatus::FIRST_QUARTER, ReportStatus::SECOND_QUARTER, ReportStatus::THIRD_QUARTER, ReportStatus::FOURTH_QUARTER])] : '',
+            'semiAnnual' => $this->period == ReportStatus::SEMI_ANNUAL ? 'required|alpha_gen' : 'nullable',
+            'range_start' => 'required|date',
+            'range_end' => 'required|date',
         ];
     }
 
@@ -62,20 +67,16 @@ class DebtReport extends Component
         $this->today = date('Y-m-d');
         $this->range_start = $this->today;
         $this->range_end = $this->today;
-        $this->optionYears = FinancialYear::pluck('code');
-        $this->optionReportTypes = ["Returns", "Assessments", "Waiver", "Installment", "Demand-Notice"];
-        $this->optionPeriods = ["Monthly", "Quarterly", "Semi-Annual", "Annual"];
-        $this->optionSemiAnnuals = ["1st-Semi-Annual", "2nd-Semi-Annual"];
-        $this->optionQuarters = ["1st-Quarter", "2nd-Quarter", "3rd-Quarter", "4th-Quarter"];
-        $this->optionMonths = [1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"];
+        $this->initializeOptions();
+        $this->optionReportTypes = [ReportStatus::RETURNS, ReportStatus::ASSESSMENTS, ReportStatus::WAIVER, ReportStatus::INSTALLMENT, ReportStatus::DEMAND_NOTICE];
     }
 
     public function updated($propertyName)
     {
-        if ($propertyName == 'period') {
+        if ($propertyName == ReportStatus::Period) {
             $this->reset('month', 'quater', 'semiAnnual');
         }
-        if ($propertyName == 'year') {
+        if ($propertyName == ReportStatus::Year) {
             $this->reset('month', 'quater', 'semiAnnual', 'period');
         }
     }
@@ -83,64 +84,86 @@ class DebtReport extends Component
     public function exportExcel()
     {
         $this->validate();
-        $parameters = $this->getParameters();
-        $records = $this->getRecords($parameters);
-        if ($records->count() < 1) {
-            $this->customAlert('error', 'No Records Found in the selected criteria');
-            return;
-        }
+        try {
+            $parameters = $this->getParameters();
+            $records = $this->getRecords($parameters);
+            if ($records->count() < 1) {
+                $this->customAlert('error', 'No Records Found in the selected criteria');
+                return;
+            }
 
-        if ($parameters['report_type'] == 'all') {
-            $report_type = 'All';
-        } else {
-            $report_type = $this->report_type;
-        }
+            if (array_key_exists('report_type', $parameters) && $parameters['report_type'] == ReportStatus::all) {
+                $report_type = ReportStatus::All;
+            } else {
+                $report_type = $this->report_type;
+            }
 
-        if ($parameters['year'] == 'all') {
-            $fileName = "{$report_type}.xlsx";
-            $title = "Debt Report for {$report_type}";
-        } else {
-            $fileName = "{$report_type}-{$parameters['year']}.xlsx";
-            $title = "Debt Report for {$report_type}-{$parameters['year']}";
-        }
-        $this->customAlert('success', 'Exporting Excel File');
+            if (array_key_exists('year', $parameters) && $parameters['year'] == ReportStatus::all) {
+                $fileName = "{$report_type}.xlsx";
+                $title = "Debt Report for {$report_type}";
+            } else {
+                $fileName = "{$report_type}-{$parameters['year']}.xlsx";
+                $title = "Debt Report for {$report_type}-{$parameters['year']}";
+            }
+            $this->customAlert('success', 'Exporting Excel File');
 
-        if ($parameters['report_type'] == 'Assessments') {
-            return Excel::download(new AssessmentDebtReportExport($records, $title, $parameters), $fileName);
-        } else if ($parameters['report_type'] == 'Returns') {
-            return Excel::download(new DebtReturnReportExport($records, $title, $parameters), $fileName);
-        } else if ($parameters['report_type'] == 'Waiver') {
-            return Excel::download(new DebtWaiverReportExport($records, $title, $parameters), $fileName);
-        }else if ($parameters['report_type'] == 'Demand-Notice') {
-            return Excel::download(new DemandNoticeReportExport($records, $title, $parameters), $fileName);
-        }else if ($parameters['report_type'] == 'Installment') {
-            return Excel::download(new InstallmentReportExport($records, $title, $parameters), $fileName);
+            if (!array_key_exists('report_type', $parameters)) {
+                $this->customAlert('error', 'Missing Report Type Definition');
+                return;
+            }
+
+            if ($parameters['report_type'] == ReportStatus::ASSESSMENTS) {
+                return Excel::download(new AssessmentDebtReportExport($records, $title, $parameters), $fileName);
+            } else if ($parameters['report_type'] == ReportStatus::RETURNS) {
+                return Excel::download(new DebtReturnReportExport($records, $title, $parameters), $fileName);
+            } else if ($parameters['report_type'] == ReportStatus::WAIVER) {
+                return Excel::download(new DebtWaiverReportExport($records, $title, $parameters), $fileName);
+            } else if ($parameters['report_type'] == ReportStatus::DEMAND_NOTICE) {
+                return Excel::download(new DemandNoticeReportExport($records, $title, $parameters), $fileName);
+            } else if ($parameters['report_type'] == ReportStatus::INSTALLMENT) {
+                return Excel::download(new InstallmentReportExport($records, $title, $parameters), $fileName);
+            }
+
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-DEBTS-DEBT-REPORT-EXPORT-EXCEL', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
     }
 
     public function exportPdf()
     {
         $this->validate();
-        $parameters = $this->getParameters();
-        $records = $this->getRecords($parameters);
-        if ($records->count() < 1) {
-            $this->customAlert('error', 'No Records Found in the selected criteria');
-            return;
+        try {
+            $parameters = $this->getParameters();
+            $records = $this->getRecords($parameters);
+            if ($records->count() < 1) {
+                $this->customAlert('error', 'No Records Found in the selected criteria');
+                return;
+            }
+            $this->customAlert('success', 'Exporting Pdf File');
+            return redirect()->route('reports.debts.download.pdf', encrypt(json_encode($parameters)));
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-DEBTS-DEBT-REPORT-EXPORT-PDF', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
-        $this->customAlert('success', 'Exporting Pdf File');
-        return redirect()->route('reports.debts.download.pdf', encrypt(json_encode($parameters)));
     }
 
     public function preview()
     {
         $this->validate();
-        $parameters = $this->getParameters();
-        $records = $this->getRecords($parameters)->get();
-        if ($records->count() < 1) {
-            $this->customAlert('error', 'No Records Found in the selected criteria');
-            return;
+
+        try {
+            $parameters = $this->getParameters();
+            $records = $this->getRecords($parameters)->get();
+            if ($records->count() < 1) {
+                $this->customAlert('error', 'No Records Found in the selected criteria');
+                return;
+            }
+            return redirect()->route('reports.debts.preview', encrypt(json_encode($this->getParameters())));
+        } catch (\Exception $exception) {
+            Log::error('REPORTS-DEBTS-DEBT-REPORT-PREVIEW', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
-        return redirect()->route('reports.debts.preview', encrypt(json_encode($this->getParameters())));
     }
 
     public function getParameters()
@@ -154,18 +177,18 @@ class DebtReport extends Component
             'semiAnnual' => $this->semiAnnual,
             'dates' => $this->getStartEndDate(),
             'range_start' => $this->range_start,
-            'range_end' =>  $this->range_end,
+            'range_end' => $this->range_end,
         ];
     }
 
     public function getStartEndDate()
     {
-        if ($this->year == "all") {
+        if ($this->year == ReportStatus::all) {
             return [
                 'startDate' => null,
                 'endDate' => null,
             ];
-        } elseif ($this->month) {
+        } elseif ($this->month >= 1 && $this->month <= 12) {
             $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
             $start = $date->startOfMonth()->format('Y-m-d H:i:s');
             $end = $date->endOfMonth()->format('Y-m-d H:i:s');
@@ -173,18 +196,18 @@ class DebtReport extends Component
             $to = $date->endOfMonth()->format('Y-m-d');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         } elseif ($this->quater) {
-            if ($this->quater == '1st-Quarter') {
-                $this->startMonth = 1;
-                $this->endMonth = 3;
-            } elseif ($this->quater == '2nd-Quarter') {
-                $this->startMonth = 4;
-                $this->endMonth = 6;
-            } elseif ($this->quater == '3rd-Quarter') {
-                $this->startMonth = 7;
-                $this->endMonth = 9;
-            } elseif ($this->quater == '4th-Quarter') {
-                $this->startMonth = 10;
-                $this->endMonth = 12;
+            if ($this->quater == ReportStatus::FIRST_QUARTER) {
+                $this->startMonth = ReportStatus::ONE;
+                $this->endMonth = ReportStatus::THREE;
+            } elseif ($this->quater == ReportStatus::SECOND_QUARTER) {
+                $this->startMonth = ReportStatus::FOUR;
+                $this->endMonth = ReportStatus::SIX;
+            } elseif ($this->quater == ReportStatus::THIRD_QUARTER) {
+                $this->startMonth = ReportStatus::SEVEN;
+                $this->endMonth = ReportStatus::NINE;
+            } elseif ($this->quater == ReportStatus::FOURTH_QUARTER) {
+                $this->startMonth = ReportStatus::TEN;
+                $this->endMonth = ReportStatus::TWELVE;
             }
 
             $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
@@ -195,12 +218,12 @@ class DebtReport extends Component
             $to = $endDate->format('Y-m-d');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         } elseif ($this->semiAnnual) {
-            if ($this->semiAnnual == '1st-Semi-Annual') {
-                $this->startMonth = 1;
-                $this->endMonth = 6;
-            } elseif ($this->semiAnnual == '2nd-Semi-Annual') {
-                $this->startMonth = 7;
-                $this->endMonth = 12;
+            if ($this->semiAnnual == ReportStatus::FIRST_SEMI_ANNUAL) {
+                $this->startMonth = ReportStatus::ONE;
+                $this->endMonth = ReportStatus::SIX;
+            } elseif ($this->semiAnnual == ReportStatus::SECOND_SEMI_ANNUAL) {
+                $this->startMonth = ReportStatus::SEVEN;
+                $this->endMonth = ReportStatus::TWELVE;
             }
             $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
             $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Reports\Business;
 
 use App\Enum\CustomMessage;
-use App\Enum\BusinessReportType;
+use App\Enum\ReportStatus;
 use App\Http\Controllers\Controller;
 use App\Traits\RegistrationReportTrait;
 use Illuminate\Support\Facades\Gate;
@@ -50,7 +50,7 @@ class BusinessRegReportController extends Controller
 
             $pdf = PDF::loadView('exports.business.pdf.business',compact('records', 'parameters'));
             $pdf->setPaper('a4', 'landscape');
-            $pdf->setOption(['dpi' => BusinessReportType::DPI, 'defaultFont' => 'sans-serif']);
+            $pdf->setOption(['dpi' => ReportStatus::DPI_150, 'defaultFont' => 'sans-serif']);
             return $pdf->download('Business.pdf');
         } catch (\Exception $exception){
             Log::error($exception);
@@ -80,7 +80,7 @@ class BusinessRegReportController extends Controller
 
             $pdf = PDF::loadView('exports.business.pdf.taxtype',compact('records','recordsData', 'parameters'));
             $pdf->setPaper('a4', 'landscape');
-            $pdf->setOption(['dpi' => BusinessReportType::DPI, 'defaultFont' => 'sans-serif']);
+            $pdf->setOption(['dpi' => ReportStatus::DPI_150, 'defaultFont' => 'sans-serif']);
             return $pdf->download('taxtype.pdf');
         } catch (\Exception $exception){
             Log::error($exception);
@@ -101,7 +101,7 @@ class BusinessRegReportController extends Controller
             $recordsData = $records->groupBy('taxpayer_id');
             $pdf = PDF::loadView('exports.business.pdf.taxpayer',compact('records','recordsData', 'parameters'));
             $pdf->setPaper('a4', 'landscape');
-            $pdf->setOption(['dpi' => BusinessReportType::DPI, 'defaultFont' => 'sans-serif']);
+            $pdf->setOption(['dpi' => ReportStatus::DPI_150, 'defaultFont' => 'sans-serif']);
             return $pdf->download('taxpayer.pdf');
         } catch (\Exception $exception){
             Log::error($exception);

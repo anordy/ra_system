@@ -161,7 +161,6 @@ class DriverLicenseApprovalProcessing extends Component
     public function generateControlNumber()
     {
         try {
-
             // Fetch the fee
             $fee = DlFee::query()->where('dl_license_duration_id', $this->subject->license_duration_id)
                 ->where('type', $this->subject->type)
@@ -171,15 +170,10 @@ class DriverLicenseApprovalProcessing extends Component
                 // Fee not configured, display error and return
                 $errorMessage = "Driver License fee for this application is not configured";
                 $this->customAlert('error', $errorMessage);
-                DB::rollBack();
                 return;
             } else {
-
                 // Generate control number
                 $this->generateDLicenseControlNumber($this->subject, $fee);
-
-                // Update application status and payment status
-                $this->subject->payment_status = BillStatus::CN_GENERATING;
 
             }
         } catch (Exception $e) {
