@@ -84,7 +84,6 @@ class FeePayment extends Component
         try {
             if (empty($this->fee)) {
                 $this->customAlert(GeneralConstant::ERROR, "Fee for the selected registration type is not configured");
-                DB::rollBack();
                 return;
             }
 

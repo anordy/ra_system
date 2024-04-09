@@ -184,11 +184,6 @@ class ParticularApprovalProcessing extends Component
         try {
             $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
 
-            DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-
             $fee = MvrFee::query()->where([
                 'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
                 'mvr_fee_type_id' => $feeType->id,
@@ -197,10 +192,14 @@ class ParticularApprovalProcessing extends Component
 
             if (empty($fee)) {
                 $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                DB::rollBack();
-                Log::error($fee);
                 return;
             }
+
+            DB::beginTransaction();
+
+            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+            $this->subject->payment_status = BillStatus::CN_GENERATING;
+            $this->subject->save();
 
             $this->generateMvrStatusChangeConntrolNumber($this->subject, $fee);
 

@@ -19,7 +19,7 @@ use Livewire\WithFileUploads;
 
 class TransferApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait,WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
 
     public $modelId;
     public $modelName;
@@ -29,10 +29,12 @@ class TransferApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId   = decrypt($modelId);
+        $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
     }
-    public function approve($transition) {
+
+    public function approve($transition)
+    {
         $transition = $transition['data']['transition'];
 
         $this->validate([
@@ -107,7 +109,8 @@ class TransferApprovalProcessing extends Component
 
     }
 
-    public function reject($transition) {
+    public function reject($transition)
+    {
         $transition = $transition['data']['transition'];
 
         $this->validate([
@@ -163,26 +166,27 @@ class TransferApprovalProcessing extends Component
         ]);
     }
 
-    public function generateControlNumber() {
+    public function generateControlNumber()
+    {
         try {
             $fee = MvrTransferFee::query()->where([
                 'mvr_transfer_category_id' => $this->subject->mvr_transfer_category_id,
             ])->first();
 
-            DB::beginTransaction();
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-
             if (empty($fee)) {
                 $this->customAlert('error', "Ownership Transfer fee is not configured");
-                DB::rollBack();
                 Log::error($fee);
                 return;
             }
+            DB::beginTransaction();
 
+            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+            $this->subject->payment_status = BillStatus::CN_GENERATING;
+            $this->subject->save();
             $this->generateMvrControlNumber($this->subject->motor_vehicle, $fee);
 
             DB::commit();
+
         } catch (Exception $exception) {
             DB::rollBack();
             Log::error('MVR-TRANSFER-APPROVAL-CN-GENERATION', [$exception]);
