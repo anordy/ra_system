@@ -284,19 +284,6 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif ($application->status === \App\Models\DlApplicationStatus::STATUS_COMPLETED)
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="modal-footer">
-                                        <a
-                                                href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}">
-                                            <button
-                                                    class="btn btn-primary">Renew License
-                                            </button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
                         @endif
                     </div>
                 @endif

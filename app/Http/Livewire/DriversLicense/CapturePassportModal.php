@@ -104,11 +104,21 @@ class CapturePassportModal extends Component
 
         if ($originalLicense) {
 
-            $newLicense = clone $originalLicense;
+            $newLicense = new DlDriversLicense();
+
+            $arr = $originalLicense->toArray();
+
+            unset($arr['id']);
+            unset($arr['created_at']);
+            unset($arr['updated_at']);
+
+            $newLicense->fill($arr);
+
             $newLicense->status = DlApplicationStatus::ACTIVE;
 
             if ($dla->type === DlApplicationStatus::RENEW) {
                 $newLicense->license_duration = $dla->license_duration;
+                $newLicense->license_number = DlDriversLicense::getNextLicenseNumber();
                 $newLicense->issued_date = date('Y-m-d');
                 $newLicense->expiry_date = date('Y-m-d', strtotime("+{$dla->license_duration} years"));
             }

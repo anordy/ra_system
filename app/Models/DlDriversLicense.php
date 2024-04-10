@@ -37,6 +37,7 @@ class DlDriversLicense extends Model implements Auditable
 
     const STATUS_DAMAGED_OR_LOST ='LOST/DAMAGED';
     const STATUS_EXPIRED ='EXPIRED';
+    const ACTIVE ='ACTIVE';
 
 	protected $table = 'dl_drivers_licenses';
 	protected $casts = [
