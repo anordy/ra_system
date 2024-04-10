@@ -84,7 +84,7 @@ class CapturePassportModal extends Component
     private function updateDriverPhoto(DlLicenseApplication $dla)
     {
         try {
-            $photoPath = $this->photo->storeAs('dl_passport', "dl-passport-{$this->application_id}-" . date('YmdHis') . '-' . random_int(10000, 99999) . '.' . $this->photo->extension());
+            $photoPath = $this->photo->store('dl_passport');
             $dla->drivers_license_owner->photo_path = $photoPath;
             $dla->drivers_license_owner->save();
         } catch (Exception $exception) {
@@ -132,7 +132,8 @@ class CapturePassportModal extends Component
                 'issued_date' => date('Y-m-d'),
                 'expiry_date' => date('Y-m-d', strtotime("+{$dla->license_duration} years")),
                 'license_restrictions' => $dla->license_restrictions ?? 'none',
-                'dl_license_application_id' => $dla->id
+                'dl_license_application_id' => $dla->id,
+                'dl_license_duration_id' => $dla->license_duration_id,
             ]);
         }
 

@@ -50,19 +50,7 @@ class DlDriversLicense extends Model implements Auditable
 		'expiry_date'
 	];
 
-	protected $fillable = [
-		'dl_drivers_license_owner_id',
-		'license_number',
-		'license_duration',
-		'taxpayer_id',
-		'dl_license_duration_id',
-		'dl_license_application_id',
-		'issued_date',
-		'expiry_date',
-		'dl_license_class_id',
-		'license_restrictions',
-		'status',
-	];
+	protected $guarded = [];
 
     public static function getNextLicenseNumber()
     {

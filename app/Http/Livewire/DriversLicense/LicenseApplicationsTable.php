@@ -15,21 +15,20 @@ class LicenseApplicationsTable extends DataTableComponent
 {
 	use CustomAlert;
 
-    public $status_id;
+    public $status;
 
 	public function builder(): Builder
 	{
-        if (empty($this->status_id)){
+        if (empty($this->status)){
             return DlLicenseApplication::query();
         }else{
             return DlLicenseApplication::query()
-                ->whereIn('dl_application_status_id',[$this->status_id]);
+                ->where('status', $this->status);
         }
 	}
 
     public function mount($status){
-        $application_status = DlApplicationStatus::select('id')->where(['name'=>$status])->first();
-        $this->status_id = $application_status->id ?? '';
+        $this->status = $status ?? '';
     }
 
 	public function configure(): void

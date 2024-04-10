@@ -8,27 +8,27 @@
 
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="to-print-link" data-toggle="tab" href="#all" role="tab"
+                    <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab"
                        aria-controls="home" aria-selected="true">Application</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="approval" data-toggle="tab" href="#approval" role="tab"
+                    <a class="nav-link" id="approval-tab" data-toggle="tab" href="#approval" role="tab"
                        aria-controls="home" aria-selected="true">Approval History</a>
                 </li>
                 @if (!empty($application->drivers_license))
                     <li class=x"nav-item" role="presentation">
-                        <a class="nav-link" id="to-print-link" data-toggle="tab" href="#license" role="tab"
+                        <a class="nav-link" id="license-tab" data-toggle="tab" href="#license" role="tab"
                            aria-controls="home" aria-selected="true">License</a>
                     </li>
                 @endif
             </ul>
             <hr>
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane p-2 show active" id="all" role="tabpanel" aria-labelledby="to-print-tab">
+                <div class="tab-pane p-2 show active" id="all" role="tabpanel" aria-labelledby="all-tab">
                     <div class="row">
                         <div class="col-md-12 mt-1">
                             <h6 class="pt-3 mb-0 font-weight-bold">Application Details</h6>
-                            <hr class="mt-2 mb-3" />
+                            <hr class="mt-2 mb-3"/>
                         </div>
 
                         <div class="col-md-12 mb-3">
@@ -54,7 +54,8 @@
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Loss Report</span>
                                 <p class="my-1"><a class="btn btn-sm btn-success"
-                                                   href="{{ url('storage/' . $application->loss_report_path) }}">View/Download</a></p>
+                                                   href="{{ url('storage/' . $application->loss_report_path) }}">View/Download</a>
+                                </p>
                             </div>
                         @endif
 
@@ -140,12 +141,12 @@
                     <div class="row">
                         <div class="col-md-12 mt-1">
                             <h6 class="pt-3 mb-0 font-weight-bold">Applicant Details</h6>
-                            <hr class="mt-2 mb-3" />
+                            <hr class="mt-2 mb-3"/>
                         </div>
 
                         <div class="col-md-4 mb-3">
                             <div class="width-px-250">
-                                @if (strtolower($application->type) == 'fresh' && empty($application->photo_path))
+                                @if (strtolower($application->type) == 'FRESH' && empty($application->drivers_license_owner->photo_path))
                                     <div
                                             class="dl-photo">
                                         <img src="{{ url('/images/profile.png') }}" class="width-percent-100">
@@ -153,7 +154,7 @@
                                 @else
                                     <div
                                             class="dl-photo">
-                                        <img src="{{ route('drivers-license.license.file', encrypt($application->photo_path ?? $application->drivers_license_owner->photo_path)) }}"
+                                        <img src="{{ route('drivers-license.license.file', encrypt($application->drivers_license_owner->photo_path)) }}"
                                              class="width-percent-100">
                                     </div>
                                 @endif
@@ -202,28 +203,25 @@
 
                     </div>
 
-                    <div class="tab-content bg-white border shadow-sm" id="myTabContent">
-                        <div class="tab-pane fade p-3 show active" id="home" role="tabpanel"
-                             aria-labelledby="home-tab">
-                            <livewire:approval.mvr.driver-license-approval-processing
-                                    modelName='App\Models\DlLicenseApplication' modelId="{{ encrypt($application->id) }}" />
-                        </div>
-                        <div class="tab-pane fade p-3" id="approval" role="tabpanel" aria-labelledby="approval-tab">
-                            <livewire:approval.approval-history-table modelName='App\Models\DlLicenseApplication'
-                                                                      modelId="{{ encrypt($application->id) }}" />
-                        </div>
-                    </div>
+                    <livewire:approval.mvr.driver-license-approval-processing
+                            modelName='App\Models\DlLicenseApplication' modelId="{{ encrypt($application->id) }}"/>
+                </div>
 
+
+                <div class="tab-pane fade m-2" id="approval" role="tabpanel" aria-labelledby="approval-tab">
+                    <livewire:approval.approval-history-table modelName='App\Models\DlLicenseApplication'
+                                                              modelId="{{ encrypt($application->id) }}"/>
                 </div>
 
                 @if (!empty($application->drivers_license))
-                    <div class="tab-pane p-2" id="license" role="tabpanel" aria-labelledby="to-print-tab">
+                    <div class="tab-pane p-2" id="license" role="tabpanel" aria-labelledby="license-tab">
                         <div class="row mb-2">
                             @if($application->photo_path)
                                 <div class="col-4 ">
                                     <div class="dl-photo-2">
                                         <div class="dl-photo">
-                                            <img src="{{ url('storage/' . $application->photo_path) }}" class="width-percent-100">
+                                            <img src="{{ url('storage/' . $application->photo_path) }}"
+                                                 class="width-percent-100">
                                         </div>
                                     </div>
                                 </div>
@@ -278,8 +276,11 @@
                                 <div class="col-12">
                                     <div class="modal-footer">
                                         <a
-                                                href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}"><button
-                                                    class="btn btn-primary">Update as printed</button></a>
+                                                href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}">
+                                            <button
+                                                    class="btn btn-primary">Update as printed
+                                            </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -288,8 +289,11 @@
                                 <div class="col-12">
                                     <div class="modal-footer">
                                         <a
-                                                href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}"><button
-                                                    class="btn btn-primary">Renew License</button></a>
+                                                href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}">
+                                            <button
+                                                    class="btn btn-primary">Renew License
+                                            </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -301,7 +305,10 @@
 
 
         </div>
-        <br>
+
+
+    </div>
+    <br>
 
     </div>
 @endsection

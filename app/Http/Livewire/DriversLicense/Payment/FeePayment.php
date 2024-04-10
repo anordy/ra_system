@@ -25,6 +25,7 @@ class FeePayment extends Component
             ->where('dl_license_duration_id', $this->license->license_duration_id)
             ->where('type', $license->type)
             ->first();
+
     }
 
     public function refresh(){
