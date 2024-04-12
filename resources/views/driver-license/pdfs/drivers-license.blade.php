@@ -109,6 +109,13 @@
             height: 100%;
             object-fit: contain;
         }
+
+        #barcode {
+            position: fixed;
+            top: 1090px;
+            left: 700px;
+            width: 480px;
+        }
     </style>
 </head>
 
@@ -130,9 +137,11 @@
         @endforeach
     </div>
 
-    <div id="zin">{{ $license->drivers_license_owner->taxpayer_id ?? 'N/A' }}</div>
+    <div id="zin">{{ $license->drivers_license_owner->taxpayer->reference_no ?? 'N/A' }}</div>
     <div id="pin">{{ $license->license_number }}</div>
-
+    <div id="barcode">
+        <img src="data:image/png;base64,' . {{ DNS1D::getBarcodePNG($license->license_number, 'C39+',4,100, array(1,1,1), false)  }} . '" alt="barcode"   />
+    </div>
 </body>
 
 </html>

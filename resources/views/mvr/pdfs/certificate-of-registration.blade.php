@@ -106,6 +106,13 @@
             width: 300px;
         }
 
+        #barcode {
+            position: fixed;
+            top: 1070px;
+            left: 700px;
+            width: 480px;
+        }
+
         #page-break {
             page-break-before: always;
         }
@@ -143,6 +150,9 @@
 <div id="engine">{{strtoupper($motor_vehicle->chassis->engine_number)}}</div>
 <div id="color">{{strtoupper($motor_vehicle->chassis->color)}}</div>
 <div id="capacity">{{strtoupper($motor_vehicle->chassis->engine_cubic_capacity)}} cc</div>
+<div id="barcode">
+    <img src="data:image/png;base64,' . {{ DNS1D::getBarcodePNG($motor_vehicle->registration_number, 'C39+',4,100, array(1,1,1), false)  }} . '" alt="barcode"   />
+</div>
 
 </body>
 <body class="page-two" style="page-break-before: always">
