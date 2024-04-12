@@ -44,7 +44,7 @@ class PublicServiceRegistrationApprovalProcessing extends Component
             $this->psPayment = $this->subject->payment;
             $this->psPaymentCategoryId = $this->subject->payment->public_service_payment_category_id;
             $paymentMonth = $this->subject->payment->payment_months;
-            $this->psPaymentMonthId = $this->psPaymentMonths->where('value', $paymentMonth)->firstOrFail();
+            $this->psPaymentMonthId = $this->psPaymentMonths->where('value', $paymentMonth)->firstOrFail()->id;
         }
 
         $this->psPaymentCategories = PublicServicePaymentCategory::select('id', 'name', 'turnover_tax')->get();
@@ -58,7 +58,9 @@ class PublicServiceRegistrationApprovalProcessing extends Component
             return;
         }
 
+
         $transition = $transition['data']['transition'];
+
 
         if ($this->checkTransition('public_service_registration_officer_review')) {
             $this->validate([
@@ -85,7 +87,8 @@ class PublicServiceRegistrationApprovalProcessing extends Component
                 DB::commit();
 
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-
+                $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+                return;
             } catch (\Exception $exception) {
                 DB::rollBack();
                 Log::error('APPROVAL-MVR-PUBLIC-SERVICE-REG-APPROVE', [$exception]);
