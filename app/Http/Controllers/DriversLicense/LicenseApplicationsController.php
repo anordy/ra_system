@@ -6,16 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
 use App\Models\DlDriversLicenseOwner;
-use App\Models\DlFee;
 use App\Models\DlLicenseApplication;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\CustomAlert;
 use App\Traits\WorkflowProcesssingTrait;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -42,11 +37,11 @@ class LicenseApplicationsController extends Controller
             [
                 'id', 'status', 'payment_status', 'type', 'created_at', 'loss_report_path',
                 'certificate_path', 'certificate_number', 'confirmation_number', 'license_duration',
-                'dl_drivers_license_owner_id', 'photo_path'
+                'dl_drivers_license_owner_id', 'license_duration_id', 'completion_certificate', 'lost_report'
             ]);
         $applicant = DlDriversLicenseOwner::query()->findOrFail($application->dl_drivers_license_owner_id,
             [
-                'id', 'first_name', 'middle_name', 'last_name', 'tin', 'email', 'mobile', 'alt_mobile', 'dob'
+                'id', 'first_name', 'middle_name', 'last_name', 'email', 'mobile', 'alt_mobile', 'dob', 'photo_path'
             ]);
         $title = ['fresh' => 'New License Application', 'renew' => 'License Renewal Application', 'duplicate' => 'License Duplicate Application'][strtolower($application->type)];
         return view('driver-license.license-applications-show', compact('application', 'title', 'applicant'));
@@ -70,12 +65,17 @@ class LicenseApplicationsController extends Controller
 
     public function license($id)
     {
+
         $id = decrypt($id);
         $license = DlDriversLicense::query()->findOrFail($id);
 
+        $imagePath = Storage::disk('local')->get($license->drivers_license_owner->photo_path);
+        $imageData = base64_encode($imagePath);
+        $base64Image = 'data:image/png;base64,' . $imageData;
+
         header('Content-Type: application/pdf');
 
-        $pdf = PDF::loadView('driver-license.pdfs.drivers-license', compact('license'));
+        $pdf = PDF::loadView('driver-license.pdfs.drivers-license', compact('license', 'base64Image'));
         $pdf->setPaper('legal', 'landscape');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->stream();
@@ -100,7 +100,8 @@ class LicenseApplicationsController extends Controller
             abort(403);
         }
         $license = DlDriversLicense::with(['drivers_license_owner', 'drivers_license_classes'])
-            ->findOrFail(decrypt($id), ['id', 'license_number', 'issued_date', 'expiry_date']);
+            ->findOrFail(decrypt($id), ['id', 'license_number', 'issued_date', 'expiry_date', 'dl_drivers_license_owner_id']);
+
         return view('driver-license.licenses-show', compact('license'));
     }
 

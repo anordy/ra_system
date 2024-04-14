@@ -34,6 +34,7 @@ class DlApplicationStatus extends Model
     const STATUS_PENDING_PAYMENT = 'Pending Payment';
     const STATUS_TAKING_PICTURE = 'Taking Picture';
     const STATUS_LICENSE_PRINTING = 'License Printing';
+    const CORRECTION = 'Correction';
 
     protected $fillable = [
 		'name'

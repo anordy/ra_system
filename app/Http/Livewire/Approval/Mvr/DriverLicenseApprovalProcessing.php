@@ -45,18 +45,14 @@ class DriverLicenseApprovalProcessing extends Component
             DB::beginTransaction();
 
 
-            if ($this->checkTransition('mvr_registration_officer_review')) {
-
-            }
-
             if ($this->checkTransition('transport_officer_review') && $transition === 'transport_officer_review') {
                 $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
+            DB::commit();
 
-            // Send correction email/sms
             if ($this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT && $transition === 'transport_officer_review') {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, [
                     'phone' => $this->subject->drivers_license_owner->mobile,
@@ -65,13 +61,10 @@ class DriverLicenseApprovalProcessing extends Component
                 ]));
             }
 
-
             // Generate Control Number after MVR SC Approval
             if ($this->subject->status == DlApplicationStatus::STATUS_PENDING_PAYMENT && $transition === 'transport_officer_review') {
                 $this->generateControlNumber();
             }
-
-            DB::commit();
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
@@ -100,20 +93,16 @@ class DriverLicenseApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('mvr_zartsa_review')) {
-                $this->subject->status = MvrRegistrationStatus::CORRECTION;
+            if ($this->checkTransition('application_filled_incorrect')) {
+                $this->subject->status = DlApplicationStatus::CORRECTION;
                 $this->subject->save();
-            }
-
-            if ($this->checkTransition('transport_officer_review')) {
-
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
             DB::commit();
 
-            if ($this->subject->status = MvrRegistrationStatus::CORRECTION) {
+            if ($this->subject->status = DlApplicationStatus::CORRECTION) {
                 // Send correction email/sms
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, [
                     'phone' => $this->subject->drivers_license_owner->mobile,

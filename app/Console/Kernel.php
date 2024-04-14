@@ -52,6 +52,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('annual:property-tax-bill')->yearlyOn(7,1,'00:50')->runInBackground();
         $schedule->command('monthly:property-tax-bill-reminder')->dailyAt('00:55')->runInBackground();
         $schedule->command('app:re-open-public-services')->dailyAt('01:00')->runInBackground();
+        $schedule->command('dl:expired')->dailyAt('01:05')->runInBackground();
 
         // RUNNING AT SPECIFIC TIME & DAY
         // $schedule->command('daily:debt')->cron('51 14 04 01 *')->runInBackground();
