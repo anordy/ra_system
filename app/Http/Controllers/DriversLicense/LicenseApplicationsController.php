@@ -37,7 +37,7 @@ class LicenseApplicationsController extends Controller
             [
                 'id', 'status', 'payment_status', 'type', 'created_at', 'loss_report_path',
                 'certificate_path', 'certificate_number', 'confirmation_number', 'license_duration',
-                'dl_drivers_license_owner_id', 'license_duration_id'
+                'dl_drivers_license_owner_id', 'license_duration_id', 'completion_certificate', 'lost_report'
             ]);
         $applicant = DlDriversLicenseOwner::query()->findOrFail($application->dl_drivers_license_owner_id,
             [

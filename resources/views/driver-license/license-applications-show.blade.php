@@ -50,11 +50,11 @@
                             <p class="my-1">{{ $application->created_at ?? 'N/A' }}</p>
                         </div>
 
-                        @if (!empty($application->loss_report_path))
+                        @if (!empty($application->lost_report))
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Loss Report</span>
                                 <p class="my-1"><a class="btn btn-sm btn-success"
-                                                   href="{{ url('storage/' . $application->loss_report_path) }}">View/Download</a>
+                                    href="{{ route('mvr.files', encrypt($application->lost_report)) }}">Preview</a>
                                 </p>
                             </div>
                         @endif
@@ -63,7 +63,7 @@
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Certificate of competence</span>
                                 <p class="my-1"><a
-                                            href="{{ route('mvr.files', encrypt($application->certificate_path)) }}">Preview</a>
+                                            href="{{ route('mvr.files', encrypt($application->completion_certificate)) }}">Preview</a>
                                 </p>
                             </div>
 
@@ -149,7 +149,7 @@
                                 @if (strtolower($application->type) == 'FRESH' && empty($application->drivers_license_owner->photo_path))
                                     <div
                                             class="dl-photo">
-                                        <img src="{{ url('/images/profile.png') }}" class="width-percent-100">
+                                        <img src="{{ url('/images/profile.png') }}" class="width-percent-100 object-fit-contain">
                                     </div>
                                 @else
                                     <div
