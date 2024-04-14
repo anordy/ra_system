@@ -14,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class FinancialMonthsTable extends DataTableComponent
 {
 
-    public $today;
+    public $today, $canDualControl;
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -29,13 +29,14 @@ class FinancialMonthsTable extends DataTableComponent
 
     public function builder(): Builder
     {
+        $this->canDualControl = approvalLevel(Auth::user()->level_id, 'Maker');
         $day = date('Y-m-d');
         $day = date('F', strtotime($day));
-        $year = FinancialYear::query()->where('code',date('Y'))->first();
+        $year = FinancialYear::select('id')->where('code',date('Y'))->first();
         if (is_null($year)){
             abort(404, 'Financial year not found.');
         }
-        $today = FinancialMonth::query()->where('financial_year_id', $year->id)->where('name', $day)->first();
+        $today = FinancialMonth::query()->select('id')->where('financial_year_id', $year->id)->where('name', $day)->first();
         if (is_null($today)){
             abort(404, 'Financial year not found');
         }
@@ -96,7 +97,7 @@ class FinancialMonthsTable extends DataTableComponent
                     $edit = '';
                     $extend = '';
                     $value = "'".encrypt($value)."'";
-                    if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
+                    if (Gate::allows('setting-user-edit') && $this->canDualControl) {
                         $edit = <<< HTML
                                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.financial-months.edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                                 HTML;
