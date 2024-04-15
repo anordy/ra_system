@@ -921,7 +921,7 @@ trait PaymentsTrait
 
         $payer_type = get_class($property->taxpayer);
         $payer_id = $property->taxpayer->id;
-        $payer_name = $property->taxpayer->first_name . ' ' . $property->taxpayer->last_name;
+        $payer_name = $property->responsible->first_name . ' ' . $property->responsible->last_name;
         $payer_email = $property->taxpayer->email;
         $payer_phone = $property->taxpayer->mobile;
         $description = "Property Tax Payment for {$property->urn} - {$propertyPayment->year->code}";
