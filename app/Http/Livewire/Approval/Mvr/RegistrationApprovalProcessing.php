@@ -65,9 +65,10 @@ class RegistrationApprovalProcessing extends Component
             DB::beginTransaction();
 
             if ($this->checkTransition('zbs_officer_review')) {
-                $inspectionReport = $this->inspectionReport;
-                if ($this->inspectionReport === ($this->inspection->inspectionReport ?? null)) {
-                    $inspectionReport = $this->inspectionReport->store('mvr', 'local');
+                if ($this->inspectionReport === ($this->inspection->report_path ?? null)) {
+                    $inspectionReport = $this->inspectionReport;
+                } else {
+                    $inspectionReport = $this->inspectionReport->store('inspection_reports');
                 }
 
                 $report = MvrInspectionReport::updateOrCreate(
