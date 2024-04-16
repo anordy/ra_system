@@ -158,7 +158,7 @@ class PublicServiceRegistrationApprovalProcessing extends Component
 
             DB::commit();
 
-            if ($this->subject->status = PublicServiceMotorStatus::CORRECTION) {
+            if ($this->subject->status == PublicServiceMotorStatus::CORRECTION) {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
                 Hello {$this->subject->taxpayer->fullname}, your public service registration request for {$this->subject->mvr->plate_number} requires correction, please login to the system to perform data update."]));
             }

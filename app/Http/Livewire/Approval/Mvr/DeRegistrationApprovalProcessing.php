@@ -159,8 +159,7 @@ class DeRegistrationApprovalProcessing extends Component
 
             DB::commit();
 
-            if ($this->subject->status = MvrRegistrationStatus::CORRECTION) {
-                // Send correction email/sms
+            if ($this->subject->status == MvrRegistrationStatus::CORRECTION) {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
                 Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for {$this->subject->registration->plate_number} requires correction, please login to the system to perform data update."]));
             }
@@ -199,7 +198,6 @@ class DeRegistrationApprovalProcessing extends Component
     public function generateControlNumber()
     {
         try {
-            //Generate control number
             $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
 
             $fee = MvrFee::query()->where([
@@ -236,3 +234,4 @@ class DeRegistrationApprovalProcessing extends Component
         return view('livewire.approval.mvr.de-registration');
     }
 }
+
