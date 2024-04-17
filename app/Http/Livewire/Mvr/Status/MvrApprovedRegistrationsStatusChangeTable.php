@@ -20,7 +20,8 @@ class MvrApprovedRegistrationsStatusChangeTable extends DataTableComponent
             MvrRegistrationStatus::STATUS_REGISTERED,
             MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING,
             MvrRegistrationStatus::STATUS_PENDING_PAYMENT,
-        ])->orderByDesc('mvr_registrations_status_change.created_at');
+        ])
+            ->orderByDesc('mvr_registrations_status_change.created_at');
     }
 
 	public function configure(): void
@@ -62,28 +63,7 @@ class MvrApprovedRegistrationsStatusChangeTable extends DataTableComponent
                     return 'N/A';
                 }),
             Column::make(__('Status'), 'status')->view('mvr.status.includes.status'),
-//            Column::make(__('Action'), 'id')->view('mvr.status.includes.actions'),
-            Column::make('Action', 'id')->format(function ($value, $row) {
-                $value = "'".encrypt($value)."'";
-                $url = route('mvr.transfer-ownership.show', $value);
-                if (in_array($row->transfer_category->name, [MvrRegistrationTypeCategory::MILITARY,
-                        MvrRegistrationTypeCategory::CORPORATE, MvrRegistrationTypeCategory::DIPLOMAT,
-                        MvrRegistrationTypeCategory::GOVERNMENT
-                    ]) && $row->request_status->name === MvrRequestStatus::STATUS_RC_ACCEPTED) {
-                    return <<< HTML
-                                        <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.ownership-transfer-assign-plate-number', $value)">Assign Plate Number</button>
-                                        <a class="btn btn-outline-primary btn-sm" href="$url">View</a>
-                                    HTML;
-                } else {
-                    return <<< HTML
-                    <a class="btn btn-outline-primary btn-sm" href="$url"><i class="fa fa-eye"></i>View</a>
-                HTML;
-                }
-
-            })->html()
+            Column::make(__('Action'), 'id')->view('mvr.status.includes.actions'),
         ];
     }
-
-
-
 }
