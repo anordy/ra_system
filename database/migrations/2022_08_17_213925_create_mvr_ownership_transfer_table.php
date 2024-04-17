@@ -17,7 +17,6 @@ class CreateMvrOwnershipTransferTable extends Migration
             $table->id();
             $table->unsignedBigInteger('mvr_motor_vehicle_id');
             $table->unsignedBigInteger('mvr_ownership_transfer_reason_id');
-            $table->unsignedBigInteger('mvr_registration_type_id');
             $table->string('transfer_reason',255)->nullable();
             $table->decimal('market_value',10)->nullable();
             $table->date('sale_date');

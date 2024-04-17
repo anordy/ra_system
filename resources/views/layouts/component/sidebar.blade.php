@@ -658,14 +658,13 @@
                     id="dlSubmenu">
                     @can('driver-licences-application')
                         <li
-                                class="{{ request()->is('drivers-license/applications') || request()->is('drivers-license*') ? 'active' : '' }}">
+                                class="{{ request()->is('drivers-license/applications*') ? 'active' : '' }}">
                             <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
                         </li>
                     @endcan
 
                     @can('driver-licences-view')
-                        <li
-                                class="{{ request()->is('drivers-license/license*') || request()->is('drivers-license*') ? 'active' : '' }}">
+                        <li class="{{ request()->is('drivers-license/license*') ? 'active' : '' }}">
                             <a href="{{ route('drivers-license.licenses') }}">Driver's Licenses</a>
                         </li>
                     @endcan

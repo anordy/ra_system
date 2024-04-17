@@ -33,16 +33,8 @@ class LicenseApplicationsController extends Controller
             abort(403);
         }
         $id = decrypt($id);
-        $application = DlLicenseApplication::with(['application_license_classes', 'drivers_license'])->findOrFail($id,
-            [
-                'id', 'status', 'payment_status', 'type', 'created_at', 'loss_report_path',
-                'certificate_path', 'certificate_number', 'confirmation_number', 'license_duration',
-                'dl_drivers_license_owner_id', 'license_duration_id', 'completion_certificate', 'lost_report'
-            ]);
-        $applicant = DlDriversLicenseOwner::query()->findOrFail($application->dl_drivers_license_owner_id,
-            [
-                'id', 'first_name', 'middle_name', 'last_name', 'email', 'mobile', 'alt_mobile', 'dob', 'photo_path'
-            ]);
+        $application = DlLicenseApplication::with(['application_license_classes', 'drivers_license', 'application_license_classes'])->findOrFail($id);
+        $applicant = DlDriversLicenseOwner::query()->findOrFail($application->dl_drivers_license_owner_id);
         $title = ['fresh' => 'New License Application', 'renew' => 'License Renewal Application', 'duplicate' => 'License Duplicate Application'][strtolower($application->type)];
         return view('driver-license.license-applications-show', compact('application', 'title', 'applicant'));
     }
@@ -99,8 +91,9 @@ class LicenseApplicationsController extends Controller
         if (!Gate::allows('driver-licences-view')) {
             abort(403);
         }
-        $license = DlDriversLicense::with(['drivers_license_owner', 'drivers_license_classes'])
-            ->findOrFail(decrypt($id), ['id', 'license_number', 'issued_date', 'expiry_date', 'dl_drivers_license_owner_id']);
+
+        $license = DlDriversLicense::with(['drivers_license_owner', 'drivers_license_classes', 'application'])
+            ->findOrFail(decrypt($id));
 
         return view('driver-license.licenses-show', compact('license'));
     }
