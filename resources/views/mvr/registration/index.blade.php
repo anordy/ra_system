@@ -6,7 +6,7 @@
 
     <div class="card mt-3">
         <div class="card-header">
-            <h5>Motor Vehicles</h5>
+            Motor Vehicles
         </div>
 
         <div class="card-body">

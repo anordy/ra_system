@@ -29,33 +29,39 @@ class FeePayment extends Component
     {
         $this->motorVehicle = $motorVehicle;
 
+        $search = [
+            'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
+            'mvr_class_id' => $this->motorVehicle->mvr_class_id
+        ];
 
         if (get_class($this->motorVehicle) == MvrRegistrationStatusChange::class) {
             $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
-        } elseif (get_class($this->motorVehicle) == MvrRegistration::class) {
+        }
+
+        elseif (get_class($this->motorVehicle) == MvrRegistration::class) {
             if ($this->motorVehicle->origin == MvrRegistrationStatus::STATUS_CHANGE) {
                 $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
             } else {
                 $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
             }
-        } else if (get_class($this->motorVehicle) == MvrRegistrationParticularChange::class) {
+        }
+
+        else if (get_class($this->motorVehicle) == MvrRegistrationParticularChange::class) {
             $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
-        } else {
+        }
+
+        else if (get_class($this->motorVehicle) == MvrOwnershipTransfer::class) {
+            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TRANSFER_OWNERSHIP]);
+            $search['mvr_class_id'] = $this->motorVehicle->motor_vehicle->mvr_class_id;
+        }
+
+        else {
             $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
         }
 
-        $this->fee = MvrFee::query()->where([
-            'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
-            'mvr_fee_type_id' => $this->feeType->id,
-            'mvr_class_id' => $this->motorVehicle->mvr_class_id
-        ])->first();
+        $search['mvr_fee_type_id'] = $this->feeType->id;
 
-        if (get_class($this->motorVehicle) == MvrOwnershipTransfer::class) {
-            $this->fee = MvrTransferFee::query()->where([
-                'mvr_transfer_category_id' => $this->motorVehicle->mvr_transfer_category_id,
-            ])->first();
-        }
-
+        $this->fee = MvrFee::query()->where($search)->first();
     }
 
     public function refresh()

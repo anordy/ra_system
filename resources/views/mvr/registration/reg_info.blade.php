@@ -1,6 +1,6 @@
 <div class="card mt-3">
     <div class="card-header font-weight-bold bg-white">
-        {{ $reg->chassis->chassis_number  }} Registration Information
+        Registration Information - {{ $reg->chassis->chassis_number  }}
     </div>
     <div class="card-body">
         <div class="row my-2">

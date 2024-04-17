@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Mvr\Status;
 
 use App\Enum\MvrRegistrationStatus;
 use App\Models\MvrRegistrationStatusChange;
+use App\Models\MvrRegistrationTypeCategory;
+use App\Models\MvrRequestStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -60,7 +62,25 @@ class MvrApprovedRegistrationsStatusChangeTable extends DataTableComponent
                     return 'N/A';
                 }),
             Column::make(__('Status'), 'status')->view('mvr.status.includes.status'),
-            Column::make(__('Action'), 'id')->view('mvr.status.includes.actions'),
+//            Column::make(__('Action'), 'id')->view('mvr.status.includes.actions'),
+            Column::make('Action', 'id')->format(function ($value, $row) {
+                $value = "'".encrypt($value)."'";
+                $url = route('mvr.transfer-ownership.show', $value);
+                if (in_array($row->transfer_category->name, [MvrRegistrationTypeCategory::MILITARY,
+                        MvrRegistrationTypeCategory::CORPORATE, MvrRegistrationTypeCategory::DIPLOMAT,
+                        MvrRegistrationTypeCategory::GOVERNMENT
+                    ]) && $row->request_status->name === MvrRequestStatus::STATUS_RC_ACCEPTED) {
+                    return <<< HTML
+                                        <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.ownership-transfer-assign-plate-number', $value)">Assign Plate Number</button>
+                                        <a class="btn btn-outline-primary btn-sm" href="$url">View</a>
+                                    HTML;
+                } else {
+                    return <<< HTML
+                    <a class="btn btn-outline-primary btn-sm" href="$url"><i class="fa fa-eye"></i>View</a>
+                HTML;
+                }
+
+            })->html()
         ];
     }
 
