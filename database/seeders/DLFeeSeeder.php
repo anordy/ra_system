@@ -15,14 +15,18 @@ class DLFeeSeeder extends Seeder
     public function run()
     {
         $types = ['FRESH', 'RENEW', 'DUPLICATE'];
+        $durations = [1, 2];
 
         foreach ($types as $type){
-            DlFee::updateOrCreate([
-                'name' => $type,
-                'amount' => 10000,
-                'gfs_code' => 116101,
-                'type' => $type
-            ]);
+            foreach ($durations as $duration) {
+                DlFee::updateOrCreate([
+                    'name' => $type,
+                    'amount' => 10000,
+                    'gfs_code' => 116101,
+                    'type' => $type,
+                    'dl_licence_duration_id' => $duration
+                ]);
+            }
         }
     }
 }

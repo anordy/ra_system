@@ -624,11 +624,10 @@
                         </li>
                     @endcan
                     {{--                        @can('motor-vehicle-status-change-request')--}}
-                    <li class="{{ request()->is('mvr/registration/particular') ? 'active' : '' }}">
+                    <li class="{{ request()->is('mvr/registration/particular*') ? 'active' : '' }}">
                         <a href="{{ route('mvr.registration.particular.index') }}">Particular Change Request</a>
                     </li>
                     {{--                        @endcan--}}
-
 
                     @can('motor-vehicle-transfer-ownership')
                         <li class="{{ request()->is('mvr/transfer-ownership*') ? 'active' : '' }}">
@@ -659,14 +658,13 @@
                     id="dlSubmenu">
                     @can('driver-licences-application')
                         <li
-                                class="{{ request()->is('drivers-license/applications') || request()->is('drivers-license*') ? 'active' : '' }}">
+                                class="{{ request()->is('drivers-license/applications*') ? 'active' : '' }}">
                             <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
                         </li>
                     @endcan
 
                     @can('driver-licences-view')
-                        <li
-                                class="{{ request()->is('drivers-license/license*') || request()->is('drivers-license*') ? 'active' : '' }}">
+                        <li class="{{ request()->is('drivers-license/license*') ? 'active' : '' }}">
                             <a href="{{ route('drivers-license.licenses') }}">Driver's Licenses</a>
                         </li>
                     @endcan

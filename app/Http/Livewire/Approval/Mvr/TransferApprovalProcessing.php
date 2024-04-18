@@ -84,7 +84,7 @@ class TransferApprovalProcessing extends Component
             DB::commit();
 
             // Send correction email/sms
-            if ($this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
+            if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->previous_owner->mobile, 'message' => "
                 Hello {$this->subject->previous_owner->fullname}, your motor vehicle transfer request for chassis number {$this->subject->motor_vehicle->chassis->chassis_number} has been approved, you will receive your payment control number shortly."]));
             }
@@ -120,7 +120,7 @@ class TransferApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('application_rejected')) {
+            if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = MvrRegistrationStatus::REJECTED;
                 $this->subject->save();
             }
@@ -169,6 +169,7 @@ class TransferApprovalProcessing extends Component
     public function generateControlNumber()
     {
         try {
+            // todo: update implementation
             $fee = MvrTransferFee::query()->where([
                 'mvr_transfer_category_id' => $this->subject->mvr_transfer_category_id,
             ])->first();
@@ -199,3 +200,4 @@ class TransferApprovalProcessing extends Component
         return view('livewire.approval.mvr.status');
     }
 }
+

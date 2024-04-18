@@ -76,4 +76,9 @@ class DlDriversLicense extends Model implements Auditable
 	{
 		return $this->hasMany(DlDriversLicenseClass::class,'dl_drivers_license_id');
 	}
+
+    public function application()
+    {
+        return $this->hasOne(DlLicenseApplication::class,'id', 'dl_license_application_id');
+    }
 }
