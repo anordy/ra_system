@@ -177,6 +177,7 @@ trait PaymentReportTrait
                         $query->where('zm_bills.paid_amount', '<=', 0);
                         break;
                     default:
+                        throw new \Exception('Invalid Payment Status');
                 }
             }
 
@@ -189,6 +190,7 @@ trait PaymentReportTrait
                         $query->where('zm_ega_charges.ega_charges_included', false);
                         break;
                     default:
+                        throw new \Exception('Invalid Charge Type');
                 }
             }
 
