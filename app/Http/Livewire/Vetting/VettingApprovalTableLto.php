@@ -7,6 +7,7 @@ use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\TaxReturn;
 use App\Traits\ReturnFilterTrait;
+use App\Traits\VettingFilterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -16,9 +17,13 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class VettingApprovalTableLto extends DataTableComponent
 {
-    use  ReturnFilterTrait;
+    use  VettingFilterTrait;
 
     protected $model = TaxReturn::class;
+
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
+
+    public $data = [];
 
     public $vettingStatus, $orderBy;
 
@@ -35,6 +40,12 @@ class VettingApprovalTableLto extends DataTableComponent
         } else {
             $this->orderBy = 'ASC';
         }
+    }
+
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->emit('$refresh');
     }
 
     public function configure(): void
@@ -73,7 +84,7 @@ class VettingApprovalTableLto extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
+        $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
             ->where('parent', 0)
             ->where('is_business_lto', true)
@@ -83,8 +94,14 @@ class VettingApprovalTableLto extends DataTableComponent
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });
-            })
-            ->orderBy('created_at', $this->orderBy);
+            });
+
+            // Apply filters
+        $returnTable = TaxReturn::getTableName();
+        $query = $this->dataFilter($query, $this->data, $returnTable);
+        $query->orderBy('created_at', $this->orderBy);
+        
+        return $query;
     }
 
     public function columns(): array
