@@ -47,33 +47,35 @@
     <div class="card-body">
         <h6>Product Information</h6>
 
-        @foreach ($products as $key => $product)
-            <div class="mt-2 border p-2">
-                <div class="row">
-                    <div class="form-group col-lg-6">
-                        <label class="control-label">Intended Cargo Discharge</label>
-                        <div class="form-control">{{ $product['cargo_name'] ?? '' }}</div>
+        @if(!empty($products))
+            @foreach ($products as $key => $product)
+                <div class="mt-2 border p-2">
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Intended Cargo Discharge</label>
+                            <div class="form-control">{{ $product['cargo_name'] ?? '' }}</div>
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Liters Observed</label>
+                            <div class="form-control">{{ number_format($product['liters_observed'], 2) ?? '' }}</div>
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Liters At 20 <sup>o</sup> C</label>
+                            <div class="form-control">{{ number_format($product['liters_at_20'], 2) ?? '' }}</div>
+
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Metric Tons in Air</label>
+                            <div class="form-control">{{ number_format($product['metric_tons'], 2) ?? '' }}</div>
+
+                        </div>
+
                     </div>
-
-                    <div class="form-group col-lg-6">
-                        <label class="control-label">Liters Observed</label>
-                        <div class="form-control">{{ number_format($product['liters_observed'], 2) ?? '' }}</div>
-                    </div>
-
-                    <div class="form-group col-lg-6">
-                        <label class="control-label">Liters At 20 <sup>o</sup> C</label>
-                        <div class="form-control">{{ number_format($product['liters_at_20'], 2) ?? '' }}</div>
-
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label class="control-label">Metric Tons in Air</label>
-                        <div class="form-control">{{ number_format($product['metric_tons'], 2) ?? '' }}</div>
-
-                    </div>
-
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        @endif
 
         <livewire:approval.quantity-certificate-approval-processing modelName="{{ get_class($certificate) }}" modelId="{{ encrypt($certificate->id) }}"></livewire:approval.quantity-certificate-approval-processing>
 
