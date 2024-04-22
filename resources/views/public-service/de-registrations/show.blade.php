@@ -16,8 +16,8 @@
     </ul>
 
     <div class="tab-content bg-white border shadow-sm" id="myTabContent">
-        <div class="tab-pane fade show active pt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <div class="card shadow-none border-0">
+        <div class="tab-pane fade show active pt-3 px-3" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="card shadow-none">
                 <div class="card-header text-uppercase font-weight-bold bg-white">
                     {{ __('Public Service De-registrations Details') }}
                 </div>
@@ -81,7 +81,7 @@
                         </div>
                         <div class="col-md-9 mb-3">
                             <span class="font-weight-bold text-uppercase">{{ __('Reasons') }}</span>
-                            <p class="my-1">{{ $deRegistration->reasons ?? 'N/A' }}</p>
+                            <p class="my-1">{{ $deRegistration->reason ?? 'N/A' }}</p>
                         </div>
                         @if ($deRegistration->grounds_path)
                             <div class="col-md-4">
@@ -103,6 +103,7 @@
                 </div>
             </div>
 
+            @include('mvr.registration.reg_info', ['reg' => $deRegistration->motor->mvr])
 
             <livewire:approval.public-service.de-registration-approval-processing
                     modelName="{{ get_class($deRegistration) }}"

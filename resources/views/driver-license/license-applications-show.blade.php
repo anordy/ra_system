@@ -95,7 +95,6 @@
 
                         </p>
                     </div>
-
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Status</span>
                         <p class="my-1">
@@ -131,6 +130,17 @@
                                     </span>
                             @endif
                         </p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                            <a target="_blank"
+                               href="{{ route('mvr.files', encrypt($application->completion_certificate)) }}"
+                               class="ml-1">
+                                Completion Certificate
+                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -214,13 +224,13 @@
                         <div class="card-tools">
                             @if ($application->status === \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)
                                 <a target="_blank" class="btn btn-primary text-white" href="{{ route('drivers-license.license.print', encrypt($application->drivers_license->id)) }}">
-                                    <i class="bi bi-printer-fill mr-1"></i> Print Licence
+                                    <i class="bi bi-printer-fill mr-1"></i> PRINT LICENSE
                                 </a>
                             @endif
                             @if ($application->status === \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)
                                 <a href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}">
                                     <button class="btn btn-success">
-                                        <i class="bi bi-check2-circle mr-1"></i> Update as printed
+                                        <i class="bi bi-check2-circle mr-1"></i> UPDATE AS PRINTED
                                     </button>
                                 </a>
                             @endif

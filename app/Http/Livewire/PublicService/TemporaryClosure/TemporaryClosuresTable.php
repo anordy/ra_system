@@ -30,8 +30,7 @@ class TemporaryClosuresTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $query = TemporaryClosureModel::query()
-            ->where('created_by', Auth::id());
+        $query = TemporaryClosureModel::query();
 
         if($this->status){
             $query->where('public_service_temporary_closures.status', $this->status);
