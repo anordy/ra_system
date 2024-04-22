@@ -12,14 +12,14 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class ReOpenPublicServices extends Command
+class PublicServicesReOpen extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:re-open-public-services';
+    protected $signature = 'app:ps-reopen';
 
     /**
      * The console command description.
@@ -52,32 +52,43 @@ class ReOpenPublicServices extends Command
                 DB::raw('public_service_temporary_closures.id as closure_id'),
             ])
             ->leftJoin('public_service_motors', 'public_service_temporary_closures.public_service_motor_id', 'public_service_motors.id')
-            ->where('opening_date', '<=', Carbon::now())
+            ->where('opening_date', '<', Carbon::now()->toDateString())
             ->where('public_service_motors.status', PublicServiceMotorStatus::TEMP_CLOSED)
             ->where('public_service_temporary_closures.status', TemporaryClosureStatus::APPROVED)
             ->get();
 
+
+        $this->line("Opening {$closures->count()} public service registrations.");
+
         foreach ($closures as $closure) {
             // Update public service status.
             $publicMotor = PublicServiceMotor::findOrFail($closure->motor_id);
-            $publicMotor->update([
+            $pmState = $publicMotor->update([
                 'status' => PublicServiceMotorStatus::REGISTERED
             ]);
 
             // Update re-open date on temporary closure.
             $temp = TemporaryClosure::findOrFail($closure->closure_id);
-            $temp->update([
+            $tmpState = $temp->update([
                 're_opening_date' => Carbon::now()->toDateString()
             ]);
 
-            // Send notification.
-            if ($publicMotor->taxpayer->mobile) {
-                event(new SendSms(SendCustomSMS::SERVICE, NULL, [
-                    'phone' => $publicMotor->taxpayer->mobile,
-                    'message' => "Hello {$publicMotor->taxpayer->fullname}, your public service temporary closure of {$publicMotor->mvr->plate_number} has ended, Please log in into your account to generate your sticker payment."
-                ]));
+            if ($pmState && $tmpState){
+                $this->line("Opened {$publicMotor->mvr->plate_number}");
+
+                // Send notification.
+                if ($publicMotor->taxpayer->mobile) {
+                    event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                        'phone' => $publicMotor->taxpayer->mobile,
+                        'message' => "Hello {$publicMotor->taxpayer->fullname}, your public service temporary closure of {$publicMotor->mvr->plate_number} has ended, Please log in into your account to generate your sticker payment."
+                    ]));
+                }
+            } else {
+                $this->error("Failed to open {$publicMotor->mvr->plate_number}");
             }
         }
+
+        $this->line('Re opening public service completed.');
 
         return 0;
     }
