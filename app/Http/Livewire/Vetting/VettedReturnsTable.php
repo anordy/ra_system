@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Vetting;
 
+use App\Traits\VettingFilterTrait;
 use Carbon\Carbon;
 use App\Enum\VettingStatus;
 use App\Models\Returns\TaxReturn;
@@ -16,9 +17,13 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class VettedReturnsTable extends DataTableComponent
 {
-    use  ReturnFilterTrait;
+    use VettingFilterTrait;
 
-    protected $model     = TaxReturn::class;
+    protected $model = TaxReturn::class;
+
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
+
+    public $data = [];
 
     public $vettingStatus;
     public $orderBy;
@@ -38,6 +43,12 @@ class VettedReturnsTable extends DataTableComponent
         }
     }
 
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->emit('$refresh');
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -45,7 +56,7 @@ class VettedReturnsTable extends DataTableComponent
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class'   => 'table-bordered table-sm',
+            'class' => 'table-bordered table-sm',
         ]);
     }
 
@@ -54,17 +65,17 @@ class VettedReturnsTable extends DataTableComponent
         return [
             SelectFilter::make('Tax Region')
                 ->options([
-                    'all'    => 'All',
+                    'all' => 'All',
                     'Headquarter' => 'Head Quarter',
-                    'Mjini'  => 'Mjini',
-                    'Kaskazini Unguja'  => 'Kaskazini Unguja',
-                    'Kusini Unguja'  => 'Kusini Unguja',
-                    'Kaskazini Pemba'  => 'Kaskazini Pemba',
-                    'Kusini Pemba'  => 'Kusini Pemba',
+                    'Mjini' => 'Mjini',
+                    'Kaskazini Unguja' => 'Kaskazini Unguja',
+                    'Kusini Unguja' => 'Kusini Unguja',
+                    'Kaskazini Pemba' => 'Kaskazini Pemba',
+                    'Kusini Pemba' => 'Kusini Pemba',
                 ])
-                ->filter(function(Builder $builder, string $value) {
+                ->filter(function (Builder $builder, string $value) {
                     if ($value != 'all') {
-                        $builder->whereHas('location.taxRegion', function($query) use($value) {
+                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
                             $query->where('name', $value);
                         });
                     }
@@ -74,11 +85,17 @@ class VettedReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
+        $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
-            ->where('parent',0)
-            ->where('vetting_status', $this->vettingStatus)
-            ->orderBy('created_at', $this->orderBy);
+            ->where('parent', 0)
+            ->where('vetting_status', $this->vettingStatus);
+
+        // Apply filters
+        $returnTable = TaxReturn::getTableName();
+        $query = $this->dataFilter($query, $this->data, $returnTable);
+        $query->orderBy('created_at', $this->orderBy);
+
+        return $query;
     }
 
     public function columns(): array

@@ -18,6 +18,10 @@
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                        aria-controls="home" aria-selected="true">Businesses with risk indicators</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab"
                         aria-controls="home" aria-selected="true">Pending Approval</a>
                 </li>
                 <li class="nav-item">
@@ -31,6 +35,9 @@
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    @livewire('audit.business-with-risk-indicators-table')
+                </div>
+                <div class="tab-pane fade show card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
                     @livewire('audit.tax-audit-approval-table')
                 </div>
                 <div class="tab-pane fade card p-2" id="progress" role="tabpanel" aria-labelledby="progress-tab">

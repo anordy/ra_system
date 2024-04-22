@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Vetting;
 
+use App\Traits\VettingFilterTrait;
 use Carbon\Carbon;
 use App\Models\Region;
 use App\Models\TaxType;
@@ -18,9 +19,13 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class VettingApprovalTablePemba extends DataTableComponent
 {
-    use  ReturnFilterTrait;
+    use VettingFilterTrait;
 
-    protected $model     = TaxReturn::class;
+    protected $model = TaxReturn::class;
+
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
+
+    public $data = [];
 
     public $vettingStatus, $orderBy;
 
@@ -39,17 +44,23 @@ class VettingApprovalTablePemba extends DataTableComponent
         }
     }
 
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->emit('$refresh');
+    }
+
     public function filters(): array
     {
         return [
             SelectFilter::make('Tax Region')
                 ->options([
-                    'Kaskazini Pemba'  => 'Kaskazini Pemba',
-                    'Kusini Pemba'  => 'Kusini Pemba',
+                    'Kaskazini Pemba' => 'Kaskazini Pemba',
+                    'Kusini Pemba' => 'Kusini Pemba',
                 ])
-                ->filter(function(Builder $builder, string $value) {
+                ->filter(function (Builder $builder, string $value) {
                     if ($value != 'all') {
-                        $builder->whereHas('location.taxRegion', function($query) use($value) {
+                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
                             $query->where('name', $value);
                         });
                     }
@@ -64,14 +75,14 @@ class VettingApprovalTablePemba extends DataTableComponent
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class'   => 'table-bordered table-sm',
+            'class' => 'table-bordered table-sm',
         ]);
-        
+
     }
 
     public function builder(): Builder
     {
-        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
+        $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
             ->whereNotIn('code', [
                 TaxType::AIRPORT_SERVICE_CHARGE,
@@ -79,12 +90,12 @@ class VettingApprovalTablePemba extends DataTableComponent
                 TaxType::AIRPORT_SAFETY_FEE,
                 TaxType::SEAPORT_SERVICE_CHARGE,
                 TaxType::ROAD_LICENSE_FEE,
-                TaxType::INFRASTRUCTURE, 
+                TaxType::INFRASTRUCTURE,
                 TaxType::RDF
             ])
-            ->where('parent',0)
-            ->where('is_business_lto',false)
-            ->where('is_business_lto',false)
+            ->where('parent', 0)
+            ->where('is_business_lto', false)
+            ->where('is_business_lto', false)
             ->whereHas('location.taxRegion', function ($query) {
                 $query->where('location', Region::PEMBA); //this is filter by department
             })
@@ -93,8 +104,14 @@ class VettingApprovalTablePemba extends DataTableComponent
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });
-            })
-            ->orderBy('created_at', $this->orderBy);
+            });
+
+        // Apply filters
+        $returnTable = TaxReturn::getTableName();
+        $query = $this->dataFilter($query, $this->data, $returnTable);
+        $query->orderBy('created_at', $this->orderBy);
+
+        return $query;
     }
 
     public function columns(): array

@@ -2,6 +2,7 @@
 
 namespace App\Models\Returns;
 
+use App\Models\RiskIndicator;
 use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
@@ -163,6 +164,11 @@ class TaxReturn extends Model implements PayloadInterface
     public static function getTableName(): string
     {
         return 'tax_returns';
+    }
+
+    public function riskIndicators()
+    {
+        return $this->hasMany(RiskIndicator::class); 
     }
 
     public function scopePreviousReturns(Builder $query, int $count)
