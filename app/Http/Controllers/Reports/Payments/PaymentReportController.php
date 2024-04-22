@@ -11,6 +11,8 @@ use PDF;
 
 class PaymentReportController extends Controller
 {
+    CONST reportType = 'Payment Reports For ';
+
     use PaymentReportTrait;
 
     public function index()
@@ -33,10 +35,10 @@ class PaymentReportController extends Controller
 
             if ($parameters['year'] == 'all') {
                 $fileName = $parameters['status'] . ' ' . $parameters['payment_category'] . '.pdf';
-                $title = 'Payment Reports For '. $parameters['status'] . ' ' . $parameters['payment_category'];
+                $title = self::reportType .  $parameters['status'] . ' ' . $parameters['payment_category'];
             } else {
                 $fileName = $parameters['status'] . ' ' . $parameters['payment_category'] . ' - ' . $parameters['year'] . '.pdf';
-                $title = 'Payment Reports For '.$parameters['status'] . ' ' . $parameters['payment_category'] . ' ' . $parameters['year'];
+                $title = self::reportType . $parameters['status'] . ' ' . $parameters['payment_category'] . ' ' . $parameters['year'];
             }
             $records = $records->get();
             if ($parameters['payment_category'] == 'returns')

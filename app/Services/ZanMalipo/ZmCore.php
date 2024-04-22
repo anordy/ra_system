@@ -96,7 +96,7 @@ class ZmCore
                 'expire_date' => $expire_date,
                 'payer_id' => $payer_id,
                 'payer_type' => $payer_type,
-                'payer_name' => $payer_name,
+                'payer_name' => trim($payer_name),
                 'payer_phone_number' => $payer_phone_number,
                 'payer_email' => $payer_email,
                 'currency' => $currency,

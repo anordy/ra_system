@@ -69,9 +69,11 @@ class DeRegistrationApprovalProcessing extends Component
                 $this->subject->approved_on = Carbon::now();
                 $this->subject->save();
 
-                $motor = $this->subject->motor;
-                $motor->status = PublicServiceMotorStatus::DEREGISTERED;
-                $motor->save();
+                if (Carbon::make($this->subject->de_registration_date)->lessThanOrEqualTo(Carbon::now()->toDateString())){
+                    $motor = $this->subject->motor;
+                    $motor->status = PublicServiceMotorStatus::DEREGISTERED;
+                    $motor->save();
+                }
 
                 DB::commit();
 

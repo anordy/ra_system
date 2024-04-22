@@ -65,22 +65,24 @@ class RegistrationApprovalProcessing extends Component
             DB::beginTransaction();
 
             if ($this->checkTransition('zbs_officer_review')) {
-                $inspectionReport = $this->inspectionReport;
-                if ($this->inspectionReport === ($this->inspection->inspectionReport ?? null)) {
-                    $inspectionReport = $this->inspectionReport->store('mvr', 'local');
+
+                if ($this->inspectionReport === ($this->inspection->report_path ?? null)) {
+                    $inspectionReport = $this->inspectionReport;
+                } else {
+                    $inspectionReport = $this->inspectionReport->store('inspection_reports');
                 }
 
-                $report = MvrInspectionReport::updateOrCreate(
-                    [
-                        'mvr_registration_id' => $this->subject->id
-                    ], [
+
+                $report = MvrInspectionReport::updateOrCreate([
+                    'mvr_registration_id' => $this->subject->id
+                ],[
                     'inspection_date' => $this->inspectionDate,
                     'report_path' => $inspectionReport,
                     'inspection_mileage' => $this->mileage,
                     'mvr_registration_id' => $this->subject->id
                 ]);
 
-                if (!$report){
+                if (!$report) {
                     throw new Exception("Could not persist MVR Inspection report into the database.");
                 }
             }
@@ -147,8 +149,7 @@ class RegistrationApprovalProcessing extends Component
 
             DB::commit();
 
-            if ($this->subject->status = MvrRegistrationStatus::CORRECTION) {
-                // Send correction email/sms
+            if ($this->subject->status == MvrRegistrationStatus::CORRECTION) {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
                 Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} requires correction, please login to the system to perform data update."]));
             }
@@ -224,3 +225,4 @@ class RegistrationApprovalProcessing extends Component
         return view('livewire.approval.mvr.registration');
     }
 }
+

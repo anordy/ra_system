@@ -26,7 +26,7 @@ class AgentRegistration extends Component
 
     public function submit()
     {
-        $this->validate(['companyName' => 'nullable|string|strip_tag']);
+        $this->validate(['companyName' => 'required|string|strip_tag']);
         if (empty($this->taxpayer)) {
             $this->customAlert(GeneralConstant::ERROR, 'Please provide valid Z-Number and confirm details by doing lookup');
             return;

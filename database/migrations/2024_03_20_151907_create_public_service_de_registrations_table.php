@@ -21,6 +21,7 @@ class CreatePublicServiceDeRegistrationsTable extends Migration
             $table->text('reason');
             $table->enum('status', DeRegistrationStatus::getConstants());
             $table->unsignedBigInteger('created_by');
+            $table->text('grounds_path');
             $table->text('marking')->nullable();
             $table->dateTime('approved_on')->nullable();
             $table->timestamps();

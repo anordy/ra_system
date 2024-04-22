@@ -30,8 +30,7 @@ class DeRegistrationsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $query = DeRegistration::query()
-            ->where('created_by', Auth::id());
+        $query = DeRegistration::query();
 
         if ($this->status){
             $query->where('public_service_de_registrations.status', $this->status);
@@ -52,7 +51,7 @@ class DeRegistrationsTable extends DataTableComponent
                 ->searchable(),
             Column::make(__('De-registration Date'), 'de_registration_date')
                 ->format(function ($value, $row) {
-                    return Carbon::create($row->closing_date)->toFormattedDateString();
+                    return Carbon::create($row->de_registration_date)->toFormattedDateString();
                 })
                 ->sortable()
                 ->searchable(),
