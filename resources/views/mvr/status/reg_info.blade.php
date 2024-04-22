@@ -7,26 +7,26 @@
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Status</span>
                 <p class="my-1">
-                    @if ($reg->status === \App\Enum\MvrRegistrationStatus::PENDING)
+                    @if($reg->status === \App\Enum\MvrRegistrationStatus::PENDING)
                         <span class="badge badge-info py-1 px-2">
-                            <i class="bi bi-check-circle-fill mr-1"></i>
-                            {{ __('Pending') }}
-                        </span>
+                <i class="bi bi-check-circle-fill mr-1"></i>
+                {{ __('Pending') }}
+            </span>
                     @elseif($reg->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED)
                         <span class="badge badge-success py-1 px-2">
-                            <i class="bi bi-check-circle-fill mr-1"></i>
-                            {{ __('Registered') }}
-                        </span>
+                <i class="bi bi-check-circle-fill mr-1"></i>
+                {{ __('Registered') }}
+            </span>
                     @elseif($reg->status === \App\Enum\MvrRegistrationStatus::CORRECTION)
                         <span class="badge badge-warning py-1 px-2">
-                            <i class="bi bi-check-circle-fill mr-1"></i>
-                            {{ __('For Corrections') }}
-                        </span>
+                <i class="bi bi-check-circle-fill mr-1"></i>
+                {{ __('For Corrections') }}
+            </span>
                     @else
                         <span class="badge badge-primary py-1 px-2">
-                            <i class="bi bi-check-circle-fill mr-1"></i>
-                            {{ $reg->status }}
-                        </span>
+                <i class="bi bi-check-circle-fill mr-1"></i>
+                {{ $reg->status }}
+            </span>
                     @endif
                 </p>
             </div>

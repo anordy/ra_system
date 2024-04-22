@@ -40,17 +40,21 @@ class Kernel extends ConsoleKernel
          *  +------------------------- min (0 - 59)
          *   SAMPLE CODE: $schedule->command('daily:debt')->cron('55 12 04 01 *')->runInBackground();
          */
-        $schedule->command('daily:debt')->dailyAt('00:00')->runInBackground();
-        $schedule->command('daily:reopen-business')->dailyAt('00:00')->runInBackground();
-        $schedule->command('update:installment')->dailyAt('00:00')->runInBackground();
-        $schedule->command('daily:debt-penalty')->dailyAt('00:00')->runInBackground();
-        $schedule->command('daily:debt-notice')->dailyAt('00:00')->runInBackground();
-        $schedule->command('daily:tax-effective-date')->dailyAt('00:00')->runInBackground();
-        $schedule->command('daily:tax-effective-date')->dailyAt('00:00')->runInBackground();
-        $schedule->command('daily:delete-draft-businesses-exceed-seven-days')->dailyAt('00:00')->runInBackground();
         $schedule->command('daily:recon')->dailyAt('00:00')->runInBackground();
-        $schedule->command('annual:property-tax-bill')->yearlyOn(7,1,'00:00')->runInBackground();
-        $schedule->command('monthly:property-tax-bill-reminder')->yearlyOn(7,1,'00:00')->runInBackground();
+        $schedule->command('daily:debt')->dailyAt('00:10')->runInBackground();
+        $schedule->command('daily:debt-penalty')->dailyAt('00:15')->runInBackground();
+        $schedule->command('daily:debt-notice')->dailyAt('00:20')->runInBackground();
+        $schedule->command('daily:reopen-business')->dailyAt('00:25')->runInBackground();
+        $schedule->command('update:installment')->dailyAt('00:30')->runInBackground();
+        $schedule->command('daily:tax-effective-date')->dailyAt('00:35')->runInBackground();
+        $schedule->command('daily:tax-effective-date')->dailyAt('00:40')->runInBackground();
+        $schedule->command('daily:delete-draft-businesses-exceed-seven-days')->dailyAt('00:45')->runInBackground();
+        $schedule->command('annual:property-tax-bill')->yearlyOn(7,1,'00:50')->runInBackground();
+        $schedule->command('monthly:property-tax-bill-reminder')->dailyAt('00:55')->runInBackground();
+        $schedule->command('app:ps-close')->dailyAt('01:00')->runInBackground();
+        $schedule->command('app:ps-reopen')->dailyAt('01:02')->runInBackground();
+        $schedule->command('app:ps-de-register')->dailyAt('01:04')->runInBackground();
+        $schedule->command('dl:expired')->dailyAt('01:05')->runInBackground();
 
         // RUNNING AT SPECIFIC TIME & DAY
         // $schedule->command('daily:debt')->cron('51 14 04 01 *')->runInBackground();

@@ -5,23 +5,25 @@
             <input readonly value="{{$year->code}}" type="text" class="form-control form-control-lg">
         </div>
         @if($code == \App\Models\TaxType::VAT)
-        <div class="col-md-4 mb-2">
-            <label>Vat Service</label>
-            <select class="form-control {{ $errors->first('service_code') ? 'is-invalid' : '' }}" wire:model="service_code">
-                <option value="">--Choose service--</option>
-                <option value="SUP">Supplies of goods & services</option>
-                <option value="PUR">Purchases (Inputs)</option>
-            </select>
-            @error('service_code')
-            <div class="invalid-feedback">
-                {{ $message }}
+            <div class="col-md-4 mb-2">
+                <label>Vat Service</label>
+                <select class="form-control {{ $errors->first('service_code') ? 'is-invalid' : '' }}"
+                        wire:model="service_code">
+                    <option value="">--Choose service--</option>
+                    <option value="SUP">Supplies of goods & services</option>
+                    <option value="PUR">Purchases (Inputs)</option>
+                </select>
+                @error('service_code')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
-            @enderror
-        </div>
         @endif
         <div class="col-md-4 mb-2">
             <label>Name</label>
-            <input type="text" class="form-control form-control-lg {{ $errors->first('name') ? 'is-invalid' : '' }}" wire:model="name">
+            <input type="text" class="form-control form-control-lg {{ $errors->first('name') ? 'is-invalid' : '' }}"
+                   wire:model="name">
             @error('name')
             <div class="invalid-feedback">
                 {{ $message }}
@@ -29,15 +31,17 @@
             @enderror
         </div>
         @if(!empty($name))
-        <div class="col-md-4 mb-2">
-            <label>Code</label>
-            <input readonly type="text" class="form-control form-control-lg {{ $errors->first('config_code') ? 'is-invalid' : '' }}" wire:model="config_code">
-            @error('config_code')
-            <div class="invalid-feedback">
-                {{ $message }}
+            <div class="col-md-4 mb-2">
+                <label>Code</label>
+                <input readonly type="text"
+                       class="form-control form-control-lg {{ $errors->first('config_code') ? 'is-invalid' : '' }}"
+                       wire:model="config_code">
+                @error('config_code')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
-            @enderror
-        </div>
         @endif
         <div class="col-md-4 mb-2">
             <label>Row Type</label>
@@ -59,8 +63,8 @@
                 <option value="normal">Normal</option>
                 <option value="external">external</option>
                 @if($code == \App\Models\TaxType::VAT)
-                <option value="exemptedMethodOne">exemptedMethodOne</option>
-                <option value="exemptedMethodTwo">exemptedMethodTwo</option>
+                    <option value="exemptedMethodOne">Exempted Method One</option>
+                    <option value="exemptedMethodTwo">Exempted Method Two</option>
                 @endif
                 <option value="subtotal">Subtotal</option>
                 <option value="total">Total</option>
@@ -75,7 +79,8 @@
 
         <div class="col-md-4 mb-2">
             <label>Is Value Calculated?</label>
-            <select class="form-control {{ $errors->first('value_calculated') ? 'is-invalid' : '' }}" wire:model="value_calculated">
+            <select class="form-control {{ $errors->first('value_calculated') ? 'is-invalid' : '' }}"
+                    wire:model="value_calculated">
                 <option value="">--Choose--</option>
                 <option value="1">Yes</option>
                 <option value="0">No</option>
@@ -88,7 +93,8 @@
         </div>
         <div class="col-md-4 mb-2">
             <label>Is Rate Applicable?</label>
-            <select class="form-control {{ $errors->first('rate_applicable') ? 'is-invalid' : '' }}" wire:model="rate_applicable">
+            <select class="form-control {{ $errors->first('rate_applicable') ? 'is-invalid' : '' }}"
+                    wire:model="rate_applicable">
                 <option value="">--Choose--</option>
                 <option value="1">Yes</option>
                 <option value="0">No</option>
@@ -115,7 +121,8 @@
 
         <div class="col-md-4 mb-2">
             <label>Rate</label>
-            <input type="text" class="form-control form-control-lg {{ $errors->first('rate') ? 'is-invalid' : '' }}" wire:model="rate">
+            <input type="text" class="form-control form-control-lg {{ $errors->first('rate') ? 'is-invalid' : '' }}"
+                   wire:model="rate">
             @error('rate')
             <div class="invalid-feedback">
                 {{ $message }}
@@ -127,9 +134,11 @@
             <label>Currency</label>
             <select class="form-control {{ $errors->first('currency') ? 'is-invalid' : '' }}" wire:model="currency">
                 <option value="">--Choose currency--</option>
-                @foreach($currencies as $currency)
-                    <option value="{{$currency->iso}}">{{$currency->name}}</option>
-                @endforeach
+                @if(!empty($currencies))
+                    @foreach($currencies as $currency)
+                        <option value="{{$currency->iso}}">{{$currency->name ?? 'N/A'}}</option>
+                    @endforeach
+                @endif
                 <option value="BOTH">Both</option>
             </select>
             @error('currency')
@@ -140,7 +149,8 @@
         </div>
         <div class="col-md-4 mb-2">
             <label>Rate USD</label>
-            <input type="text" class="form-control form-control-lg {{ $errors->first('rate_usd') ? 'is-invalid' : '' }}" wire:model="rate_usd">
+            <input type="text" class="form-control form-control-lg {{ $errors->first('rate_usd') ? 'is-invalid' : '' }}"
+                   wire:model="rate_usd">
             @error('rate_usd')
             <div class="invalid-feedback">
                 {{ $message }}

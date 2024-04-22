@@ -12,9 +12,11 @@
                         <label class="control-label">Year</label>
                         <select disabled wire:model.lazy="year" name="year" id="year" class="form-control">
                             <option value="">select year</option>
-                            @foreach($years as $year)
-                                <option value="{{$year->id}}">{{$year->code}}</option>
-                            @endforeach
+                            @if(!empty($years))
+                                @foreach($years as $year)
+                                    <option value="{{$year->id}}">{{$year->code}}</option>
+                                @endforeach
+                            @endif
                         </select>
                         @error('year')
                         <span class="text-danger">{{ $message }}</span>
@@ -51,7 +53,9 @@
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                    </div>Save</button>
+                    </div>
+                    Save
+                </button>
             </div>
         </div>
     </div>

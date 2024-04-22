@@ -2,11 +2,15 @@
 
 namespace App\Http\Livewire\Mvr\Payment;
 
+use App\Enum\GeneralConstant;
+use App\Enum\MvrRegistrationStatus;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
-use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrOwnershipTransfer;
 use App\Models\MvrRegistration;
-use App\Models\MvrRegistrationType;
+use App\Models\MvrRegistrationParticularChange;
+use App\Models\MvrRegistrationStatusChange;
+use App\Models\MvrTransferFee;
 use App\Services\ZanMalipo\GepgResponse;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
@@ -25,13 +29,39 @@ class FeePayment extends Component
     {
         $this->motorVehicle = $motorVehicle;
 
-        $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
-
-        $this->fee = MvrFee::query()->where([
+        $search = [
             'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
-            'mvr_fee_type_id' => $this->feeType->id,
             'mvr_class_id' => $this->motorVehicle->mvr_class_id
-        ])->first();
+        ];
+
+        if (get_class($this->motorVehicle) == MvrRegistrationStatusChange::class) {
+            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
+        }
+
+        elseif (get_class($this->motorVehicle) == MvrRegistration::class) {
+            if ($this->motorVehicle->origin == MvrRegistrationStatus::STATUS_CHANGE) {
+                $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
+            } else {
+                $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
+            }
+        }
+
+        else if (get_class($this->motorVehicle) == MvrRegistrationParticularChange::class) {
+            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
+        }
+
+        else if (get_class($this->motorVehicle) == MvrOwnershipTransfer::class) {
+            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TRANSFER_OWNERSHIP]);
+            $search['mvr_class_id'] = $this->motorVehicle->motor_vehicle->mvr_class_id;
+        }
+
+        else {
+            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
+        }
+
+        $search['mvr_fee_type_id'] = $this->feeType->id;
+
+        $this->fee = MvrFee::query()->where($search)->first();
     }
 
     public function refresh()
@@ -46,12 +76,11 @@ class FeePayment extends Component
     {
         $response = $this->regenerateControlNo($this->motorVehicle->bill);
         if ($response) {
-            session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
+            session()->flash(GeneralConstant::SUCCESS, 'Your request was submitted, you will receive your payment information shortly.');
             return redirect(request()->header('Referer'));
         }
-        $this->customAlert('error', 'Control number could not be generated, please try again later.');
+        $this->customAlert(GeneralConstant::ERROR, 'Control number could not be generated, please try again later.');
     }
-
 
     /**
      * A Safety Measure to Generate a bill that has not been generated
@@ -59,64 +88,23 @@ class FeePayment extends Component
     public function generateBill()
     {
         try {
-
             if (empty($this->fee)) {
-                $this->customAlert('error', "Fee for the selected registration type is not configured");
-                DB::rollBack();
+                $this->customAlert(GeneralConstant::ERROR, "Fee for the selected registration type is not configured");
                 return;
             }
 
-            $this->generateMvrControlNumber($this->motorVehicle, $this->fee);
-            $this->customAlert('success', 'Your request was submitted, you will receive your payment information shortly.');
-            return redirect(request()->header('Referer'));
-        } catch (Exception $e) {
-            $this->customAlert('error', 'Bill could not be generated, please try again later.');
-            Log::error($e);
-        }
-    }
-
-
-    public function processRegistrationPlateNumber()
-    {
-        $regType = $this->motorVehicle->regtype;
-        try {
-            DB::beginTransaction();
-
-            if ($regType->name == MvrRegistrationType::TYPE_PRIVATE_GOLDEN
-                || $regType->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED
-                || $regType->name == MvrRegistrationType::TYPE_DIPLOMATIC) {
-                $plateNumber = $this->motorVehicle->plate_number;
-            } else if ($regType->external_defined != 1) {
-                $plateNumber = MvrRegistration::getNexPlateNumber($regType, $this->motorVehicle->class);
-
-                if (!$plateNumber) {
-                    $this->customAlert('warning', 'Failed to generate plate number, please make sure initial plate number for this registration has been created');
-                    return;
-                }
+            if (get_class($this->motorVehicle) != MvrOwnershipTransfer::class) {
+                $this->generateMvrControlNumber($this->motorVehicle, $this->fee);
             } else {
-                throw new Exception('Invalid mvr registration type');
+                $this->generateMvrTransferOwnershipControlNumber($this->motorVehicle, $this->fee);
             }
-
-            $this->motorVehicle->update([
-                'plate_number' => $this->motorVehicle->plate_number ?? $plateNumber,
-                'registration_number' => 'Z-' . str_pad($this->motorVehicle->id, 6, "0", STR_PAD_LEFT),
-                'mvr_plate_number_status' => MvrPlateNumberStatus::STATUS_GENERATED,
-                'registered_at' => date('Y-m-d')
-            ]);
-
-            DB::commit();
-
+            $this->customAlert(GeneralConstant::SUCCESS, 'Your request was submitted, you will receive your payment information shortly.');
             return redirect(request()->header('Referer'));
-
-            // TODO: Send Registration status as a job
-//            $this->mvrService->postPlateNumber($this->motorVehicle->chassis->chassis_number, $plateNumber, 'registration');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, Please contact administrator for support');
+        } catch (Exception $exception) {
+            $this->customAlert(GeneralConstant::ERROR, 'Bill could not be generated, please try again later.');
+            Log::error('MVR-FEE-PAYMENT-GN-BILL', [$exception]);
         }
     }
-
 
     public function getGepgStatus($code)
     {

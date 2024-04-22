@@ -93,7 +93,6 @@
                 </div>
                 </div>
                 </div>
-
                 <div class="card mt-3">
                     <div class="card-header">
                         <h5>Owner</h5>
@@ -112,49 +111,17 @@
                                 <span class="font-weight-bold text-uppercase">TIN</span>
                                 <p class="my-1">{{ $motor_vehicle['importer_tin'] }}</p>
                             </div>
-{{--                            <div class="col-md-4 mb-3">--}}
-{{--                                <span class="font-weight-bold text-uppercase">State/City</span>--}}
-{{--                                <p class="my-1">{{ $motor_vehicle['owner']['city'] }}</p>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-md-4 mb-3">--}}
-{{--                                <span class="font-weight-bold text-uppercase">Address</span>--}}
-{{--                                <p class="my-1">{{ $motor_vehicle['owner']['address'] }}</p>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-md-4 mb-3">--}}
-{{--                                <span class="font-weight-bold text-uppercase">Street</span>--}}
-{{--                                <p class="my-1">{{ $motor_vehicle['owner']['street'] }}</p>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-md-4 mb-3">--}}
-{{--                                <span class="font-weight-bold text-uppercase">Shehia</span>--}}
-{{--                                <p class="my-1">{{ $motor_vehicle['owner']['shehia'] }}</p>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-md-4 mb-3">--}}
-{{--                                <span class="font-weight-bold text-uppercase">Postal Address</span>--}}
-{{--                                <p class="my-1">{{ $motor_vehicle['owner']['postal_address'] }}</p>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-md-4 mb-3">--}}
-{{--                                <span class="font-weight-bold text-uppercase">Office Number</span>--}}
-{{--                                <p class="my-1">{{ $motor_vehicle['owner']['office_number'] }}</p>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-md-4 mb-3">--}}
-{{--                                <span class="font-weight-bold text-uppercase">Email</span>--}}
-{{--                                <p class="my-1">{{ $motor_vehicle['owner']['email'] }}</p>--}}
-{{--                            </div>--}}
                         </div>
-
-
                     </div>
                 </div>
             @else
                 <div class="card mt-3">
                     <div class="card-body">
-
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <div class="text-center m-3 text-center h3"><i class="bi bi-search text-danger"></i></div>
                                 <h3 class="font-weight-bold text-center m-3 text-danger">{{$message}}</h3>
                             </div>
-
                         </div>
                     </div>
                 </div>

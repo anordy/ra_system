@@ -20,6 +20,7 @@ class TaxRegionsSeeder extends Seeder
 
         $regions = [
             [
+                'department_id' => null,
                 'code' => 'headquarter',
                 'name' => 'Headquarter',
                 'prefix' => '01',

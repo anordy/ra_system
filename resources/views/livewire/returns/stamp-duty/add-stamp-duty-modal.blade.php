@@ -12,9 +12,11 @@
                         <label class="control-label">Financial Year</label>
                         <select wire:model="financial_year" class="form-control">
                             <option></option>
-                            @foreach($financialYears as $year)
-                                <option value="fixed">{{ $year->name }}</option>
-                            @endforeach
+                            @if(!empty($financialYears))
+                                @foreach($financialYears as $year)
+                                    <option value="fixed">{{ $year->name ?? 'N/A' }}</option>
+                                @endforeach
+                            @endif
                         </select>
                         @error('description')
                         <span class="text-danger">{{ $message }}</span>

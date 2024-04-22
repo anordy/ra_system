@@ -19,8 +19,8 @@ class CreateRioRegisterOffences extends Migration
             $table->unsignedBigInteger('rio_register_id');
             $table->timestamps();
 
-            $table->foreign('rio_offence_id')->references('id')->on('rio_offences');
-            $table->foreign('rio_register_id')->references('id')->on('rio_register');
+            // $table->foreign('rio_offence_id')->references('id')->on('rio_offences');
+            // $table->foreign('rio_register_id')->references('id')->on('rio_register');
         });
     }
 

@@ -81,7 +81,7 @@ class DemandNoticeReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         return number_format($value);
                     }
                 ),
@@ -90,7 +90,7 @@ class DemandNoticeReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         return $value;
                     }
                 ),
@@ -99,7 +99,7 @@ class DemandNoticeReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         return $value;
                     }
                 ),

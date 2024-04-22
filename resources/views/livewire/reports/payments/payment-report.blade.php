@@ -143,7 +143,7 @@
                 <select wire:model="period" id="period"
                         class="form-control {{ $errors->has('period') ? 'is-invalid' : '' }}">
                     <option value="">Select Period</option>
-                    @if ($tax_type_id && $reportType && $year)
+                    @if ($tax_type_id && $year)
                         @foreach ($optionPeriods as $optionPeriod)
                             <option value="{{ $optionPeriod }}">
                                 {{ $optionPeriod }}</option>
@@ -168,7 +168,7 @@
                             class="form-control {{ $errors->has('semiAnnual') ? 'is-invalid' : '' }}"
                             wire:model="semiAnnual">
                         <option value="">Select Semi-Annual term</option>
-                        @if ($year && $period && $tax_type_id && $reportType)
+                        @if ($year && $period && $tax_type_id)
                             @foreach ($optionSemiAnnuals as $optionSemiAnnual)
                                 <option value={{ $optionSemiAnnual }}>
                                     {{ $optionSemiAnnual }}</option>
@@ -192,8 +192,8 @@
                     </label>
                     <select name="quater" id="Quarter" wire:model="quater"
                             class="form-control {{ $errors->has('quater') ? 'is-invalid' : '' }}">
-                        <option value="">Select Quater</option>
-                        @if ($year && $period && $tax_type_id && $reportType)
+                        <option value="">Select Quarter</option>
+                        @if ($year && $period && $tax_type_id)
                             @foreach ($optionQuarters as $optionQuarter)
                                 <option value={{ $optionQuarter }}>
                                     {{ $optionQuarter }}</option>
@@ -218,7 +218,7 @@
                     <select name="month" id="Month" wire:model="month"
                             class="form-control {{ $errors->has('month') ? 'is-invalid' : '' }}">
                         <option value="">Select Month</option>
-                        @if ($year && $period && $tax_type_id && $reportType)
+                        @if ($year && $period && $tax_type_id)
                             @foreach ($optionMonths as $key => $optionMonth)
                                 <option value={{ $key }}>
                                     {{ $optionMonth }}</option>

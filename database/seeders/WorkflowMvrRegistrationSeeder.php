@@ -33,6 +33,11 @@ class WorkflowMvrRegistrationSeeder extends Seeder
                 'operator_type' => 'user',
                 'operators' => [],
             ],
+            'zbs_officer' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2, 3],
+            ],
             'mvr_registration_officer' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -57,6 +62,11 @@ class WorkflowMvrRegistrationSeeder extends Seeder
         $transitions = [
             'application_submitted' => [
                 'from' => 'apply',
+                'to' => 'zbs_officer',
+                'condition' => '',
+            ],
+            'zbs_officer_review' => [
+                'from' => 'zbs_officer',
                 'to' => 'mvr_registration_officer',
                 'condition' => '',
             ],
@@ -65,14 +75,19 @@ class WorkflowMvrRegistrationSeeder extends Seeder
                 'to' => 'mvr_registration_manager',
                 'condition' => '',
             ],
-            'application_filled_incorrect' => [
+            'mvr_registration_officer_reject' => [
                 'from' => 'mvr_registration_officer',
+                'to' => 'zbs_officer',
+                'condition' => '',
+            ],
+            'application_filled_incorrect' => [
+                'from' => 'zbs_officer',
                 'to' => 'correct_application',
                 'condition' => '',
             ],
             'application_corrected' => [
                 'from' => 'correct_application',
-                'to' => 'mvr_registration_officer',
+                'to' => 'zbs_officer',
                 'condition' => '',
             ],
             'mvr_registration_manager_reject' => [

@@ -17,7 +17,7 @@
         @endif
     </div>
     <div class="card-body mt-0">
-        <table class="table table-bordered table-striped normal-text">
+        <table class="table table-bordered table-striped table-responsive normal-text">
             <thead>
             <th>Business Name</th>
             <th>Location Name</th>

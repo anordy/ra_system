@@ -206,7 +206,7 @@
                                 </label>
                                 <select name="quater" id="Quarter" wire:model="quater"
                                     class="form-control {{ $errors->has($quater) ? 'is-invalid' : '' }}">
-                                    <option value="" disabled>Select Quater</option>
+                                    <option value="" disabled>Select Quarter</option>
                                     @foreach ($optionQuarters as $optionQuarter)
                                         <option value={{ $optionQuarter }}>
                                             {{ $optionQuarter }}</option>

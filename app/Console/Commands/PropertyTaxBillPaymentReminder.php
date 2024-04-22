@@ -111,6 +111,8 @@ class PropertyTaxBillPaymentReminder extends Command
             CancelBill::dispatch($propertyPayment->latestBill, 'Property Tax Interest Increment');
         }
 
+         $propertyPayment = PropertyPayment::find($propertyPayment->id);
+
          GeneratePropertyTaxControlNo::dispatch($propertyPayment);
 
     }

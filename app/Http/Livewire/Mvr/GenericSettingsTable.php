@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Mvr;
 
+use App\Enum\GeneralConstant;
 use App\Models\DlFee;
 use App\Models\DlLicenseClass;
 use App\Models\DlLicenseDuration;
@@ -9,12 +10,14 @@ use App\Models\GenericSettingModel;
 use App\Models\MvrColor;
 use App\Models\MvrFee;
 use App\Models\MvrModel;
-use App\Models\MvrPlateNumberColor;
+use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferFee;
+use App\Models\TaxRefund\PortLocation;
 use App\Traits\WithSearch;
+use App\Traits\CustomAlert;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Log;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -64,23 +67,29 @@ class GenericSettingsTable extends DataTableComponent
                 ->sortable()
             ];
         }
+
+        if ($this->model === MvrRegistrationType::class){
+            $name_column =  [
+                Column::make("Name", "name")
+                    ->sortable(),
+                Column::make("Initial Plate Number", "initial_plate_number")
+                    ->sortable()
+            ];
+        }
         return array_merge(
             $name_column,
             $this->modelExtraColumns(),[
                 Column::make('Action', 'id')
             ->format(function ($value){
                 $model = preg_replace('/\\\\/','\\\\\\',$this->model);
-                return <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'mvr.generic-setting-add-modal','$model',$value)"><i class="bi bi-pencil-square"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash-fill"></i> </button>
-                HTML;
-                    })->html()]);
+                return view('mvr.generic-settings.actions', compact('model', 'value'));
+            })]);
     }
 
 
     public function delete($id)
     {
-        $this->customAlert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert(GeneralConstant::WARNING, 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -101,10 +110,10 @@ class GenericSettingsTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $this->model::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $this->flash(GeneralConstant::SUCCESS, 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            report($e);
-            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            Log::error('GENERIC-SETTING-TABLE', [$e]);
+            $this->customAlert(GeneralConstant::WARNING, 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
@@ -143,6 +152,9 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("Type", "type")->sortable(),
                 Column::make("Duration", "license_duration.number_of_years")->sortable(),
             ],
+            PortLocation::class => [
+                Column::make("Region", "region.name")->sortable(),
+            ]
         ];
 
         return $model_extra_columns[$this->model]??[];

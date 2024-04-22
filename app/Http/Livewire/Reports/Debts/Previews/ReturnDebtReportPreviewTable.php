@@ -84,7 +84,7 @@ class ReturnDebtReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         return number_format($value, 2);
                     }
                 ),
@@ -93,7 +93,7 @@ class ReturnDebtReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         if (!$value) {
                             return '-';
                         }
@@ -104,7 +104,7 @@ class ReturnDebtReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         return $value;
                     }
                 ),

@@ -3,7 +3,7 @@
 @section('title', 'Approval Details')
 
 @section('content')
-    @if ($audit->status == App\Enum\TaxAuditStatus::APPROVED)
+    @if ($audit->status == App\Enum\TaxAuditStatus::APPROVED && $audit->assesment)
     <div class="row m-2 pt-3">
         <div class="col-md-12">
             <livewire:assesments.tax-assessment-payment :assessment="$audit->assessment" />

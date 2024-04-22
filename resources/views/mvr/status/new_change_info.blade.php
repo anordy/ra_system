@@ -1,7 +1,6 @@
 <div class="card mt-3">
     <div class="card-header font-weight-bold bg-white d-flex justify-content-between align-items-center">
-        <span> {{ $reg->chassis->chassis_number }} Status Change Information</span>
-
+        <span> {{ $reg->chassis->chassis_number ?? 'N/A'  }}  Status Change Information</span>
     </div>
 
     <div class="card-body">
@@ -9,26 +8,26 @@
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Status</span>
                 <p class="my-1">
-                    @if ($reg->status === \App\Enum\MvrRegistrationStatus::PENDING)
+                    @if($reg->status === \App\Enum\MvrRegistrationStatus::PENDING)
                         <span class="badge badge-info py-1 px-2">
-                            <i class="bi bi-check-circle-fill mr-1"></i>
-                            {{ __('Pending') }}
-                        </span>
+                <i class="bi bi-check-circle-fill mr-1"></i>
+                {{ __('Pending') }}
+            </span>
                     @elseif($reg->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED)
                         <span class="badge badge-success py-1 px-2">
-                            <i class="bi bi-check-circle-fill mr-1"></i>
-                            {{ __('Registered') }}
-                        </span>
+                <i class="bi bi-check-circle-fill mr-1"></i>
+                {{ __('Registered') }}
+            </span>
                     @elseif($reg->status === \App\Enum\MvrRegistrationStatus::CORRECTION)
                         <span class="badge badge-warning py-1 px-2">
-                            <i class="bi bi-check-circle-fill mr-1"></i>
-                            {{ __('For Corrections') }}
-                        </span>
+                <i class="bi bi-check-circle-fill mr-1"></i>
+                {{ __('For Corrections') }}
+            </span>
                     @else
                         <span class="badge badge-primary py-1 px-2">
-                            <i class="bi bi-check-circle-fill mr-1"></i>
-                            {{ $reg->status }}
-                        </span>
+                <i class="bi bi-check-circle-fill mr-1"></i>
+                {{ $reg->status }}
+            </span>
                     @endif
                 </p>
             </div>
@@ -84,7 +83,7 @@
     </div>
 </div>
 
-@if ($reg->approval_report)
+ @if ($reg->approval_report)
     <div class="card my-4 rounded-0">
         <div class="card-header font-weight-bold bg-white">
             Approval Report
@@ -93,12 +92,11 @@
             <div class="row">
                 @if ($reg->approval_report)
                     <div class="col-md-3">
-                        <div
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
-                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                        <div class="file-item p-2 mb-3 d-flex rounded-sm align-items-center">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
                             <a target="_blank"
-                                href="{{ route('assesments.waiver.files', encrypt($reg->approval_report)) }}"
-                                class="ml-1 font-weight-bold">
+                               href="{{ route('assesments.waiver.files', encrypt($reg->approval_report)) }}"
+                               class="ml-1 font-weight-bolder">
                                 Approval Report
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>

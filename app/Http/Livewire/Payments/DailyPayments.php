@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Payments;
 
+use App\Enum\CustomMessage;
 use App\Exports\DailyPaymentExport;
 use App\Traits\DailyPaymentTrait;
 use Exception;
@@ -25,8 +26,8 @@ class DailyPayments extends Component
     public $vars;
 
     protected $rules =[
-        'range_start'=>'required|strip_tag',
-        'range_end' => 'required|strip_tag',
+        'range_start'=>'required|date',
+        'range_end' => 'required|date',
     ];
 
     public function mount()
@@ -75,16 +76,22 @@ class DailyPayments extends Component
 
     public function getData()
     {
-        $this->taxTypes = $this->getInvolvedTaxTypes($this->range_start,$this->range_end);
+        try {
+            $this->taxTypes = $this->getInvolvedTaxTypes($this->range_start, $this->range_end);
 
-        $this->vars['tzsTotalCollection'] = $this->getTotalCollectionPerCurrency('TZS',$this->range_start,$this->range_end);
+            $this->vars['tzsTotalCollection'] = $this->getTotalCollectionPerCurrency('TZS', $this->range_start, $this->range_end);
 
-        $this->vars['usdTotalCollection'] = $this->getTotalCollectionPerCurrency('USD',$this->range_start,$this->range_end);
+            $this->vars['usdTotalCollection'] = $this->getTotalCollectionPerCurrency('USD', $this->range_start, $this->range_end);
 
-        $this->vars['range_start'] = $this->range_start;
+            $this->vars['range_start'] = $this->range_start;
 
-        $this->vars['range_end'] = $this->range_end;
+            $this->vars['range_end'] = $this->range_end;
+        } catch (Exception $exception) {
+            Log::error('PAYMENTS-DAILY-PAYMENTS-GET-DATA', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
+        }
     }
+
 
     public function render()
     {

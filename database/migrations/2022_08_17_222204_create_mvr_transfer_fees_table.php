@@ -20,8 +20,6 @@ class CreateMvrTransferFeesTable extends Migration
             $table->string('gfs_code',15);
             $table->unsignedBigInteger('mvr_transfer_category_id');
             $table->timestamps();
-
-            $table->foreign('mvr_transfer_category_id')->references('id')->on('mvr_transfer_categories');
         });
     }
 

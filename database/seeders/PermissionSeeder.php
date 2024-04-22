@@ -285,6 +285,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-mvr-fee-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-deregistration-reason-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-deregistration-fee-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-registration-type-view', 'sys_module_id' => 18],
 
             ['name' => 'setting-mvr-ownership-transfer-reason-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-category-view', 'sys_module_id' => 18],
@@ -453,6 +454,9 @@ class PermissionSeeder extends Seeder
             ['name' => 'properties-registrations', 'sys_module_id' => 31],
             ['name' => 'property-payment-extension', 'sys_module_id' => 31],
             ['name' => 'next-bills-preview', 'sys_module_id' => 31],
+
+            # Tax Refund
+            ['name' => 'port-location-view', 'sys_module_id' => 32],
         ];
 
         foreach ($data as $row) {

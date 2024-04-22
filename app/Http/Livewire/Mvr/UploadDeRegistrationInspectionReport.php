@@ -3,29 +3,14 @@
 namespace App\Http\Livewire\Mvr;
 
 
-use App\Models\BusinessLocation;
-use App\Models\Country;
-use App\Models\MvrBodyType;
-use App\Models\MvrClass;
-use App\Models\MvrColor;
+use App\Enum\GeneralConstant;
 use App\Models\MvrDeRegistrationRequest;
-use App\Models\MvrFuelType;
-use App\Models\MvrMake;
-use App\Models\MvrModel;
-use App\Models\MvrMotorVehicle;
-use App\Models\MvrMotorVehicleOwner;
-use App\Models\MvrOwnershipStatus;
-use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRequestStatus;
-use App\Models\MvrTransmissionType;
-use App\Models\MvrVehicleStatus;
-use App\Models\Taxpayer;
-use App\Services\TRA\ServiceRequest;
+use App\Traits\CustomAlert;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -33,7 +18,7 @@ use Livewire\WithFileUploads;
 class UploadDeRegistrationInspectionReport extends Component
 {
 
-    use CustomAlert,WithFileUploads;
+    use CustomAlert, WithFileUploads;
 
 
     public string $request_id;
@@ -46,14 +31,14 @@ class UploadDeRegistrationInspectionReport extends Component
 
     public function mount($request_id)
     {
-        $this->request_id = $request_id;
+        $this->request_id = decrypt($request_id);
     }
 
     protected function rules()
     {
         return [
-            'inspection_report'=>'required|mimes:pdf|max:1024|max_file_name_length:100',
-            'inspection_date'=>'required|date',
+            'inspection_report' => 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
+            'inspection_date' => 'required|date',
         ];
     }
 
@@ -62,18 +47,21 @@ class UploadDeRegistrationInspectionReport extends Component
     {
         $this->validate();
         DB::beginTransaction();
-        try{
-            $this->inspection_report_path = $this->inspection_report->storePubliclyAs('MVR', "De-Reg-Inspection-Report-{$this->request_id}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->inspection_report->extension());
+        try {
+            $this->inspection_report_path = $this->inspection_report->storePubliclyAs('MVR', "De-Reg-Inspection-Report-{$this->request_id}-" . date('YmdHis') . '-' . random_int(10000, 99999) . '.' . $this->inspection_report->extension());
             MvrDeRegistrationRequest::query()->find($this->request_id)->update([
-                'inspection_report_path'=>$this->inspection_report_path,
-                'mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_APPROVAL])->id,
+                'inspection_report_path' => $this->inspection_report_path,
+                'mvr_request_status_id' => MvrRequestStatus::query()
+                    ->select('id')
+                    ->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_PENDING_APPROVAL])
+                    ->id,
             ]);
-            $this->flash('success', 'Inspection Report Uploaded', [], route('mvr.de-register-requests.show',encrypt($this->request_id)));
-        }catch(Exception $e){
+            $this->flash(GeneralConstant::SUCCESS, 'Inspection Report Uploaded', [], route('mvr.de-register-requests.show', encrypt($this->request_id)));
+        } catch (Exception $e) {
             if (Storage::exists($this->inspection_report_path)) Storage::delete($this->inspection_report_path);
             DB::rollBack();
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            Log::error('UPDATE-DE-REGISTRATION-INSPECTION-REPORT', [$e]);
+            $this->customAlert(GeneralConstant::ERROR, 'Something went wrong, please contact the administrator for help');
         }
     }
 

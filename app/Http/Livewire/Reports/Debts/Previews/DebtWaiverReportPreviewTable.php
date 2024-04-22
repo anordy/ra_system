@@ -75,7 +75,7 @@ class DebtWaiverReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         if ($value === 'interest') {
                             return 'Interest';
                         } else if ($value === 'penalty') {

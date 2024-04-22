@@ -2,14 +2,18 @@
 
 namespace App\Http\Livewire\Mvr;
 
+use App\Enum\GeneralConstant;
+use App\Enum\MvrRegistrationStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistration;
+use App\Models\MvrRegistrationStatusChange;
 use App\Traits\CustomAlert;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -80,6 +84,7 @@ class PlateNumbersTable extends DataTableComponent
                             <button class="btn btn-outline-primary btn-sm" wire:click="updateToReceived($value)"><i class="bi bi-pencil-square"></i> Update Status</button>
                         HTML;
                     } elseif (MvrPlateNumberStatus::STATUS_RECEIVED == $row->mvr_plate_number_status) {
+                        $id = encrypt($value);
                         return <<< HTML
                             <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.plate-number-collection-model',$value)"><i class="bi bi-pencil-square"></i> Update Status</button>
                         HTML;
@@ -92,7 +97,7 @@ class PlateNumbersTable extends DataTableComponent
 
     public function updateToPrinted($id)
     {
-        $this->customAlert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Printed</span>?', [
+        $this->customAlert(GeneralConstant::QUESTION, 'Update Status to <span class="text-uppercase font-weight-bold">Printed</span>?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -111,7 +116,7 @@ class PlateNumbersTable extends DataTableComponent
 
     public function updateToReceived($id)
     {
-        $this->customAlert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Received</span>?', [
+        $this->customAlert(GeneralConstant::QUESTION, 'Update Status to <span class="text-uppercase font-weight-bold">Received</span>?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -130,7 +135,7 @@ class PlateNumbersTable extends DataTableComponent
 
     public function updateToCollected($id)
     {
-        $this->customAlert('question', 'Update Status to <span class="text-uppercase font-weight-bold">Collected</span>?', [
+        $this->customAlert(GeneralConstant::QUESTION, 'Update Status to <span class="text-uppercase font-weight-bold">Collected</span>?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -151,21 +156,31 @@ class PlateNumbersTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-
             $mvr = MvrRegistration::query()->find($data->id);
+
+            DB::beginTransaction();
             $mvr->update([
                 'mvr_plate_number_status' => $data->status
             ]);
+
+
+            $mvrStatusChange = MvrRegistrationStatusChange::where('registration_number',$mvr->registration_number)->first();
+            if ($mvrStatusChange) {
+                $mvrStatusChange->mvr_plate_number_status = $data->status;
+                $mvrStatusChange->status = MvrRegistrationStatus::STATUS_REGISTERED;
+                $mvrStatusChange->save();
+            }
 
             if ($data->status === MvrPlateNumberStatus::STATUS_PRINTED) {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $mvr->taxpayer->mobile, 'message' => "
                 Hello {$mvr->taxpayer->fullname}, your plate number for motor vehicle registration for chassis number {$mvr->chassis->chassis_number} has been printed. You may visit ZRA offices after 3 days for collection of plate number"]));
             }
-
-            $this->flash('success', 'Plate Number Status updated', [], redirect()->back()->getTargetUrl());
+            DB::commit();
+            $this->flash(GeneralConstant::SUCCESS, 'Plate Number Status updated', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
-            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            DB::rollBack();
+            Log::error('PLATE-NUMBERS-TABLE-CONFIRM-UPDATE', [$e]);
+            $this->customAlert(GeneralConstant::WARNING, 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

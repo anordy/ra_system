@@ -38,7 +38,9 @@ class BusinessInvestigationAddModal extends Component
     {
         return [
             'business_id' => 'required|numeric|exists:businesses,id',
+            'location_ids' => 'required',
             'location_ids.*' => 'required|numeric',
+            'tax_type_ids' => 'required',
             'tax_type_ids.*' => 'required|numeric',
             'intension' => 'required|strip_tag',
             'scope' => 'required|strip_tag',
@@ -85,11 +87,10 @@ class BusinessInvestigationAddModal extends Component
             ->first();
 
         if ($check) {
-            $this->validate(
-                ['business_id' => 'required|email'],
-                ['business_id.email' => 'Business with the given tax type is already on investigationing']
-            );
+            $this->customAlert('warning', 'The selected business location and tax type is already on investigation');
+            return;
         }
+
         DB::beginTransaction();
         try {
             $taxInvestigation = TaxInvestigation::create([
@@ -107,7 +108,6 @@ class BusinessInvestigationAddModal extends Component
             ]);
 
             foreach ($this->location_ids as $location_id) {
-
                 TaxInvestigationLocation::create([
                     'tax_investigation_id' => $taxInvestigation->id,
                     'business_location_id' => $location_id
@@ -115,7 +115,6 @@ class BusinessInvestigationAddModal extends Component
             }
 
             foreach ($this->tax_type_ids as $tax_type_id) {
-
                 TaxInvestigationTaxType::create([
                     'tax_investigation_id' => $taxInvestigation->id,
                     'business_tax_type_id' => $tax_type_id

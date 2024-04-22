@@ -37,6 +37,7 @@ class DlDriversLicense extends Model implements Auditable
 
     const STATUS_DAMAGED_OR_LOST ='LOST/DAMAGED';
     const STATUS_EXPIRED ='EXPIRED';
+    const ACTIVE ='ACTIVE';
 
 	protected $table = 'dl_drivers_licenses';
 	protected $casts = [
@@ -50,17 +51,7 @@ class DlDriversLicense extends Model implements Auditable
 		'expiry_date'
 	];
 
-	protected $fillable = [
-		'dl_drivers_license_owner_id',
-		'license_number',
-		'dl_license_duration_id',
-		'dl_license_application_id',
-		'issued_date',
-		'expiry_date',
-		'dl_license_class_id',
-		'license_restrictions',
-		'status',
-	];
+	protected $guarded = [];
 
     public static function getNextLicenseNumber()
     {
@@ -85,4 +76,9 @@ class DlDriversLicense extends Model implements Auditable
 	{
 		return $this->hasMany(DlDriversLicenseClass::class,'dl_drivers_license_id');
 	}
+
+    public function application()
+    {
+        return $this->hasOne(DlLicenseApplication::class,'id', 'dl_license_application_id');
+    }
 }

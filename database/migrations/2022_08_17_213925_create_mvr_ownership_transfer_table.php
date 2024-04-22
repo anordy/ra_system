@@ -18,7 +18,6 @@ class CreateMvrOwnershipTransferTable extends Migration
             $table->unsignedBigInteger('mvr_motor_vehicle_id');
             $table->unsignedBigInteger('mvr_ownership_transfer_reason_id');
             $table->string('transfer_reason',255)->nullable();
-            $table->unsignedBigInteger('mvr_transfer_category_id');
             $table->decimal('market_value',10)->nullable();
             $table->date('sale_date');
             $table->date('delivered_date')->comment("Date vehicle delivered to new owner");
@@ -28,14 +27,13 @@ class CreateMvrOwnershipTransferTable extends Migration
             $table->unsignedBigInteger('agent_taxpayer_id');
             $table->unsignedBigInteger('owner_taxpayer_id');
             $table->unsignedBigInteger('mvr_request_status_id');
+            $table->string('marking')->nullable();
+            $table->string('payment_status')->nullable();
+            $table->string('approval_report',255)->nullable();
+            $table->string('inspection_report',255)->nullable();
+            $table->string('status',255)->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('mvr_request_status_id')->references('id')->on('mvr_request_status');
-            $table->foreign('mvr_motor_vehicle_id')->references('id')->on('mvr_motor_vehicles');
-            $table->foreign('mvr_ownership_transfer_reason_id')->references('id')->on('mvr_o_transfer_reasons');
-            $table->foreign('agent_taxpayer_id')->references('id')->on('taxpayers');
-            $table->foreign('owner_taxpayer_id')->references('id')->on('taxpayers');
         });
     }
 

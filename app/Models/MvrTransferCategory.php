@@ -24,7 +24,7 @@ class MvrTransferCategory extends Model implements Auditable
 {
 	use \OwenIt\Auditing\Auditable;
 
-	protected $table = 'mvr_transfer_categories';
+	protected $table = 'mvr_registration_type_categories';
 
 	protected $fillable = [
 		'name'

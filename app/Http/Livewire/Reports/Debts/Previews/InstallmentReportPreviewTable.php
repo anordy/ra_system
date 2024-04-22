@@ -72,7 +72,7 @@ class InstallmentReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         return $value->toDateString();
                     }
                 ),
@@ -81,7 +81,7 @@ class InstallmentReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         return $value->toDateString();
                     }
                 ),
@@ -90,7 +90,7 @@ class InstallmentReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->format(
-                    function ($value, $row) {
+                    function ($value) {
                         return $value;
                     }
                 ),

@@ -20,7 +20,7 @@ class ReportPreviewTable extends DataTableComponent
     public function mount($parameters)
     {
         $this->parameters = $parameters;
-        $this->lumpsump = TaxType::where('code', TaxType::LUMPSUM_PAYMENT)->first();
+        $this->lumpsump = TaxType::select('id', 'code')->where('code', TaxType::LUMPSUM_PAYMENT)->first();
     }
 
     public function builder(): Builder
@@ -151,7 +151,6 @@ class ReportPreviewTable extends DataTableComponent
                     }
                 })
                 ->html()
-                // ->view('reports.returns.includes.payment-status'),
         ];
     }
 }

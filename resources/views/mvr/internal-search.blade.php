@@ -9,10 +9,7 @@
            <div class="card-header">
                <h5 class="">Search Result - {{$search_type=='chassis'?'Chassis':'Plate'}} Number: {{$number}}</h5>
                <div class="card-tools">
-                   <button class="btn btn-info btn-sm"
-                           onclick="Livewire.emit('showModal', 'mvr.chassis-number-internal-search','{{$result_route ?? 'mvr.internal-search'}}')"><i
-                               class="bi bi-plus-circle-fill"></i>
-                       New Search</button>
+                   New Search
                    <button class="btn btn-primary btn-sm"
                            onclick="Livewire.emit('showModal', '{{$action}}',{{$motor_vehicle->id}})"><i
                                class="bi bi-arrow-right"></i>
@@ -120,10 +117,6 @@
                </div>
                <hr />
                <div class="row">
-{{--                   <div class="col-md-4 mb-3">--}}
-{{--                       <span class="font-weight-bold text-uppercase">Vehicle Status</span>--}}
-{{--                       <p class="my-1">{{$motor_vehicle->vehicle_status->name}}</p>--}}
-{{--                   </div>--}}
                    <div class="col-md-4 mb-3">
                        <span class="font-weight-bold text-uppercase">Registration Status</span>
                        <p class="my-1"><span class="badge-info badge font-weight-bold">{{$motor_vehicle->registration_status}}</span></p>
@@ -143,54 +136,17 @@
                        <span class="font-weight-bold text-uppercase">Name</span>
                        <p class="my-1">{{ $motor_vehicle->chassis->importer_tin }}</p>
                    </div>
-{{--                   <div class="col-md-4 mb-3">--}}
-{{--                       <span class="font-weight-bold text-uppercase">Z-Number</span>--}}
-{{--                       <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->reference_no }}</p>--}}
-{{--                   </div>--}}
                    <div class="col-md-4 mb-3">
                        <span class="font-weight-bold text-uppercase">TIN</span>
                        <p class="my-1">{{ $motor_vehicle->chassis->importer_tin }}</p>
                    </div>
-{{--                   <div class="col-md-4 mb-3">--}}
-{{--                       <span class="font-weight-bold text-uppercase">State/City</span>--}}
-{{--                       <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->location }}</p>--}}
-{{--                   </div>--}}
-{{--                   <div class="col-md-4 mb-3">--}}
-{{--                       <span class="font-weight-bold text-uppercase">Address</span>--}}
-{{--                       <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->physical_address }}</p>--}}
-{{--                   </div>--}}
-{{--                   <div class="col-md-4 mb-3">--}}
-{{--                       <span class="font-weight-bold text-uppercase">Street</span>--}}
-{{--                       <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->street }}</p>--}}
-{{--                   </div>--}}
-{{--                   <div class="col-md-4 mb-3">--}}
-{{--                       <span class="font-weight-bold text-uppercase">Shehia</span>--}}
-{{--                       <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->shehia }}</p>--}}
-{{--                   </div>--}}
-{{--                   <div class="col-md-4 mb-3">--}}
-{{--                       <span class="font-weight-bold text-uppercase">Mobile</span>--}}
-{{--                       <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->mobile }}/{{ $motor_vehicle->current_owner->taxpayer->alt_mobile }}</p>--}}
-{{--                   </div>--}}
-{{--                   <div class="col-md-4 mb-3">--}}
-{{--                       <span class="font-weight-bold text-uppercase">Email</span>--}}
-{{--                       <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->email }}</p>--}}
-{{--                   </div>--}}
                </div>
-
            </div>
        </div>
 
    @else
        <div class="card mt-3">
-           <div class="card-header">
-{{--               <h5 class="text-uppercase">Search Results - {{$search_type}}: {{$number}}</h5>--}}
-               <div class="card-tools">
-                   <button class="btn btn-info btn-sm"
-                           onclick="Livewire.emit('showModal', 'mvr.chassis-number-internal-search','{{$result_route ?? 'mvr.internal-search'}}')"><i
-                               class="bi bi-plus-circle-fill"></i>
-                       New Search</button>
-               </div>
-           </div>
+          
            <div class="card-body">
 
                <div class="row">

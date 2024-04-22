@@ -46,7 +46,7 @@ class StatusApprovalProcessing extends Component
 
                 $this->validate(
                     [
-                        'approvalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
+                        'approvalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
                     ]
                 );
 
@@ -58,9 +58,6 @@ class StatusApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            if ($this->checkTransition('mvr_registration_officer_review')) {
-
-            }
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
@@ -81,7 +78,7 @@ class StatusApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            Log::error('MVR-STATUS-APPROVAL-APPROVE', [$exception]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }
@@ -107,29 +104,25 @@ class StatusApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('mvr_zartsa_review')) {
-                $this->subject->status = MvrRegistrationStatus::CORRECTION;
+            if ($this->checkTransition('application_rejected')) {
+                $this->subject->status = MvrRegistrationStatus::REJECTED;
                 $this->subject->save();
-            }
-
-            if ($this->checkTransition('mvr_registration_manager_review')) {
-
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
             DB::commit();
 
-            if ($this->subject->status = MvrRegistrationStatus::CORRECTION) {
+            if ($this->subject->status == MvrRegistrationStatus::REJECTED) {
                 // Send correction email/sms
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} requires correction, please login to the system to perform data update."]));
+                Hello {$this->subject->taxpayer->fullname}, your motor vehicle status change request for chassis number {$this->subject->chassis->chassis_number} has been rejected. Please ensure your details and re-submit your application again."]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            Log::error('MVR-STATUS-APPROVAL-REJECT', [$exception]);
             $this->customAlert('error', 'Something went wrong');
         }
 
@@ -159,12 +152,6 @@ class StatusApprovalProcessing extends Component
 
     public function generateControlNumber() {
         try {
-            DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-
-            //Generate control number
             $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
 
             $fee = MvrFee::query()->where([
@@ -175,17 +162,23 @@ class StatusApprovalProcessing extends Component
 
             if (empty($fee)) {
                 $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                DB::rollBack();
-                Log::error($fee);
                 return;
             }
 
-            $this->generateMvrControlNumber($this->subject, $fee);
+            DB::beginTransaction();
+
+            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+            $this->subject->payment_status = BillStatus::CN_GENERATING;
+            $this->subject->save();
+
+            $this->generateMvrStatusChangeConntrolNumber($this->subject, $fee);
 
             DB::commit();
-        } catch (Exception $e) {
+
+            $this->flash('success', 'Approved Successful', [], redirect()->back()->getTargetUrl());
+        } catch (Exception $exception) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('MVR-STATUS-APPROVAL-CN-GENERATION', [$exception]);
             $this->customAlert('error', 'Failed to generate control number, please try again');
         }
     }

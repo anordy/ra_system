@@ -211,6 +211,16 @@ class SystemSettingsSeeder extends Seeder
                 'unit' => 'number',
                 'is_approved' => 1
             ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Tax Refund Rate',
+                'code' => SystemSetting::TAX_REFUND_RATE,
+                'description' => 'Tax Refund Rate.',
+                'value' => '0.15',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
+
         ];
 
         foreach ($system_settings as $system_setting) {

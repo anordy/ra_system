@@ -67,6 +67,17 @@
                             <span class="font-weight-bold text-uppercase">Business Location</span>
                             <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
                         </div>
+
+                        @if ($riskIndicators)
+                        <div class="col-md-12 mb-3">
+                            <span class="font-weight-bold text-uppercase text-danger">Risk Indicators on this return</span>
+                            @foreach ($riskIndicators as $riskIndicator)
+                            <ul>
+                                <li><p class="my-1">{{ $riskIndicator->risk_indicator }}</p></li>
+                            </ul>    
+                            @endforeach
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

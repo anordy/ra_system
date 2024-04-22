@@ -6,14 +6,6 @@
     <div class="card mt-3">
         <div class="card-header">
             <h5>Motor Vehicles</h5>
-            <div class="card-tools">
-                @can('mvr_initiate_registration')
-                    <button class="btn btn-info btn-sm"
-                            onclick="Livewire.emit('showModal', 'mvr.chassis-number-search','mvr.chassis-search')"><i
-                                class="bi bi-plus-circle-fill"></i>
-                        Register Motor Vehicle</button>
-                @endcan
-            </div>
         </div>
 
         <div class="card-body">

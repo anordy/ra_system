@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Enum\BillStatus;
 use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
+use App\Enum\SubVatConstant;
 use App\Events\SendSms;
 use App\Jobs\SendZanMalipoSMS;
 use App\Models\BusinessTaxType;
@@ -16,6 +17,7 @@ use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\Taxpayer;
+use App\Models\TaxRefund\TaxRefund;
 use App\Models\TaxType;
 use App\Models\TransactionFee;
 use App\Models\ZmBill;
@@ -921,14 +923,14 @@ trait PaymentsTrait
 
         $payer_type = get_class($property->taxpayer);
         $payer_id = $property->taxpayer->id;
-        $payer_name = $property->taxpayer->first_name . ' ' . $property->taxpayer->last_name;
+        $payer_name = $property->responsible->first_name . ' ' . $property->responsible->last_name;
         $payer_email = $property->taxpayer->email;
         $payer_phone = $property->taxpayer->mobile;
         $description = "Property Tax Payment for {$property->urn} - {$propertyPayment->year->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = $propertyPayment->currency->iso;
-        $createdby_type = get_class(Auth::user());
-        $createdby_id = Auth::id();
+        $createdby_type = Auth::user() ? get_class(Auth::user()) : 'job';
+        $createdby_id = Auth::id() ?? 0;
         $expire_date = $propertyPayment->curr_payment_date;
         $billableId = $propertyPayment->id;
         $billableType = get_class($propertyPayment);
@@ -978,10 +980,8 @@ trait PaymentsTrait
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
 
-            $this->flash('success', 'Your return was submitted, you will receive your payment information shortly - test');
         }
     }
-
     public function generatePropertyTaxBillItems($propertyPayment, $taxType)
     {
         $property = $propertyPayment->property;
@@ -990,7 +990,7 @@ trait PaymentsTrait
             'billable_id' => $propertyPayment->id,
             'billable_type' => get_class($property),
             'use_item_ref_on_pay' => 'N',
-            'amount' => $propertyPayment->amount,
+            'amount' => $propertyPayment->total_amount,
             'currency' => $propertyPayment->currency->iso,
             'gfs_code' => $taxType->gfs_code,
             'tax_type_id' => $taxType->id,
@@ -998,7 +998,6 @@ trait PaymentsTrait
 
         return $billItems;
     }
-
     public function generateMvrControlNumber($mvr, $fee) {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
@@ -1048,4 +1047,256 @@ trait PaymentsTrait
             $this->flash('success', 'A control number for this verification has been generated successfully');
         }
     }
+
+
+    public function generateMvrTransferOwnershipControlNumber($transfer, $fee) {
+        $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+        $exchangeRate = 1;
+        $zmBill = ZmCore::createBill(
+            $transfer->id,
+            get_class($transfer),
+            $taxType->id,
+            $transfer->agent_taxpayer_id,
+            Taxpayer::class,
+            $transfer->previous_owner->fullname,
+            $transfer->previous_owner->email,
+            ZmCore::formatPhone($transfer->previous_owner->mobile),
+            Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
+            "{$fee->name} for chassis number {$transfer->motor_vehicle->chassis->chassis_number}",
+            ZmCore::PAYMENT_OPTION_EXACT,
+            'TZS',
+            $exchangeRate,
+            auth()->user()->id,
+            get_class(auth()->user()),
+            [
+                [
+                    'billable_id' => $transfer->id,
+                    'billable_type' => get_class($transfer),
+                    'tax_type_id' => $taxType->id,
+                    'amount' => $fee->amount,
+                    'currency' => 'TZS',
+                    'exchange_rate' => 1,
+                    'equivalent_amount' => $fee->amount,
+                    'gfs_code' => $taxType->gfs_code
+                ]
+            ]
+        );
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($zmBill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                session()->flash('success', 'A control number request was sent successful.');
+            } else {
+                session()->flash('error', 'Control number generation failed, try again later');
+            }
+        }else {
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
+            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
+            $zmBill->billable->save();
+            $zmBill->save();
+            $this->flash('success', 'A control number for this verification has been generated successfully');
+        }
+    }
+
+    public function generateMvrStatusChangeConntrolNumber($mvr, $fee) {
+        $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+        $exchangeRate = 1;
+        $zmBill = ZmCore::createBill(
+            $mvr->id,
+            get_class($mvr),
+            $taxType->id,
+            $mvr->taxpayer_id,
+            Taxpayer::class,
+            $mvr->taxpayer->fullname,
+            $mvr->taxpayer->email,
+            ZmCore::formatPhone($mvr->taxpayer->mobile),
+            Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
+            "{$fee->name} for chassis number {$mvr->chassis->chassis_number}",
+            ZmCore::PAYMENT_OPTION_EXACT,
+            'TZS',
+            $exchangeRate,
+            auth()->user()->id,
+            get_class(auth()->user()),
+            [
+                [
+                    'billable_id' => $mvr->id,
+                    'billable_type' => get_class($mvr),
+                    'tax_type_id' => $taxType->id,
+                    'amount' => $fee->amount,
+                    'currency' => 'TZS',
+                    'exchange_rate' => 1,
+                    'equivalent_amount' => $fee->amount,
+                    'gfs_code' => $taxType->gfs_code
+                ]
+            ]
+        );
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($zmBill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                session()->flash('success', 'A control number request was sent successful.');
+            } else {
+                session()->flash('error', 'Control number generation failed, try again later');
+            }
+        }else {
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
+            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
+            $zmBill->billable->save();
+            $zmBill->save();
+            $this->flash('success', 'A control number for this verification has been generated successfully');
+        }
+    }    
+
+    public function generateDLicenseControlNumber($license, $fee) {
+        $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+        $exchangeRate = 1;
+        $zmBill = ZmCore::createBill(
+            $license->id,
+            get_class($license),
+            $taxType->id,
+            $license->driving_school_id,
+            Taxpayer::class,
+            $license->drivers_license_owner->fullname(),
+            $license->drivers_license_owner->email,
+            ZmCore::formatPhone($license->drivers_license_owner->mobile),
+            Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
+            "{$fee->name} Driving License For {$license->drivers_license_owner->fullname()}",
+            ZmCore::PAYMENT_OPTION_EXACT,
+            'TZS',
+            $exchangeRate,
+            auth()->user()->id,
+            get_class(auth()->user()),
+            [
+                [
+                    'billable_id' => $license->id,
+                    'billable_type' => get_class($license),
+                    'tax_type_id' => $taxType->id,
+                    'amount' => $fee->amount,
+                    'currency' => 'TZS',
+                    'exchange_rate' => 1,
+                    'equivalent_amount' => $fee->amount,
+                    'gfs_code' => $taxType->gfs_code
+                ]
+            ]
+        );
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($zmBill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                session()->flash('success', 'A control number request was sent successful.');
+            } else {
+                session()->flash('error', 'Control number generation failed, try again later');
+            }
+        }else {
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
+            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
+            $zmBill->billable->save();
+            $zmBill->save();
+            $this->flash('success', 'A control number for this verification has been generated successfully');
+        }
+    }
+
+    public function generateMvrDeregistrationControlNumber($mvr, $fee) {
+        $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+        $exchangeRate = 1;
+        $zmBill = ZmCore::createBill(
+            $mvr->id,
+            get_class($mvr),
+            $taxType->id,
+            $mvr->taxpayer_id,
+            Taxpayer::class,
+            $mvr->taxpayer->fullname,
+            $mvr->taxpayer->email,
+            ZmCore::formatPhone($mvr->taxpayer->mobile),
+            Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
+            "{$fee->name} for plate number {$mvr->registration->plate_number}",
+            ZmCore::PAYMENT_OPTION_EXACT,
+            'TZS',
+            $exchangeRate,
+            auth()->user()->id,
+            get_class(auth()->user()),
+            [
+                [
+                    'billable_id' => $mvr->id,
+                    'billable_type' => get_class($mvr),
+                    'tax_type_id' => $taxType->id,
+                    'amount' => $fee->amount,
+                    'currency' => 'TZS',
+                    'exchange_rate' => 1,
+                    'equivalent_amount' => $fee->amount,
+                    'gfs_code' => $taxType->gfs_code
+                ]
+            ]
+        );
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($zmBill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                session()->flash('success', 'A control number request was sent successful.');
+            } else {
+                session()->flash('error', 'Control number generation failed, try again later');
+            }
+        }else {
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
+            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
+            $zmBill->billable->save();
+            $zmBill->save();
+            $this->flash('success', 'A control number for this verification has been generated successfully');
+        }
+    }
+    public function generateTaxRefundControlNumber($taxRefund) {
+        $taxType = TaxType::select('id')->where('code', TaxType::VAT)->firstOrFail();
+        $subVat = SubVat::select('gfs_code')->where('code', SubVatConstant::IMPORTS)->firstOrFail();
+        $exchangeRate = 1;
+        $zmBill = ZmCore::createBill(
+            $taxRefund->id,
+            get_class($taxRefund),
+            $taxType->id,
+            $taxRefund->id,
+            TaxRefund::class,
+            $taxRefund->importer_name,
+            null,
+            ZmCore::formatPhone($taxRefund->phone_number),
+            Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
+            "Tax refund for {$taxRefund->importer_name}",
+            ZmCore::PAYMENT_OPTION_EXACT,
+            $taxRefund->currency,
+            $exchangeRate,
+            auth()->user()->id,
+            get_class(auth()->user()),
+            [
+                [
+                    'billable_id' => $taxRefund->id,
+                    'billable_type' => get_class($taxRefund),
+                    'tax_type_id' => $taxType->id,
+                    'amount' => $taxRefund->total_payable_amount,
+                    'currency' => 'TZS',
+                    'exchange_rate' => 1,
+                    'equivalent_amount' => $taxRefund->total_payable_amount,
+                    'gfs_code' => $subVat->gfs_code
+                ]
+            ]
+        );
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($zmBill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                session()->flash('success', 'A control number request was sent successful.');
+            } else {
+                session()->flash('error', 'Control number generation failed, try again later');
+            }
+        }else {
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
+            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
+            $zmBill->billable->save();
+            $zmBill->save();
+            $this->flash('success', 'A control number for this verification has been generated successfully');
+        }
+    }
+
 }

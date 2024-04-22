@@ -164,10 +164,6 @@
                     <span class="font-weight-bold text-uppercase">Engine capacity</span>
                     <p class="my-1">{{ $motor_vehicle->chassis->engine_cubic_capacity }}</p>
                 </div>
-{{--                <div class="col-md-4 mb-3">--}}
-{{--                    <span class="font-weight-bold text-uppercase">Class</span>--}}
-{{--                    <p class="my-1">{{ $motor_vehicle->class->name ?? '' }}</p>--}}
-{{--                </div>--}}
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Fuel type</span>
                     <p class="my-1">{{ $motor_vehicle->chassis->fuel_type }}</p>
@@ -205,10 +201,6 @@
             </div>
             <hr />
             <div class="row">
-{{--                <div class="col-md-4 mb-3">--}}
-{{--                    <span class="font-weight-bold text-uppercase">Vehicle Status</span>--}}
-{{--                    <p class="my-1">{{$motor_vehicle->vehicle_status->name}}</p>--}}
-{{--                </div>--}}
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Registration Status</span>
                     <p class="my-1"><span class="badge-info badge font-weight-bold">{{$motor_vehicle->registration_status->name}}</span></p>
@@ -228,40 +220,11 @@
                     <span class="font-weight-bold text-uppercase">Name</span>
                     <p class="my-1">{{ $motor_vehicle->chassis->importer_name }}</p>
                 </div>
-{{--                <div class="col-md-4 mb-3">--}}
-{{--                    <span class="font-weight-bold text-uppercase">Z-Number</span>--}}
-{{--                    <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->reference_no }}</p>--}}
-{{--                </div>--}}
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">TIN</span>
                     <p class="my-1">{{ $motor_vehicle->chassis->importer_tin }}</p>
                 </div>
-{{--                <div class="col-md-4 mb-3">--}}
-{{--                    <span class="font-weight-bold text-uppercase">State/City</span>--}}
-{{--                    <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->location }}</p>--}}
-{{--                </div>--}}
-{{--                <div class="col-md-4 mb-3">--}}
-{{--                    <span class="font-weight-bold text-uppercase">Address</span>--}}
-{{--                    <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->physical_address }}</p>--}}
-{{--                </div>--}}
-{{--                <div class="col-md-4 mb-3">--}}
-{{--                    <span class="font-weight-bold text-uppercase">Street</span>--}}
-{{--                    <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->street }}</p>--}}
-{{--                </div>--}}
-{{--                <div class="col-md-4 mb-3">--}}
-{{--                    <span class="font-weight-bold text-uppercase">Shehia</span>--}}
-{{--                    <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->shehia }}</p>--}}
-{{--                </div>--}}
-{{--                <div class="col-md-4 mb-3">--}}
-{{--                    <span class="font-weight-bold text-uppercase">Mobile</span>--}}
-{{--                    <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->mobile }}/{{ $motor_vehicle->current_owner->taxpayer->alt_mobile }}</p>--}}
-{{--                </div>--}}
-{{--                <div class="col-md-4 mb-3">--}}
-{{--                    <span class="font-weight-bold text-uppercase">Email</span>--}}
-{{--                    <p class="my-1">{{ $motor_vehicle->current_owner->taxpayer->email }}</p>--}}
-{{--                </div>--}}
             </div>
-
         </div>
     </div>
 
@@ -288,14 +251,11 @@
                     <span class="font-weight-bold text-uppercase">Mobile</span>
                     <p class="my-1">{{ $request->agent->taxpayer->mobile }}/{{ $request->agent->taxpayer->alt_mobile }}</p>
                 </div>
-
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">E-mail</span>
                     <p class="my-1">{{ $request->agent->taxpayer->email }}</p>
                 </div>
             </div>
-
         </div>
     </div>
-
 @endsection
