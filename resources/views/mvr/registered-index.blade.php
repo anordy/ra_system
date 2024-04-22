@@ -8,8 +8,7 @@
             <h5>Motor Vehicles</h5>
             <div class="card-tools">
                 @can('mvr_initiate_registration')
-                    <button class="btn btn-info btn-sm"
-                            onclick="Livewire.emit('showModal', 'mvr.chassis-number-search','mvr.chassis-search')"><i
+                    <button class="btn btn-info btn-sm"><i
                                 class="fa fa-plus-circle"></i>
                         Register Motor Vehicle</button>
                 @endcan

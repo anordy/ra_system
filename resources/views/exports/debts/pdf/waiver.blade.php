@@ -49,15 +49,33 @@
             border-collapse: collapse;
             background: transparent;
         }
+
+        .border {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .font-size-8 {
+            font-size: 8pt;
+        }
+
+        .top-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
     </style>
 </head>
 
-<body style="font-size: 8pt">
+<body class="font-size-8">
 
-    <table style="border-collapse:collapse; width:100%">
+    <table class="top-table">
         <thead>
             <tr>
-                <th style="text-align:center;" colspan="15">
+                <th class="text-center" colspan="15">
                     <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
                     <strong>{{ $title }}</strong><br>
                     {{-- <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong> --}}
@@ -74,37 +92,37 @@
     <table class="table">
         <thead class="tableHead">
             <tr>
-                <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>S/N</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Business</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Location</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Tax Type</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Currency</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Principal Amount</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Interest Amount</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Penalty Amount</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Interest %</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Penalty %</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Status</strong>
                 </th>
             </tr>
@@ -112,50 +130,50 @@
         <tbody>
             @foreach ($records as $index => $record)
             <tr>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $index + 1 }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->debt->business->name ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->debt->location->name ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->debt->taxType->name ?? '-' }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->debt->currency ?? '-' }}
                 </td>
                 @if ($record->debt_type === 'App\Models\Returns\TaxReturn')
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->debt->principal === null ? '-' : number_format($record->debt->principal, 2) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->debt->interest === null ? '-' : number_format($record->debt->interest, 2) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->debt->penalty === null ? '-' : number_format($record->debt->penalty, 2) }}
                     </td>
                 @elseif($record->debt_type === 'App\Models\TaxAssessments\TaxAssessment')
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->debt->principal_amount === null ? '-' : number_format($record->debt->principal_amount, 2) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->debt->interest_amount === null ? '-' : number_format($record->debt->interest_amount, 2) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->debt->penalty_amount === null ? '-' : number_format($record->debt->penalty_amount, 2) }}
                     </td>
                 @endif
 
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->penalty_rate === null ? '-' : number_format($record->penalty_rate, 2) }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->interest_rate === null ? '-' : number_format($record->interest_rate, 2) }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <td class="text-center border">
                     {{ $record->status }}
                 </td>
             </tr>

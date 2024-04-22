@@ -7,9 +7,6 @@ use App\Enum\CustomMessage;
 use App\Enum\MvrRegistrationStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
-use App\Models\MvrFee;
-use App\Models\MvrFeeType;
-use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrTransferFee;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
@@ -22,7 +19,7 @@ use Livewire\WithFileUploads;
 
 class TransferApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait,WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
 
     public $modelId;
     public $modelName;
@@ -32,10 +29,12 @@ class TransferApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId   = decrypt($modelId);
+        $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
     }
-    public function approve($transition) {
+
+    public function approve($transition)
+    {
         $transition = $transition['data']['transition'];
 
         $this->validate([
@@ -48,7 +47,7 @@ class TransferApprovalProcessing extends Component
 
                 $this->validate(
                     [
-                        'agreementContract' => 'nullable|mimes:pdf|max:3072|max_file_name_length:100',
+                        'agreementContract' => 'nullable|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
                     ]
                 );
 
@@ -75,10 +74,6 @@ class TransferApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            if ($this->checkTransition('mvr_registration_officer_review')) {
-
-            }
-
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->save();
@@ -97,7 +92,7 @@ class TransferApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            Log::error('MVR-TRANSFER-APPROVAL-APPROVE', [$exception]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }
@@ -114,7 +109,8 @@ class TransferApprovalProcessing extends Component
 
     }
 
-    public function reject($transition) {
+    public function reject($transition)
+    {
         $transition = $transition['data']['transition'];
 
         $this->validate([
@@ -124,29 +120,25 @@ class TransferApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('application_filled_incorrect')) {
-                $this->subject->status = MvrRegistrationStatus::CORRECTION;
+            if ($this->checkTransition('application_rejected')) {
+                $this->subject->status = MvrRegistrationStatus::REJECTED;
                 $this->subject->save();
-            }
-
-            if ($this->checkTransition('mvr_registration_manager_review')) {
-
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
             DB::commit();
 
-            if ($this->subject->status = MvrRegistrationStatus::CORRECTION) {
+            if ($this->subject->status = MvrRegistrationStatus::REJECTED) {
                 // Send correction email/sms
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->previous_owner->mobile, 'message' => "
-                Hello {$this->subject->previous_owner->fullname}, your transfer ownership request for chassis number {$this->subject->motor_vehicle->chassis->chassis_number} requires correction, please login to the system to perform data update."]));
+                Hello {$this->subject->previous_owner->fullname}, your transfer ownership request for chassis number {$this->subject->motor_vehicle->chassis->chassis_number} has been rejected. Please create a new application and submit your information again."]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            Log::error('MVR-TRANSFER-APPROVAL-REJECT', [$exception]);
             $this->customAlert('error', 'Something went wrong');
         }
 
@@ -174,31 +166,30 @@ class TransferApprovalProcessing extends Component
         ]);
     }
 
-    public function generateControlNumber() {
+    public function generateControlNumber()
+    {
         try {
-            DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-
             $fee = MvrTransferFee::query()->where([
                 'mvr_transfer_category_id' => $this->subject->mvr_transfer_category_id,
             ])->first();
 
             if (empty($fee)) {
                 $this->customAlert('error', "Ownership Transfer fee is not configured");
-                DB::rollBack();
                 Log::error($fee);
                 return;
             }
+            DB::beginTransaction();
 
+            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+            $this->subject->payment_status = BillStatus::CN_GENERATING;
+            $this->subject->save();
             $this->generateMvrControlNumber($this->subject->motor_vehicle, $fee);
 
             DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error($e);
 
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error('MVR-TRANSFER-APPROVAL-CN-GENERATION', [$exception]);
             $this->customAlert('error', 'Failed to generate control number, please try again');
         }
     }

@@ -46,15 +46,32 @@
         .text-right {
             text-align: right;
         }
+
+        .border {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .font-size-9 {
+            font-size: 9pt;
+        }
+
+        .width-100 {
+            width: 100%;
+        }
     </style>
 </head>
 
 
-<body style="font-size: 9pt">
-    <table style="width:100%;">
+<body class="font-size-9">
+    <table class="width-100">
         <thead>
             <tr>
-                <th style="text-align:center;" colspan="3">
+                <th class="text-center" colspan="3">
                     <strong>ZANZIBAR Revenue Authority</strong><br>
                         @if ($vars['range_start'] == date('Y-m-d'))
                         Collections on <span> {{ date('d-M-Y') }} </span>

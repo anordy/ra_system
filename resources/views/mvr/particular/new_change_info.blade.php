@@ -10,26 +10,22 @@
                 <span class="font-weight-bold text-uppercase">Status</span>
                 <p class="my-1">
                     @if($reg->status === \App\Enum\MvrRegistrationStatus::PENDING)
-                        <span class="badge badge-info py-1 px-2"
-                              style="font-size: 85%">
+                        <span class="badge badge-info py-1 px-2">
                 <i class="bi bi-check-circle-fill mr-1"></i>
                 {{ __('Pending') }}
             </span>
                     @elseif($reg->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED)
-                        <span class="badge badge-success py-1 px-2"
-                              style="font-size: 85%">
+                        <span class="badge badge-success py-1 px-2">
                 <i class="bi bi-check-circle-fill mr-1"></i>
                 {{ __('Registered') }}
             </span>
                     @elseif($reg->status === \App\Enum\MvrRegistrationStatus::CORRECTION)
-                        <span class="badge badge-warning py-1 px-2"
-                              style="font-size: 85%">
+                        <span class="badge badge-warning py-1 px-2">
                 <i class="bi bi-check-circle-fill mr-1"></i>
                 {{ __('For Corrections') }}
             </span>
                     @else
-                        <span class="badge badge-primary py-1 px-2"
-                              style="font-size: 85%">
+                        <span class="badge badge-primary py-1 px-2">
                 <i class="bi bi-check-circle-fill mr-1"></i>
                 {{ $reg->status }}
             </span>
@@ -96,12 +92,11 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3">
-                    <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                         class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                    <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
                         <a target="_blank"
                            href="{{ route('assesments.waiver.files', encrypt($reg->approval_report)) }}"
-                           style="font-weight: 500;" class="ml-1">
+                           class="ml-1 font-weight-bolder">
                             Approval Report
                             <i class="bi bi-arrow-up-right-square ml-1"></i>
                         </a>

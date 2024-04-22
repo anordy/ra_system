@@ -110,6 +110,9 @@ class VettedReturnsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return "{$row->location->name}";
                 }),
+            Column::make('Old ZRA No', 'business.previous_zno')
+                ->sortable()
+                ->searchable(),
             Column::make('Tax Region', 'location.tax_region_id')
                 ->sortable()
                 ->searchable()

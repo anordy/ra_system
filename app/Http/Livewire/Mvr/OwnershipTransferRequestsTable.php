@@ -2,22 +2,13 @@
 
 namespace App\Http\Livewire\Mvr;
 
-use App\Enum\BillStatus;
-use App\Models\MvrAgent;
-use App\Models\MvrMotorVehicle;
 use App\Models\MvrOwnershipTransfer;
-use App\Models\MvrPlateNumberStatus;
-use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationTypeCategory;
 use App\Models\MvrRequestStatus;
-use App\Models\MvrTransferCategory;
-use App\Models\TaxAgentStatus;
-use App\Models\Taxpayer;
-use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\TaxAgent;
 
 class OwnershipTransferRequestsTable extends DataTableComponent
 {

@@ -54,7 +54,7 @@
                             Paid
                         </p>
                     </div>
-                    @if(get_class($motorVehicle) === 'App\Models\MvrRegistrationStatusChange')
+                    @if(get_class($motorVehicle) === 'App\Models\MvrRegistrationStatusChange' || get_class($motorVehicle) === \App\Models\MvrRegistration::class)
                         <div class="col-md-3">
                             <span class="font-weight-bold text-uppercase"> </span>
                             <p class="my-1">

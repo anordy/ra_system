@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\MVR;
 
+use App\Enum\Currencies;
+use App\Enum\GeneralConstant;
 use App\Enum\PaymentStatus;
 use App\Events\SendMail;
 use App\Events\SendSms;
@@ -10,13 +12,13 @@ use App\Models\MvrMotorVehicleOwner;
 use App\Models\MvrOwnershipStatus;
 use App\Models\MvrOwnershipTransfer;
 use App\Models\MvrRegistration;
-use App\Models\MvrRegistrationChangeRequest;
 use App\Models\MvrRequestStatus;
 use App\Models\MvrTransferFee;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\ExchangeRateTrait;
 use App\Traits\MotorVehicleSearchTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
@@ -24,11 +26,12 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class OwnershipTransferController extends Controller
 {
 
-    use MotorVehicleSearchTrait;
+    use MotorVehicleSearchTrait, ExchangeRateTrait;
 
     public function index()
     {
@@ -69,21 +72,22 @@ class OwnershipTransferController extends Controller
 
     public function approve($id)
     {
-        $id = decrypt($id);
-        //Generate control number
-        $request = MvrOwnershipTransfer::query()->findOrFail($id);
-        $fee = MvrTransferFee::query()
-            ->where(['mvr_transfer_category_id' => $request->mvr_transfer_category_id])
-            ->first();
-
-        if (empty($fee)) {
-            session()->flash('error', "Fee for selected transfer category is not configured");
-            return redirect()->route('mvr.transfer-ownership.show', encrypt($id));
-        }
-        $exchange_rate = 1;
-        $amount = $fee->amount;
-        $gfs_code = $fee->gfs_code;
         try {
+            $id = decrypt($id);
+            //Generate control number
+            $request = MvrOwnershipTransfer::query()->findOrFail($id);
+            $fee = MvrTransferFee::query()
+                ->where(['mvr_transfer_category_id' => $request->mvr_transfer_category_id])
+                ->first();
+
+            if (empty($fee)) {
+                session()->flash(GeneralConstant::ERROR, "Fee for selected transfer category is not configured");
+                return redirect()->route('mvr.transfer-ownership.show', encrypt($id));
+            }
+            $exchange_rate = self::getExchangeRate(Currencies::TZS);
+            $amount = $fee->amount;
+            $gfs_code = $fee->gfs_code;
+
             $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
             DB::beginTransaction();
             $bill = ZmCore::createBill(
@@ -98,7 +102,7 @@ class OwnershipTransferController extends Controller
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
                 ZmCore::PAYMENT_OPTION_EXACT,
-                'TZS',
+                Currencies::TZS,
                 $exchange_rate,
                 auth()->user()->id,
                 get_class(auth()->user()),
@@ -117,14 +121,18 @@ class OwnershipTransferController extends Controller
                     ]
                 ]
             );
-            $request->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
+            $request->update([
+                'mvr_request_status_id' => MvrRequestStatus::query()
+                    ->select('id')
+                    ->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])
+                    ->id
+            ]);
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($bill);
                 if ($response->status != ZmResponse::SUCCESS) {
-                    session()->flash("success", 'Request Approved!');
-                    session()->flash("error", 'Control Number request failed');
+                    session()->flash(GeneralConstant::SUCCESS, 'Request Approved!');
                 } else {
-                    session()->flash("success", 'Request Approved, Control Number request sent');
+                    session()->flash(GeneralConstant::ERROR, 'Control Number request failed');
                 }
                 event(new SendSms('mvr-ownership-transfer-approval', $request->id));
                 event(new SendMail('mvr-ownership-transfer-approval', $request->id));
@@ -133,13 +141,13 @@ class OwnershipTransferController extends Controller
                 $bill->zan_status = 'pending';
                 $bill->control_number = random_int(2000070001000, 2000070009999);
                 $bill->save();
-                session()->flash("success", 'Request Approved, Control Number request sent');
+                session()->flash(GeneralConstant::SUCCESS, 'Request Approved, Control Number request sent');
             }
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            report($e);
-            session()->flash('error', 'Approval failed, could not update data');
+            Log::error('MVR-OWNERSHIP-TRANSFER-APPROVE', [$e]);
+            session()->flash(GeneralConstant::ERROR, 'Approval failed, could not update data');
         }
         return redirect()->route('mvr.transfer-ownership.show', encrypt($id));
     }
@@ -150,8 +158,13 @@ class OwnershipTransferController extends Controller
         //Generate control number
         $request = MvrOwnershipTransfer::query()->findOrFail($id);
 
-        $request->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_REJECTED])->id]);
-        session()->flash('warning', 'Request has been rejected');
+        $request->update([
+            'mvr_request_status_id' => MvrRequestStatus::query()
+                ->select('id')
+                ->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_REJECTED])->id
+        ]);
+
+        session()->flash(GeneralConstant::ERROR, 'Request has been rejected');
 
         event(new SendSms('mvr-ownership-transfer-approval', $request->id));
         event(new SendMail('mvr-ownership-transfer-approval', $request->id));
@@ -167,9 +180,20 @@ class OwnershipTransferController extends Controller
             DB::beginTransaction();
             $bill = $request->get_latest_bill();
             $bill->update(['status' => PaymentStatus::PAID]);
-            $request->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_ACCEPTED])->id]);
+
+            $request->update([
+                'mvr_request_status_id' => MvrRequestStatus::query()
+                    ->select('id')
+                    ->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_ACCEPTED])->id
+            ]);
+
             $request->motor_vehicle->current_owner
-                ->update(['mvr_ownership_status_id' => MvrOwnershipStatus::query()->firstOrCreate(['name' => MvrOwnershipStatus::STATUS_PREVIOUS_OWNER])->id]);
+                ->update([
+                    'mvr_ownership_status_id' => MvrOwnershipStatus::query()
+                        ->select('id')
+                        ->firstOrCreate(['name' => MvrOwnershipStatus::STATUS_PREVIOUS_OWNER])->id
+                ]);
+
             MvrMotorVehicleOwner::query()->create([
                 'mvr_motor_vehicle_id' => $request->mvr_motor_vehicle_id,
                 'taxpayer_id' => $request->owner_taxpayer_id,
@@ -178,9 +202,9 @@ class OwnershipTransferController extends Controller
             DB::commit();
             return redirect()->route('mvr.transfer-ownership.show', encrypt($id));
         } catch (\Exception $e) {
-            session()->flash('error', 'Could not update status');
+            session()->flash(GeneralConstant::ERROR, 'Could not update status');
             DB::rollBack();
-            report($e);
+            Log::error('MVR-OWNERSHIP-TRANSFER-SIMULATE-PAYMENT', [$e]);
             return redirect()->route('mvr.transfer-ownership.show', encrypt($id));
         }
     }

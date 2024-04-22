@@ -11,7 +11,7 @@
                 @if($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_PENDING_APPROVAL)
                     @can('mvr_approve_transfer')
                     <button class="btn btn-primary   btn-sm"
-                            onclick="Livewire.emit('showModal', 'mvr.approve-ownership-transfer','{{$request->id}}')">
+                            onclick="Livewire.emit('showModal', 'mvr.approve-ownership-transfer','{{encrypt($request->id)}}')">
                         <i class="fa fa-check"></i> Approve
                     </button>
                     <a href="{{route('mvr.transfer-ownership.reject',encrypt($request->id))}}">
@@ -23,13 +23,13 @@
                 @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_INITIATED && \Illuminate\Support\Facades\Gate::has('mvr_initiate_transfer'))
                     @can('mvr_initiate_transfer')
                     <button class="btn btn-info btn-sm"
-                            onclick="Livewire.emit('showModal', 'mvr.upload-sale-agreement-modal','{{$request->id}}')"><i
+                            onclick="Livewire.emit('showModal', 'mvr.upload-sale-agreement-modal','{{encrypt($request->id)}}')"><i
                                 class="fa fa-upload"></i>
                         Upload Agreement Contract</button>
                     @endcan
                 @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_ACCEPTED)
                     <a href="{{route('mvr.certificate-of-registration',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
-                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
+                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection"><i
                                 class="fa fa-print text-white"></i>
                         New Certificate of Registration</a><!--- todo: Missing format for cert fo registration - NCR -->
                 @endif

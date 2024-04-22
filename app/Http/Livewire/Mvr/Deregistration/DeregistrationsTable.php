@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\Mvr\Deregistration;
 
+use App\Enum\MvrDeRegistrationStatus;
 use App\Models\MvrDeregistration;
 use App\Traits\CustomAlert;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -16,7 +16,8 @@ class DeregistrationsTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-        return MvrDeregistration::where('mvr_deregistrations.taxpayer_id', Auth::id())->orderBy('mvr_deregistrations.created_at', 'desc');
+        return MvrDeregistration::where('mvr_deregistrations.status', MvrDeRegistrationStatus::APPROVED)
+            ->orderBy('mvr_deregistrations.created_at', 'desc');
     }
 
 	public function configure(): void

@@ -2,8 +2,6 @@
 
 namespace App\Http\Livewire\Mvr;
 
-use App\Models\Bank;
-use App\Models\DlDriversLicenseClass;
 use App\Models\DlFee;
 use App\Models\DlLicenseClass;
 use App\Models\DlLicenseDuration;
@@ -17,11 +15,13 @@ use App\Models\MvrModel;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
+use App\Models\Region;
+use App\Models\TaxRefund\PortLocation;
+use App\Traits\CustomAlert;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class GenericSettingAddModal extends Component
@@ -42,6 +42,7 @@ class GenericSettingAddModal extends Component
             ['title'=>'Fee Type/Category','class'=>MvrFeeType::class,'field'=>'mvr_fee_type_id']
         ],
         DlFee::class=>[['title'=>'License Duration','field'=>'dl_license_duration_id', 'class'=>DlLicenseDuration::class,'value_field'=>'number_of_years']],
+        PortLocation::class=>[['title'=>'Region','field'=>'region_id', 'class'=>Region::class,'value_field'=>'region_id']],
     ];
 
     private array $enums = [
@@ -68,7 +69,8 @@ class GenericSettingAddModal extends Component
         MvrFee::class=>['data.amount'=>'required|numeric'],
         MvrTransferFee::class=>['data.amount'=>'required|numeric'],
         DlFee::class=>['data.amount'=>'required|numeric'],
-        MvrRegistrationType::class=>['data.initial_plate_number' => 'required|alpha_num']
+        MvrRegistrationType::class=>['data.initial_plate_number' => 'required|alpha_num'],
+        PortLocation::class=>['relation_data.region_id' => 'required|exists:regions,id', 'name' => 'alpha_num_space']
     ];
 
     /**
@@ -87,11 +89,11 @@ class GenericSettingAddModal extends Component
      */
     public $setting_title = '';
 
-    public function mount($model,$id=null)
+    public function mount($model, $id=null)
     {
         $this->model = $model;
         if (!empty($id)){
-            $this->instance = $model::query()->find($id);
+            $this->instance = $model::query()->find(decrypt($id));
             $this->name = $this->instance->name;
         }
 
@@ -121,7 +123,7 @@ class GenericSettingAddModal extends Component
         });
 
         if ($this->hasNameColumn()) {
-            $rules = ['name' => 'required|gs_unique'];
+            $rules = ['name' => 'required|string|gs_unique'];
         }
 
         if (!empty($this->relations[$this->model])){
@@ -178,7 +180,7 @@ class GenericSettingAddModal extends Component
             }
 
         }catch(Exception $e){
-            Log::error($e);
+            Log::error('GENERIC-SETTING-ADD-MODAL', [$e]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

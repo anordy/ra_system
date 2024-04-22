@@ -7,6 +7,7 @@ use ReflectionClass;
 class MvrRegistrationStatus implements Status
 {
     const PENDING = 'PENDING';
+    const INITIATED = 'Initiated';
     const APPROVED = 'APPROVED';
     const CORRECTION = 'CORRECTION';
     const STATUS_REGISTERED = 'REGISTERED';
@@ -16,6 +17,7 @@ class MvrRegistrationStatus implements Status
     const STATUS_DE_REGISTERED = 'DE REGISTERED';
     const STATUS_RETIRED = 'RETIRED';
     const STATUS_CHANGE = 'STATUS CHANGE';
+    const REJECTED = 'REJECTED';
 
 
     static function getConstants(): array

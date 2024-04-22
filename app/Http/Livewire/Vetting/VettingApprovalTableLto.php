@@ -115,6 +115,9 @@ class VettingApprovalTableLto extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Old ZRA No', 'business.previous_zno')
+                ->sortable()
+                ->searchable(),
             Column::make('Branch', 'location.name')
                 ->sortable()
                 ->searchable()

@@ -16,6 +16,7 @@ use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -56,7 +57,7 @@ class ParticularApprovalProcessing extends Component
                 'chassisNo' => 'nullable|alpha_num',
                 'bodyStyle' => 'nullable|alpha',
                 'color' => 'nullable|alpha',
-                'approvalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
+                'approvalReport' => 'required|mimes:pdf|valid_pdf|max:1024|max_file_name_length:100',
             ]);
         }
 
@@ -84,10 +85,6 @@ class ParticularApprovalProcessing extends Component
                 ]);
             }
 
-            if ($this->checkTransition('mvr_registration_officer_review')) {
-
-            }
-
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
@@ -107,7 +104,10 @@ class ParticularApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            if (isset($approvalReport) && $approvalReport && Storage::exists($approvalReport)){
+                Storage::delete($approvalReport);
+            }
+            Log::error('PARTICULAR-APPROVAL-APPROVE', [$exception]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }
@@ -117,6 +117,7 @@ class ParticularApprovalProcessing extends Component
             try {
                 $this->generateControlNumber();
             } catch (Exception $exception) {
+                Log::error('PARTICULAR-APPROVAL-CN-GENERATION', [$exception]);
                 $this->customAlert('error', 'Failed to generate control number, please try again');
             }
         }
@@ -133,29 +134,25 @@ class ParticularApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('mvr_zartsa_review')) {
-                $this->subject->status = MvrRegistrationStatus::CORRECTION;
+            if ($this->checkTransition('application_rejected')) {
+                $this->subject->status = MvrRegistrationStatus::REJECTED;
                 $this->subject->save();
-            }
-
-            if ($this->checkTransition('mvr_registration_manager_review')) {
-
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
             DB::commit();
 
-            if ($this->subject->status = MvrRegistrationStatus::CORRECTION) {
+            if ($this->subject->status = MvrRegistrationStatus::REJECTED) {
                 // Send correction email/sms
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} requires correction, please login to the system to perform data update."]));
+                Hello {$this->subject->taxpayer->fullname}, your motor vehicle particular change request for chassis number {$this->subject->chassis->chassis_number} has been rejected. Please re-submit new application."]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error($exception);
+            Log::error('PARTICULAR-APPROVAL-REJECT', [$exception]);
             $this->customAlert('error', 'Something went wrong');
         }
 
@@ -185,12 +182,6 @@ class ParticularApprovalProcessing extends Component
 
     public function generateControlNumber() {
         try {
-            DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-
-            //Generate control number
             $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
 
             $fee = MvrFee::query()->where([
@@ -201,19 +192,23 @@ class ParticularApprovalProcessing extends Component
 
             if (empty($fee)) {
                 $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                DB::rollBack();
-                Log::error($fee);
                 return;
             }
+
+            DB::beginTransaction();
+
+            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+            $this->subject->payment_status = BillStatus::CN_GENERATING;
+            $this->subject->save();
 
             $this->generateMvrStatusChangeConntrolNumber($this->subject, $fee);
 
             DB::commit();
 
             $this->flash('success', 'Approved Successful', [], redirect()->back()->getTargetUrl());
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('PARTICULAR-APPROVAL-CN-GENERATION', [$exception]);
             $this->customAlert('error', 'Failed to generate control number, please try again');
         }
     }

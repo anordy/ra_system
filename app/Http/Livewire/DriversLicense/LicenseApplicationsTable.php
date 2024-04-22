@@ -4,10 +4,9 @@ namespace App\Http\Livewire\DriversLicense;
 
 use App\Models\DlApplicationStatus;
 use App\Models\DlLicenseApplication;
-use App\Models\Taxpayer;
+use App\Models\DlDriversLicenseOwner;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -16,20 +15,20 @@ class LicenseApplicationsTable extends DataTableComponent
 {
 	use CustomAlert;
 
-    public $status_id;
+    public $status;
 
 	public function builder(): Builder
 	{
-        if (empty($this->status_id)){
+        if (empty($this->status)){
             return DlLicenseApplication::query();
         }else{
-            return DlLicenseApplication::query()->whereIn('dl_application_status_id',[$this->status_id]);
+            return DlLicenseApplication::query()
+                ->where('status', $this->status);
         }
 	}
 
     public function mount($status){
-        $application_status = DlApplicationStatus::query()->where(['name'=>$status])->first();
-        $this->status_id = $application_status->id ?? '';
+        $this->status = $status ?? '';
     }
 
 	public function configure(): void
@@ -45,18 +44,21 @@ class LicenseApplicationsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Applicants Name", "taxpayer_id")
-                ->format(fn($id)=>Taxpayer::query()->find($id)->fullname() ?? 'N/A')
+            Column::make(__("Applicant's Name"), "dl_drivers_license_owner_id")
+                ->format(function ($dl_drivers_license_owner_id) {
+                    $owner = DlDriversLicenseOwner::find($dl_drivers_license_owner_id);
+                    return $owner ? $owner->fullname() : null;
+                })
                 ->sortable(),
-            Column::make("Applicants TIN", "taxpayer.tin")
-                ->sortable(),
+            // Column::make("Applicants TIN", "taxpayer.tin")
+            //     ->sortable(),
             Column::make("Type", "type")
                 ->format(fn($type)=>ucwords(strtolower($type)))
                 ->sortable(),
             Column::make("Application Date", "created_at")
                 ->format(fn($date)=>Carbon::parse($date)->format('Y-m-d'))
                 ->sortable(),
-            Column::make("Status", "application_status.name")
+            Column::make("Status", "status")
                 ->sortable(),
             Column::make('Action', 'id')
                 ->format(function ($value) {

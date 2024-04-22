@@ -104,12 +104,11 @@
             <div class="row">
                 @if ($taxPayer->approval_report)
                     <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                             class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
                             <a target="_blank"
                                href="{{ route('assesments.waiver.files', encrypt($taxPayer->approval_report)) }}"
-                               style="font-weight: 500;" class="ml-1">
+                               class="ml-1 font-weight-bolder">
                                 Approval Report
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>

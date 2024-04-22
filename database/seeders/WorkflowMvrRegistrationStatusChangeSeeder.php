@@ -28,7 +28,7 @@ class WorkflowMvrRegistrationStatusChangeSeeder extends Seeder
                 'operator_type' => 'user',
                 'operators' => [],
             ],
-            'correct_application' => [
+            'application_rejected' => [
                 'owner' => 'taxpayer',
                 'operator_type' => 'user',
                 'operators' => [],
@@ -65,14 +65,9 @@ class WorkflowMvrRegistrationStatusChangeSeeder extends Seeder
                 'to' => 'mvr_zartsa',
                 'condition' => '',
             ],
-            'application_filled_incorrect' => [
+            'application_rejected' => [
                 'from' => 'mvr_zartsa',
-                'to' => 'correct_application',
-                'condition' => '',
-            ],
-            'application_corrected' => [
-                'from' => 'correct_application',
-                'to' => 'mvr_zartsa',
+                'to' => 'application_rejected',
                 'condition' => '',
             ],
             'mvr_zartsa_review' => [

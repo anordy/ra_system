@@ -131,7 +131,7 @@ class EnrollFingerprint extends Component
 
             $existingTaxpayer = Taxpayer::query()
                 ->where('mobile', $data['mobile'])
-                ->orWhere('email', $data['email'])
+                ->orWhere('email', $data['email'] ?? '')
                 ->first();
 
             if ($existingTaxpayer){
@@ -149,6 +149,9 @@ class EnrollFingerprint extends Component
                     ->update([
                         'taxpayer_id' => $existingTaxpayer->id
                     ]);
+
+                $this->sign($existingTaxpayer);
+
             } else {
                 $taxpayer = Taxpayer::create([
                     'id_type' => $data['id_type'],
@@ -180,9 +183,6 @@ class EnrollFingerprint extends Component
 
                 $taxpayer->generateReferenceNo();
 
-                // sign taxpayer
-                $this->sign($taxpayer);
-
                 Biometric::query()
                     ->where('reference_no', $kyc->id)
                     ->update([
@@ -198,6 +198,9 @@ class EnrollFingerprint extends Component
                 }
 
                 DB::commit();
+
+                // sign taxpayer
+                $this->sign($taxpayer);
 
                 // Send email and password for OTP
                 event(new SendSms('taxpayer-registration', $taxpayer->id, ['code' => $password]));

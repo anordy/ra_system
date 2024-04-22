@@ -2,14 +2,11 @@
 
 namespace App\Http\Livewire\Mvr;
 
-use App\Models\Audit;
+use App\Enum\GeneralConstant;
 use App\Models\MvrAgent;
-use App\Models\MvrMotorVehicle;
-use App\Models\MvrRegistrationStatus;
-use App\Models\Taxpayer;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -72,7 +69,7 @@ class AgentsTable extends DataTableComponent
 
     public function changeStatus($id, $status)
     {
-        $this->customAlert('warning', 'Are you sure you want to change AGENT status ?', [
+        $this->customAlert(GeneralConstant::WARNING, 'Are you sure you want to change AGENT status ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -96,9 +93,9 @@ class AgentsTable extends DataTableComponent
             $agent->status = $agent->status == 'ACTIVE'?'INACTIVE':'ACTIVE';
             $agent->save();
             return redirect()->to(route('mvr.agent'));
-        } catch (\Exception $e) {
-            report($e);
-            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+        } catch (\Exception $exception) {
+            Log::error('MVR-AGENT-TABLE-TOGGLE-STATUS', [$exception]);
+            $this->customAlert(GeneralConstant::WARNING, 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 

@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class SevenDaysFinancialMonthsTable extends DataTableComponent
 {
-    public $today;
+    public $today, $canDualControl;
 
     public function configure(): void
     {
@@ -28,6 +28,7 @@ class SevenDaysFinancialMonthsTable extends DataTableComponent
 
     public function builder(): Builder
     {
+        $this->canDualControl = approvalLevel(Auth::user()->level_id, 'Maker');
         $day = date('Y-m-d');
         $day = date('F', strtotime($day));
         $year = FinancialYear::query()->where('code', date('Y'))->first();
@@ -90,7 +91,7 @@ class SevenDaysFinancialMonthsTable extends DataTableComponent
                     $edit = '';
                     $extend = '';
                     $value = "'".encrypt($value)."'";
-                    if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
+                    if (Gate::allows('setting-user-edit') && $this->canDualControl) {
                         $edit = <<< HTML
                                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                                 HTML;
