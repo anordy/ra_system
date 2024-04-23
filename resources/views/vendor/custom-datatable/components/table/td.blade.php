@@ -26,7 +26,7 @@
 @elseif ($theme === 'bootstrap-4' || $theme === 'bootstrap-5')
     <td
         @if ($column->isClickable())
-            onclick="window.open('{{ $component->getTableRowUrl($row) }}', '{{ $component->getTableRowUrlTarget($row) ?? '_self' }}')"
+            id="openRow"
             style="cursor:pointer"
         @endif
 
@@ -40,4 +40,16 @@
     >
         {{ $slot }}
     </td>
+
+{{--    TODO: THIS IS PASSED ON EVAL() HENCE CSP BLOCKS IT --}}
+{{--    <script nonce="custom_script">--}}
+{{--        document.addEventListener('DOMContentLoaded', function () {--}}
+{{--            var button = document.getElementById('openRow');--}}
+{{--            if (button) {--}}
+{{--                button.addEventListener('click', function () {--}}
+{{--                    window.open('{{ $component->getTableRowUrl($row) }}', '{{ $component->getTableRowUrlTarget($row) ?? '_self' }}')--}}
+{{--                });--}}
+{{--            }--}}
+{{--        });--}}
+{{--    </script>--}}
 @endif

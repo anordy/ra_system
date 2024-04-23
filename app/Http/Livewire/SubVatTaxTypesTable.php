@@ -89,7 +89,7 @@ class SubVatTaxTypesTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-tax-type-edit')) {
                             $edit =  <<< HTML
-                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'settings.sub-vat.tax-type-edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
+                                    <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="settings.sub-vat.tax-type-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
                                 HTML;
                         }
 

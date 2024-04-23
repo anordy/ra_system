@@ -58,7 +58,7 @@ class ISIC4Table extends DataTableComponent
 
                     if (Gate::allows('setting-isic-level-four-edit')) {
                         $edit = <<< HTML
-                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'i-s-i-c4-edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
+                        <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="i-s-i-c4-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
                     HTML;
                     }
 

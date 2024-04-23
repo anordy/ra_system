@@ -92,7 +92,7 @@ class DistrictTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-district-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'district-edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
+                                <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="district-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
                             HTML;
                         }
 

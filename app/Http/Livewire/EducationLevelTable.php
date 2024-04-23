@@ -98,7 +98,7 @@ class EducationLevelTable extends DataTableComponent
 
                     if (Gate::allows('setting-education-level-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                         $edit = <<< HTML
-                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'education-level-edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
+                            <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="education-level-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
                         HTML;
                     }
 

@@ -54,7 +54,7 @@ class BusinessCatTable extends DataTableComponent
 
                     if (Gate::allows('setting-business-category-edit')) {
                         $edit = <<< HTML
-                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'business-cat-edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
+                            <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="business-cat-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
                         HTML;
                     }
 

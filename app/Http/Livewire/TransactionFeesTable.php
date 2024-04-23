@@ -88,7 +88,7 @@ class TransactionFeesTable extends DataTableComponent
                         if (Gate::allows('setting-transaction-fees-edit') && approvalLevel(Auth::user()->level_id, 'maker')) {
                             $id = encrypt($value);
                             $edit = <<< HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'transaction-fees-edit-modal', $id)"><i class="bi bi-pencil-square"></i> </button>
+                                <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="transaction-fees-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
                             HTML;
                         }
 

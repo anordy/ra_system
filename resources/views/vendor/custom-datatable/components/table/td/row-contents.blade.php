@@ -8,7 +8,7 @@
 
     @if ($theme === 'tailwind')
         <td
-{{--            @if (! $hidden) x-data="{open:false}" @endif--}}
+            @if (! $hidden) x-data="{open:false}" @endif
             {{
                 $attributes
                     ->merge(['class' => 'p-3 table-cell text-center'])
@@ -36,7 +36,7 @@
         </td>
     @elseif ($theme === 'bootstrap-4' || $theme === 'bootstrap-5')
         <td
-{{--            @if (! $hidden) x-data="{open:false}" @endif--}}
+            @if (! $hidden) x-data="open = false" @endif
             {{
                 $attributes
                     ->class([

@@ -55,7 +55,7 @@ class BanksTable extends DataTableComponent
 
                     if (Gate::allows('setting-bank-edit')) {
                         $edit = <<< HTML
-                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'bank-edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
+                            <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="bank-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
                         HTML;
                     }
 

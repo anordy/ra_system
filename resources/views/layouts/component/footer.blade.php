@@ -3,7 +3,7 @@
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('plugins/sweetalert/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('js/x-mask.js') }}" defer></script>
-<script src="{{ asset('js/alpine.min.js') }}" defer></script>
+<script src="{{ asset('js/alpine-csp.min.js') }}" defer></script>
 <script src="{{ asset('js/modals.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="{{ asset('vendor/livewire-alert/livewire-alert.js') }}"></script>

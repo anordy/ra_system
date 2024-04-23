@@ -95,7 +95,7 @@ class WardTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-ward-edit')  && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'ward-edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
+                                <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="ward-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
                             HTML;
                         }
                         if (Gate::allows('setting-ward-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {

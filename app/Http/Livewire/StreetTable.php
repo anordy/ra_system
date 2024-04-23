@@ -98,12 +98,12 @@ class StreetTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-street-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'street-edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
+                                <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="street-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
                             HTML;
                         }
                         if (Gate::allows('setting-street-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete = <<<HTML
-                                <button class="btn btn-danger btn-sm" wire:cl   ick="delete($value)"><i class="bi bi-trash-fill"></i> </button>
+                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash-fill"></i> </button>
                             HTML;
                         }
                     }
