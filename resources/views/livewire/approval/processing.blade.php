@@ -253,7 +253,7 @@
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                    </div>Filled Incorrect return to Applicant
+                    </div>Filed Incorrect return to Applicant
                 </button>
 
                 <button wire:click="confirmPopUpModal('approve', 'registration_officer_review')"

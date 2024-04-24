@@ -40,7 +40,7 @@
                             <p class="my-1">{{ $verification->taxtype->name }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <span class="font-weight-bold text-uppercase">Filled By</span>
+                            <span class="font-weight-bold text-uppercase">Filed By</span>
                             <p class="my-1">{{ $verification->createdBy->full_name ?? '' }}</p>
                         </div>
                         <div class="col-md-3 mb-3">

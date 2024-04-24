@@ -14,9 +14,9 @@
                         <th></th>
                         <th class="text-center">R</th>
                         <th class="text-center">NR</th>
-                        <th class="text-center">Total Pax</th>
+                        <th class="text-center">TOTAL PAX</th>
                         <th class="text-center">TRANSFER</th>
-                        <th class="text-center">EXCUSSION</th>
+                        <th class="text-center">EXCURSION</th>
                         <th></th>
                         <th></th>
                     </tr>

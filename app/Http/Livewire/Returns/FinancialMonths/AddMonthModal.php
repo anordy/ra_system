@@ -2,16 +2,16 @@
 
 namespace App\Http\Livewire\Returns\FinancialMonths;
 
+use App\Enum\CustomMessage;
 use App\Models\DualControl;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
-use App\Models\SevenDaysFinancialMonth;
+use App\Traits\CustomAlert;
 use App\Traits\DualControlActivityTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class AddMonthModal extends Component
@@ -28,31 +28,35 @@ class AddMonthModal extends Component
 
     public function mount()
     {
-        $this->years = FinancialYear::query()->where('active', 0)->orderByDesc('code')->get();
+        $this->years = FinancialYear::query()->select(['id', 'name', 'code', 'active', 'is_approved'])
+            ->where('active', 0)
+            ->orderByDesc('code')
+            ->get();
     }
 
     public function updated($property)
     {
-        $yr = FinancialYear::query()->findOrFail($this->year);
-        if ($property == 'year')
-        {
-            $this->month_number = '';
-            $this->day  = '';
-        }
-        if ($property == 'month_number' && $this->month_number == 2)
-        {
-            if (Carbon::create($yr['code'], $this->month_number)->isLeapYear()) {
-                $this->is_leap = true;
-                $this->is_non_leap = false;
+        try {
+            if ($property == 'year') {
+                $this->month_number = '';
+                $this->day = '';
             }
-            else{
-                $this->is_non_leap = true;
+            if ($property == 'month_number' && $this->month_number == 2) {
+                $yr = FinancialYear::query()->findOrFail($this->year, ['id', 'name', 'code', 'active', 'is_approved']);
+                if (Carbon::create($yr['code'], $this->month_number)->isLeapYear()) {
+                    $this->is_leap = true;
+                    $this->is_non_leap = false;
+                } else {
+                    $this->is_non_leap = true;
+                    $this->is_leap = false;
+                }
+            } else {
+                $this->is_non_leap = false;
                 $this->is_leap = false;
             }
-        }
-        else{
-            $this->is_non_leap = false;
-            $this->is_leap = false;
+        } catch (\Exception $exception) {
+            Log::error('RETURNS-FINANCIAL-MONTHS-ADD-MONTH-MODAL-UPDATED', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
     }
 
@@ -63,19 +67,20 @@ class AddMonthModal extends Component
         }
 
         $this->validate([
-            'year' => 'required',
-            'month_number' => 'required',
+            'year' => 'required|integer',
+            'month_number' => 'required|integer',
         ],
             [
                 'month_number.required' => 'This field is required',
             ]
         );
-        $yr = FinancialYear::query()->findOrFail($this->year);
+        $yr = FinancialYear::query()->findOrFail($this->year, ['id', 'name', 'code', 'active', 'is_approved']);
 
         if (Carbon::create($yr['code'], $this->month_number, $this->day)->isWeekend()) {
             $this->customAlert('error', 'The selected day is weekend. Please choose another day');
             return;
         }
+
         $this->month = date('F', mktime(0, 0, 0, $this->month_number));
         DB::beginTransaction();
         try {
@@ -84,16 +89,16 @@ class AddMonthModal extends Component
                 'number' => $this->month_number,
                 'name' => $this->month,
                 'due_date' => Carbon::create($yr['code'], $this->month_number, $this->day)->endOfDay()->toDateTimeString(),
-                'lumpsum_due_date'  => Carbon::create($yr['code'], $this->month_number)->endOfMonth()->endOfDay()->toDateTimeString(),
+                'lumpsum_due_date' => Carbon::create($yr['code'], $this->month_number)->endOfMonth()->endOfDay()->toDateTimeString(),
             ]);
-            $this->triggerDualControl(get_class($financial_month), $financial_month->id, DualControl::ADD, 'adding financial month '.$this->month.' '.$yr['code']);
+            $this->triggerDualControl(get_class($financial_month), $financial_month->id, DualControl::ADD, 'adding financial month ' . $this->month . ' ' . $yr['code']);
             DB::commit();
-            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer'=>8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.financial-months');
         } catch (\Throwable $exception) {
             DB::rollBack();
-            Log::error($exception);
-            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer'=>2000]);
+            Log::error('RETURNS-FINANCIAL-MONTHS-ADD-MONTH-MODAL-UPDATED', [$exception]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.financial-months');
         }
     }

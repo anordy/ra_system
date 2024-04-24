@@ -1,9 +1,9 @@
 <div class="card">
     <div class="card-body">
-        <h6 class="text-uppercase mt-2 ml-2">Filled Return Details For {{ $return->taxtype->name }}</h6>
+        <h6 class="text-uppercase mt-2 ml-2">Filed Return Details For {{ $return->taxtype->name ?? 'N/A' }}</h6>
         <hr>
         <div>
-            <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
 
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="academic-tab" data-toggle="tab" href="#academic" role="tab"
@@ -55,14 +55,14 @@
                        aria-selected="false">Exempt Supplies</a>
                 </li>
             </ul>
-            <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
+            <div class="tab-content" id="myTabContent">
 
                 <div class="tab-pane p-2 show active" id="academic" role="tabpanel" aria-labelledby="academic-tab">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
 
-                                <div class="pb-2" style="width: 160px">
+                                <div class="pb-2">
                                     <label>{{ __('Exemption Method Used') }}</label>
                                     <input readonly class="form-control" type="text"
                                            value="{{ $return->method_used ?? 'No Method Used' }}">
@@ -70,73 +70,75 @@
 
                             </div>
 
-                            <table class="table table-bordered ">
+                            <table class="table table-bordered table-responsive">
                                 <thead>
-                                <th style="width: 40%">Item Name</th>
-                                <th style="width: 20%">Value</th>
-                                <th style="width: 20%">Rate</th>
-                                <th class="text-right" style="width: 20%">VAT</th>
+                                <th>Item Name</th>
+                                <th>Value</th>
+                                <th>Rate</th>
+                                <th class="text-right">VAT</th>
                                 </thead>
                                 <tbody>
-                                @foreach ($return->items as $item)
-                                    @if($item->config->code == 'ITH')
-                                        @if($return->business->business_type =='hotel')
-                                            <tr>
-                                                <td>{{ $item->config->name }}</td>
-                                                <td class="text-right">{{ number_format($item->value, 2) }} <strong>(No.
-                                                        of bed nights)</strong></td>
-                                                <td>
-                                                    {{ $item->config->rate_type === 'percentage' ? $item->config->rate : getHotelStarByBusinessId($return->business->id)->infrastructure_charged }}
-                                                    @if($item->config->rate_type =='percentage')
-                                                        %
-                                                    @else
-                                                        @if ($item->config->currency == 'both')
-                                                            <strong>TZS</strong> <br>
-                                                            <strong>USD</strong>
-                                                        @elseif ($item->config->currency == 'TZS')
-                                                            <strong>TZS</strong>
-                                                        @elseif ($item->config->currency == 'USD')
-                                                            <strong>USD</strong>
+                                @if(!empty($return->items))
+                                    @foreach ($return->items as $item)
+                                        @if($item->config->code == 'ITH')
+                                            @if($return->business->business_type =='hotel')
+                                                <tr>
+                                                    <td>{{ $item->config->name }}</td>
+                                                    <td class="text-right">{{ number_format($item->value, 2) }} <strong>(No.
+                                                            of bed nights)</strong></td>
+                                                    <td>
+                                                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate : getHotelStarByBusinessId($return->business->id)->infrastructure_charged }}
+                                                        @if($item->config->rate_type =='percentage')
+                                                            %
+                                                        @else
+                                                            @if ($item->config->currency == 'both')
+                                                                <strong>TZS</strong> <br>
+                                                                <strong>USD</strong>
+                                                            @elseif ($item->config->currency == 'TZS')
+                                                                <strong>TZS</strong>
+                                                            @elseif ($item->config->currency == 'USD')
+                                                                <strong>USD</strong>
+                                                            @endif
                                                         @endif
-                                                    @endif
-                                                </td>
-                                                <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
-                                                    <strong>{{$return->currency}}</strong></td>
-                                            </tr>
-                                        @endif
-                                    @elseif($item->config->code == 'ITE')
-                                        @if($return->business->business_type =='electricity')
+                                                    </td>
+                                                    <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
+                                                        <strong>{{$return->currency}}</strong></td>
+                                                </tr>
+                                            @endif
+                                        @elseif($item->config->code == 'ITE')
+                                            @if($return->business->business_type =='electricity')
+                                                <tr>
+                                                    <td>{{ $item->config->name }}</td>
+                                                    <td class="text-right">{{ number_format($item->value, 2) }}
+                                                        <strong>(Electricity Units)</strong></td>
+                                                    <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
+                                                        @if($item->config->rate_type =='percentage')
+                                                            %
+                                                        @else
+                                                            {{$return->currency}}
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
+                                                        <strong>{{$return->currency}}</strong></td>
+                                                </tr>
+                                            @endif
+                                        @elseif($item->config->code != 'TIT' && $item->config->code != 'TITM1')
                                             <tr>
                                                 <td>{{ $item->config->name }}</td>
                                                 <td class="text-right">{{ number_format($item->value, 2) }}
-                                                    <strong>(Electricity Units)</strong></td>
-                                                <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
+                                                    <strong>  {{ $return->currency}}</strong></td>
+                                                <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }}
                                                     @if($item->config->rate_type =='percentage')
                                                         %
-                                                    @else
-                                                        {{$return->currency}}
                                                     @endif
                                                 </td>
-                                                <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
+                                                <td class="text-right">{{ number_format($item->vat,2) }}
                                                     <strong>{{$return->currency}}</strong></td>
                                             </tr>
                                         @endif
+                                    @endforeach
+                                @endif
 
-                                    @elseif($item->config->code != 'TIT' && $item->config->code != 'TITM1')
-                                        <tr>
-                                            <td>{{ $item->config->name }}</td>
-                                            <td class="text-right">{{ number_format($item->value, 2) }}
-                                                <strong>  {{ $return->currency}}</strong></td>
-                                            <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }}
-                                                @if($item->config->rate_type =='percentage')
-                                                    %
-                                                @endif
-                                            </td>
-                                            <td class="text-right">{{ number_format($item->vat,2) }}
-                                                <strong>{{$return->currency}}</strong></td>
-                                        </tr>
-                                    @endif
-                                @endforeach
                                 </tbody>
 
                                 <tbody>
@@ -266,9 +268,8 @@
                                     <div class="col-md-3">
                                         <a class="file-item" target="_blank"
                                            href="{{ route('returns.vat-return.withheld-file', [encrypt($file->id), 'withheld']) }}">
-                                            <i class="bi bi-file-earmark-pdf-fill px-2"
-                                               style="font-size: x-large"></i>
-                                            <div style="font-weight: 500;" class="ml-1">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                            <div class="ml-1 font-weight-bold">
                                                 View Attachment
                                             </div>
                                         </a>
@@ -418,7 +419,7 @@
                                         </thead>
 
                                         <tbody>
-                                        @if (count($return->cashSales))
+                                        @if (count($return->cashSales ?? []))
                                             @foreach ($return->cashSales as $index=> $details)
                                                 <tr>
                                                     <th>{{$index + 1}}</th>
@@ -469,7 +470,7 @@
                                 </thead>
 
                                 <tbody>
-                                @if (count($return->hotelDetails))
+                                @if (count($return->hotelDetails ?? []))
                                     @foreach ($return->hotelDetails as $index=> $details)
                                         <tr>
                                             <th class="text-center">{{ $details['no_of_days'] }}</th>
@@ -515,7 +516,7 @@
                                 </thead>
 
                                 <tbody>
-                                @if (count($return->zeroRatedDetails))
+                                @if (count($return->zeroRatedDetails ?? []))
                                     @foreach ($return->zeroRatedDetails as $index=> $details)
                                         <tr>
                                             <th class="text-center">{{$index + 1}}</th>
@@ -556,7 +557,7 @@
                                 </thead>
 
                                 <tbody>
-                                @if (count($return->penalties))
+                                @if (count($return->penalties ?? []))
                                     @foreach ($return->penalties as $index=> $penalty)
                                         <tr>
                                             <th>{{$index + 1}}</th>
@@ -610,7 +611,7 @@
                                 </thead>
 
                                 <tbody>
-                                @if (count($return->withheldDetails))
+                                @if (count($return->withheldDetails ?? []))
                                     @foreach ($return->withheldDetails as $index=> $details)
                                         <tr>
                                             <th class="text-center">{{$index + 1}}</th>

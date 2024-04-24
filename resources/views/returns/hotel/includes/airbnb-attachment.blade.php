@@ -8,14 +8,14 @@
                     <th class="text-center" colspan="3">NO. OF PAX</th>
                     <th class="text-center">TOTAL ROOM REVENUE</th>
                     <th class="text-center" colspan="2">REVENUE</th>
-                    <th class="text-center">TOTAL REVENUE OF FOOD BEVARAGE</th>
+                    <th class="text-center">TOTAL REVENUE OF FOOD BEVERAGE</th>
                     <th class="text-center">OTHER REVENUE</th>
                 </tr>
                 <tr>
                     <th></th>
                     <th class="text-center">R</th>
                     <th class="text-center">NR</th>
-                    <th class="text-center">Total Pax</th>
+                    <th class="text-center">TOTAL PAX</th>
                     <th></th>
                     <th class="text-center">FOOD</th>
                     <th class="text-center">BEVERAGE</th>

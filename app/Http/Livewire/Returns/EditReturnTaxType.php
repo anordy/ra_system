@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Returns;
 
-use App\Models\Currency;
 use App\Models\DualControl;
 use App\Models\TaxType;
 use App\Traits\DualControlActivityTrait;
@@ -32,7 +31,7 @@ class EditReturnTaxType extends Component
     public function mount($taxtype_id)
     {
         $this->taxtype_id = decrypt($taxtype_id);
-        $this->tax_type = TaxType::query()->findOrFail($this->taxtype_id);
+        $this->tax_type = TaxType::query()->findOrFail($this->taxtype_id, ['id', 'name', 'code', 'gfs_code', 'is_approved']);
         $this->name = $this->tax_type->name;
         $this->code = $this->tax_type->code;
         $this->category = $this->tax_type->category;
@@ -49,8 +48,8 @@ class EditReturnTaxType extends Component
             abort(403);
         }
         $this->validate();
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $payload = [
                 'name' => $this->name,
                 'gfs_code' => $this->gfs_code,

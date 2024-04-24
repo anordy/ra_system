@@ -73,9 +73,6 @@
             border-bottom: 2px solid black;
         }
 
-
-
-
         .no-border {
             border: none;
         }
@@ -173,7 +170,7 @@
     <div>
         <p>Intended Cargo discharge: {{ $product->cargo_name ?? '' }}</p>
 
-        <p>This is to certify that the quantity of <b>{{ $product->liters_at_20 }} ltrs@20<sup>o</sup>C</b> dischared at
+        <p>This is to certify that the quantity of <b>{{ $product->liters_at_20 }} ltrs@20<sup>o</sup>C</b> discharged at
             {{ $data->port }}
             ex ship {{ $data->ship }} at {{ $data->port }} for account of {{ $data->business->name ?? '' }} as
             ascertained on {{ Carbon\Carbon::create($data->ascertained)->isoFormat('DD-MMMM-YYYY') }}

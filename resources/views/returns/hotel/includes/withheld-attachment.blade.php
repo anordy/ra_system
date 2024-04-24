@@ -63,8 +63,8 @@
         @foreach($return->withheldCertificates as $certificate)
             <a class="file-item d-inline-flex pr-3 mr-2" target="_blank"
                href="{{ route('returns.stamp-duty.withheld-certificate', encrypt($certificate->id)) }}">
-                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                <div style="font-weight: 500;" class="ml-1">
+                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                <div class="ml-1 font-weight-bold">
                     Withheld Certificate {{ $loop->index + 1 }}
                 </div>
                 <i class="bi bi-arrow-up-right-square ml-2"></i>

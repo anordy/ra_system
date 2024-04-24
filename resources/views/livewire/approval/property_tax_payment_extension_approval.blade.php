@@ -35,7 +35,7 @@
         </div>
         @if ($this->checkTransition('commissioner_approve'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commissioner_reject')">Filled Incorrect
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commissioner_reject')">Filed Incorrect
                     return to Applicant</button>
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve','commissioner_approve')" wire:loading.attr="disabled">
                         <div wire:loading>

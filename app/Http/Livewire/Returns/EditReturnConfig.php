@@ -52,8 +52,9 @@ class EditReturnConfig extends Component
             abort(403);
         }
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
+
             $payload = [
                 'name'=>$this->name,
                 'row_type'=>$this->row_type,

@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body">
         <div class="row mt-2">
-            <div class="col-md-6 text-uppercase">Filled Return Details</div>
+            <div class="col-md-6 text-uppercase">Filed Return Details</div>
             <div class="col-md-6 d-flex justify-content-end">
                 <div>
                     <span class="font-weight-bold text-uppercase">Rejected At</span>
