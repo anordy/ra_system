@@ -827,8 +827,11 @@
                         <li class="{{ request()->is('payments/departmental-reports*') ? 'active' : '' }}">
                             <a href="{{ route('payments.departmental-reports.index') }}">Departmental Reports</a>
                         </li>
-                        <li class="{{ request()->is('payments/pbz*') ? 'active' : '' }}">
-                            <a href="{{ route('payments.pbz.index') }}">PBZ Payments</a>
+                        <li class="{{ request()->is('payments/pbz/statement*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.pbz.statements') }}">PBZ Statements</a>
+                        </li>
+                        <li class="{{ request()->is('payments/pbz/transaction*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.pbz.transactions') }}">PBZ Transactions</a>
                         </li>
                     @endcan
                 </ul>
@@ -929,6 +932,11 @@
                             <a href="{{ route('settings.banks.index') }}">Banks</a>
                         </li>
                     @endcan
+{{--                    @can('setting-bank-accounts-view')--}}
+                        <li class="{{ request()->is('settings/bank-accounts*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.bank-accounts.index') }}">Bank Accounts</a>
+                        </li>
+{{--                    @endcan--}}
                     @can('setting-exchange-rate-view')
                         <li class="{{ request()->is('settings/exchange-rate*') ? 'active' : '' }}">
                             <a href="{{ route('settings.exchange-rate.index') }}">Exchange Rate</a>

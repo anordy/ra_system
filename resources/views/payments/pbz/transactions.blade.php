@@ -1,13 +1,13 @@
 @extends('layouts.master')
 
 @section('title')
-    PBZ Payments
+    PBZ Transactions
 @endsection
 
 @section('content')
     <div class="card p-0 m-0">
         <div class="card-header text-uppercase font-weight-bold">
-            PBZ Payments
+            PBZ Transactions
         </div>
         <div class="card-body mt-0 p-2">
             <nav class="nav nav-tabs mt-0 border-top-0">

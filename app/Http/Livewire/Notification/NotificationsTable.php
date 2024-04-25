@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -25,7 +26,7 @@ class NotificationsTable extends Component
             ->where('notifiable_id', auth()->id())
             ->whereNull('read_at')
             ->increment('seen');
-   
+
     }
 
     public function toggleSelectAll()
@@ -52,7 +53,11 @@ class NotificationsTable extends Component
             $notification->read_at = now();
             $notification->save();
             DB::commit();
-            return redirect()->route($data->href, !empty($data->hrefParameters) ? encrypt($data->hrefParameters) : null);
+            if (Route::has($data->href)){
+                return redirect()->route($data->href, !empty($data->hrefParameters) ? encrypt($data->hrefParameters) : null);
+            } else {
+                return redirect()->route('notifications');
+            }
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
@@ -62,7 +67,7 @@ class NotificationsTable extends Component
 
     public function render()
     {
-                 
+
         $notifications = Notification::where('notifiable_type', get_class(auth()->user()))
             ->where('notifiable_id', auth()->id())
             ->whereNull('read_at')

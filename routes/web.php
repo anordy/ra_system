@@ -224,6 +224,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/street', StreetController::class);
         Route::resource('/education-level', EducationLevelController::class);
         Route::resource('/banks', BankController::class);
+        Route::resource('/bank-accounts', BankController::class);
         Route::resource('/business-categories', BusinessCategoryController::class);
         Route::resource('/taxtypes', TaxTypeController::class);
         Route::resource('/isic1', ISIC1Controller::class);
@@ -658,9 +659,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/daily-payments/{taxTypeId}', [PaymentsController::class, 'dailyPaymentsPerTaxType'])->name('daily-payments.tax-type');
         Route::get('/ega-charges/index', [PaymentsController::class, 'egaCharges'])->name('ega-charges.index');
         Route::get('/departmental-reports/index', [PaymentsController::class, 'departmentalReports'])->name('departmental-reports.index');
-        Route::get('/pbz', [PBZController::class, 'index'])->name('pbz.index');
-        Route::get('/pbz/payment/{transaction}', [PBZController::class, 'payment'])->name('pbz.payment');
-        Route::get('/pbz/reversal/{transaction}', [PBZController::class, 'reversal'])->name('pbz.reversal');
+        Route::get('/pbz/statements', [PBZController::class, 'statements'])->name('pbz.statements');
+        Route::get('/pbz/statement/{statement}', [PBZController::class, 'statement'])->name('pbz.statement');
+        Route::get('/pbz/transactions', [PBZController::class, 'transactions'])->name('pbz.transactions');
+        Route::get('/pbz/transactions/payment/{transaction}', [PBZController::class, 'payment'])->name('pbz.payment');
+        Route::get('/pbz/transactions/reversal/{transaction}', [PBZController::class, 'reversal'])->name('pbz.reversal');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 

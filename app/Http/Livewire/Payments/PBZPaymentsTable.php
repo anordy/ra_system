@@ -3,9 +3,11 @@
 namespace App\Http\Livewire\Payments;
 
 use App\Enum\GeneralConstant;
+use App\Models\PBZStatement;
 use App\Models\PBZTransaction;
 use App\Traits\CustomAlert;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -15,7 +17,7 @@ class PBZPaymentsTable extends DataTableComponent
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
 
-    public $data = [];
+    public $data = [], $status, $statement;
 
     public function filterData($data)
     {
@@ -23,28 +25,39 @@ class PBZPaymentsTable extends DataTableComponent
         $this->emit('$refresh');
     }
 
+    public function mount($status = null, $statement = null){
+        $this->status = $status;
+        $this->statement = $statement;
+    }
+
     public function builder(): Builder
     {
-        $data   = $this->data;
-        $query = (new PBZTransaction())->newQuery();
+        if ($this->statement){
+            return PBZTransaction::query()
+                ->join('pbz_transaction_statement', 'pbz_transactions.id', '=', 'pbz_transaction_statement.pbz_transaction_id')
+                ->where('pbz_transaction_statement.pbz_statement_id', $this->statement);
+        } else {
+            $data   = $this->data;
+            $query = (new PBZTransaction())->newQuery();
 
-        if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
-            $query->where('currency', $data['currency']);
+            if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
+                $query->where('currency', $data['currency']);
+            }
+
+            if (isset($data['range_start']) && isset($data['range_end'])) {
+                $query->whereBetween('transaction_time', [$data['range_start'], $data['range_end']]);
+            }
+
+            if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::YES){
+                $query->whereHas('bill');
+            }
+
+            if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::NO){
+                $query->whereDoesntHave('bill');
+            }
+
+            return $query->with('bill')->orderBy('created_at', 'desc');
         }
-
-        if (isset($data['range_start']) && isset($data['range_end'])) {
-            $query->whereBetween('transaction_time', [$data['range_start'], $data['range_end']]);
-        }
-
-        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::YES){
-            $query->whereHas('bill');
-        }
-
-        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::NO){
-            $query->whereDoesntHave('bill');
-        }
-
-        return $query->with('bill')->orderBy('created_at', 'desc');
     }
 
     public function configure(): void
@@ -54,8 +67,11 @@ class PBZPaymentsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-
         $this->setPerPageAccepted([15, 25, 50, 100]);
+
+        if ($this->statement){
+            $this->setPerPage(100);
+        }
     }
 
     public function columns(): array
@@ -76,7 +92,6 @@ class PBZPaymentsTable extends DataTableComponent
             Column::make('Currency', 'currency')
                 ->sortable()
                 ->searchable(),
-
             Column::make('Bank Ref', 'bank_ref'),
             Column::make('Transaction Time', 'transaction_time'),
             Column::make('Has Bill', 'created_at')
