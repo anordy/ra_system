@@ -100,6 +100,14 @@
                     @endif
 
                 </div>
+                    <div class="text-secondary small">
+                        <span class="font-weight-bold">
+                            {{ __('Note') }}:
+                        </span>
+                            <span class="">
+                            {{ __('Uploaded Documents must be less than 3  MB in size') }}
+                        </span>
+                    </div>
             @endif
             <div class="row p-0">
                 <div class="col-md-12 mb-3">

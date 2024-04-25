@@ -19,7 +19,7 @@ class CreateTaxRegionsTable extends Migration
             $table->string('code');
             $table->string('name');
             $table->string('prefix');
-            $table->enum('location', [Region::PEMBA, Region::UNGUJA]);
+            $table->enum('location', [Region::PEMBA, Region::UNGUJA, Region::NTRD,Region::LTD,Region::DTD]);
             $table->unsignedInteger('registration_count')->default(0);
             $table->softDeletes();
             $table->timestamps();

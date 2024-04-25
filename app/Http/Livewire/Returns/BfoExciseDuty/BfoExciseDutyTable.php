@@ -57,6 +57,11 @@ class BfoExciseDutyTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('Taxpayer Name', 'business.taxpayer_name')
+            ->format(function ($value, $row) {
+                return $value ?? 'N/A';
+            })
+            ->sortable()->searchable(),
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),

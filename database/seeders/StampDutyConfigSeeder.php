@@ -109,7 +109,7 @@ class StampDutyConfigSeeder extends Seeder
                 'financia_year_id' => 1,
                 'order' => 8,
                 'code' => 'TOTAL',
-                'name' => 'Total Duty (Amount due) / Kiasi kinachostahili kulipwa',
+                'name' => 'Total / Jumla',
                 'row_type' => 'dynamic',
                 'value_calculated' => false,
                 'col_type' => 'total',
@@ -122,6 +122,24 @@ class StampDutyConfigSeeder extends Seeder
                 'active' => true,
                 'value_label' => '09',
                 'tax_label' => '09'
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 9,
+                'code' => 'TOTAL_PAY',
+                'name' => 'Total Duty (Amount due) / Kiasi kinachostahili kulipwa',
+                'row_type' => 'dynamic',
+                'value_calculated' => false,
+                'col_type' => 'total',
+                'rate_applicable' => false,
+                'rate_type' => 'percentage',
+                'currency' => 'TZS',
+                'formular' => '(SUP+INST)-WITHH',
+                'rate' => 2,
+                'rate_usd' => 0,
+                'active' => true,
+                'value_label' => '10',
+                'tax_label' => '10'
             ]
         ];
 

@@ -8,6 +8,7 @@ use App\Jobs\PropertyTax\SendPaymentExtensionApprovalSMS;
 use App\Jobs\PropertyTax\SendPropertyTaxApprovalSMS;
 use App\Jobs\PropertyTax\SendPropertyTaxCorrectionSMS;
 use App\Jobs\PropertyTax\SendPropertyTaxPaymentReminderApprovalSMS;
+use App\Jobs\SendCustomSMS;
 use App\Jobs\SendZanMalipoSMS;
 use App\Jobs\Vfms\ClientNotificationSMS;
 use App\Models\KYC;
@@ -237,6 +238,8 @@ class SendSmsFired
             SendPropertyTaxCorrectionSMS::dispatch($event->tokenId);
         } else if ($event->service === SendPaymentExtensionApprovalSMS::SERVICE){
             SendPaymentExtensionApprovalSMS::dispatch($event->tokenId);
+        } else if ($event->service === SendCustomSMS::SERVICE){
+            SendCustomSMS::dispatch($event->extra['phone'], $event->extra['message']);
         }
     }
 }

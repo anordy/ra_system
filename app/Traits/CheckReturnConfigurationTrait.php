@@ -162,11 +162,14 @@ trait CheckReturnConfigurationTrait
 
                     $currencyRate = ExchangeRate::query()
                         ->whereMonth('exchange_date', '=', Carbon::now()->month)
-                        ->where('currency', $currency->iso)->first();
+                        ->where('currency', $currency->iso)
+                        ->where('is_approved', true)
+                        ->first();
                 } else {
                     $currencyRate = ExchangeRate::where('currency', $currency->iso)
                         ->whereRaw("TO_CHAR(exchange_date, 'mm') = TO_CHAR(SYSDATE, 'mm')
                             AND TO_CHAR(exchange_date, 'yyyy') = TO_CHAR(SYSDATE, 'yyyy')")
+                        ->where('is_approved', true)
                         ->first();
                 }
 
@@ -177,7 +180,7 @@ trait CheckReturnConfigurationTrait
                     event(new SendMail('exchange-rate', $payload));
                     event(new SendSms('exchange-rate', $payload));
                     $currencies_statuses[] = [
-                        'description' => "{$currency->iso} exchange rate for month {$month} has not been configured",
+                        'description' => "{$currency->iso} exchange rate for month {$month} has not been configured or approved.",
                         'route' => 'settings.exchange-rate.index'
                     ];
                 }

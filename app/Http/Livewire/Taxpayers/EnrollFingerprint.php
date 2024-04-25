@@ -5,10 +5,8 @@ namespace App\Http\Livewire\Taxpayers;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Biometric;
-use App\Models\IDType;
-use App\Models\KYC;
 use App\Models\Taxpayer;
-use App\Traits\Taxpayer\KYCTrait;
+use App\Traits\CustomAlert;
 use App\Traits\VerificationTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +14,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use App\Traits\CustomAlert;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class EnrollFingerprint extends Component
 {
-    use KYCTrait, CustomAlert, VerificationTrait;
+    use CustomAlert, VerificationTrait;
 
     public $kyc;
     public $error;
@@ -37,20 +35,25 @@ class EnrollFingerprint extends Component
 
     public function mount()
     {
-        // Allow unverified passport and nida number
-        if ($this->kyc->zanid_verified_at || empty($this->kyc->passport_verified_at) || empty($this->kyc->nida_verified_at)) {
-            $this->userVerified = true;
-        } else {
-            $this->userVerified = false;
-            $this->verifyingUser = true;
-        }
+        try {
+            // Allow unverified passport and nida number
+            if ($this->kyc->zanid_verified_at || empty($this->kyc->passport_verified_at) || empty($this->kyc->nida_verified_at)) {
+                $this->userVerified = true;
+            } else {
+                $this->userVerified = false;
+                $this->verifyingUser = true;
+            }
 
-        $count = Biometric::where('reference_no', $this->kyc->id)
-            ->where('template', '!=', null)
-            ->count();
+            $count = Biometric::where('reference_no', $this->kyc->id)
+                ->where('template', '!=', null)
+                ->count();
 
-        if ($count){
-            $this->selectedStep = 'biometric';
+            if ($count){
+                $this->selectedStep = 'biometric';
+            }
+        } catch (\Exception $exception){
+            Log::error($exception);
+            abort(500, 'Something went wrong, please contact your system administrator.');
         }
     }
 
@@ -91,16 +94,18 @@ class EnrollFingerprint extends Component
         if (!Gate::allows('kyc_view')) {
             abort(403);
         }
-        $kyc = $this->kyc;
 
-        if (config('app.env') != 'local') {
-            $biometrics = Biometric::where('reference_no', $kyc->id)
+        if (!$kyc = $this->kyc){
+            $this->customAlert('error', 'Something went wrong, please contact your system administrator for support.');
+            return;
+        }
+
+        $biometrics = Biometric::where('reference_no', $kyc->id)
                 ->get();
 
-            if (count($biometrics) != 4) {
-                $this->customAlert('error', 'Enroll four fingers');
-                return;
-            }
+        if (count($biometrics) != 4) {
+            $this->customAlert('error', 'Enroll four fingers');
+            return;
         }
 
         if ($this->kyc->tin && !$this->kyc->tin_verified_at){
@@ -116,18 +121,13 @@ class EnrollFingerprint extends Component
         DB::beginTransaction();
 
         try {
-
             $kyc->biometric_verified_at = Carbon::now()->toDateTimeString();
             $kyc->verified_by = Auth::id();
-            $kyc->save(); // todo: unless the exception tha would occur below will not affect this record, i suggest to put this inside trx
+            $kyc->save();
             $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at', 'verified_by', 'comments'])->toArray();
-            $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
-            $password = substr(str_shuffle($permitted_chars), 0, 8);
-            $data['password'] = Hash::make($password);
 
-            if (config('app.env') == 'local') {
-                $data['password'] = Hash::make('password');
-            }
+            $password = Str::random(8);
+            $data['password'] = Hash::make($password);
 
             $existingTaxpayer = Taxpayer::query()
                 ->where('mobile', $data['mobile'])

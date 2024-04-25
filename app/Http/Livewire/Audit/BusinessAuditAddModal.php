@@ -83,10 +83,7 @@ class BusinessAuditAddModal extends Component
             ->first();
 
         if ($check) {
-            $this->validate(
-                ['business_id' => 'required|email'],
-                ['business_id.email' => 'Business with the given tax type is already on auditing']
-            );
+            $this->customAlert('warning', 'The selected business location and tax type is already on auditing');
         }
 
         DB::beginTransaction();

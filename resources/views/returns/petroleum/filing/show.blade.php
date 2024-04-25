@@ -69,7 +69,16 @@
                             <tr>
                                 <td>{{ $item->config->name ?? 'name' }}</td>
                                 <td>{{ number_format($item->value, 2) }}</td>
-                                <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' : $item->config->rate_usd ?? '' }}
+                                <td>
+                                    @if($item->config->rate_type === 'percentage')
+                                        {{ $item->config->rate }}%
+                                    @elseif($item->config->rate_type === 'fixed')
+                                        @if($item->config->rate_usd)
+                                            {{ $item->config->rate_usd }} USD
+                                        @else
+                                            {{ $item->config->rate }}
+                                        @endif
+                                    @endif
                                 </td>
                                 <td>{{ number_format($item->vat, 1) }}</td>
                             </tr>

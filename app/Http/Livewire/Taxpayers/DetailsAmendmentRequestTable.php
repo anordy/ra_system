@@ -30,8 +30,6 @@ class DetailsAmendmentRequestTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['taxpayer_amendment_requests.status']);
-
     }
 
     public function mount($status)
@@ -41,20 +39,19 @@ class DetailsAmendmentRequestTable extends DataTableComponent
 
     public function builder(): Builder
     {
+        $query = TaxpayerAmendmentRequest::query();
         if ($this->status == TaxpayerAmendmentRequest::PENDING) {
-            return TaxpayerAmendmentRequest::where('taxpayer_amendment_requests.status', TaxpayerAmendmentRequest::PENDING)->orderBy('taxpayer_amendment_requests.created_at', 'DESC')
-                ->with('taxpayer');
+            $query->where('taxpayer_amendment_requests.status', TaxpayerAmendmentRequest::PENDING);
         } else if ($this->status == TaxpayerAmendmentRequest::APPROVED) {
-            return TaxpayerAmendmentRequest::where('taxpayer_amendment_requests.status', TaxpayerAmendmentRequest::APPROVED)->orderBy('taxpayer_amendment_requests.created_at', 'DESC')
-                ->with('taxpayer');
+            $query->where('taxpayer_amendment_requests.status', TaxpayerAmendmentRequest::APPROVED);
         } else if ($this->status == TaxpayerAmendmentRequest::REJECTED) {
-            return TaxpayerAmendmentRequest::where('taxpayer_amendment_requests.status', TaxpayerAmendmentRequest::REJECTED)->orderBy('taxpayer_amendment_requests.created_at', 'DESC')
-                ->with('taxpayer');
+            $query->where('taxpayer_amendment_requests.status', TaxpayerAmendmentRequest::REJECTED);
         }else if ($this->status == TaxpayerAmendmentRequest::TEMPERED) {
-            return TaxpayerAmendmentRequest::where('taxpayer_amendment_requests.status', TaxpayerAmendmentRequest::TEMPERED)->orderBy('taxpayer_amendment_requests.created_at', 'DESC')
-                ->with('taxpayer');
+            $query->where('taxpayer_amendment_requests.status', TaxpayerAmendmentRequest::TEMPERED);
         }
-        return TaxpayerAmendmentRequest::query();
+        return $query
+            ->orderBy('taxpayer_amendment_requests.created_at', 'DESC')
+            ->with('taxpayer');
     }
 
     public function columns(): array

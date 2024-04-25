@@ -40,7 +40,7 @@ class ZanIDController extends Controller
         $access_token = (new ApiAuthenticationService)->getAccessToken();
 
         if ($access_token == null) {
-            return ['data' => null, 'msg' => 'Gateway Timed Out', 'code' => 504];
+            return ['data' => null, 'msg' => 'Authentication Failure.', 'code' => 401];
         } else {
             $authorization = "Authorization: Bearer " . $access_token;
 

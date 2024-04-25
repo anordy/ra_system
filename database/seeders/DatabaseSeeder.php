@@ -52,6 +52,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SystemSettingsSeeder::class);
         $this->call(StampDutyConfigSeeder::class);
         $this->call(BusinessSeeder::class);
+        $this->call(DepartmentsTableSeeder::class);
         $this->call(TaxRegionsSeeder::class);
         $this->call(ReliefProjectSeeder::class);
         $this->call(DateConfigurationSeeder::class);
@@ -116,5 +117,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowPropertyTaxExtensionApprovalSeeder::class);
         $this->call(PropertyOwnershipTypeSeeder::class);
         $this->call(WorkflowUpgradeTaxTypeSeeder::class);
+        $this->call(WorkflowWithholdingAgentSeeder::class);
     }
 }

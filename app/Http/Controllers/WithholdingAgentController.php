@@ -23,12 +23,27 @@ class WithholdingAgentController extends Controller
         return view('withholding-agent.index');
     }
 
+    public function activeRequest()
+    {
+        if (!Gate::allows('withholding-agents-view')) {
+            abort(403);
+        }
+        return view('withholding-agent.active');
+    }
+
     public function view($id)
     {
         if (!Gate::allows('withholding-agents-view')) {
             abort(403);
         }
         return view('withholding-agent.view', compact('id'));
+    }
+    public function show($id)
+    {
+        if (!Gate::allows('withholding-agents-view')) {
+            abort(403);
+        }
+        return view('withholding-agent.show', compact('id'));
     }
 
     public function registration()

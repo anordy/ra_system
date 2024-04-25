@@ -64,7 +64,7 @@ class ObjectionApprovalProcessing extends Component
     {
         $this->propertyName = $propertyName;
         if ($propertyName == "penaltyPercent") {
-            if (!is_numeric($this->interestPercent)) {
+            if (!is_numeric($this->penaltyPercent)) {
                 $this->penaltyPercent = null;
             }
             if ($this->penaltyPercent > 100) {

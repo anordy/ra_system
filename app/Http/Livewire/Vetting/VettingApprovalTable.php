@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Vetting;
 
+use App\Models\Region;
 use Carbon\Carbon;
 use App\Models\TaxType;
 use App\Enum\VettingStatus;
@@ -87,14 +88,28 @@ class VettingApprovalTable extends DataTableComponent
                 TaxType::RDF
             ])
             ->where('parent',0)
-            ->where('is_business_lto',false)
+            ->where('is_business_lto',false) 
             ->where('vetting_status', $this->vettingStatus)
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->where('location', Region::DTD); //this is filter by department
+            })
+            ->whereHas('pinstance', function ($query) {
+                $query->where('status', '!=', 'completed');
+                $query->whereHas('actors', function ($query) {
+                    $query->where('user_id', auth()->id());
+                });
+            })
             ->orderBy('created_at', $this->orderBy);
     }
 
     public function columns(): array
     {
         return [
+            Column::make('Taxpayer Name', 'business.taxpayer_name')
+            ->format(function ($value, $row) {
+                return $value ?? 'N/A';
+            })
+            ->sortable()->searchable(),
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),

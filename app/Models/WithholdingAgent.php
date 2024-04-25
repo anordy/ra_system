@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class WithholdingAgent extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
+    use HasFactory, SoftDeletes,WorkflowTrait, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -78,5 +79,9 @@ class WithholdingAgent extends Model implements Auditable
             DB::rollBack();
             Log::error($e);
         }
+    }
+
+    public function taxpayer(){
+        return $this->belongsTo(Taxpayer::class, 'taxpayer_id');
     }
 }

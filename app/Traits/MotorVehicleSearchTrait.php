@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleRegistration;
+use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationStatus;
 use App\Models\Tra\ChassisNumber;
 use Illuminate\Support\Facades\DB;
@@ -27,14 +28,15 @@ trait MotorVehicleSearchTrait
 
                 return $mv;
         }else{
-            $motor_vehicle = MvrMotorVehicleRegistration::query()
+            $motor_vehicle = MvrRegistration::query()
                     ->where(['plate_number'=>$number])
-                    ->first()->motor_vehicle ?? null;
+                    ->first();
+
             if($motor_vehicle == null){
                 return null;
             }
 
-            return ($motor_vehicle->mvr_registration_status_id ?? null) == $status->id ? $motor_vehicle: null;
+            return $motor_vehicle;
         }
     }
 

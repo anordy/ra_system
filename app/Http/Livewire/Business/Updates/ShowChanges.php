@@ -70,7 +70,7 @@ class ShowChanges extends Component
 
     public function getResponsiblePersonNameById($id)
     {
-        return Taxpayer::find($id)->fullname() ?? 'N/A';
+        return Taxpayer::select('first_name', 'last_name')->find($id)->fullname() ?? 'N/A';
     }
 
     public function getResponsiblePersonNameByReferenceNo($refNo)

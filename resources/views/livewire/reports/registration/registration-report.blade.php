@@ -6,7 +6,7 @@
                 <div class="card-header"> <b> Report Type</b></div>
             </div>
         </div>
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-md-4 form-group">
                 <label class="d-flex justify-content-between'">
                     <span>
@@ -355,11 +355,6 @@
 
     <div class="row mt-3">
         <div class="col-md-12 d-flex justify-content-end">
-            <button class="btn btn-primary ml-2" wire:click="preview" wire:loading.attr="disabled">
-                <i class="bi bi-funnel ml-1" wire:loading.remove wire:target="priview"></i>
-                <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="priview"></i>
-                Search
-            </button>
             @if ($hasData)
             <button class="btn btn-success ml-2" wire:click="exportExcel" wire:loading.attr="disabled">
                 <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="exportExcel"></i>
@@ -375,10 +370,5 @@
         </div>
     </div>
 
-    @if($hasData)
-    <div class="mt-3">
-        @livewire('reports.business.preview-table',['parameters'=>$parameters])
-    </div>
-    @endif
 
 </div>

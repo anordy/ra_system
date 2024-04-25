@@ -6,8 +6,11 @@ use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Taxpayer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -44,10 +47,12 @@ class TaxpayersTable extends DataTableComponent
                 ->label(fn ($row) => $row->fullname())
                 ->sortable()
                 ->searchable(function (Builder $query, $searchTerm) {
-                    return $query
-                        ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
-                        ->orWhere('middle_name', 'like', '%' . $searchTerm . '%')
-                        ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                    $searchTerms = explode(" ", $searchTerm);
+                    foreach ($searchTerms as $term) {
+                        $query->orWhereRaw(DB::raw("LOWER(first_name) like '%' || LOWER('$term') || '%'"))
+                            ->orWhereRaw(DB::raw("LOWER(middle_name) like '%' || LOWER('$term') || '%'"))
+                            ->orWhereRaw(DB::raw("LOWER(last_name) like '%' || LOWER('$term') || '%'"));
+                    }
                 }),
             Column::make('Mobile No', 'mobile')->searchable(),
             Column::make('Email Address', 'email')->searchable(),
@@ -61,15 +66,26 @@ class TaxpayersTable extends DataTableComponent
 
     public function sendCredential($value)
     {
-        $data = (object) $value['data'];
+        if (isset($value['data'])) {
+            $data = (object) $value['data'];
+        } else {
+            abort(400);
+        }
+
         $taxpayer = Taxpayer::find($data->id);
         if(is_null($taxpayer)){
             abort(404);
         }
-        $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
-        $password = substr(str_shuffle($permitted_chars), 0, 8);
-        $taxpayer->password = Hash::make($password);
-        $taxpayer->save();
+
+        try {
+            $password = Str::random(8);
+            $taxpayer->password = Hash::make($password);
+            $taxpayer->save();
+        } catch (\Exception $exception) {
+            Log::error($exception);
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            return;
+        }
 
         event(new SendSms('taxpayer-registration', $taxpayer->id, ['code' => $password]));
         if ($taxpayer->email) {

@@ -46,6 +46,7 @@ class MnoReturnsTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            
             Column::make('Taxpayer Name', 'business_id')
                 ->sortable()
                 ->searchable()

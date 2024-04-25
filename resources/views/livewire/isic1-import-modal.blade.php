@@ -15,6 +15,15 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+
+                    <div class="text-secondary small">
+                        <span class="font-weight-bold">
+                            {{ __('Note') }}:
+                        </span>
+                        <span class="">
+                            {{ __('Uploaded Documents must be less than 3  MB in size') }}
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -24,7 +33,8 @@
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                    </div>Save changes</button>
+                    </div>Save changes
+                </button>
             </div>
         </div>
     </div>

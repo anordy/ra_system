@@ -2,15 +2,13 @@
 
 namespace App\Http\Livewire\Business\Deregister;
 
+use App\Enum\CustomMessage;
 use Exception;
 use Livewire\Component;
-use App\Models\Business;
 use App\Models\BusinessDeregistration;
-use App\Models\BusinessLocation;
 use App\Models\TaxAudit\TaxAudit;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
 use App\Models\TaxAudit\TaxAuditTaxType;
 use App\Models\TaxAudit\TaxAuditLocation;
 use App\Traits\CustomAlert;
@@ -42,8 +40,8 @@ class InitiateAuditModal extends Component
     {
         return [
             'business_id' => 'required|numeric|exists:businesses,id',
-            'location_ids' => 'required',
-            'tax_type_ids' => 'required',
+            'location_ids' => 'required|arr_num',
+            'tax_type_ids' => 'required|arr_num',
             'intension' => 'required|strip_tag',
             'scope' => 'required|strip_tag',
             'period_from' => 'required|date',
@@ -77,17 +75,17 @@ class InitiateAuditModal extends Component
             ->where('location_id', $this->location_ids)
             ->where('tax_type_id', $this->tax_type_ids)
             ->whereIn('status', ['draft', 'pending'])
-            ->first();
+            ->exists();
 
         if ($check) {
             $this->validate(
                 ['business_id' => 'required|numeric'],
-                ['business_id.email' => 'Business with the given tax type is already on auditing']
+                ['business_id.exists' => 'Business with the given tax type is already on auditing']
             );
         }
         $this->validate();
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $taxAudit = TaxAudit::create([
                 'business_id' => $this->business_id,
                 'location_id' => count($this->location_ids) <= 1 ? $this->location_ids[0] : 0,
@@ -106,7 +104,6 @@ class InitiateAuditModal extends Component
             $this->deregister->save();
 
             foreach ($this->location_ids as $location_id) {
-                
                 TaxAuditLocation::create([
                     'tax_audit_id' => $taxAudit->id,
                     'business_location_id' => $location_id
@@ -114,7 +111,6 @@ class InitiateAuditModal extends Component
             }
 
             foreach ($this->tax_type_ids as $tax_type_id) {
-                
                 TaxAuditTaxType::create([
                     'tax_audit_id' => $taxAudit->id,
                     'business_tax_type_id' => $tax_type_id
@@ -125,8 +121,8 @@ class InitiateAuditModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            Log::error('BUSINESS-DEREGISTER-INITIATE-AUDIT-MODAL', [$e->getMessage()]);
+            $this->customAlert('error', CustomMessage::ERROR);
         }
     }
 

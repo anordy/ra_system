@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Taxpayers;
 
 use App\Models\KYC;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -34,15 +35,16 @@ class RegistrationsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-
             Column::make('Name')
                 ->label(fn ($row) => $row->fullname())
                 ->sortable()
                 ->searchable(function (Builder $query, $searchTerm) {
-                    return $query
-                        ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
-                        ->orWhere('middle_name', 'like', '%' . $searchTerm . '%')
-                        ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                    $searchTerms = explode(" ", $searchTerm);
+                    foreach ($searchTerms as $term) {
+                        $query->orWhereRaw(DB::raw("LOWER(first_name) like '%' || LOWER('$term') || '%'"))
+                            ->orWhereRaw(DB::raw("LOWER(middle_name) like '%' || LOWER('$term') || '%'"))
+                            ->orWhereRaw(DB::raw("LOWER(last_name) like '%' || LOWER('$term') || '%'"));
+                    }
                 }),
             Column::make('Mobile No', 'mobile')->searchable(),
             Column::make('Email Address', 'email')->searchable(),

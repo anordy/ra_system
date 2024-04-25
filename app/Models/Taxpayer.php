@@ -70,7 +70,7 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
 
             $s = $s . Carbon::now()->format('y');
 
-            $index = Sequence::where('prefix', 'TRN')->firstOrFail();
+            $index = Sequence::where('prefix', 'TRN')->lockForUpdate()->firstOrFail();
 
             $s = $s . sprintf("%05s", $index->next_id);
 

@@ -114,6 +114,9 @@ class PenaltyForDebt
 
         $penaltableAmount = $outstanding_amount;
 
+        $start_date = Carbon::create($tax_return->curr_payment_due_date)->addDay()->startOfDay();
+        $end_date = Carbon::create($tax_return->curr_payment_due_date)->addDays(30)->endOfDay();
+
         /**
          * If return is EM or MM Do not calculate interest Amount and Late payment amount is always constant ie. 1,000,000 (Fetched from DB)
          */
@@ -125,12 +128,15 @@ class PenaltyForDebt
         } else {
             $latePaymentAmount = 0;
             $penaltableAmount = $latePaymentAmount + $penaltableAmount;
-            $interestAmount = roundOff(self::calculateInterest($penaltableAmount, $interestRate->rate, $period), $tax_return->currency);
+            if ($end_date->gt(Carbon::today())) {
+                $diffInDays = Carbon::today()->diffInDays($start_date);
+            } else {
+                $diffInDays = $end_date->diffInDays($start_date);
+            }
+            $interestAmount = roundOff(self::calculateInterest($penaltableAmount, $interestRate->rate, $diffInDays), $tax_return->currency);
             $penaltableAmount = roundOff($penaltableAmount + $interestAmount, $tax_return->currency);
         }
 
-        $start_date = Carbon::create($tax_return->curr_payment_due_date)->addDay()->startOfDay();
-        $end_date = Carbon::create($tax_return->curr_payment_due_date)->addDays(30)->endOfDay();
 
         try {
             $previous_debt_penalty_id = $tax_return->latestPenalty->id ?? null;
@@ -333,6 +339,9 @@ class PenaltyForDebt
             $date = self::getFinancialMonthFromDate($tax_return->curr_payment_due_date, $tax_return->return_type);
     
             for ($i = 0; $i < $iterations; $i++) {
+
+                $startDate = $date->due_date;
+                $endDate = self::getNextFinancialMonthDueDateFromDate($tax_return->return_type, $date->due_date)->due_date;
     
                 if ($tax_return->return_type == EmTransactionReturn::class || $tax_return->return_type == MmTransferReturn::class) {
                     $latePaymentAmount = PenaltyRate::where('financial_year_id', $tax_return->financialMonth->year->id)->where('code', PenaltyRate::PENALTY_FOR_MM_TRANSACTION)->firstOrFail()->rate;
@@ -343,7 +352,14 @@ class PenaltyForDebt
                     $period = round($tax_return->periods) + $i + 1;
                     $latePaymentAmount = 0;
                     $penaltableAmount = $latePaymentAmount + $penaltableAmountForPerticularMonth;
-                    $interestAmount = roundOff(self::calculateInterest($penaltableAmount, $interestRate->rate, $period), $tax_return->currency);
+
+                    if ($endDate->gt(Carbon::today())) {
+                        $diffInDays = Carbon::today()->diffInDays($startDate);
+                    } else {
+                        $diffInDays = $endDate->diffInDays($startDate);
+                    }
+                    
+                    $interestAmount = roundOff(self::calculateInterest($penaltableAmount, $interestRate->rate, $diffInDays), $tax_return->currency);
                     $penaltableAmount = roundOff($penaltableAmount + $interestAmount, $tax_return->currency);
                 }
     
@@ -356,8 +372,8 @@ class PenaltyForDebt
                     'interestRate' => $interestRate->rate,
                     'interestAmount' => $interestAmount,
                     'penaltyAmount' => $penaltableAmount,
-                    'start_date' => $date->due_date,
-                    'end_date' => self::getNextFinancialMonthDueDateFromDate($tax_return->return_type, $date->due_date)->due_date
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
                 ];
                 $penaltableAmountForPerticularMonth = $penaltableAmount;
                 $date = self::getFinancialMonthFromDate($paymentStructure[$i]['end_date'], $tax_return->return_type);

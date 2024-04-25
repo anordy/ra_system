@@ -185,6 +185,11 @@
                    class="dropdown-toggle">Withholding Agents</a>
                 <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}"
                     id="withholdingAgentsMenu">
+                    {{-- @can('withholding-agents-registration') --}}
+                    <li class="{{ request()->is('withholdingAgents/request*') ? 'active' : '' }}">
+                        <a href="{{ route('withholdingAgents.request') }}">Registration Request</a>
+                    </li>
+                    {{-- @endcan --}}
                     @can('withholding-agents-registration')
                         <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
                             <a href="{{ route('withholdingAgents.register') }}">Registration</a>
@@ -420,8 +425,14 @@
                 <ul class="collapse list-unstyled {{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'show' : '' }}"
                     id="tax-claim">
                     @can('tax-claim-view')
-                        <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
-                            <a href="{{ route('claims.index') }}">Claims</a>
+                        <li class="{{ request()->is('tax-claims') ? 'active' : '' }}">
+                            <a href="{{ route('claims.index') }}">Submitted Claims</a>
+                        </li>
+                        <li class="{{ request()->is('tax-claims/approved') ? 'active' : '' }}">
+                            <a href="{{ route('claims.approved') }}">Approved Claims</a>
+                        </li>
+                        <li class="{{ request()->is('tax-claims/rejected') ? 'active' : '' }}">
+                            <a href="{{ route('claims.rejected') }}">Rejected Claims</a>
                         </li>
                     @endcan
                     {{-- @can('tax-credit-view') --}}
@@ -571,8 +582,8 @@
                     Registration</a>
                 <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
                     @can('motor-vehicle-registration')
-                        <li class="{{ request()->is('mvr/register') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
+                        <li class="{{ request()->is('mvr/registration') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.registration.index') }}">Motor Vehicle Registration</a>
                         </li>
                     @endcan
 
@@ -583,9 +594,9 @@
                     @endcan
 
                     @can('motor-vehicle-status-change-request')
-                        <li class="{{ request()->is('mvr/reg-change-requests') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.reg-change-requests') }}">Status Change Requests</a>
-                        </li>
+                            <li class="{{ request()->is('mvr/registration/status') ? 'active' : '' }}">
+                                <a href="{{ route('mvr.registration.status.index') }}">Status Change Request</a>
+                            </li>
                     @endcan
 
                     @can('motor-vehicle-transfer-ownership')
@@ -600,19 +611,13 @@
                         </li>
                     @endcan
 
-                    @can('motor-vehicle-status-written-off')
+                    @can('motor-vehicle-written-off')
                         <li class="{{ request()->is('mvr/written-off') ? 'active' : '' }}">
                             <a href="{{ route('mvr.written-off') }}">Written-off Vehicles</a>
                         </li>
                     @endcan
 
-                    @can('motor-vehicle-status-registered')
-                        <li class="{{ request()->is('mvr/registered') ? 'active' : '' }}">
-                            <a href="{{ route('mvr.registered') }}">Registered Motor Vehicles</a>
-                        </li>
-                    @endcan
-
-                    @can('motor-vehicle-status-transport-agent')
+                    @can('motor-vehicle-transport-agent')
                         <li class="{{ request()->is('mvr/agent') ? 'active' : '' }}">
                             <a href="{{ route('mvr.agent') }}">Transport Agents</a>
                         </li>
@@ -985,6 +990,11 @@
                                 Reasons</a>
                         </li>
                     @endcan
+                        @can('setting-mvr-transfer-category-view')
+                            <li class="{{ request()->is('settings/mvr-generic/MvrPlateNumberColor') ? 'active' : '' }}">
+                                <a href="{{ route('settings.mvr-generic.index', 'MvrPlateNumberColor') }}">MVR Plate Number Color</a>
+                            </li>
+                        @endcan
                     @can('setting-mvr-transfer-category-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer
@@ -1109,7 +1119,7 @@
             </li>
         @endcan
 
-        @can('system')
+        @canany(['system-audit-trail-view', 'system-workflow-view', 'setting-dual-control-activities-view'])
             <li class="{{ request()->is('system*') ? 'active' : '' }}">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
                 <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">

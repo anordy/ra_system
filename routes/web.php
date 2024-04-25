@@ -241,7 +241,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
+                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor');
         });
         Route::name('return-config.')->prefix('return-config')->group(function () {
             Route::get('/', [ReturnController::class, 'taxTypes'])->name('index');
@@ -302,9 +302,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::resource('taxpayers', TaxpayersController::class);
 
     Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function () {
+        Route::get('request', [WithholdingAgentController::class, 'index'])->name('request');
         Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register');
-        Route::get('list', [WithholdingAgentController::class, 'index'])->name('list');
+        Route::get('list', [WithholdingAgentController::class, 'activeRequest'])->name('list');
         Route::get('view/{id}', [WithholdingAgentController::class, 'view'])->name('view');
+        Route::get('show/{id}', [WithholdingAgentController::class, 'show'])->name('show');
         Route::get('file/{id}/{type}', [WithholdingAgentController::class, 'getWithholdingAgentFile'])->name('file');
         Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
     });
@@ -452,6 +454,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);
         Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
         Route::get('/certificateOfQuantityFile/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
+        Route::get('/certificateOfQuantityAttachment/{id}', [QuantityCertificateController::class, 'getAttachedCertificateFile'])->name('certificateOfQuantity.attachment');
     });
 
     Route::name('queries.')->prefix('queries')->group(function () {
@@ -505,6 +508,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
 
         Route::get('/business', [BusinessRegReportController::class, 'init'])->name('business.init');
+        Route::get('/business/preview/{parameters}', [BusinessRegReportController::class, 'preview'])->name('business.preview');
         Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
         Route::get('/taxtype/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesTaxtypeReportPdf'])->name('taxtype.download.pdf');
         Route::get('/taxpayer/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesTaxpayerReportPdf'])->name('taxpayer.download.pdf');
@@ -540,6 +544,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
         Route::get('/', [ClaimsController::class, 'index'])->name('index');
+        Route::get('/approved', [ClaimsController::class, 'approved'])->name('approved');
+        Route::get('/rejected', [ClaimsController::class, 'rejected'])->name('rejected');
         Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
         Route::get('/{claim}/approve', [ClaimsController::class, 'approve'])->name('approve');
         Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
@@ -649,12 +655,23 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     });
 
     Route::prefix('mvr')->as('mvr.')->group(function () {
-        Route::get('/register', [MotorVehicleRegistrationController::class, 'index'])->name('register');
-        Route::get('/registered', [MotorVehicleRegistrationController::class, 'registeredIndex'])->name('registered');
+        Route::get('/registrations', [MotorVehicleRegistrationController::class, 'index'])->name('registration.index');
+        Route::get('/registrations/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('registration.show');
+        Route::get('/registrations/certificate/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('registration.certificate');
+
+        /**
+         * Registration Status Change
+         */
+        Route::get('/registration/status/index', [\App\Http\Controllers\MVR\MotorVehicleRegistrationStatusChangeController::class, 'index'])->name('registration.status.index');
+        Route::get('/registration/status/show/{id}', [\App\Http\Controllers\MVR\MotorVehicleRegistrationStatusChangeController::class, 'show'])->name('registration.status.show');
+        Route::get('/registration/status/correct/{id}', [\App\Http\Controllers\MVR\MotorVehicleRegistrationStatusChangeController::class, 'update'])->name('registration.status.update');
+
+
+        // TODO: Remove unused routes
+        Route::get('/certificate-of-registration/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('certificate-of-registration');
         Route::get('/plate-numbers', [MotorVehicleRegistrationController::class, 'plateNumbers'])->name('plate-numbers');
         Route::get('/change-status', [MotorVehicleRegistrationController::class, 'index'])->name('change-status');
         Route::get('/view/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('show');
-        Route::get('/certificate-of-registration/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('certificate-of-registration');
         Route::get('/certificate-of-worth/{id}', [MotorVehicleRegistrationController::class, 'printCertificateOfWorth'])->name('certificate-of-worth');
         Route::get('/de-registration-certificate/{id}', [MotorVehicleRegistrationController::class, 'deRegistrationCertificate'])->name('de-registration-certificate');
         Route::get('/submit-inspection/{id}', [MotorVehicleRegistrationController::class, 'submitInspection'])->name('submit-inspection');
@@ -684,7 +701,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
             ->name('internal-search-wo')->where('type', 'plate-number|chassis');
         Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
-        Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']); //todo: remove on production
         Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove on production
         Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove on production
         Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']); //todo: remove on production

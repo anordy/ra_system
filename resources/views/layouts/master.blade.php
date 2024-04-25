@@ -3,8 +3,6 @@
 
 <head>
     @include('layouts.component.header')
-
-
 </head>
 <body>
     <div class="wrapper">
