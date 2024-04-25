@@ -67,39 +67,39 @@ class MapVfmsWards extends Command
         $missingWards = [];
         DB::beginTransaction();
         foreach ($data as $key => $item){
-            $locality_name = strtolower($item->locality_name);
+            $item = (array) $item;
+            $locality_name = strtolower($item['locality_name']);
             $ward = Ward::select('id', 'name')->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$locality_name}%"])->first();
+
             if ($ward){
-                $this->addVfmsWardToZidras($ward, $item);
+                VfmsWard::updateOrCreate([
+                    'ward_id' => $ward->id,
+                    'locality_id' => $item['locality_id']
+                ],[
+                    'ward_id' => $ward->id,
+                    'locality_id' => $item['locality_id'],
+                    'locality_name' => $ward->name,
+                ]);
             } else {
-                $response = $this->vfmsCheck($item->locality_id);
-                $data = json_decode($response['data'], true);
-                if (array_key_exists('data', $response) && $response['data']){
-                    $region = $this->checkRegion($data);
+                    $region = $this->checkRegion($item);
                     if ($region){
-                        $this->addOrCheckDistrict($region, $data);
+                        $this->addOrCheckDistrict($region, $item);
                     } else {
-                        $this->addRegion($data);
+                        $this->addRegion($item);
                     }
+
                     $ward = Ward::select('id', 'name')->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$locality_name}%"])->first();
 
                     if ($ward) {
                         VfmsWard::updateOrCreate([
                             'ward_id' => $ward->id,
-                            'locality_id' => $data['locality_id'],
+                            'locality_id' => $item['locality_id'],
                             'locality_name' => $ward->name,
                         ]);
                     } else {
                         Log::error('Ward not found!');
-                        Log::info($item);
+                        Log::info('Ward Item', [json_encode($item)]);
                     }
-                } else {
-                    Log::channel('vfms')->error('No response data after new ward entry data to vfms');
-                    Log::channel('vfms')->info($response);
-
-                    $message = "This alert email concerning Mapping Vfms Locality data with ZIDRAS wards. Inspect the logs as no response after requesting Locality data from VFMS side.";
-                    $this->sendnotificationToAdmin($message);
-                }
             }
         }
         DB::commit();

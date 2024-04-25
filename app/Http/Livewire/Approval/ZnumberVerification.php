@@ -139,7 +139,6 @@ class ZnumberVerification extends Component
                 $taxtype = TaxType::select('id', 'code')->where('code', $this->mapVfmsTaxType($unit['tax_type']))->first();
 
                 if (!$taxtype) {
-                    dd($unit);
                     $this->customAlert('error', 'Missing VFMS Tax Type Mapping');
                     return;
                 }
@@ -147,8 +146,8 @@ class ZnumberVerification extends Component
                 if (!$vfmsBusinessUnit) {
                     $this->createBusinessUnit($unit, $taxtype);
                 } else {
-                    $vfmsBusinessUnit->location_id = $unit['is_headquarter'] ? $this->business->headquarter->id : null;
-                    $vfmsBusinessUnit->is_headquater = $unit['is_headquarter'] ?? false;
+                    $vfmsBusinessUnit->location_id = !empty($unit['is_headquarter']) ? $this->business->headquarter->id : null;
+                    $vfmsBusinessUnit->is_headquarter = !empty($unit['is_headquarter']) ? $unit['is_headquarter'] : false;
                     $vfmsBusinessUnit->save();
                 }
             }

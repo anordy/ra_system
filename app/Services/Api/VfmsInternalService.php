@@ -17,13 +17,16 @@ class VfmsInternalService
     public function getBusinessUnits($business, $location, $is_headquarter)
     {
         $vfmsWard = $is_headquarter ? $business->headquarter->ward->vfms_ward : $location->ward->vfms_ward;
+        $wardName = $business->headquarter->ward->name ?? $location->ward->name;
         if (!$vfmsWard){
             return  [
                     'statusCode' => 400,
-                    'statusMessage' => "Ward; '". $vfmsWard->ward->name."' selected for particular Business is not recognized yet from VFMS, contact Admin to complete this action."
+                    'statusMessage' => "Ward; '". $wardName. "' selected for particular Business is not recognized yet from VFMS, contact Admin to complete this action."
                 ];
         }
         $znumber_internal = config('modulesconfig.api_url') . '/vfms-internal/check_znumber';
+        Log::info('GET-BUSINESS-UNITS-URL', [$znumber_internal]);
+
         $access_token = (new ApiAuthenticationService)->getAccessToken();
 
         $data = [];
@@ -56,6 +59,7 @@ class VfmsInternalService
             ));
 
             $response = curl_exec($curl);
+            Log::info('RESPONSE-GET-BUSINESS-UNITS', [json_decode($response)]);
             $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($statusCode != 200) {
                 curl_close($curl);
