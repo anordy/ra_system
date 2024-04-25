@@ -438,8 +438,8 @@ class ApprovalProcessing extends Component
                 DB::commit();
 
                 // TODO: Make it as a job
-                $traService = new TraInternalService();
-                $traService->postZNumber($this->subject->id);
+                // $traService = new TraInternalService();
+                //$traService->postZNumber($this->subject->id);
 
             } catch (Exception $exception){
                 DB::rollBack();

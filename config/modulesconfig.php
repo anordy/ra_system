@@ -41,10 +41,6 @@ return [
 
     // DIP(Data Integrity Protection) Service
 
-    //VFMS API SERVER CREDENTIALS
-    'vfms_api_server_username' => secEnv('VFMS_API_SERVER_USERNAME'),
-    'vfms_api_server_password' => secEnv('VFMS_API_SERVER_PASSWORD'),
-
     'verification' => [
         'server_auth_url' => secEnv('VERIFICATION_SERVER_AUTH_URL'),
         'server_sign_url' => secEnv('VERIFICATION_SERVER_SIGN_URL'),
