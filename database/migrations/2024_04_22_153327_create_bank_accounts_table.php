@@ -18,6 +18,7 @@ class CreateBankAccountsTable extends Migration
             $table->unsignedBigInteger('bank_id');
             $table->string('account_name')->nullable();
             $table->string('account_number');
+            $table->string('currency');
             $table->boolean('is_updated')->default(false);
             $table->boolean('is_approved')->default(false);
             $table->softDeletes();

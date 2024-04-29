@@ -155,6 +155,9 @@ class PermissionSeeder extends Seeder
             ['name' => 'view-ega-charges', 'sys_module_id' => 17],
             ['name' => 'view-departmental-reports', 'sys_module_id' => 17],
             ['name' => 'view-recon', 'sys_module_id' => 17],
+            ['name' => 'request-bank-statements', 'sys_module_id' => 17],
+            ['name' => 'view-bank-statements', 'sys_module_id' => 17],
+            ['name' => 'view-bank-transactions', 'sys_module_id' => 17],
 
             # Setting
             ['name' => 'setting-user-view', 'sys_module_id' => 18],

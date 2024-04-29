@@ -16,7 +16,7 @@
                             <select class="form-control @error('bankAccount') is-invalid @enderror" wire:model="bankAccount" >
                                 <option>Please select bank account</option>
                                 @foreach($bankAccounts as $account)
-                                    <option value="{{ $account->id  }}">{{ $account->account_number }} {{ $account->account_name ? ' - ' . $account->account_name : '' }}</option>
+                                    <option value="{{ $account->id  }}">{{ $account->account_number }} {{ $account->account_name ? ' - ' . $account->account_name : '' }} ({{ $account->currency }})</option>
                                 @endforeach
                             </select>
                             @error('bankAccount')

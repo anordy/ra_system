@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\BankAccountsController;
 use App\Http\Controllers\Payments\PBZController;
 use App\Http\Controllers\PropertyTax\CondominiumController;
 use App\Http\Controllers\PropertyTax\PropertyTaxController;
@@ -224,7 +225,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/street', StreetController::class);
         Route::resource('/education-level', EducationLevelController::class);
         Route::resource('/banks', BankController::class);
-        Route::resource('/bank-accounts', BankController::class);
+        Route::resource('/bank-accounts', BankAccountsController::class);
         Route::resource('/business-categories', BusinessCategoryController::class);
         Route::resource('/taxtypes', TaxTypeController::class);
         Route::resource('/isic1', ISIC1Controller::class);

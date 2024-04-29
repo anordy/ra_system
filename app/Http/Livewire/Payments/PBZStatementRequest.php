@@ -40,9 +40,9 @@ class PBZStatementRequest extends Component
 
     public function submit()
     {
-//        if (!Gate::allows('bank-recon-import')) {
-//            abort(403);
-//        }
+        if (!Gate::allows('request-bank-statements')) {
+            abort(403);
+        }
 
         try {
 

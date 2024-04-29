@@ -24,7 +24,7 @@ class PBZStatementRequestModal extends Component
 
     public function mount(){
         $this->bankAccounts = BankAccount::query()
-            ->select('id', 'account_name', 'account_number')
+            ->select('id', 'account_name', 'account_number', 'currency')
             ->get();
 
         $this->statementDate = Carbon::yesterday()->toDateString();
@@ -39,9 +39,9 @@ class PBZStatementRequestModal extends Component
 
     public function submit()
     {
-//        if (!Gate::allows('bank-recon-import')) {
-//            abort(403);
-//        }
+        if (!Gate::allows('request-bank-statements')) {
+            abort(403);
+        }
 
         $this->validate();
 
@@ -67,7 +67,7 @@ class PBZStatementRequestModal extends Component
                 'stmdt' => $this->statementDate,
                 'account_no' => $bankAccount->account_number,
                 'status' => StatementStatus::PENDING,
-                'currency' => Currencies::TZS
+                'currency' => $bankAccount->currency
             ]);
 
             DB::commit();
