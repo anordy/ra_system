@@ -76,9 +76,11 @@ class TaxAuditInitiateTable extends DataTableComponent
                 ->format(function ($value) {
                     $url = route('tax_auditing.approvals.show', encrypt($value));
                     return <<<HTML
-                           <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-check"></i> Initiate Approval</button>
-                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> Delete</button>
-                           <a href="{$url}" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="right" title="View"> View More </a>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-check"></i> Initiate Approval</button>
+                            <a href="{$url}" class="btn btn-outline-info btn-sm" title="View"><i class="fa fa-eye"></i> View More </a>
+                            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> Delete</button>
+                        </div>
                     HTML;
                 })
                 ->html(true),

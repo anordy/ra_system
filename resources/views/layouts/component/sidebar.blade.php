@@ -375,6 +375,11 @@
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('tax_auditing*') ? 'show' : '' }}" id="tax_auditing">
                     @can('tax-auditing-approved-view')
+                        <li class="{{ request()->is('tax_auditing/businesses*') ? 'active' : '' }}">
+                            <a href="{{ route('tax_auditing.businesses') }}">Businesses</a>
+                        </li>
+                    @endcan
+                    @can('tax-auditing-approved-view')
                         <li class="{{ request()->is('tax_auditing/approvals*') ? 'active' : '' }}">
                             <a href="{{ route('tax_auditing.approvals.index') }}">Approvals</a>
                         </li>

@@ -504,6 +504,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     });
 
     Route::name('tax_auditing.')->prefix('tax_auditing')->group(function () {
+        Route::get('/businesses', [TaxAuditApprovalController::class, 'business'])->name('businesses');
+        Route::get('/business/show/{id}', [TaxAuditApprovalController::class, 'showBusiness'])->name('business.show');
         Route::resource('/approvals', TaxAuditApprovalController::class);
         Route::resource('/assessments', TaxAuditAssessmentController::class);
         Route::resource('/verified', TaxAuditVerifiedController::class);

@@ -48,9 +48,16 @@ class BusinessAuditAddModal extends Component
         ];
     }
 
-    public function mount()
+    public function mount($jsonData = null)
     {
         $this->business = Business::all();
+
+        if (isset($jsonData)) {
+            $this->business_id = $jsonData['business_id'];
+            $this->businessChange($this->business_id);
+            $this->location_ids[] = $jsonData['location_ids'];
+        }
+
     }
 
     public function businessChange($id)
@@ -90,6 +97,7 @@ class BusinessAuditAddModal extends Component
             return;
         }
 
+
         DB::beginTransaction();
         try {
             $taxAudit = TaxAudit::create([
@@ -123,7 +131,8 @@ class BusinessAuditAddModal extends Component
             }
 
             DB::commit();
-            $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
+            $this->customAlert('success', 'Business added to Auditing successfully');
+            redirect()->route('tax_auditing.approvals.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
