@@ -23,10 +23,9 @@ class ReturnsPortPenalty extends Component
         $this->modelId = decrypt($modelId);
         $this->return = $modelName::findOrFail($this->modelId);
         $this->businessLocationId = $this->return->business_location_id;
-        $this->taxTypeCurrency = BusinessTaxType::where('business_id', $this->return->business_id)->where('tax_type_id', $this->return->tax_type_id)->value('currency');
+        $this->taxTypeCurrency = BusinessTaxType::select('currency')->where('business_id', $this->return->business_id)->where('tax_type_id', $this->return->tax_type_id)->value('currency');
 
         if ($financialMonth = $this->getFilingMonth($this->businessLocationId, $this->modelName)) {
-            // Tunadeal na wewe perperndicular
             if ($this->return->total_vat_payable_usd > 0) {
                 $this->penalties_tzs = $this->getTotalPenalties($financialMonth, $this->return->total_vat_payable_tzs, $this->taxTypeCurrency);
                 $this->penalties_usd = $this->getTotalPenalties($financialMonth, $this->return->total_vat_payable_usd, 'USD');
@@ -35,7 +34,6 @@ class ReturnsPortPenalty extends Component
             }
 
         } else {
-            // Kama hana, pamoja
             $this->penalties_tzs = [];
             $this->penalties_usd = [];
         }

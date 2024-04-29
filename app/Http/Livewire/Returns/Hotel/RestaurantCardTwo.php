@@ -30,7 +30,7 @@ class RestaurantCardTwo extends Component
     {
         $penaltyTable  = HotelReturnPenalty::getTableName();
         $returnTable   = HotelReturn::getTableName();
-        $taxType       = TaxType::where('code', TaxType::RESTAURANT)->first();
+        $taxType       = TaxType::select('id')->where('code', TaxType::RESTAURANT)->first();
         if (!$taxType) {
             abort(404);
         }
@@ -39,7 +39,7 @@ class RestaurantCardTwo extends Component
 
         $filter  = $this->dataFilter($filter, $this->data, $returnTable);
         $filter1 = clone $filter;
-        $filter2 = clone $filter;
+        $filter2 = $filter1;
 
         $USD = $filter1->where($returnTable . '.currency', 'USD');
         $TZS = $filter2->where($returnTable . '.currency', 'TZS');

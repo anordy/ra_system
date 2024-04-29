@@ -28,7 +28,7 @@ class AirPortCardTwo extends Component
 
     public function mount()
     {
-        $tax  = TaxType::where('code', TaxType::AIRPORT_SERVICE_SAFETY_FEE)->first();
+        $tax  = TaxType::select('id')->where('code', TaxType::AIRPORT_SERVICE_SAFETY_FEE)->first();
         if (!$tax) {
             abort(404);
         }
@@ -40,7 +40,7 @@ class AirPortCardTwo extends Component
 
         $filter  = $this->dataFilter($filter, $this->data, $returnTable);
         $filter1 = clone $filter;
-        $filter2 = clone $filter;
+        $filter2 = $filter1;
 
         $USD = $filter1->where($returnTable . '.currency', 'USD');
         $TZS = $filter2->where($returnTable . '.currency', 'TZS');

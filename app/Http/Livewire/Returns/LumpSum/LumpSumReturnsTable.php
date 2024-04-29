@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Returns\LumpSum;
 
 use App\Models\Returns\LumpSum\LumpSumReturn;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\ReturnFilterTrait;
 use App\Traits\CustomAlert;
