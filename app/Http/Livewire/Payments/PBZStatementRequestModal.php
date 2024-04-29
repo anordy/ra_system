@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Payments;
 
+use App\Enum\Currencies;
 use App\Enum\StatementStatus;
 use App\Models\BankAccount;
 use App\Models\PBZStatement;
@@ -65,7 +66,8 @@ class PBZStatementRequestModal extends Component
             $statement = PBZStatement::create([
                 'stmdt' => $this->statementDate,
                 'account_no' => $bankAccount->account_number,
-                'status' => StatementStatus::PENDING
+                'status' => StatementStatus::PENDING,
+                'currency' => Currencies::TZS
             ]);
 
             DB::commit();
