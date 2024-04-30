@@ -82,7 +82,6 @@ trait ReturnFilterTrait
             }
 
             // Return both USD and TZS
-
             $returnClass1 = clone $returnClass;
             $returnClass2 = $returnClass1;
             $penaltyData = $returnClass1->where("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])
@@ -116,7 +115,6 @@ trait ReturnFilterTrait
     //unpaid Returns
     public function unPaidReturns($returnClass, $returnTableName, $penaltyTableName)
     {
-//        dd($returnClass, $returnTableName, $penaltyTableName);
         try {
             $allowedCharacters = '/^[a-zA-Z0-9_]+$/';
             if (!preg_match($allowedCharacters, $penaltyTableName) || !preg_match($allowedCharacters, $returnTableName)) {
@@ -132,7 +130,7 @@ trait ReturnFilterTrait
                     DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totallatepayment'),
                     DB::raw('SUM(' . $penaltyTableName . '.rate_amount) as totalrate'),
                 )
-                ->groupBy('return_id')
+                ->groupBy("{$returnTableName}.currency")
                 ->get();
 
             $totalTaxAmount = $returnClass2->whereNotIn($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->sum("{$returnTableName}.total_amount_due");

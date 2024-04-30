@@ -96,6 +96,8 @@ class AddMonthModal extends Component
                 'due_date' => Carbon::create($yr['code'], $this->month_number, $this->day)->endOfDay()->toDateTimeString(),
                 'lumpsum_due_date' => Carbon::create($yr['code'], $this->month_number)->endOfMonth()->endOfDay()->toDateTimeString(),
             ]);
+            if (!$financial_month) throw new \Exception('Failed to save financial month');
+
             $this->triggerDualControl(get_class($financial_month), $financial_month->id, DualControl::ADD, 'adding financial month ' . $this->month . ' ' . $yr['code']);
             DB::commit();
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE);

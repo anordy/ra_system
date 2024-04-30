@@ -26,16 +26,6 @@
 
             <tbody>
                 @if (count($return->hotelLevyAttachment ?? []))
-                    @php
-                        $totalPaxR = 0;
-                        $totalPaxNR = 0;
-                        $totalPax = 0;
-                        $totalRoomRevenue = 0;
-                        $revenueForFood = 0;
-                        $revenueForBeverage = 0;
-                        $totalRevenueOfFoodBeverage = 0;
-                        $otherRevenue = 0;
-                    @endphp
                     @foreach ($return->hotelLevyAttachment as $index => $details)
                         <tr>
                             <th class="text-center">{{ $details['no_of_days'] }}</th>
@@ -53,28 +43,17 @@
                             </td>
                             <td class="text-right">{{ number_format($details['other_revenue'], 2) }}</td>
                         </tr>
-                        @php
-                            $totalPaxR += $details['no_of_pax_for_r'];
-                            $totalPaxNR += $details['no_of_pax_for_nr'];
-                            $totalPax += $details['total_no_of_pax'];
-                            $totalRoomRevenue += $details['total_room_revenue'];
-                            $revenueForFood += $details['revenue_for_food'];
-                            $revenueForBeverage += $details['revenue_for_beverage'];
-                            $totalRevenueOfFoodBeverage += $details['total_revenue_of_food_beverage'];
-                            $otherRevenue += $details['other_revenue'];
-                        @endphp
                     @endforeach
                     <tr>
                         <td class="text-right"><strong>Total:</strong></td>
-                        <td class="text-right"><strong>{{ number_format($totalPaxR, 2) }}</strong></td>
-                        <td class="text-right"><strong>{{ number_format($totalPaxNR, 2) }}</strong></td>
-                        <td class="text-right"><strong>{{ number_format($totalPax, 2) }}</strong></td>
-                        <td class="text-right"><strong>{{ number_format($totalRoomRevenue, 2) }}</strong></td>
-                        <td class="text-right"><strong>{{ number_format($revenueForFood, 2) }}</strong></td>
-                        <td class="text-right"><strong>{{ number_format($revenueForBeverage, 2) }}</strong></td>
-                        <td class="text-right"><strong>{{ number_format($totalRevenueOfFoodBeverage, 2) }}</strong>
-                        </td>
-                        <td class="text-right"><strong>{{ number_format($otherRevenue, 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->hotelLevyAttachment->sum('no_of_pax_for_r'), 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->hotelLevyAttachment->sum('no_of_pax_for_nr'), 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->hotelLevyAttachment->sum('total_no_of_pax'), 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->hotelLevyAttachment->sum('total_room_revenue'), 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->hotelLevyAttachment->sum('revenue_for_food'), 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->hotelLevyAttachment->sum('revenue_for_beverage'), 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->hotelLevyAttachment->sum('total_revenue_of_food_beverage'), 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->hotelLevyAttachment->sum('other_revenue'), 2) }}</strong></td>
                     </tr>
                 @else
                     <tr>

@@ -29,6 +29,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use function Symfony\Component\String\b;
 
 trait PaymentsTrait
 {
@@ -63,7 +64,8 @@ trait PaymentsTrait
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = BillStatus::PENDING;
                 $bill->control_number = random_int(2000070001000, 2000070009999);
-                $bill->save();
+
+                if (!$bill->save()) throw new \Exception('Failed to Save Bill');
 
                 $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
                 $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
@@ -131,13 +133,15 @@ trait PaymentsTrait
             } else {
                 // We are local
                 $return->status = ReturnStatus::CN_GENERATED;
-                $return->save();
+
+                if (!$return->save()) throw new \Exception('Failed to Save Bill');
 
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = BillStatus::PENDING;
                 $bill->control_number = random_int(2000070001000, 2000070009999);
-                $bill->save();
+
+                if (!$bill->save()) throw new \Exception('Failed to Save Bill');
 
                 $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
                 $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
@@ -161,7 +165,8 @@ trait PaymentsTrait
             } else {
                 $bill->status = PaymentStatus::CANCELLED;
                 $bill->cancellation_reason = $cancellationReason ?? '';
-                $bill->save();
+                if (!$bill->save()) throw new \Exception('Failed to Save Bill');
+
             }
         } catch (\Exception $e) {
             Log::error('TRAITS-PAYMENTS-TRAIT-CANCEL-BILL', [$e]);
@@ -179,7 +184,8 @@ trait PaymentsTrait
                 return (new ZanMalipoInternalService)->updateBill($bill, $expireDate->toDateTimeString());
             } else {
                 $bill->expire_date = $expireDate->toDateTimeString();
-                $bill->save();
+
+                if (!$bill->save()) throw new \Exception('Failed to Save Bill');
 
                 ZmBillChange::create([
                     'zm_bill_id' => $bill->id,
@@ -242,13 +248,14 @@ trait PaymentsTrait
             } else {
                 // We are local
                 $leasePayment->status = LeaseStatus::CN_GENERATED;
-                $leasePayment->save();
+                if (!$leasePayment->save()) throw new \Exception('Failed to Save Lease Payment');
 
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = BillStatus::PENDING;
                 $bill->control_number = random_int(2000070001000, 2000070009999);
-                $bill->save();
+                if (!$bill->save()) throw new \Exception('Failed to Save Bill');
+
             }
 
         } catch (\Exception $e) {
@@ -323,17 +330,19 @@ trait PaymentsTrait
                     $billable->status = BillStatus::CN_GENERATION_FAILED;
                 }
 
-                $billable->save();
+                if (!$billable->save()) throw new \Exception('Failed to Save Billable');
+
             } else {
                 // We are local
                 $billable->status = BillStatus::CN_GENERATED;
-                $billable->save();
+                if (!$billable->save()) throw new \Exception('Failed to Save Billable');
+
 
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = BillStatus::PENDING;
                 $bill->control_number = random_int(2000070001000, 2000070009999);
-                $bill->save();
+                if (!$bill->save()) throw new \Exception('Failed to Save Bill');
 
                 session()->flash('success', 'Your request was submitted, you will receive your payment information shortly - test');
             }
@@ -389,14 +398,15 @@ trait PaymentsTrait
             } else {
                 // We are local
                 $debt->payment_status = ReturnStatus::CN_GENERATED;
+                if (!$debt->save()) throw new \Exception('Failed to Save Bill');
 
-                $debt->save();
 
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $zmBill->zan_status = BillStatus::PENDING;
                 $zmBill->control_number = random_int(2000070001000, 2000070009999);
-                $zmBill->save();
+                if (!$zmBill->save()) throw new \Exception('Failed to Save Bill');
+
             }
 
         } catch (\Exception $e) {
@@ -493,13 +503,14 @@ trait PaymentsTrait
             } else {
                 // We are local
                 $debt->payment_status = ReturnStatus::CN_GENERATED;
-                $debt->save();
+                if (!$debt->save()) throw new \Exception('Failed to Save Debt');
 
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $zmBill->zan_status = BillStatus::PENDING;
                 $zmBill->control_number = random_int(2000070001000, 2000070009999);
-                $zmBill->save();
+                if (!$zmBill->save()) throw new \Exception('Failed to Save Bill');
+
             }
 
         } catch (\Exception $e) {
@@ -575,14 +586,14 @@ trait PaymentsTrait
             } else {
                 // We are local
                 $assessment->payment_status = ReturnStatus::CN_GENERATED;
-
-                $assessment->save();
+                if (!$assessment->save()) throw new \Exception('Failed to Save Assessment');
 
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $zmBill->zan_status = BillStatus::PENDING;
                 $zmBill->control_number = random_int(2000070001000, 2000070009999);
-                $zmBill->save();
+                if (!$zmBill->save()) throw new \Exception('Failed to Save Bill');
+
             }
 
         } catch (\Exception $e) {
@@ -827,14 +838,14 @@ trait PaymentsTrait
                     // We are local
                     $return->payment_status = ReturnStatus::CN_GENERATED;
                     $return->return->status = ReturnStatus::CN_GENERATED;
-                    $return->return->save();
-                    $return->save();
+                    if (!$return->return->save()) throw new \Exception('Failed to Save Child return');
+                    if (!$return->save()) throw new \Exception('Failed to Save Return');
 
                     // Simulate successful control no generation
                     $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                     $bill->zan_status = BillStatus::PENDING;
                     $bill->control_number = random_int(2000070001000, 2000070009999);
-                    $bill->save();
+                    if (!$bill->save()) throw new \Exception('Failed to Save Bill');
 
                     $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
                     $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
@@ -943,13 +954,14 @@ trait PaymentsTrait
             } else {
                 // We are local
                 $assessment->payment_status = ReturnStatus::CN_GENERATED;
-                $assessment->save();
+                if (!$assessment->save()) throw new \Exception('Failed to Save Assessment');
 
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $zmBill->zan_status = BillStatus::PENDING;
                 $zmBill->control_number = random_int(2000070001000, 2000070009999);
-                $zmBill->save();
+                if (!$zmBill->save()) throw new \Exception('Failed to Save Bill');
+
                 $this->customAlert('success', 'A control number for this verification has been generated successfully');
             }
         } catch (\Exception $e) {
@@ -1013,12 +1025,13 @@ trait PaymentsTrait
                 // We are local
                 $propertyPayment->payment_status = BillStatus::CN_GENERATED;
                 $propertyPayment->save();
+                if (!$propertyPayment->save()) throw new \Exception('Failed to Property Payment');
 
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = BillStatus::PENDING;
                 $bill->control_number = random_int(2000070001000, 2000070009999);
-                $bill->save();
+                if (!$bill->save()) throw new \Exception('Failed to Save Bill');
 
                 $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
                 $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
@@ -1105,8 +1118,8 @@ trait PaymentsTrait
                 $zmBill->zan_status = BillStatus::PENDING;
                 $zmBill->control_number = random_int(2000070001000, 2000070009999);
                 $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-                $zmBill->billable->save();
-                $zmBill->save();
+                if (!$zmBill->billable->save()) throw new \Exception('Failed to Save Billable');
+                if (!$zmBill->save()) throw new \Exception('Failed to Save Bill');
                 $this->flash('success', 'A control number for this verification has been generated successfully');
             }
 
@@ -1164,8 +1177,8 @@ trait PaymentsTrait
                 $zmBill->zan_status = BillStatus::PENDING;
                 $zmBill->control_number = random_int(2000070001000, 2000070009999);
                 $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-                $zmBill->billable->save();
-                $zmBill->save();
+                if (!$zmBill->billable->save()) throw new \Exception('Failed to Save Billable');
+                if (!$zmBill->save()) throw new \Exception('Failed to Save Bill');
                 $this->flash('success', 'A control number for this verification has been generated successfully');
             }
 
@@ -1222,8 +1235,8 @@ trait PaymentsTrait
                 $zmBill->zan_status = BillStatus::PENDING;
                 $zmBill->control_number = random_int(2000070001000, 2000070009999);
                 $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-                $zmBill->billable->save();
-                $zmBill->save();
+                if (!$zmBill->billable->save()) throw new \Exception('Failed to Save Billable');
+                if (!$zmBill->save()) throw new \Exception('Failed to Save Bill');
                 $this->flash('success', 'A control number for this verification has been generated successfully');
             }
 
@@ -1280,8 +1293,8 @@ trait PaymentsTrait
                 $zmBill->zan_status = BillStatus::PENDING;
                 $zmBill->control_number = random_int(2000070001000, 2000070009999);
                 $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-                $zmBill->billable->save();
-                $zmBill->save();
+                if (!$zmBill->billable->save()) throw new \Exception('Failed to Save Billable');
+                if (!$zmBill->save()) throw new \Exception('Failed to Save Bill');
                 $this->flash('success', 'A control number for this verification has been generated successfully');
             }
 
@@ -1338,8 +1351,8 @@ trait PaymentsTrait
                 $zmBill->zan_status = BillStatus::PENDING;
                 $zmBill->control_number = random_int(2000070001000, 2000070009999);
                 $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-                $zmBill->billable->save();
-                $zmBill->save();
+                if (!$zmBill->billable->save()) throw new \Exception('Failed to Save Billable');
+                if (!$zmBill->save()) throw new \Exception('Failed to Save Bill');
                 $this->flash('success', 'A control number for this verification has been generated successfully');
             }
 
@@ -1397,8 +1410,9 @@ trait PaymentsTrait
                 $zmBill->zan_status = BillStatus::PENDING;
                 $zmBill->control_number = random_int(2000070001000, 2000070009999);
                 $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-                $zmBill->billable->save();
-                $zmBill->save();
+                if (!$zmBill->billable->save()) throw new \Exception('Failed to Save Billable');
+                if (!$zmBill->save()) throw new \Exception('Failed to Save Bill');
+
                 $this->flash('success', 'A control number for this verification has been generated successfully');
             }
 

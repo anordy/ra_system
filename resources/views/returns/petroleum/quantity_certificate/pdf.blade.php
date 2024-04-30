@@ -125,28 +125,28 @@
         <table class="no-border">
             <td align="left" style="width: 30%">
                 <div style="font-size: 12px">
-                    Zanzibar Revenue Authority, <br>
-                    Head Office, <br>
-                    P.O.Box 2072 <br>
-                    Tel: 255 24 2230639/233041 <br>
-                    Fax: 255 24 2233904 <br>
-                    Email: zrb@zanrevenue.org <br>
-                    Zanzibar
+                    {{ $addressInfo['institutionName'] ?? 'N/A'  }}, <br>
+                    {{ $addressInfo['operatingOffice'] ?? 'N/A'  }}, <br>
+                    {{ $addressInfo['poBox'] ?? 'N/A' }} <br>
+                    Tel: {{ $addressInfo['tel'] ?? 'N/A' }}<br>
+                    Fax: {{ $addressInfo['fax'] ?? 'N/A' }} <br>
+                    Email: {{ $addressInfo['email'] ?? 'N/A' }} <br>
+                    {{ $addressInfo['institutionLocation'] ?? 'N/A'  }}
                 </div>
             </td>
             <td align="center" class="header-title">
                 <img class="header-nembo" src="{{ public_path('/images/logo.png') }}" alt="ZRA Logo">
-                <div style="font-size: 12px">www.zrbrevenue.org</div>
+                <div style="font-size: 12px">{{ $addressInfo['institutionWebsite'] ?? 'N/A'  }}</div>
             </td>
             <td align="right" style="width: 30%">
                 <div style="text-align: left; font-size: 12px;">
-                    Zanzibar Revenue Authority, <br>
-                    Head Office, <br>
-                    P.O.Box 2072 <br>
-                    Tel: 255 24 2230639/233041 <br>
-                    Fax: 255 24 2233904 <br>
-                    Email: zrb@zanrevenue.org <br>
-                    Zanzibar
+                    {{ $addressInfo['institutionName'] ?? 'N/A'  }}, <br>
+                    {{ $addressInfo['operatingOffice'] ?? 'N/A'  }}, <br>
+                    {{ $addressInfo['poBox'] ?? 'N/A' }} <br>
+                    Tel: {{ $addressInfo['tel'] ?? 'N/A' }}<br>
+                    Fax: {{ $addressInfo['fax'] ?? 'N/A' }} <br>
+                    Email: {{ $addressInfo['email'] ?? 'N/A' }} <br>
+                    {{ $addressInfo['institutionLocation'] ?? 'N/A'  }}
                 </div>
             </td>
         </table>
