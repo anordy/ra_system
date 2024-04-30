@@ -33,7 +33,7 @@ class MobileMoneyCardTwo extends Component
 
         $filter  = $this->dataFilter($filter, $this->data, $returnTable);
         $filter1 = clone $filter;
-        $filter2 = clone $filter;
+        $filter2 = $filter1;
 
         $USD = $filter1->where($returnTable . '.currency', 'USD');
         $TZS = $filter2->where($returnTable . '.currency', 'TZS');

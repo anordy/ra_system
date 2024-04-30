@@ -2,13 +2,11 @@
 
 namespace App\Http\Livewire\Returns\FinancialYears;
 
-use App\Models\FinancialMonth;
+use App\Enum\GeneralConstant;
 use App\Models\FinancialYear;
-use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\TaPaymentConfiguration;
 
 class FinancialYearsTable extends DataTableComponent
 {
@@ -42,30 +40,28 @@ class FinancialYearsTable extends DataTableComponent
             Column::make("Status", "active")
                 ->sortable()->searchable()
                 ->format(function ($value) {
-                    if ($value == '0') {
-                        return 'Active';
-                    } elseif ($value == 'F') {
-                        return 'Inctive';
+                    if ($value == GeneralConstant::ONE) {
+                        return GeneralConstant::ACTIVE;
+                    } elseif ($value == GeneralConstant::ZERO) {
+                        return GeneralConstant::INACTIVE;
                     }
-
                 }),
             Column::make('Approval Status', 'is_approved')
                 ->format(function ($value, $row) {
-                    if ($value == 0) {
+                    if ($value == GeneralConstant::ZERO_INT) {
                         return <<< HTML
                             <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
                         HTML;
-                    } elseif ($value == 1) {
+                    } elseif ($value == GeneralConstant::ONE_INT) {
                         return <<< HTML
                             <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
                         HTML;
                     }
-                    elseif ($value == 2) {
+                    elseif ($value == GeneralConstant::TWO_INT) {
                         return <<< HTML
                             <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
                         HTML;
                     }
-
                 })->html(),
             Column::make("Created At", "created_at")
                 ->sortable()->searchable(),

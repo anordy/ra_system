@@ -2,39 +2,36 @@
 
 namespace App\Services\Workflow\Subscriber;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\Role;
-use App\Models\User;
-use App\Events\SendSms;
-use App\Events\SendMail;
-use App\Models\Taxpayer;
-use App\Models\Workflow;
 use App\Enum\DisputeStatus;
-use App\Enum\TaxAuditStatus;
-use App\Models\WorkflowTask;
-use App\Models\TaxAgentStatus;
-use App\Enum\TaxClearanceStatus;
-use Illuminate\Support\Facades\DB;
-use App\Enum\TaxVerificationStatus;
-use App\Enum\TaxInvestigationStatus;
-use App\Models\WorkflowTaskOperator;
 use App\Enum\ReturnApplicationStatus;
+use App\Enum\TaxAuditStatus;
+use App\Enum\TaxClearanceStatus;
+use App\Enum\TaxInvestigationStatus;
+use App\Enum\TaxVerificationStatus;
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\Vat\VatReturn;
-use App\Services\Workflow\Event\Event;
-use App\Models\Returns\Port\PortReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Notifications\DatabaseNotification;
-use App\Services\Workflow\Event\GuardEvent;
 use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use App\Models\Returns\Vat\VatReturn;
+use App\Models\TaxAgentStatus;
+use App\Models\Taxpayer;
+use App\Models\User;
+use App\Models\Workflow;
+use App\Models\WorkflowTask;
+use App\Models\WorkflowTaskOperator;
+use App\Notifications\DatabaseNotification;
+use App\Services\Workflow\Event\Event;
+use App\Services\Workflow\Event\GuardEvent;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class WorkflowSubscriber implements EventSubscriberInterface
 {
@@ -44,6 +41,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
     {
         $this->expressionLanguage = new ExpressionLanguage();
     }
+
     public function guardEvent(GuardEvent $event)
     {
         $subject = $event->getSubject();
@@ -128,7 +126,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $operators = json_encode($context['operators']);
                     $original_operators = $operators;
                 } else {
-                 
+
                     $original_operators = json_encode($place['operators']);
 
                     if ($place['operator_type'] == 'role') {
@@ -146,7 +144,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
 
                 $new_task = new WorkflowTask([
                     'workflow_id' => $workflow->id,
-                    'pinstance_type' =>  get_class($subject),
+                    'pinstance_type' => get_class($subject),
                     'pinstance_id' => $subject->id,
                     'name' => $transition->getName(),
                     'from_place' => $transition->getFroms()[0],
@@ -293,6 +291,35 @@ class WorkflowSubscriber implements EventSubscriberInterface
 
             $placeName = $event->getWorkflowName();
 
+            $urls = $this->getApplicationUrls($placeName, $subject);
+
+            $hrefClient = $urls['client'];
+            $hrefAdmin = $urls['admin'];
+
+            $this->notifyActors($placeName, $placesCurrent, $event, $notificationName, $places, $subject, $hrefClient, $hrefAdmin);
+
+        } catch (Exception $e) {
+            report($e);
+            throw new Exception($e);
+        }
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            'workflow.guard' => ['guardEvent'],
+            'workflow.leave' => ['leaveEvent'],
+            'workflow.transition' => ['transitionEvent'],
+            'workflow.enter' => ['enterEvent'],
+            'workflow.entered' => ['enteredEvent'],
+            'workflow.completed' => ['completedEvent'],
+            'workflow.announce' => ['announceEvent'],
+        ];
+    }
+
+    private function getApplicationUrls($placeName, $subject)
+    {
+        try {
             if ($placeName == 'BUSINESS_UPDATE') {
                 $hrefClient = 'business.index';
                 $hrefAdmin = 'business.updatesRequests';
@@ -343,23 +370,25 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 } elseif ($return instanceof EmTransactionReturn) {
                     $hrefClient = 'returns.em-transaction.show-returns';
                     $hrefAdmin = 'returns.em-transaction.index';
+                } else {
+                    $hrefClient = null;
+                    $hrefAdmin = null;
                 }
-            }
-
-            if ($placeName == 'TAX_RETURN_VERIFICATION') {
-            } elseif ($placeName == 'TAX_AUDIT') {
-            } elseif ($placeName == 'TAX_INVESTIGATION') {
-            } elseif ($placeName == 'TAX_CLEARENCE') {
-            } elseif ($placeName == 'DISPUTE') {
-            } elseif ($placeName == 'INSTALLMENT_REQUESTS') {
-            } elseif ($placeName == 'PAYMENTS_EXTENSION_REQUEST') {
-            } elseif ($placeName == 'TAX_CLAIM_VERIFICATION') {
-            } elseif ($placeName == 'INSTALLMENT_REQUESTS') {
-            } elseif ($placeName == 'PAYMENTS_EXTENSION_REQUEST') {
-            } elseif ($placeName == 'DEBT_RECOVERY_MEASURE') {
-            } elseif ($placeName == 'TAX_CONSULTANT_VERIFICATION') {
-            } elseif ($placeName == 'RENEW_TAX_CONSULTANT_VERIFICATION') {
             } else {
+                $hrefClient = null;
+                $hrefAdmin = null;
+            }
+            return ['client' => $hrefClient, 'admin' => $hrefAdmin];
+        } catch (Exception $exception) {
+            Log::error('WORKFLOW-SUBSCRIBER-WS', [$exception]);
+            throw $exception;
+        }
+
+    }
+
+    private function notifyActors($placeName, $placesCurrent, $event, $notificationName, $places, $subject, $hrefClient, $hrefAdmin) {
+        try {
+            if ($placeName) {
                 if (key($placesCurrent) == 'completed') {
                     if ($event->getSubject()->taxpayer || $placeName == 'TAXPAYER_DETAILS_AMENDMENT_VERIFICATION') {
                         $event->getSubject()->taxpayer->notify(new DatabaseNotification(
@@ -396,9 +425,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 }
 
                 if ($places['owner'] == 'staff') {
-
                     $task = $subject->pinstance;
-
                     $actors = json_decode($task->operators);
                     if (gettype($actors) != "array") {
                         $actors = [];
@@ -416,22 +443,9 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     }
                 }
             }
-        } catch (Exception $e) {
-            report($e);
-            throw new Exception($e);
+        } catch (Exception $exception) {
+            Log::error('WORKFLOW-SUBSCRIBER-NOTIFY-ACTORS', [$exception]);
+            throw $exception;
         }
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return [
-            'workflow.guard' => ['guardEvent'],
-            'workflow.leave' => ['leaveEvent'],
-            'workflow.transition' => ['transitionEvent'],
-            'workflow.enter' => ['enterEvent'],
-            'workflow.entered' => ['enteredEvent'],
-            'workflow.completed' => ['completedEvent'],
-            'workflow.announce' => ['announceEvent'],
-        ];
     }
 }

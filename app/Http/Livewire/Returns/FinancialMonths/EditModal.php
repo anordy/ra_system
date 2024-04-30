@@ -8,6 +8,7 @@ use App\Models\FinancialYear;
 use App\Traits\DualControlActivityTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
 use Livewire\Component;
@@ -26,8 +27,11 @@ class EditModal extends Component
 
     public function mount($id)
     {
-        $this->years = FinancialYear::query()->orderByDesc('id')->get();
-        $this->edited_month = FinancialMonth::query()->findOrFail(decrypt($id));
+        if (Gate::allows('setting-user-edit')) {
+            abort(403);
+        }
+        $this->years = FinancialYear::query()->select('id', 'name', 'code', 'active', 'is_approved')->orderByDesc('id')->get();
+        $this->edited_month = FinancialMonth::query()->findOrFail(decrypt($id), ['id', 'financial_year_id', 'due_date', 'number']);
         $this->day = (int)date('d', strtotime($this->edited_month->due_date));
         $this->month_number = $this->edited_month->number;
         $this->year = $this->edited_month->financial_year_id;
@@ -53,7 +57,7 @@ class EditModal extends Component
     {
         $this->validate();
 
-        $yr = FinancialYear::query()->findOrFail($this->year);
+        $yr = FinancialYear::query()->findOrFail($this->year, ['code']);
 
         if (Carbon::create($yr['code'], $this->month_number, $this->day)->isWeekend()) {
             $this->customAlert('error', 'The selected day is weekend. Please choose another day');
@@ -74,8 +78,8 @@ class EditModal extends Component
             'lumpsum_due_date'  => Carbon::create($yr['code'], $this->month_number)->endOfMonth()->endOfDay()->toDateTimeString(),
         ];
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $this->edited_month->update($payload);
             $this->triggerDualControl(get_class($this->edited_month), $this->edited_month->id, DualControl::EDIT, 'editing financial month '.$this->edited_month->name. ' '.$this->edited_month->year->code, json_encode($this->old_values), json_encode($payload));
             DB::commit();

@@ -58,6 +58,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'return-lump-sum-payment-return-view', 'sys_module_id' => 5],
             ['name' => 'return-mobile-money-transfer-view', 'sys_module_id' => 5],
             ['name' => 'return-electronic-money-transaction-return-view', 'sys_module_id' => 5],
+            ['name' => 'print-return', 'sys_module_id' => 5],
 
             # Withholding Agent
             ['name' => 'withholding-agents-registration', 'sys_module_id' => 6],
