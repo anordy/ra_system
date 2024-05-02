@@ -489,6 +489,10 @@ class ApprovalProcessing extends Component
             return;
         }
 
+        if (is_string($transition)) {
+            $transition = ['data' => ['transition' =>  $transition]];
+        }
+
         $transition = $transition['data']['transition'];
 
         try {
@@ -541,7 +545,7 @@ class ApprovalProcessing extends Component
             'cancelButtonText' => 'Cancel',
             'timer' => null,
             'data' => [
-                'transition' => $transition
+                'transition' => $transition['data']['transition']
             ],
         ]);
     }
