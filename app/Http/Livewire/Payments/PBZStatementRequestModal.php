@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Validators\ValidationException;
+use Illuminate\Support\Facades\Gate;
+
 
 class PBZStatementRequestModal extends Component
 {
