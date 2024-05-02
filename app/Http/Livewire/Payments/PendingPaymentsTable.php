@@ -6,6 +6,7 @@ use App\Enum\GeneralConstant;
 use App\Enum\PaymentStatus;
 use App\Models\TaxType;
 use App\Models\ZmBill;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -38,7 +39,10 @@ class PendingPaymentsTable extends DataTableComponent
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
+        }  else {
+            $filter->whereBetween('created_at', [Carbon::now()->toDateString(), Carbon::now()->toDateString()]);
         }
+
 
         if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::NOT_APPLICABLE){
             $filter->whereNull('pbz_status');

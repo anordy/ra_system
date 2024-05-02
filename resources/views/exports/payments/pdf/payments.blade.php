@@ -148,10 +148,10 @@
                         {{ $record->description ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ strtoupper($record->status ?? '') ?? '-' }}
+                        {{ strtoupper($record->status ?? 'N/A') }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ strtoupper($record->pbz_status ?? '') ?? '-' }}
+                        {{ strtoupper($record->pbz_status ?? 'N/A') }}
                     </td>
                 </tr>
             @endforeach

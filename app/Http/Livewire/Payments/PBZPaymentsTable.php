@@ -6,6 +6,7 @@ use App\Enum\GeneralConstant;
 use App\Models\PBZStatement;
 use App\Models\PBZTransaction;
 use App\Traits\CustomAlert;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -46,6 +47,8 @@ class PBZPaymentsTable extends DataTableComponent
 
             if (isset($data['range_start']) && isset($data['range_end'])) {
                 $query->whereBetween('transaction_time', [$data['range_start'], $data['range_end']]);
+            } else {
+                $query->whereBetween('transaction_time', [Carbon::now()->startOfMonth()->toDateString(), Carbon::now()->toDateString()]);
             }
 
             if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::YES){
@@ -93,7 +96,9 @@ class PBZPaymentsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Bank Ref', 'bank_ref'),
-            Column::make('Transaction Time', 'transaction_time'),
+            Column::make('Transaction Time', 'transaction_time')->format(function ($value, $row){
+                return $value->toDateTimeString();
+            }),
             Column::make('Has Bill', 'created_at')
                 ->view('payments.pbz.includes.has-bill'),
             Column::make('Actions', 'id')
