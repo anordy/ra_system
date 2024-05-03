@@ -3,15 +3,20 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrInspectionReport;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistration;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -23,6 +28,7 @@ use Livewire\WithFileUploads;
 class RegistrationApprovalProcessing extends Component
 {
     use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
+    use TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
@@ -75,7 +81,7 @@ class RegistrationApprovalProcessing extends Component
 
                 $report = MvrInspectionReport::updateOrCreate([
                     'mvr_registration_id' => $this->subject->id
-                ],[
+                ], [
                     'inspection_date' => $this->inspectionDate,
                     'report_path' => $inspectionReport,
                     'inspection_mileage' => $this->mileage,
@@ -118,10 +124,28 @@ class RegistrationApprovalProcessing extends Component
             return;
         }
 
-        // Generate Control Number after MVR RM Approval
+        // Generate Ledger DB and Control Number after MVR RM Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
+                $fee = $this->getFee();
+                $taxType = TaxType::query()->select('id')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+
+                // Record ledger transaction
+                $this->recordLedger(
+                    TransactionType::DEBIT,
+                    MvrRegistration::class,
+                    $this->subject->id,
+                    $fee->amount,
+                    0,
+                    0,
+                    $fee->amount,
+                    $taxType->id,
+                    Currencies::TZS,
+                    $this->subject->taxpayer_id
+                );
+
                 $this->generateControlNumber();
+
             } catch (Exception $exception) {
                 $this->flash('error', 'Failed to generate control number, please try again', [], redirect()->back()->getTargetUrl());
             }
@@ -181,15 +205,24 @@ class RegistrationApprovalProcessing extends Component
             'data' => [
                 'transition' => $transition
             ],
-
         ]);
+    }
+
+    private function getFee()
+    {
+        $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
+
+        return MvrFee::query()->where([
+            'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
+            'mvr_fee_type_id' => $feeType->id,
+            'mvr_class_id' => $this->subject->mvr_class_id
+        ])->firstOrFail();
     }
 
     public function generateControlNumber()
     {
         try {
             $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
-
             $fee = MvrFee::query()->where([
                 'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
                 'mvr_fee_type_id' => $feeType->id,

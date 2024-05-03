@@ -45,6 +45,10 @@ trait TaxpayerLedgerTrait
                 throw new \Exception('Invalid Amount provided');
             }
 
+            if ($totalAmount != array_sum([$interestAmount, $penaltyAmount, $principalAmount])){
+                throw new \Exception('Invalid Amount provided');
+            }
+
             if ($locationId) {
                 $location = BusinessLocation::find($locationId, ['business_id']);
 
