@@ -27,8 +27,7 @@ use Livewire\WithFileUploads;
 
 class RegistrationApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
-    use TaxpayerLedgerTrait;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
@@ -128,6 +127,12 @@ class RegistrationApprovalProcessing extends Component
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
                 $fee = $this->getFee();
+
+                if (empty($fee)) {
+                    $this->customAlert('error', "Registration fee for selected registration type is not configured");
+                    return;
+                }
+
                 $taxType = TaxType::query()->select('id')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
 
                 // Record ledger transaction
@@ -144,7 +149,7 @@ class RegistrationApprovalProcessing extends Component
                     $this->subject->taxpayer_id
                 );
 
-                $this->generateControlNumber();
+                $this->generateControlNumber($fee);
 
             } catch (Exception $exception) {
                 $this->flash('error', 'Failed to generate control number, please try again', [], redirect()->back()->getTargetUrl());
@@ -216,24 +221,12 @@ class RegistrationApprovalProcessing extends Component
             'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
             'mvr_fee_type_id' => $feeType->id,
             'mvr_class_id' => $this->subject->mvr_class_id
-        ])->firstOrFail();
+        ])->first();
     }
 
-    public function generateControlNumber()
+    public function generateControlNumber($fee)
     {
         try {
-            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
-            $fee = MvrFee::query()->where([
-                'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
-                'mvr_fee_type_id' => $feeType->id,
-                'mvr_class_id' => $this->subject->mvr_class_id
-            ])->first();
-
-            if (empty($fee)) {
-                $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                return;
-            }
-
             DB::beginTransaction();
 
             $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;

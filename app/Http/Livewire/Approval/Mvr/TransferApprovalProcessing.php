@@ -3,13 +3,19 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\CustomMessage;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
-use App\Models\MvrTransferFee;
+use App\Models\MvrFee;
+use App\Models\MvrFeeType;
+use App\Models\MvrOwnershipTransfer;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +25,7 @@ use Livewire\WithFileUploads;
 
 class TransferApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
@@ -100,7 +106,37 @@ class TransferApprovalProcessing extends Component
         // Generate Control Number after MVR SC Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
-                $this->generateControlNumber();
+                $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TRANSFER_OWNERSHIP]);
+
+                $fee = MvrFee::query()->where([
+                    'mvr_registration_type_id' => $this->subject->motor_vehicle->mvr_registration_type_id,
+                    'mvr_fee_type_id' => $feeType->id,
+                    'mvr_class_id' => $this->subject->motor_vehicle->mvr_class_id
+                ])->first();
+
+                if (empty($fee)) {
+                    $this->customAlert('error', "Ownership Transfer fee is not configured.");
+                    Log::error($fee);
+                    return;
+                }
+
+                $taxType = TaxType::query()->select('id')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+
+                // Record ledger transaction
+                $this->recordLedger(
+                    TransactionType::DEBIT,
+                    MvrOwnershipTransfer::class,
+                    $this->subject->id,
+                    $fee->amount,
+                    0,
+                    0,
+                    $fee->amount,
+                    $taxType->id,
+                    Currencies::TZS,
+                    $this->subject->taxpayer_id
+                );
+
+                $this->generateControlNumber($fee);
             } catch (Exception $exception) {
                 $this->customAlert('error', 'Failed to generate control number, please try again');
                 $this->flash('error', CustomMessage::ERROR, [], redirect()->back()->getTargetUrl());
@@ -166,19 +202,10 @@ class TransferApprovalProcessing extends Component
         ]);
     }
 
-    public function generateControlNumber()
+    public function generateControlNumber($fee)
     {
         try {
-            // todo: update implementation
-            $fee = MvrTransferFee::query()->where([
-                'mvr_transfer_category_id' => $this->subject->mvr_transfer_category_id,
-            ])->first();
 
-            if (empty($fee)) {
-                $this->customAlert('error', "Ownership Transfer fee is not configured");
-                Log::error($fee);
-                return;
-            }
             DB::beginTransaction();
 
             $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;

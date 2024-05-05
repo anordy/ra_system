@@ -3,14 +3,19 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistrationStatusChange;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +25,7 @@ use Livewire\WithFileUploads;
 
 class StatusApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait,WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait,WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
@@ -33,6 +38,7 @@ class StatusApprovalProcessing extends Component
         $this->modelId   = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
     }
+
     public function approve($transition) {
         $transition = $transition['data']['transition'];
 
@@ -86,7 +92,36 @@ class StatusApprovalProcessing extends Component
         // Generate Control Number after MVR SC Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
-                $this->generateControlNumber();
+                $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
+
+                $fee = MvrFee::query()->where([
+                    'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
+                    'mvr_fee_type_id' => $feeType->id,
+                    'mvr_class_id' => $this->subject->mvr_class_id
+                ])->first();
+
+                if (empty($fee)) {
+                    $this->customAlert('error', "Registration fee for selected status change type is not configured");
+                    return;
+                }
+
+                $taxType = TaxType::query()->select('id')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+
+                // Record ledger transaction
+                $this->recordLedger(
+                    TransactionType::DEBIT,
+                    MvrRegistrationStatusChange::class,
+                    $this->subject->id,
+                    $fee->amount,
+                    0,
+                    0,
+                    $fee->amount,
+                    $taxType->id,
+                    Currencies::TZS,
+                    $this->subject->taxpayer_id
+                );
+
+                $this->generateControlNumber($fee);
             } catch (Exception $exception) {
                 $this->customAlert('error', 'Failed to generate control number, please try again');
             }
@@ -150,21 +185,8 @@ class StatusApprovalProcessing extends Component
         ]);
     }
 
-    public function generateControlNumber() {
+    public function generateControlNumber($fee) {
         try {
-            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
-
-            $fee = MvrFee::query()->where([
-                'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
-                'mvr_fee_type_id' => $feeType->id,
-                'mvr_class_id' => $this->subject->mvr_class_id
-            ])->first();
-
-            if (empty($fee)) {
-                $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                return;
-            }
-
             DB::beginTransaction();
 
             $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
@@ -172,9 +194,7 @@ class StatusApprovalProcessing extends Component
             $this->subject->save();
 
             $this->generateMvrStatusChangeConntrolNumber($this->subject, $fee);
-
             DB::commit();
-
             $this->flash('success', 'Approved Successful', [], redirect()->back()->getTargetUrl());
         } catch (Exception $exception) {
             DB::rollBack();

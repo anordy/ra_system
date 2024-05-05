@@ -3,14 +3,19 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\MvrDeRegistrationReasonStatus;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
+use App\Models\MvrDeregistration;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +26,7 @@ use Livewire\WithFileUploads;
 
 class DeRegistrationApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
@@ -78,7 +83,6 @@ class DeRegistrationApprovalProcessing extends Component
                 } else if ($this->subject->reason->name === MvrDeRegistrationReasonStatus::SERVIER_ACCIDENT) {
 
                     $zicEvidence = $this->zicEvidence;
-
                     if ($this->zicEvidence != $this->subject->zic_evidence) {
                         $zicEvidence = $this->zicEvidence->store('mvr_deregistration', 'local');
                     }
@@ -91,7 +95,6 @@ class DeRegistrationApprovalProcessing extends Component
                     $this->customAlert('warning', 'Invalid Reason Provided');
                     return;
                 }
-
             }
 
 
@@ -100,9 +103,7 @@ class DeRegistrationApprovalProcessing extends Component
             }
 
             $this->subject->save();
-
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-
             DB::commit();
 
             if ($this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'zbs_officer_review') {
@@ -130,13 +131,41 @@ class DeRegistrationApprovalProcessing extends Component
         // Generate Control Number after MVR DR Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'zbs_officer_review') {
             try {
-                $this->generateControlNumber();
+                $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
+
+                $fee = MvrFee::query()->where([
+                    'mvr_registration_type_id' => $this->subject->registration->mvr_registration_type_id,
+                    'mvr_fee_type_id' => $feeType->id,
+                    'mvr_class_id' => $this->subject->registration->mvr_class_id
+                ])->first();
+
+                if (empty($fee)) {
+                    $this->customAlert('error', "De-registration fee for selected de-registration type is not configured");
+                    return;
+                }
+
+                $taxType = TaxType::query()->select('id')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+
+                // Record ledger transaction
+                $this->recordLedger(
+                    TransactionType::DEBIT,
+                    MvrDeregistration::class,
+                    $this->subject->id,
+                    $fee->amount,
+                    0,
+                    0,
+                    $fee->amount,
+                    $taxType->id,
+                    Currencies::TZS,
+                    $this->subject->taxpayer_id
+                );
+
+                $this->generateControlNumber($fee);
             } catch (Exception $exception) {
                 Log::error('DE-REGISTRATION-APPROVE-CN-GEN', [$exception]);
                 $this->flash('error', 'Failed to generate control number, please try again', [], redirect()->back()->getTargetUrl());
             }
         }
-
     }
 
     public function reject($transition)
@@ -195,22 +224,9 @@ class DeRegistrationApprovalProcessing extends Component
         ]);
     }
 
-    public function generateControlNumber()
+    public function generateControlNumber($fee)
     {
         try {
-            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
-
-            $fee = MvrFee::query()->where([
-                'mvr_registration_type_id' => $this->subject->registration->mvr_registration_type_id,
-                'mvr_fee_type_id' => $feeType->id,
-                'mvr_class_id' => $this->subject->registration->mvr_class_id
-            ])->first();
-
-            if (empty($fee)) {
-                $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                return;
-            }
-
             DB::beginTransaction();
 
             $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
