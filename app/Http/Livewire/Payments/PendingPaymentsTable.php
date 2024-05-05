@@ -4,13 +4,11 @@ namespace App\Http\Livewire\Payments;
 
 use App\Enum\GeneralConstant;
 use App\Enum\PaymentStatus;
-use App\Models\TaxType;
 use App\Models\ZmBill;
+use App\Traits\CustomAlert;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class PendingPaymentsTable extends DataTableComponent
 {
@@ -104,9 +102,7 @@ class PendingPaymentsTable extends DataTableComponent
             ->sortable()
             ->searchable(),
             Column::make('Status', 'status'),
-            Column::make('PBZ Status', 'pbz_status')->format(function ($value){
-                return $value ?? 'N/A';
-            }),
+            Column::make('PBZ Status', 'pbz_status')->view('payments.includes.pbz-status'),
             Column::make('Actions', 'id')
                 ->view('payments.includes.actions'),
         ];

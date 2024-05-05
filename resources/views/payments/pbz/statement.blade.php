@@ -70,9 +70,11 @@
             </div>
         </div>
         <div id="tab2" class="tab-pane fade m-4">
+            <livewire:payments.p-b-z-statement-export statementId='{{ $statement->id }}' exportType="{{ \App\Models\PBZTransaction::class }}"></livewire:payments.p-b-z-statement-export>
             <livewire:payments.p-b-z-payments-table statement='{{ $statement->id }}'></livewire:payments.p-b-z-payments-table>
         </div>
         <div id="tab3" class="tab-pane fade m-4">
+            <livewire:payments.p-b-z-statement-export statementId='{{ $statement->id }}' exportType="{{ \App\Models\PBZReversal::class }}"></livewire:payments.p-b-z-statement-export>
             <livewire:payments.p-b-z-reversals-table statement='{{ $statement->id }}'></livewire:payments.p-b-z-reversals-table>
         </div>
     </div>

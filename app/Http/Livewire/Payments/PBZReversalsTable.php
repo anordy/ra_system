@@ -3,13 +3,10 @@
 namespace App\Http\Livewire\Payments;
 
 use App\Enum\GeneralConstant;
-use App\Enum\PaymentStatus;
 use App\Models\PBZReversal;
-use App\Models\PBZTransaction;
-use App\Models\ZmBill;
-use App\Traits\WithSearch;
-use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -45,8 +42,11 @@ class PBZReversalsTable extends DataTableComponent
             if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
                 $query->where('currency', $data['currency']);
             }
+
             if (isset($data['range_start']) && isset($data['range_end'])) {
                 $query->whereBetween('transaction_time', [$data['range_start'], $data['range_end']]);
+            } else {
+                $query->whereBetween('transaction_time', [Carbon::now()->startOfMonth()->toDateString(), Carbon::now()->toDateString()]);
             }
 
             if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::YES) {
@@ -55,6 +55,12 @@ class PBZReversalsTable extends DataTableComponent
 
             if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::NO) {
                 $query->whereDoesntHave('bill');
+            }
+
+            if (isset($data['zanmalipo_status']) && $data['zanmalipo_status'] != GeneralConstant::ALL) {
+                $query->whereHas('bill', function ($query) use ($data){
+                    $query->where('status', $data['zanmalipo_status']);
+                });
             }
 
             return $query->with('bill');
@@ -97,6 +103,11 @@ class PBZReversalsTable extends DataTableComponent
             Column::make('Transaction Time', 'transaction_time'),
             Column::make('Has Bill', 'created_at')
                 ->view('payments.pbz.includes.has-bill'),
+            Column::make('ZanMalipo Status', 'updated_at')
+                ->format(function ($value, $row){
+                    $value = $row->bill ? $row->bill->status : 'N/A';
+                    return view('payments.includes.payment-status', ['value' => $value]);
+                }),
             Column::make('Actions', 'id')
                 ->view('payments.pbz.includes.reversal-actions')
         ];

@@ -12,6 +12,7 @@ class PBZPaymentStatusEnum implements Status
     const CANCELLED = 'cancelled';
     const FAILED = 'failed';
     const REVERSED = 'reversed';
+    const PAID_INCORRECTLY = 'paid-incorrectly';
 
     static function getConstants(): array
     {

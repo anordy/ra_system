@@ -27,7 +27,7 @@
                 <label class="d-flex justify-content-between'">
                     <span>End Date</span>
                 </label>
-                <input type="date" min="{{ date('Y-m-d', strtotime($range_start))}}" max="{{ now()->format('Y-m-d') }}" class="form-control" wire:model.defer="range_end">
+                <input type="date" max="{{ now()->format('Y-m-d') }}" class="form-control" wire:model.defer="range_end">
                 @error('range_end')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -42,12 +42,6 @@
                         <i class="bi bi-filter mr-2" wire:loading.remove wire:target="filter"></i>
                         <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="filter"></i>
                             Apply Filter
-                    </button>
-
-                    <button class="btn btn-success ml-2" wire:click="pdf" wire:loading.attr="disabled">
-                        <i class="fas fa-file-pdf ml-1" wire:loading.remove wire:target="pdf"></i>
-                        <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="pdf"></i>
-                            Export Report
                     </button>
                 </div>
             </div>

@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Payments;
 use App\Enum\GeneralConstant;
 use App\Enum\PaymentStatus;
 use App\Models\ZmBill;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -37,6 +38,8 @@ class CancelledPaymentsTable extends DataTableComponent
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
+        }  else {
+            $filter->whereBetween('created_at', [Carbon::now()->toDateString(), Carbon::now()->toDateString()]);
         }
 
         if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::NOT_APPLICABLE){
@@ -102,9 +105,7 @@ class CancelledPaymentsTable extends DataTableComponent
             ->sortable()
             ->searchable(),
             Column::make('Status', 'status'),
-            Column::make('PBZ Status', 'pbz_status')->format(function ($value){
-                return $value ?? 'N/A';
-            }),
+            Column::make('PBZ Status', 'pbz_status')->view('payments.includes.pbz-status'),
             Column::make('Actions', 'id')
                 ->view('payments.includes.actions'),
         ];

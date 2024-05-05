@@ -8,6 +8,8 @@ use App\Models\PBZTransaction;
 use App\Traits\CustomAlert;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -15,7 +17,7 @@ class PBZStatementsTable extends DataTableComponent
 {
     use CustomAlert;
 
-    protected $listeners = ['filterData' => 'filterData', '$refresh'];
+    protected $listeners = ['filterData' => 'filterData', '$refresh', 'deleteStatement'];
 
     public $data = [];
 
@@ -52,6 +54,40 @@ class PBZStatementsTable extends DataTableComponent
         ]);
 
         $this->setPerPageAccepted([15, 25, 50, 100]);
+    }
+
+    public function confirmPopUpModal($statement){
+        $this->customAlert('warning', "Are you sure you want to delete this statement ?", [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Yes, Delete',
+            'onConfirmed' => 'deleteStatement',
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Close',
+            'timer' => null,
+            'data' => [
+                'statement' => $statement
+            ]
+        ]);
+    }
+
+    public function deleteStatement($statement){
+        $statement = $statement['data']['statement'];
+        try {
+            $statement = PBZStatement::findOrFail(decrypt($statement));
+            DB::beginTransaction();
+            $statement->pbzTransactions()->delete();
+            $statement->pbzReversals()->delete();
+            $statement->delete();
+            DB::commit();
+            session()->flash('success', "Statement for {$statement->stmdt} deleted successful");
+            $this->redirect(redirect()->back()->getTargetUrl());
+        } catch (\Exception $exception){
+            DB::rollBack();
+            Log::info('PBZ-STATEMENT-DELETE-ERROR', [$exception]);
+            $this->customAlert('error', 'Something went wrong, please contact your system administrator for support.');
+        }
     }
 
     public function columns(): array

@@ -4,10 +4,10 @@ namespace App\Http\Livewire\Payments;
 
 use App\Enum\GeneralConstant;
 use App\Enum\PaymentStatus;
-use App\Models\TaxType;
 use App\Models\ZmBill;
-use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -38,6 +38,8 @@ class CompletePaymentsTable extends DataTableComponent
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
+        }  else {
+            $filter->whereBetween('created_at', [Carbon::now()->toDateString(), Carbon::now()->toDateString()]);
         }
 
         if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::NOT_APPLICABLE){
@@ -85,11 +87,8 @@ class CompletePaymentsTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return number_format($value, 2);
+                    return number_format($value, 2) . " $row->currency";
                 }),
-            Column::make('Currency', 'currency')
-                ->sortable()
-                ->searchable(),
             Column::make('Tax Type', 'tax_type_id')
                 ->label(fn ($row) => $row->taxType->name ?? 'N/A')
                 ->sortable()
@@ -109,9 +108,7 @@ class CompletePaymentsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Status', 'status'),
-            Column::make('PBZ Status', 'pbz_status')->format(function ($value){
-                return $value ?? 'N/A';
-            }),
+            Column::make('PBZ Status', 'pbz_status')->view('payments.includes.pbz-status'),
             Column::make('Actions', 'id')
                 ->view('payments.includes.actions'),
         ];

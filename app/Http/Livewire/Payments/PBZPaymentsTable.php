@@ -3,12 +3,10 @@
 namespace App\Http\Livewire\Payments;
 
 use App\Enum\GeneralConstant;
-use App\Models\PBZStatement;
 use App\Models\PBZTransaction;
 use App\Traits\CustomAlert;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -43,6 +41,12 @@ class PBZPaymentsTable extends DataTableComponent
 
             if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
                 $query->where('currency', $data['currency']);
+            }
+
+            if (isset($data['zanmalipo_status']) && $data['zanmalipo_status'] != GeneralConstant::ALL) {
+                $query->whereHas('bill', function ($query) use ($data){
+                    $query->where('status', $data['zanmalipo_status']);
+                });
             }
 
             if (isset($data['range_start']) && isset($data['range_end'])) {
@@ -101,6 +105,11 @@ class PBZPaymentsTable extends DataTableComponent
             }),
             Column::make('Has Bill', 'created_at')
                 ->view('payments.pbz.includes.has-bill'),
+            Column::make('ZanMalipo Status', 'updated_at')
+                ->format(function ($value, $row){
+                    $value = $row->bill ? $row->bill->status : 'N/A';
+                    return view('payments.includes.payment-status', ['value' => $value]);
+                }),
             Column::make('Actions', 'id')
                 ->view('payments.pbz.includes.payment-actions')
         ];

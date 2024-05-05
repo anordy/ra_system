@@ -3,11 +3,13 @@
 namespace App\Http\Livewire\Payments;
 
 use App\Enum\GeneralConstant;
+use App\Exports\PBZTransactionsExport;
+use App\Models\PBZReversal;
 use App\Models\PBZTransaction;
-use App\Models\ZmBill;
 use App\Traits\CustomAlert;
 use Carbon\Carbon;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 
 class PBZPaymentFilter extends Component
@@ -21,6 +23,7 @@ class PBZPaymentFilter extends Component
     public $range_end;
     public $status;
     public $has_bill;
+    public $zanmalipo_status = GeneralConstant::ALL;
 
     protected $rules = [
         'range_start' => 'required|strip_tag',
@@ -39,10 +42,11 @@ class PBZPaymentFilter extends Component
         $this->validate();
 
         $filters = [
-            'currency'    => $this->currency,
+            'currency' => $this->currency,
             'range_start' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
-            'range_end'   => date('Y-m-d 23:59:59', strtotime($this->range_end)),
-            'has_bill' => $this->has_bill
+            'range_end' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
+            'has_bill' => $this->has_bill,
+            'zanmalipo_status' => $this->zanmalipo_status
         ];
 
         $this->data = $filters;
@@ -54,26 +58,37 @@ class PBZPaymentFilter extends Component
         }
     }
 
-    public function pdf()
+    public function exportPDF()
     {
         $this->filter();
 
-        $data   = $this->data;
-        $query = (new PBZTransaction())->newQuery();
+        $data = $this->data;
+
+        if ($this->tableName == 'p-b-z-reversals-table') {
+            $query = (new PBZReversal())->newQuery();
+        } elseif ($this->tableName == 'p-b-z-payments-table') {
+            $query = (new PBZTransaction())->newQuery();
+        }
 
         if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
             $query->Where('currency', $data['currency']);
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
-            $query->WhereBetween('transaction_time', [$data['range_start'],$data['range_end']]);
+            $query->WhereBetween('transaction_time', [$data['range_start'], $data['range_end']]);
         }
 
-        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::YES){
+        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::YES) {
             $query->whereHas('bill');
         }
 
-        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::NO){
+        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::NO) {
             $query->whereDoesntHave('bill');
+        }
+
+        if (isset($data['zanmalipo_status']) && $data['zanmalipo_status'] != GeneralConstant::ALL) {
+            $query->whereHas('bill', function ($query) use ($data){
+                $query->where('status', $data['zanmalipo_status']);
+            });
         }
 
         $records = $query->with('bill')->orderBy('created_at', 'desc')->get();
@@ -83,22 +98,64 @@ class PBZPaymentFilter extends Component
             return;
         }
 
-        $fileName = 'pbz_payments' . '_' . $data['currency'] . '.pdf';
-        $title = 'pbz_pending_payments' . '_' . $data['currency'] . '.pdf';
+        $fileName = 'pbz-transactions-' . $data['currency'] . '.pdf';
+        $title = 'PBZ Transactions ' . $data['currency'] . '.pdf';
 
-        $parameters    = $data;
+        $parameters = $data;
         $pdf = PDF::loadView('exports.payments.pdf.pbz-payments', compact('records', 'title', 'parameters'));
         $pdf->setPaper('a4', 'landscape');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
         return response()->streamDownload(
-            fn () => print($pdf->output()),
+            fn() => print($pdf->output()),
             $fileName
         );
     }
 
-    public function excel()
+    public function exportExcel()
     {
+        $this->filter();
+
+        $data = $this->data;
+        if ($this->tableName == 'p-b-z-reversals-table') {
+            $query = (new PBZReversal())->newQuery();
+        } elseif ($this->tableName == 'p-b-z-payments-table') {
+            $query = (new PBZTransaction())->newQuery();
+        }
+
+        if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
+            $query->Where('currency', $data['currency']);
+        }
+        if (isset($data['range_start']) && isset($data['range_end'])) {
+            $query->WhereBetween('transaction_time', [$data['range_start'], $data['range_end']]);
+        }
+
+        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::YES) {
+            $query->whereHas('bill');
+        }
+
+        if (isset($data['has_bill']) && $data['has_bill'] == GeneralConstant::NO) {
+            $query->whereDoesntHave('bill');
+        }
+
+        if (isset($data['zanmalipo_status']) && $data['zanmalipo_status'] != GeneralConstant::ALL) {
+            $query->whereHas('bill', function ($query) use ($data){
+                $query->where('status', $data['zanmalipo_status']);
+            });
+        }
+
+        $records = $query->with('bill')->orderBy('created_at', 'desc')->get();
+
+        if ($records->count() < 1) {
+            $this->customAlert('error', 'No Data Found for selected options');
+            return;
+        }
+
+        $fileName = 'pbz-transactions-' . time() . '.xlsx';
+        $title = 'PBZ Transactions Between ' . $data['range_start'] . ' and ' . $data['range_end'];
+
+        $this->customAlert('success', 'Exporting Excel File');
+        return Excel::download(new PBZTransactionsExport($records, $title), $fileName);
     }
 
     public function render()
