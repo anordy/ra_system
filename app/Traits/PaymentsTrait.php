@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
 use App\Enum\SubVatConstant;
@@ -1023,7 +1024,7 @@ trait PaymentsTrait
                     'billable_type' => get_class($mvr),
                     'tax_type_id' => $taxType->id,
                     'amount' => $fee->amount,
-                    'currency' => 'TZS',
+                    'currency' => Currencies::TZS,
                     'exchange_rate' => 1,
                     'equivalent_amount' => $fee->amount,
                     'gfs_code' => $taxType->gfs_code
