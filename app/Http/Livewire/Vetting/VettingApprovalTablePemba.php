@@ -50,28 +50,9 @@ class VettingApprovalTablePemba extends DataTableComponent
         $this->emit('$refresh');
     }
 
-    public function filters(): array
-    {
-        return [
-            SelectFilter::make('Tax Region')
-                ->options([
-                    'Kaskazini Pemba' => 'Kaskazini Pemba',
-                    'Kusini Pemba' => 'Kusini Pemba',
-                ])
-                ->filter(function (Builder $builder, string $value) {
-                    if ($value != 'all') {
-                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
-                            $query->where('name', $value);
-                        });
-                    }
-                }),
-        ];
-    }
-
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setFilterLayoutSlideDown();
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
@@ -94,8 +75,9 @@ class VettingApprovalTablePemba extends DataTableComponent
                 TaxType::RDF
             ])
             ->where('parent', 0)
-            ->where('is_business_lto', false)
-            ->where('is_business_lto', false)
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->where('location', 'PEMBA');
+            })
             ->whereHas('location.taxRegion', function ($query) {
                 $query->where('location', Region::PEMBA); //this is filter by department
             })

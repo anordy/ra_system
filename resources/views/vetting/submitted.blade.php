@@ -17,13 +17,13 @@
             <nav class="nav nav-tabs justify-content-between mt-0 border-top-0">
                 @can('tax-returns-vetting-view-domestic-taxpayers')
                     <a href="#domestic-tax-payers" class="nav-item nav-link font-weight-bold active">Domestic Taxes Returns
-                        (DTR)</a>
+                        (DTD)</a>
                 @endcan
                 @can('tax-returns-vetting-view-lto-taxpayers')
-                    <a href="#large-tax-payers" class="nav-item nav-link font-weight-bold ">Large Taxpayers Returns (LTO)</a>
+                    <a href="#large-tax-payers" class="nav-item nav-link font-weight-bold ">Large Taxpayers Returns (LTD)</a>
                 @endcan
                 @can('tax-returns-vetting-view-non-tax-revenue-taxpayers')
-                    <a href="#non-tax-revenues" class="nav-item nav-link font-weight-bold">Non-Tax Revenue Returns (NTR)</a>
+                    <a href="#non-tax-revenues" class="nav-item nav-link font-weight-bold">Non-Tax Revenue Returns (NTRD)</a>
                 @endcan
                 @can('tax-returns-vetting-view-domestic-taxpayers')
                     <a href="#pemba" class="nav-item nav-link font-weight-bold">Pemba</a>

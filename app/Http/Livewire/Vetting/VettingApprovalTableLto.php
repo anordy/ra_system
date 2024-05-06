@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Vetting;
 
 use App\Enum\VettingStatus;
+use App\Models\Region;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\TaxReturn;
@@ -51,7 +52,6 @@ class VettingApprovalTableLto extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setFilterLayoutSlideDown();
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
@@ -59,35 +59,15 @@ class VettingApprovalTableLto extends DataTableComponent
         ]);
     }
 
-    public function filters(): array
-    {
-        return [
-            SelectFilter::make('Tax Region')
-                ->options([
-                    'all' => 'All',
-                    'Headquarter' => 'Head Quarter',
-                    'Mjini' => 'Mjini',
-                    'Kaskazini Unguja' => 'Kaskazini Unguja',
-                    'Kusini Unguja' => 'Kusini Unguja',
-                    'Kaskazini Pemba' => 'Kaskazini Pemba',
-                    'Kusini Pemba' => 'Kusini Pemba',
-                ])
-                ->filter(function (Builder $builder, string $value) {
-                    if ($value != 'all') {
-                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
-                            $query->where('name', $value);
-                        });
-                    }
-                }),
-        ];
-    }
 
     public function builder(): Builder
     {
         $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
             ->where('parent', 0)
-            ->where('is_business_lto', true)
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->where('location', Region::LTD);
+            })
             ->where('vetting_status', $this->vettingStatus)
             ->whereHas('pinstance', function ($query) {
                 $query->where('status', '!=', 'completed');

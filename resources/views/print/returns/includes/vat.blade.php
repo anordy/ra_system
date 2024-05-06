@@ -50,12 +50,8 @@
                         <td>{{ $item->config->name }}</td>
                         <td class="text-right">{{ number_format($item->value, 2) }}
                             <strong>(Electricity Units)</strong></td>
-                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate }}
-                            @if($item->config->rate_type =='percentage')
-                                %
-                            @else
-                                {{$item->config->currency}}
-                            @endif
+                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
+                        <td>
                         </td>
                         <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
                             <strong>{{$return->currency}}</strong></td>
@@ -67,10 +63,7 @@
                     <td>{{ $item->config->name }}</td>
                     <td class="text-right">{{ number_format($item->value, 2) }}
                         <strong>  {{ $item->config->currency}}</strong></td>
-                    <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
-                        @if($item->config->rate_type =='percentage')
-                            %
-                        @endif
+                    <td> {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
                     </td>
                     <td class="text-right">{{ number_format($item->vat,2) }}
                         <strong>{{$return->currency}}</strong></td>
