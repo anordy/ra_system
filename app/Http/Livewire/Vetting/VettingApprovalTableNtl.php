@@ -65,15 +65,6 @@ class VettingApprovalTableNtl extends DataTableComponent
     {
         $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
-            ->whereIn('code', [
-                TaxType::AIRPORT_SERVICE_CHARGE,
-                TaxType::SEAPORT_TRANSPORT_CHARGE,
-                TaxType::AIRPORT_SAFETY_FEE,
-                TaxType::SEAPORT_SERVICE_CHARGE,
-                TaxType::ROAD_LICENSE_FEE,
-                TaxType::INFRASTRUCTURE,
-                TaxType::RDF
-            ])
             ->where('parent', 0)
             ->whereHas('location.taxRegion', function ($query) {
                 $query->where('location', Region::NTRD);

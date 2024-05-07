@@ -65,26 +65,19 @@ class VettingApprovalTable extends DataTableComponent
     {
         $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
-            ->whereNotIn('code', [
-                TaxType::AIRPORT_SERVICE_CHARGE,
-                TaxType::SEAPORT_TRANSPORT_CHARGE,
-                TaxType::AIRPORT_SAFETY_FEE,
-                TaxType::SEAPORT_SERVICE_CHARGE,
-                TaxType::ROAD_LICENSE_FEE,
-                TaxType::INFRASTRUCTURE,
-                TaxType::RDF
-            ])
             ->where('parent', 0)
-            ->where('vetting_status', $this->vettingStatus)
-            ->whereHas('location.taxRegion', function ($query) {
-                $query->where('location', Region::DTD); //this is filter by department
-            })
             ->whereHas('pinstance', function ($query) {
                 $query->where('status', '!=', 'completed');
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });
             });
+
+        if ($this->vettingStatus != 'all') {
+            $query->whereHas('location.taxRegion', function ($query) {
+                $query->where('location', null); //this is filter by department
+            })->where('vetting_status', $this->vettingStatus);
+        }
 
         // Apply filters
         $returnTable = TaxReturn::getTableName();

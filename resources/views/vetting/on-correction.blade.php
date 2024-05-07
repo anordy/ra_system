@@ -28,6 +28,7 @@
                 @can('tax-returns-vetting-view-domestic-taxpayers')
                     <a href="#pemba" class="nav-item nav-link font-weight-bold">Pemba</a>
                 @endcan
+                    <a href="#uncategorized" class="nav-item nav-link font-weight-bold">Uncategorized</a>
             </nav>
             <br>
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
@@ -61,6 +62,12 @@
                         </div>
                     </div>
                 @endcan
+                    <div id="uncategorized" class="tab-pane fade p-2">
+                        <div class="p-2">
+                            @livewire('vetting.vetting-filter', ['tablename' => 'vetting.vetting-approval-table']) <br>
+                            <livewire:vetting.vetting-approval-table vettingStatus="all"/>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
