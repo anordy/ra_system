@@ -82,6 +82,7 @@ class TransferApprovalProcessing extends Component
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->save();
             }
 
@@ -119,22 +120,6 @@ class TransferApprovalProcessing extends Component
                     Log::error($fee);
                     return;
                 }
-
-                $taxType = TaxType::query()->select('id')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
-
-                // Record ledger transaction
-                $this->recordLedger(
-                    TransactionType::DEBIT,
-                    MvrOwnershipTransfer::class,
-                    $this->subject->id,
-                    $fee->amount,
-                    0,
-                    0,
-                    $fee->amount,
-                    $taxType->id,
-                    Currencies::TZS,
-                    $this->subject->taxpayer_id
-                );
 
                 $this->generateControlNumber($fee);
             } catch (Exception $exception) {
@@ -205,16 +190,9 @@ class TransferApprovalProcessing extends Component
     public function generateControlNumber($fee)
     {
         try {
-
             DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-            $this->subject->save();
-            $this->generateMvrControlNumber($this->subject->motor_vehicle, $fee);
-
+            $this->generateMvrTransferOwnershipControlNumber($this->subject->motor_vehicle, $fee);
             DB::commit();
-
         } catch (Exception $exception) {
             DB::rollBack();
             Log::error('MVR-TRANSFER-APPROVAL-CN-GENERATION', [$exception]);

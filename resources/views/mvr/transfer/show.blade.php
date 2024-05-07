@@ -5,7 +5,7 @@
 @section('content')
 
     @if($request->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $request->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED || $request->status === \App\Models\MvrRequestStatus::STATUS_RC_ACCEPTED)
-        @livewire('mvr.payment.fee-payment', ['motorVehicle' => $request])
+        @livewire('mvr.fee-payment', ['motorVehicle' => $request])
     @endif
 
     <ul class="nav nav-tabs shadow-sm mb-0" id="myTab" role="tablist">

@@ -34,6 +34,10 @@ class FeePayment extends Component
         if (get_class($this->motorVehicle) == MvrRegistrationStatusChange::class) {
             $this->fee = $this->getStatusChangeFee();
         }
+
+        if (get_class($this->motorVehicle) == MvrOwnershipTransfer::class) {
+            $this->fee = $this->getOwnershipTransferFee();
+        }
     }
 
     public function getRegistrationFee(){
@@ -52,6 +56,16 @@ class FeePayment extends Component
         return  MvrFee::query()->where([
             'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
             'mvr_class_id' => $this->motorVehicle->mvr_class_id,
+            'mvr_fee_type_id' => $this->feeType->id
+        ])->first();
+    }
+
+    public function getOwnershipTransferFee(){
+        $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TRANSFER_OWNERSHIP]);
+
+        return  MvrFee::query()->where([
+            'mvr_registration_type_id' => $this->motorVehicle->motor_vehicle->mvr_registration_type_id,
+            'mvr_class_id' => $this->motorVehicle->motor_vehicle->mvr_class_id,
             'mvr_fee_type_id' => $this->feeType->id
         ])->first();
     }
@@ -108,11 +122,17 @@ class FeePayment extends Component
                 return;
             }
 
-            if (in_array(get_class($this->motorVehicle), [
-                MvrRegistration::class,
-                MvrRegistrationStatusChange::class
-            ])){
+            if (in_array(get_class($this->motorVehicle),
+                [
+                    MvrRegistration::class,
+                    MvrRegistrationStatusChange::class
+                ]
+            )) {
                 $this->generateMvrControlNumber($this->motorVehicle, $this->fee);
+            }
+
+            else if (get_class($this->motorVehicle) == MvrOwnershipTransfer::class){
+                $this->generateMvrTransferOwnershipControlNumber($this->motorVehicle, $this->fee);
             }
 
 

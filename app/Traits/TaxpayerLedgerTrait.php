@@ -123,7 +123,7 @@ trait TaxpayerLedgerTrait
      * @return void
      * @throws \Exception
      */
-    public function recordDebitLedger($service, $fee, $taxTypeId){
+    public function recordDebitLedger($service, $fee, $taxTypeId, $taxpayerId = null){
         // Record ledger transaction
         $this->recordLedger(
             TransactionType::DEBIT,
@@ -135,7 +135,7 @@ trait TaxpayerLedgerTrait
             $fee,
             $taxTypeId,
             Currencies::TZS,
-            $service->taxpayer_id
+            $taxpayerId ?? $service->taxpayer_id
         );
     }
 }

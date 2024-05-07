@@ -1070,7 +1070,7 @@ trait PaymentsTrait
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
 
         if (!$transfer->ledger){
-            $this->recordDebitLedger($transfer, $fee->amount, $taxType->id);
+            $this->recordDebitLedger($transfer, $fee->amount, $taxType->id, $transfer->motor_vehicle->taxpayer_id);
         }
 
         $exchangeRate = 1;
