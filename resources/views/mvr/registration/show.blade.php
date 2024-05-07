@@ -6,7 +6,7 @@
 
     @if($motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_REGISTERED
         || $motorVehicle->status === \App\Enum\MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING)
-        @livewire('mvr.payment.fee-payment', ['motorVehicle' => $motorVehicle])
+        @livewire('mvr.fee-payment', ['motorVehicle' => $motorVehicle])
     @endif
 
     <ul class="nav nav-tabs shadow-sm mb-0" id="myTab" role="tablist">

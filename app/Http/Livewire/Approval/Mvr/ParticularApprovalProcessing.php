@@ -93,6 +93,7 @@ class ParticularApprovalProcessing extends Component
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
                 $this->subject->save();
             }
@@ -134,23 +135,7 @@ class ParticularApprovalProcessing extends Component
                     return;
                 }
 
-                $taxType = TaxType::query()->select('id')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
-
-                // Record ledger transaction
-                $this->recordLedger(
-                    TransactionType::DEBIT,
-                    MvrRegistrationParticularChange::class,
-                    $this->subject->id,
-                    $fee->amount,
-                    0,
-                    0,
-                    $fee->amount,
-                    $taxType->id,
-                    Currencies::TZS,
-                    $this->subject->taxpayer_id
-                );
-
-                $this->generateControlNumber();
+                $this->generateControlNumber($fee);
             } catch (Exception $exception) {
                 Log::error('PARTICULAR-APPROVAL-CN-GENERATION', [$exception]);
                 $this->customAlert('error', 'Failed to generate control number, please try again');
@@ -220,13 +205,8 @@ class ParticularApprovalProcessing extends Component
     {
         try {
             DB::beginTransaction();
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-            $this->subject->save();
-
-            $this->generateMvrStatusChangeConntrolNumber($this->subject, $fee);
+            $this->generateMvrControlNumber($this->subject, $fee);
             DB::commit();
-
             $this->flash('success', 'Approved Successful', [], redirect()->back()->getTargetUrl());
         } catch (Exception $exception) {
             DB::rollBack();

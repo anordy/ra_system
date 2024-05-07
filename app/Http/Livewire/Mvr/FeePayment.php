@@ -38,6 +38,13 @@ class FeePayment extends Component
         if (get_class($this->motorVehicle) == MvrOwnershipTransfer::class) {
             $this->fee = $this->getOwnershipTransferFee();
         }
+
+        // Particulars change
+        if (get_class($this->motorVehicle) == MvrRegistrationParticularChange::class) {
+            $this->fee = $this->getParticularsChangeFee();
+        }
+
+        // De registration
     }
 
     public function getRegistrationFee(){
@@ -70,17 +77,23 @@ class FeePayment extends Component
         ])->first();
     }
 
+    public function getParticularsChangeFee(){
+        $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
+
+        return  MvrFee::query()->where([
+            'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
+            'mvr_class_id' => $this->motorVehicle->mvr_class_id,
+            'mvr_fee_type_id' => $this->feeType->id
+        ])->first();
+    }
+
     public function getFee(){
         $search = [
             'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
             'mvr_class_id' => $this->motorVehicle->mvr_class_id,
         ];
 
-    if (get_class($this->motorVehicle) == MvrRegistrationParticularChange::class) {
-            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
-        }
-
-        else if (get_class($this->motorVehicle) == MvrOwnershipTransfer::class) {
+         if (get_class($this->motorVehicle) == MvrOwnershipTransfer::class) {
             $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TRANSFER_OWNERSHIP]);
             $search['mvr_class_id'] = $this->motorVehicle->motor_vehicle->mvr_class_id;
         }
@@ -125,7 +138,8 @@ class FeePayment extends Component
             if (in_array(get_class($this->motorVehicle),
                 [
                     MvrRegistration::class,
-                    MvrRegistrationStatusChange::class
+                    MvrRegistrationStatusChange::class,
+                    MvrRegistrationParticularChange::class
                 ]
             )) {
                 $this->generateMvrControlNumber($this->motorVehicle, $this->fee);
