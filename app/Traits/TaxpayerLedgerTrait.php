@@ -81,4 +81,35 @@ trait TaxpayerLedgerTrait
             throw $exception;
         }
     }
+
+    public static function recordLedgerDebt($sourceType, $sourceId, $interestAmount, $penaltyAmount, $totalAmount)
+    {
+        try {
+
+            if ( $interestAmount < 0 || $penaltyAmount < 0 || $totalAmount < 0) {
+                throw new \Exception('Invalid Amount provided');
+            }
+
+            $ledger = TaxpayerLedger::select('id', 'interest_amount', 'penalty_amount', 'total_amount')
+                ->where('source_type', $sourceType)
+                ->where('source_id', $sourceId)
+                ->first();
+
+            if (!$ledger) {
+                throw new \Exception('Transaction ledger not found');
+            }
+
+            $ledger->interest_amount = $interestAmount;
+            $ledger->penalty_amount = $interestAmount;
+            $ledger->total_amount = $interestAmount;
+            $ledger->transaction_date = Carbon::now();
+
+            if (!$ledger->save()) throw new \Exception('Failed to Save Ledger');
+
+        } catch (\Exception $exception) {
+            Log::error('TRAITS-TAXPAYER-LEDGER-TRAIT-RECORD-LEDGER-DEBT', [$exception]);
+            throw $exception;
+        }
+    }
+
 }
