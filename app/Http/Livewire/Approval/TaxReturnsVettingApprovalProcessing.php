@@ -226,7 +226,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->recordLedger(TransactionType::DEBIT, TaxReturn::class, $tax_return->id, $tax_return->principal, $tax_return->interest, $tax_return->penalty, $tax_return->total_amount, $tax_return->tax_type_id, $tax_return->currency, $tax_return->filed_by_id, $tax_return->location_id, $tax_return->financial_month_id);
 
                 // Trigger verification
-                $this->triggerTaxVerifications($this->return->return, auth()->user());
+                $this->triggerTaxVerifications($this->return, auth()->user());
                 
                 DB::commit();
 

@@ -7,6 +7,7 @@ use App\Enum\TransactionType;
 use App\Models\Business;
 use App\Models\BusinessAssistant;
 use App\Models\Returns\TaxReturn;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\Taxpayer;
 use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\ZmPayment;
@@ -47,18 +48,18 @@ class LoadTaxpayerLedger extends Command
      */
     public function handle()
     {
-        DB::beginTransaction();
         try {
             $this->line('Recording tax returns ledgers');
+            DB::beginTransaction();
 
             // TAX RETURNS
             $taxReturns = TaxReturn::get();
-
             foreach ($taxReturns as $return) {
                 $ledger = TaxpayerLedger::updateOrCreate(
                     [
                       'source_type' => TaxReturn::class,
-                      'source_id' => $return->id
+                      'source_id' => $return->id,
+                        'transaction_type' => TransactionType::DEBIT,
                     ],
                     [
                     'source_type' => TaxReturn::class,
@@ -68,7 +69,7 @@ class LoadTaxpayerLedger extends Command
                     'financial_month_id' => $return->financial_month_id,
                     'transaction_type' => TransactionType::DEBIT,
                     'business_id' => $return->business_id,
-                    'business_location_id' => $return->business_location_id,
+                    'business_location_id' => $return->location_id,
                     'currency' => $return->currency,
                     'transaction_date' => Carbon::now(),
                     'principal_amount' => $return->principal,
@@ -82,7 +83,6 @@ class LoadTaxpayerLedger extends Command
 
             // PAYMENTS
             $payments = ZmPayment::get();
-
             foreach ($payments as $payment) {
                 $ledger = TaxpayerLedger::updateOrCreate(
                     [
@@ -115,6 +115,45 @@ class LoadTaxpayerLedger extends Command
             // PROPERTY TAX
 
             // TAX ASSESSMENTS
+            $assessments = TaxAssessment::get();
+            foreach ($assessments as $assessment) {
+                $ledger = TaxpayerLedger::updateOrCreate(
+                    [
+                        'source_type' => TaxAssessment::class,
+                        'source_id' => $assessment->id,
+                        'transaction_type' => TransactionType::DEBIT,
+                    ],
+                    [
+                        'source_type' => TaxAssessment::class,
+                        'source_id' => $assessment->id,
+                        'tax_type_id' => $assessment->tax_type_id,
+                        'taxpayer_id' => $assessment->business->taxpayer_id,
+                        'financial_month_id' => $assessment->financial_month_id,
+                        'transaction_type' => TransactionType::DEBIT,
+                        'business_id' => $assessment->business_id,
+                        'business_location_id' => $assessment->location_id,
+                        'currency' => $assessment->currency,
+                        'transaction_date' => Carbon::now(),
+                        'principal_amount' => $assessment->principal_amount,
+                        'interest_amount' => $assessment->interest_amount,
+                        'penalty_amount' => $assessment->penalty_amount,
+                        'total_amount' => $assessment->total_amount
+                    ]);
+
+                if (!$ledger) throw new \Exception('Failed to save ledger');
+            }
+
+            // MVR REGISTRATION
+
+            // MVR DE-REGISTRATION
+
+            // MVR OWNERSHIP TRANSFER
+
+            // MVR STATUS CHANGE
+
+            // MVR PARTICULAR CHANGE
+
+            // DRIVER'S LICENSE APPLICATION
 
             $this->info('Completed recording tax returns ledger');
             DB::commit();
