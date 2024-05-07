@@ -6,7 +6,9 @@ namespace App\Traits;
 use App\Enum\Currencies;
 use App\Enum\TransactionType;
 use App\Models\BusinessLocation;
+use App\Models\DlLicenseApplication;
 use App\Models\TaxpayerLedger\TaxpayerLedger;
+use App\Models\TaxType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -112,4 +114,28 @@ trait TaxpayerLedgerTrait
         }
     }
 
+    /**
+     * Record ledger for public service
+     * @param $class
+     * @param $service
+     * @param $fee
+     * @param $taxTypeId
+     * @return void
+     * @throws \Exception
+     */
+    public function recordDebitLedger($service, $fee, $taxTypeId){
+        // Record ledger transaction
+        $this->recordLedger(
+            TransactionType::DEBIT,
+            get_class($service),
+            $service->id,
+            $fee,
+            0,
+            0,
+            $fee,
+            $taxTypeId,
+            Currencies::TZS,
+            $service->taxpayer_id
+        );
+    }
 }

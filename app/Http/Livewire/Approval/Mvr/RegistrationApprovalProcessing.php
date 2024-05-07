@@ -94,6 +94,7 @@ class RegistrationApprovalProcessing extends Component
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
                 $this->subject->save();
 
@@ -126,31 +127,7 @@ class RegistrationApprovalProcessing extends Component
         // Generate Ledger DB and Control Number after MVR RM Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
-                $fee = $this->getFee();
-
-                if (empty($fee)) {
-                    $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                    return;
-                }
-
-                $taxType = TaxType::query()->select('id')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
-
-                // Record ledger transaction
-                $this->recordLedger(
-                    TransactionType::DEBIT,
-                    MvrRegistration::class,
-                    $this->subject->id,
-                    $fee->amount,
-                    0,
-                    0,
-                    $fee->amount,
-                    $taxType->id,
-                    Currencies::TZS,
-                    $this->subject->taxpayer_id
-                );
-
-                $this->generateControlNumber($fee);
-
+                $this->generateControlNumber();
             } catch (Exception $exception) {
                 $this->flash('error', 'Failed to generate control number, please try again', [], redirect()->back()->getTargetUrl());
             }
@@ -213,31 +190,25 @@ class RegistrationApprovalProcessing extends Component
         ]);
     }
 
-    private function getFee()
-    {
-        $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
-
-        return MvrFee::query()->where([
-            'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
-            'mvr_fee_type_id' => $feeType->id,
-            'mvr_class_id' => $this->subject->mvr_class_id
-        ])->first();
-    }
-
-    public function generateControlNumber($fee)
+    public function generateControlNumber()
     {
         try {
+            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
+            $fee = MvrFee::query()->where([
+                'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
+                'mvr_fee_type_id' => $feeType->id,
+                'mvr_class_id' => $this->subject->mvr_class_id
+            ])->first();
+
+            if (empty($fee)) {
+                $this->customAlert('error', "Registration fee for selected registration type is not configured");
+                return;
+            }
+
+
             DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-            $this->subject->save();
-
-            //Generate control number
             $this->generateMvrControlNumber($this->subject, $fee);
-
             DB::commit();
-
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $exception) {
             DB::rollBack();

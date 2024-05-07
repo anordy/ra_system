@@ -67,6 +67,7 @@ class StatusApprovalProcessing extends Component
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
                 $this->subject->save();
             }
@@ -104,22 +105,6 @@ class StatusApprovalProcessing extends Component
                     $this->customAlert('error', "Registration fee for selected status change type is not configured");
                     return;
                 }
-
-                $taxType = TaxType::query()->select('id')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
-
-                // Record ledger transaction
-                $this->recordLedger(
-                    TransactionType::DEBIT,
-                    MvrRegistrationStatusChange::class,
-                    $this->subject->id,
-                    $fee->amount,
-                    0,
-                    0,
-                    $fee->amount,
-                    $taxType->id,
-                    Currencies::TZS,
-                    $this->subject->taxpayer_id
-                );
 
                 $this->generateControlNumber($fee);
             } catch (Exception $exception) {
@@ -189,11 +174,7 @@ class StatusApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-            $this->subject->save();
-
-            $this->generateMvrStatusChangeConntrolNumber($this->subject, $fee);
+            $this->generateMvrControlNumber($this->subject, $fee);
             DB::commit();
             $this->flash('success', 'Approved Successful', [], redirect()->back()->getTargetUrl());
         } catch (Exception $exception) {

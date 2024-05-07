@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\Tra\ChassisNumber;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -52,6 +53,11 @@ class MvrRegistrationParticularChange extends Model
 
     public function change(){
         return $this->hasOne(ChassisNumberChange::class, 'particular_change_id');
+    }
+
+    public function ledger()
+    {
+        return $this->morphOne(TaxpayerLedger::class, 'source');
     }
 
     public static function getNexPlateNumber(mixed $regType, $class): mixed
