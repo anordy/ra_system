@@ -6,6 +6,8 @@ namespace App\Traits;
 use App\Enum\Currencies;
 use App\Enum\TransactionType;
 use App\Models\BusinessLocation;
+use App\Models\Returns\TaxReturn;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxpayerLedger\TaxpayerLedger;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -41,8 +43,16 @@ trait TaxpayerLedgerTrait
                 throw new \Exception('Invalid Currency Provided');
             }
 
-            if ($principalAmount < 0 || $interestAmount < 0 || $penaltyAmount < 0 || $totalAmount < 0) {
+            if ($interestAmount < 0 || $penaltyAmount < 0 || $totalAmount < 0) {
                 throw new \Exception('Invalid Amount provided');
+            }
+
+            if ($sourceType === TaxReturn::class) {
+                $hasClaim = TaxReturn::findOrFail($sourceId, ['has_claim']);
+
+                if ($hasClaim) {
+                    $principalAmount = 0;
+                }
             }
 
             if ($totalAmount != array_sum([$interestAmount, $penaltyAmount, $principalAmount])){
@@ -112,4 +122,8 @@ trait TaxpayerLedgerTrait
         }
     }
 
+    public function getEntityTaxTypes($businessLocationId, $taxpayerId) {
+        $taxTypesId = TaxReturn::select('tax_type_id')->where('location_id', $businessLocationId)->distinct()->pluck('tax_type_id')->toArray();
+        $taxTypesId = TaxAssessment::select('tax_type_id')->where('location_id', $businessLocationId)->distinct()->pluck('tax_type_id')->toArray();
+    }
 }

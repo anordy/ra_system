@@ -413,7 +413,7 @@ class HotelReturnConfigSeeder extends Seeder
         ];
 
         foreach ($configs as $config) {
-            HotelReturnConfig::updateOrCreate($config);
+            HotelReturnConfig::updateOrCreate(['code' => $config['code']],$config);
         }
     }
 }

@@ -840,7 +840,7 @@
                 <ul class="collapse list-unstyled {{ request()->is('finance*') ? 'show' : '' }}" id="finance">
                     @can('view-taxpayer-ledgers')
                         <li class="{{ request()->is('finance/taxpayer/ledger*') ? 'active' : '' }}">
-                            <a href="{{ route('finance.taxpayer.ledgers') }}">Taxpayer Ledgers</a>
+                            <a href="{{ route('finance.taxpayer.ledger.search') }}">Taxpayer Ledgers</a>
                         </li>
                     @endcan
                 </ul>
