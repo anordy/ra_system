@@ -17,6 +17,7 @@ use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
+use App\Models\TaxDepartment;
 use App\Models\Taxpayer;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
@@ -57,6 +58,7 @@ class InternalBusinessInfoChangeProcessing extends Component
     public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList  = [];
     public $newOwnerZno;
     public $defaultSubVatOptions = [];
+    public $taxDepartment = [], $selectedDepartment, $currentDepartmentId;
 
     public function mount($modelName, $modelId)
     {
@@ -105,11 +107,14 @@ class InternalBusinessInfoChangeProcessing extends Component
         }
 
         if ($this->infoType === InternalInfoType::TAX_REGION) {
-            $this->taxRegions = TaxRegion::select('id', 'name')->get();
             $this->currentTaxRegion = json_decode($this->info->old_values, TRUE);
             $this->newTaxRegion = json_decode($this->info->new_values, TRUE);
             $this->currentTaxRegionId = $this->currentTaxRegion['tax_region_id'];
             $this->taxRegionId = $this->newTaxRegion['tax_region_id'];
+            $this->selectedDepartment = TaxRegion::findOrFail($this->taxRegionId, ['department_id'])->department_id;
+            $this->currentDepartmentId = $this->selectedDepartment;
+            $this->taxDepartment = TaxDepartment::select('id', 'name')->get();
+            $this->taxRegions = TaxRegion::select('id', 'name')->where('department_id', $this->selectedDepartment)->get();
         }
 
         if ($this->infoType === InternalInfoType::BUSINESS_OWNERSHIP) {
@@ -153,25 +158,29 @@ class InternalBusinessInfoChangeProcessing extends Component
         $transition = $transition['data']['transition'];
 
         $this->validate([
-            'comments' => 'required|string|strip_tag',
+            'comments' => 'required|alpha_gen|strip_tag',
         ]);
+
+        if ($this->checkTransition('registration_manager_review')) {
+            $this->validate([
+                'newHotelStar' => 'required_if:infoType,hotel_stars|nullable|numeric',
+                'newEffectiveDate' => 'required_if:infoType,effective_date|nullable|date',
+                'ltoStatus' => 'required_if:informationType,lto|nullable|string',
+                'electricStatus' => 'required_if:informationType,electric|nullable|numeric',
+                'taxRegionId' => 'required_if:informationType,tax_region|nullable|numeric',
+                'selectedDepartment' => 'required_if:informationType,tax_region|nullable|numeric',
+                'businessCurrencyId' => 'required_if:informationType,currency|numeric|numeric',
+                'isiic_i' => 'required_if:informationType,isic|nullable|numeric|exists:isic1s,id',
+                'isiic_ii' => 'required_if:informationType,isic|nullable|numeric|exists:isic2s,id',
+                'isiic_iii' => 'required_if:informationType,isic|nullable|numeric|exists:isic3s,id',
+                'isiic_iv' => 'required_if:informationType,isic|nullable|numeric|exists:isic4s,id',
+            ]);
+        }
 
         try {
             DB::beginTransaction();
 
             if ($this->checkTransition('registration_manager_review')) {
-               $this->validate([
-                   'newHotelStar' => 'required_if:infoType,hotel_stars',
-                   'newEffectiveDate' => 'required_if:infoType,effective_date',
-                   'ltoStatus' => 'required_if:informationType,lto',
-                   'electricStatus' => 'required_if:informationType,electric',
-                   'taxRegionId' => 'required_if:informationType,tax_region',
-                   'businessCurrencyId' => 'required_if:informationType,currency',
-                   'isiic_i' => 'required_if:informationType,isic|numeric|exists:isic1s,id',
-                   'isiic_ii' => 'required_if:informationType,isic|numeric|exists:isic2s,id',
-                   'isiic_iii' => 'required_if:informationType,isic|numeric|exists:isic3s,id',
-                   'isiic_iv' => 'required_if:informationType,isic|numeric|exists:isic4s,id',
-               ]);
 
                if ($this->infoType === InternalInfoType::EFFECTIVE_DATE) {
                    $this->info->update(['new_values' => json_encode(['effective_date' => $this->newEffectiveDate])]);
@@ -255,13 +264,13 @@ class InternalBusinessInfoChangeProcessing extends Component
                 
                 // Update Hotel Star Rating
                 if ($this->subject->type === InternalInfoType::HOTEL_STARS) {
-                    $businessHotel = BusinessHotel::where('location_id', $this->subject->location_id)->firstOrFail();
+                    $businessHotel = BusinessHotel::select('id', 'hotel_star_id')->where('location_id', $this->subject->location_id)->firstOrFail();
                     $businessHotel->update(['hotel_star_id' => json_decode($this->subject->new_values)->id]);
                 }
 
                 // Update Effective Date
                 if ($this->subject->type === InternalInfoType::EFFECTIVE_DATE) {
-                    BusinessLocation::findOrFail($this->info->location_id)->update(['effective_date' => $this->newEffectiveDate]);
+                    BusinessLocation::findOrFail($this->info->location_id, ['id', 'effective_date'])->update(['effective_date' => $this->newEffectiveDate]);
                 }
 
                 // Update Tax Types
@@ -404,6 +413,15 @@ class InternalBusinessInfoChangeProcessing extends Component
     {
         $this->isiicivList = ISIC4::where('isic3_id', $value)->get();
         $this->isiic_iv    = null;
+    }
+
+    public function selectedDepartment($value)
+    {
+        if (!is_null((int)$value)) {
+            $this->taxRegions = TaxRegion::where('department_id', $value)->get();
+        } else {
+            $this->taxRegions = [];
+        }
     }
 
 
