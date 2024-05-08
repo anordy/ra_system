@@ -100,6 +100,8 @@ class DeRegistrationApprovalProcessing extends Component
 
             if ($this->checkTransition('zbs_officer_review') && $transition === 'zbs_officer_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
+                $this->subject->save();
             }
 
             $this->subject->save();
@@ -143,22 +145,6 @@ class DeRegistrationApprovalProcessing extends Component
                     $this->customAlert('error', "De-registration fee for selected de-registration type is not configured");
                     return;
                 }
-
-                $taxType = TaxType::query()->select('id')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
-
-                // Record ledger transaction
-                $this->recordLedger(
-                    TransactionType::DEBIT,
-                    MvrDeregistration::class,
-                    $this->subject->id,
-                    $fee->amount,
-                    0,
-                    0,
-                    $fee->amount,
-                    $taxType->id,
-                    Currencies::TZS,
-                    $this->subject->taxpayer_id
-                );
 
                 $this->generateControlNumber($fee);
             } catch (Exception $exception) {
@@ -228,13 +214,7 @@ class DeRegistrationApprovalProcessing extends Component
     {
         try {
             DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-            $this->subject->save();
-
-            $this->generateMvrControlNumber($this->subject, $fee);
-
+            $this->generateMvrDeregistrationControlNumber($this->subject, $fee);
             DB::commit();
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());

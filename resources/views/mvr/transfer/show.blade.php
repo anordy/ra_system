@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Show Motor Vehicle Ownership Transfer')
+@section('title', 'Motor Vehicle Ownership Transfer Details')
 
 @section('content')
 

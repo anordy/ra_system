@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Show Motor Vehicle Particular Change')
+@section('title', 'Motor Vehicle Particular Change Details')
 
 @section('content')
 

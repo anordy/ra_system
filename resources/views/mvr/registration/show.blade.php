@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Show Motor Vehicle Registration')
+@section('title', 'Motor Vehicle Registration Details')
 
 @section('content')
 

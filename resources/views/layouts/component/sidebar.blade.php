@@ -582,7 +582,7 @@
                     Registration</a>
                 <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
                     @can('motor-vehicle-registration')
-                        <li class="{{ request()->is('mvr/registration') ? 'active' : '' }}">
+                        <li class="{{ request()->is('mvr/registration*') ? 'active' : '' }}">
                             <a href="{{ route('mvr.registration.index') }}">Motor Vehicle Registration</a>
                         </li>
                     @endcan
@@ -594,7 +594,7 @@
                     @endcan
 
                     @can('motor-vehicle-status-change-request')
-                        <li class="{{ request()->is('mvr/registration/status') ? 'active' : '' }}">
+                        <li class="{{ request()->is('mvr/registration/status*') ? 'active' : '' }}">
                             <a href="{{ route('mvr.registration.status.index') }}">Status Change Request</a>
                         </li>
                     @endcan
