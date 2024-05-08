@@ -7,11 +7,10 @@
 
     <div class="card rounded-0">
         <div class="card-header bg-white font-weight-bold text-uppercase">
-            Taxpayer Account
+           {{ $locationName }} - {{ $taxTypeName  }}  Account
         </div>
         <div class="card-body">
             <table class="table table-sm px-2">
-                <label class="font-weight-bold">Account Information</label>
                 <thead>
                 <tr>
                     <th>Financial Month</th>
@@ -53,6 +52,17 @@
                     <td class="px-2"></td>
                     <td class="px-2 font-weight-bold">{{ number_format($debitSum, 2) }}</td>
                     <td class="px-2 font-weight-bold">{{ number_format($creditSum, 2)   }}</td>
+                </tr>
+                <tr>
+                    <td class="px-2"></td>
+                    <td class="px-2"></td>
+                    <td class="px-2"></td>
+                    <td class="px-2"></td>
+                    <td class="px-2"></td>
+                    <td class="px-2"></td>
+                    <td class="px-2"></td>
+                    <td class="px-2 font-weight-bold"></td>
+                    <td class="px-2 font-weight-bold">{{ number_format($debitSum - $creditSum, 2)   }}</td>
                 </tr>
                 </tbody>
             </table>
