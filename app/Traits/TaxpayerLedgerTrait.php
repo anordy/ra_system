@@ -6,9 +6,7 @@ namespace App\Traits;
 use App\Enum\Currencies;
 use App\Enum\TransactionType;
 use App\Models\BusinessLocation;
-use App\Models\DlLicenseApplication;
 use App\Models\TaxpayerLedger\TaxpayerLedger;
-use App\Models\TaxType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 

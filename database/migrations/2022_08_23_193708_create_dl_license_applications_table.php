@@ -32,6 +32,7 @@ class CreateDlLicenseApplicationsTable extends Migration
             $table->enum('type',['FRESH','DUPLICATE','RENEW'])->default('FRESH');
             $table->string('payment_status')->nullable();
             $table->string('status',255)->nullable();
+            $table->unsignedBigInteger('dl_drivers_license_id');
             $table->timestamps();
         });
     }

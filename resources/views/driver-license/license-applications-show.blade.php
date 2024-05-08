@@ -150,28 +150,21 @@
                     Applicant Details
                 </div>
                 <div class="card-body row">
-                    <div class="col-md-4 mb-3">
-                        <div class="width-px-250">
-                            @if (strtolower($application->type) == 'FRESH' && empty($application->drivers_license_owner->photo_path))
-                                <div class="dl-photo">
-                                    <img src="{{ url('/images/profile.png') }}" class="width-percent-100 object-fit-contain">
-                                </div>
-                            @else
-                                <div class="dl-photo">
-                                    <img src="{{ route('drivers-license.license.file', encrypt($application->drivers_license_owner->photo_path)) }}"
-                                         class="width-percent-100">
-                                </div>
-                            @endif
-                            @if ($application->status === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
-                                <button class="btn btn-primary btn-sm btn-block"
-                                        onclick="Livewire.emit('showModal', 'drivers-license.capture-passport-modal',{{ $application->id }})">
-                                    <i class="fa fa-camera"></i>
-                                    Capture Passport
-                                </button>
-                            @endif
-                        </div>
+                    <div class="col-auto px-4">
+                        @if (strtolower($application->type) == 'fresh' && empty($application->drivers_license_owner->photo_path))
+                            <img class="dl-passport shadow" src="{{ asset('/images/profile.png') }}">
+                        @else
+                            <img class="dl-passport shadow" src="{{ route('drivers-license.application.file', encrypt($application->drivers_license_owner->photo_path)) }}">
+                        @endif
+                        @if ($application->status === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
+                            <button class="btn btn-primary btn-sm btn-block"
+                                    onclick="Livewire.emit('showModal', 'drivers-license.capture-passport-modal',{{ $application->id }})">
+                                <i class="fa fa-camera"></i>
+                                Capture Passport
+                            </button>
+                        @endif
                     </div>
-                    <div class="col-md-8 mt-3">
+                    <div class="col-md-8">
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">{{ __('name') }}</span>
