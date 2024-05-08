@@ -150,16 +150,16 @@
                     Applicant Details
                 </div>
                 <div class="card-body row">
-                    <div class="col-auto px-4">
+                    <div class="col-auto px-4 text-center">
                         @if (strtolower($application->type) == 'fresh' && empty($application->drivers_license_owner->photo_path))
                             <img class="dl-passport shadow" src="{{ asset('/images/profile.png') }}">
                         @else
-                            <img class="dl-passport shadow" src="{{ route('drivers-license.application.file', encrypt($application->drivers_license_owner->photo_path)) }}">
+                            <img class="dl-passport shadow-sm rounded-0" src="{{ route('drivers-license.license.file', encrypt($application->drivers_license_owner->photo_path)) }}">
                         @endif
                         @if ($application->status === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
-                            <button class="btn btn-primary btn-sm btn-block"
+                            <button class="btn btn-primary btn-sm btn-block mt-3"
                                     onclick="Livewire.emit('showModal', 'drivers-license.capture-passport-modal',{{ $application->id }})">
-                                <i class="fa fa-camera"></i>
+                                <i class="bi bi-camera-fill mr-1"></i>
                                 Capture Passport
                             </button>
                         @endif
@@ -231,13 +231,9 @@
                     </div>
                     <div class="card-body row">
                         @if($application->drivers_license_owner->photo_path)
-                            <div class="col-md-4">
-                                <div class="dl-photo-2">
-                                    <div class="dl-photo">
-                                        <img src="{{ route('drivers-license.license.file', encrypt($application->drivers_license_owner->photo_path)) }}"
-                                             class="width-percent-100">
-                                    </div>
-                                </div>
+                            <div class="col-auto">
+                                <img src="{{ route('drivers-license.license.file', encrypt($application->drivers_license_owner->photo_path)) }}"
+                                     class="dl-passport rounded-0 shadow-sm">
                             </div>
                         @endif
                         <div class="col">
@@ -275,7 +271,5 @@
                 </div>
             </div>
         @endif
-
     </div>
-
 @endsection
