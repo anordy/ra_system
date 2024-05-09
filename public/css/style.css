@@ -1003,13 +1003,11 @@ font-size: 85%"
     width: 100%;
 }
 
-.dl-photo img {
-    border: 1px solid silver;
-    width: 100%;
-    border-radius: 3px;
-    margin-bottom: 3px;
-    padding: 3px;
-    object-fit: contain;
+.dl-passport {
+    width: 120px;
+    height: 120px;
+    border-radius: 100%;
+    border: 1px solid #d1d6d8;
 }
 
 .dl-photo-2 img {

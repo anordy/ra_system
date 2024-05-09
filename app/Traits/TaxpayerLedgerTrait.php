@@ -122,8 +122,28 @@ trait TaxpayerLedgerTrait
         }
     }
 
-    public function getEntityTaxTypes($businessLocationId, $taxpayerId) {
-        $taxTypesId = TaxReturn::select('tax_type_id')->where('location_id', $businessLocationId)->distinct()->pluck('tax_type_id')->toArray();
-        $taxTypesId = TaxAssessment::select('tax_type_id')->where('location_id', $businessLocationId)->distinct()->pluck('tax_type_id')->toArray();
+    /**
+     * Record ledger for public service
+     * @param $class
+     * @param $service
+     * @param $fee
+     * @param $taxTypeId
+     * @return void
+     * @throws \Exception
+     */
+    public function recordDebitLedger($service, $fee, $taxTypeId, $taxpayerId = null){
+        // Record ledger transaction
+        $this->recordLedger(
+            TransactionType::DEBIT,
+            get_class($service),
+            $service->id,
+            $fee,
+            0,
+            0,
+            $fee,
+            $taxTypeId,
+            Currencies::TZS,
+            $taxpayerId ?? $service->taxpayer_id
+        );
     }
 }

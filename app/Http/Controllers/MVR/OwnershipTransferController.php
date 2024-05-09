@@ -57,7 +57,7 @@ class OwnershipTransferController extends Controller
         $newOwner = Taxpayer::with('region:id,name', 'district:id,name', 'ward:id,name', 'street:id,name')->findOrFail($request->owner_taxpayer_id);
         $previousOwner = Taxpayer::with('region:id,name', 'district:id,name', 'ward:id,name', 'street:id,name')->findOrfail($request->agent_taxpayer_id);
 
-        return view('mvr.transfer.show', compact('motor_vehicle', 'request','newOwner','previousOwner'));
+        return view('mvr.transfer.show', compact('motor_vehicle', 'request', 'newOwner', 'previousOwner'));
     }
 
     public function search($type, $number)
@@ -96,9 +96,9 @@ class OwnershipTransferController extends Controller
                 $taxType->id,
                 $request->agent->id ?? $request->new_owner->id,
                 get_class($request->agent ?? $request->new_owner),
-                !empty($request->agent)?$request->agent->taxpayer->fullname() : $request->new_owner->fullname(),
-                !empty($request->agent)? $request->agent->taxpayer->email : $request->new_owner->email,
-                ZmCore::formatPhone(!empty($request->agent)? $request->agent->taxpayer->mobile : $request->new_owner->mobile),
+                !empty($request->agent) ? $request->agent->taxpayer->fullname() : $request->new_owner->fullname(),
+                !empty($request->agent) ? $request->agent->taxpayer->email : $request->new_owner->email,
+                ZmCore::formatPhone(!empty($request->agent) ? $request->agent->taxpayer->mobile : $request->new_owner->mobile),
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
                 ZmCore::PAYMENT_OPTION_EXACT,

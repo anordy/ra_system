@@ -5,7 +5,7 @@
             <button type="button" id="sidebarCollapse" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-list"></i>
             </button>
-            <span class="navbar-brand mb-0 px-3 py-0 font-weight-bold">@yield('title')</span>
+            <span class=" mb-0 px-3 py-0 font-weight-bold h6">@yield('title')</span>
         </div>
 
         <div class="justify-content-end">
