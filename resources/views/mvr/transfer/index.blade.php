@@ -4,10 +4,10 @@
 
 @section('content')
     <div class="card mt-3">
+        <div class="card-header">
+            Requests
+        </div>
         <div class="card-body">
-            <div class="card-header">
-                <h5>Requests</h5>
-            </div>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="to-print-link" data-toggle="tab" href="#to-print" role="tab"
@@ -24,7 +24,7 @@
                     <livewire:mvr.ownership-transfer-requests-table :status="null"/>
                 </div>
                 <div class="tab-pane p-2" id="printed" role="tabpanel" aria-labelledby="printed-tab">
-                    <livewire:mvr.ownership-transfer-requests-table :status="App\Models\MvrRequestStatus::STATUS_RC_PENDING_APPROVAL"/>
+                    <livewire:mvr.ownership-transfer-requests-table :status="App\Models\MvrRequestStatus::STATUS_RC_INITIATED"/>
                 </div>
             </div>
 

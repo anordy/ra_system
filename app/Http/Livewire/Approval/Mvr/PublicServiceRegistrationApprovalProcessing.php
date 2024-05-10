@@ -2,13 +2,16 @@
 
 namespace App\Http\Livewire\Approval\Mvr;
 
+use App\Enum\Currencies;
 use App\Enum\CustomMessage;
 use App\Enum\PublicServiceMotorStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
+use App\Models\Business;
 use App\Models\PublicService\PublicServicePayment;
 use App\Models\PublicService\PublicServicePaymentCategory;
 use App\Models\PublicService\PublicServicePaymentInterval;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
@@ -44,7 +47,7 @@ class PublicServiceRegistrationApprovalProcessing extends Component
             $this->psPayment = $this->subject->payment;
             $this->psPaymentCategoryId = $this->subject->payment->public_service_payment_category_id;
             $paymentMonth = $this->subject->payment->payment_months;
-            $this->psPaymentMonthId = $this->psPaymentMonths->where('value', $paymentMonth)->firstOrFail();
+            $this->psPaymentMonthId = $this->psPaymentMonths->where('value', $paymentMonth)->firstOrFail()->id;
         }
 
         $this->psPaymentCategories = PublicServicePaymentCategory::select('id', 'name', 'turnover_tax')->get();
@@ -85,7 +88,8 @@ class PublicServiceRegistrationApprovalProcessing extends Component
                 DB::commit();
 
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-
+                $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+                return;
             } catch (\Exception $exception) {
                 DB::rollBack();
                 Log::error('APPROVAL-MVR-PUBLIC-SERVICE-REG-APPROVE', [$exception]);
@@ -100,12 +104,15 @@ class PublicServiceRegistrationApprovalProcessing extends Component
                 'comments' => 'required|strip_tag',
             ]);
             try {
-                DB::beginTransaction();
 
+                $taxType = TaxType::query()->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+                $business = Business::findOrFail($this->subject->business_id);
+
+                DB::beginTransaction();
                 $this->subject->status = PublicServiceMotorStatus::REGISTERED;
                 $this->subject->approved_on = Carbon::now();
                 $this->subject->save();
-
+                $business->taxTypes()->syncWithoutDetaching([$taxType->id => ['currency' => Currencies::TZS]]);
                 DB::commit();
 
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
@@ -155,7 +162,7 @@ class PublicServiceRegistrationApprovalProcessing extends Component
 
             DB::commit();
 
-            if ($this->subject->status = PublicServiceMotorStatus::CORRECTION) {
+            if ($this->subject->status == PublicServiceMotorStatus::CORRECTION) {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
                 Hello {$this->subject->taxpayer->fullname}, your public service registration request for {$this->subject->mvr->plate_number} requires correction, please login to the system to perform data update."]));
             }

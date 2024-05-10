@@ -159,8 +159,7 @@ class DeRegistrationApprovalProcessing extends Component
 
             DB::commit();
 
-            if ($this->subject->status = MvrRegistrationStatus::CORRECTION) {
-                // Send correction email/sms
+            if ($this->subject->status == MvrRegistrationStatus::CORRECTION) {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
                 Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for {$this->subject->registration->plate_number} requires correction, please login to the system to perform data update."]));
             }
@@ -199,14 +198,7 @@ class DeRegistrationApprovalProcessing extends Component
     public function generateControlNumber()
     {
         try {
-            //Generate control number
             $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
-
-            DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-
 
             $fee = MvrFee::query()->where([
                 'mvr_registration_type_id' => $this->subject->registration->mvr_registration_type_id,
@@ -216,14 +208,19 @@ class DeRegistrationApprovalProcessing extends Component
 
             if (empty($fee)) {
                 $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                DB::rollBack();
-                Log::error($fee);
                 return;
             }
+
+            DB::beginTransaction();
+
+            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+            $this->subject->payment_status = BillStatus::CN_GENERATING;
+            $this->subject->save();
 
             $this->generateMvrControlNumber($this->subject, $fee);
 
             DB::commit();
+
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $exception) {
             DB::rollBack();
@@ -237,3 +234,4 @@ class DeRegistrationApprovalProcessing extends Component
         return view('livewire.approval.mvr.de-registration');
     }
 }
+

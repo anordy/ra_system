@@ -67,8 +67,9 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
                         $this->subject->status = TaxpayerAmendmentRequest::TEMPERED;
                         $this->doTransition('tempered_information_detected', ['status' => 'agree', 'comment' => $this->comments]);
                         $this->flash('error', 'Data submitted could not be verified, please contact system administrator.', [], redirect()->back()->getTargetUrl());
-                        return;
                     }
+
+                    $this->subject->save();
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             DB::commit();

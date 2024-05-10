@@ -60,21 +60,7 @@ class DlLicenseApplication extends Model implements Auditable
 		'dob'
 	];
 
-	protected $fillable = [
-		'taxpayer_id',
-		'dl_drivers_license_owner_id',
-		'dl_blood_group_id',
-		'dl_license_duration_id',
-		'dob',
-		'certificate_path',
-		'certificate_number',
-		'confirmation_number',
-		'photo_path',
-		'license_restrictions',
-		'loss_report_path',
-		'type',
-		'dl_application_status_id'
-	];
+    protected $guarded = [];
 
 	public function application_status()
 	{

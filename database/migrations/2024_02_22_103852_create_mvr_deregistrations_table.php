@@ -19,7 +19,7 @@ class CreateMvrDeregistrationsTable extends Migration
             $table->string('marking')->nullable();
             $table->unsignedBigInteger('taxpayer_id');
             $table->unsignedBigInteger('mvr_de_registration_reason_id');
-            $table->string('status')->default('pending');
+            $table->string('status')->default('PENDING');
             $table->string('clearance_evidence')->nullable();
             $table->string('police_evidence')->nullable();
             $table->string('zic_evidence')->nullable();

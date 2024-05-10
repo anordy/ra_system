@@ -1,6 +1,7 @@
 
 
 <html>
+
     <head>
         <title></title>
         <style>
@@ -47,14 +48,46 @@
                 width: 100%;
                 border-collapse: collapse;
             }
+
+            .border {
+                border-collapse: collapse;
+                border: 1px solid black;
+            }
+
+            .text-center {
+                text-align: center;
+            }
+
+            .top-table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            .text-right {
+                text-align:right;
+            }
+
+            .border-collapse {
+                border-collapse: collapse;
+            }
+
+            .border-left {
+                border-collapse:collapse;
+                border-left: 1px solid black;
+            }
+
+            .border-right {
+                border-collapse:collapse;
+                border: 1px solid black;
+            }
             
         </style>
     </head>
     <body>
-        <table style="border-collapse:collapse; width:100%">
+        <table class="top-table">
             <thead>
                 <tr>
-                    <th style="text-align:center;" colspan="4" height="50">
+                    <th class="text-center" colspan="4" height="50">
                         <strong>ZANZIBAR REVENUE AUTHORITY</strong><br>
                         <strong>RELIEFS CEILING REPORT</strong><br>
                         <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong>
@@ -66,16 +99,16 @@
         <table class="table">
             <thead class="tableHead">
                 <tr>
-                    <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>S/N</strong>
                     </th>
-                    <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>BENEFICIARIES INSTITUTIONS</strong>
                     </th>
-                    <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>DONORS</strong>
                     </th>
-                    <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <th class="text-center border">
                         <strong>VAT SPECIAL RELIEF (Tsh)</strong>
                     </th>
                 </tr>
@@ -87,37 +120,37 @@
                 @endphp
                 @foreach ($projectSections as $projectSection)
                     <tr>
-                        <td style="border-collapse:collapse;border-left: 1px solid black;"></td>
+                        <td class="border-left"></td>
                         <td ><strong> {{ $projectSection['name'] }}</strong></td>
                         <td ></td>
-                        <td style="border-collapse:collapse;border-right: 1px solid black;"></td>
+                        <td class="border-right"></td>
                     </tr>
                     @foreach ($projectSection['projects'] as $index => $project)
                         @php
                             $mainIndex++;
                         @endphp
                         <tr>
-                            <td style="border-collapse:collapse;border: 1px solid black;">{{ $mainIndex }}</td>
-                            <td style="border-collapse:collapse;border: 1px solid black;">{{ $project['name'] }}</td>
-                            <td style="text-align:center; border-collapse:collapse;border: 1px solid black;">{{ $project['sponsor'] }}</td>
-                            <td style="text-align:right; border-collapse:collapse;border: 1px solid black;">{{ number_format($project['relievedAmount'],1) }}</td>
+                            <td class="border">{{ $mainIndex }}</td>
+                            <td class="border">{{ $project['name'] }}</td>
+                            <td class="text-center border">{{ $project['sponsor'] }}</td>
+                            <td class="text-right border">{{ number_format($project['relievedAmount'],1) }}</td>
                         </tr>
                     @endforeach
                     <tr>
-                        <td style="border-collapse:collapse;border: 1px solid black;"></td>
-                        <td style="border-collapse:collapse;border-bottom: 1px solid black;"> <strong>SUB TOTAL</strong></td>
-                        <td style="border-collapse:collapse;border-bottom: 1px solid black;"></td>
-                        <td style="text-align:right; border-collapse:collapse;border: 1px solid black;"> <strong>{{ number_format($projectSection['subTotal'],1) }}</strong></td>
+                        <td class="border"></td>
+                        <td class="border"> <strong>SUB TOTAL</strong></td>
+                        <td class="border"></td>
+                        <td class="text-right border"> <strong>{{ number_format($projectSection['subTotal'],1) }}</strong></td>
                     </tr>
                     @php
                         $total += $projectSection['subTotal'];
                     @endphp
                 @endforeach
                 <tr>
-                    <td style="border-collapse:collapse;border-bottom: 1px solid black;"></td>
-                    <td style="border-collapse:collapse;border-bottom: 1px solid black;"> <strong>GRAND TOTAL</strong></td>
-                    <td style="border-collapse:collapse;border-bottom: 1px solid black;"></td>
-                    <td style="text-align:right; border-collapse:collapse;border: 1px solid black;"> <strong> {{ number_format($total,1) }} </strong></td>
+                    <td class="border"></td>
+                    <td class="border"> <strong>GRAND TOTAL</strong></td>
+                    <td class="border"></td>
+                    <td class="text-right border"> <strong> {{ number_format($total,1) }} </strong></td>
                 </tr>
             </tbody>
         </table>

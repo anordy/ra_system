@@ -69,9 +69,12 @@ class TemporaryClosureApprovalProcessing extends Component
                 $this->subject->approved_on = Carbon::now();
                 $this->subject->save();
 
-                $motor = $this->subject->motor;
-                $motor->status = PublicServiceMotorStatus::TEMP_CLOSED;
-                $motor->save();
+                if (Carbon::make($this->subject->closing_date)->lessThanOrEqualTo(Carbon::now()->toDateString()) &&
+                    Carbon::make($this->subject->opening_date)->greaterThan(Carbon::now()->toDateString())){
+                    $motor = $this->subject->motor;
+                    $motor->status = PublicServiceMotorStatus::TEMP_CLOSED;
+                    $motor->save();
+                }
 
                 DB::commit();
 

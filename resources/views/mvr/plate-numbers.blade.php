@@ -4,12 +4,10 @@
 
 @section('content')
     <div class="card mt-3">
+        <div class="card-header">
+            Plate Numbers
+        </div>
         <div class="card-body">
-            <div class="card-header">
-                <h5>Plate Numbers</h5>
-                <div class="card-tools">
-                </div>
-            </div>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 @can('print_plate_number')
                 <li class="nav-item" role="presentation">

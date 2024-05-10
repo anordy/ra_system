@@ -121,5 +121,14 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowPublicServiceDeRegistrationSeeder::class);
         $this->call(PublicServicePaymentCategorySeeder::class);
         $this->call(PublicServicePaymentsIntervalSeeder::class);
+        $this->call(WorkflowPublicServiceTemporaryClosureSeeder::class);
+        $this->call(WorkflowPublicServiceDeRegistrationSeeder::class);
+        $this->call(WorkflowPublicServiceRegistrationSeeder::class);
+        $this->call(WorkflowMvrRegistrationSeeder::class);
+        $this->call(WorkflowMvrRegistrationStatusChangeSeeder::class);
+        $this->call(WorkflowMvrRegistrationParticularChangeSeeder::class);
+        $this->call(WorkflowMvrTransferOwnershipSeeder::class);
+        $this->call(WorkflowMvrDriverLicenseSeeder::class);
+        $this->call(WorkflowMvrDeRegistrationSeeder::class);
     }
 }

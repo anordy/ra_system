@@ -48,14 +48,34 @@
             width: 100%;
             border-collapse: collapse;
         }
+
+        .border {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+
+        .font-size-6 {
+            font-size: 6pt;
+        }
+
+        .top-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
     </style>
 </head>
 
-<body style="font-size: 6pt">
-    <table style="border-collapse:collapse; width:100%">
+<body class="font-size-6">
+    <table class="top-table">
         <thead>
             <tr>
-                <th style="text-align:center;" colspan="10">
+                <th class="text-center" colspan="10">
                     <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
                     <strong>Business Registration Report on {{ $parameters['criteria']  }} </strong>
                     @if(array_key_exists('tax_type_name',$parameters))
@@ -79,49 +99,49 @@
     <table class="table">
         <thead class="tableHead">
             <tr>
-                <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>S/N</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Business</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Location</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Tax Region</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Business Category</strong>
                 </th>
 
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Taxpayer Name</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Mobile</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Email</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Effective Date</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
 
                     <strong>Region</strong>
                 </th>
 
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>District</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Ward</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Physical Address</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <th class="text-center border">
                     <strong>Status</strong>
                 </th>
             </tr>
@@ -130,47 +150,47 @@
             @foreach ($records as $index => $record)
                    
                 <tr>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $index + 1 }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->business->name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->name }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->taxRegion->name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->business->category->name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->taxpayer_name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->mobile ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->email ?? '-' }}
                     </td>
                 
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ date('M, d Y', strtotime($record->effective_date)) ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->region->name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->district->name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->ward->name ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ $record->physical_address ?? '-' }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <td class="text-center border">
                         {{ ucfirst($record->business->status ?? '') ?? '-' }}
                     </td>
                 </tr>

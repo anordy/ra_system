@@ -17,19 +17,19 @@
         @endif
     </div>
     <div class="card-body mt-0">
-        <table class="table table-bordered table-striped normal-text">
+        <table class="table table-bordered table-striped table-responsive normal-text">
             <thead>
-            <th style="width: 20%">Business Name</th>
-            <th style="width: 10%">Location Name</th>
-            <th style="width: 20%">Filed By</th>
-            <th style="width: 10%">Principal Amount</th>
-            <th style="width: 20%">Interest</th>
-            <th style="width: 20%">Penalty</th>
-            <th style="width: 20%">Infrastructure</th>
-            <th style="width: 10%">Total Amount</th>
-            <th style="width: 20%">outstanding_amount</th>
-            <th style="width: 20%">Currency</th>
-            <th style="width: 20%">Payment Status</th>
+            <th>Business Name</th>
+            <th>Location Name</th>
+            <th>Filed By</th>
+            <th>Principal Amount</th>
+            <th>Interest</th>
+            <th>Penalty</th>
+            <th>Infrastructure</th>
+            <th>Total Amount</th>
+            <th>outstanding_amount</th>
+            <th>Currency</th>
+            <th>Payment Status</th>
             </thead>
             <tbody>
             @foreach ($local_purchases_data as $item)

@@ -28,7 +28,7 @@ class WorkflowMvrTransferOwnershipSeeder extends Seeder
                 'operator_type' => 'user',
                 'operators' => [],
             ],
-            'correct_application' => [
+            'application_rejected' => [
                 'owner' => 'taxpayer',
                 'operator_type' => 'user',
                 'operators' => [],
@@ -72,12 +72,7 @@ class WorkflowMvrTransferOwnershipSeeder extends Seeder
             ],
             'application_filled_incorrect' => [
                 'from' => 'bpra_officer',
-                'to' => 'correct_application',
-                'condition' => '',
-            ],
-            'application_corrected' => [
-                'from' => 'correct_application',
-                'to' => 'bpra_officer',
+                'to' => 'application_rejected',
                 'condition' => '',
             ],
             'bpra_officer_review' => [
