@@ -47,6 +47,8 @@ class SysModuleSeeder extends Seeder
             ['id' => 30, 'code' => 'legal-cases', 'name' => 'Legal Cases'],
             ['id' => 31, 'code' => 'property-tax', 'name' => 'Property Tax'],
 
+            ['id' => 31, 'code' => 'vfm-integration', 'name' => 'VFMS Integration'],
+
 
         ];
         foreach ($data as $row) {

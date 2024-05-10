@@ -110,7 +110,12 @@ class FinancialYearSeeder extends Seeder
             $yr = FinancialYear::query()->updateOrCreate($year);
 
             foreach ($months as $index => $month) {
-                FinancialMonth::create([
+                FinancialMonth::updateOrCreate(
+                    [
+                        'financial_year_id' => $yr->id,
+                        'number'            => $index,
+                    ],
+                    [
                     'financial_year_id' => $yr->id,
                     'number'            => $index,
                     'name'              => $month,
@@ -121,7 +126,12 @@ class FinancialYearSeeder extends Seeder
             }
 
             foreach($months as $index => $month){
-                SevenDaysFinancialMonth::create([
+                SevenDaysFinancialMonth::updateOrCreate(
+                    [
+                        'financial_year_id' => $yr->id,
+                        'number'            => $index,
+                    ],
+                    [
                     'financial_year_id' => $yr->id,
                     'number' => $index,
                     'name' => $month,

@@ -215,7 +215,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::get('/account/security-questions', [AccountController::class, 'securityQuestions'])->name('account.security-questions');
 
     Route::prefix('settings')->name('settings.')->group(function () {
-        Route::resource('/users', UserController::class);
+        Route::resource('/users', \App\Http\Controllers\UserController::class);
         Route::resource('/roles', RoleController::class);
         Route::resource('/country', CountryController::class);
         Route::resource('/region', RegionController::class);

@@ -1,0 +1,1606 @@
+[
+  {
+    "locality_id": 1,
+    "locality_name": "Misufini"
+  },
+  {
+    "locality_id": 2,
+    "locality_name": "Upenja"
+  },
+  {
+    "locality_id": 3,
+    "locality_name": "Kiombamvua"
+  },
+  {
+    "locality_id": 4,
+    "locality_name": "Mbiji"
+  },
+  {
+    "locality_id": 5,
+    "locality_name": "Karange"
+  },
+  {
+    "locality_id": 6,
+    "locality_name": "Mtambile"
+  },
+  {
+    "locality_id": 7,
+    "locality_name": "Mnyimbi"
+  },
+  {
+    "locality_id": 8,
+    "locality_name": "Mahonda"
+  },
+  {
+    "locality_id": 9,
+    "locality_name": "Kiongo Kidogo"
+  },
+  {
+    "locality_id": 10,
+    "locality_name": "Kitope"
+  },
+  {
+    "locality_id": 11,
+    "locality_name": "Zingwezingwe"
+  },
+  {
+    "locality_id": 12,
+    "locality_name": "Mkadini"
+  },
+  {
+    "locality_id": 13,
+    "locality_name": "Fujoni"
+  },
+  {
+    "locality_id": 14,
+    "locality_name": "Mangapwani"
+  },
+  {
+    "locality_id": 15,
+    "locality_name": "Makoba"
+  },
+  {
+    "locality_id": 16,
+    "locality_name": "Kiwengwa"
+  },
+  {
+    "locality_id": 17,
+    "locality_name": "Pangeni"
+  },
+  {
+    "locality_id": 18,
+    "locality_name": "Kilombero"
+  },
+  {
+    "locality_id": 19,
+    "locality_name": "Kinduni"
+  },
+  {
+    "locality_id": 20,
+    "locality_name": "Vijibweni"
+  },
+  {
+    "locality_id": 21,
+    "locality_name": "Donge Pwani"
+  },
+  {
+    "locality_id": 22,
+    "locality_name": "Kwagube"
+  },
+  {
+    "locality_id": 23,
+    "locality_name": "Donge Majenzi"
+  },
+  {
+    "locality_id": 24,
+    "locality_name": "Kisongoni"
+  },
+  {
+    "locality_id": 25,
+    "locality_name": "Njia ya Mtoni"
+  },
+  {
+    "locality_id": 26,
+    "locality_name": "Mkataleni"
+  },
+  {
+    "locality_id": 27,
+    "locality_name": "Mafufuni"
+  },
+  {
+    "locality_id": 28,
+    "locality_name": "Mgambo"
+  },
+  {
+    "locality_id": 29,
+    "locality_name": "Matetema"
+  },
+  {
+    "locality_id": 30,
+    "locality_name": "Kidanzini"
+  },
+  {
+    "locality_id": 31,
+    "locality_name": "Mbaleni"
+  },
+  {
+    "locality_id": 32,
+    "locality_name": "Kandwi"
+  },
+  {
+    "locality_id": 33,
+    "locality_name": "Moga"
+  },
+  {
+    "locality_id": 34,
+    "locality_name": "Chaani Masingini"
+  },
+  {
+    "locality_id": 35,
+    "locality_name": "Mcheza Shauri"
+  },
+  {
+    "locality_id": 36,
+    "locality_name": "Chutama"
+  },
+  {
+    "locality_id": 37,
+    "locality_name": "Chaani Kubwa"
+  },
+  {
+    "locality_id": 38,
+    "locality_name": "Kikobweni"
+  },
+  {
+    "locality_id": 39,
+    "locality_name": "Kinyasini"
+  },
+  {
+    "locality_id": 40,
+    "locality_name": "Bandamaji"
+  },
+  {
+    "locality_id": 41,
+    "locality_name": "Gamba"
+  },
+  {
+    "locality_id": 42,
+    "locality_name": "Pwani Mchangani"
+  },
+  {
+    "locality_id": 43,
+    "locality_name": "Kijini"
+  },
+  {
+    "locality_id": 44,
+    "locality_name": "Muwange"
+  },
+  {
+    "locality_id": 45,
+    "locality_name": "Pitanazako"
+  },
+  {
+    "locality_id": 46,
+    "locality_name": "Mkokotoni"
+  },
+  {
+    "locality_id": 47,
+    "locality_name": "Chaani Mcheza Shauri"
+  },
+  {
+    "locality_id": 48,
+    "locality_name": "Mkwajuni"
+  },
+  {
+    "locality_id": 49,
+    "locality_name": "Kibeni"
+  },
+  {
+    "locality_id": 50,
+    "locality_name": "Fukuchani"
+  },
+  {
+    "locality_id": 51,
+    "locality_name": "Kidoti"
+  },
+  {
+    "locality_id": 52,
+    "locality_name": "Kigunda"
+  },
+  {
+    "locality_id": 53,
+    "locality_name": "Kilimani"
+  },
+  {
+    "locality_id": 54,
+    "locality_name": "Tumbatu Uvivini"
+  },
+  {
+    "locality_id": 55,
+    "locality_name": "Jugakuu"
+  },
+  {
+    "locality_id": 56,
+    "locality_name": "Donge mchangani"
+  },
+  {
+    "locality_id": 57,
+    "locality_name": "Mbuyu Tende"
+  },
+  {
+    "locality_id": 58,
+    "locality_name": "Kigomani"
+  },
+  {
+    "locality_id": 59,
+    "locality_name": "Tazari"
+  },
+  {
+    "locality_id": 60,
+    "locality_name": "Pale"
+  },
+  {
+    "locality_id": 61,
+    "locality_name": "Tumbatu Jongowe"
+  },
+  {
+    "locality_id": 62,
+    "locality_name": "Tumbatu Gomani"
+  },
+  {
+    "locality_id": 63,
+    "locality_name": "Kivunge"
+  },
+  {
+    "locality_id": 64,
+    "locality_name": "Kilindi"
+  },
+  {
+    "locality_id": 65,
+    "locality_name": "Matemwe kaskazini"
+  },
+  {
+    "locality_id": 66,
+    "locality_name": "Matemwe kusini"
+  },
+  {
+    "locality_id": 67,
+    "locality_name": "Kidombo"
+  },
+  {
+    "locality_id": 68,
+    "locality_name": "Potoa"
+  },
+  {
+    "locality_id": 69,
+    "locality_name": "Bwereu"
+  },
+  {
+    "locality_id": 70,
+    "locality_name": "Mto wa Pwani"
+  },
+  {
+    "locality_id": 71,
+    "locality_name": "Muwanda"
+  },
+  {
+    "locality_id": 72,
+    "locality_name": "Kipange"
+  },
+  {
+    "locality_id": 73,
+    "locality_name": "Kigongoni"
+  },
+  {
+    "locality_id": 74,
+    "locality_name": "Bandakuu"
+  },
+  {
+    "locality_id": 75,
+    "locality_name": "Kiungani"
+  },
+  {
+    "locality_id": 76,
+    "locality_name": "Mtakuja"
+  },
+  {
+    "locality_id": 77,
+    "locality_name": "Mchangani"
+  },
+  {
+    "locality_id": 78,
+    "locality_name": "Dunga Kiembeni"
+  },
+  {
+    "locality_id": 79,
+    "locality_name": "Umbuji"
+  },
+  {
+    "locality_id": 80,
+    "locality_name": "Ndijani Mseweni"
+  },
+  {
+    "locality_id": 81,
+    "locality_name": "Pagali"
+  },
+  {
+    "locality_id": 82,
+    "locality_name": "Bambi"
+  },
+  {
+    "locality_id": 83,
+    "locality_name": "Tunduni"
+  },
+  {
+    "locality_id": 84,
+    "locality_name": "Mitakawani"
+  },
+  {
+    "locality_id": 85,
+    "locality_name": "Uzini"
+  },
+  {
+    "locality_id": 86,
+    "locality_name": "Ubago"
+  },
+  {
+    "locality_id": 87,
+    "locality_name": "Kidimni"
+  },
+  {
+    "locality_id": 88,
+    "locality_name": "Machui"
+  },
+  {
+    "locality_id": 89,
+    "locality_name": "Kiboje Mwembeshauri"
+  },
+  {
+    "locality_id": 90,
+    "locality_name": "Miwani"
+  },
+  {
+    "locality_id": 91,
+    "locality_name": "Kiboje Mkwajuni"
+  },
+  {
+    "locality_id": 92,
+    "locality_name": "Ghana"
+  },
+  {
+    "locality_id": 93,
+    "locality_name": "Koani"
+  },
+  {
+    "locality_id": 94,
+    "locality_name": "Mgeni Haji"
+  },
+  {
+    "locality_id": 95,
+    "locality_name": "Dunga Bweni"
+  },
+  {
+    "locality_id": 96,
+    "locality_name": "Jendele"
+  },
+  {
+    "locality_id": 97,
+    "locality_name": "Chwaka"
+  },
+  {
+    "locality_id": 98,
+    "locality_name": "Charawe"
+  },
+  {
+    "locality_id": 99,
+    "locality_name": "Ukongoroni"
+  },
+  {
+    "locality_id": 100,
+    "locality_name": "Mpapa"
+  },
+  {
+    "locality_id": 101,
+    "locality_name": "Unguja Ukuu Tindini"
+  },
+  {
+    "locality_id": 102,
+    "locality_name": "Ndijani Mwembepunda"
+  },
+  {
+    "locality_id": 103,
+    "locality_name": "Pete"
+  },
+  {
+    "locality_id": 104,
+    "locality_name": "Kijibwemtu"
+  },
+  {
+    "locality_id": 105,
+    "locality_name": "Cheju Zawiyani"
+  },
+  {
+    "locality_id": 106,
+    "locality_name": "Ng'ambwa"
+  },
+  {
+    "locality_id": 107,
+    "locality_name": "Uzi"
+  },
+  {
+    "locality_id": 108,
+    "locality_name": "Marumbi"
+  },
+  {
+    "locality_id": 109,
+    "locality_name": "Pongwe"
+  },
+  {
+    "locality_id": 110,
+    "locality_name": "Tunguu"
+  },
+  {
+    "locality_id": 111,
+    "locality_name": "Binguni"
+  },
+  {
+    "locality_id": 112,
+    "locality_name": "Cheju"
+  },
+  {
+    "locality_id": 113,
+    "locality_name": "Bungi"
+  },
+  {
+    "locality_id": 114,
+    "locality_name": "Unguja Ukuu Kaepwani"
+  },
+  {
+    "locality_id": 115,
+    "locality_name": "Kikungwi"
+  },
+  {
+    "locality_id": 116,
+    "locality_name": "Unguja Ukuu Kaebona"
+  },
+  {
+    "locality_id": 117,
+    "locality_name": "Uroa"
+  },
+  {
+    "locality_id": 118,
+    "locality_name": "Jumbi"
+  },
+  {
+    "locality_id": 119,
+    "locality_name": "Nganani"
+  },
+  {
+    "locality_id": 120,
+    "locality_name": "Muyuni 'C'"
+  },
+  {
+    "locality_id": 121,
+    "locality_name": "Muyuni 'B'"
+  },
+  {
+    "locality_id": 122,
+    "locality_name": "Muyuni 'A'"
+  },
+  {
+    "locality_id": 123,
+    "locality_name": "Kizimkazi mkunguni"
+  },
+  {
+    "locality_id": 124,
+    "locality_name": "Kizimkazi Dimbani"
+  },
+  {
+    "locality_id": 125,
+    "locality_name": "Kibuteni"
+  },
+  {
+    "locality_id": 126,
+    "locality_name": "Mtende"
+  },
+  {
+    "locality_id": 127,
+    "locality_name": "Kajengwa"
+  },
+  {
+    "locality_id": 128,
+    "locality_name": "Mzuri"
+  },
+  {
+    "locality_id": 129,
+    "locality_name": "Kijini"
+  },
+  {
+    "locality_id": 130,
+    "locality_name": "Muungoni"
+  },
+  {
+    "locality_id": 131,
+    "locality_name": "Paje"
+  },
+  {
+    "locality_id": 132,
+    "locality_name": "Jambiani kibigija"
+  },
+  {
+    "locality_id": 133,
+    "locality_name": "Jambiani kikadini"
+  },
+  {
+    "locality_id": 134,
+    "locality_name": "Tasani"
+  },
+  {
+    "locality_id": 135,
+    "locality_name": "Michamvi"
+  },
+  {
+    "locality_id": 136,
+    "locality_name": "Dongwe"
+  },
+  {
+    "locality_id": 137,
+    "locality_name": "Kiongoni"
+  },
+  {
+    "locality_id": 138,
+    "locality_name": "Kitogani"
+  },
+  {
+    "locality_id": 139,
+    "locality_name": "Bwejuu"
+  },
+  {
+    "locality_id": 140,
+    "locality_name": "Kikwajuni Juu"
+  },
+  {
+    "locality_id": 141,
+    "locality_name": "Mlandege"
+  },
+  {
+    "locality_id": 142,
+    "locality_name": "Gulioni"
+  },
+  {
+    "locality_id": 143,
+    "locality_name": "Makadara"
+  },
+  {
+    "locality_id": 144,
+    "locality_name": "Shaurimoyo"
+  },
+  {
+    "locality_id": 145,
+    "locality_name": "Mwembemakumbi"
+  },
+  {
+    "locality_id": 146,
+    "locality_name": "Chumbuni"
+  },
+  {
+    "locality_id": 147,
+    "locality_name": "Kwamtipura"
+  },
+  {
+    "locality_id": 148,
+    "locality_name": "Mchangani"
+  },
+  {
+    "locality_id": 149,
+    "locality_name": "Malindi"
+  },
+  {
+    "locality_id": 150,
+    "locality_name": "Kiponda"
+  },
+  {
+    "locality_id": 151,
+    "locality_name": "Mkunazini"
+  },
+  {
+    "locality_id": 152,
+    "locality_name": "Maruhubi"
+  },
+  {
+    "locality_id": 153,
+    "locality_name": "C012"
+  },
+  {
+    "locality_id": 154,
+    "locality_name": "Mikunguni"
+  },
+  {
+    "locality_id": 155,
+    "locality_name": "Kwaalimsha"
+  },
+  {
+    "locality_id": 156,
+    "locality_name": "Shangani"
+  },
+  {
+    "locality_id": 157,
+    "locality_name": "Kilimahewa juu"
+  },
+  {
+    "locality_id": 158,
+    "locality_name": "Muembemadema"
+  },
+  {
+    "locality_id": 159,
+    "locality_name": "Karakana"
+  },
+  {
+    "locality_id": 160,
+    "locality_name": "Kilimahewa Bondeni"
+  },
+  {
+    "locality_id": 161,
+    "locality_name": "Kwa Wazee"
+  },
+  {
+    "locality_id": 162,
+    "locality_name": "Migombani"
+  },
+  {
+    "locality_id": 163,
+    "locality_name": "Meya"
+  },
+  {
+    "locality_id": 164,
+    "locality_name": "Kiswandui"
+  },
+  {
+    "locality_id": 165,
+    "locality_name": "Banko"
+  },
+  {
+    "locality_id": 166,
+    "locality_name": "Masumbani"
+  },
+  {
+    "locality_id": 167,
+    "locality_name": "Mwembeladu"
+  },
+  {
+    "locality_id": 168,
+    "locality_name": "Matarumbeta"
+  },
+  {
+    "locality_id": 169,
+    "locality_name": "Kwa Mtumwajeni"
+  },
+  {
+    "locality_id": 170,
+    "locality_name": "Mapinduzi"
+  },
+  {
+    "locality_id": 171,
+    "locality_name": "Mnazimmoja"
+  },
+  {
+    "locality_id": 172,
+    "locality_name": "Mitiulaya"
+  },
+  {
+    "locality_id": 173,
+    "locality_name": "Kwabintiamrani"
+  },
+  {
+    "locality_id": 174,
+    "locality_name": "Saateni"
+  },
+  {
+    "locality_id": 175,
+    "locality_name": "Mboriborini"
+  },
+  {
+    "locality_id": 176,
+    "locality_name": "Kwaalinatu"
+  },
+  {
+    "locality_id": 177,
+    "locality_name": "Kwahani"
+  },
+  {
+    "locality_id": 178,
+    "locality_name": "Kidongo Chekundu"
+  },
+  {
+    "locality_id": 179,
+    "locality_name": "Nyerere"
+  },
+  {
+    "locality_id": 180,
+    "locality_name": "Sebleni"
+  },
+  {
+    "locality_id": 181,
+    "locality_name": "Magomeni"
+  },
+  {
+    "locality_id": 182,
+    "locality_name": "Mpendae"
+  },
+  {
+    "locality_id": 183,
+    "locality_name": "Urusi"
+  },
+  {
+    "locality_id": 184,
+    "locality_name": "Kilimani"
+  },
+  {
+    "locality_id": 185,
+    "locality_name": "Miembeni"
+  },
+  {
+    "locality_id": 186,
+    "locality_name": "Kikwajuni Bondeni"
+  },
+  {
+    "locality_id": 187,
+    "locality_name": "KisimaMajongoo"
+  },
+  {
+    "locality_id": 188,
+    "locality_name": "Vikokotoni"
+  },
+  {
+    "locality_id": 189,
+    "locality_name": "Jangombe"
+  },
+  {
+    "locality_id": 190,
+    "locality_name": "Sogea"
+  },
+  {
+    "locality_id": 191,
+    "locality_name": "Muungano"
+  },
+  {
+    "locality_id": 192,
+    "locality_name": "Mkele"
+  },
+  {
+    "locality_id": 193,
+    "locality_name": "Rahaleo"
+  },
+  {
+    "locality_id": 194,
+    "locality_name": "Mwembeshauri"
+  },
+  {
+    "locality_id": 195,
+    "locality_name": "Muembetanga"
+  },
+  {
+    "locality_id": 196,
+    "locality_name": "Amani"
+  },
+  {
+    "locality_id": 197,
+    "locality_name": "Sokoni"
+  },
+  {
+    "locality_id": 198,
+    "locality_name": "Mikarafuuni"
+  },
+  {
+    "locality_id": 199,
+    "locality_name": "Chunga"
+  },
+  {
+    "locality_id": 200,
+    "locality_name": "Pangawe"
+  },
+  {
+    "locality_id": 201,
+    "locality_name": "Kinuni"
+  },
+  {
+    "locality_id": 202,
+    "locality_name": "Mnarani"
+  },
+  {
+    "locality_id": 203,
+    "locality_name": "MuembeMajogoo"
+  },
+  {
+    "locality_id": 204,
+    "locality_name": "Mwanakwerekwe"
+  },
+  {
+    "locality_id": 205,
+    "locality_name": "Jitimai"
+  },
+  {
+    "locality_id": 206,
+    "locality_name": "Shakani"
+  },
+  {
+    "locality_id": 207,
+    "locality_name": "Chukwani"
+  },
+  {
+    "locality_id": 208,
+    "locality_name": "Tomondo"
+  },
+  {
+    "locality_id": 209,
+    "locality_name": "Kisauni"
+  },
+  {
+    "locality_id": 210,
+    "locality_name": "Kwa Mchina"
+  },
+  {
+    "locality_id": 211,
+    "locality_name": "Michungwani"
+  },
+  {
+    "locality_id": 212,
+    "locality_name": "Mombasa"
+  },
+  {
+    "locality_id": 213,
+    "locality_name": "Mbweni"
+  },
+  {
+    "locality_id": 214,
+    "locality_name": "Kiembesamaki"
+  },
+  {
+    "locality_id": 215,
+    "locality_name": "Melinne"
+  },
+  {
+    "locality_id": 216,
+    "locality_name": "Taveta"
+  },
+  {
+    "locality_id": 217,
+    "locality_name": "Magogoni"
+  },
+  {
+    "locality_id": 218,
+    "locality_name": "Mambosasa"
+  },
+  {
+    "locality_id": 219,
+    "locality_name": "Fuoni Migombani"
+  },
+  {
+    "locality_id": 220,
+    "locality_name": "Fuoni kipungani"
+  },
+  {
+    "locality_id": 221,
+    "locality_name": "Kibondeni"
+  },
+  {
+    "locality_id": 222,
+    "locality_name": "Bweleo"
+  },
+  {
+    "locality_id": 223,
+    "locality_name": "Uwandani"
+  },
+  {
+    "locality_id": 224,
+    "locality_name": "Maungani"
+  },
+  {
+    "locality_id": 225,
+    "locality_name": "Kombeni"
+  },
+  {
+    "locality_id": 226,
+    "locality_name": "Kijitoupele"
+  },
+  {
+    "locality_id": 227,
+    "locality_name": "Nyamanzi"
+  },
+  {
+    "locality_id": 228,
+    "locality_name": "Dimani"
+  },
+  {
+    "locality_id": 229,
+    "locality_name": "Fumba"
+  },
+  {
+    "locality_id": 230,
+    "locality_name": "Uzi"
+  },
+  {
+    "locality_id": 231,
+    "locality_name": "Kihinani"
+  },
+  {
+    "locality_id": 232,
+    "locality_name": "Kijichi"
+  },
+  {
+    "locality_id": 233,
+    "locality_name": "Kizimbani"
+  },
+  {
+    "locality_id": 234,
+    "locality_name": "Mbuzini"
+  },
+  {
+    "locality_id": 235,
+    "locality_name": "Chemchem"
+  },
+  {
+    "locality_id": 236,
+    "locality_name": "Mfenesini"
+  },
+  {
+    "locality_id": 237,
+    "locality_name": "Muembemchomeke"
+  },
+  {
+    "locality_id": 238,
+    "locality_name": "Kibweni"
+  },
+  {
+    "locality_id": 239,
+    "locality_name": "Kikaangoni"
+  },
+  {
+    "locality_id": 240,
+    "locality_name": "Kianga"
+  },
+  {
+    "locality_id": 241,
+    "locality_name": "Kama"
+  },
+  {
+    "locality_id": 242,
+    "locality_name": "Hawaii"
+  },
+  {
+    "locality_id": 243,
+    "locality_name": "Dole"
+  },
+  {
+    "locality_id": 244,
+    "locality_name": "Bububu"
+  },
+  {
+    "locality_id": 245,
+    "locality_name": "Chuini"
+  },
+  {
+    "locality_id": 246,
+    "locality_name": "Bumbwisudi"
+  },
+  {
+    "locality_id": 247,
+    "locality_name": "Michikichini"
+  },
+  {
+    "locality_id": 248,
+    "locality_name": "Mtoni Kidatu"
+  },
+  {
+    "locality_id": 249,
+    "locality_name": "Tazari"
+  },
+  {
+    "locality_id": 250,
+    "locality_name": "Kilindi"
+  },
+  {
+    "locality_id": 251,
+    "locality_name": "Mtofaani"
+  },
+  {
+    "locality_id": 252,
+    "locality_name": "Mtoni"
+  },
+  {
+    "locality_id": 253,
+    "locality_name": "Welezo"
+  },
+  {
+    "locality_id": 254,
+    "locality_name": "Sharifumsa"
+  },
+  {
+    "locality_id": 255,
+    "locality_name": "Uholanzi"
+  },
+  {
+    "locality_id": 256,
+    "locality_name": "Masingini"
+  },
+  {
+    "locality_id": 257,
+    "locality_name": "Mwera"
+  },
+  {
+    "locality_id": 258,
+    "locality_name": "Mtoni chemchem"
+  },
+  {
+    "locality_id": 259,
+    "locality_name": "Munduli"
+  },
+  {
+    "locality_id": 260,
+    "locality_name": "Mtopepo"
+  },
+  {
+    "locality_id": 261,
+    "locality_name": "Mwakaje"
+  },
+  {
+    "locality_id": 262,
+    "locality_name": "Mwanyanya"
+  },
+  {
+    "locality_id": 263,
+    "locality_name": "Kwa goa"
+  },
+  {
+    "locality_id": 264,
+    "locality_name": "Tumbe Magharibi"
+  },
+  {
+    "locality_id": 265,
+    "locality_name": "Kijogoo"
+  },
+  {
+    "locality_id": 266,
+    "locality_name": "Konde"
+  },
+  {
+    "locality_id": 267,
+    "locality_name": "Mjini wingwi"
+  },
+  {
+    "locality_id": 268,
+    "locality_name": "shumba viamboni"
+  },
+  {
+    "locality_id": 269,
+    "locality_name": "Tumbe Mashariki"
+  },
+  {
+    "locality_id": 270,
+    "locality_name": "Shumba Mjini"
+  },
+  {
+    "locality_id": 271,
+    "locality_name": "Wingwi Njuguni"
+  },
+  {
+    "locality_id": 272,
+    "locality_name": "Wingwi Mapofu"
+  },
+  {
+    "locality_id": 273,
+    "locality_name": "Makangale"
+  },
+  {
+    "locality_id": 274,
+    "locality_name": "Msuka Magharibi"
+  },
+  {
+    "locality_id": 275,
+    "locality_name": "Mlindo"
+  },
+  {
+    "locality_id": 276,
+    "locality_name": "Micheweni"
+  },
+  {
+    "locality_id": 277,
+    "locality_name": "Majenzi"
+  },
+  {
+    "locality_id": 278,
+    "locality_name": "Kipangani"
+  },
+  {
+    "locality_id": 279,
+    "locality_name": "Kinowe"
+  },
+  {
+    "locality_id": 280,
+    "locality_name": "Chimba"
+  },
+  {
+    "locality_id": 281,
+    "locality_name": "Wingwi Mtemani"
+  },
+  {
+    "locality_id": 282,
+    "locality_name": "Kipange"
+  },
+  {
+    "locality_id": 283,
+    "locality_name": "Sizini"
+  },
+  {
+    "locality_id": 284,
+    "locality_name": "Chamboni"
+  },
+  {
+    "locality_id": 285,
+    "locality_name": "Shanake"
+  },
+  {
+    "locality_id": 286,
+    "locality_name": "Tondooni"
+  },
+  {
+    "locality_id": 287,
+    "locality_name": "Kiuyu Mbuyuni"
+  },
+  {
+    "locality_id": 288,
+    "locality_name": "Kifundi"
+  },
+  {
+    "locality_id": 289,
+    "locality_name": "Msuka Mashariki"
+  },
+  {
+    "locality_id": 290,
+    "locality_name": "Kinowejiso"
+  },
+  {
+    "locality_id": 291,
+    "locality_name": "Maziwa Ngombe"
+  },
+  {
+    "locality_id": 292,
+    "locality_name": "Mihogoni"
+  },
+  {
+    "locality_id": 293,
+    "locality_name": "Maziwani"
+  },
+  {
+    "locality_id": 294,
+    "locality_name": "Mpambani"
+  },
+  {
+    "locality_id": 295,
+    "locality_name": "Mjini Ole"
+  },
+  {
+    "locality_id": 296,
+    "locality_name": "Kiuyu Kigongoni"
+  },
+  {
+    "locality_id": 297,
+    "locality_name": "Ukunjwi"
+  },
+  {
+    "locality_id": 298,
+    "locality_name": "Mzambaru takau"
+  },
+  {
+    "locality_id": 299,
+    "locality_name": "Junguni"
+  },
+  {
+    "locality_id": 300,
+    "locality_name": "Chwale"
+  },
+  {
+    "locality_id": 301,
+    "locality_name": "Kinyikani"
+  },
+  {
+    "locality_id": 302,
+    "locality_name": "Selem"
+  },
+  {
+    "locality_id": 303,
+    "locality_name": "Mtambwe Kusini"
+  },
+  {
+    "locality_id": 304,
+    "locality_name": "Utaani"
+  },
+  {
+    "locality_id": 305,
+    "locality_name": "Kisiwani"
+  },
+  {
+    "locality_id": 306,
+    "locality_name": "Bopwe"
+  },
+  {
+    "locality_id": 307,
+    "locality_name": "Shengejuu"
+  },
+  {
+    "locality_id": 308,
+    "locality_name": "Pandani"
+  },
+  {
+    "locality_id": 309,
+    "locality_name": "Pembeni"
+  },
+  {
+    "locality_id": 310,
+    "locality_name": "Kizimbani"
+  },
+  {
+    "locality_id": 311,
+    "locality_name": "Limbani"
+  },
+  {
+    "locality_id": 312,
+    "locality_name": "Gando"
+  },
+  {
+    "locality_id": 313,
+    "locality_name": "Mjananza"
+  },
+  {
+    "locality_id": 314,
+    "locality_name": "Mtemani"
+  },
+  {
+    "locality_id": 315,
+    "locality_name": "Finya"
+  },
+  {
+    "locality_id": 316,
+    "locality_name": "Kinyasini"
+  },
+  {
+    "locality_id": 317,
+    "locality_name": "Kiuyu minungwini"
+  },
+  {
+    "locality_id": 318,
+    "locality_name": "Kangagani"
+  },
+  {
+    "locality_id": 319,
+    "locality_name": "Kojani"
+  },
+  {
+    "locality_id": 320,
+    "locality_name": "Kambini"
+  },
+  {
+    "locality_id": 321,
+    "locality_name": "Mchanga mdogo"
+  },
+  {
+    "locality_id": 322,
+    "locality_name": "Fundo"
+  },
+  {
+    "locality_id": 323,
+    "locality_name": "Mtambwe Kaskazini"
+  },
+  {
+    "locality_id": 324,
+    "locality_name": "Kipangani"
+  },
+  {
+    "locality_id": 325,
+    "locality_name": "Piki"
+  },
+  {
+    "locality_id": 326,
+    "locality_name": "Mlindo"
+  },
+  {
+    "locality_id": 327,
+    "locality_name": "Mlindo"
+  },
+  {
+    "locality_id": 328,
+    "locality_name": "Jadida"
+  },
+  {
+    "locality_id": 329,
+    "locality_name": "Mgogoni"
+  },
+  {
+    "locality_id": 330,
+    "locality_name": "Kiungoni"
+  },
+  {
+    "locality_id": 331,
+    "locality_name": "Michenzani"
+  },
+  {
+    "locality_id": 332,
+    "locality_name": "Chokocho"
+  },
+  {
+    "locality_id": 333,
+    "locality_name": "Kisiwa Panza"
+  },
+  {
+    "locality_id": 334,
+    "locality_name": "Ng'ombeni"
+  },
+  {
+    "locality_id": 335,
+    "locality_name": "Kangani"
+  },
+  {
+    "locality_id": 336,
+    "locality_name": "Kengeja"
+  },
+  {
+    "locality_id": 337,
+    "locality_name": "Muambe"
+  },
+  {
+    "locality_id": 338,
+    "locality_name": "Kiwani"
+  },
+  {
+    "locality_id": 339,
+    "locality_name": "Mkanyageni"
+  },
+  {
+    "locality_id": 340,
+    "locality_name": "Shidi"
+  },
+  {
+    "locality_id": 341,
+    "locality_name": "Makoongwe"
+  },
+  {
+    "locality_id": 342,
+    "locality_name": "Makombeni"
+  },
+  {
+    "locality_id": 343,
+    "locality_name": "Tironi"
+  },
+  {
+    "locality_id": 344,
+    "locality_name": "Dodo"
+  },
+  {
+    "locality_id": 345,
+    "locality_name": "Chole"
+  },
+  {
+    "locality_id": 346,
+    "locality_name": "Mchakwe"
+  },
+  {
+    "locality_id": 347,
+    "locality_name": "Kuukuu"
+  },
+  {
+    "locality_id": 348,
+    "locality_name": "Mtambile"
+  },
+  {
+    "locality_id": 349,
+    "locality_name": "Mzingani"
+  },
+  {
+    "locality_id": 350,
+    "locality_name": "Ngwachani"
+  },
+  {
+    "locality_id": 351,
+    "locality_name": "Kendwa"
+  },
+  {
+    "locality_id": 352,
+    "locality_name": "Minazini"
+  },
+  {
+    "locality_id": 353,
+    "locality_name": "Mgagadu"
+  },
+  {
+    "locality_id": 354,
+    "locality_name": "Mkungu"
+  },
+  {
+    "locality_id": 355,
+    "locality_name": "Changaweni"
+  },
+  {
+    "locality_id": 356,
+    "locality_name": "Jombwe"
+  },
+  {
+    "locality_id": 357,
+    "locality_name": "Shamiani"
+  },
+  {
+    "locality_id": 358,
+    "locality_name": "Mjimbini"
+  },
+  {
+    "locality_id": 359,
+    "locality_name": "Stahabu"
+  },
+  {
+    "locality_id": 360,
+    "locality_name": "Wambaa"
+  },
+  {
+    "locality_id": 361,
+    "locality_name": "Chambani"
+  },
+  {
+    "locality_id": 362,
+    "locality_name": "Mbuguani"
+  },
+  {
+    "locality_id": 363,
+    "locality_name": "Uweleni"
+  },
+  {
+    "locality_id": 364,
+    "locality_name": "Mtangani"
+  },
+  {
+    "locality_id": 365,
+    "locality_name": "Ukutini"
+  },
+  {
+    "locality_id": 366,
+    "locality_name": "Chumbageni"
+  },
+  {
+    "locality_id": 367,
+    "locality_name": "Mbuyuni"
+  },
+  {
+    "locality_id": 368,
+    "locality_name": "Vitongoji"
+  },
+  {
+    "locality_id": 369,
+    "locality_name": "Ng'ambwa"
+  },
+  {
+    "locality_id": 370,
+    "locality_name": "Shungi"
+  },
+  {
+    "locality_id": 371,
+    "locality_name": "Mgelema"
+  },
+  {
+    "locality_id": 372,
+    "locality_name": "Kilindi"
+  },
+  {
+    "locality_id": 373,
+    "locality_name": "Ole"
+  },
+  {
+    "locality_id": 374,
+    "locality_name": "Ndagoni"
+  },
+  {
+    "locality_id": 375,
+    "locality_name": "Ziwani"
+  },
+  {
+    "locality_id": 376,
+    "locality_name": "Gombani"
+  },
+  {
+    "locality_id": 377,
+    "locality_name": "Pujini"
+  },
+  {
+    "locality_id": 378,
+    "locality_name": "Wawi"
+  },
+  {
+    "locality_id": 379,
+    "locality_name": "Chanjaani"
+  },
+  {
+    "locality_id": 380,
+    "locality_name": "Mjini Ole"
+  },
+  {
+    "locality_id": 381,
+    "locality_name": "Chinga"
+  },
+  {
+    "locality_id": 382,
+    "locality_name": "Tibirinzi"
+  },
+  {
+    "locality_id": 383,
+    "locality_name": "Mfikiwa"
+  },
+  {
+    "locality_id": 384,
+    "locality_name": "Mkoroshoni"
+  },
+  {
+    "locality_id": 385,
+    "locality_name": "Misingini"
+  },
+  {
+    "locality_id": 386,
+    "locality_name": "Kichungwani"
+  },
+  {
+    "locality_id": 387,
+    "locality_name": "Kibokoni"
+  },
+  {
+    "locality_id": 389,
+    "locality_name": "Mbuzini"
+  },
+  {
+    "locality_id": 390,
+    "locality_name": "Dodo"
+  },
+  {
+    "locality_id": 391,
+    "locality_name": "Mgogoni"
+  },
+  {
+    "locality_id": 392,
+    "locality_name": "Madungu"
+  },
+  {
+    "locality_id": 393,
+    "locality_name": "Chachani"
+  },
+  {
+    "locality_id": 394,
+    "locality_name": "Wara"
+  },
+  {
+    "locality_id": 395,
+    "locality_name": "Mvumoni"
+  },
+  {
+    "locality_id": 396,
+    "locality_name": "Mchanga Mrima"
+  },
+  {
+    "locality_id": 397,
+    "locality_name": "Matale"
+  },
+  {
+    "locality_id": 398,
+    "locality_name": "Wesha"
+  },
+  {
+    "locality_id": 399,
+    "locality_name": "Uwandani"
+  },
+  {
+    "locality_id": 400,
+    "locality_name": "Kwale"
+  },
+  {
+    "locality_id": 388,
+    "locality_name": "Michungwani"
+  },
+  {
+    "locality_id": 401,
+    "locality_name": "Misufini"
+  }
+]
