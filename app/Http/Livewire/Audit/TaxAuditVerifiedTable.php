@@ -15,19 +15,33 @@ class TaxAuditVerifiedTable extends DataTableComponent
 {
 
     use CustomAlert;
+    public $taxRegion;
+    public $orderBy;
 
     public $model = TaxAudit::class;
+
+    public function mount($taxRegion)
+    {
+        // if (!Gate::allows('tax-returns-vetting-view')) {
+        //     abort(403);
+        // }
+
+        $this->taxRegion = $taxRegion;
+    }
 
     public function builder(): Builder
     {
         return TaxAudit::query()->with('business', 'location', 'taxType', 'taxReturn')
-            ->where('tax_audits.status', TaxAuditStatus::APPROVED);
+            ->where('tax_audits.status', TaxAuditStatus::APPROVED)
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->where('location', $this->taxRegion); //this is filter by department
+            });
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['created_by_type','created_by_id']);
+        $this->setAdditionalSelects(['created_by_type', 'created_by_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',

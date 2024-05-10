@@ -7,6 +7,7 @@ use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\BusinessDeregistration;
 use App\Models\Investigation\TaxInvestigation;
+use App\Models\Region;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Role;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -40,10 +41,14 @@ class TaxAuditApprovalProcessing extends Component
     public $teamLeader;
     public $teamMember;
     public $auditingDate;
+    public $notificationLetter;
     public $preliminaryReport;
     public $workingReport;
+    public $audit;
+    public $entryMeeting;
     public $finalReport;
     public $exitMinutes;
+    public $auditDocuments;
     public $periodTo;
     public $periodFrom;
     public $intension;
@@ -55,13 +60,20 @@ class TaxAuditApprovalProcessing extends Component
     public $assessmentReport;
 
     public $hasAssessment;
+    public $forwardToCG = false;
 
     public $taxTypes;
     public $taxType;
+    public $taxAssessments;
+    public $grandTotal;
 
     public $staffs = [];
     public $subRoles = [];
 
+    public $principalAmounts = [];
+    public $interestAmounts = [];
+    public $penaltyAmounts = [];
+    public $taxTypeIds = [];
     public $task;
 
 
@@ -75,33 +87,77 @@ class TaxAuditApprovalProcessing extends Component
         $this->modelId   = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
 
+        $assessment = $this->subject->assessment;
+        if ($assessment) {
+            $this->hasAssessment = "1";
+
+            $this->taxAssessments = TaxAssessment::where('assessment_id', $this->subject->id)
+                ->where('assessment_type', get_class($this->subject))
+                ->get();
+        } else {
+            $this->hasAssessment = "0";
+        }
+
+
         $this->task = $this->subject->pinstancesActive;
-        if(!isNullOrEmpty($this->subject->period_from)){
+        if (!isNullOrEmpty($this->subject->period_from)) {
             $this->periodFrom = Carbon::create($this->subject->period_from)->format('Y-m-d');
         }
-        if(!isNullOrEmpty($this->subject->period_to)){
+        if (!isNullOrEmpty($this->subject->period_to)) {
             $this->periodTo = Carbon::create($this->subject->period_to)->format('Y-m-d');
         }
         $this->intension = $this->subject->intension;
         $this->scope = $this->subject->scope;
-        if(!isNullOrEmpty($this->subject->auditing_date)){
+        if (!isNullOrEmpty($this->subject->auditing_date)) {
             $this->auditingDate = Carbon::create($this->subject->auditing_date)->format('Y-m-d');
         }
+
+        if ($this->checkTransition('audit_team_review')) {
+
+            $this->auditDocuments = DB::table('tax_audit_files')->where('tax_audit_id', $this->modelId)->get();
+        }
+        if ($this->checkTransition('prepare_final_report')) {
+            $this->audit = TaxAudit::find($this->modelId);
+
+            // Initialize properties with empty arrays for each tax type
+            $taxTypes = $this->audit->taxAuditTaxTypes();
+
+            foreach ($taxTypes as $taxType) {
+                // Replace spaces with underscores (_) in tax type names
+                $taxTypeKey = str_replace(' ', '_', $taxType['name']);
+                $this->principalAmounts[$taxTypeKey] = null;
+                $this->interestAmounts[$taxTypeKey] = null;
+                $this->penaltyAmounts[$taxTypeKey] = null;
+                $this->taxTypeIds[$taxTypeKey] = $taxType['id'];
+            }
+        }
+
+        // if ($this->checkTransition('final_report_review')) {
+        $taxRegion = $this->subject->location->taxRegion->location;
+
+        // Initialize grand total
+        $grandTotal = 0;
+
+        // Calculate grand total
+        foreach ($this->taxAssessments as $taxAssessment) {
+            $grandTotal += $taxAssessment->total_amount ?? 0;
+
+            dd($assessment->taxtype->where('code', 'interest')->firstOrFail()->id);
+        }
+        // Check if tax liability exceeds the threshold for forwarding to Commissioner General
+        if ($taxRegion == Region::LTD && $grandTotal > 500000000) {
+            $this->forwardToCG = true;
+        } elseif ($taxRegion == Region::DTD && $grandTotal > 100000000) {
+            $this->forwardToCG = true;
+        }
+        // }
 
         $this->exitMinutes = $this->subject->exit_minutes;
         $this->finalReport = $this->subject->final_report;
         $this->workingReport = $this->subject->working_report;
         $this->preliminaryReport = $this->subject->preliminary_report;
-
-        $assessment = $this->subject->assessment;
-        if ($assessment) {
-            $this->hasAssessment = "1";
-            $this->principalAmount = $assessment->principal_amount;
-            $this->interestAmount = $assessment->interest_amount;
-            $this->penaltyAmount = $assessment->penalty_amount;
-        } else {
-            $this->hasAssessment = "0";
-        }
+        $this->entryMeeting = $this->subject->entry_minutes;
+        $this->notificationLetter = $this->subject->notification_letter;
 
         if ($this->task != null) {
             $operators = json_decode($this->task->operators);
@@ -113,8 +169,8 @@ class TaxAuditApprovalProcessing extends Component
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
 
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
+            // $this->staffs = User::get();
         }
-
     }
 
 
@@ -145,11 +201,26 @@ class TaxAuditApprovalProcessing extends Component
             );
         }
 
+        if ($this->checkTransition('send_notification_letter')) {
+            $this->validate(
+                [
+                    'notificationLetter' => 'required|max:1024',
+                ]
+            );
+
+            if ($this->notificationLetter != $this->subject->notification_letter) {
+                $this->validate([
+                    'notificationLetter' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
+                ]);
+            }
+        }
+
         if ($this->checkTransition('conduct_audit')) {
             $this->validate(
                 [
                     'preliminaryReport' => 'required|max:1024',
                     'workingReport' => 'required|max:1024',
+                    'entryMeeting' => 'required|max:1024',
                 ]
             );
 
@@ -164,18 +235,32 @@ class TaxAuditApprovalProcessing extends Component
                     'workingReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
                 ]);
             }
+            if ($this->entryMeeting != $this->subject->entry_minutes) {
+                $this->validate([
+                    'entryMeeting' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
+                ]);
+            }
         }
+
         if ($this->checkTransition('prepare_final_report')) {
-            $this->validate(
-                [
-                    'finalReport' => 'required|max:1024',
-                    'exitMinutes' => 'required',
-                    'hasAssessment' => ['required', 'boolean'],
-                    'principalAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,?:d*.d{1,2}|d+]*$/'],
-                    'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,?:d*.d{1,2}|d+]*$/'],
-                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,?:d*.d{1,2}|d+]*$/'],
-                ]
-            );
+            $this->validate([
+                'finalReport' => 'required|max:1024',
+                'exitMinutes' => 'required',
+                'hasAssessment' => ['required', 'boolean'],
+            ]);
+
+            // Dynamically add validation rules for each tax type
+            $taxTypes = explode(",", $this->audit->taxAuditTaxTypeNames());
+            $validationRules = [];
+            foreach ($taxTypes as $taxType) {
+                $taxTypeKey = str_replace(' ', '_', $taxType);
+                $validationRules["principalAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
+                $validationRules["interestAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
+                $validationRules["penaltyAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
+            }
+
+            $this->validate($validationRules);
+
 
             if ($this->exitMinutes != $this->subject->exit_minutes) {
                 $this->validate([
@@ -229,6 +314,30 @@ class TaxAuditApprovalProcessing extends Component
                 $operators = [intval($this->teamLeader), intval($this->teamMember)];
             }
 
+            if ($this->checkTransition('send_notification_letter')) {
+
+                $notificationLetter = $this->notificationLetter;
+                if ($this->notificationLetter != $this->subject->notification_letter) {
+                    $notificationLetter = $this->notificationLetter->store('audit', 'local');
+                }
+
+                $this->subject->notification_letter = $notificationLetter;
+                $this->subject->save();
+
+                //Send Email Notification to taxpayer 
+                event(new SendMail('notification-letter-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
+
+                //Send SMS Notification to taxpayer 
+                event(new SendSms('notification-letter-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
+            }
+
+            //* Update the auditing date if a new audit date (Extension) is available and save the changes.
+            if ($this->checkTransition('audit_team_review')) {
+                if ($this->subject->new_audit_date) {
+                    $this->subject->auditing_date = $this->subject->new_audit_date;
+                }
+                $this->subject->save();
+            }
 
             if ($this->checkTransition('conduct_audit')) {
 
@@ -242,8 +351,14 @@ class TaxAuditApprovalProcessing extends Component
                     $workingReport = $this->workingReport->store('audit', 'local');
                 }
 
+                $entryMeeting = $this->entryMeeting;
+                if ($this->entryMeeting != $this->subject->entry_minutes) {
+                    $entryMeeting = $this->entryMeeting->store('audit', 'local');
+                }
+
                 $this->subject->preliminary_report = $preliminaryReport;
                 $this->subject->working_report = $workingReport;
+                $this->subject->entry_minutes = $entryMeeting;
                 $this->subject->save();
             }
 
@@ -255,35 +370,45 @@ class TaxAuditApprovalProcessing extends Component
                 $assessment = $this->subject->assessment()->exists();
 
                 if ($this->hasAssessment == "1") {
-                    if ($assessment) {
-                        $this->subject->assessment()->update([
-                            'principal_amount' => str_replace(',', '', $this->principalAmount),
-                            'interest_amount' => str_replace(',', '', $this->interestAmount),
-                            'penalty_amount' => str_replace(',', '', $this->penaltyAmount),
-                            'total_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
-                            'outstanding_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
-                            'original_principal_amount' => str_replace(',', '', $this->principalAmount),
-                            'original_interest_amount' => str_replace(',', '', $this->interestAmount),
-                            'original_penalty_amount' => str_replace(',', '', $this->penaltyAmount),
-                            'original_total_amount' => str_replace(',', '', $this->principalAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->penaltyAmount)
-                        ]);
-                    } else {
-                        TaxAssessment::create([
-                            'location_id' => $this->subject->location_id,
-                            'business_id' => $this->subject->business_id,
-                            'tax_type_id' => $this->taxType->id,
-                            'assessment_id' => $this->subject->id,
-                            'assessment_type' => get_class($this->subject),
-                            'principal_amount' => str_replace(',', '', $this->principalAmount),
-                            'interest_amount' => str_replace(',', '', $this->interestAmount),
-                            'penalty_amount' => str_replace(',', '', $this->penaltyAmount),
-                            'total_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
-                            'outstanding_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
-                            'original_principal_amount' => str_replace(',', '', $this->principalAmount),
-                            'original_interest_amount' => str_replace(',', '', $this->interestAmount),
-                            'original_penalty_amount' => str_replace(',', '', $this->penaltyAmount),
-                            'original_total_amount' => str_replace(',', '', $this->principalAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->penaltyAmount)
-                        ]);
+                    foreach ($this->principalAmounts as $taxTypeKey => $principalAmount) {
+                        $interestAmount = str_replace(',', '', $this->interestAmounts[$taxTypeKey]);
+                        $penaltyAmount = str_replace(',', '', $this->penaltyAmounts[$taxTypeKey]);
+                        $principalAmount = str_replace(',', '', $principalAmount);
+                        $taxTypeId = $this->taxTypeIds[$taxTypeKey];
+
+                        $totalAmount = $penaltyAmount + $interestAmount + $principalAmount;
+
+
+                        if ($assessment) {
+                            $this->subject->assessment()->where('tax_type_id', $taxTypeId)->update([
+                                'principal_amount' => $principalAmount,
+                                'interest_amount' => $interestAmount,
+                                'penalty_amount' => $penaltyAmount,
+                                'total_amount' => $totalAmount,
+                                'outstanding_amount' => $totalAmount,
+                                'original_principal_amount' => $principalAmount,
+                                'original_interest_amount' => $interestAmount,
+                                'original_penalty_amount' => $penaltyAmount,
+                                'original_total_amount' => $totalAmount
+                            ]);
+                        } else {
+                            TaxAssessment::create([
+                                'location_id' => $this->subject->location_id,
+                                'business_id' => $this->subject->business_id,
+                                'tax_type_id' => $taxTypeId,
+                                'assessment_id' => $this->subject->id,
+                                'assessment_type' => get_class($this->subject),
+                                'principal_amount' => $principalAmount,
+                                'interest_amount' => $interestAmount,
+                                'penalty_amount' => $penaltyAmount,
+                                'total_amount' => $totalAmount,
+                                'outstanding_amount' => $totalAmount,
+                                'original_principal_amount' => $principalAmount,
+                                'original_interest_amount' => $interestAmount,
+                                'original_penalty_amount' => $penaltyAmount,
+                                'original_total_amount' => $totalAmount
+                            ]);
+                        }
                     }
                 } else {
                     if ($assessment) {
@@ -331,7 +456,6 @@ class TaxAuditApprovalProcessing extends Component
                             ));
                         }
                     }
-
                 }
             }
 
@@ -341,10 +465,13 @@ class TaxAuditApprovalProcessing extends Component
 
             if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
                 $this->generateControlNumber();
-                $this->subject->assessment->update([
-                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                    'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                ]);
+
+                foreach ($this->taxAssessments as $taxAssessment) {
+                    $taxAssessment->update([
+                        'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                        'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                    ]);
+                }
 
                 event(new SendMail('audit-approved-notification', $this->subject->business->taxpayer));
             }
@@ -354,61 +481,65 @@ class TaxAuditApprovalProcessing extends Component
             Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
-
     }
 
     public function generateControlNumber()
     {
-        $assessment = $this->subject->assessment;
-        $taxType = null;
-        if ($this->subject->tax_type_id == 0) {
-            if ($this->subject->assessment->assessment_type == TaxAudit::class ) {
-                $taxType = $this->subject->assessment->assessment_type::find($this->subject->assessment->assessment_id)->taxAuditTaxTypeNames();
-                if(is_null($taxType)){
-                    abort(404);
+        foreach ($this->taxAssessments as $taxAssessment) {
+
+            $assessment = $taxAssessment;
+            $taxType = null;
+            if ($this->subject->tax_type_id == 0) {
+                if ($assessment->assessment_type == TaxAudit::class) {
+                    $taxType = $assessment->assessment_type::find($assessment->assessment_id)->taxAuditTaxTypeNames();
+                    if (is_null($taxType)) {
+                        abort(404);
+                    }
+                } else if ($assessment->assessment_type == TaxInvestigation::class) {
+                    $taxType = $assessment->assessment_type::find($assessment->assessment_id)->taxInvestigationTaxTypeNames();
+                    if (is_null($taxType)) {
+                        abort(404);
+                    }
                 }
-            } else if ($this->subject->assessment->assessment_type == TaxInvestigation::class ) {
-                $taxType = $this->subject->assessment->assessment_type::find($this->subject->assessment->assessment_id)->taxInvestigationTaxTypeNames();
-                if(is_null($taxType)){
-                    abort(404);
-                }
+            } else {
+                $taxType = $this->subject->taxType;
             }
-        } else {
-            $taxType = $this->subject->taxType;
-        }
 
-        DB::beginTransaction();
-
-        try {
             $billitems = [
                 [
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($this->principalAmount, 'TZS'),
+                    'amount' => roundOff($assessment->principal_amount, 'TZS'),
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'audit')->firstOrFail()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'audit')->firstOrFail()->id
+                    'gfs_code' => $assessment->taxtype->where('code', 'audit')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $assessment->taxtype->where('code', 'audit')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($this->interestAmount, 'TZS'),
+                    'amount' => roundOff($assessment->interest_amount, 'TZS'),
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'audit')->firstOrFail()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->firstOrFail()->id
+                    'gfs_code' => $assessment->taxtype->where('code', 'audit')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $assessment->taxtype->where('code', 'interest')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($this->penaltyAmount, 'TZS'),
+                    'amount' => roundOff($assessment->penalty_amount, 'TZS'),
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'audit')->firstOrFail()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->id
+                    'gfs_code' => $assessment->taxtype->where('code', 'audit')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $assessment->taxtype->where('code', 'penalty')->firstOrFail()->id
                 ]
             ];
+        }
+
+
+        DB::beginTransaction();
+
+        try {
 
             $taxpayer = $this->subject->business->taxpayer;
 
@@ -424,13 +555,13 @@ class TaxAuditApprovalProcessing extends Component
             $exchange_rate = 1;
             $payer_id = $taxpayer->id;
             $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
-            $billableId = $assessment->id;
+            $billableId = $assessment->id; //TODO: need to be disscussed
             $billableType = get_class($assessment);
 
             $zmBill = ZmCore::createBill(
                 $billableId,
                 $billableType,
-                $this->taxTypes->where('code', 'audit')->first()->id,
+                $this->taxTypes->where('code', 'audit')->first()->id,  //TODO: need to be disscussed
                 $payer_id,
                 $payer_type,
                 $payer_name,
@@ -448,7 +579,7 @@ class TaxAuditApprovalProcessing extends Component
             DB::commit();
 
             if (config('app.env') != 'local') {
-               $this->generateGeneralControlNumber($zmBill);
+                $this->generateGeneralControlNumber($zmBill);
             } else {
                 // We are local
                 $assessment->payment_status = ReturnStatus::CN_GENERATED;
@@ -531,4 +662,3 @@ class TaxAuditApprovalProcessing extends Component
         return view('livewire.approval.tax_audit');
     }
 }
-

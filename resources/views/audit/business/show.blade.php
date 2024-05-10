@@ -36,16 +36,16 @@
                         <p class="my-1">{{ $location->taxpayer->email ?? '' }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Financial Year</span>
-                        <p class="my-1">{{ $location->financialYear->name ?? '' }}</p>
-                    </div>
-                    <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Business Name</span>
                         <p class="my-1">{{ $location->business->name }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Business Location</span>
                         <p class="my-1">{{ $location->branch->name ?? 'Head Quarter' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Financial Year</span>
+                        <p class="my-1">{{ $location->financialYear->name ?? '' }}</p>
                     </div>
                 </div>
             </div>

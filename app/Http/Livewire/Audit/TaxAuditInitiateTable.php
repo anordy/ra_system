@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Audit;
 
 use App\Enum\TaxAuditStatus;
+use App\Models\Region;
 use App\Models\TaxAudit\TaxAudit;
 use App\Traits\WithSearch;
 use App\Traits\WorkflowProcesssingTrait;
@@ -10,22 +11,37 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxAuditInitiateTable extends DataTableComponent
 {
-
+    public $taxRegion;
+    public $orderBy;
 
     use CustomAlert, WorkflowProcesssingTrait;
 
     public $model = TaxAudit::class;
 
+    public function mount($taxRegion)
+    {
+        // if (!Gate::allows('tax-returns-vetting-view')) {
+        //     abort(403);
+        // }
+
+        $this->taxRegion = $taxRegion;
+    }
+
+
     public function builder(): Builder
     {
         return TaxAudit::query()
             ->with('business', 'location', 'taxType', 'createdBy')
-            ->where('tax_audits.status', TaxAuditStatus::DRAFT);
+            ->where('tax_audits.status', TaxAuditStatus::DRAFT)
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->where('location', $this->taxRegion); //this is filter by department
+            });
     }
 
     public function configure(): void

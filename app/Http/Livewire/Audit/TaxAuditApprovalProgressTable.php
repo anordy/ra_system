@@ -13,8 +13,19 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class TaxAuditApprovalProgressTable extends DataTableComponent
 {
     use CustomAlert;
+    public $taxRegion;
+    public $orderBy;
 
     public $model = WorkflowTask::class;
+
+    public function mount($taxRegion = null)
+    {
+        // if (!Gate::allows('tax-returns-vetting-view')) {
+        //     abort(403);
+        // }
+
+        $this->taxRegion = $taxRegion;
+    }
 
     public function builder(): Builder
     {

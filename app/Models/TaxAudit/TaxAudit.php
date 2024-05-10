@@ -53,7 +53,8 @@ class TaxAudit extends Model implements Auditable
         return $this->hasMany(TaxAuditOfficer::class, 'audit_id', 'id');
     }
 
-    public function taxAuditLocations(){
+    public function taxAuditLocations()
+    {
         return $this->hasMany(TaxAuditLocation::class);
     }
 
@@ -62,36 +63,49 @@ class TaxAudit extends Model implements Auditable
         return $this->hasManyThrough(BusinessLocation::class, TaxAuditLocation::class, 'tax_audit_id', 'id', 'id', 'business_location_id');
     }
 
-    public function taxAuditLocationNames(){
-        return $this->businessLocations->map(fn($location) => $location->name . '('. $location->zin .')')->implode(',', 'name');
+    public function taxAuditLocationNames()
+    {
+        return $this->businessLocations->map(fn ($location) => $location->name . '(' . $location->zin . ')')->implode(',', 'name');
     }
 
-    public function taxAuditTaxTypes(){
-        return $this->hasMany(TaxAuditTaxType::class);
-    }
+    // public function taxAuditTaxTypes()
+    // {
+    //     return $this->hasMany(TaxAuditTaxType::class);
+    // }
 
     public function taxTypes()
     {
         return $this->hasManyThrough(TaxType::class, TaxAuditTaxType::class, 'tax_audit_id', 'id', 'id', 'business_tax_type_id');
     }
 
+    public function taxAuditTaxTypes()
+    {
+        return $this->taxTypes->map(function ($type) {
+            return [
+                'id' => $type->id,
+                'name' => $type->name
+            ];
+        });
+    }
+
 
     public function taxAuditTaxTypeNames()
     {
-        return $this->taxTypes->map(fn($type) => $type->name)->implode(',', 'name');
+        return $this->taxTypes->map(fn ($type) => $type->name)->implode(',', 'name');
     }
 
-    public function periodFrom(){
+    public function periodFrom()
+    {
         return !isNullOrEmpty($this->period_from) ? Carbon::create($this->period_from)->format('d-m-Y') : null;
     }
 
-    public function periodTo(){
+    public function periodTo()
+    {
         return !isNullOrEmpty($this->period_to) ? Carbon::create($this->period_to)->format('d-m-Y') : null;
     }
 
-    public function auditingDate(){
+    public function auditingDate()
+    {
         return !isNullOrEmpty($this->auditing_date) ? Carbon::create($this->auditing_date)->format('d-m-Y') : null;
     }
-    
-    
 }

@@ -34,6 +34,7 @@ use App\Jobs\Extension\SendExtensionApprovedMail;
 use App\Jobs\Extension\SendExtensionRejectedMail;
 use App\Jobs\Audit\AuditApprovedNotificationEmail;
 use App\Jobs\Audit\ExitPreliminaryEmailToTaxPayer;
+use App\Jobs\Audit\NotificationLetterToTaxPayer;
 use App\Jobs\Configuration\SendFinancialYearEmail;
 use App\Jobs\Configuration\SendFinancialMonthEmail;
 use App\Jobs\SendWithholdingAgentRegistrationEmail;
@@ -84,172 +85,172 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        if(config('app.env') == 'local'){
+        if (config('app.env') == 'local') {
             return true;
         }
-        if($event->service == 'otp'){
+        if ($event->service == 'otp') {
             $token = UserOtp::find($event->tokenId);
-            if(is_null($token)){
+            if (is_null($token)) {
                 abort(404);
             }
             SendOTPEmail::dispatch($event->extra['code'], $token->user->email, $token->user->fullname());
         } else if ($event->service == 'withholding_agent_registration') {
             /** TokenId is withholding agent history is */
             $withholding_agent = WaResponsiblePerson::find($event->tokenId);
-            if(is_null($withholding_agent)){
+            if (is_null($withholding_agent)) {
                 abort(404);
             }
             SendWithholdingAgentRegistrationEmail::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->withholdingAgent->institution_name, $withholding_agent->taxpayer->email);
-        } else if ($event->service === 'taxpayer-registration'){
+        } else if ($event->service === 'taxpayer-registration') {
             // Token ID is $taxpayerId
             $taxpayer = Taxpayer::find($event->tokenId);
-            if(is_null($taxpayer)){
+            if (is_null($taxpayer)) {
                 abort(404);
             }
             SendRegistrationMail::dispatch($taxpayer, $event->extra['code']);
-        }  else if ($event->service == 'kyc-registration') {
+        } else if ($event->service == 'kyc-registration') {
             $kyc = KYC::find($event->tokenId);
             SendKYCRegistrationEmail::dispatch($kyc);
-        }
-        else if ($event->service === 'business-registration-approved'){
+        } else if ($event->service === 'business-registration-approved') {
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
-            if(is_null($business)){
+            if (is_null($business)) {
                 abort(404);
             }
             SendBusinessApprovedMail::dispatch($business, $business->taxpayer);
-        } else if ($event->service === 'business-registration-correction'){
+        } else if ($event->service === 'business-registration-correction') {
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
-            if(is_null($business)){
+            if (is_null($business)) {
                 abort(404);
             }
             SendBusinessCorrectionMail::dispatch($business, $business->taxpayer, $event->extra['message']);
-        }
-        else if ($event->service == 'tax-agent-registration-approval') {
-	        $taxpayer = Taxpayer::find($event->tokenId);
-            if(is_null($taxpayer)){
+        } else if ($event->service == 'tax-agent-registration-approval') {
+            $taxpayer = Taxpayer::find($event->tokenId);
+            if (is_null($taxpayer)) {
                 abort(404);
             }
-			$fullname = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
-			$email = $taxpayer->email;
-	        $status = $taxpayer->taxagent->status;
+            $fullname = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+            $email = $taxpayer->email;
+            $status = $taxpayer->taxagent->status;
             $reference_no = $taxpayer->taxagent->reference_no;
-	        SendTaxAgentApprovalEmail::dispatch($fullname, $email, $status, $reference_no);
-        } else if ($event->service === 'business-closure-approval'){
+            SendTaxAgentApprovalEmail::dispatch($fullname, $email, $status, $reference_no);
+        } else if ($event->service === 'business-closure-approval') {
             // Token ID is $closure data
             $closure = $event->tokenId;
             SendBusinessClosureApprovedMail::dispatch($closure);
-        } else if ($event->service === 'business-closure-correction'){
+        } else if ($event->service === 'business-closure-correction') {
             // Token ID is $businessId
             $closure = $event->tokenId;
             SendBusinessClosureCorrectionMail::dispatch($closure);
-        } else if ($event->service === 'business-closure-rejected'){
+        } else if ($event->service === 'business-closure-rejected') {
             // Token ID is $businessId
             $closure = $event->tokenId;
             SendBusinessClosureRejectedMail::dispatch($closure);
-        } else if ($event->service === 'business-deregister-approval'){
+        } else if ($event->service === 'business-deregister-approval') {
             // Token ID is $deregister data
             $deregister = $event->tokenId;
             SendBusinessDeregisterApprovedMail::dispatch($deregister);
-        } else if ($event->service === 'business-deregister-correction'){
+        } else if ($event->service === 'business-deregister-correction') {
             // Token ID is $businessId
             $deregister = $event->tokenId;
             SendBusinessDeregisterCorrectionMail::dispatch($deregister);
-        } else if ($event->service === 'business-deregister-rejected'){
+        } else if ($event->service === 'business-deregister-rejected') {
             // Token ID is $businessId
             $deregister = $event->tokenId;
             SendBusinessDeregisterRejectedMail::dispatch($deregister);
-        } else if ($event->service === 'change-tax-type-approval'){
+        } else if ($event->service === 'change-tax-type-approval') {
             // Token ID is payload data having all notification details
             SendTaxTypeMail::dispatch($event->tokenId);
-        } else if ($event->service === 'change-business-information-approval'){
+        } else if ($event->service === 'change-business-information-approval') {
             // Token ID is payload data having all notification details
             SendBusinessUpdateApprovalMail::dispatch($event->tokenId);
-        } else if ($event->service === 'change-business-information-correction'){
+        } else if ($event->service === 'change-business-information-correction') {
             // Token ID is payload data having all notification details
             SendBusinessUpdateCorrectionMail::dispatch($event->tokenId);
-        } else if ($event->service === 'change-business-information-rejected'){
+        } else if ($event->service === 'change-business-information-rejected') {
             // Token ID is payload data having all notification details
             SendBusinessUpdateRejectedMail::dispatch($event->tokenId);
-        }else if ($event->service === 'change-business-consultant-information-approval'){
+        } else if ($event->service === 'change-business-consultant-information-approval') {
             // Token ID is payload data having all notification details
             SendBusinessUpdateApprovalConsultantMail::dispatch($event->tokenId);
-        }  else if ($event->service === 'branch-approval'){
+        } else if ($event->service === 'branch-approval') {
             // Token ID is payload data having all notification details
             SendBranchApprovedMail::dispatch($event->tokenId);
-        } else if ($event->service === 'branch-correction'){
+        } else if ($event->service === 'branch-correction') {
             // Token ID is payload data having all notification details
             SendBranchCorrectionMail::dispatch($event->tokenId);
-        } else if ($event->service === 'tax-clearance-approved'){
+        } else if ($event->service === 'tax-clearance-approved') {
             // Token ID is payload data having all notification details
             SendTaxClearanceApprovedEmail::dispatch($event->tokenId);
-        } else if ($event->service === 'tax-clearance-rejected'){
+        } else if ($event->service === 'tax-clearance-rejected') {
             // Token ID is payload data having all notification details
             SendTaxClearanceRejectedEmail::dispatch($event->tokenId);
-        } else if ($event->service === 'license-application-submitted'){
+        } else if ($event->service === 'license-application-submitted') {
             SendFreshApplicationSubmittedEmail::dispatch($event->tokenId);
-        }else if ($event->service === 'debt-waiver-approval'){
+        } else if ($event->service === 'debt-waiver-approval') {
             SendDebtWaiverApprovalMail::dispatch($event->tokenId);
-        }else if ($event->service === 'debt-waiver-rejected'){
+        } else if ($event->service === 'debt-waiver-rejected') {
             SendDebtWaiverRejectedMail::dispatch($event->tokenId);
-        }else if ($event->service === 'debt-balance'){
+        } else if ($event->service === 'debt-balance') {
             SendDebtBalanceMail::dispatch($event->tokenId);
-        } else if ($event->service === 'audit-notification-to-taxpayer'){
+        } else if ($event->service === 'audit-notification-to-taxpayer') {
             SendEmailToTaxPayer::dispatch($event->tokenId);
-        } else if ($event->service === 'send-report-to-taxpayer'){
+        } else if ($event->service === 'notification-letter-to-taxpayer') {
+            NotificationLetterToTaxPayer::dispatch($event->tokenId);
+        } else if ($event->service === 'send-report-to-taxpayer') {
             ExitPreliminaryEmailToTaxPayer::dispatch($event->tokenId);
-        } else if ($event->service === 'send-assessment-report-to-taxpayer'){
+        } else if ($event->service === 'send-assessment-report-to-taxpayer') {
             SendAssessmentReportEmailToTaxPayer::dispatch($event->tokenId);
-        } else if ($event->service === 'audit-approved-notification'){
+        } else if ($event->service === 'audit-approved-notification') {
             AuditApprovedNotificationEmail::dispatch($event->tokenId);
-        } else if ($event->service === 'kyc-reject'){
+        } else if ($event->service === 'kyc-reject') {
             SendKycRejectMail::dispatch($event->tokenId);
-        } else if ($event->service === 'financial-month'){
+        } else if ($event->service === 'financial-month') {
             SendFinancialMonthEmail::dispatch($event->tokenId);
-        } else if ($event->service === 'financial-year'){
+        } else if ($event->service === 'financial-year') {
             SendFinancialYearEmail::dispatch($event->tokenId);
-        } else if ($event->service === 'interest-rate'){
+        } else if ($event->service === 'interest-rate') {
             SendInterestRateEmail::dispatch($event->tokenId);
-        } else if ($event->service === 'penalty-rate'){
+        } else if ($event->service === 'penalty-rate') {
             SendPenaltyRateEmail::dispatch($event->tokenId);
-        } else if ($event->service === 'exchange-rate'){
+        } else if ($event->service === 'exchange-rate') {
             SendExchangeRateEmail::dispatch($event->tokenId);
-        } else if ($event->service === 'tax-claim-feedback'){
+        } else if ($event->service === 'tax-claim-feedback') {
             SendTaxClaimRequestFeedbackMAIL::dispatch($event->tokenId);
-        } else if ($event->service === 'dual-control-update-user-info-notification'){
+        } else if ($event->service === 'dual-control-update-user-info-notification') {
             UserInformationUpdateMAIL::dispatch($event->tokenId);
         } else if ($event->service === 'user_add') {
             SendRegistrationEmail::dispatch($event->tokenId);
         } else if ($event->service === 'taxpayer-amendment-notification') {
             TaxpayerAmendmentNotificationEmail::dispatch($event->tokenId);
-        } else if ($event->service === 'too-many-login-attempts'){
+        } else if ($event->service === 'too-many-login-attempts') {
             TooManyLoginAttempts::dispatch($event->tokenId);
-        } else if ($event->service === 'failed-verification'){
+        } else if ($event->service === 'failed-verification') {
             SendFailedVerificationMail::dispatch($event->tokenId);
-        } else if ($event->service === SendExtensionApprovedMail::SERVICE){
+        } else if ($event->service === SendExtensionApprovedMail::SERVICE) {
             SendExtensionApprovedMail::dispatch($event->tokenId);
-        } else if ($event->service === SendExtensionRejectedMail::SERVICE){
+        } else if ($event->service === SendExtensionRejectedMail::SERVICE) {
             SendExtensionRejectedMail::dispatch($event->tokenId);
-        } else if ($event->service === SendInstallmentApprovedMail::SERVICE){
+        } else if ($event->service === SendInstallmentApprovedMail::SERVICE) {
             SendInstallmentApprovedMail::dispatch($event->tokenId);
-        } else if ($event->service === SendInstallmentRejectedMail::SERVICE){
+        } else if ($event->service === SendInstallmentRejectedMail::SERVICE) {
             SendInstallmentRejectedMail::dispatch($event->tokenId);
-        } else if ($event->service === SendVettedReturnMail::SERVICE){
+        } else if ($event->service === SendVettedReturnMail::SERVICE) {
             SendVettedReturnMail::dispatch($event->tokenId);
-        } else if ($event->service === SendToCorrectionReturnMail::SERVICE){
+        } else if ($event->service === SendToCorrectionReturnMail::SERVICE) {
             SendToCorrectionReturnMail::dispatch($event->tokenId);
-        } else if ($event->service === SendBranchRegisteredMail::SERVICE){
+        } else if ($event->service === SendBranchRegisteredMail::SERVICE) {
             SendBranchRegisteredMail::dispatch($event->tokenId);
-        } else if ($event->service === SendReferenceNumberMail::SERVICE){
+        } else if ($event->service === SendReferenceNumberMail::SERVICE) {
             SendReferenceNumberMail::dispatch($event->tokenId);
-        } else if ($event->service === SendQuantityCertificateMail::SERVICE){
+        } else if ($event->service === SendQuantityCertificateMail::SERVICE) {
             SendQuantityCertificateMail::dispatch($event->tokenId);
-        } else if ($event->service === SendPropertyTaxApprovalMail::SERVICE){
+        } else if ($event->service === SendPropertyTaxApprovalMail::SERVICE) {
             SendPropertyTaxApprovalMail::dispatch($event->tokenId);
-        } else if ($event->service === SendPropertyTaxCorrectionMail::SERVICE){
+        } else if ($event->service === SendPropertyTaxCorrectionMail::SERVICE) {
             SendPropertyTaxCorrectionMail::dispatch($event->tokenId);
-        } else if ($event->service === SendPropertyTaxExtensionApprovalMail::SERVICE){
+        } else if ($event->service === SendPropertyTaxExtensionApprovalMail::SERVICE) {
             SendPropertyTaxExtensionApprovalMail::dispatch($event->tokenId);
         }
     }

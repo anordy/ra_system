@@ -17,34 +17,72 @@ class TaxAuditApprovalTable extends DataTableComponent
 {
     use CustomAlert;
 
+    public $taxRegion;
+    public $orderBy;
+
     public $model = WorkflowTask::class;
 
-    public function builder(): Builder
+    /**
+     * Mount the component.
+     *
+     * @param  mixed  $taxRegion The tax region for the component.
+     * @return void
+     */
+    public function mount($taxRegion = null)
     {
-        return WorkflowTask::with('pinstance', 'pinstance.location', 'pinstance.business', 'user')
-            ->where('pinstance_type', TaxAudit::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
-            ->whereHas('actors', function ($query) {
-                $query->where('user_id', auth()->id());
-            });
+        // if (!Gate::allows('tax-returns-vetting-view')) {
+        //     abort(403);
+        // }
+
+        $this->taxRegion = $taxRegion;
     }
 
+    /**
+     * Get the query builder for the table.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder The query builder for the table.
+     */
+    public function builder(): Builder
+    {
+        $data = WorkflowTask::with('pinstance', 'pinstance.location', 'pinstance.business', 'user')
+            ->where('pinstance_type', TaxAudit::class)
+            ->where('status', '!=', 'completed')
+            ->where('owner', 'staff');
+        //TODO: return to the original function
+        // ->whereHas('actors', function ($query) {
+        //     $query->where('user_id', auth()->id());
+        // });
+
+        return $data;
+    }
+
+    /**
+     * Configure the table component.
+     */
     public function configure(): void
     {
+        // Set the primary key for the table.
         $this->setPrimaryKey('id');
+
+        // Set additional selects for the table.
         $this->setAdditionalSelects('pinstance_type', 'user_type');
+
+        // Set the table wrapper attributes.
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
 
+        // Set attributes for table header columns.
         $this->setThAttributes(function (Column $column) {
+            // Check if the column title is 'Tax Types'.
             if ($column->getTitle() == 'Tax Types') {
+                // Return the style attribute for the column with a width of 20%.
                 return [
                     'style' => 'width: 20%;',
                 ];
             }
+            // Return an empty array if the column title is not 'Tax Types'.
             return [];
         });
     }

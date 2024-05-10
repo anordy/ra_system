@@ -12,6 +12,7 @@ use App\Jobs\SendCustomSMS;
 use App\Jobs\SendZanMalipoSMS;
 use App\Models\KYC;
 use App\Events\SendSms;
+use App\Jobs\Audit\SendNotificationLetterSmsToTaxPayer;
 use App\Models\UserOtp;
 use App\Jobs\SendOTPSMS;
 use App\Models\Business;
@@ -86,47 +87,45 @@ class SendSmsFired
         }
         if ($event->service == 'otp') {
             $token = UserOtp::find($event->tokenId);
-            if(is_null($token)){
+            if (is_null($token)) {
                 abort(404);
             }
             SendOTPSMS::dispatch($event->extra['code'], $token->user->fullname(), $token->user->phone);
         } else if ($event->service == 'withholding_agent_registration') {
             /** TokenId is withholding agent id */
             $withholding_agent = WaResponsiblePerson::find($event->tokenId);
-            if(is_null($withholding_agent)){
+            if (is_null($withholding_agent)) {
                 abort(404);
             }
             SendWithholdingAgentRegistrationSMS::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->withholdingAgent->institution_name, $withholding_agent->taxpayer->mobile);
         } else if ($event->service === 'taxpayer-registration') {
             // Token ID is $taxpayerId
             $taxpayer = Taxpayer::find($event->tokenId);
-            if(is_null($taxpayer)){
+            if (is_null($taxpayer)) {
                 abort(404);
             }
             SendRegistrationSMS::dispatch($taxpayer->mobile, $taxpayer->reference_no, $event->extra['code']);
-        }
-        else if ($event->service == 'kyc-registration'){
+        } else if ($event->service == 'kyc-registration') {
             // token is kyc id
             $kyc = KYC::find($event->tokenId);
             SendKYCRegistrationSMS::dispatch($kyc);
-        }
-        else if ($event->service === 'business-registration-approved') {
+        } else if ($event->service === 'business-registration-approved') {
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
-            if(is_null($business)){
+            if (is_null($business)) {
                 abort(404);
             }
             SendBusinessApprovedSMS::dispatch($business);
         } else if ($event->service === 'business-registration-correction') {
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
-            if(is_null($business)){
+            if (is_null($business)) {
                 abort(404);
             }
             SendBusinessCorrectionSMS::dispatch($business, $event->extra['message']);
         } else if ($event->service == 'tax-agent-registration-approval') {
             $taxpayer = Taxpayer::find($event->tokenId);
-            if(is_null($taxpayer)){
+            if (is_null($taxpayer)) {
                 abort(404);
             }
             SendTaxAgentApprovalSMS::dispatch($taxpayer);
@@ -185,6 +184,8 @@ class SendSmsFired
             SendDebtBalanceSMS::dispatch($event->tokenId);
         } else if ($event->service === 'audit-notification-to-taxpayer') {
             SendSmsToTaxPayer::dispatch($event->tokenId);
+        } else if ($event->service === 'notification-letter-to-taxpayer') {
+            SendNotificationLetterSmsToTaxPayer::dispatch($event->tokenId);
         } else if ($event->service === 'tax-clearance-feedback-to-taxpayer') {
             RequestFeedbackJob::dispatch($event->tokenId);
         } else if ($event->service === 'kyc-reject') {
@@ -207,35 +208,35 @@ class SendSmsFired
             UserSendRegistrationSMS::dispatch($event->tokenId);
         } else if ($event->service === 'taxpayer-amendment-notification') {
             TaxpayerAmendmentNotificationSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendExtensionApprovedSMS::SERVICE){
+        } else if ($event->service === SendExtensionApprovedSMS::SERVICE) {
             SendExtensionApprovedSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendExtensionRejectedSMS::SERVICE){
+        } else if ($event->service === SendExtensionRejectedSMS::SERVICE) {
             SendExtensionRejectedSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendInstallmentApprovedSMS::SERVICE){
+        } else if ($event->service === SendInstallmentApprovedSMS::SERVICE) {
             SendInstallmentApprovedSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendInstallmentRejectedSMS::SERVICE){
+        } else if ($event->service === SendInstallmentRejectedSMS::SERVICE) {
             SendInstallmentRejectedSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendVettedReturnSMS::SERVICE){
+        } else if ($event->service === SendVettedReturnSMS::SERVICE) {
             SendVettedReturnSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendToCorrectionReturnSMS::SERVICE){
+        } else if ($event->service === SendToCorrectionReturnSMS::SERVICE) {
             SendToCorrectionReturnSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendBranchRegisteredSMS::SERVICE){
+        } else if ($event->service === SendBranchRegisteredSMS::SERVICE) {
             SendBranchRegisteredSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendZanMalipoSMS::SERVICE){
+        } else if ($event->service === SendZanMalipoSMS::SERVICE) {
             SendZanMalipoSMS::dispatch($event->extra['mobile_no'], $event->extra['message']);
         } else if ($event->service === SendReferenceNumberMail::SERVICE) {
             SendReferenceNumberSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendQuantityCertificateSMS::SERVICE){
+        } else if ($event->service === SendQuantityCertificateSMS::SERVICE) {
             SendQuantityCertificateSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendPropertyTaxApprovalSMS::SERVICE){
+        } else if ($event->service === SendPropertyTaxApprovalSMS::SERVICE) {
             SendPropertyTaxApprovalSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendPropertyTaxPaymentReminderApprovalSMS::SERVICE){
+        } else if ($event->service === SendPropertyTaxPaymentReminderApprovalSMS::SERVICE) {
             SendPropertyTaxPaymentReminderApprovalSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendPropertyTaxCorrectionSMS::SERVICE){
+        } else if ($event->service === SendPropertyTaxCorrectionSMS::SERVICE) {
             SendPropertyTaxCorrectionSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendPaymentExtensionApprovalSMS::SERVICE){
+        } else if ($event->service === SendPaymentExtensionApprovalSMS::SERVICE) {
             SendPaymentExtensionApprovalSMS::dispatch($event->tokenId);
-        } else if ($event->service === SendCustomSMS::SERVICE){
+        } else if ($event->service === SendCustomSMS::SERVICE) {
             SendCustomSMS::dispatch($event->extra['phone'], $event->extra['message']);
         }
     }

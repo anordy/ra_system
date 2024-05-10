@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Audit;
 
 use App\Http\Controllers\Controller;
 use App\Models\BusinessLocation;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
 use Illuminate\Support\Facades\Gate;
 
@@ -15,7 +16,7 @@ class TaxAuditApprovalController extends Controller
         if (!Gate::allows('tax-auditing-approval-view')) {
             abort(403);
         }
-        
+
 
         return view('audit.approval.index');
     }
@@ -24,7 +25,7 @@ class TaxAuditApprovalController extends Controller
         if (!Gate::allows('tax-auditing-approval-view')) {
             abort(403);
         }
-        
+
 
         return view('audit.approval.businesses');
     }
@@ -36,26 +37,35 @@ class TaxAuditApprovalController extends Controller
 
         $location = BusinessLocation::whereHas('taxVerifications', function ($query) {
             $query->with('riskIndicators'); // Eager load risk indicators with tax verification
-          })->findOrFail(decrypt($id));
-          
-          $taxReturns = $location->taxVerifications->map(function ($verification) {
+        })->findOrFail(decrypt($id));
+
+        $taxReturns = $location->taxVerifications->map(function ($verification) {
             return $verification->taxReturn;
-          });
-          
-          return view('audit.business.show', compact('location', 'taxReturns'));
-        
+        });
+
+        return view('audit.business.show', compact('location', 'taxReturns'));
     }
 
     public function edit($id)
     {
 
         $audit = TaxAudit::findOrFail(decrypt($id));
-        return view('audit.approval.approval', compact('audit'));
+
+        $taxAssessments = TaxAssessment::where('assessment_id', $audit->id)
+            ->where('assessment_type', get_class($audit))->get();
+
+        // dd($taxAssessments);
+
+        return view('audit.approval.approval', compact('audit', 'taxAssessments'));
     }
 
     public function show($id)
     {
         $audit = TaxAudit::with('assessment', 'officers', 'business')->findOrFail(decrypt($id));
-        return view('audit.preview', compact('audit'));
+
+        $taxAssessments = TaxAssessment::where('assessment_id', $audit->id)
+            ->where('assessment_type', get_class($audit))->get();
+
+        return view('audit.preview', compact('audit', 'taxAssessment'));
     }
 }
