@@ -16,6 +16,7 @@
                     <th>Financial Month</th>
                     <th>Transaction Date</th>
                     <th>Transaction Type</th>
+                    <th>Debit No</th>
                     <th>Currency</th>
                     <th>Principal</th>
                     <th>Interest</th>
@@ -34,6 +35,7 @@
                         </td>
                         <td class="px-2">{{ $ledger->transaction_date ? \Carbon\Carbon::create($ledger->transaction_date)->format('d M Y') : 'N/A' }}</td>
                         <td class="px-2">{{ getSourceName($ledger->source_type) ?? 'N/A' }} - {{ $ledger->taxtype->name ?? 'N/A' }}</td>
+                        <td class="px-2">{{ $ledger->transaction_type === \App\Enum\TransactionType::DEBIT ? 'D'. str_pad($ledger->id, 6, "0", STR_PAD_LEFT) : '' }}</td>
                         <td class="px-2">{{ $ledger->currency  }}</td>
                         <td class="px-2">{{ number_format($ledger->principal_amount, 2)  }}</td>
                         <td class="px-2">{{ number_format($ledger->interest_amount, 2)  }}</td>

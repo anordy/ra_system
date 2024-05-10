@@ -15,6 +15,7 @@ class SearchTaxpayerAccount extends Component
     use CustomAlert;
 
     public $businessName, $accounts = [], $ztnNumber, $taxTypes = [], $taxTypeId;
+    public $referenceNumber;
 
 
     public function rules()
@@ -23,6 +24,7 @@ class SearchTaxpayerAccount extends Component
             'businessName' => 'nullable|alpha_gen',
             'ztnNumber' => 'nullable|alpha_gen',
             'taxTypeId' => 'nullable|alpha_gen',
+            'referenceNumber' => 'nullable|alpha_num'
         ];
     }
 

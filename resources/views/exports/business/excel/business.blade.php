@@ -59,51 +59,54 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($records as $index => $record)
-        <tr>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $index + 1 }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->business->name ?? '-' }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->name }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->taxRegion->name ?? '-'}}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->business->category->name ?? '-' }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->taxpayer_name ?? '-' }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->mobile ?? '-' }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->email ?? '-' }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ date('M, d Y', strtotime($record->effective_date)) ?? '-' }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->region->name ?? '-' }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->district->name ?? '-' }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->ward->name ?? '-' }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->physical_address ?? '-' }}
-            </td>
-            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ ucfirst($record->business->status ?? '') ?? '-' }}
-            </td>
-        </tr>
+        @foreach ($records as $i => $r)
+            @foreach($r as $index => $record)
+                <tr>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $index + 1 }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->business->name ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->name }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->taxRegion->name ?? '-'}}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->business->category->name ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->taxpayer_name ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->mobile ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->email ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ date('M, d Y', strtotime($record->effective_date)) ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->region->name ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->district->name ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->ward->name ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->physical_address ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ ucfirst($record->business->status ?? '') ?? '-' }}
+                    </td>
+                </tr>
+
+            @endforeach
         @endforeach
     </tbody>
 </table>

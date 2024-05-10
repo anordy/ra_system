@@ -757,6 +757,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::name('finance.')->prefix('finance')->group(function () {
         Route::get('/taxpayer/ledger', [TaxpayerLedgerController::class, 'search'])->name('taxpayer.ledger.search');
         Route::get('/taxpayer/ledger/{businessLocationId}/tax/{taxTypeId}', [TaxpayerLedgerController::class, 'show'])->name('taxpayer.ledger.show');
+        Route::get('/taxpayer/ledger/{businessLocationId}/summary', [TaxpayerLedgerController::class, 'summary'])->name('taxpayer.ledger.summary');
     });
 
     Route::prefix('public-service')->as('public-service.')->group(function () {
