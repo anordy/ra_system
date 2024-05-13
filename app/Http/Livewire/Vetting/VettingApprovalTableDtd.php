@@ -2,22 +2,19 @@
 
 namespace App\Http\Livewire\Vetting;
 
-use App\Models\Region;
-use App\Traits\VettingFilterTrait;
-use Carbon\Carbon;
-use App\Models\TaxType;
 use App\Enum\VettingStatus;
-use App\Models\Returns\TaxReturn;
-use App\Traits\ReturnFilterTrait;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Region;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
-use Rappasoft\LaravelLivewireTables\Views\Column;
+use App\Models\Returns\TaxReturn;
+use App\Traits\VettingFilterTrait;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class VettingApprovalTable extends DataTableComponent
+class VettingApprovalTableDtd extends DataTableComponent
 {
     use VettingFilterTrait;
 
@@ -66,23 +63,23 @@ class VettingApprovalTable extends DataTableComponent
         $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
             ->where('parent', 0)
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->where('location', Region::DTD);
+            })
+            ->where('vetting_status', $this->vettingStatus)
             ->whereHas('pinstance', function ($query) {
-                $query->where('status', '!=', 'completed');
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });
-            })->whereHas('location.taxRegion', function ($query) {
-                $query->where('location', null); //this is filter by department
-            })->where('vetting_status', $this->vettingStatus);
+            });
 
         // Apply filters
         $returnTable = TaxReturn::getTableName();
         $query = $this->dataFilter($query, $this->data, $returnTable);
         $query->orderBy('created_at', $this->orderBy);
-        
+
         return $query;
     }
-
 
     public function columns(): array
     {
@@ -150,3 +147,5 @@ class VettingApprovalTable extends DataTableComponent
         ];
     }
 }
+
+

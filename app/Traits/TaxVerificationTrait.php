@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enum\GeneralConstant;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\RiskIndicator;
@@ -28,7 +29,6 @@ trait TaxVerificationTrait
         }
     }
 
-
     public function triggerTaxVerifications($taxReturn, $authenticatedUser)
     {
         if ($taxReturn->return == null || $authenticatedUser == null) {
@@ -40,13 +40,13 @@ trait TaxVerificationTrait
 
         // Create tax verification only if there are risk indicators
         if (count($riskIndicators) > 0) {
-            $taxReturn = $taxReturn->return;
+            $childReturn = $taxReturn->return;
             $data = [
-                'tax_return_id' => $taxReturn->id ?? '',
-                'tax_return_type' => get_class($taxReturn),
-                'business_id' => $taxReturn->business_id,
-                'location_id' => $taxReturn->business_location_id ?? null,
-                'tax_type_id' => $taxReturn->tax_type_id,
+                'tax_return_id' => $childReturn->id ?? '',
+                'tax_return_type' => get_class($childReturn),
+                'business_id' => $childReturn->business_id,
+                'location_id' => $childReturn->business_location_id ?? null,
+                'tax_type_id' => $childReturn->tax_type_id,
                 'created_by_id' => $authenticatedUser->id ?? null,
                 'created_by_type' => get_class($authenticatedUser),
                 'status' => 'pending',
@@ -55,6 +55,10 @@ trait TaxVerificationTrait
             try {
                 $verification = TaxVerification::create($data);
                 $verification->riskIndicators()->attach($riskIndicators);
+
+                if ($taxReturn->total_amount == GeneralConstant::ZERO_INT){
+                    $this->initiateVerificationApproval($taxReturn);
+                }
             } catch (Exception $e) {
                 Log::error($e);
             }

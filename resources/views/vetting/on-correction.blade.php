@@ -36,7 +36,7 @@
                     <div id="domestic-tax-payers" class="tab-pane fade active show p-2">
                         <div class="p-2">
                             @livewire('vetting.vetting-filter', ['tablename' => 'vetting.vetting-approval-table']) <br>
-                            <livewire:vetting.vetting-approval-table vettingStatus="{{ $vettingStatus }}" />
+                            <livewire:vetting.vetting-approval-table-dtd vettingStatus="{{ $vettingStatus }}" />
                         </div>
                     </div>
                 @endcan
@@ -65,7 +65,7 @@
                     <div id="uncategorized" class="tab-pane fade p-2">
                         <div class="p-2">
                             @livewire('vetting.vetting-filter', ['tablename' => 'vetting.vetting-approval-table']) <br>
-                            <livewire:vetting.vetting-approval-table vettingStatus="all"/>
+                            <livewire:vetting.vetting-approval-table vettingStatus="{{ $vettingStatus }}"/>
                         </div>
                     </div>
             </div>

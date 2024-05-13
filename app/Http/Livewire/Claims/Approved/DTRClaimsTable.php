@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Claims\Approved;
 
 use App\Enum\TaxClaimStatus;
 use App\Models\Claims\TaxClaim;
+use App\Models\Region;
 use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -28,15 +29,9 @@ class DTRClaimsTable extends DataTableComponent
     {
         return TaxClaim::with('business', 'location', 'taxType')
             ->where('is_business_lto', false)
-            ->whereNotIn('code', [
-                TaxType::AIRPORT_SERVICE_CHARGE,
-                TaxType::SEAPORT_TRANSPORT_CHARGE,
-                TaxType::AIRPORT_SAFETY_FEE,
-                TaxType::SEAPORT_SERVICE_CHARGE,
-                TaxType::ROAD_LICENSE_FEE,
-                TaxType::INFRASTRUCTURE,
-                TaxType::RDF
-            ])
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->whereIn('location', [Region::DTD]);
+            })
             ->where('tax_claims.status', TaxClaimStatus::APPROVED)
             ->whereHas('pinstance', function ($query) {
                 $query->where('workflow_tasks.status', '=', 'completed');

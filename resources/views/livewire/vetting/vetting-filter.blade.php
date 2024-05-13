@@ -52,7 +52,7 @@
 
                 <div class="col-md-4 form-group">
                     <label for="year" class="d-flex justify-content-between'">
-                        <span>Return Year</span>
+                        <span>Filed Year</span>
                     </label>
                     <select name="year" class="form-control" wire:model="year">
                         @foreach ($optionYears as $optionYear)
@@ -66,7 +66,7 @@
                 {{-- @unless($year == 'All') --}}
                 <div class="col-md-4 form-group">
                     <label for="month" class="d-flex justify-content-between'">
-                        <span>Return Month</span>
+                        <span>Filed Month</span>
                     </label>
                     <select name="month" class="form-control" wire:model="month">
                         <option value="all">All</option>

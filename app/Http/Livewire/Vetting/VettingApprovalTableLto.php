@@ -66,7 +66,7 @@ class VettingApprovalTableLto extends DataTableComponent
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
             ->where('parent', 0)
             ->whereHas('location.taxRegion', function ($query) {
-                $query->where('location', Region::LTD);
+                $query->whereIn('location', [Region::LTD, Region::UNGUJA]);
             })
             ->where('vetting_status', $this->vettingStatus)
             ->whereHas('pinstance', function ($query) {

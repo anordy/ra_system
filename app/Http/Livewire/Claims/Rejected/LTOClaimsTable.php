@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Claims\Rejected;
 
 use App\Enum\TaxClaimStatus;
 use App\Models\Claims\TaxClaim;
+use App\Models\Region;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -26,7 +27,9 @@ class LTOClaimsTable extends DataTableComponent
     public function builder(): Builder
     {
          return TaxClaim::with('business', 'location', 'taxType')
-             ->where('is_business_lto', true)
+             ->whereHas('location.taxRegion', function ($query) {
+                 $query->whereIn('location', [Region::LTD, Region::UNGUJA]);
+             })
              ->where('tax_claims.status', TaxClaimStatus::REJECTED)
              ->whereHas('pinstance', function ($query) {
                 $query->whereHas('actors', function ($query) {

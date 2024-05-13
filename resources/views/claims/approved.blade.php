@@ -9,6 +9,7 @@
                 <a href="#dtr" class="nav-item nav-link font-weight-bold active">Domestic Taxes Returns (DTD)</a>
                 <a href="#lto" class="nav-item nav-link font-weight-bold">Large Taxpayers Returns (LTD)</a>
                 <a href="#ntr" class="nav-item nav-link font-weight-bold">Non-Tax Revenue Returns (NTRD)</a>
+                <a href="#pemba" class="nav-item nav-link font-weight-bold">Pemba</a>
                 <a href="#uncategorized" class="nav-item nav-link font-weight-bold">Uncategorized</a>
             </nav>
             <div class="tab-content px-2 pt-3 pb-2 border">
@@ -21,8 +22,11 @@
                 <div id="ntr" class="tab-pane fade  p-2">
                     <livewire:claims.approved.n-t-r-claims-table />
                 </div>
+                <div id="pemba" class="tab-pane fade  p-2">
+                    <livewire:claims.approved.pemba-claims-table />
+                </div>
                 <div id="uncategorized" class="tab-pane fade  p-2">
-                    <livewire:claims.uncategorized-claims-table />
+                    <livewire:claims.uncategorized-claims-table status="{{ \App\Enum\TaxClaimStatus::APPROVED  }}" />
                 </div>
             </div>
         </div>

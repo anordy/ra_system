@@ -66,11 +66,11 @@ class VettingApprovalTablePemba extends DataTableComponent
         $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
             ->where('parent', 0)
+            ->where('vetting_status', $this->vettingStatus)
             ->whereHas('location.taxRegion', function ($query) {
                 $query->where('location', Region::PEMBA); //this is filter by department
             })
             ->whereHas('pinstance', function ($query) {
-                $query->where('status', '!=', 'completed');
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });

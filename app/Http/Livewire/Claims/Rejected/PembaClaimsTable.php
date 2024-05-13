@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Claims\Approved;
+namespace App\Http\Livewire\Claims\Rejected;
 
 use App\Enum\TaxClaimStatus;
 use App\Models\Claims\TaxClaim;
 use App\Models\Region;
-use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class NTRClaimsTable extends DataTableComponent
+class PembaClaimsTable extends DataTableComponent
 {
 
     public $pending;
@@ -29,11 +28,11 @@ class NTRClaimsTable extends DataTableComponent
     {
         return TaxClaim::with('business', 'location', 'taxType')
             ->whereHas('location.taxRegion', function ($query) {
-                $query->whereIn('location', [Region::NTRD]);
+                $query->whereIn('location', [Region::PEMBA]);
             })
-            ->where('tax_claims.status', TaxClaimStatus::APPROVED)
+            ->where('tax_claims.status', TaxClaimStatus::REJECTED)
             ->whereHas('pinstance', function ($query) {
-                $query->where('workflow_tasks.status', '=', 'completed');
+                $query->where('workflow_tasks.status', '!=', 'completed');
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });

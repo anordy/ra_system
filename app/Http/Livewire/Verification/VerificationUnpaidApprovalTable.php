@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Verification;
 
 use App\Enum\ReturnApplicationStatus;
 use App\Enum\TaxVerificationStatus;
+use App\Enum\VettingStatus;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Verification\TaxVerification;
 use App\Traits\ReturnFilterTrait;
@@ -36,8 +37,7 @@ class VerificationUnpaidApprovalTable extends DataTableComponent
 
         return $filter->with('business', 'location', 'taxtype', 'taxReturn')
             ->whereHas('taxReturn', function (Builder $builder) {
-                $builder->where('application_status', ReturnApplicationStatus::SUBMITTED)
-                    ->whereNotIn('status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
+                $builder->where('vetting_status', VettingStatus::VETTED);
             })
             ->where('tax_verifications.status', TaxVerificationStatus::PENDING)
             ->orderByDesc('tax_verifications.id');

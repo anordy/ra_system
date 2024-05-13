@@ -14,6 +14,7 @@ class UncategorizedClaimsTable extends DataTableComponent
 
     public $pending;
     public $rejected;
+    public $status;
 
     public function configure(): void
     {
@@ -24,10 +25,14 @@ class UncategorizedClaimsTable extends DataTableComponent
         ]);
     }
 
+    public function mount($status) {
+        $this->status = $status;
+    }
+
     public function builder(): Builder
     {
         return TaxClaim::with('business', 'location', 'taxType')
-            ->where('tax_claims.status', TaxClaimStatus::PENDING)
+            ->where('tax_claims.status', $this->status)
             ->whereHas('pinstance', function ($query) {
                 $query->where('workflow_tasks.status', '!=', 'completed');
                 $query->whereHas('actors', function ($query) {
