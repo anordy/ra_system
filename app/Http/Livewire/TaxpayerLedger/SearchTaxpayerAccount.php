@@ -49,13 +49,16 @@ class SearchTaxpayerAccount extends Component
             return back();
         }
 
-        // Search business name/z-number in businesses then get all associated tax types
         $locationQuery = BusinessLocation::select('id', 'name', 'business_id')
-            ->whereRaw(DB::raw("LOWER(name) like '%' || LOWER('$this->businessName') || '%'"))
             ->where('status', BusinessStatus::APPROVED);
 
+        if ($this->businessName) {
+            // Search business name/z-number in businesses then get all associated tax types
+            $locationQuery->whereRaw(DB::raw("LOWER(name) like '%' || LOWER('$this->businessName') || '%'"));
+        }
+
         if ($this->ztnNumber) {
-            $locationQuery->OrWhere('zin', trim($this->ztnNumber));
+            $locationQuery->where('zin', trim($this->ztnNumber));
         }
 
         $businessLocationIds = $locationQuery->get()->pluck('id')->toArray();
