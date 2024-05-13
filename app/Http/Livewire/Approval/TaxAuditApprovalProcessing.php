@@ -120,7 +120,7 @@ class TaxAuditApprovalProcessing extends Component
             $this->audit = TaxAudit::find($this->modelId);
 
             // Initialize properties with empty arrays for each tax type
-            $taxTypes = $this->audit->taxAuditTaxTypes();
+            $taxTypes = $this->audit->taxAuditTaxType();
 
             foreach ($taxTypes as $taxType) {
                 // Replace spaces with underscores (_) in tax type names
