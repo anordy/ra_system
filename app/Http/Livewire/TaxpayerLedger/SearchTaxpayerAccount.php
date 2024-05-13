@@ -68,6 +68,7 @@ class SearchTaxpayerAccount extends Component
             $ledgerQuery->where('tax_type_id', $this->taxTypeId);
         }
 
+        // TODO: Get by limiting results
         $this->accounts = $ledgerQuery->groupBy('tax_type_id', 'business_location_id')
             ->get();
 
@@ -77,11 +78,6 @@ class SearchTaxpayerAccount extends Component
 
     }
 
-
-    public function submit()
-    {
-
-    }
 
     public function clear()
     {

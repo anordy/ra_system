@@ -38,11 +38,11 @@
                         </select>
                     </div>
 
-                    <div class="form-group col-md-6">
-                        <label class="font-weight-bold">Reference Number</label>
-                        <input type="text" wire:model.defer="referenceNumber"
-                               class="form-control @error('referenceNumber') is-invalid @enderror">
-                    </div>
+{{--                    <div class="form-group col-md-6">--}}
+{{--                        <label class="font-weight-bold">Reference Number</label>--}}
+{{--                        <input type="text" wire:model.defer="referenceNumber"--}}
+{{--                               class="form-control @error('referenceNumber') is-invalid @enderror">--}}
+{{--                    </div>--}}
 
                     <div class="col-md-12 text-right">
                         <button type="button" class="btn btn-danger mr-1" wire:click="clear">
@@ -90,7 +90,7 @@
                                 @if(isset($account->location->id))
                                     <a href="{{ route('finance.taxpayer.ledger.summary', ['businessLocationId' => encrypt($account->location->id)]) }}"
                                        class="btn btn-outline-primary btn-sm">
-                                        <i class="bi bi-eye-fill mr-1"></i> View Summary
+                                        <i class="bi bi-eye-fill mr-1"></i> View Taxpayer Summary
                                     </a>
                                 @endif
                             </td>
