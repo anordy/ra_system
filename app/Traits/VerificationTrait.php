@@ -18,8 +18,6 @@ trait VerificationTrait
 
     public function verify(PayloadInterface $object): bool
     {
-        return true;
-
         $stringData = "";
 
         foreach ($object::getPayloadColumns() as $column) {
@@ -70,8 +68,6 @@ trait VerificationTrait
 
     public function sign(PayloadInterface $object): bool
     {
-        return true;
-
         $stringData = "";
 
         foreach ($object::getPayloadColumns() as $column) {
