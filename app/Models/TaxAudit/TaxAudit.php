@@ -68,17 +68,17 @@ class TaxAudit extends Model implements Auditable
         return $this->businessLocations->map(fn ($location) => $location->name . '(' . $location->zin . ')')->implode(',', 'name');
     }
 
-    // public function taxAuditTaxTypes()
-    // {
-    //     return $this->hasMany(TaxAuditTaxType::class);
-    // }
+    public function taxAuditTaxTypes()
+    {
+        return $this->hasMany(TaxAuditTaxType::class);
+    }
 
     public function taxTypes()
     {
         return $this->hasManyThrough(TaxType::class, TaxAuditTaxType::class, 'tax_audit_id', 'id', 'id', 'business_tax_type_id');
     }
 
-    public function taxAuditTaxTypes()
+    public function taxAuditTaxType()
     {
         return $this->taxTypes->map(function ($type) {
             return [
