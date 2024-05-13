@@ -132,25 +132,23 @@ class TaxAuditApprovalProcessing extends Component
             }
         }
 
-        // if ($this->checkTransition('final_report_review')) {
-        $taxRegion = $this->subject->location->taxRegion->location;
+        if ($this->checkTransition('final_report_review')) {
+            $taxRegion = $this->subject->location->taxRegion->location;
 
-        // Initialize grand total
-        $grandTotal = 0;
+            // Initialize grand total
+            $grandTotal = 0;
 
-        // Calculate grand total
-        foreach ($this->taxAssessments as $taxAssessment) {
-            $grandTotal += $taxAssessment->total_amount ?? 0;
-
-            dd($assessment->taxtype->where('code', 'interest')->firstOrFail()->id);
+            // Calculate grand total
+            foreach ($this->taxAssessments as $taxAssessment) {
+                $grandTotal += $taxAssessment->total_amount ?? 0;
+            }
+            // Check if tax liability exceeds the threshold for forwarding to Commissioner General
+            if ($taxRegion == Region::LTD && $grandTotal > 500000000) {
+                $this->forwardToCG = true;
+            } elseif ($taxRegion == Region::DTD && $grandTotal > 100000000) {
+                $this->forwardToCG = true;
+            }
         }
-        // Check if tax liability exceeds the threshold for forwarding to Commissioner General
-        if ($taxRegion == Region::LTD && $grandTotal > 500000000) {
-            $this->forwardToCG = true;
-        } elseif ($taxRegion == Region::DTD && $grandTotal > 100000000) {
-            $this->forwardToCG = true;
-        }
-        // }
 
         $this->exitMinutes = $this->subject->exit_minutes;
         $this->finalReport = $this->subject->final_report;

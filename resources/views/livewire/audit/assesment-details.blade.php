@@ -1,21 +1,43 @@
+@php
+    use App\Models\TaxType;
+    $taxTypeCode = $taxType->code;
+@endphp
+
 @if ($withoutPurchases)
-    @if ($taxType->code == App\Models\TaxType::EXCISE_DUTY_BFO)
-        @include('investigation.approval.return-details.bfo')
-    @elseif($taxType->code == App\Models\TaxType::EXCISE_DUTY_MNO)
-        @include('investigation.approval.return-details.mno')
-    @elseif ($taxType->code == App\Models\TaxType::ELECTRONIC_MONEY_TRANSACTION)
-        @include('investigation.approval.return-details.emtransaction')
-    @elseif ($taxType->code == App\Models\TaxType::MOBILE_MONEY_TRANSFER)
-        @include('investigation.approval.return-details.mmtransfer')
-    @elseif ($taxType->code == App\Models\TaxType::PETROLEUM)
-        @include('investigation.approval.return-details.petroleum')
-    @elseif ($taxType->code == App\Models\TaxType::LUMPSUM_PAYMENT)
-        @include('investigation.approval.return-details.lumpsum')
-    @elseif ($taxType->code == App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)
-        @include('investigation.approval.return-details.air_port')
-    @elseif ($taxType->code == App\Models\TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE)
-        @include('investigation.approval.return-details.sea_port')
-    @endif
+
+    @switch($taxTypeCode)
+        @case(TaxType::EXCISE_DUTY_BFO)
+            @include("investigation.approval.return-details.bfo")
+        @break
+
+        @case(TaxType::EXCISE_DUTY_MNO)
+            @include("investigation.approval.return-details.mno")
+        @break
+
+        @case(TaxType::ELECTRONIC_MONEY_TRANSACTION)
+            @include("investigation.approval.return-details.emtransaction")
+        @break
+
+        @case(TaxType::MOBILE_MONEY_TRANSFER)
+            @include("investigation.approval.return-details.mmtransfer")
+        @break
+
+        @case(TaxType::PETROLEUM)
+            @include("investigation.approval.return-details.petroleum")
+        @break
+
+        @case(TaxType::LUMPSUM_PAYMENT)
+            @include("investigation.approval.return-details.lumpsum")
+        @break
+
+        @case(TaxType::AIRPORT_SERVICE_SAFETY_FEE)
+            @include("investigation.approval.return-details.air_port")
+        @break
+
+        @case(TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE)
+            @include("investigation.approval.return-details.sea_port")
+        @break
+    @endswitch
 @else
     <div class="card">
         <div class="card-body">
@@ -40,23 +62,23 @@
                             <tbody>
                                 @foreach ($return as $item)
                                     <tr>
-                                        <td>{{ $item['financial_month'] }}</td>
-                                        <td>{{ number_format($item['total_purchases']) }}</td>
-                                        <td>{{ number_format($item['input_tax']) }}</td>
-                                        <td>{{ number_format($item['total_sales']) }}</td>
-                                        <td>{{ number_format($item['output_vat']) }}</td>
-                                        <td>{{ number_format($item['tax_paid']) }}</td>
+                                        <td>{{ $item["financial_month"] }}</td>
+                                        <td>{{ number_format($item["total_purchases"]) }}</td>
+                                        <td>{{ number_format($item["input_tax"]) }}</td>
+                                        <td>{{ number_format($item["total_sales"]) }}</td>
+                                        <td>{{ number_format($item["output_vat"]) }}</td>
+                                        <td>{{ number_format($item["tax_paid"]) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td>TOTAL</td>
-                                    <th>{{ number_format($return->sum('total_purchases')) }}</th>
-                                    <th>{{ number_format($return->sum('input_tax')) }}</th>
-                                    <th>{{ number_format($return->sum('total_sales')) }}</th>
-                                    <th>{{ number_format($return->sum('output_vat')) }}</th>
-                                    <th>{{ number_format($return->sum('tax_paid')) }}</th>
+                                    <th>{{ number_format($return->sum("total_purchases")) }}</th>
+                                    <th>{{ number_format($return->sum("input_tax")) }}</th>
+                                    <th>{{ number_format($return->sum("total_sales")) }}</th>
+                                    <th>{{ number_format($return->sum("output_vat")) }}</th>
+                                    <th>{{ number_format($return->sum("tax_paid")) }}</th>
                                 </tr>
                             </tfoot>
 

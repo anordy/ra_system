@@ -50,10 +50,11 @@ class DeclaredSalesAnalysis extends Component
     public $start_date;
     public $end_date;
 
+
     public function mount($auditId, $tax_type_id, $location_id)
     {
         $audit = TaxAudit::find(decrypt($auditId));
-        if (is_null($audit)){
+        if (is_null($audit)) {
             abort(404);
         }
         $this->taxType = $audit->taxTypes->firstWhere('id', decrypt($tax_type_id));
