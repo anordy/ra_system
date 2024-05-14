@@ -150,27 +150,28 @@ class TaxAuditApprovalProcessing extends Component
             } elseif ($taxRegion == Region::DTD && $grandTotal > 100000000) {
                 $this->forwardToCG = true;
             }
-      
 
-        $this->exitMinutes = $this->subject->exit_minutes;
-        $this->finalReport = $this->subject->final_report;
-        $this->workingReport = $this->subject->working_report;
-        $this->preliminaryReport = $this->subject->preliminary_report;
-        $this->entryMeeting = $this->subject->entry_minutes;
-        $this->notificationLetter = $this->subject->notification_letter;
 
-        if ($this->task != null) {
-            $operators = json_decode($this->task->operators);
-            if (gettype($operators) != "array") {
-                $operators = [];
+            $this->exitMinutes = $this->subject->exit_minutes;
+            $this->finalReport = $this->subject->final_report;
+            $this->workingReport = $this->subject->working_report;
+            $this->preliminaryReport = $this->subject->preliminary_report;
+            $this->entryMeeting = $this->subject->entry_minutes;
+            $this->notificationLetter = $this->subject->notification_letter;
+
+            if ($this->task != null) {
+                $operators = json_decode($this->task->operators);
+                if (gettype($operators) != "array") {
+                    $operators = [];
+                }
+                $roles = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
+
+                $this->subRoles = Role::whereIn('report_to', $roles)->get();
+
+                $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
+                // TODO: Remove on production
+                $this->staffs = User::get();
             }
-            $roles = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
-
-            $this->subRoles = Role::whereIn('report_to', $roles)->get();
-
-            $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
-            // TODO: Remove on production
-            $this->staffs = User::get();
         }
     }
 
