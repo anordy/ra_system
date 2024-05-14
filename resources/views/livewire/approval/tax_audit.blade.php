@@ -384,12 +384,12 @@
 
                 @if ($forwardToCG)
                     <button type="button" class="btn btn-primary"
-                        wire:click="confirmPopUpModal('approve', 'final_report_review')">
+                        wire:click="confirmPopUpModal('approve', 'foward_to_commissioner')">
                         Approve & Forward
                     </button>
                 @else
                     <button type="button" class="btn btn-primary"
-                        wire:click="confirmPopUpModal('approve', 'accepted')">
+                        wire:click="confirmPopUpModal('approve', 'final_report_review')">
                         Approve & Complete
                     </button>
                 @endif

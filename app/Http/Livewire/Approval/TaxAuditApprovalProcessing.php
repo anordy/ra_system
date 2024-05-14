@@ -6,9 +6,11 @@ use App\Enum\TaxAuditStatus;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\BusinessDeregistration;
+use App\Models\BusinessTaxType;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\Region;
 use App\Models\Returns\ReturnStatus;
+use App\Models\Returns\Vat\SubVat;
 use App\Models\Role;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
@@ -18,6 +20,7 @@ use App\Models\User;
 use App\Notifications\DatabaseNotification;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\ExchangeRateTrait;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
@@ -33,7 +36,7 @@ use Livewire\WithFileUploads;
 
 class TaxAuditApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait, ExchangeRateTrait;
     public $modelId;
     public $modelName;
     public $comments;
@@ -490,21 +493,14 @@ class TaxAuditApprovalProcessing extends Component
         foreach ($this->taxAssessments as $taxAssessment) {
 
             $assessment = $taxAssessment;
-            $taxType = null;
-            if ($this->subject->tax_type_id == 0) {
-                if ($assessment->assessment_type == TaxAudit::class) {
-                    $taxType = $assessment->assessment_type::find($assessment->assessment_id)->taxAuditTaxTypeNames();
-                    if (is_null($taxType)) {
-                        abort(404);
-                    }
-                } else if ($assessment->assessment_type == TaxInvestigation::class) {
-                    $taxType = $assessment->assessment_type::find($assessment->assessment_id)->taxInvestigationTaxTypeNames();
-                    if (is_null($taxType)) {
-                        abort(404);
-                    }
-                }
-            } else {
-                $taxType = $this->subject->taxType;
+            $taxType = TaxType::findOrFail($assessment->tax_type_id, ['id', 'code', 'gfs_code']);
+
+            $taxTypes = TaxType::select('id', 'code', 'gfs_code')->get();
+
+            if ($taxType->code === TaxType::VAT) {
+                $businessTaxType = BusinessTaxType::where('business_id', $assessment->business_id)
+                    ->where('tax_type_id', $taxType->id)->firstOrFail();
+                $taxType = SubVat::findOrFail($businessTaxType->sub_vat_id, ['id', 'code', 'gfs_code']);
             }
 
             $billitems = [
@@ -512,94 +508,94 @@ class TaxAuditApprovalProcessing extends Component
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($assessment->principal_amount, 'TZS'),
-                    'currency' => 'TZS',
-                    'gfs_code' => $assessment->taxtype->where('code', 'audit')->firstOrFail()->gfs_code,
-                    'tax_type_id' => $assessment->taxtype->where('code', 'audit')->firstOrFail()->id
+                    'amount' => roundOff($assessment->principal_amount, $assessment->currency),
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
+                    'tax_type_id' => $taxType->id
                 ],
                 [
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($assessment->interest_amount, 'TZS'),
-                    'currency' => 'TZS',
-                    'gfs_code' => $assessment->taxtype->where('code', 'audit')->firstOrFail()->gfs_code,
-                    'tax_type_id' => $assessment->taxtype->where('code', 'interest')->firstOrFail()->id
+                    'amount' => roundOff($assessment->interest_amount, $assessment->currency),
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
+                    'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
                     'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($assessment->penalty_amount, 'TZS'),
-                    'currency' => 'TZS',
-                    'gfs_code' => $assessment->taxtype->where('code', 'audit')->firstOrFail()->gfs_code,
-                    'tax_type_id' => $assessment->taxtype->where('code', 'penalty')->firstOrFail()->id
+                    'amount' => roundOff($assessment->penalty_amount, $assessment->currency),
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
+                    'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->firstOrFail()->id
                 ]
             ];
-        }
 
+            try {
 
-        DB::beginTransaction();
+                $taxpayer = $this->subject->business->taxpayer;
 
-        try {
+                $payer_type = get_class($this->subject->business);
+                $payer_name = $this->subject->business->name;
+                $payer_email = $taxpayer->email;
+                $payer_phone = $taxpayer->mobile;
+                $description = "Tax Auditing Assessment for {$taxType}";
+                $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
+                $currency = $assessment->currency;
+                $createdby_type = get_class(Auth::user());
+                $createdby_id = Auth::id();
+                $exchange_rate = self::getExchangeRate($assessment->currency);
+                $payer_id = $taxpayer->id;
+                $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
+                $billableId = $assessment->id;
+                $billableType = get_class($assessment);
 
-            $taxpayer = $this->subject->business->taxpayer;
+                DB::beginTransaction();
 
-            $payer_type = get_class($taxpayer);
-            $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
-            $payer_email = $taxpayer->email;
-            $payer_phone = $taxpayer->mobile;
-            $description = "Auditing for {$taxType}";
-            $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-            $currency = 'TZS';
-            $createdby_type = get_class(Auth::user());
-            $createdby_id = Auth::id();
-            $exchange_rate = 1;
-            $payer_id = $taxpayer->id;
-            $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
-            $billableId = $assessment->id; //TODO: need to be disscussed
-            $billableType = get_class($assessment);
+                $zmBill = ZmCore::createBill(
+                    $billableId,
+                    $billableType,
+                    $this->taxTypes->where('code', 'audit')->first()->id,  //TODO: need to be disscussed
+                    $payer_id,
+                    $payer_type,
+                    $payer_name,
+                    $payer_email,
+                    $payer_phone,
+                    $expire_date,
+                    $description,
+                    $payment_option,
+                    $currency,
+                    $exchange_rate,
+                    $createdby_id,
+                    $createdby_type,
+                    $billitems
+                );
+                DB::commit();
 
-            $zmBill = ZmCore::createBill(
-                $billableId,
-                $billableType,
-                $this->taxTypes->where('code', 'audit')->first()->id,  //TODO: need to be disscussed
-                $payer_id,
-                $payer_type,
-                $payer_name,
-                $payer_email,
-                $payer_phone,
-                $expire_date,
-                $description,
-                $payment_option,
-                $currency,
-                $exchange_rate,
-                $createdby_id,
-                $createdby_type,
-                $billitems
-            );
-            DB::commit();
+                if (config('app.env') != 'local') {
+                    $this->generateGeneralControlNumber($zmBill);
+                } else {
+                    // We are local
+                    $assessment->payment_status = ReturnStatus::CN_GENERATED;
+                    $assessment->save();
 
-            if (config('app.env') != 'local') {
-                $this->generateGeneralControlNumber($zmBill);
-            } else {
-                // We are local
-                $assessment->payment_status = ReturnStatus::CN_GENERATED;
-                $assessment->save();
+                    // Simulate successful control no generation
+                    $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                    $zmBill->zan_status = 'pending';
+                    $zmBill->control_number = random_int(2000070001000, 2000070009999);
+                    $zmBill->save();
 
-                // Simulate successful control no generation
-                $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-                $zmBill->zan_status = 'pending';
-                $zmBill->control_number = random_int(2000070001000, 2000070009999);
-                $zmBill->save();
-
-                $this->customAlert('success', 'A control number for this verification has been generated successfully');
+                    $this->customAlert('success', 'A control number for this verification has been generated successfully');
+                }
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                throw $e;
             }
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-            throw $e;
         }
+
     }
 
 

@@ -3,12 +3,14 @@
 @section("title", "Approval Details")
 
 @section("content")
-    @if ($audit->status == App\Enum\TaxAuditStatus::APPROVED && $audit->assessment)
-        <div class="row m-2 pt-3">
-            <div class="col-md-12">
-                <livewire:assesments.tax-assessment-payment :assessment="$audit->assessment" />
+    @if ($audit->status == App\Enum\TaxAuditStatus::APPROVED && $audit->assessments)
+        @foreach($audit->assessments as $assessment)
+            <div class="row m-2 pt-3">
+                <div class="col-md-12">
+                    <livewire:assesments.tax-assessment-payment :assessment="$assessment" />
+                </div>
             </div>
-        </div>
+        @endforeach
     @endif
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
@@ -163,7 +165,7 @@
                 </div>
             </div>
 
-            @if ($audit->assessment)
+            @if ($audit->assessments)
                 <div class="card">
                     <div class="card-header text-uppercase font-weight-bold bg-white">
                         Assessment Details
@@ -171,7 +173,7 @@
                     <div class="card-body">
                         @php $grandTotal = 0; @endphp
 
-                        @foreach ($taxAssessments as $taxAssessment)
+                        @foreach ($audit->assessments as $taxAssessment)
                             <div>
                                 <h6>{{ $taxAssessment->taxtype->name }} Assesment :</h6>
                                 <div class="row">

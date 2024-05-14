@@ -15,7 +15,7 @@ class TaxAuditAssessmentController extends Controller
 
     public function show($id)
     {
-        $audit = TaxAudit::with('assessment', 'officers')->findOrFail(decrypt($id));
+        $audit = TaxAudit::with('assessment', 'officers', 'assessments')->findOrFail(decrypt($id));
         return view('audit.preview', compact('audit'));
     }
 }

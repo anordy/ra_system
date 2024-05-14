@@ -20,6 +20,7 @@ use App\Models\Taxpayer;
 use App\Models\TaxRefund\TaxRefund;
 use App\Models\TaxType;
 use App\Models\TransactionFee;
+use App\Models\Verification\TaxVerification;
 use App\Models\ZmBill;
 use App\Models\ZmBillChange;
 use App\Services\Api\ZanMalipoInternalService;
@@ -806,17 +807,18 @@ trait PaymentsTrait
 
     public function generateAssessmentControlNumber($assessment)
     {
-        $taxTypes = TaxType::all();
+        $taxTypes = TaxType::select('id', 'code', 'gfs_code')->get();
+        $taxType = TaxType::findOrFail($assessment->tax_type_id, ['id', 'code', 'gfs_code']);
 
-        $taxType = $assessment->taxtype;
-
-        if (!$taxType->gfs_code) {
-            $taxType = TaxType::where('code', TaxType::VERIFICATION)->first();
+        if ($taxType->code === TaxType::VAT) {
+            $businessTaxType = BusinessTaxType::where('business_id', $assessment->business_id)
+                ->where('tax_type_id', $taxType->id)->firstOrFail();
+            $taxType = SubVat::findOrFail($businessTaxType->sub_vat_id, ['id', 'code', 'gfs_code']);
         }
 
-        DB::beginTransaction();
 
         try {
+
             $billitems = [];
 
             if ($assessment->principal_amount > 0) {
@@ -839,7 +841,7 @@ trait PaymentsTrait
                     'amount' => $assessment->interest_amount,
                     'currency' => $assessment->currency,
                     'gfs_code' => $taxType->gfs_code,
-                    'tax_type_id' => $taxTypes->where('code', 'interest')->firstOrFail()->id
+                    'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->firstOrFail()->id
                 ];
             }
 
@@ -851,9 +853,22 @@ trait PaymentsTrait
                     'amount' => $assessment->penalty_amount,
                     'currency' => $assessment->currency,
                     'gfs_code' => $taxType->gfs_code,
-                    'tax_type_id' => $taxTypes->where('code', 'penalty')->firstOrFail()->id
+                    'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->firstOrFail()->id
                 ];
             }
+
+            if ($assessment->assessment_type === TaxAudit::class) {
+                $assessmentType = 'Tax Audit';
+            } else if ($assessment->assessment_type === TaxInvestigation::class) {
+                $assessmentType = 'Tax Investigation';
+            } else if ($assessment->assessment_type === TaxVerification::class) {
+                $assessmentType = 'Tax Verification';
+            } else {
+                throw new \Exception('Invalid Assessment Type');
+            }
+
+            DB::beginTransaction();
+
 
             $business = $assessment->business;
 
@@ -861,7 +876,7 @@ trait PaymentsTrait
             $payer_name = $business->name ?? $business->taxpayer_name;
             $payer_email = $business->email;
             $payer_phone = $business->mobile;
-            $description = "{$taxType->name} Verification Assessment for {$payer_name}";
+            $description = "{$taxType->name} {$assessmentType} Assessment for {$payer_name}";
             $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
             $currency = $assessment->currency;
             $createdby_type = get_class(Auth::user());
