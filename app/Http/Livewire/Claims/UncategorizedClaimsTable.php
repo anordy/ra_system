@@ -31,14 +31,20 @@ class UncategorizedClaimsTable extends DataTableComponent
 
     public function builder(): Builder
     {
+        if ($this->status === TaxClaimStatus::PENDING){
+            return TaxClaim::with('business', 'location', 'taxType')
+                ->where('tax_claims.status', $this->status)
+                ->whereHas('pinstance', function ($query) {
+                    $query->where('workflow_tasks.status', '!=', 'completed');
+                    $query->whereHas('actors', function ($query) {
+                        $query->where('user_id', auth()->id());
+                    });
+                })
+                ->orderBy('tax_claims.created_at');
+        }
+
         return TaxClaim::with('business', 'location', 'taxType')
             ->where('tax_claims.status', $this->status)
-            ->whereHas('pinstance', function ($query) {
-                $query->where('workflow_tasks.status', '!=', 'completed');
-                $query->whereHas('actors', function ($query) {
-                    $query->where('user_id', auth()->id());
-                });
-            })
             ->orderBy('tax_claims.created_at');
     }
 

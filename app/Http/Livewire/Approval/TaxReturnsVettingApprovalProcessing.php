@@ -155,11 +155,10 @@ class TaxReturnsVettingApprovalProcessing extends Component
                         }
                     }
                 }
-                //saving credit brought forward(claim)
 
+                //saving credit brought forward(claim)
                 if ($this->return->return->credit_brought_forward > 0) {
-                    $this->claim_data = VatReturn::query()->selectRaw('payment_status, tax_credits.amount, payment_method, installments_count,
-        tax_credits.id as credit_id, tax_claims.old_return_id, tax_claims.old_return_type, tax_claims.currency')
+                    $this->claim_data = VatReturn::query()->selectRaw('payment_status, tax_credits.amount, payment_method, installments_count, tax_credits.id as credit_id, tax_claims.old_return_id, tax_claims.old_return_type, tax_claims.currency')
                         ->leftJoin('tax_claims', 'tax_claims.old_return_id', '=', 'vat_returns.id')
                         ->leftJoin('tax_credits', 'tax_credits.claim_id', '=', 'tax_claims.id')
                         ->where('vat_returns.claim_status', '=', TaxClaimStatus::CLAIM)

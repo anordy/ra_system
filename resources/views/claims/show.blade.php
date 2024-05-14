@@ -9,8 +9,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-
-                <div class="col-md-12 mt-3">
+                <div class="col-md-12">
                     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active" id="claim-details-tab" data-toggle="tab" href="#claim-details"

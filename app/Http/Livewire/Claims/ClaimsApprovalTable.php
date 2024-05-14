@@ -12,8 +12,6 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ClaimsApprovalTable extends DataTableComponent
 {
-
-
     public $pending;
     public $rejected;
 
