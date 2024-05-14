@@ -48,7 +48,7 @@ class TaxAuditApprovalProcessing extends Component
     public $entryMeeting;
     public $finalReport;
     public $exitMinutes;
-    public $auditDocuments;
+    public $auditDocuments = [];
     public $periodTo;
     public $periodFrom;
     public $intension;
@@ -64,7 +64,7 @@ class TaxAuditApprovalProcessing extends Component
 
     public $taxTypes;
     public $taxType;
-    public $taxAssessments;
+    public $taxAssessments = [];
     public $grandTotal;
 
     public $staffs = [];
@@ -113,9 +113,11 @@ class TaxAuditApprovalProcessing extends Component
         }
 
         if ($this->checkTransition('audit_team_review')) {
-
             $this->auditDocuments = DB::table('tax_audit_files')->where('tax_audit_id', $this->modelId)->get();
+            $this->auditDocuments = json_decode($this->auditDocuments, true);
+
         }
+
         if ($this->checkTransition('prepare_final_report')) {
             $this->audit = TaxAudit::find($this->modelId);
 
@@ -148,7 +150,7 @@ class TaxAuditApprovalProcessing extends Component
             } elseif ($taxRegion == Region::DTD && $grandTotal > 100000000) {
                 $this->forwardToCG = true;
             }
-        }
+      
 
         $this->exitMinutes = $this->subject->exit_minutes;
         $this->finalReport = $this->subject->final_report;
@@ -167,7 +169,8 @@ class TaxAuditApprovalProcessing extends Component
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
 
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
-            // $this->staffs = User::get();
+            // TODO: Remove on production
+            $this->staffs = User::get();
         }
     }
 
