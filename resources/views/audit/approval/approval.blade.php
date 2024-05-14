@@ -60,6 +60,12 @@
                             <span class="font-weight-bold text-uppercase">Audit Date</span>
                             <p class="my-1">{{ $audit->auditingDate() ?? "" }}</p>
                         </div>
+                        @if($audit->new_audit_date)
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">New Proposed Audit Date</span>
+                                <p class="my-1">{{ $audit->new_audit_date }}</p>
+                            </div>
+                        @endif
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Scope</span>
                             <p class="my-1">{{ $audit->scope ?? "" }}</p>

@@ -307,7 +307,7 @@ class WorkflowTaxAuditSeeder extends Seeder
             ],
             'audit_team_reject_extension' => [
                 'from' => 'audit_team_review',
-                'to'   => 'audit_taxpayer_acceptance',
+                'to'   => 'taxpayer_uploads_documents',
                 'condition' => '',
             ],
             'audit_team_reject_documents' => [

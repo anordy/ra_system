@@ -143,9 +143,9 @@
                                         class="p-2 mb-3 d-flex rounded-sm align-items-center">
                                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                         <a target="_blank"
-                                            href="{{ route("tax_auditing.files.show", encrypt($document->path)) }}"
+                                            href="{{ route("tax_auditing.files.show", encrypt($document['path'])) }}"
                                             style="font-weight: 500;" class="ml-1">
-                                            {{ $document->name }}
+                                            {{ $document['name'] }}
                                             <i class="bi bi-arrow-up-right-square ml-1"></i>
                                         </a>
                                     </div>
@@ -160,14 +160,14 @@
                                 class="text-secondary">{{ $this->subject->new_audit_date ? \Carbon\Carbon::parse($this->subject->new_audit_date)->format("F j, Y") : "" }}</strong>
                         </p>
 
-                        <p> <strong> extension Reasons:</strong> <br> {{ $this->subject->extension_reason }}</p>
+                        <p> <strong> Extension Reasons:</strong> <br> {{ $this->subject->extension_reason }}</p>
                     @endif
                 </div>
             @endif
             @if ($this->checkTransition("conduct_audit"))
                 <div class="row pl-3 pr-3">
                     <div class="form-group col-lg-4">
-                        <label class="control-label">Entry Meeting report</label>
+                        <label class="control-label">Notice of discussion</label>
                         <input type="file" class="form-control  @error("entryMeeting") is-invalid @enderror"
                             wire:model.defer="entryMeeting">
                         @error("entryMeeting")

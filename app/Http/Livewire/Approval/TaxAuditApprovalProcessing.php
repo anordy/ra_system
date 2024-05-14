@@ -118,7 +118,6 @@ class TaxAuditApprovalProcessing extends Component
         if ($this->checkTransition('audit_team_review')) {
             $this->auditDocuments = DB::table('tax_audit_files')->where('tax_audit_id', $this->modelId)->get();
             $this->auditDocuments = json_decode($this->auditDocuments, true);
-
         }
 
         if ($this->checkTransition('prepare_final_report')) {
@@ -162,19 +161,20 @@ class TaxAuditApprovalProcessing extends Component
             $this->entryMeeting = $this->subject->entry_minutes;
             $this->notificationLetter = $this->subject->notification_letter;
 
-            if ($this->task != null) {
-                $operators = json_decode($this->task->operators);
-                if (gettype($operators) != "array") {
-                    $operators = [];
-                }
-                $roles = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
+        }
 
-                $this->subRoles = Role::whereIn('report_to', $roles)->get();
-
-                $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
-                // TODO: Remove on production
-                $this->staffs = User::get();
+        if ($this->task != null) {
+            $operators = json_decode($this->task->operators);
+            if (gettype($operators) != "array") {
+                $operators = [];
             }
+            $roles = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
+
+            $this->subRoles = Role::whereIn('report_to', $roles)->get();
+
+            $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
+            // TODO: Remove on production
+            $this->staffs = User::get();
         }
     }
 
@@ -622,6 +622,10 @@ class TaxAuditApprovalProcessing extends Component
             }
             if ($this->checkTransition('correct_final_report')) {
                 $operators = $this->subject->officers->pluck('user_id')->toArray();
+            }
+            if ($this->checkTransition('audit_team_reject_extension')) {
+                $this->subject->new_audit_date = null;
+                $this->subject->save();
             }
 
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments, 'operators' => $operators]);
