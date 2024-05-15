@@ -76,7 +76,7 @@
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Business Reg. No.</span>
-                <p class="my-1">{{ $business->reg_no ?? 'N/A' }} </p>
+                <p class="my-1">{{ $business->reg_no ?? "N/A" }} </p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Owner Designation</span>
@@ -102,7 +102,6 @@
                 <span class="font-weight-bold text-uppercase">Place of Business</span>
                 <p class="my-1">{{ $business->place_of_business }}</p>
             </div>
-   
 
         </div>
     </div>
@@ -129,7 +128,6 @@
                 <p class="my-1">{{ $waiverObjection->tax_in_dispute }} TZS</p>
             </div>
 
-
         </div>
 
     </div>
@@ -145,7 +143,6 @@
         </div>
     </div>
 
-
     <div class="tab-pane fade" id="reason" role="tabpanel" aria-labelledby="reason-tab">
         <div class="row m-2 pt-3">
             <div class="col-md-4 mb-3">
@@ -156,17 +153,15 @@
         </div>
     </div>
 
-
     <div class="tab-pane fade" id="attachment" role="tabpanel" aria-labelledby="attachment-tab">
         <div class="row m-2 pt-3">
             @foreach ($files as $file)
                 <div class="col-md-3">
-                    <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                        class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                    <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                        <a target="_blank" href="{{ route('assesments.waiver.files', encrypt($file['file_path'])) }}"
+                        <a target="_blank" href="{{ route("assesments.waiver.files", encrypt($file["file_path"])) }}"
                             style="font-weight: 500;" class="ml-1">
-                            {{ $file['file_name'] }}
+                            {{ $file["file_name"] }}
                             <i class="bi bi-arrow-up-right-square ml-1"></i>
                         </a>
                     </div>
@@ -177,7 +172,6 @@
     </div>
 
 </div>
-
 
 @if ($waiverObjection->taxVerificationAssesment)
     <div class="card my-2">
@@ -217,8 +211,6 @@
     </div>
 @endif
 
-
-
 @if ($waiverObjection->objection_report)
     <div class="card my-4 rounded-0">
         <div class="card-header font-weight-bold bg-white">
@@ -227,11 +219,10 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3">
-                    <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                        class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                    <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                         <a target="_blank"
-                            href="{{ route('assesments.waiver.files', encrypt($waiverObjection->objection_report)) }}"
+                            href="{{ route("assesments.waiver.files", encrypt($waiverObjection->objection_report)) }}"
                             style="font-weight: 500;" class="ml-1">
                             Waiver Report
                             <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -239,14 +230,12 @@
                     </div>
                 </div>
 
-
                 @if ($waiverObjection->notice_report)
                     <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <a target="_blank"
-                                href="{{ route('assesments.waiver.files', encrypt($waiverObjection->notice_report)) }}"
+                                href="{{ route("assesments.waiver.files", encrypt($waiverObjection->notice_report)) }}"
                                 style="font-weight: 500;" class="ml-1">
                                 Notice Report
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -255,14 +244,12 @@
                     </div>
                 @endif
 
-
                 @if ($waiverObjection->setting_report)
                     <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <a target="_blank"
-                                href="{{ route('assesments.waiver.files', encrypt($waiverObjection->setting_report)) }}"
+                                href="{{ route("assesments.waiver.files", encrypt($waiverObjection->setting_report)) }}"
                                 style="font-weight: 500;" class="ml-1">
                                 Setting Report
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>

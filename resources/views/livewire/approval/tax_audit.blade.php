@@ -136,7 +136,7 @@
                 <div class="pl-3 pr-3 card">
                     <p class="card-header ">Taxpayer Uploaded Documents</p>
                     <div class="row pt-3">
-                        @if ($auditDocuments)
+                        {{-- @if ($auditDocuments)
                             @foreach ($auditDocuments as $document)
                                 <div class="col-md-3">
                                     <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
@@ -151,7 +151,7 @@
                                     </div>
                                 </div>
                             @endforeach
-                        @endif
+                        @endif --}}
                     </div>
 
                     @if ($this->subject->new_audit_date)

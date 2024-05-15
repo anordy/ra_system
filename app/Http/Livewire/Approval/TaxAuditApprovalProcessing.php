@@ -90,6 +90,13 @@ class TaxAuditApprovalProcessing extends Component
         $this->modelId   = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
 
+        $this->exitMinutes = $this->subject->exit_minutes;
+        $this->finalReport = $this->subject->final_report;
+        $this->workingReport = $this->subject->working_report;
+        $this->preliminaryReport = $this->subject->preliminary_report;
+        $this->entryMeeting = $this->subject->entry_minutes;
+        $this->notificationLetter = $this->subject->notification_letter;
+
         $assessment = $this->subject->assessment;
         if ($assessment) {
             $this->hasAssessment = "1";
@@ -118,7 +125,6 @@ class TaxAuditApprovalProcessing extends Component
         if ($this->checkTransition('audit_team_review')) {
             $this->auditDocuments = DB::table('tax_audit_files')->where('tax_audit_id', $this->modelId)->get();
             $this->auditDocuments = json_decode($this->auditDocuments, true);
-
         }
 
         if ($this->checkTransition('prepare_final_report')) {
@@ -153,28 +159,21 @@ class TaxAuditApprovalProcessing extends Component
             } elseif ($taxRegion == Region::DTD && $grandTotal > 100000000) {
                 $this->forwardToCG = true;
             }
+        }
 
 
-            $this->exitMinutes = $this->subject->exit_minutes;
-            $this->finalReport = $this->subject->final_report;
-            $this->workingReport = $this->subject->working_report;
-            $this->preliminaryReport = $this->subject->preliminary_report;
-            $this->entryMeeting = $this->subject->entry_minutes;
-            $this->notificationLetter = $this->subject->notification_letter;
-
-            if ($this->task != null) {
-                $operators = json_decode($this->task->operators);
-                if (gettype($operators) != "array") {
-                    $operators = [];
-                }
-                $roles = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
-
-                $this->subRoles = Role::whereIn('report_to', $roles)->get();
-
-                $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
-                // TODO: Remove on production
-                $this->staffs = User::get();
+        if ($this->task != null) {
+            $operators = json_decode($this->task->operators);
+            if (gettype($operators) != "array") {
+                $operators = [];
             }
+            $roles = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
+
+            $this->subRoles = Role::whereIn('report_to', $roles)->get();
+
+            $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
+            // TODO: Remove on production
+            $this->staffs = User::get();
         }
     }
 
@@ -595,7 +594,6 @@ class TaxAuditApprovalProcessing extends Component
                 throw $e;
             }
         }
-
     }
 
 

@@ -22,8 +22,8 @@ class DebtWaiverAprovalProgressTable extends DataTableComponent
     {
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', DebtWaiver::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff');
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF);
     }
 
     public function configure(): void

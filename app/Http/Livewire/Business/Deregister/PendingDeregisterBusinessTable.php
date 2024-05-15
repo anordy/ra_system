@@ -19,8 +19,8 @@ class PendingDeregisterBusinessTable extends DataTableComponent
     {
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', BusinessDeregistration::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF)
             ->whereHas('actors', function ($query) {
                 $query->where('user_id', auth()->id());
             });
@@ -35,13 +35,13 @@ class PendingDeregisterBusinessTable extends DataTableComponent
             'class' => 'table-bordered table-sm',
         ]);
     }
-    
+
     public function columns(): array
     {
         return [
             Column::make('ZTN No', 'pinstance.business.ztn_number')
                 ->label(fn ($row) => $row->pinstance->business->ztn_number ?? '')
-                ->sortable(), 
+                ->sortable(),
             Column::make('Name', 'pinstance.business.name')
                 ->label(fn ($row) => $row->pinstance->business->name ?? '')
                 ->sortable(),
@@ -73,5 +73,4 @@ class PendingDeregisterBusinessTable extends DataTableComponent
 
         ];
     }
-
 }

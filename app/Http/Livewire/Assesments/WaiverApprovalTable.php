@@ -27,17 +27,16 @@ class WaiverApprovalTable extends DataTableComponent
 
         $workflow = WorkflowTask::with('pinstance')
             ->where('pinstance_type', Dispute::class)
-            ->where('status', '!=', 'completed')
+            ->where('status', '!=', WorkflowTask::COMPLETED)
             ->whereHasMorph('pinstance', Dispute::class, function ($query) {
                 $query->where('category', $this->category)
-                       ->where('payment_status', [BillStatus::COMPLETE]);
+                    ->where('payment_status', [BillStatus::COMPLETE]);
             })
-            ->where('owner', 'staff')
+            ->where('owner', WorkflowTask::STAFF)
             ->whereHas('actors', function ($query) {
                 $query->where('user_id', auth()->id());
             });
         return $workflow;
-
     }
 
     public function configure(): void
@@ -56,23 +55,23 @@ class WaiverApprovalTable extends DataTableComponent
             // Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
             // Column::make('user_type', 'user_id')->hideIf(true),
             Column::make('TIN', 'pinstance.business.tin')
-                ->label(fn($row) => $row->pinstance->business->tin ?? ''),
+                ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
             Column::make('Business Name', 'pinstance.business.name')
-                ->label(fn($row) => $row->pinstance->business->name ?? ''),
+                ->label(fn ($row) => $row->pinstance->business->name ?? ''),
             Column::make('Owner ', 'pinstance.business.owner_designation')
-                ->label(fn($row) => $row->pinstance->business->owner_designation ?? ''),
+                ->label(fn ($row) => $row->pinstance->business->owner_designation ?? ''),
             Column::make('Business Mobile', 'pinstance.business.mobile')
-                ->label(fn($row) => $row->pinstance->business->mobile ?? ''),
+                ->label(fn ($row) => $row->pinstance->business->mobile ?? ''),
             Column::make('Category', 'pinstance.category')
-                ->label(fn($row) => $row->pinstance->category ?? ''),
+                ->label(fn ($row) => $row->pinstance->category ?? ''),
             Column::make('Tax In Dispute', 'pinstance.tax_in_dispute')
-                ->label(fn($row) => $row->pinstance->tax_in_dispute ?? ''),
+                ->label(fn ($row) => $row->pinstance->tax_in_dispute ?? ''),
             Column::make('Tax Not in Dispute', 'pinstance.tax_not_in_dispute')
-                ->label(fn($row) => $row->pinstance->tax_not_in_dispute ?? ''),
+                ->label(fn ($row) => $row->pinstance->tax_not_in_dispute ?? ''),
             Column::make('Tax Deposit', 'pinstance.tax_deposit')
-                ->label(fn($row) => $row->pinstance->tax_deposit ?? ''),
+                ->label(fn ($row) => $row->pinstance->tax_deposit ?? ''),
             Column::make('Filled On', 'created_at')
-                ->format(fn($value) => Carbon::create($value)->toDayDateTimeString()),
+                ->format(fn ($value) => Carbon::create($value)->toDayDateTimeString()),
             Column::make('Action', 'pinstance_id')
                 ->view('assesments.waiver.includes.action')
                 ->html(true),

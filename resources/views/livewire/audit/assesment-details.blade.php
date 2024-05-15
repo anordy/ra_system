@@ -1,5 +1,5 @@
 @php
-    use App\Models\TaxType;
+    use App\Helpers\TaxType;
     $taxTypeCode = $taxType->code;
 @endphp
 

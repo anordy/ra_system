@@ -11,7 +11,10 @@ class BfoConfig extends Model
 
     protected $table = 'bfo_configs';
 
-    public function items() {
+    const TotalFBO = 'TotalFBO';
+
+    public function items()
+    {
         return $this->hasMany(BfoReturnItems::class);
     }
 }

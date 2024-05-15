@@ -29,8 +29,8 @@ class InstallmentRequestsApprovalTable extends DataTableComponent
     {
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', InstallmentRequest::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff');
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF);
     }
 
     public function columns(): array
@@ -46,22 +46,22 @@ class InstallmentRequestsApprovalTable extends DataTableComponent
             Column::make('Type', 'pinstance.taxType.name')
                 ->label(fn ($row) => $row->pinstance->taxType->name ?? ''),
             Column::make('Total Amount', 'pinstance.extensible.total_amount')
-                ->label(function ($row){
+                ->label(function ($row) {
                     return "{$row->pinstance->installable->total_amount} {$row->pinstance->installable->currency}";
                 }),
             Column::make('Outstanding Amount', 'installable.outstanding_amount')
-                ->label(function ($row){
+                ->label(function ($row) {
                     return "{$row->pinstance->installable->outstanding_amount} {$row->pinstance->installable->currency}";
                 }),
             Column::make('Requested At', 'created_at')
                 ->label(fn ($row) => $row->pinstance->created_at->toFormattedDateString() ?? ''),
             Column::make('Status', 'status')
-                ->label(function($row){
+                ->label(function ($row) {
                     $row = $row->pinstance;
                     return view('installment.requests.includes.status', compact('row'));
                 }),
             Column::make('Action', 'id')
-                ->label(function($row){
+                ->label(function ($row) {
                     $row = $row->pinstance;
                     return view('installment.requests.includes.actions', compact('row'));
                 }),

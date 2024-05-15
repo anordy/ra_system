@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Audit;
 
+use App\Enum\TaxAuditStatus;
 use App\Models\Business;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxAudit\TaxAuditLocation;
@@ -50,14 +51,13 @@ class BusinessAuditAddModal extends Component
 
     public function mount($jsonData = null)
     {
-        $this->business = Business::all();
+        $this->business = Business::select('id', 'name')->get();
 
         if (isset($jsonData)) {
             $this->business_id = $jsonData['business_id'];
             $this->businessChange($this->business_id);
             $this->location_ids[] = $jsonData['location_ids'];
         }
-
     }
 
     public function businessChange($id)
@@ -65,7 +65,8 @@ class BusinessAuditAddModal extends Component
         if ($this->business_id) {
             $this->selectedBusiness = Business::with('locations', 'taxTypes')->find($id);
             if (is_null($this->selectedBusiness)) {
-                abort(404);
+                $this->customAlert('warning', 'The selected business location does not exist');
+                return;
             }
             $this->taxTypes         = $this->selectedBusiness->taxTypes;
             $this->locations        = $this->selectedBusiness->locations;
@@ -89,14 +90,13 @@ class BusinessAuditAddModal extends Component
             ->whereHas('taxAuditTaxTypes', function ($query) use ($tax_type_ids) {
                 $query->whereIn('business_tax_type_id', $tax_type_ids);
             })
-            ->whereIn('status', ['draft', 'pending'])
+            ->whereIn('status', [TaxAuditStatus::DRAFT, TaxAuditStatus::PENDING])
             ->first();
 
         if ($check) {
             $this->customAlert('warning', 'The selected business location and tax type is already on auditing');
             return;
         }
-
 
         DB::beginTransaction();
         try {
@@ -110,35 +110,51 @@ class BusinessAuditAddModal extends Component
                 'period_to' => $this->period_to,
                 'created_by_id' => auth()->user()->id,
                 'created_by_type' => get_class(auth()->user()),
-                'status' => 'draft',
+                'status' => TaxAuditStatus::DRAFT,
                 'origin' => 'manual'
             ]);
 
-            foreach ($this->location_ids as $location_id) {
+            //TODO: check if this is correct or not
 
-                TaxAuditLocation::create([
+            // Check if TaxAudit creation was successful
+            if (!$taxAudit) {
+                throw new Exception('Failed to create Tax Audit record');
+            }
+
+            foreach ($this->location_ids as $location_id) {
+                $taxAuditLocation = TaxAuditLocation::create([
                     'tax_audit_id' => $taxAudit->id,
                     'business_location_id' => $location_id
                 ]);
+
+                // Check if TaxAuditLocation creation was successful
+                if (!$taxAuditLocation) {
+                    throw new Exception('Failed to create Tax Audit Location record');
+                }
             }
 
             foreach ($this->tax_type_ids as $tax_type_id) {
-
-                TaxAuditTaxType::create([
+                $taxAuditTaxType = TaxAuditTaxType::create([
                     'tax_audit_id' => $taxAudit->id,
                     'business_tax_type_id' => $tax_type_id
                 ]);
+
+                // Check if TaxAuditTaxType creation was successful
+                if (!$taxAuditTaxType) {
+                    throw new Exception('Failed to create Tax Audit Tax Type record');
+                }
             }
 
             DB::commit();
             $this->customAlert('success', 'Business added to Auditing successfully');
-            redirect()->route('tax_auditing.approvals.index');
+            return redirect()->route('tax_auditing.approvals.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
+
 
     public function render()
     {
