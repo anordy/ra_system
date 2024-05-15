@@ -493,14 +493,14 @@ class TaxAuditApprovalProcessing extends Component
         foreach ($this->taxAssessments as $taxAssessment) {
 
             $assessment = $taxAssessment;
-            $taxType = TaxType::findOrFail($assessment->tax_type_id, ['id', 'code', 'gfs_code']);
+            $taxType = TaxType::findOrFail($assessment->tax_type_id, ['id', 'code', 'gfs_code', 'name']);
 
-            $taxTypes = TaxType::select('id', 'code', 'gfs_code')->get();
+            $taxTypes = TaxType::select('id', 'code', 'gfs_code', 'name')->get();
 
             if ($taxType->code === TaxType::VAT) {
                 $businessTaxType = BusinessTaxType::where('business_id', $assessment->business_id)
                     ->where('tax_type_id', $taxType->id)->firstOrFail();
-                $taxType = SubVat::findOrFail($businessTaxType->sub_vat_id, ['id', 'code', 'gfs_code']);
+                $taxType = SubVat::findOrFail($businessTaxType->sub_vat_id, ['id', 'code', 'gfs_code', 'name']);
             }
 
             $billitems = [
@@ -541,7 +541,7 @@ class TaxAuditApprovalProcessing extends Component
                 $payer_name = $this->subject->business->name;
                 $payer_email = $taxpayer->email;
                 $payer_phone = $taxpayer->mobile;
-                $description = "Tax Auditing Assessment for {$taxType}";
+                $description = "Tax Auditing Assessment for {$taxType->name}";
                 $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
                 $currency = $assessment->currency;
                 $createdby_type = get_class(Auth::user());

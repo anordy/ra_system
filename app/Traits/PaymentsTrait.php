@@ -61,6 +61,8 @@ trait PaymentsTrait
                     $billable->payment_status = ReturnStatus::CN_GENERATED;
                 }
 
+                $billable->save();
+
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = 'pending';
