@@ -127,7 +127,11 @@
     <div id="owner-name">{{ strtoupper($license->drivers_license_owner->fullname()) }}</div>
     <div id="sex">{{ strtoupper($license->drivers_license_owner->gender ?? 'N/A') }}</div>
     <div id="dob">{{ \Carbon\Carbon::parse($license->drivers_license_owner->dob)->format('d/m/Y') }}</div>
-    <div id="restrictions">{{ $license->license_restrictions }}</div>
+    <div id="restrictions">
+        @foreach($license->licenseRestrictions as $lR)
+            {{ $lR->restriction->symbol }} @if(!$loop->last)/ @endif
+        @endforeach
+    </div>
     <div id="issue">{{ \Carbon\Carbon::parse($license->issued_date)->format('d/m/Y') }}</div>
     <div id="expiry">{{ \Carbon\Carbon::parse($license->expiry_date)->format('d/m/Y') }}</div>
     <div id="blood-group">{{ $license->drivers_license_owner->blood_group }}</div>

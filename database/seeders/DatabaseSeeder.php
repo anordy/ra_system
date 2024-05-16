@@ -75,6 +75,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DlClassAdditionFeeTableSeeder::class);
         $this->call(DlClassAdditionFeeTableSeeder::class);
         $this->call(DlClassAdditionFeeTableSeeder::class);
+        $this->call(DlRestrictionsSeeder::class);
         $this->call(SequencesTableSeeder::class);
         $this->call(MainRegionSeeder::class);
         $this->call(TaxTypePrefixSeeder::class);

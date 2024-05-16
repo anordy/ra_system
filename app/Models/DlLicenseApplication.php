@@ -103,4 +103,8 @@ class DlLicenseApplication extends Model implements Auditable
         return $bill_item->bill ??  null;
     }
 
+    public function licenseRestrictions()
+    {
+        return $this->hasMany(DlLicenseRestriction::class,'dl_license_application_id');
+    }
 }

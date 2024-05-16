@@ -298,6 +298,10 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-dl-duration-view', 'sys_module_id' => 18],
             ['name' => 'setting-dl-fee-view', 'sys_module_id' => 18],
             ['name' => 'setting-dl-blood-group-view', 'sys_module_id' => 18],
+            ['name' => 'setting-dl-restriction-view', 'sys_module_id' => 18],
+            ['name' => 'setting-dl-restriction-add', 'sys_module_id' => 18],
+            ['name' => 'setting-dl-restriction-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-dl-restriction-delete', 'sys_module_id' => 18],
 
 
             ['name' => 'setting-case-stage-view', 'sys_module_id' => 18],

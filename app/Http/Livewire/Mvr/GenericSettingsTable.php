@@ -6,6 +6,7 @@ use App\Enum\GeneralConstant;
 use App\Models\DlFee;
 use App\Models\DlLicenseClass;
 use App\Models\DlLicenseDuration;
+use App\Models\DlRestriction;
 use App\Models\GenericSettingModel;
 use App\Models\MvrColor;
 use App\Models\MvrFee;
@@ -150,6 +151,11 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("Type", "type")->sortable(),
                 Column::make("Duration", "license_duration.number_of_years")->sortable(),
             ],
+            DlRestriction::class => [
+                Column::make("Code", "code")->sortable(),
+                Column::make("Description", "description")->sortable(),
+                Column::make("Symbol", "symbol")->sortable(),
+            ],
         ];
 
         return $model_extra_columns[$this->model]??[];
@@ -158,6 +164,7 @@ class GenericSettingsTable extends DataTableComponent
     private function modelHasNameColumn(){
         $models_with_no_name_columns = [
             DlLicenseDuration::class => 1,
+            DlRestriction::class => 1
         ];
 
         return empty($models_with_no_name_columns[$this->model]);
