@@ -25,6 +25,7 @@ class TransferApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $approvalReport, $agreementContract, $vehicleInspectionReport;
+    public $affidavit, $ownerId, $originalCard;
 
     public function mount($modelName, $modelId)
     {
@@ -47,15 +48,43 @@ class TransferApprovalProcessing extends Component
 
                 $this->validate(
                     [
-                        'agreementContract' => 'nullable|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
+                        'agreementContract' => $this->subject->agreement_contract ? 'nullable' : 'required|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
+                        'affidavit' => $this->subject->affidavit ? 'nullable' :  'required|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
+                        'originalCard' => $this->subject->original_card ? 'nullable' :  'required|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
+                        'ownerId' => $this->subject->owner_id ? 'nullable' :  'required|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
+                    ],
+                    [
+                        'agreementContract.required' => 'Sales document is required',
+                        'affidavit.required' => 'Affidavit document is required',
+                        'originalCard.required' => 'Original card document is required',
+                        'ownerId.required' => 'Owner identification file is required',
                     ]
                 );
 
-                $agreementContract = "";
-                if ($this->agreementContract) {
+                $agreementContract = $this->agreementContract;
+                if ($this->subject->agreement_contract_path != $this->agreementContract && $this->agreementContract) {
                     $agreementContract = $this->agreementContract->store('mvrZartsaReport', 'local');
                 }
+
+                $affidavit = $this->affidavit;
+                if ( $this->subject->affidavit != $this->affidavit && $this->affidavit) {
+                    $affidavit = $this->affidavit->store('mvrZartsaReport', 'local');
+                }
+
+                $ownerId = $this->ownerId;
+                if ($this->subject->owner_id != $this->ownerId && $this->ownerId) {
+                    $ownerId = $this->ownerId->store('mvrZartsaReport', 'local');
+                }
+
+                $originalCard = $this->originalCard;
+                if ($this->subject->original_card != $this->originalCard && $this->originalCard) {
+                    $originalCard = $this->originalCard->store('mvrZartsaReport', 'local');
+                }
+
                 $this->subject->agreement_contract_path = $agreementContract;
+                $this->subject->affidavit = $affidavit;
+                $this->subject->original_card = $originalCard;
+                $this->subject->owner_id = $ownerId;
                 $this->subject->save();
             }
 
@@ -197,7 +226,7 @@ class TransferApprovalProcessing extends Component
 
     public function render()
     {
-        return view('livewire.approval.mvr.status');
+        return view('livewire.approval.mvr.transfer');
     }
 }
 

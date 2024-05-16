@@ -36,7 +36,12 @@ class MotorVehicleRegistrationController extends Controller
             abort(403);
         }
         $motorVehicle = MvrRegistration::findOrFail(decrypt($id));
-        return view('mvr.registration.show', compact('motorVehicle'));
+        $plateHistories = MvrRegistration::with(['agent', 'taxpayer'])
+            ->select('id', 'plate_number', 'registration_number', 'registered_at', 'status', 'is_agent_registration', 'use_company_name', 'taxpayer_id', 'registrant_tin')
+            ->where('chassis_number_id', $motorVehicle->chassis_number_id)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+        return view('mvr.registration.show', compact('motorVehicle', 'plateHistories'));
     }
 
 

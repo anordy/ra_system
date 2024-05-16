@@ -9,6 +9,7 @@ use App\Jobs\SendCustomSMS;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistrationStatusChangeFile;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
@@ -26,12 +27,19 @@ class StatusApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $approvalReport;
+    public $attachments = [];
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId   = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
+        $this->attachments = [
+            [
+                'name' => '',
+                'file' => '',
+            ],
+        ];
     }
     public function approve($transition) {
         $transition = $transition['data']['transition'];
@@ -40,20 +48,43 @@ class StatusApprovalProcessing extends Component
             'comments' => 'required|strip_tag',
         ]);
 
+        if ($this->checkTransition('mvr_zartsa_review')) {
+            $this->validate(
+                [
+                    'approvalReport' => $this->subject->approval_report ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
+                    'attachments.*.name' => count($this->subject->attachments) > 0 ? 'nullable' : 'required|strip_tag',
+                    'attachments.*.file' => count($this->subject->attachments) > 0 ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
+                ],
+                [
+                    'approvalReport.required' => 'Please upload Inspection report document'
+                ]
+            );
+        }
+
         try {
             DB::beginTransaction();
             if ($this->checkTransition('mvr_zartsa_review')) {
 
-                $this->validate(
-                    [
-                        'approvalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
-                    ]
-                );
+                foreach ($this->attachments as $attachment) {
+                    if ($attachment['file'] && $attachment['name']) {
+                        $documentPath = $attachment['file']->store("/mvr_status_change");
 
-                $approvalReport = "";
-                if ($this->approvalReport) {
-                    $approvalReport = $this->approvalReport->store('mvrZartsaReport', 'local');
+                        $file = MvrRegistrationStatusChangeFile::create([
+                            'mvr_status_change_id' => $this->subject->id,
+                            'location' => $documentPath,
+                            'name' => $attachment['name'],
+                        ]);
+
+                        if (!$file) throw new Exception('Failed to save mvr status change file');
+
+                    }
                 }
+
+                $approvalReport = $this->approvalReport;
+                if ($this->subject->approval_report != $this->approvalReport && $this->approvalReport) {
+                        $approvalReport = $this->approvalReport->store('mvrZartsaReport', 'local');
+                }
+
                 $this->subject->approval_report = $approvalReport;
                 $this->subject->save();
             }
@@ -131,6 +162,19 @@ class StatusApprovalProcessing extends Component
     protected $listeners = [
         'approve', 'reject'
     ];
+
+    public function addAttachment()
+    {
+        $this->attachments[] = [
+            'name' => '',
+            'file' => '',
+        ];
+    }
+
+    public function removeAttachment($i)
+    {
+        unset($this->attachments[$i]);
+    }
 
     public function confirmPopUpModal($action, $transition)
     {

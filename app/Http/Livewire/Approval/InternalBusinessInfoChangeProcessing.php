@@ -15,6 +15,7 @@ use App\Models\ISIC1;
 use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
+use App\Models\LumpSumPayment;
 use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\Taxpayer;
@@ -268,26 +269,29 @@ class InternalBusinessInfoChangeProcessing extends Component
                 if ($this->subject->type === InternalInfoType::TAX_TYPE) {
                     $this->info->business->taxTypes()->detach();
 
-                    if ($this->showLumpsumOptions == true) {
-                        DB::table('lump_sum_payments')->insert([
-                            'filed_by_id' => auth()->user()->id,
-                            'business_id' => $this->info->business_id,
-                            'business_location_id' => $this->info->location_id,
-                            'annual_estimate' => $this->lumpsumPayment['annualEstimate'][0],
-                            'payment_quarters' => $this->lumpsumPayment['quarters'][0],
-                            'currency' => $this->lumpsumPayment['currency'][0],
-                        ]);
-                    }
 
                     foreach ($this->selectedTaxTypes as $type) {
-                        DB::table('business_tax_type')->insert([
-                            'business_id' => $this->info->business_id,
-                            'tax_type_id' => $type['tax_type_id'],
-                            'sub_vat_id' => $type['sub_vat_id'] ?? null,
-                            'currency' => $type['currency'],
-                            'created_at' => Carbon::now(),
-                            'status' => 'current-used'
-                        ]);
+                        $taxType = TaxType::findOrFail($type['tax_type_id'], ['id', 'code']);
+                        if ($taxType->code != TaxType::LUMPSUM_PAYMENT) {
+                            DB::table('business_tax_type')->insert([
+                                'business_id' => $this->info->business_id,
+                                'tax_type_id' => $type['tax_type_id'],
+                                'sub_vat_id' => $type['sub_vat_id'] ?? null,
+                                'currency' => $type['currency'],
+                                'created_at' => Carbon::now(),
+                                'status' => 'current-used'
+                            ]);
+                        } else {
+                            LumpSumPayment::where('business_location_id', $this->info->location_id)->delete();
+                            LumpSumPayment::create([
+                                'filed_by_id' => auth()->user()->id,
+                                'business_id' => $this->info->business_id,
+                                'business_location_id' => $this->info->location_id,
+                                'annual_estimate' => $type['annual_estimate'],
+                                'payment_quarters' => $type['quarters'],
+                                'currency' => $type['currency'],
+                            ]);
+                        }
                     }
                 }
 
