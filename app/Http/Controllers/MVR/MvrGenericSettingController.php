@@ -11,6 +11,7 @@ use App\Models\DlBloodGroup;
 use App\Models\DlFee;
 use App\Models\DlLicenseClass;
 use App\Models\DlLicenseDuration;
+use App\Models\DlRestriction;
 use App\Models\GenericSettingModel;
 use App\Models\MvrBodyType;
 use App\Models\MvrColor;
@@ -79,6 +80,8 @@ class MvrGenericSettingController extends Controller
             $permission = 'setting-mvr-color-view';
         } else if ($class === MvrRegistrationType::class) {
             $permission = 'setting-mvr-color-view';
+        } else if ($class === DlRestriction::class){
+            $permission = 'setting-dl-restriction-view';
         }
 
         if (!Gate::allows($permission)) {

@@ -159,6 +159,9 @@ class CapturePassportModal extends Component
             ]);
         }
 
+        // Update restrictions
+        $dla->licenseRestrictions()->update(['dl_license_id' => $newLicense->id]);
+
         $this->licenseId = $newLicense->id;
 
         return $newLicense;

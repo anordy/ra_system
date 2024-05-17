@@ -37,6 +37,43 @@
                 </div>
                 <div class="card-body row">
                     <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Status</span>
+                        <p class="my-1">
+                            @if ($application->status == \App\Models\DlApplicationStatus::STATUS_PENDING_PAYMENT)
+                                <span class="font-weight-bold text-info">
+                                        <i class="bi bi-clock-history mr-1"></i>
+                                        Pending payment
+                                    </span>
+                            @elseif($application->status == \App\Models\DlApplicationStatus::STATUS_COMPLETED)
+                                <span class="font-weight-bold text-success">
+                                        <i class="bi bi-check-circle-fill mr-1"></i>
+                                        Completed
+                                    </span>
+                            @elseif($application->status == \App\Models\DlApplicationStatus::STATUS_PENDING_APPROVAL)
+                                <span class="font-weight-bold text-info">
+                                        <i class="bi bi-clock-history mr-1"></i>
+                                        Waiting Approval
+                                    </span>
+                            @elseif($application->status == \App\Models\DlApplicationStatus::STATUS_INITIATED)
+                                <span class="font-weight-bold text-warning">
+                                        <i class="bi bi-pen-fill mr-1"></i>
+                                        Initiated
+                                    </span>
+                            @elseif($application->status == \App\Models\DlApplicationStatus::STATUS_DETAILS_CORRECTION)
+                                <span class="font-weight-bold text-warning">
+                                        <i class="bi bi-pen-fill mr-1"></i>
+                                        Returned
+                                    </span>
+                            @else
+                                <span class="font-weight-bold text-info">
+                                        <i class="bi bi-clock-history mr-1"></i>
+                                        {{ $application->status }}
+                                    </span>
+                            @endif
+                        </p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Application Type</span>
                         <p class="my-1">{{ $application->type ?? 'N/A' }}</p>
                     </div>
@@ -95,42 +132,21 @@
 
                         </p>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Status</span>
-                        <p class="my-1">
-                            @if ($application->status == \App\Models\DlApplicationStatus::STATUS_PENDING_PAYMENT)
-                                <span class="font-weight-bold text-info">
-                                        <i class="bi bi-clock-history mr-1"></i>
-                                        Pending payment
-                                    </span>
-                            @elseif($application->status == \App\Models\DlApplicationStatus::STATUS_COMPLETED)
-                                <span class="font-weight-bold text-success">
-                                        <i class="bi bi-check-circle-fill mr-1"></i>
-                                        Completed
-                                    </span>
-                            @elseif($application->status == \App\Models\DlApplicationStatus::STATUS_PENDING_APPROVAL)
-                                <span class="font-weight-bold text-info">
-                                        <i class="bi bi-clock-history mr-1"></i>
-                                        Waiting Approval
-                                    </span>
-                            @elseif($application->status == \App\Models\DlApplicationStatus::STATUS_INITIATED)
-                                <span class="font-weight-bold text-warning">
-                                        <i class="bi bi-pen-fill mr-1"></i>
-                                        Initiated
-                                    </span>
-                            @elseif($application->status == \App\Models\DlApplicationStatus::STATUS_DETAILS_CORRECTION)
-                                <span class="font-weight-bold text-warning">
-                                        <i class="bi bi-pen-fill mr-1"></i>
-                                        Returned
-                                    </span>
-                            @else
-                                <span class="font-weight-bold text-info">
-                                        <i class="bi bi-clock-history mr-1"></i>
-                                        {{ $application->status }}
-                                    </span>
-                            @endif
-                        </p>
-                    </div>
+
+
+                    @if($application->licenseRestrictions->count())
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{ __('License Restrictions') }}</span>
+                            <ul>
+                                @foreach ($application->licenseRestrictions as $licenseRestriction)
+                                    <li>
+                                        {{ $licenseRestriction->restriction->description }} ({{ $licenseRestriction->restriction->symbol }})
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <div class="col-md-4">
                         <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
                             <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
@@ -150,28 +166,21 @@
                     Applicant Details
                 </div>
                 <div class="card-body row">
-                    <div class="col-md-4 mb-3">
-                        <div class="width-px-250">
-                            @if (strtolower($application->type) == 'FRESH' && empty($application->drivers_license_owner->photo_path))
-                                <div class="dl-photo">
-                                    <img src="{{ url('/images/profile.png') }}" class="width-percent-100 object-fit-contain">
-                                </div>
-                            @else
-                                <div class="dl-photo">
-                                    <img src="{{ route('drivers-license.license.file', encrypt($application->drivers_license_owner->photo_path)) }}"
-                                         class="width-percent-100">
-                                </div>
-                            @endif
-                            @if ($application->status === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
-                                <button class="btn btn-primary btn-sm btn-block"
-                                        onclick="Livewire.emit('showModal', 'drivers-license.capture-passport-modal',{{ $application->id }})">
-                                    <i class="fa fa-camera"></i>
-                                    Capture Passport
-                                </button>
-                            @endif
-                        </div>
+                    <div class="col-auto px-4">
+                        @if ($application->type == 'FRESH' && empty($application->drivers_license_owner->photo_path))
+                            <img class="dl-passport shadow" src="{{ url('/images/profile.png') }}">
+                        @else
+                            <img class="dl-passport shadow"  src="{{ route('drivers-license.license.file', encrypt($application->drivers_license_owner->photo_path)) }}">
+                        @endif
+                        @if ($application->status === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
+                            <button class="btn btn-primary btn-sm btn-block mt-3"
+                                    onclick="Livewire.emit('showModal', 'drivers-license.capture-passport-modal',{{ $application->id }})">
+                                <i class="bi bi-camera-fill mr-1"></i>
+                                Capture Passport
+                            </button>
+                        @endif
                     </div>
-                    <div class="col-md-8 mt-3">
+                    <div class="col">
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">{{ __('name') }}</span>
@@ -238,13 +247,9 @@
                     </div>
                     <div class="card-body row">
                         @if($application->drivers_license_owner->photo_path)
-                            <div class="col-md-4">
-                                <div class="dl-photo-2">
-                                    <div class="dl-photo">
-                                        <img src="{{ route('drivers-license.license.file', encrypt($application->drivers_license_owner->photo_path)) }}"
-                                             class="width-percent-100">
-                                    </div>
-                                </div>
+                            <div class="col-auto px-4">
+                                <img src="{{ route('drivers-license.license.file', encrypt($application->drivers_license_owner->photo_path)) }}"
+                                     class="dl-passport shadow">
                             </div>
                         @endif
                         <div class="col">
@@ -263,6 +268,15 @@
                                             @endforeach
                                         @endif
                                     </p>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">License Restrictions</span>
+                                    <ol class="mx-0">
+                                        @foreach($application->licenseRestrictions as $licenseRestrictions)
+                                            <li>{{ $licenseRestrictions->restriction->description ?? 'N/A' }}</li>
+                                        @endforeach
+                                    </ol>
                                 </div>
 
                                 <div class="col-md-4 mb-3">

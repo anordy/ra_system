@@ -1078,6 +1078,12 @@
                         </li>
                     @endcan
 
+                    @can('setting-dl-restriction-view')
+                        <li class="{{ request()->is('settings/mvr-generic/DlRestriction') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'DlRestriction') }}">Driver's License Restrictions</a>
+                        </li>
+                    @endcan
+
                     @can('setting-case-stage-view')
                         <li class="{{ request()->is('settings/mvr-generic/CaseStage') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'CaseStage') }}">Case Stages</a>
