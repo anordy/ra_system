@@ -282,6 +282,14 @@ class InternalBusinessInfoChangeProcessing extends Component
                                 'status' => 'current-used'
                             ]);
                         } else {
+                            DB::table('business_tax_type')->insert([
+                                'business_id' => $this->info->business_id,
+                                'tax_type_id' => $type['tax_type_id'],
+                                'sub_vat_id' => $type['sub_vat_id'] ?? null,
+                                'currency' => $type['currency'],
+                                'created_at' => Carbon::now(),
+                                'status' => 'current-used'
+                            ]);
                             LumpSumPayment::where('business_location_id', $this->info->location_id)->delete();
                             LumpSumPayment::create([
                                 'filed_by_id' => auth()->user()->id,

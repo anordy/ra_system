@@ -165,7 +165,7 @@ Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
     Route::get('/transfer/{billId}', [QRCodeCheckController::class, 'transfer'])->name('transfer');
     Route::get('/mvr/de-registration/{id}', [QRCodeCheckController::class, 'mvrDeregistrationCertificate'])->name('mvr.de-registration');
     Route::get('/mvr/registration/{id}', [QRCodeCheckController::class, 'mvrRegistrationCertificate'])->name('mvr.registration');
-
+    Route::get('/road-license/{roadLicenseId}', [QRCodeCheckController::class, 'roadLicenseSticker'])->name('road-license.sticker');
 });
 
 Route::middleware('auth')->group(function () {
@@ -719,6 +719,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::name('road-license.')->prefix('road-license')->group(function () {
         Route::get('/show/{id}', [RoadLicenseController::class, 'show'])->name('show');
         Route::get('/index', [RoadLicenseController::class, 'index'])->name('index');
+        Route::get('/sticker/{id}', [RoadLicenseController::class, 'sticker'])->name('sticker');
     });
 
     Route::prefix('drivers-license')->as('drivers-license.')->group(function () {

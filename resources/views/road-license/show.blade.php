@@ -81,6 +81,19 @@
                             <span class="font-weight-bold text-uppercase">Unique Number</span>
                             <p class="my-1">{{ $roadLicense->urn ?? 'N/A' }}</p>
                         </div>
+                        @if($roadLicense->status == \App\Enum\RoadLicenseStatus::APPROVED)
+                            <div class="col-md-3 mb-3">
+                                <div class="file-item p-2 mb-3 d-flex rounded-sm align-items-center">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                                    <a target="_blank"
+                                       href="{{route('road-license.sticker',encrypt($roadLicense->id))}}"
+                                       class="ml-1 font-weight-bolder">
+                                        Download Sticker
+                                        <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
