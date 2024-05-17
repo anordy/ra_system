@@ -19,6 +19,7 @@ use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
+use App\Http\Controllers\RoadLicense\RoadLicenseController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -713,6 +714,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/agent', [AgentsController::class, 'index'])->name('agent');
         Route::get('/agent/create', [AgentsController::class, 'create'])->name('agent.create');
         Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
+    });
+
+    Route::name('road-license.')->prefix('road-license')->group(function () {
+        Route::get('/show/{id}', [RoadLicenseController::class, 'show'])->name('show');
+        Route::get('/index', [RoadLicenseController::class, 'index'])->name('index');
     });
 
     Route::prefix('drivers-license')->as('drivers-license.')->group(function () {
