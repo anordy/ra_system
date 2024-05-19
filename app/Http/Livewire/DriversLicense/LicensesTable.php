@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\DriversLicense;
 
 use App\Models\DlDriversLicense;
+use App\Models\DlDriversLicenseOwner;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
@@ -23,7 +24,6 @@ class LicensesTable extends DataTableComponent
 	public function configure(): void
     {
         $this->setPrimaryKey('id');
-
 	    $this->setTableWrapperAttributes([
 	      'default' => true,
 	      'class' => 'table-bordered table-sm',
@@ -36,6 +36,12 @@ class LicensesTable extends DataTableComponent
             Column::make("License Number", "license_number")
                 ->sortable()
                 ->searchable(),
+            Column::make(__("Applicant's Name"), "dl_drivers_license_owner_id")
+                ->format(function ($dl_drivers_license_owner_id) {
+                    $owner = DlDriversLicenseOwner::find($dl_drivers_license_owner_id);
+                    return $owner ? $owner->fullname() : null;
+                })
+                ->sortable(),
             Column::make("TIN", "drivers_license_owner.taxpayer.tin")
                 ->sortable(),
             Column::make("Issue Date", "issued_date")
@@ -43,6 +49,8 @@ class LicensesTable extends DataTableComponent
                 ->sortable(),
             Column::make("Expire Date", "expiry_date")
                 ->format(fn($date)=>Carbon::parse($date)->format('Y-m-d'))
+                ->sortable(),
+            Column::make("Status", "status")
                 ->sortable(),
             Column::make('Action', 'id')
                 ->format(function ($value) {

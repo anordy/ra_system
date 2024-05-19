@@ -18,20 +18,20 @@
 
         #no-top {
             position: fixed;
-            top: 310px;
+            top: 355px;
             left: 200px;
-        }
-
-        #barcode {
-            position: fixed;
-            top: 480px;
-            left: 320px;
         }
 
         #no-inner {
             position: fixed;
             top: 490px;
             left: 720px;
+        }
+
+        #plate-number {
+            position: fixed;
+            top: 490px;
+            left: 320px;
         }
 
         #qr-code {
@@ -46,42 +46,60 @@
             left: 320px;
         }
 
-        #plate-number {
+        #category {
             position: fixed;
-            top: 630px;
+            top: 620px;
+            left: 320px;
+            width: 400px;
+        }
+
+        #reg-no {
+            position: fixed;
+            top: 720px;
+            left: 320px;
+            min-width: 430px;
+        }
+
+        #make {
+            position: fixed;
+            top: 800px;
+            left: 320px;
+        }
+
+        #pass-mark {
+            position: fixed;
+            top: 800px;
+            left: 805px;
+        }
+
+        #model {
+            position: fixed;
+            top: 890px;
             left: 320px;
         }
 
         #color {
             position: fixed;
-            top: 720px;
+            top: 950px;
             left: 320px;
         }
 
-        #passenger-capacity {
+        #weight {
             position: fixed;
-            top: 810px;
+            top: 1010px;
             left: 320px;
         }
 
         #issued-date {
             position: fixed;
-            top: 890px;
+            top: 1090px;
             left: 320px;
-            min-width: 430px;
         }
 
         #expiry-date {
             position: fixed;
-            top: 950px;
-            left: 320px;
-        }
-
-        #category {
-            position: fixed;
-            top: 1015px;
-            left: 320px;
-            width: 400px;
+            top: 1090px;
+            left: 605px;
         }
 
         #paid-amount-words {
@@ -103,16 +121,17 @@
 
 <div id="no-top">{{ strtoupper($roadLicense->id) }}</div>
 <div id="no-inner">{{ strtoupper($roadLicense->id) }}</div>
-<div id="barcode">
-    <img src="data:image/png;base64,' . {{ DNS1D::getBarcodePNG($roadLicense->id, 'C39+',3,50, array(1,1,1), true)  }} . '" alt="barcode"   />
-</div>
 <div id="owner-name">{{ strtoupper($roadLicense->taxpayer->fullname() ?? 'N/A') }}</div>
 <div id="plate-number">{{ strtoupper($roadLicense->registration->plate_number ?? 'N/A') }}</div>
 <div id="color">{{ strtoupper($roadLicense->registration->chassis->color ?? 'N/A') }}</div>
-<div id="passenger-capacity">{{ strtoupper($roadLicense->passengers_no ?? 'N/A') }}</div>
+<div id="reg-no">{{ strtoupper($roadLicense->registration->registration_number ?? 'N/A') }}</div>
+<div id="weight">{{ strtoupper($roadLicense->registration->chassis->gross_weight ?? 'N/A') }}</div>
+<div id="make">{{ strtoupper($roadLicense->registration->chassis->make ?? 'N/A') }}</div>
+<div id="pass-mark">Pass: {{ strtoupper($roadLicense->pass_mark ?? 'N/A') }}</div>
+<div id="model">{{ strtoupper($roadLicense->registration->chassis->model_type ?? 'N/A') }}</div>
 <div id="issued-date">{{ \Carbon\Carbon::parse($roadLicense->issued_date)->format('d/m/Y') }}</div>
 <div id="expiry-date">{{ \Carbon\Carbon::parse($roadLicense->expire_date)->format('d/m/Y') }}</div>
-<div id="category">{{ strtoupper($roadLicense->registration->category ?? 'N/A') }}</div>
+<div id="category">{{ strtoupper($roadLicense->registration->class->name ?? 'N/A') }}</div>
 <div id="paid-amount-words">
 
 </div>
