@@ -205,12 +205,82 @@
                                 <span class="font-weight-bold text-uppercase">{{ __('Alternative') }}</span>
                                 <p class="my-1">{{ $applicant->alt_mobile ?? 'N/A' }}</p>
                             </div>
-
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">{{ __('Date of birth') }}</span>
                                 <p class="my-1">{{ $applicant->dob ? Carbon\Carbon::parse($applicant->dob)->format('d-m-Y') : 'N/A' }}
                                 </p>
                             </div>
+                            @if($applicant->birth_certificate_no)
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">{{ __('Birth Certificate No.') }}</span>
+                                    <p class="my-1">{{ $applicant->birth_certificate_no ?? '' }}
+                                    </p>
+                                </div>
+                            @endif
+                            @if($applicant->birth_certificate)
+                                <div class="col-md-4">
+                                    <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                                        <a target="_blank"
+                                           href="{{ route('drivers-license.license.file', encrypt($applicant->birth_certificate)) }}"
+                                           class="ml-1"> Birth Certificate
+                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+                            @if($applicant->passport_no)
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">{{ __('Passport No.') }}</span>
+                                    <p class="my-1">{{ $applicant->passport_no ?? '' }}
+                                    </p>
+                                </div>
+                            @endif
+                            @if($applicant->passport_attachment)
+                                <div class="col-md-4">
+                                    <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                                        <a target="_blank"
+                                           href="{{ route('drivers-license.license.file', encrypt($applicant->passport_attachment)) }}"
+                                           class="ml-1"> Passport Attachment
+                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+                            @if($applicant->zan_id)
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">{{ __('ZanID') }}</span>
+                                    <p class="my-1">{{ $applicant->zan_id ?? '' }}
+                                    </p>
+                                </div>
+                            @endif
+                            @if($applicant->ref_no)
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">{{ __('Reference No.') }}</span>
+                                    <p class="my-1">{{ $applicant->ref_no ?? '' }}
+                                    </p>
+                                </div>
+                            @endif
+                            @if($applicant->nida)
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">{{ __('NIDA No') }}</span>
+                                    <p class="my-1">{{ $applicant->nida ?? '' }}
+                                    </p>
+                                </div>
+                            @endif
+                            @if($applicant->nida_attachment)
+                                <div class="col-md-4">
+                                    <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                                        <a target="_blank"
+                                           href="{{ route('drivers-license.license.file', encrypt($applicant->nida_attachment)) }}"
+                                           class="ml-1"> Passport Attachment
+                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
