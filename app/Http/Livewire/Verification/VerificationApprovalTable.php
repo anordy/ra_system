@@ -16,7 +16,7 @@ class VerificationApprovalTable extends DataTableComponent
     use CustomAlert, ReturnFilterTrait;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
-    
+
     public $data = [];
 
     public $model = WorkflowTask::class;
@@ -36,9 +36,9 @@ class VerificationApprovalTable extends DataTableComponent
         return $filter->with('pinstance', 'user')
             ->where('pinstance_type', TaxVerification::class)
             ->where('workflow_tasks.status', '!=', 'completed')
-            ->where('owner', 'staff')
-            ->leftJoin(TaxVerification::getTableName(), $returnTable.'.pinstance_id', TaxVerification::getTableName(). '.id')
-            ->whereHas('actors', function($query){
+            ->where('owner', WorkflowTask::STAFF)
+            ->leftJoin(TaxVerification::getTableName(), $returnTable . '.pinstance_id', TaxVerification::getTableName() . '.id')
+            ->whereHas('actors', function ($query) {
                 $query->where('user_id', auth()->id());
             });
     }

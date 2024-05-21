@@ -20,10 +20,6 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
 
     public function mount($taxRegion = null)
     {
-        // if (!Gate::allows('tax-returns-vetting-view')) {
-        //     abort(403);
-        // }
-
         $this->taxRegion = $taxRegion;
     }
 
@@ -31,8 +27,8 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
     {
         return WorkflowTask::with('pinstance', 'pinstance.location', 'pinstance.business', 'user')
             ->where('pinstance_type', TaxAudit::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff');
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF);
     }
 
     public function configure(): void

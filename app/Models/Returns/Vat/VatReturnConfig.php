@@ -12,12 +12,27 @@ class VatReturnConfig extends Model
     protected $table = 'vat_return_configs';
     protected $guarded = [];
 
+    const PURCHASES = [
+        'EIP',
+        'ELP',
+        'NCP',
+        'VDP',
+        'SLP',
+        'IP',
+        'SRI',
+        'SA',
+        'SC',
+    ];
+    const SALES = ['SRS', 'ZRS', 'ES', 'SER'];
+
+
     public function items()
     {
         return $this->hasMany(VatReturnItem::class, 'config_id', 'id');
     }
 
-    public function year() {
-        return $this->belongsTo(FinancialYear::class, 'financial_year_id','id');
+    public function year()
+    {
+        return $this->belongsTo(FinancialYear::class, 'financial_year_id', 'id');
     }
 }

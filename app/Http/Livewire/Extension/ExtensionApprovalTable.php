@@ -32,9 +32,9 @@ class ExtensionApprovalTable extends DataTableComponent
     {
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', ExtensionRequest::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
-            ->whereHas('actors', function($query){
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF)
+            ->whereHas('actors', function ($query) {
                 $query->where('user_id', auth()->id());
             });
     }
@@ -52,22 +52,22 @@ class ExtensionApprovalTable extends DataTableComponent
             Column::make('Type', 'pinstance.taxType.name')
                 ->label(fn ($row) => $row->pinstance->taxType->name ?? ''),
             Column::make('Total Amount', 'pinstance.extensible.total_amount')
-                ->label(function ($row){
+                ->label(function ($row) {
                     return "{$row->pinstance->extensible->total_amount} {$row->pinstance->extensible->currency}";
                 }),
             Column::make('Outstanding Amount', 'extensible.outstanding_amount')
-                ->label(function ($row){
+                ->label(function ($row) {
                     return "{$row->pinstance->extensible->outstanding_amount} {$row->pinstance->extensible->currency}";
                 }),
             Column::make('Requested At', 'created_at')
                 ->label(fn ($row) => $row->pinstance->created_at->toFormattedDateString() ?? ''),
             Column::make('Status', 'status')
-                ->label(function($row){
+                ->label(function ($row) {
                     $row = $row->pinstance;
                     return view('extension.includes.status', compact('row'));
                 }),
             Column::make('Action', 'id')
-                ->label(function($row){
+                ->label(function ($row) {
                     $row = $row->pinstance;
                     return view('extension.includes.actions', compact('row'));
                 }),

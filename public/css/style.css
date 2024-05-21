@@ -30,6 +30,24 @@ a:focus {
     border: none;
 }
 
+.custom-payment-box {
+    border-radius: 1rem;
+    background: #72DC3559;
+    color: #319e0a;
+    font-size: 85%;
+}
+
+.highlighted-file-box {
+    background: #faf5f5;
+    color: #036a9e;
+    border: .5px solid #036a9e24;
+    padding: 2px;
+    margin-bottom: 3px;
+    display: flex;
+    border-radius: 4px;
+    align-items: center;
+}
+
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */

@@ -15,44 +15,51 @@ class TaxAssessmentPayment extends Component
 
     public $assessment;
 
-    public function mount($assessment){
+    public function mount($assessment)
+    {
         $this->assessment = $assessment;
     }
 
     public function getGepgStatus($code)
     {
-        return $this->getResponseCodeStatus($code)['message'];
+        $responseStatus = $this->getResponseCodeStatus($code);
+
+        // Check if 'message' key exists using array_key_exists
+        if (array_key_exists('message', $responseStatus)) {
+            return $responseStatus['message'];
+        } else {
+            session()->flash('error', 'something went wrong, please contact your administrator');
+            return back();
+        }
     }
 
-    public function refresh(){
+
+    public function refresh()
+    {
         $this->assessment = get_class($this->assessment)::find($this->assessment->id);
-        if (!$this->assessment){
+        if (!$this->assessment) {
             session()->flash('error', 'Assessment not found.');
             return redirect()->back()->getTargetUrl();
         }
     }
 
-    public function regenerate(){
+    public function regenerate()
+    {
+        if (is_null($this->assessment->bill)) {
+            $this->customAlert('error', 'Missing bill information. Please try again.');
+            return back(); // Redirect back to the previous page
+        }
+
         $response = $this->regenerateControlNo($this->assessment->bill);
-        if ($response){
+        if ($response) {
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             return redirect(request()->header('Referer'));
         }
         $this->customAlert('error', 'Control number could not be generated, please try again later.');
     }
 
-    public function generateBill(){
-        try {
-            $this->generateAssessmentControlNumber($this->assessment);
-            $this->customAlert('success', 'Your request was submitted, you will receive your payment information shortly.');
-            return redirect(request()->header('Referer'));
-        } catch (\Exception $e) {
-            $this->customAlert('error', 'Control number could not be generated, please try again later.');
-            Log::error($e);
-        }
-    }
-
-    public function render(){
+    public function render()
+    {
         return view('livewire.assesments.assesment-payment');
     }
 }

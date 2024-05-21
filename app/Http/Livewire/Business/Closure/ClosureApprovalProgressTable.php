@@ -35,8 +35,8 @@ class ClosureApprovalProgressTable extends DataTableComponent
     {
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', BusinessTempClosure::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff');
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF);
     }
 
     public function columns(): array
@@ -52,19 +52,19 @@ class ClosureApprovalProgressTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Closing Date', 'pinstance_type')
-                ->label(fn($row) => $row->pinstance->closing_date ?? '')
+                ->label(fn ($row) => $row->pinstance->closing_date ?? '')
                 ->sortable()
                 ->searchable(),
             Column::make('Opening Date', 'pinstance_type')
-                ->label(fn($row) => $row->pinstance->opening_date ?? '')
+                ->label(fn ($row) => $row->pinstance->opening_date ?? '')
                 ->sortable()
                 ->searchable(),
             Column::make('From State', 'from_place')
-                ->format(fn($value) => strtoupper($value))
+                ->format(fn ($value) => strtoupper($value))
                 ->sortable()
                 ->searchable(),
             Column::make('Current State', 'to_place')
-                ->format(fn($value) => strtoupper($value))
+                ->format(fn ($value) => strtoupper($value))
                 ->sortable()
                 ->searchable(),
             Column::make('Status', 'status')->view('business.closure.includes.status'),

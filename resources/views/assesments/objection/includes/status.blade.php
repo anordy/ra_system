@@ -20,15 +20,13 @@
                 Rejected Changes
             </span>
         @elseif($row->businessUpdate->status === \App\Models\BusinessStatus::APPROVED)
-            <span class="badge badge-success py-1 px-2"
-                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+            <span class="badge badge-success py-1 px-2 custom-payment-box">
                 <i class="bi bi-check-circle-fill mr-1"></i>
                 Approved
             </span>
         @endif
     @else
-        <span class="badge badge-success py-1 px-2"
-            style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+        <span class="badge badge-success py-1 px-2 custom-payment-box">
             <i class="bi bi-check-circle-fill mr-1"></i>
             Approved
         </span>
