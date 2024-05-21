@@ -927,3 +927,7 @@ div.table-bordered {
     border-radius: 100%;
     border: 1px solid #d1d6d8;
 }
+
+.z-9999 {
+    z-index: 9999;
+}

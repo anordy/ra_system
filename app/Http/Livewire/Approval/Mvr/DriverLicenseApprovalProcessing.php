@@ -8,6 +8,8 @@ use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\DlApplicationStatus;
 use App\Models\DlFee;
+use App\Models\DlLicenseRestriction;
+use App\Models\DlRestriction;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
@@ -25,28 +27,62 @@ class DriverLicenseApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $approvalReport;
+    public $competenceCertificate;
+    public $selectedRestrictions, $restrictions;
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
+        $this->selectedRestrictions = [];
+        $this->restrictions = DlRestriction::select('id', 'symbol', 'description')->get();
     }
+
+    public function updatedSelectedRestrictions($value)
+    {
+        $this->selectedRestrictions[] = (int) $value;
+        // Remove 0 and false values from the array
+        $this->selectedRestrictions = array_filter($this->selectedRestrictions, function ($item) {
+            return $item !== 0 && $item !== false;
+        });
+        $this->selectedRestrictions = array_unique($this->selectedRestrictions);
+    }
+
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
 
-        $this->validate([
-            'comments' => 'required|strip_tag',
-        ]);
-
-
         try {
             DB::beginTransaction();
 
-
             if ($this->checkTransition('transport_officer_review') && $transition === 'transport_officer_review') {
+                $this->validate([
+                    'comments' => 'required|strip_tag',
+                    'competenceCertificate' => 'required|valid_pdf|max_file_name_length:100|max:3072',
+                ]);
+
+                DlLicenseRestriction::where('dl_license_application_id', $this->subject->id)->delete();
+                foreach ($this->selectedRestrictions as $_id => $_value) {
+                    if (!empty($_value)) {
+                        $class = DlLicenseRestriction::query()->create([
+                            'dl_license_application_id' => $this->subject->id,
+                            'dl_restriction_id' => $_id
+                        ]);
+
+                        if (!$class) {
+                            throw new \Exception('Could not persist driving license restriction information');
+                        }
+                    }
+                }
+
                 $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->completion_certificate = $this->competenceCertificate->store('/dl_files');
+                $this->subject->save();
+            } else {
+                $this->validate([
+                    'comments' => 'required|strip_tag',
+                ]);
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);

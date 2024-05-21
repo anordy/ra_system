@@ -5,17 +5,13 @@
         </div>
         <div class="card-body">
             @include('livewire.approval.transitions')
-
-            @if ($this->checkTransition('zbs_officer_review'))
-
+            @if ($this->checkTransition('transport_officer_review'))
                 <div class="row">
                     <div class="form-group col-lg-4">
-                        <label class="control-label">Inspection Report @if (!$this->inspectionReport)
-                                *
-                            @endif
+                        <label class="control-label">Competence Certificate @if (!$competenceCertificate)*@endif
                         </label>
-                        <input type="file" class="form-control" wire:model="inspectionReport" id="inspectionReport">
-                        @error('inspectionReport')
+                        <input type="file" class="form-control" wire:model="competenceCertificate" id="competenceCertificate">
+                        @error('competenceCertificate')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                         <div class="text-secondary small">
@@ -26,38 +22,40 @@
                                 {{ __('Uploaded Documents must be less than 3  MB in size') }}
                             </span>
                         </div>
-
                     </div>
 
-                    <div class="form-group col-lg-4">
-                        <label class="control-label">Inspection Date *</label>
-                        <input type="date" class="form-control" wire:model.lazy="inspectionDate" id="inspectionDate">
-                        @error('inspectionDate')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="form-group col-lg-4">
-                        <label class="control-label">Inspected mileage (Km) *</label>
-                        <input type="number" class="form-control" wire:model.lazy="mileage" id="mileage">
-                        @error('mileage')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    @if ($this->inspectionReport)
-                        <div class="col-md-4">
-                            <div style="background: #faf5f5; color: #036a9eea; border: .5px solid #036a9e24;"
-                                class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                <a target="_blank" href="{{ route('mvr.files', encrypt($this->inspectionReport)) }}"
-                                    class="ml-1">
-                                    Inspection Report
-                                    <i class="bi bi-arrow-up-right-square ml-1"></i>
-                                </a>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label">License Restrictions</label>
+                            <div x-data="{ selectedRestrictions: [], isOpen: false }">
+                                <div class="position-relative">
+                                    <button @click="isOpen = !isOpen" class="btn btn-outline-secondary w-100 text-start pr-2">
+                                        <div class="d-flex align-items-center justify-content-between text-dark font-weight-bold">
+                                            {{ count($selectedRestrictions) ? implode(', ', $selectedRestrictions) : 'Select Restrictions' }}
+                                            <span>
+                                                <span x-show="selectedRestrictions.length > 0" class="bg-primary text-white badge px-2 ">
+                                                    {{ count($selectedRestrictions) }}
+                                                </span>
+                                                <i class="bi bi-chevron-down"></i>
+                                            </span>
+                                        </div>
+                                    </button>
+                                    <div x-show="isOpen" @click.away="isOpen = false"
+                                         class="position-absolute bg-white border rounded mt-1 w-100 overflow-auto max-h-40 shadow z-9999"
+                                         x-cloak>
+                                        @foreach ($restrictions as $restriction)
+                                            <label class="d-block px-4 py-2 mb-0">
+                                                <input type="checkbox" x-model="selectedRestrictions"
+                                                       value="{{ $restriction->symbol }}"
+                                                       wire:model.lazy="selectedRestrictions.{{ $restriction->id }}">
+                                                {{ $restriction->description }} ({{ $restriction->symbol  }})
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    @endif
+                    </div>
                 </div>
 
             @endif
