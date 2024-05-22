@@ -39,6 +39,7 @@ class GeneralConstant implements Status
     const FRESH = 'fresh';
     const DUPLICATE = 'duplicate';
     const LOST = 'lost';
+    const ADD_CLASS = 'CLASS';
 
 
     public static function getConstants(): array

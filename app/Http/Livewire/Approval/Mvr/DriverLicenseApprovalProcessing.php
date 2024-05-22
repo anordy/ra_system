@@ -3,10 +3,13 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\GeneralConstant;
 use App\Enum\MvrRegistrationStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
+use App\Models\DlApplicationLicenseClass;
 use App\Models\DlApplicationStatus;
+use App\Models\DlDriversLicense;
 use App\Models\DlFee;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
@@ -47,6 +50,16 @@ class DriverLicenseApprovalProcessing extends Component
 
             if ($this->checkTransition('transport_officer_review') && $transition === 'transport_officer_review') {
                 $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
+
+                $dlAppLicenseClass = DlApplicationLicenseClass::where('dl_license_application_id', $this->subject->id)->count();
+                $lastDlLicense = DlDriversLicense::where('dl_drivers_license_owner_id', $this->subject->dl_drivers_license_owner_id)->latest()->first();
+                $lastDlLicenseClass = $lastDlLicense->drivers_license_classes->count();
+
+                if ($lastDlLicenseClass < $dlAppLicenseClass) {
+                    $lastDlLicense->status = GeneralConstant::ADD_CLASS;
+                    $lastDlLicense->save();
+                }
+
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
