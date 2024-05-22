@@ -4,6 +4,7 @@ namespace App\Http\Controllers\TaxpayerLedger;
 
 use App\Enum\Currencies;
 use App\Enum\CustomMessage;
+use App\Enum\ReportStatus;
 use App\Enum\TransactionType;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessLocation;
@@ -32,33 +33,37 @@ class TaxpayerLedgerController extends Controller
 
         try {
             $businessLocationId = decrypt($businessLocationId);
+
             $taxTypeId = decrypt($taxTypeId);
 
-            $tzsLedgers = TaxpayerLedger::select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
+            $tzsLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
                 ->where('business_location_id', $businessLocationId)
-                ->where('tax_type_id', $taxTypeId)
                 ->where('currency', Currencies::TZS)
                 ->orderBy('source_type', 'ASC')
                 ->orderBy('source_id', 'ASC')
-                ->orderBy('financial_month_id', 'ASC')
-                ->get();
+                ->orderBy('financial_month_id', 'ASC');
 
-            $usdLedgers = TaxpayerLedger::select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
+            $usdLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
                 ->where('business_location_id', $businessLocationId)
-                ->where('tax_type_id', $taxTypeId)
                 ->where('currency', Currencies::USD)
                 ->orderBy('source_type', 'ASC')
                 ->orderBy('source_id', 'ASC')
-                ->orderBy('financial_month_id', 'ASC')
-                ->get();
-
-            $ledgers = [
-                'USD' => $usdLedgers,
-                'TZS' => $tzsLedgers
-            ];
+                ->orderBy('financial_month_id', 'ASC');
 
             $locationName = BusinessLocation::findOrFail($businessLocationId, ['name'])->name;
-            $taxTypeName = TaxType::findOrFail($taxTypeId, ['name'])->name;
+
+            if ($taxTypeId === ReportStatus::All) {
+                $taxTypeName = 'All Tax Types';
+            } else {
+                $tzsLedgers->where('tax_type_id', $taxTypeId);
+                $usdLedgers->where('tax_type_id', $taxTypeId);
+                $taxTypeName = TaxType::findOrFail($taxTypeId, ['name'])->name;
+            }
+
+            $ledgers = [
+                'USD' => $usdLedgers->get(),
+                'TZS' => $tzsLedgers->get()
+            ];
 
             $tzsCreditSum = $ledgers['TZS']->where('transaction_type', TransactionType::CREDIT)->sum('total_amount') ?? 0;
             $tzsDebitSum = $ledgers['TZS']->where('transaction_type', TransactionType::DEBIT)->sum('total_amount') ?? 0;
@@ -66,8 +71,8 @@ class TaxpayerLedgerController extends Controller
             $usdDebitSum = $ledgers['USD']->where('transaction_type', TransactionType::DEBIT)->sum('total_amount') ?? 0;
 
             $summations = [
-              'TZS' => ['credit' => $tzsCreditSum, 'debit' => $tzsDebitSum],
-              'USD' => ['credit' => $usdCreditSum, 'debit' => $usdDebitSum],
+                'TZS' => ['credit' => $tzsCreditSum, 'debit' => $tzsDebitSum],
+                'USD' => ['credit' => $usdCreditSum, 'debit' => $usdDebitSum],
             ];
 
             return view('taxpayer-ledger.show', compact('ledgers', 'summations', 'locationName', 'taxTypeName'));
@@ -78,6 +83,7 @@ class TaxpayerLedgerController extends Controller
         }
 
     }
+
 
     public function summary($businessLocationId)
     {
@@ -90,8 +96,8 @@ class TaxpayerLedgerController extends Controller
 
             $location = BusinessLocation::findOrFail($businessLocationId);
 
-            $tzsLedgers = $this->getLedgerByCurrency(Currencies::TZS, $location->business_id);
-            $usdLedgers = $this->getLedgerByCurrency(Currencies::USD, $location->business_id);
+            $tzsLedgers = $this->getLedgerByCurrency(Currencies::TZS, $businessLocationId);
+            $usdLedgers = $this->getLedgerByCurrency(Currencies::USD, $businessLocationId);
 
             $ledgers = [
                 'TZS' => $this->joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
@@ -117,30 +123,21 @@ class TaxpayerLedgerController extends Controller
 
     }
 
-    private function getLedgerByCurrency($currency, $businessId) {
-        $debitLedgers = TaxpayerLedger::select(
-            'source_type',
-            'source_id',
-            'business_location_id',
-            'tax_type_id',
-            'currency',
+    private function getLedgerByCurrency($currency, $businessLocationId)
+    {
+        $debitLedgers = TaxpayerLedger::select('source_type', 'source_id', 'business_location_id', 'tax_type_id', 'currency',
             DB::raw('SUM(total_amount) as total_debit_amount')
         )
-            ->where('business_id', $businessId)
+            ->where('business_location_id', $businessLocationId)
             ->where('transaction_type', TransactionType::DEBIT)
             ->where('currency', $currency)
             ->groupBy('source_type', 'source_id', 'business_location_id', 'tax_type_id', 'currency')
             ->get();
 
-        $creditLedgers = TaxpayerLedger::select(
-            'source_type',
-            'source_id',
-            'business_location_id',
-            'tax_type_id',
-            'currency',
+        $creditLedgers = TaxpayerLedger::select('source_type', 'source_id', 'business_location_id', 'tax_type_id', 'currency',
             DB::raw('SUM(total_amount) as total_credit_amount')
         )
-            ->where('business_id', $businessId)
+            ->where('business_location_id', $businessLocationId)
             ->where('transaction_type', TransactionType::CREDIT)
             ->where('currency', $currency)
             ->groupBy('source_type', 'source_id', 'business_location_id', 'tax_type_id', 'currency')
@@ -152,7 +149,8 @@ class TaxpayerLedgerController extends Controller
         ];
     }
 
-    private function joinLedgers($debitLedgers, $creditLedgers) {
+    private function joinLedgers($debitLedgers, $creditLedgers)
+    {
         $joinedLedgers = collect();
 
         $debitLedgers->each(function ($item) use ($joinedLedgers, $creditLedgers) {
