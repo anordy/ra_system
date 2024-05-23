@@ -8,6 +8,7 @@ use App\Models\DlLicenseClass;
 use App\Models\DlLicenseDuration;
 use App\Models\DlRestriction;
 use App\Models\GenericSettingModel;
+use App\Models\MvrClass;
 use App\Models\MvrColor;
 use App\Models\MvrFee;
 use App\Models\MvrModel;
@@ -158,6 +159,10 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("Description", "description")->sortable(),
                 Column::make("Symbol", "symbol")->sortable(),
             ],
+            MvrClass::class => [
+                Column::make("Code", "code")->sortable(),
+                Column::make("Category", "category")->sortable(),
+            ]
         ];
 
         return $model_extra_columns[$this->model]??[];

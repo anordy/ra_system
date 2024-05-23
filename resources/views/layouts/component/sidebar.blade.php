@@ -1009,6 +1009,11 @@
                             <a href="{{ route('settings.mvr-generic.index', 'MvrColor') }}">Motor Vehicle Plate Color</a>
                         </li>
                     @endcan
+                    @can('setting-mvr-classes-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrClass') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrClass') }}">Motor Vehicle Classes</a>
+                        </li>
+                    @endcan
                     @can('setting-mvr-plate-size-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrPlateSize') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrPlateSize') }}">Motor Vehicle Plate Size</a>

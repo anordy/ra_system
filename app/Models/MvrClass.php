@@ -28,6 +28,8 @@ class MvrClass extends Model implements Auditable
 	protected $table = 'mvr_classes';
 
 	protected $fillable = [
-		'name'
+		'name',
+        'code',
+        'category'
 	];
 }

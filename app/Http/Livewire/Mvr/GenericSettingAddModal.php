@@ -67,6 +67,7 @@ class GenericSettingAddModal extends Component
         DlLicenseClass::class => [['title' => 'Description', 'field' => 'description']],
         MvrRegistrationType::class => [['title' => 'Initial Plate Number', 'field' => 'initial_plate_number']],
         MvrColor::class => [['title' => 'Color', 'field' => 'color', 'placeholder' => 'e.g. White/Black']],
+        MvrClass::class => [['title' => 'Code', 'field' => 'code'], ['title' => 'Category', 'field' => 'category']]
     ];
 
     private $no_name_column = [
@@ -86,6 +87,10 @@ class GenericSettingAddModal extends Component
             'data.code' => ['required', 'gs_unique'],
             'data.symbol' => ['required', 'gs_unique'],
             'data.description' => ['required']
+        ],
+        MvrClass::class => [
+            'data.code' => ['required', 'gs_unique', 'alpha', 'max:5'],
+            'data.category' => ['required', 'alpha', 'max:1'],
         ]
     ];
 
