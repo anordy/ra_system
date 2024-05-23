@@ -25,7 +25,6 @@
 
                 @if(\App\Models\MvrRegistrationType::query()->whereIn('name',[
                     \App\Models\MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED,
-                    \App\Models\MvrRegistrationType::TYPE_DIPLOMATIC
                     ])->where(['id'=>$registration_type_id])->exists() || (\App\Models\MvrRegistrationType::query()->find($registration_type_id)->external_defined ?? null)==1)
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">

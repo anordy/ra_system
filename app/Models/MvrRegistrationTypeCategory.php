@@ -27,9 +27,6 @@ class MvrRegistrationTypeCategory extends Model
     public const COMMERCIAL = 'Commercial';
     public const GOVERNMENT = 'Government';
     public const CORPORATE = 'Corporate';
-    public const DFP = 'Donor Funded Project';
-    public const DIPLOMAT = 'Diplomat';
-    public const MILITARY = 'Military';
 
 
 	protected $fillable = [

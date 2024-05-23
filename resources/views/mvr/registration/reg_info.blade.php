@@ -43,16 +43,26 @@
                 <p class="my-1">{{ $reg->registration_number ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Plate Number</span>
-                <p class="my-1">{{ $reg->plate_number ?? 'N/A' }}</p>
+                <span class="font-weight-bold text-uppercase">Registered On</span>
+                <p class="my-1">{{ $reg->registered_at ?? 'N/A' }}</p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Registration Class</span>
+                <p class="my-1">{{ $reg->class->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Registration Type</span>
                 <p class="my-1">{{ $reg->regtype->name ?? 'N/A' }}</p>
             </div>
+            @if($reg->plate_type)
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Plate No. Type</span>
+                    <p class="my-1">{{ $reg->plate_type->name ?? 'N/A' }}</p>
+                </div>
+            @endif
             <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Registration Class</span>
-                <p class="my-1">{{ $reg->class->name ?? 'N/A' }}</p>
+                <span class="font-weight-bold text-uppercase">Plate Number</span>
+                <p class="my-1">{{ $reg->plate_number ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Plate Number Size</span>
@@ -60,11 +70,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Plate Number Color</span>
-                <p class="my-1">{{ $reg->platecolor->name ?? 'N/A' }}</p>
-            </div>
-            <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Registered On</span>
-                <p class="my-1">{{ $reg->registered_at ?? 'N/A' }}</p>
+                <p class="my-1">{{ $reg->regtype->color ? ($reg->regtype->color->name ?? 'N/A') : 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Register Type</span>

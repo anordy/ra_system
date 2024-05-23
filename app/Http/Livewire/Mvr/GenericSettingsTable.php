@@ -120,10 +120,11 @@ class GenericSettingsTable extends DataTableComponent
     {
         $model_extra_columns = [
             MvrModel::class => [
-                Column::make("Motor Vehicle Make", "make.name")->sortable()
+                Column::make("Motor Vehicle Make", "make.name")->sortable(),
             ],
             MvrColor::class => [
-                Column::make("Hex Value", "hex_value")->sortable()
+                Column::make("Color", "color")->sortable(),
+                Column::make("Registration Type", "registration_type.name")->sortable(),
             ],
             MvrFee::class => [
                 Column::make("Amount", "amount")->sortable()->format(fn($value)=>number_format($value).' TZS'),
@@ -164,7 +165,8 @@ class GenericSettingsTable extends DataTableComponent
     private function modelHasNameColumn(){
         $models_with_no_name_columns = [
             DlLicenseDuration::class => 1,
-            DlRestriction::class => 1
+            DlRestriction::class => 1,
+            MvrColor::class => 1
         ];
 
         return empty($models_with_no_name_columns[$this->model]);

@@ -16,6 +16,7 @@ class CreateMvrColorTable extends Migration
         Schema::create('mvr_colors', function (Blueprint $table) {
             $table->id();
             $table->string('name',100);
+            $table->unsignedBigInteger('mvr_registration_type_id');
             $table->string('hex_value',10)->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -119,7 +119,7 @@ class MvrMotorVehicleRegistration extends Model implements Auditable
                 $plate_number = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
                 $plate_number = preg_replace('/SLS(.+)(.)$/', 'SLS' . $plate_number . '$2', $last_reg->plate_number);
             }
-        }elseif ($reg_type->name == MvrRegistrationType::TYPE_GOVERNMENT){
+        }elseif ($reg_type->name == MvrRegistrationType::TYPE_GOVERNMENT_SLS){
             if (empty($last_reg)) {
                 $number = str_pad( '1', 4, '0', STR_PAD_LEFT);
                 $plate_number = 'SMZ' . $number.$class->category;

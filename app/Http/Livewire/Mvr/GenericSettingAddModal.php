@@ -40,6 +40,9 @@ class GenericSettingAddModal extends Component
             ],
             ['title' => 'Fee Type/Category', 'class' => MvrFeeType::class, 'field' => 'mvr_fee_type_id']
         ],
+        MvrColor::class => [
+            ['title' => 'Motor vehicle Registration Type', 'class' => MvrRegistrationType::class, 'field' => 'mvr_registration_type_id'],
+        ],
         DlFee::class => [['title' => 'License Duration', 'field' => 'dl_license_duration_id', 'class' => DlLicenseDuration::class, 'value_field' => 'number_of_years']],
     ];
 
@@ -62,18 +65,26 @@ class GenericSettingAddModal extends Component
         ],
         DlLicenseClass::class => [['title' => 'Description', 'field' => 'description']],
         MvrRegistrationType::class => [['title' => 'Initial Plate Number', 'field' => 'initial_plate_number']],
+        MvrColor::class => [['title' => 'Color', 'field' => 'color', 'placeholder' => 'e.g. White/Black']],
     ];
 
     private $no_name_column = [
         DlLicenseDuration::class => true,
-        DlRestriction::class => true
+        DlRestriction::class => true,
+        MvrColor::class => true
     ];
 
     private $rules = [
         MvrFee::class => ['data.amount' => 'required|numeric'],
         MvrTransferFee::class => ['data.amount' => 'required|numeric'],
         DlFee::class => ['data.amount' => 'required|numeric'],
-        MvrRegistrationType::class => ['data.initial_plate_number' => 'required|alpha_num']
+        MvrRegistrationType::class => ['data.initial_plate_number' => 'required|alpha_num'],
+        MvrColor::class => ['data.color' => 'required', 'relation_data.mvr_registration_type_id' => 'required|gs_relation_unique'],
+        DlRestriction::class => [
+            'data.code' => ['required', 'gs_unique'],
+            'data.symbol' => ['required', 'gs_unique'],
+            'data.description' => ['required']
+        ]
     ];
 
     /**
@@ -114,13 +125,30 @@ class GenericSettingAddModal extends Component
         $this->prepareEnums();
     }
 
+    protected function messages(){
+        return [
+            '*.*.required' => 'This field is required.',
+            '*.required' => 'This field is required.',
+            'required' => 'This field is required.'
+        ];
+    }
+
     protected function rules()
     {
         Validator::extend('gs_unique', function ($attribute, $value, $parameters, $validator) {
-            $exist = empty($this->instance) ? $this->model::query()->where([$attribute => $value])->exists()
+            $exist = empty($this->instance) ? $this->model::query()->where([str_replace('data.', '', $attribute) => $value])->exists()
                 : $this->model::query()->where([str_replace('data.', '', $attribute) => $value])->whereKeyNot($this->instance->id)->exists();
             if ($exist) {
-                $validator->errors()->add($attribute, "{$attribute} must be unique, {$value} already exist");
+                $validator->errors()->add($attribute, "This field must be unique, a duplicate record with this value already exist");
+            }
+            return !$exist;
+        });
+
+        Validator::extend('gs_relation_unique', function ($attribute, $value, $parameters, $validator) {
+            $exist = empty($this->instance) ? $this->model::query()->where([str_replace('relation_data.', '', $attribute) => $value])->exists()
+                : $this->model::query()->where([str_replace('relation_data.', '', $attribute) => $value])->whereKeyNot($this->instance->id)->exists();
+            if ($exist) {
+                $validator->errors()->add($attribute, "This field must be unique, a duplicate record with this value already exist");
             }
             return !$exist;
         });
@@ -141,10 +169,6 @@ class GenericSettingAddModal extends Component
             }
         }
 
-        if (array_search(GenericSettingModel::class, class_parents($this->model)) && count($this->model::validationRules())) {
-            $rules = $this->model::validationRules() + $rules;
-        }
-
         if (!empty($this->rules[$this->model])) {
             foreach ($this->rules[$this->model] as $field => $rule) {
                 $rules[$field] = $rule;
@@ -158,6 +182,7 @@ class GenericSettingAddModal extends Component
     public function submit()
     {
         $this->validate();
+
         try {
             if ($this->hasNameColumn()) {
                 $data = ['name' => $this->name];
@@ -216,7 +241,7 @@ class GenericSettingAddModal extends Component
     {
         if (empty($this->fields[$this->model])) return;
         foreach ($this->fields[$this->model] as $field) {
-            $this->field_options[$field['field']] = ['title' => $field['title']];
+            $this->field_options[$field['field']] = ['title' => $field['title'], 'placeholder' => $field['placeholder'] ?? ''];
             $this->data[$field['field']] = $this->instance[$field['field']] ?? null;
         }
     }

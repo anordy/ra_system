@@ -28,16 +28,16 @@ class MvrRegistration extends Model
         return $this->hasOne(MvrAgent::class, 'taxpayer_id', 'taxpayer_id');
     }
 
-    public function platecolor(){
-        return $this->belongsTo(MvrPlateNumberColor::class, 'plate_number_color_id');
-    }
-
     public function regtype(){
         return $this->belongsTo(MvrRegistrationType::class, 'mvr_registration_type_id');
     }
 
     public function platesize(){
         return $this->belongsTo(MvrPlateSize::class, 'mvr_plate_size_id');
+    }
+
+    public function plate_type(){
+        return $this->belongsTo(MvrPlateNumberType::class, 'mvr_plate_number_type_id');
     }
 
     public function class(){
@@ -80,7 +80,7 @@ class MvrRegistration extends Model
                 $plate_number = str_pad($number + 1, 3, '0', STR_PAD_LEFT).$class->category;
                 $plate_number = 'SLS'.$plate_number;
             }
-        }elseif ($regType->name == MvrRegistrationType::TYPE_GOVERNMENT){
+        }elseif ($regType->name == MvrRegistrationType::TYPE_GOVERNMENT_SLS){
             if (empty($last_reg)) {
                 $number = str_pad( '1', 3, '0', STR_PAD_LEFT);
                 $plate_number = 'SMZ' . $number.$class->category;

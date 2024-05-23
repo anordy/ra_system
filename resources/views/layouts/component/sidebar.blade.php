@@ -1004,15 +1004,19 @@
                             <a href="{{ route('settings.tax-regions.index') }}">Tax Regions</a>
                         </li>
                     @endcan
+                    @can('setting-mvr-transfer-category-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrColor') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrColor') }}">Motor Vehicle Plate Color</a>
+                        </li>
+                    @endcan
                     @can('setting-mvr-plate-size-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrPlateSize') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrPlateSize') }}">Motor Vehicle Plate
-                                Size</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrPlateSize') }}">Motor Vehicle Plate Size</a>
                         </li>
                     @endcan
                     @can('setting-mvr-plate-size-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrRegistrationType') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrRegistrationType') }}">Motor Vehicle Initial Plates
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrRegistrationType') }}">Motor Vehicle Initial Plate No.
                                 </a>
                         </li>
                     @endcan
@@ -1023,35 +1027,24 @@
                     @endcan
                     @can('setting-mvr-deregistration-reason-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrDeRegistrationReason') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrDeRegistrationReason') }}">De
-                                Registration
-                                Reasons</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrDeRegistrationReason') }}">Motor Vehicle De-Registration Reasons</a>
                         </li>
                     @endcan
                     @can('setting-mvr-ownership-transfer-reason-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrOwnershipTransferReason') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrOwnershipTransferReason') }}">Transfer
-                                Reasons</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-transfer-category-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrPlateNumberColor') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrPlateNumberColor') }}">MVR Plate Number
-                                Color</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrOwnershipTransferReason') }}">Motor Vehicle Transfer Reasons</a>
                         </li>
                     @endcan
                     @can('setting-mvr-transfer-category-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer
-                                Categories</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Motor Vehicle Transfer Categories</a>
                         </li>
                     @endcan
                     @can('setting-mvr-transfer-fee-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrTransferFee') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Transfer Fees</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Motor Vehicle Transfer Fees</a>
                         </li>
                     @endcan
-
                     @can('setting-dl-class-view')
                         <li class="{{ request()->is('settings/mvr-generic/DlLicenseClass') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'DlLicenseClass') }}">Driver's License

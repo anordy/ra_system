@@ -13,7 +13,7 @@
                         <label class="control-label">Name</label>
                         <input type="text" class="form-control" wire:model.lazy="name" id="name">
                         @error('name')
-                            <span class="text-danger">{{ $message }}</span>
+                            <small class="text-danger pt-2">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
@@ -23,9 +23,9 @@
                     <div class="row pr-3 pl-3">
                         <div class="form-group col-lg-12">
                             <label class="control-label" for="{{$f}}">{{$options['title']}}</label>
-                            <input type="{{$this->getFieldInputType($f)}}" class="form-control" wire:model.lazy="data.{{$f}}" id="{{$f}}">
+                            <input type="{{$this->getFieldInputType($f)}}" class="form-control" wire:model.lazy="data.{{$f}}" id="{{$f}}" placeholder="{{ $options['placeholder'] ?? '' }}">
                             @error("data.{$f}")
-                                <span class="text-danger">{{ $message }}</span>
+                                <small class="text-danger pt-2">{{ $message }}</small>
                             @enderror
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                                     @endforeach
                                 </select>
                                 @error("relation_data.{$field}")
-                                <span class="text-danger">{{ $message }}</span>
+                                <small class="text-danger pt-2">{{ $message }}</small>
                                 @enderror
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                                     @endforeach
                                 </select>
                                 @error("data.{$field}")
-                                <span class="text-danger">{{ $message }}</span>
+                                <small class="text-danger pt-2">{{ $message }}</small>
                                 @enderror
                             </div>
                         </div>

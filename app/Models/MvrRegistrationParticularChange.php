@@ -73,7 +73,7 @@ class MvrRegistrationParticularChange extends Model
                 $plate_number = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
                 $plate_number = preg_replace('/SLS(.+)(.)$/', 'SMZ' . $plate_number . '$2', $last_reg->plate_number);
             }
-        }elseif ($regType->name == MvrRegistrationType::TYPE_GOVERNMENT){
+        }elseif ($regType->name == MvrRegistrationType::TYPE_GOVERNMENT_SLS){
             if (empty($last_reg)) {
                 $number = str_pad( '1', 4, '0', STR_PAD_LEFT);
                 $plate_number = 'SMZ' . $number.$class->name;
