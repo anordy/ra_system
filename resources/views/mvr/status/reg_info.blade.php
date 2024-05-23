@@ -1,6 +1,6 @@
 <div class="card mt-3">
     <div class="card-header font-weight-bold bg-white">
-        {{ $reg->chassis->chassis_number  }} Registration Information
+        {{ $reg->chassis->chassis_number }} Registration Information
     </div>
     <div class="card-body">
         <div class="row my-2">
@@ -63,7 +63,7 @@
                 <p class="my-1">{{ $reg->register_type ?? 'N/A' }}</p>
             </div>
 
-            @if($reg->agent)
+            @if ($reg->agent)
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Is Registration For Agent?</span>
                     <p class="my-1">{{ $reg->is_agent_registration ? 'Yes' : 'No' }}</p>
