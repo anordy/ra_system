@@ -13,9 +13,11 @@ use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrMake;
 use App\Models\MvrModel;
+use App\Models\MvrPlateNumberType;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -38,7 +40,7 @@ class GenericSettingAddModal extends Component
                 'dy_data' => "\$relation['data']=App\Models\MvrRegistrationType::query()->where(['name'=>App\Models\MvrRegistrationType::TYPE_PRIVATE_GOLDEN,'id'=>\$relation_data['mvr_registration_type_id']])->exists()?
                              App\Models\MvrClass::query()->whereNotIn('category',['C'])->get():App\Models\MvrClass::query()->get();"
             ],
-            ['title' => 'Fee Type/Category', 'class' => MvrFeeType::class, 'field' => 'mvr_fee_type_id']
+            ['title' => 'Fee Type/Category', 'class' => MvrFeeType::class, 'field' => 'mvr_fee_type_id'],
         ],
         MvrColor::class => [
             ['title' => 'Motor vehicle Registration Type', 'class' => MvrRegistrationType::class, 'field' => 'mvr_registration_type_id'],
@@ -53,7 +55,6 @@ class GenericSettingAddModal extends Component
     ];
 
     private $fields = [
-        MvrColor::class => [['title' => 'Hex Value', 'field' => 'hex_value']],
         MvrFee::class => [['title' => 'Amount', 'field' => 'amount']],
         MvrTransferFee::class => [['title' => 'Amount', 'field' => 'amount', 'type' => 'number']],
         DlLicenseDuration::class => [['title' => 'Years', 'field' => 'number_of_years', 'type' => 'number'], ['title' => 'Description', 'field' => 'description']],
@@ -71,13 +72,14 @@ class GenericSettingAddModal extends Component
     private $no_name_column = [
         DlLicenseDuration::class => true,
         DlRestriction::class => true,
-        MvrColor::class => true
+        MvrColor::class => true,
+        MvrFee::class => true
     ];
 
     private $rules = [
         MvrFee::class => ['data.amount' => 'required|numeric'],
         MvrTransferFee::class => ['data.amount' => 'required|numeric'],
-        DlFee::class => ['data.amount' => 'required|numeric'],
+        DlFee::class => ['data.amount' => 'required|numeric', 'relation_data.mvr_plate_number_type_id' => 'nullable'],
         MvrRegistrationType::class => ['data.initial_plate_number' => 'required|alpha_num'],
         MvrColor::class => ['data.color' => 'required', 'relation_data.mvr_registration_type_id' => 'required|gs_relation_unique'],
         DlRestriction::class => [
@@ -102,6 +104,10 @@ class GenericSettingAddModal extends Component
      * @var array|string|string[]|null
      */
     public $setting_title = '';
+    /**
+     * @var mixed
+     */
+    public $plateNoType;
 
     public function mount($model, $id = null)
     {
@@ -204,6 +210,11 @@ class GenericSettingAddModal extends Component
                 foreach ($this->enums[$this->model] as $field) {
                     $data[$field['field']] = $this->data[$field['field']];
                 }
+            }
+
+            if ($this->model == \App\Models\MvrFee::class){
+                $data['mvr_plate_number_type_id'] = $this->plateNoType;
+                $data['gfs_code'] = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first()->gfs_code;
             }
 
             if (empty($this->instance)) {

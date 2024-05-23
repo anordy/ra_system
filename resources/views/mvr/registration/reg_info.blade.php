@@ -70,7 +70,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Plate Number Color</span>
-                <p class="my-1">{{ $reg->regtype->color ? ($reg->regtype->color->name ?? 'N/A') : 'N/A' }}</p>
+                <p class="my-1">{{ $reg->regtype->color ? ($reg->regtype->color->color ?? 'N/A') : 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Register Type</span>

@@ -131,6 +131,7 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("GFS Code", "gfs_code")->sortable(),
                 Column::make("Fee Category", "fee_type.type")->sortable(),
                 Column::make("Registration Type", "registration_type.name")->sortable(),
+                Column::make("Plate No. Type", "plate_type.name")->sortable(),
                 Column::make("Class", "class.name")->sortable(),
                 Column::make("Status", "status")->sortable(),
             ],
@@ -166,7 +167,8 @@ class GenericSettingsTable extends DataTableComponent
         $models_with_no_name_columns = [
             DlLicenseDuration::class => 1,
             DlRestriction::class => 1,
-            MvrColor::class => 1
+            MvrColor::class => 1,
+            MvrFee::class => 1
         ];
 
         return empty($models_with_no_name_columns[$this->model]);

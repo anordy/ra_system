@@ -99,7 +99,12 @@ class RegistrationApprovalProcessing extends Component
 
                 $regType = $this->subject->regtype;
 
-                if (in_array($regType->name, [MvrRegistrationType::TYPE_PRIVATE]))
+                if (!in_array($regType->name, [
+                    MvrRegistrationType::TYPE_GOVERNMENT_MILITARY,
+                    MvrRegistrationType::TYPE_GOVERNMENT_DIPLOMATIC,
+                    MvrRegistrationType::TYPE_GOVERNMENT_DONOR_FUNDED,
+                    MvrRegistrationType::TYPE_GOVERNMENT_INTERNATIONAL,
+                ]))
                 if (!$regType->initial_plate_number) {
                     $this->customAlert('warning', 'Please make sure initial plate number for this registration type has been created');
                     return;
