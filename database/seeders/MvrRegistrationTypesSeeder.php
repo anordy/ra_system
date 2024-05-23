@@ -39,8 +39,8 @@ class MvrRegistrationTypesSeeder extends Seeder
             ['mvr_registration_type_category_id' => $commercialId, 'name' => MvrRegistrationType::TYPE_COMMERCIAL_TRICYCLE, 'plate_number_color' => 'Black and White', 'initial_plate_number' => '', 'external_defined' => 0],
 
             // Government
-            ['mvr_registration_type_category_id' => $gvtId, 'name' => MvrRegistrationType::TYPE_GOVERNMENT_SLS, 'plate_number_color' => 'Black and White', 'initial_plate_number' => '', 'external_defined' => 0, 'plate_number_pattern' => 'SLS([0-9]{4})(_class_)',],
-            ['mvr_registration_type_category_id' => $gvtId, 'name' => MvrRegistrationType::TYPE_GOVERNMENT_SMZ, 'plate_number_color' => 'Black and White', 'initial_plate_number' => '', 'external_defined' => 0, 'plate_number_pattern' => 'SMZ([0-9]{4})(_class_)',],
+            ['mvr_registration_type_category_id' => $gvtId, 'name' => MvrRegistrationType::TYPE_GOVERNMENT_SLS, 'plate_number_color' => 'Black and White', 'initial_plate_number' => 'SLS1111A', 'external_defined' => 0, 'plate_number_pattern' => 'SLS([0-9]{4})(_class_)',],
+            ['mvr_registration_type_category_id' => $gvtId, 'name' => MvrRegistrationType::TYPE_GOVERNMENT_SMZ, 'plate_number_color' => 'Black and White', 'initial_plate_number' => 'SMZ1111A', 'external_defined' => 0, 'plate_number_pattern' => 'SMZ([0-9]{4})(_class_)',],
             ['mvr_registration_type_category_id' => $gvtId, 'name' => MvrRegistrationType::TYPE_GOVERNMENT_DIPLOMATIC, 'plate_number_color' => 'Black and White', 'initial_plate_number' => '', 'external_defined' => 1],
             ['mvr_registration_type_category_id' => $gvtId, 'name' => MvrRegistrationType::TYPE_GOVERNMENT_MILITARY, 'plate_number_color' => 'Black and White', 'initial_plate_number' => '', 'external_defined' => 1],
             ['mvr_registration_type_category_id' => $gvtId, 'name' => MvrRegistrationType::TYPE_GOVERNMENT_INTERNATIONAL, 'plate_number_color' => 'Black and White', 'initial_plate_number' => '', 'external_defined' => 1],

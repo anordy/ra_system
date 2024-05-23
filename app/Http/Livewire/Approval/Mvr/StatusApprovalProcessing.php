@@ -93,7 +93,8 @@ class StatusApprovalProcessing extends Component
                 $fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
                     'mvr_fee_type_id' => $feeType->id,
-                    'mvr_class_id' => $this->subject->mvr_class_id
+                    'mvr_class_id' => $this->subject->mvr_class_id,
+                    'mvr_plate_number_type_id' => $this->subject->mvr_plate_number_type_id
                 ])->first();
 
                 if (empty($fee)) {

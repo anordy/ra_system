@@ -6,8 +6,6 @@ use App\Enum\BillStatus;
 use App\Enum\Currencies;
 use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
-use App\Enum\SubVatConstant;
-use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendZanMalipoSMS;
 use App\Models\BusinessTaxType;
@@ -19,7 +17,6 @@ use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\Taxpayer;
-use App\Models\TaxRefund\TaxRefund;
 use App\Models\TaxType;
 use App\Models\ZmBill;
 use App\Models\ZmBillChange;
@@ -34,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 
 trait PaymentsTrait
 {
-    use ExchangeRateTrait, VerificationTrait, TaxpayerLedgerTrait;
+    use ExchangeRateTrait, VerificationTrait;
 
     /**
      * @param ZmBill $bill
