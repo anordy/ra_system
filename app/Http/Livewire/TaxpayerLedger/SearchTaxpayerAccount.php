@@ -111,7 +111,8 @@ class SearchTaxpayerAccount extends Component
             ->where('currency', Currencies::TZS)
             ->orderBy('source_type', 'DESC')
             ->orderBy('source_id', 'DESC')
-            ->orderBy('financial_month_id', 'DESC');
+            ->orderBy('transaction_date', 'ASC')
+            ->orderByRaw("CASE TRANSACTION_TYPE WHEN 'DEBIT' THEN 1 WHEN 'CREDIT' THEN 2 END ASC");
 
         if ($this->startDate && $this->endDate) {
             $tzsLedgersOpeningQuery = clone $tzsLedgers;
@@ -129,7 +130,8 @@ class SearchTaxpayerAccount extends Component
             ->where('currency', Currencies::USD)
             ->orderBy('source_type', 'DESC')
             ->orderBy('source_id', 'DESC')
-            ->orderBy('financial_month_id', 'DESC');
+            ->orderBy('transaction_date', 'ASC')
+            ->orderByRaw("CASE TRANSACTION_TYPE WHEN 'DEBIT' THEN 1 WHEN 'CREDIT' THEN 2 END ASC");
 
         if ($this->startDate && $this->endDate) {
             $usdLedgersOpeningQuery = clone $usdLedgers;

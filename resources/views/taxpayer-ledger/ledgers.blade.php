@@ -31,11 +31,17 @@
                         <td class="px-2"></td>
                         <td class="px-2"></td>
                         <td class="px-2"></td>
-                        <td class="px-2 font-weight-bold">{{ number_format($tzsOpeningFigures['debit'], 2) }}</td>
-                        <td class="px-2 font-weight-bold">{{ number_format($tzsOpeningFigures['credit'], 2)   }}</td>
-                        <td class="px-2 font-weight-bold">{{ number_format($tzsOpeningFigures['credit'] - $tzsOpeningFigures['debit'], 2)   }}</td>
+                        <td class="px-2 font-weight-bold"></td>
+                        <td class="px-2 font-weight-bold"></td>
+                        <td class="px-2 font-weight-bold">{{ number_format($tzsOpeningFigures['debit'] - $tzsOpeningFigures['credit'], 2)   }}</td>
                     </tr>
                 @endif
+                @php
+                    $balanceTZS = 0;
+                    if (count($tzsOpeningFigures) > 0) {
+                        $balanceTZS += $tzsOpeningFigures['debit'] - $tzsOpeningFigures['credit'];
+                    }
+                @endphp
                 @foreach($ledgers['TZS'] as $key => $ledger)
                     <tr>
                         <td class="px-2">
@@ -52,35 +58,16 @@
                         <td class="px-2">{{ number_format($ledger->penalty_amount, 2)  }}</td>
                         <td class="px-2">{{ $ledger->transaction_type === \App\Enum\TransactionType::DEBIT ? number_format($ledger->total_amount, 2) : 0  }}</td>
                         <td class="px-2">{{ $ledger->transaction_type === \App\Enum\TransactionType::CREDIT ? number_format($ledger->total_amount, 2) : 0   }}</td>
-                        <td class="px-2">
-                            {{ $ledger->transaction_type === \App\Enum\TransactionType::CREDIT ? $ledger->total_amount : 0 - ($ledger->transaction_type === \App\Enum\TransactionType::DEBIT ? $ledger->total_amount : 0)  }}
-                        </td>
+                        @php
+                            if ($ledger->transaction_type === \App\Enum\TransactionType::DEBIT) {
+                                $balanceTZS += $ledger->total_amount;
+                            } elseif ($ledger->transaction_type === \App\Enum\TransactionType::CREDIT) {
+                                $balanceTZS -= $ledger->total_amount;
+                            }
+                        @endphp
+                        <td class="px-2">{{ number_format($balanceTZS, 2) }}</td>
                     </tr>
                 @endforeach
-                <tr>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2 font-weight-bold">{{ number_format($summations['TZS']['debit'], 2) }}</td>
-                    <td class="px-2 font-weight-bold">{{ number_format($summations['TZS']['credit'], 2)   }}</td>
-                </tr>
-                <tr>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2 font-weight-bold"></td>
-                    <td class="px-2 font-weight-bold">{{ number_format($summations['TZS']['debit'] - $summations['TZS']['credit'], 2)   }}</td>
-                </tr>
                 </tbody>
             </table>
 
@@ -122,10 +109,17 @@
                         <td class="px-2"></td>
                         <td class="px-2"></td>
                         <td class="px-2"></td>
-                        <td class="px-2 font-weight-bold">{{ number_format($usdOpeningFigures['debit'], 2) }}</td>
-                        <td class="px-2 font-weight-bold">{{ number_format($usdOpeningFigures['credit'], 2)   }}</td>
+                        <td class="px-2 font-weight-bold"></td>
+                        <td class="px-2 font-weight-bold"></td>
+                        <td class="px-2 font-weight-bold">{{ number_format($usdOpeningFigures['debit'] - $usdOpeningFigures['credit'], 2)   }}</td>
                     </tr>
                 @endif
+                @php
+                    $balanceUSD = 0;
+                     if (count($usdOpeningFigures) > 0) {
+                        $balanceUSD += $usdOpeningFigures['debit'] - $usdOpeningFigures['credit'];
+                    }
+                @endphp
                 @foreach($ledgers['USD'] as $key => $ledger)
                     <tr>
                         <td class="px-2">
@@ -142,32 +136,16 @@
                         <td class="px-2">{{ number_format($ledger->penalty_amount, 2)  }}</td>
                         <td class="px-2">{{ $ledger->transaction_type === \App\Enum\TransactionType::DEBIT ? number_format($ledger->total_amount, 2) : 0  }}</td>
                         <td class="px-2">{{ $ledger->transaction_type === \App\Enum\TransactionType::CREDIT ? number_format($ledger->total_amount, 2) : 0   }}</td>
+                        @php
+                            if ($ledger->transaction_type === \App\Enum\TransactionType::DEBIT) {
+                                $balanceUSD += $ledger->total_amount;
+                            } elseif ($ledger->transaction_type === \App\Enum\TransactionType::CREDIT) {
+                                $balanceUSD -= $ledger->total_amount;
+                            }
+                        @endphp
+                        <td class="px-2">{{ number_format($balanceUSD, 2) }}</td>
                     </tr>
                 @endforeach
-                <tr>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2 font-weight-bold">{{ number_format($summations['USD']['credit'], 2) }}</td>
-                    <td class="px-2 font-weight-bold">{{ number_format($summations['USD']['debit'], 2)   }}</td>
-                </tr>
-                <tr>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2"></td>
-                    <td class="px-2 font-weight-bold"></td>
-                    <td class="px-2 font-weight-bold">{{ number_format($summations['USD']['debit'] - $summations['USD']['credit'], 2)   }}</td>
-                </tr>
                 </tbody>
             </table>
 
