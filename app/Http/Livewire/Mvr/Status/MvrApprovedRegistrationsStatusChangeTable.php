@@ -51,8 +51,6 @@ class MvrApprovedRegistrationsStatusChangeTable extends DataTableComponent
                 ->searchable(),
             Column::make(__("Reg Type"), "regtype.name")
                 ->searchable(),
-            Column::make(__("Plate No Color"), "platecolor.name")
-                ->searchable(),
             Column::make(__("Plate No Size"), "platesize.name")
                 ->searchable(),
             Column::make(__("Registration Date"), "registered_at")

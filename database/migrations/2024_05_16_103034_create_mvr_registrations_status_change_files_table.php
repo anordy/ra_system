@@ -13,7 +13,7 @@ class CreateMvrRegistrationsStatusChangeFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('mvr_registrations_status_change_files', function (Blueprint $table) {
+        Schema::create('mvr_status_change_files', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('mvr_status_change_id');
             $table->string('name');
@@ -30,6 +30,6 @@ class CreateMvrRegistrationsStatusChangeFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mvr_registrations_status_change_files');
+        Schema::dropIfExists('mvr_status_change_files');
     }
 }

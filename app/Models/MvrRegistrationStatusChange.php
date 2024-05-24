@@ -29,10 +29,6 @@ class MvrRegistrationStatusChange extends Model
         return $this->hasOne(MvrAgent::class, 'taxpayer_id', 'taxpayer_id');
     }
 
-    public function platecolor(){
-        return $this->belongsTo(MvrPlateNumberColor::class, 'plate_number_color_id');
-    }
-
     public function regtype(){
         return $this->belongsTo(MvrRegistrationType::class, 'mvr_registration_type_id');
     }

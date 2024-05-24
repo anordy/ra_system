@@ -10,8 +10,7 @@ class MvrRegistrationStatusChangeFile extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'mvr_registrations_status_change_files';
-
+    protected $table = 'mvr_status_change_files';
 
     protected $guarded = [];
 }
