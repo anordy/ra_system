@@ -6,6 +6,7 @@ use App\Enum\BillStatus;
 use App\Enum\MvrRegistrationStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
+use App\Models\MvrClass;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrInspectionReport;
@@ -29,6 +30,7 @@ class RegistrationApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $mileage, $inspectionReport, $inspectionDate, $inspection;
+    public $mvrClasses, $mvrClass;
 
     public function mount($modelName, $modelId)
     {
@@ -44,6 +46,9 @@ class RegistrationApprovalProcessing extends Component
             $this->mileage = $this->inspection->inspection_mileage;
             $this->inspectionReport = $this->inspection->report_path;
         }
+
+        $this->mvrClasses = MvrClass::all();
+        $this->mvrClass = $this->subject->class->id;
     }
 
     public function approve($transition)
@@ -61,6 +66,7 @@ class RegistrationApprovalProcessing extends Component
                 'inspectionReport' => [$this->inspectionReport === ($this->inspection->report_path ?? null) ? 'required' : 'nullable', 'max:1024', 'valid_pdf'],
                 'mileage' => 'required|numeric',
                 'comments' => 'required|strip_tag',
+                'mvrClass' => 'required|numeric',
             ]);
         } else {
             $this->validate([
@@ -84,8 +90,11 @@ class RegistrationApprovalProcessing extends Component
                     'inspection_date' => $this->inspectionDate,
                     'report_path' => $inspectionReport,
                     'inspection_mileage' => $this->mileage,
-                    'mvr_registration_id' => $this->subject->id
+                    'mvr_registration_id' => $this->subject->id,
                 ]);
+
+                $this->subject->mvr_class_id = $this->mvrClass;
+                $this->subject->save();
 
                 if (!$report) {
                     throw new Exception("Could not persist MVR Inspection report into the database.");
