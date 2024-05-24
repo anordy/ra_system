@@ -3,9 +3,13 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\GeneralConstant;
+use App\Enum\MvrRegistrationStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
+use App\Models\DlApplicationLicenseClass;
 use App\Models\DlApplicationStatus;
+use App\Models\DlDriversLicense;
 use App\Models\DlFee;
 use App\Models\DlLicenseRestriction;
 use App\Traits\CustomAlert;
@@ -82,6 +86,16 @@ class DriverLicenseApprovalProcessing extends Component
                 $this->validate([
                     'comments' => 'required|strip_tag',
                 ]);
+
+                $dlAppLicenseClass = DlApplicationLicenseClass::where('dl_license_application_id', $this->subject->id)->count();
+                $lastDlLicense = DlDriversLicense::where('dl_drivers_license_owner_id', $this->subject->dl_drivers_license_owner_id)->latest()->first();
+                $lastDlLicenseClass = $lastDlLicense->drivers_license_classes->count();
+
+                if ($lastDlLicenseClass < $dlAppLicenseClass) {
+                    $lastDlLicense->status = GeneralConstant::ADD_CLASS;
+                    $lastDlLicense->save();
+                }
+
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);

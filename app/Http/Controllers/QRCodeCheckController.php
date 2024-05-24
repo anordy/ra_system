@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\BusinessLocation;
 use App\Models\MvrDeregistration;
+use App\Models\MvrRegistration;
+use App\Models\RoadLicense\RoadLicense;
 use App\Models\TaxAgent;
 use App\Models\TaxType;
 use App\Models\WithholdingAgent;
@@ -147,4 +149,49 @@ class QRCodeCheckController extends Controller
 
         return view('qr-check.index', ['code' => $code]);
     }
+
+    public function mvrRegistrationCertificate($id)
+    {
+        $id = base64_decode($id);
+
+        if (!$id) {
+            return view('qr-check.error');
+        }
+
+        $registration = MvrRegistration::findOrFail($id);
+
+        $code = [
+            'Chassis Number' => $registration->chassis->chassis_number,
+            'Model' => $registration->chassis->model_type ?? 'N/A',
+            'Plate Number' => $registration->plate_number,
+            'Registration Number' => $registration->registration_number,
+            'Date of Registration' => Carbon::create($registration->registered_at)->format('d M, Y'),
+        ];
+
+        return view('qr-check.index', ['code' => $code]);
+    }
+
+    public function roadLicenseSticker($roadLicenseId)
+    {
+        $id = base64_decode($roadLicenseId);
+
+        if (!$id) {
+            return view('qr-check.error');
+        }
+
+        $roadLicense = RoadLicense::findOrFail($id);
+
+        $code = [
+            'Chassis Number' => $roadLicense->registration->chassis->chassis_number,
+            'Registration Type' => 'Road License Sticker',
+            'Plate Number' => $roadLicense->registration->plate_number ?? 'N/A',
+            'Issued Date' => Carbon::create($roadLicense->issued_date)->format('d M Y'),
+            'Expiry Date' => Carbon::create($roadLicense->expire_date)->format('d M Y'),
+            'Status' => Carbon::now()->gt($roadLicense->expire_date) ? 'EXPIRED' : 'ACTIVE',
+        ];
+
+        return view('qr-check.index', ['code' => $code]);
+    }
+
+
 }

@@ -116,6 +116,13 @@
             left: 700px;
             width: 480px;
         }
+
+        #duplicate {
+            position: fixed;
+            top: 1090px;
+            left: -0px;
+            width: 480px;
+        }
     </style>
 </head>
 
@@ -143,6 +150,9 @@
 
     <div id="zin">{{ $license->drivers_license_owner->taxpayer->reference_no ?? 'N/A' }}</div>
     <div id="pin">{{ $license->license_number }}</div>
+    @if($license->status === \App\Models\DlDriversLicense::STATUS_DAMAGED_OR_LOST)
+        <div id="duplicate">DUPLICATE</div>
+    @endif
     <div id="barcode">
         <img src="data:image/png;base64,' . {{ DNS1D::getBarcodePNG($license->license_number, 'C39+',4,100, array(1,1,1), false)  }} . '" alt="barcode"   />
     </div>

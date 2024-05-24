@@ -28,6 +28,7 @@ class DeRegistrationApprovalProcessing extends Component
     public $comments;
     public $deregistration;
     public $reasonsForLost, $clearanceEvidence, $zicEvidence;
+    public $description;
 
     public function mount($modelName, $modelId)
     {
@@ -39,6 +40,7 @@ class DeRegistrationApprovalProcessing extends Component
         $this->clearanceEvidence = $this->subject->clearance_evidence;
         $this->zicEvidence = $this->subject->zic_evidence;
         $this->reasonsForLost = $this->subject->police_evidence;
+        $this->description = $this->subject->description;
     }
 
     public function approve($transition)
@@ -49,20 +51,23 @@ class DeRegistrationApprovalProcessing extends Component
             'comments' => 'required|strip_tag',
             'reasonsForLost' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::LOST ? 'required|strip_tag' : 'nullable',
             'clearanceEvidence' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::OUT_OF_ZANZIBAR ? ($this->clearanceEvidence === $this->subject->clearance_evidence ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf') : 'nullable',
-            'zicEvidence' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::SERVIER_ACCIDENT ? ($this->zicEvidence === $this->subject->zic_evidence ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf') : 'nullable'
-        ]);
+            'description' => ($this->subject->reason->name === MvrDeRegistrationReasonStatus::SCRAPPED || $this->subject->reason->name === MvrDeRegistrationReasonStatus::NOT_UNDER_OBLIGATION) ? ($this->description ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf') : 'nullable'
+        ],
+            [
+                'description.required' => 'Please enter reasons for de-registration'
+            ]
+        );
 
         try {
             DB::beginTransaction();
 
             if ($this->checkTransition('mvr_police_officer_review')) {
-
                 // Update file/attachment based on type of de-registration reason
                 if ($this->subject->reason->name === MvrDeRegistrationReasonStatus::LOST) {
-
                     $this->subject->police_evidence = $this->reasonsForLost;
                     $this->subject->clearance_evidence = null;
                     $this->subject->zic_evidence = null;
+                    $this->subject->description = $this->reasonsForLost;
 
                 } else if ($this->subject->reason->name === MvrDeRegistrationReasonStatus::OUT_OF_ZANZIBAR) {
                     $clearanceEvidence = $this->clearanceEvidence;
@@ -74,24 +79,29 @@ class DeRegistrationApprovalProcessing extends Component
                     $this->subject->clearance_evidence = $clearanceEvidence;
                     $this->subject->police_evidence = null;
                     $this->subject->zic_evidence = null;
-
-                } else if ($this->subject->reason->name === MvrDeRegistrationReasonStatus::SERVIER_ACCIDENT) {
+                    $this->subject->description = $this->description;
+                }  else if ($this->subject->reason->name === MvrDeRegistrationReasonStatus::SERVIER_ACCIDENT) {
 
                     $zicEvidence = $this->zicEvidence;
                     if ($this->zicEvidence != $this->subject->zic_evidence) {
                         $zicEvidence = $this->zicEvidence->store('mvr_deregistration', 'local');
                     }
-
                     $this->subject->zic_evidence = $zicEvidence;
+                }
+            }
+
+
+            if ($this->checkTransition('mvr_zra_officer_review')) {
+                if ($this->subject->reason->name === MvrDeRegistrationReasonStatus::SCRAPPED || $this->subject->reason->name === MvrDeRegistrationReasonStatus::NOT_UNDER_OBLIGATION) {
+                    $this->subject->description = $this->description;
+                    $this->subject->zic_evidence = null;
                     $this->subject->clearance_evidence = null;
                     $this->subject->police_evidence = null;
-
                 } else {
                     $this->customAlert('warning', 'Invalid Reason Provided');
                     return;
                 }
             }
-
 
             if ($this->checkTransition('zbs_officer_review') && $transition === 'zbs_officer_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
@@ -112,11 +122,11 @@ class DeRegistrationApprovalProcessing extends Component
         } catch (\Exception $exception) {
             DB::rollBack();
 
-            if (isset($zicEvidence) && $zicEvidence && Storage::exists($zicEvidence)){
+            if (isset($zicEvidence) && $zicEvidence && Storage::exists($zicEvidence)) {
                 Storage::delete($zicEvidence);
             }
 
-            if (isset($clearanceEvidence) && $clearanceEvidence && Storage::exists($clearanceEvidence)){
+            if (isset($clearanceEvidence) && $clearanceEvidence && Storage::exists($clearanceEvidence)) {
                 Storage::delete($clearanceEvidence);
             }
 

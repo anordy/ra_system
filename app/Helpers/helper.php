@@ -201,7 +201,7 @@ function getHotelStarByBusinessId($business_id)
 }
 
 function getTaxTypeName($taxTypeId) {
-    return \App\Models\TaxType::select('name')->findOrFail($taxTypeId)->name;
+    return \App\Models\TaxType::select('name')->find($taxTypeId)->name ?? '';
 }
 
 function getSubVatName($subVatId) {

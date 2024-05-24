@@ -50,6 +50,10 @@ class MvrRegistrationStatusChange extends Model
         return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 
+    public function attachments() {
+        return $this->hasMany(MvrRegistrationStatusChangeFile::class, 'mvr_status_change_id');
+    }
+
     public static function getNexPlateNumber(mixed $regType, $class): mixed
     {
         $last_reg = MvrRegistrationStatusChange::query()

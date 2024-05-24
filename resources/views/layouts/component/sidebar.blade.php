@@ -650,6 +650,17 @@
             </ul>
         </li>
 
+        <li class="{{ request()->is('road-license*') ? 'active' : '' }}">
+            <a href="#roadLicense" data-toggle="collapse"
+               aria-expanded="{{ request()->is('road-license*') ? 'true' : 'false' }}"
+               class="dropdown-toggle">{{ __('Road License') }}</a>
+            <ul class="collapse list-unstyled {{ request()->is('road-license*') ? 'show' : '' }}" id="roadLicense">
+                <li class="{{ request()->is(['road-license', 'road-license/index/*']) ? 'active' : '' }}">
+                    <a href="{{ route('road-license.index') }}">{{ __('Road Licenses') }}</a>
+                </li>
+            </ul>
+        </li>
+
         @can('driver-licences-view')
             <li class="{{ request()->is('drivers-license*') || request()->is('rio*') ? 'active' : '' }}">
                 <a href="#dlSubmenu" data-toggle="collapse"
@@ -1198,9 +1209,9 @@
                 <li class="{{ request()->is('account') ? 'active' : '' }}">
                     <a href="{{ route('account') }}">{{ __("Account Details") }}</a>
                 </li>
-                {{-- <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
+                <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
                     <a href="{{ route('account.security-questions') }}">{{ __("Security Questions") }}</a>
-                </li> --}}
+                </li>
                 <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
                     <a href="{{ route('logout') }}"
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

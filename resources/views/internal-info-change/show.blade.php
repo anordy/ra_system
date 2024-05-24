@@ -167,7 +167,7 @@
                                 <tbody>
                                     @foreach($oldTaxes as $oldTax)
                                         <tr>
-                                            <td>{{ getTaxTypeName($oldTax['tax_type_id'])  }}</td>
+                                            <td>{{ getTaxTypeName($oldTax['tax_type_id']) ?? 'N/A'  }}</td>
                                             <td>{{ $oldTax['currency']  }}</td>
                                             <td>{{ getSubVatName($oldTax['sub_vat_id'] ?? null) ?? 'N/A'  }}</td>
                                         </tr>
@@ -188,7 +188,7 @@
                                 <tbody>
                                 @foreach($newTaxes as $newTax)
                                     <tr>
-                                        <td>{{ getTaxTypeName($newTax['tax_type_id'])  }}</td>
+                                        <td>{{ getTaxTypeName($newTax['tax_type_id']) ?? ''  }}</td>
                                         <td>{{ $newTax['currency']  }}</td>
                                         <td>{{ getSubVatName($newTax['sub_vat_id'] ?? null) ?? 'N/A'  }}</td>
                                     </tr>

@@ -6,7 +6,7 @@
             margin-top: 60px;
             margin-bottom: 10px;
         }
-        
+
         .card-header {
             padding-top: 60px;
             padding-bottom: 20px;
@@ -25,7 +25,8 @@
                 <div class="card rounded card-margin">
                     <div class="card-body">
                         <div class="text-center">
-                            <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px" alt="{{ config('app.name') }}">
+                            <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px"
+                                 alt="{{ config('app.name') }}">
                         </div>
                         <h5 class="bg-white text-uppercase text-center">OTP VERIFICATION</h5>
                         @include('layouts.component.messages')
@@ -73,18 +74,22 @@
                             </form>
 
                             <div class="py-1">
-                                <a href="{{ route('session.kill') }}" class="btn-link">Click here to return to login page</a>
+                                <a href="{{ route('session.kill') }}" class="btn-link">Click here to return to login
+                                    page</a>
                             </div>
-
-                            {{-- <div class="mt-1 mb-2">
-                                <a href="{{ route('2fa.security-questions') }}" class="btn-link">Login using security questions</a>
-                            </div> --}}
+                            @if(\App\Models\SystemSetting::where('code', \App\Models\SystemSetting::ENABLE_OTP_ALTERNATIVE)->first()->value == 1)
+                                <div class="mt-1 mb-2">
+                                    <a href="{{ route('2fa.security-questions') }}" class="btn-link">Login using
+                                        security questions</a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="text-center text-white">
                     ©{{ date("Y") }}
-                    <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">Zanzibar Revenue Authority</a>.
+                    <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">Zanzibar Revenue
+                        Authority</a>.
                     All Rights Reserved.
                 </div>
             </div>
