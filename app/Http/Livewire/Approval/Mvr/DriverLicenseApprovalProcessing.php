@@ -2,9 +2,7 @@
 
 namespace App\Http\Livewire\Approval\Mvr;
 
-use App\Enum\BillStatus;
 use App\Enum\GeneralConstant;
-use App\Enum\MvrRegistrationStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\DlApplicationLicenseClass;

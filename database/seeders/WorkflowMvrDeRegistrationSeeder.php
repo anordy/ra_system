@@ -97,7 +97,7 @@ class WorkflowMvrDeRegistrationSeeder extends Seeder
             ],
             'mvr_registration_officer_reject' => [
                 'from' => 'mvr_registration_officer',
-                'to' => 'correct_application',
+                'to' => 'mvr_police_officer',
                 'condition' => '',
             ],
             'mvr_registration_manager_review' => [

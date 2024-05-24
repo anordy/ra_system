@@ -15,8 +15,7 @@ class ApprovedRequestsTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-        return RoadLicense::where('road_licenses.taxpayer_id', Auth::id())
-            ->where('road_licenses.status', RoadLicenseStatus::APPROVED)
+        return RoadLicense::where('road_licenses.status', RoadLicenseStatus::APPROVED)
             ->orderBy('road_licenses.created_at', 'desc');
     }
 
