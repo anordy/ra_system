@@ -616,11 +616,16 @@
                         </li>
                     @endcan
 
+                        <li class="{{ request()->is('mvr/temporary-transport*') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.temporary-transports.index') }}">{{ __('Temporary Transportations') }}</a>
+                        </li>
+
                     @can('motor-vehicle-transport-agent')
                         <li class="{{ request()->is('mvr/agent') ? 'active' : '' }}">
                             <a href="{{ route('mvr.agent') }}">Transport Agents</a>
                         </li>
                     @endcan
+
                 </ul>
             </li>
         @endif
@@ -1032,7 +1037,7 @@
                     @endcan
                     @can('setting-mvr-plate-size-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrRegistrationType') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrRegistrationType') }}">Motor Vehicle Initial Plate No.
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrRegistrationType') }}">Motor Vehicle Initial Registration No.
                                 </a>
                         </li>
                     @endcan
@@ -1049,11 +1054,6 @@
                     @can('setting-mvr-ownership-transfer-reason-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrOwnershipTransferReason') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrOwnershipTransferReason') }}">Motor Vehicle Transfer Reasons</a>
-                        </li>
-                    @endcan
-                    @can('setting-mvr-transfer-category-view')
-                        <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Motor Vehicle Transfer Categories</a>
                         </li>
                     @endcan
                     @can('setting-mvr-transfer-fee-view')

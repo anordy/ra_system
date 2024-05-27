@@ -58,16 +58,17 @@ class PlateNumbersTable extends DataTableComponent
         return [
             Column::make(__("Chassis No"), "chassis.chassis_number")
                 ->searchable(),
-            Column::make(__("Plate No"), "plate_number")
+            Column::make(__("Registration No"), "plate_number")
                 ->format(function ($value, $row) {
                     return $row->plate_number ?? 'PENDING';
                 })
                 ->searchable(),
             Column::make(__("Reg Type"), "regtype.name")
                 ->searchable(),
-            Column::make(__("Plate No Color"), "regtype.color.color")
-                ->searchable(),
-            Column::make(__("Plate No Size"), "platesize.name")
+            Column::make(__("Plate Color"), "regtype.color.color")
+                ->searchable()
+                ->format(fn($value) => $value ?? 'N/A'),
+            Column::make(__("Plate Size"), "platesize.name")
                 ->searchable(),
             Column::make(__("Registration Date"), "registered_at")
                 ->format(function ($value, $row) {
@@ -86,7 +87,7 @@ class PlateNumbersTable extends DataTableComponent
                     } elseif (MvrPlateNumberStatus::STATUS_RECEIVED == $row->mvr_plate_number_status) {
                         $id = encrypt($value);
                         return <<< HTML
-                            <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.plate-number-collection-model',$value)"><i class="bi bi-pencil-square"></i> Update Status</button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.plate-number-collection-model', '$id')"><i class="bi bi-pencil-square"></i> Update Status</button>
                         HTML;
                     }
                     return '';

@@ -57,7 +57,7 @@
             </div>
             @if($reg->plate_type)
                 <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Plate No. Type</span>
+                    <span class="font-weight-bold text-uppercase">Registration No. Type</span>
                     <p class="my-1">{{ $reg->plate_type->name ?? 'N/A' }}</p>
                 </div>
             @endif

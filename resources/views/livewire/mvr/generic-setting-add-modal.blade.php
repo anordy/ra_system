@@ -79,7 +79,7 @@
                     ]))
                         <div class="row pr-3 pl-3">
                             <div class="form-group col-lg-12">
-                                <label class="control-label">Plate No. Type</label>
+                                <label class="control-label">Registration No. Type</label>
                                 <select wire:model="plateNoType" class="form-control">
                                     <option>Choose option</option>
                                     @foreach (\App\Models\MvrPlateNumberType::all() as $key => $type)

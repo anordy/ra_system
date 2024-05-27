@@ -13,7 +13,6 @@ use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrMake;
 use App\Models\MvrModel;
-use App\Models\MvrPlateNumberType;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;

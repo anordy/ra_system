@@ -132,7 +132,7 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("GFS Code", "gfs_code")->sortable(),
                 Column::make("Fee Category", "fee_type.type")->sortable(),
                 Column::make("Registration Type", "registration_type.name")->sortable(),
-                Column::make("Plate No. Type", "plate_type.name")->sortable(),
+                Column::make("Registration No. Type", "plate_type.name")->sortable(),
                 Column::make("Class", "class.name")->sortable(),
                 Column::make("Status", "status")->sortable(),
             ],
