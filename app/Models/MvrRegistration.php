@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\PublicService\PublicServiceMotor;
 use App\Models\Tra\ChassisNumber;
 use App\Models\Tra\Tin;
 use App\Traits\WorkflowTrait;
@@ -61,4 +62,7 @@ class MvrRegistration extends Model
         return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 
+    public function publicService(){
+        return $this->hasOne(PublicServiceMotor::class, 'mvr_registration_id');
+    }
 }
