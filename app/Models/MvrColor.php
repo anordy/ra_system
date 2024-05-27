@@ -25,7 +25,7 @@ use OwenIt\Auditing\Contracts\Auditable;
  */
 class MvrColor extends Model implements Auditable
 {
-	use SoftDeletes, \OwenIt\Auditing\Auditable;
+	use \OwenIt\Auditing\Auditable;
 	protected $table = 'mvr_colors';
 
 	protected $fillable = [

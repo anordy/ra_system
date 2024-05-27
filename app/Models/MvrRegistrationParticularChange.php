@@ -30,7 +30,7 @@ class MvrRegistrationParticularChange extends Model
     }
 
     public function platecolor(){
-        return $this->belongsTo(MvrPlateNumberColor::class, 'plate_number_color_id');
+        return $this->belongsTo(MvrColor::class, 'plate_number_color_id');
     }
 
     public function regtype(){
