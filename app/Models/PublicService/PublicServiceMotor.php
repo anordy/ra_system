@@ -31,4 +31,7 @@ class PublicServiceMotor extends Model
         return $this->hasOne(PublicServicePayment::class, 'public_service_motor_id');
     }
 
+    public function returns(){
+        return $this->hasMany(PublicServiceReturn::class);
+    }
 }

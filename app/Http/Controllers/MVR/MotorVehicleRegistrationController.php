@@ -35,6 +35,7 @@ class MotorVehicleRegistrationController extends Controller
         if (!Gate::allows('motor-vehicle-registration')) {
             abort(403);
         }
+
         $motorVehicle = MvrRegistration::findOrFail(decrypt($id));
         $plateHistories = MvrRegistration::with(['agent', 'taxpayer'])
             ->select('id', 'plate_number', 'registration_number', 'registered_at', 'status', 'is_agent_registration', 'use_company_name', 'taxpayer_id', 'registrant_tin')

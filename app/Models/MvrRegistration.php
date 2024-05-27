@@ -65,4 +65,8 @@ class MvrRegistration extends Model
     public function publicService(){
         return $this->hasOne(PublicServiceMotor::class, 'mvr_registration_id');
     }
+
+    public function temporaryTransports(){
+        return $this->hasMany(MvrTemporaryTransport::class);
+    }
 }
