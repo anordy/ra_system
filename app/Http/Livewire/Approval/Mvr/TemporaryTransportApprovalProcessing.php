@@ -116,7 +116,6 @@ class TemporaryTransportApprovalProcessing extends Component
             'data' => [
                 'transition' => $transition
             ],
-
         ]);
     }
 

@@ -106,10 +106,11 @@
             </div>
             @include('mvr.registration.reg_info', ['reg' => $registration->mvr])
             @include('mvr.registration.chassis_info', ['motor_vehicle' => $registration->mvr->chassis])
-
-            <livewire:approval.mvr.public-service-registration-approval-processing modelName="{{ get_class($registration) }}"
-                                                                            modelId="{{ encrypt($registration->id) }}"></livewire:approval.mvr.public-service-registration-approval-processing>
-
+            @can('public-service-approve-registrations')
+                <livewire:approval.mvr.public-service-registration-approval-processing
+                        modelName="{{ get_class($registration) }}"
+                        modelId="{{ encrypt($registration->id) }}" />
+            @endcan
         </div>
 
 

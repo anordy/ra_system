@@ -104,19 +104,16 @@
             </div>
 
             @include('mvr.registration.reg_info', ['reg' => $deRegistration->motor->mvr])
-
-            <livewire:approval.public-service.de-registration-approval-processing
+            @can('public-service-approve-de-registrations')
+                <livewire:approval.public-service.de-registration-approval-processing
                     modelName="{{ get_class($deRegistration) }}"
-                    modelId="{{ encrypt($deRegistration->id) }}">
-            </livewire:approval.public-service.de-registration-approval-processing>
-
+                    modelId="{{ encrypt($deRegistration->id) }}" />
+            @endcan
         </div>
-
-
         <div class="tab-pane fade m-2" id="approval" role="tabpanel" aria-labelledby="approval-tab">
             <livewire:approval.approval-history-table
-                    modelName='{{ \App\Models\PublicService\DeRegistration::class }}'
-                    modelId="{{ encrypt($deRegistration->id) }}"/>
+                modelName='{{ \App\Models\PublicService\DeRegistration::class }}'
+                modelId="{{ encrypt($deRegistration->id) }}"/>
         </div>
     </div>
 

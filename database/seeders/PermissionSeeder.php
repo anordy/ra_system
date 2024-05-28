@@ -130,6 +130,15 @@ class PermissionSeeder extends Seeder
             ['name' => 'mvr_approve_transfer', 'sys_module_id' => 15],
             ['name' => 'mvr_initiate_de_registration', 'sys_module_id' => 15],
             ['name' => 'mvr_approve_de_registration', 'sys_module_id' => 15],
+            ['name' => 'mvr-view-temporary-transports', 'sys_module_id' => 15],
+            ['name' => 'mvr-approve-temporary-transports', 'sys_module_id' => 15],
+            ['name' => 'public-service-view-registrations', 'sys_module_id' => 15],
+            ['name' => 'public-service-view-temporary-closures', 'sys_module_id' => 15],
+            ['name' => 'public-service-view-de-registrations', 'sys_module_id' => 15],
+            ['name' => 'public-service-view-payments', 'sys_module_id' => 15],
+            ['name' => 'public-service-approve-registrations', 'sys_module_id' => 15],
+            ['name' => 'public-service-approve-temporary-closures', 'sys_module_id' => 15],
+            ['name' => 'public-service-approve-de-registrations', 'sys_module_id' => 15],
 
             # Land Lease
             ['name' => 'land-lease-create', 'sys_module_id' => 16],
@@ -371,6 +380,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'managerial-business-report-view', 'sys_module_id' => 20],
             ['name' => 'managerial-debt-report-view', 'sys_module_id' => 20],
             ['name' => 'managerial-payment-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-public-service-reports-view', 'sys_module_id' => 20],
 
             # Extenstion
             ['name' => 'payment-extension-view', 'sys_module_id' => 21],

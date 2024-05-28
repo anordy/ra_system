@@ -598,11 +598,12 @@
                             <a href="{{ route('mvr.registration.status.index') }}">Status Change Request</a>
                         </li>
                     @endcan
-                    {{--                        @can('motor-vehicle-status-change-request')--}}
-                    <li class="{{ request()->is('mvr/registration/particular*') ? 'active' : '' }}">
-                        <a href="{{ route('mvr.registration.particular.index') }}">Particular Change Request</a>
-                    </li>
-                    {{--                        @endcan--}}
+
+                    @can('motor-vehicle-status-change-request')
+                        <li class="{{ request()->is('mvr/registration/particular*') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.registration.particular.index') }}">Particular Change Request</a>
+                        </li>
+                    @endcan
 
                     @can('motor-vehicle-transfer-ownership')
                         <li class="{{ request()->is('mvr/transfer-ownership*') ? 'active' : '' }}">
@@ -616,9 +617,11 @@
                         </li>
                     @endcan
 
+                    @can('mvr-view-temporary-transports')
                         <li class="{{ request()->is('mvr/temporary-transport*') ? 'active' : '' }}">
                             <a href="{{ route('mvr.temporary-transports.index') }}">{{ __('Temporary Transportations') }}</a>
                         </li>
+                    @endcan
 
                     @can('motor-vehicle-transport-agent')
                         <li class="{{ request()->is('mvr/agent') ? 'active' : '' }}">
@@ -648,9 +651,6 @@
                 </li>
                 <li class="{{ request()->is('public-service/payments*') ? 'active' : '' }}">
                     <a href="{{ route('public-service.payments.index') }}">Returns Payments</a>
-                </li>
-                <li class="{{ request()->is('public-service/reports*') ? 'active' : '' }}">
-                    <a href="{{ route('public-service.report.index') }}">Reports</a>
                 </li>
             </ul>
         </li>
@@ -770,29 +770,15 @@
                                 <a href="{{ route('reports.payments') }}">Payment Reports</a>
                             </li>
                         @endcan
+                        @can('managerial-public-service-reports-view')
+                            <li class="{{ request()->is('public-service/reports*') ? 'active' : '' }}">
+                                <a href="{{ route('public-service.report.index') }}">Public Service Reports</a>
+                            </li>
+                        @endcan
                     @endcan
-
                 </ul>
             </li>
         @endcan
-
-        {{-- @can('managerial-report-view')
-            <li class="{{ request()->is('queries*') ? 'active' : '' }}">
-                <a href="#queriesSubmenu" data-toggle="collapse"
-                   aria-expanded="{{ request()->is('queries*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                    Return Queries
-                </a>
-                <ul class="collapse list-unstyled {{ request()->is('queries*') ? 'show' : '' }}" id="queriesSubmenu">
-                    <li class="{{ request()->is('queries/sales-purchases*') ? 'active' : '' }}">
-                        <a href="{{ route('queries.sales-purchases') }}">Sales Vs Purchases</a>
-                    </li>
-
-                    <li class="{{ request()->is('queries/all-credit-returns*') ? 'active' : '' }}">
-                        <a href="{{ route('queries.all-credit-returns') }}">All Credit Returns</a>
-                    </li>
-                </ul>
-            </li>
-        @endcan --}}
 
         @can('manage-payment-management')
             <li class="{{ request()->is('payments*') ? 'active' : '' }}">

@@ -95,13 +95,16 @@
             </div>
 
             @include('mvr.reg_info', ['reg' => $transport->mvr])
-
-            <livewire:approval.mvr.temporary-transport-approval-processing modelName='App\Models\MvrTemporaryTransport'
-                                                                           modelId="{{ encrypt($transport->id) }}" />
+            @can('mvr-approve-temporary-transports')
+                <livewire:approval.mvr.temporary-transport-approval-processing
+                    modelName='App\Models\MvrTemporaryTransport'
+                    modelId="{{ encrypt($transport->id) }}" />
+            @endcan
         </div>
         <div class="tab-pane fade p-3" id="approval" role="tabpanel" aria-labelledby="approval-tab">
-            <livewire:approval.approval-history-table modelName='App\Models\MvrTemporaryTransport'
-                                                      modelId="{{ encrypt($transport->id) }}"/>
+            <livewire:approval.approval-history-table
+                    modelName='App\Models\MvrTemporaryTransport'
+                    modelId="{{ encrypt($transport->id) }}" />
         </div>
     </div>
 @endsection

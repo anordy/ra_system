@@ -14,11 +14,23 @@ class TemporaryTransportsTable extends DataTableComponent
 {
     use CustomAlert;
 
+    private $status;
+
+    public function mount($status = null){
+        $this->status = $status;
+    }
+
     public function builder(): Builder
     {
-        return MvrTemporaryTransport::query()
+        $query =  MvrTemporaryTransport::query()
             ->where('mvr_temporary_transports.taxpayer_id', Auth::id())
             ->orderBy('mvr_temporary_transports.created_at', 'desc');
+
+        if ($this->status !== null) {
+            $query->where('mvr_temporary_transports.status', $this->status);
+        }
+
+        return $query;
     }
 
     public function configure(): void

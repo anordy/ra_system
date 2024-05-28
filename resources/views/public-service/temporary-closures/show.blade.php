@@ -86,14 +86,12 @@
             </div>
 
             @include('mvr.registration.reg_info', ['reg' => $closure->motor->mvr])
-
-            <livewire:approval.public-service.temporary-closure-approval-processing
+            @can('public-service-approve-temporary-closures')
+                <livewire:approval.public-service.temporary-closure-approval-processing
                     modelName="{{ get_class($closure) }}"
-                    modelId="{{ encrypt($closure->id) }}">
-            </livewire:approval.public-service.temporary-closure-approval-processing>
-
+                    modelId="{{ encrypt($closure->id) }}" />
+            @endcan
         </div>
-
 
         <div class="tab-pane fade m-2" id="approval" role="tabpanel" aria-labelledby="approval-tab">
             <livewire:approval.approval-history-table
@@ -101,5 +99,4 @@
                     modelId="{{ encrypt($closure->id) }}"/>
         </div>
     </div>
-
 @endsection
