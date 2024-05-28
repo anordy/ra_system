@@ -2,16 +2,15 @@
 
 namespace App\Http\Livewire;
 
-use App\Jobs\User\SendRegistrationEmail;
-use App\Jobs\User\SendRegistrationSMS;
-use App\Models\ApprovalLevel;
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Models\ApprovalLevel;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserApprovalLevel;
 use App\Notifications\DatabaseNotification;
+use App\Traits\CustomAlert;
 use App\Traits\DualControlActivityTrait;
 use App\Traits\VerificationTrait;
 use Exception;
@@ -21,7 +20,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class UserAddModal extends Component
@@ -125,9 +123,7 @@ class UserAddModal extends Component
                'created_by' => Auth::user()->id
             ]);
 
-
             $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding new user '.$this->fname.' '.$this->lname.'');
-
             $admins = User::whereHas('role', function ($query) {
                 $query->where('name', 'Administrator');
             })->get();
