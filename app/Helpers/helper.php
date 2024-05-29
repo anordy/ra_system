@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\ExchangeRate;
+use App\Models\InterestRate;
 use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\User;
@@ -208,4 +210,18 @@ function getSubVatName($subVatId) {
 function formatEnum($string) {
     $string = str_replace( '_', ' ', $string);
     return ucwords($string);
+}
+
+function exchangeRate()
+{
+    $exchangeRate = ExchangeRate::where('currency', 'USD')
+        ->whereRaw("TO_CHAR(exchange_date, 'mm') = TO_CHAR(SYSDATE, 'mm') AND TO_CHAR(exchange_date, 'yyyy') = TO_CHAR(SYSDATE, 'yyyy')")
+        ->firstOrFail();
+    return $exchangeRate;
+}
+
+function interestRate()
+{
+    $interestRate = InterestRate::where('year', Carbon::now()->year)->firstOrFail();
+    return number_format($interestRate->rate, 4);
 }
