@@ -34,10 +34,10 @@ class DetailsAmendmentRequestAddModal extends Component
     public $alt_mobile;
     public $physical_address;
     public $old_values;
-    public $region, $regions=[];
-    public $district, $districts=[];
-    public $ward, $wards=[];
-    public $street, $streets=[];
+    public $region, $regions = [];
+    public $district, $districts = [];
+    public $ward, $wards = [];
+    public $street, $streets = [];
 
     public function mount($id)
     {
@@ -76,7 +76,7 @@ class DetailsAmendmentRequestAddModal extends Component
                 'ward_id' => $this->ward,
                 'street_id' => $this->street,
             ];
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::error($exception);
             abort(500, 'Something went wrong, please contact your system administrator.');
         }
@@ -93,12 +93,12 @@ class DetailsAmendmentRequestAddModal extends Component
 
         if ($propertyName === 'region') {
             $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
-            $this->reset('district','ward','wards','street','streets');
+            $this->reset('district', 'ward', 'wards', 'street', 'streets');
         }
 
         if ($propertyName === 'district') {
             $this->wards = Ward::where('district_id', $this->district)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
-            $this->reset('ward','streets','street');
+            $this->reset('ward', 'streets', 'street');
         }
 
         if ($propertyName === 'ward') {
@@ -120,7 +120,7 @@ class DetailsAmendmentRequestAddModal extends Component
             'middle_name' => 'nullable|alpha|max:30',
             'last_name' => 'required|alpha|max:30',
             'email' => 'nullable|email|unique:taxpayers,email,' . $this->taxpayer->id . ',id',
-            'mobile' => ['required', 'string', 'unique:taxpayers,mobile,'. $this->taxpayer->id . ',id', new ValidPhoneNo()],
+            'mobile' => ['required', 'string', 'unique:taxpayers,mobile,' . $this->taxpayer->id . ',id', new ValidPhoneNo()],
             'alt_mobile' => ['nullable', 'string', new ValidPhoneNo()],
             'physical_address' => 'required',
             'region' => 'required|numeric',
@@ -173,17 +173,20 @@ class DetailsAmendmentRequestAddModal extends Component
 
             session()->flash('success', 'Amendment details submitted. Waiting approval.');
             $this->redirect(route('taxpayers.taxpayer.index'));
-
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong');
         }
     }
 
     public function sendEmailToUser($data, $message)
     {
-        if ($data && $message){
+        if ($data && $message) {
             $smsPayload = [
                 'phone' => $data->phone,
                 'message' => "Hello, {$data->first_name}. {$message}",

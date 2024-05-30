@@ -38,16 +38,16 @@ class StreetAddModal extends Component
 
     public function mount()
     {
-        $this->regions = Region::where('is_approved',1)->get();
+        $this->regions = Region::where('is_approved', 1)->get();
     }
 
     public function updated($propertyName)
     {
         if ($propertyName === 'region_id') {
-            $this->districts = District::where('region_id', $this->region_id)->where('is_approved',1)->select('id', 'name')->get();
+            $this->districts = District::where('region_id', $this->region_id)->where('is_approved', 1)->select('id', 'name')->get();
         }
 
-        if ($propertyName === 'district_id'){
+        if ($propertyName === 'district_id') {
             $this->wards = Ward::where('district_id', $this->district_id)->where('is_approved', 1)->select('id', 'name')->get();
         }
     }
@@ -65,15 +65,19 @@ class StreetAddModal extends Component
             $street = Street::create([
                 'name' => $this->name,
                 'ward_id' => $this->ward_id,
-                'created_at' =>Carbon::now()
+                'created_at' => Carbon::now()
             ]);
             DB::commit();
-            $this->triggerDualControl(get_class($street), $street->id, DualControl::ADD, 'adding street'.$this->name);
+            $this->triggerDualControl(get_class($street), $street->id, DualControl::ADD, 'adding street' . $this->name);
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.street.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.street.index');
         }

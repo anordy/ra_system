@@ -22,7 +22,8 @@ class PenaltyRateAddModal extends Component
     public $financialYears;
     public $configs = [];
 
-    public function mount() {
+    public function mount()
+    {
         $existingPenaltyRateFinancialYears = PenaltyRate::distinct()->pluck('financial_year_id')->toArray();
         $this->financialYears = FinancialYear::whereNotIn('id', $existingPenaltyRateFinancialYears)->get();
         $this->configs = PenaltyRate::CONFIGURATIONS;
@@ -30,7 +31,7 @@ class PenaltyRateAddModal extends Component
 
     protected $rules = [
         'configs.*.rate' => 'required|numeric',
-//        'financial_year_id' => 'required'
+        //        'financial_year_id' => 'required'
     ];
 
     protected $messages = [
@@ -46,7 +47,7 @@ class PenaltyRateAddModal extends Component
         DB::beginTransaction();
         try {
             foreach ($this->configs as $config) {
-               $penalty_rate = PenaltyRate::create([
+                $penalty_rate = PenaltyRate::create([
                     'financial_year_id' => 72,
                     'code' => $config['code'],
                     'name' => $config['name'],
@@ -59,7 +60,11 @@ class PenaltyRateAddModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

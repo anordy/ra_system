@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Investigation;
 
 use App\Http\Controllers\Controller;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class TaxInvestigationFilesController extends Controller
@@ -15,8 +16,13 @@ class TaxInvestigationFilesController extends Controller
             try {
                 return Storage::disk('local')->response(decrypt($path));
             } catch (Exception $e) {
-                report($e);
-                abort(404);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+
+                return redirect()->back()->withError('Something went wrong. Please contact your admin.');
             }
         }
 

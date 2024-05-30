@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Investigation;
 
 use App\Models\Business;
+use App\Models\FinancialYear;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\Investigation\TaxInvestigationLocation;
 use App\Models\Investigation\TaxInvestigationTaxType;
@@ -42,9 +43,9 @@ class BusinessInvestigationAddModal extends Component
             'location_ids.*' => 'required|numeric',
             'tax_type_ids' => 'required',
             'tax_type_ids.*' => 'required|numeric',
-            'intension' => 'required|strip_tag',
-            'scope' => 'required|strip_tag',
-            'period_from' => 'required|date',
+            'intension' => 'required|strip_tag|string',
+            'scope' => 'required|strip_tag|string',
+            'period_from' => 'required|date|after:businesses,created_at',
             'period_to' => 'required|date|after:period_from',
         ];
     }
@@ -94,6 +95,7 @@ class BusinessInvestigationAddModal extends Component
         DB::beginTransaction();
         try {
             $taxInvestigation = TaxInvestigation::create([
+                'case_number' => TaxInvestigation::generateNewCaseNumber(),
                 'business_id' => $this->business_id,
                 'location_id' => count($this->location_ids) <= 1 ? $this->location_ids[0] : 0,
                 'tax_type_id' => count($this->tax_type_ids) <= 1 ? $this->tax_type_ids[0] : 0,
@@ -125,10 +127,15 @@ class BusinessInvestigationAddModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
+
 
     public function render()
     {

@@ -102,13 +102,13 @@ class ApprovalProcessing extends Component
             $this->vat_id = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
 
             foreach ($this->subject->taxTypes as $value) {
-                $subVat = $value->pivot->sub_vat_id ? SubVat::where('id', $value->pivot->sub_vat_id)->where('is_approved', 1)->firstOrFail('name'): null;
+                $subVat = $value->pivot->sub_vat_id ? SubVat::where('id', $value->pivot->sub_vat_id)->where('is_approved', 1)->firstOrFail('name') : null;
                 $this->selectedTaxTypes[] = [
                     'currency'    => $value->pivot->currency ?? '',
                     'tax_type_id' => $value->id,
                     'sub_vat_id' => $value->pivot->sub_vat_id,
                     'sub_vat_name' => $value->pivot->sub_vat_id ? $subVat['name'] : null,
-                    'show_hide_options'=> false,
+                    'show_hide_options' => false,
                 ];
             }
             if (count($this->selectedTaxTypes) < 1) {
@@ -124,7 +124,7 @@ class ApprovalProcessing extends Component
             $this->directors = BusinessDirector::where('business_id', $this->subject->id)->get() ?? [];
             $this->shareholders = BusinessShareholder::where('business_id', $this->subject->id)->get() ?? [];
             $this->shares = BusinessShare::where('business_id', $this->subject->id)->get() ?? [];
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::error($exception);
             abort(500, 'Something went wrong, please contact your system administrator for support.');
         }
@@ -205,7 +205,6 @@ class ApprovalProcessing extends Component
                 ];
 
                 $this->annualSales = LumpSumConfig::select('id', 'min_sales_per_year', 'max_sales_per_year', 'payments_per_year', 'payments_per_installment')->get()->toArray();
-
             } else {
                 $this->showLumpsumOptions = false;
             }
@@ -228,24 +227,27 @@ class ApprovalProcessing extends Component
         ];
     }
 
-    public function subCategorySearchUpdate($key, $value){
+    public function subCategorySearchUpdate($key, $value)
+    {
         $this->selectedTaxTypes[$key]['show_hide_options'] = true;
-        if (strlen($value) >= $this->minimumSearchableCharacters){
+        if (strlen($value) >= $this->minimumSearchableCharacters) {
             $this->subVatOptions  = SubVat::select('id', 'name')->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$value}%"])->get();
-        } else{
+        } else {
             $this->subVatOptions  = $this->defaultSubVatOptions;
         }
     }
 
-    public function checkArrayKey($array, $column, $value, $givenKey) {
+    public function checkArrayKey($array, $column, $value, $givenKey)
+    {
         $keys = array_keys(array_column($array, $column), $value);
         $checkedKey = (count($keys) > 0) ? $keys[0] : false;
         return $checkedKey == $givenKey;
     }
 
-    public function selectSubVat($key, $subVat){
+    public function selectSubVat($key, $subVat)
+    {
         $sameKey = $this->checkArrayKey($this->selectedTaxTypes, 'sub_vat_id', $subVat['id'], $key);
-        if (in_array($subVat['id'], array_column($this->selectedTaxTypes, 'sub_vat_id')) && !$sameKey){
+        if (in_array($subVat['id'], array_column($this->selectedTaxTypes, 'sub_vat_id')) && !$sameKey) {
             $this->alert('warning', 'Sub Vat is already selected');
             return;
         }
@@ -262,7 +264,7 @@ class ApprovalProcessing extends Component
 
     public function approve($transition)
     {
-        if (!isset($transition['data']['transition'])){
+        if (!isset($transition['data']['transition'])) {
             $this->customAlert('error', 'Something went wrong, please contact your system administrator for support');
             return;
         }
@@ -356,7 +358,7 @@ class ApprovalProcessing extends Component
                 }
 
                 DB::commit();
-            } catch (Exception $exception){
+            } catch (Exception $exception) {
                 DB::rollBack();
                 Log::error($exception);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
@@ -368,7 +370,7 @@ class ApprovalProcessing extends Component
             $this->validate([
                 'comments' => 'required|string|strip_tag',
             ]);
-            
+
             try {
                 DB::beginTransaction();
 
@@ -411,7 +413,7 @@ class ApprovalProcessing extends Component
                 // $traService = new TraInternalService();
                 // $traService->postZNumber($this->subject->id);
 
-            } catch (Exception $exception){
+            } catch (Exception $exception) {
                 DB::rollBack();
                 Log::error($exception);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
@@ -425,7 +427,11 @@ class ApprovalProcessing extends Component
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
@@ -433,7 +439,8 @@ class ApprovalProcessing extends Component
         $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
-    public function rejectToCorrection($comments, $correctionPart){
+    public function rejectToCorrection($comments, $correctionPart)
+    {
         $transition = 'application_filled_incorrect';
         try {
             DB::beginTransaction();
@@ -449,10 +456,10 @@ class ApprovalProcessing extends Component
             Log::error($exception);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
-
     }
 
-    public function rejectToTransition($transition){
+    public function rejectToTransition($transition)
+    {
         if (!isset($transition['data']['transition'])) {
             Log::error('Transition not defined');
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
@@ -470,7 +477,11 @@ class ApprovalProcessing extends Component
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }

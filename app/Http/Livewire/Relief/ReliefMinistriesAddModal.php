@@ -34,19 +34,23 @@ class ReliefMinistriesAddModal extends Component
 
     public function submit()
     {
-        if(!Gate::allows('relief-ministries-create')){
-            abort(403); 
+        if (!Gate::allows('relief-ministries-create')) {
+            abort(403);
         }
         $this->validate();
-        try{
+        try {
             ReliefMinistry::create([
                 'name' => $this->name,
                 'type' => $this->type,
                 'created_by' => auth()->user()->id
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
-        }catch(Exception $e){
-            Log::error($e);
+        } catch (Exception $e) {
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

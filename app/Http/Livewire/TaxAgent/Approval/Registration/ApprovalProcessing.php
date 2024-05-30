@@ -61,7 +61,7 @@ class ApprovalProcessing extends Component
             return;
         }
 
-        if (!isset($transition['data']['transition'])){
+        if (!isset($transition['data']['transition'])) {
             $this->customAlert('error', 'Something went wrong, please contact your system administrator for support.');
             return;
         }
@@ -75,7 +75,7 @@ class ApprovalProcessing extends Component
             $this->agent->save();
 
             $this->agent->generateReferenceNo();
-            $taxpayer = Taxpayer::find($this->agent->taxpayer_id);// todo: check if object exists
+            $taxpayer = Taxpayer::find($this->agent->taxpayer_id); // todo: check if object exists
             if (empty($taxpayer)) {
                 $this->customAlert('error', 'This taxpayer does not exist');
                 return;
@@ -95,17 +95,20 @@ class ApprovalProcessing extends Component
 
             $this->subject->approved_at = Carbon::now()->toDateTimeString();
             $this->subject->status = TaxAgentStatus::APPROVED;
-
         }
 
         try {
-            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]) ;
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             DB::commit();
             $this->customAlert('success', 'Approved successfully');
             return redirect()->route('taxagents.active-show', encrypt($this->subject->id));
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }
@@ -124,7 +127,11 @@ class ApprovalProcessing extends Component
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }

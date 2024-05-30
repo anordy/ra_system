@@ -54,13 +54,17 @@ class AddModal extends Component
             if (!$this->sign($api_user)) {
                 throw new Exception('Failed to sign user');
             }
-            $this->triggerDualControl(get_class($api_user), $api_user->id, DualControl::ADD, 'adding new user for API '.$this->app_name);
+            $this->triggerDualControl(get_class($api_user), $api_user->id, DualControl::ADD, 'adding new user for API ' . $this->app_name);
             DB::commit();
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.api-users.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.api-users.index');
         }

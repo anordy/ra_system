@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxInvestigationStatus;
 use App\Models\CaseStage;
+use App\Models\Investigation\TaxInvestigation;
 use App\Models\Investigation\TaxInvestigationOfficer;
 use App\Models\LegalCase;
 use App\Models\Returns\ReturnStatus;
@@ -32,92 +33,131 @@ class TaxInvestigationApprovalProcessing extends Component
     public $modelId;
     public $modelName;
     public $comments;
-
     public $teamLeader;
     public $teamMember;
     public $periodTo;
     public $periodFrom;
-
-    public $principalAmount;
-    public $interestAmount;
-    public $penaltyAmount;
-    public $investigationReport;
-    public $workingsReport;
+    public $workingReport;
+    public $noticeOfDiscussion;
+    public $finalReport;
+    public $preliminaryReport;
+    public $investigationDocuments = [];
+    public $taxAssessments = [];
+    public $principalAmounts = [];
+    public $interestAmounts = [];
+    public $penaltyAmounts = [];
+    public $taxTypeIds = [];
     public $intension;
     public $scope;
     public $exitMinutes;
-
     public $taxTypes;
     public $taxType;
-
     public $hasAssessment;
-
-
     public $staffs = [];
     public $subRoles = [];
-
     public $task;
+    public $investigation;
 
-
-
-
+    /**
+     * Mounts the TaxInvestigationApprovalProcessing component,
+     *  initializing its properties and registering the workflow.
+     *
+     * @param string $modelName The name of the model being processed.
+     * @param string $modelId The encrypted ID of the model being processed.
+     */
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId   = decrypt($modelId);
+        $this->modelId = decrypt($modelId);
         $this->taxTypes = TaxType::all();
         $this->taxType = $this->taxTypes->firstWhere('code', TaxType::INVESTIGATION);
 
         $this->registerWorkflow($modelName, $this->modelId);
 
-        $this->task = $this->subject->pinstancesActive;
+        $this->subject = $this->getSubject();
 
-        if(!isNullOrEmpty($this->subject->period_from)){
-            $this->periodFrom = Carbon::create($this->subject->period_from)->format('Y-m-d');
-        }
-        if(!isNullOrEmpty($this->subject->period_to)){
-            $this->periodTo = Carbon::create($this->subject->period_to)->format('Y-m-d');
-        }
+        // dd($this->getEnabledTransitions());
 
+        $this->exitMinutes = $this->subject->exit_minutes;
+        $this->finalReport = $this->subject->final_report;
+        $this->workingReport = $this->subject->working_report;
+        $this->preliminaryReport = $this->subject->preliminary_report;
+        $this->noticeOfDiscussion = $this->subject->notice_of_discussion;
         $this->intension = $this->subject->intension;
         $this->scope = $this->subject->scope;
-        $this->workingsReport = $this->subject->working_report;
-        $this->investigationReport = $this->subject->investigation_report;
+        $this->task = $this->subject->pinstancesActive;
 
-        $assessment = $this->subject->assessment;
-        if ($assessment) {
-            $this->hasAssessment = "1";
-            $this->principalAmount = $assessment->principal_amount;
-            $this->interestAmount = $assessment->interest_amount;
-            $this->penaltyAmount = $assessment->penalty_amount;
-        } else {
-            $this->hasAssessment = "0";
+        $this->periodFrom = $this->formatDate($this->subject->period_from);
+        $this->periodTo = $this->formatDate($this->subject->period_to);
+
+        $this->initializeAssessment();
+
+        if ($this->checkTransition('conduct_investigation')) {
+            $this->initializeTaxTypeAmounts();
         }
 
-        if ($this->task != null) {
-            $operators = json_decode($this->task->operators);
-            if (gettype($operators) != "array") {
-                $operators = [];
-            }
-            $roles = Role::whereIn('id', $operators)->get()->pluck('id')->toArray();
-
-            $this->subRoles = Role::whereIn('report_to', $roles)->get();
-           
-            $this->staffs = User::all();
-//            $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
+        if ($this->checkTransition('taxPayer_rejected_review')) {
+            $this->investigationDocuments = DB::table('tax_investigations_files')->where('tax_investigation_id', $this->modelId)->get();
+            $this->investigationDocuments = json_decode($this->investigationDocuments, true);
         }
+
+        $this->initializeStaffAndRoles();
     }
 
-
-    public function hasNoticeOfAttachmentChange($value)
+    private function getSubject()
     {
-        if ($value != "1") {
-            $this->principalAmount = null;
-            $this->interestAmount = null;
-            $this->penaltyAmount = null;
+        return app($this->modelName)->findOrFail($this->modelId);
+    }
+
+    private function formatDate($date)
+    {
+        return isNullOrEmpty($date) ? null : Carbon::create($date)->format('Y-m-d');
+    }
+
+    private function initializeAssessment()
+    {
+        $assessment = $this->subject->assessment;
+        $this->hasAssessment = $assessment ? "1" : "0";
+
+        if ($assessment) {
+            $this->taxAssessments = TaxAssessment::where('assessment_id', $this->subject->id)
+                ->where('assessment_type', get_class($this->subject))
+                ->get();
         }
     }
 
+    private function initializeTaxTypeAmounts()
+    {
+        $taxTypes = $this->subject->InvestigationTaxType();
+
+        foreach ($taxTypes as $taxType) {
+            $taxTypeKey = str_replace(' ', '_', $taxType['name']);
+            $this->principalAmounts[$taxTypeKey] = null;
+            $this->interestAmounts[$taxTypeKey] = null;
+            $this->penaltyAmounts[$taxTypeKey] = null;
+            $this->taxTypeIds[$taxTypeKey] = $taxType['id'];
+        }
+    }
+
+    private function initializeStaffAndRoles()
+    {
+        if ($this->task != null) {
+            $operators = json_decode($this->task->operators, true) ?: [];
+            $roles = Role::whereIn('id', $operators)->get()->pluck('id')->toArray();
+            $this->subRoles = Role::whereIn('report_to', $roles)->get();
+            $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
+            // TODO: Remove on production
+            $this->staffs = User::get();
+        }
+    }
+
+
+    /**
+     * Approves the tax investigation process and performs the necessary actions based on the transition.
+     *
+     * @param array $transition The transition data.
+     * @throws Exception If an error occurs during the approval process.
+     */
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
@@ -126,169 +166,265 @@ class TaxInvestigationApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
-        
+
         if ($this->checkTransition('assign_officers')) {
-            $this->validate(
-                [
-                    'intension' => 'required|strip_tag',
-                    'scope' => 'required|strip_tag',
-                    'periodFrom' => 'required|date',
-                    'periodTo' => 'required|after:periodFrom',
-                    'teamLeader' => ['required',  new NotIn([$this->teamMember])],
-                    'teamMember' => ['required',  new NotIn([$this->teamLeader])],
-                ],
-                [
-                    'teamLeader.not_in' => 'Duplicate  already exists as team member',
-                    'teamMember.not_in' => 'Duplicate already exists as team leader'
-                ]
-            );
+            $this->validateAssignOfficers();
         }
 
         if ($this->checkTransition('conduct_investigation')) {
-            $this->validate(
-                [
-                    'hasAssessment' => ['required', 'boolean'],
-                    'investigationReport' => ['required', 'mimes:pdf', 'max:1024', 'max_file_name_length:100'],
-                    'workingsReport' => [new RequiredIf($this->hasAssessment == "1"), 'nullable'],
-                    'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
-                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
-                ]
-            );
+            $this->validateConductInvestigation();
+        }
 
-            if ($this->workingsReport != $this->subject->working_report) {
-                $this->validate([
-                    'workingsReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
-                ]);
-            }
-
-            if ($this->investigationReport != $this->subject->investigation_report) {
-                $this->validate([
-                    'investigationReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
-                ]);
-            }
+        if ($this->checkTransition('final_report')) {
+            $this->validateFinalReport();
         }
 
         DB::beginTransaction();
         try {
-
             if ($this->checkTransition('assign_officers')) {
-
-                $officers = $this->subject->officers()->exists();
-
-                if ($officers) {
-                    $this->subject->officers()->delete();
-                }
-
-                TaxInvestigationOfficer::create([
-                    'investigation_id' => $this->subject->id,
-                    'user_id' => $this->teamLeader,
-                    'team_leader' => true,
-                ]);
-
-                TaxInvestigationOfficer::create([
-                    'investigation_id' => $this->subject->id,
-                    'user_id' => $this->teamMember,
-                ]);
-
-                $this->subject->period_to = $this->periodTo;
-                $this->subject->period_from = $this->periodTo;
-                $this->subject->intension = $this->intension;
-                $this->subject->scope = $this->scope;
-
-                $this->subject->save();
-
-                $operators = [intval($this->teamLeader), intval($this->teamMember)];
+                $operators =  $this->assignOfficers();
             }
 
             if ($this->checkTransition('conduct_investigation')) {
-
-                $assessment = $this->subject->assessment()->exists();
-
-                $principalAmount = $this->principalAmount ? str_replace(',', '', $this->principalAmount) : 0;
-                $interestAmount = $this->interestAmount ? str_replace(',', '', $this->interestAmount) : 0;
-                $penaltyAmount = $this->penaltyAmount ? str_replace(',', '', $this->penaltyAmount) : 0;
-                $totalAMount = ($penaltyAmount + $interestAmount + $principalAmount);
-
-
-                if ($this->hasAssessment == "1") {
-                    if ($assessment) {
-                        $this->subject->assessment()->update([
-                            'principal_amount' => $principalAmount,
-                            'interest_amount' => $interestAmount,
-                            'penalty_amount' => $penaltyAmount,
-                            'total_amount' => $totalAMount,
-                            'outstanding_amount' => $totalAMount,
-                            'original_principal_amount' => $principalAmount,
-                            'original_interest_amount' => $interestAmount,
-                            'original_penalty_amount' => $penaltyAmount,
-                            'original_total_amount' => $principalAmount + $interestAmount + $penaltyAmount
-                        ]);
-                    } else {
-                        TaxAssessment::create([
-                            'location_id' => $this->subject->location_id,
-                            'business_id' => $this->subject->business_id,
-                            'tax_type_id' => $this->taxType->id,
-                            'assessment_id' => $this->subject->id,
-                            'assessment_type' => get_class($this->subject),
-                            'principal_amount' => $principalAmount,
-                            'interest_amount' => $interestAmount,
-                            'penalty_amount' => $penaltyAmount,
-                            'total_amount' => $totalAMount,
-                            'outstanding_amount' => $totalAMount,
-                            'original_principal_amount' => $principalAmount,
-                            'original_interest_amount' => $interestAmount,
-                            'original_penalty_amount' => $penaltyAmount,
-                            'original_total_amount' => $principalAmount + $interestAmount + $penaltyAmount
-                        ]);
-                    }
-                } else {
-                    if ($assessment) {
-                        $this->subject->assessment()->delete();
-                    }
-                }
-
-                $investigationReport = "";
-                if ($this->investigationReport != $this->subject->investigation_report) {
-                    $investigationReport = $this->investigationReport->store('investigation', 'local');
-                }
-
-                $workingsReport = "";
-                if ($this->workingsReport != $this->subject->working_report) {
-                    $workingsReport = $this->workingsReport->store('investigation', 'local');
-                }
-
-                $this->subject->working_report = $workingsReport;
-                $this->subject->investigation_report = $investigationReport;
+                $this->conductInvestigation();
+            }
+            if ($this->checkTransition('investigation_report_review')) {
+                $this->subject->preliminary_report_date = Carbon::now()->addWeekdays(7); //add seven working days
                 $this->subject->save();
             }
 
+            if ($this->checkTransition('taxPayer_rejected_review')) {
+                $operators = $this->subject->officers()->select('user_id')->pluck('user_id')->toArray() ?? [];
+                $this->subject->was_rejected = True;
+                $this->subject->save();
+            }
+
+            if ($this->checkTransition('final_report')) {
+
+                $this->prepareFinalReport();
+            }
+            $this->registerWorkflow($this->modelName, $this->modelId);
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
-            
+
             DB::commit();
 
-            if ($this->subject->status == TaxInvestigationStatus::LEGAL) {
-                $this->addToLegalCase();
+            // if ($this->subject->status == TaxInvestigationStatus::LEGAL) {
+            //     $this->addToLegalCase();
+            // }
+
+            if ($this->subject->status == TaxInvestigationStatus::APPROVED) {
+                //TODO:(Generate Assessment notice)
+
+
             }
-    
-            if ($this->subject->status == TaxInvestigationStatus::APPROVED && $this->subject->assessment()->exists()) {
-                $this->generateControlNumber();
-                $this->subject->assessment->update([
-                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                    'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                ]);
-            }
-            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+
+            $this->flash('success', __('Approved successfully'), [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            $this->customAlert('error', __('Something went wrong, please contact the administrator for help'));
+        }
+    }
 
-            return;
+    private function validateAssignOfficers()
+    {
+        $this->validate(
+            [
+                'intension' => 'required|strip_tag|string',
+                'scope' => 'required|strip_tag|string',
+                'periodFrom' => 'required|date',
+                'periodTo' => 'required|after:periodFrom',
+                'teamLeader' => ['required', new NotIn([$this->teamMember])],
+                'teamMember' => ['required', new NotIn([$this->teamLeader])],
+            ],
+            [
+                'teamLeader.not_in' => 'Duplicate already exists as team member',
+                'teamMember.not_in' => 'Duplicate already exists as team leader'
+            ]
+        );
+    }
+
+    private function validateConductInvestigation()
+    {
+        $this->validate([
+            'preliminaryReport' => 'required|max:1024',
+            'noticeOfDiscussion' => 'required|max:1024',
+            'hasAssessment' => ['required', 'boolean'],
+        ]);
+
+        $validationRules = $this->generateTaxTypeValidationRules();
+        $this->validate($validationRules);
+
+        if ($this->preliminaryReport != $this->subject->preliminary_report) {
+            $this->validate([
+                'preliminaryReport' => 'required|mimes:pdf,csv|max:1024|max_file_name_length:100'
+            ]);
         }
 
+        if ($this->noticeOfDiscussion != $this->subject->notice_of_discussion) {
+            $this->validate([
+                'noticeOfDiscussion' => 'required|mimes:pdf,csv|max:1024|max_file_name_length:100'
+            ]);
+        }
+    }
+    private function validateFinalReport()
+    {
+        $this->validate([
+            'finalReport' => 'required|max:1024',
+            'workingReport' => 'nullable|max:1024',
+        ]);
 
-     
+        if ($this->finalReport != $this->subject->final_report) {
+            $this->validate([
+                'finalReport' => 'required|mimes:pdf,csv|max:1024|max_file_name_length:100'
+            ]);
+        }
 
+        if ($this->workingReport != $this->subject->working_report) {
+            $this->validate([
+                'workingReport' => 'nullable|mimes:pdf,csv|max:1024|max_file_name_length:100'
+            ]);
+        }
+    }
+
+    private function generateTaxTypeValidationRules()
+    {
+        $taxTypes = explode(",", $this->subject->taxInvestigationTaxTypeNames());
+        $validationRules = [];
+        foreach ($taxTypes as $taxType) {
+            $taxTypeKey = str_replace(' ', '_', $taxType);
+            $validationRules["principalAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
+            $validationRules["interestAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
+            $validationRules["penaltyAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
+        }
+        return $validationRules;
+    }
+
+    private function assignOfficers()
+    {
+        $officers = $this->subject->officers()->exists();
+
+        if ($officers) {
+            $this->subject->officers()->delete();
+        }
+
+        TaxInvestigationOfficer::create([
+            'investigation_id' => $this->subject->id,
+            'user_id' => $this->teamLeader,
+            'team_leader' => true,
+        ]);
+
+        TaxInvestigationOfficer::create([
+            'investigation_id' => $this->subject->id,
+            'user_id' => $this->teamMember,
+        ]);
+
+        $this->subject->period_to = $this->periodTo;
+        $this->subject->period_from = $this->periodTo;
+        $this->subject->intension = $this->intension;
+        $this->subject->scope = $this->scope;
+        $this->subject->save();
+
+        return [intval($this->teamLeader), intval($this->teamMember)];
+    }
+
+    private function conductInvestigation()
+    {
+        $assessment = $this->subject->assessment()->exists();
+
+        if ($this->hasAssessment == "1") {
+            $this->handleAssessment($assessment);
+        } else {
+            if ($assessment) {
+                $this->subject->assessment()->delete();
+            }
+        }
+
+        $preliminaryReport = $this->preliminaryReport;
+        if ($this->preliminaryReport != $this->subject->preliminary_report) {
+            $preliminaryReport = $this->preliminaryReport->store('investigation', 'local');
+        }
+
+        $noticeOfDiscussion = $this->noticeOfDiscussion;
+        if ($this->noticeOfDiscussion != $this->subject->notice_of_discussion) {
+            $noticeOfDiscussion = $this->noticeOfDiscussion->store('investigation', 'local');
+        }
+
+        $this->subject->preliminary_report = $preliminaryReport;
+        $this->subject->notice_of_discussion = $noticeOfDiscussion;
+        $this->subject->save();
+    }
+    private function prepareFinalReport()
+    {
+        $finalReport = $this->finalReport;
+        if ($this->finalReport != $this->subject->final_report) {
+            $finalReport = $this->finalReport->store('investigation', 'local');
+        }
+
+        $workingReport = $this->workingReport;
+        if ($this->workingReport != $this->subject->working_report) {
+            $workingReport = $this->workingReport->store('investigation', 'local');
+        }
+
+        $this->subject->final_report = $finalReport;
+        $this->subject->working_report = $workingReport;
+        $this->subject->save();
+    }
+
+    private function handleAssessment($assessment)
+    {
+        foreach ($this->principalAmounts as $taxTypeKey => $principalAmount) {
+            $interestAmount = str_replace(',', '', $this->interestAmounts[$taxTypeKey]);
+            $penaltyAmount = str_replace(',', '', $this->penaltyAmounts[$taxTypeKey]);
+            $principalAmount = str_replace(',', '', $principalAmount);
+            $taxTypeId = $this->taxTypeIds[$taxTypeKey];
+            $totalAmount = $penaltyAmount + $interestAmount + $principalAmount;
+
+            if ($assessment) {
+                $this->updateAssessment($taxTypeId, $principalAmount, $interestAmount, $penaltyAmount, $totalAmount);
+            } else {
+                $this->createAssessment($taxTypeId, $principalAmount, $interestAmount, $penaltyAmount, $totalAmount);
+            }
+        }
+    }
+
+    private function updateAssessment($taxTypeId, $principalAmount, $interestAmount, $penaltyAmount, $totalAmount)
+    {
+        $this->subject->assessment()->where('tax_type_id', $taxTypeId)->update([
+            'principal_amount' => $principalAmount,
+            'interest_amount' => $interestAmount,
+            'penalty_amount' => $penaltyAmount,
+            'total_amount' => $totalAmount,
+            'outstanding_amount' => $totalAmount,
+            'original_principal_amount' => $principalAmount,
+            'original_interest_amount' => $interestAmount,
+            'original_penalty_amount' => $penaltyAmount,
+            'original_total_amount' => $totalAmount
+        ]);
+    }
+
+    private function createAssessment($taxTypeId, $principalAmount, $interestAmount, $penaltyAmount, $totalAmount)
+    {
+        TaxAssessment::create([
+            'location_id' => $this->subject->location_id,
+            'business_id' => $this->subject->business_id,
+            'tax_type_id' => $taxTypeId,
+            'assessment_id' => $this->subject->id,
+            'assessment_type' => get_class($this->subject),
+            'principal_amount' => $principalAmount,
+            'interest_amount' => $interestAmount,
+            'penalty_amount' => $penaltyAmount,
+            'total_amount' => $totalAmount,
+            'outstanding_amount' => $totalAmount,
+            'original_principal_amount' => $principalAmount,
+            'original_interest_amount' => $interestAmount,
+            'original_penalty_amount' => $penaltyAmount,
+            'original_total_amount' => $totalAmount
+        ]);
     }
 
     public function addToLegalCase()
@@ -305,104 +441,16 @@ class TaxInvestigationApprovalProcessing extends Component
         );
     }
 
-    public function generateControlNumber()
-    {
-        $assessment = $this->subject->assessment;
 
-        DB::beginTransaction();
-
-        try {
-            $billitems = [
-                [
-                    'billable_id' => $assessment->id,
-                    'billable_type' => get_class($assessment),
-                    'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($this->principalAmount, 'TZS'),
-                    'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'investigation')->firstOrFail()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'investigation')->firstOrFail()->id
-                ],
-                [
-                    'billable_id' => $assessment->id,
-                    'billable_type' => get_class($assessment),
-                    'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($this->interestAmount, 'TZS'),
-                    'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'investigation')->firstOrFail()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->firstOrFail()->id
-                ],
-                [
-                    'billable_id' => $assessment->id,
-                    'billable_type' => get_class($assessment),
-                    'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($this->penaltyAmount, 'TZS'),
-                    'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'investigation')->firstOrFail()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->id
-                ]
-            ];
-
-            $taxpayer = $this->subject->business->taxpayer;
-
-            $payer_type = get_class($taxpayer);
-            $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
-            $payer_email = $taxpayer->email;
-            $payer_phone = $taxpayer->mobile;
-            $description = "Verification for {$this->taxType->name} ";
-            $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-            $currency = 'TZS';
-            $createdby_type = get_class(Auth::user());
-            $createdby_id = Auth::id();
-            $exchange_rate = 1;
-            $payer_id = $taxpayer->id;
-            $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
-            $billableId = $assessment->id;
-            $billableType = get_class($assessment);
-
-            $zmBill = ZmCore::createBill(
-                $billableId,
-                $billableType,
-                $this->taxTypes->where('code', 'investigation')->firstOrFail()->id,
-                $payer_id,
-                $payer_type,
-                $payer_name,
-                $payer_email,
-                $payer_phone,
-                $expire_date,
-                $description,
-                $payment_option,
-                $currency,
-                $exchange_rate,
-                $createdby_id,
-                $createdby_type,
-                $billitems
-            );
-            DB::commit();
-
-            if (config('app.env') != 'local') {
-                $this->generateGeneralControlNumber($zmBill);
-            } else {
-                // We are local
-                $assessment->payment_status = ReturnStatus::CN_GENERATED;
-                $assessment->save();
-
-                // Simulate successfully control no generation
-                $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-                $zmBill->zan_status = 'pending';
-                $zmBill->control_number = random_int(2000070001000, 2000070009999);
-                $zmBill->save();
-                $this->customAlert('success', 'A control number for this verification has been generated successfully');
-            }
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-            throw $e;
-        }
-    }
-
+    /**
+     * Rejects the tax investigation approval process.
+     *
+     * @param array $transition The transition data for the approval process.
+     * @return void
+     */
     public function reject($transition)
     {
-        $transition = $transition['data']['transition'];
+        // $transition = $transition['data']['transition'];
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
@@ -414,11 +462,15 @@ class TaxInvestigationApprovalProcessing extends Component
             }
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments, 'operators' => $operators]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             return;
         }
-        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+        $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl());
     }
 
     protected $listeners = [
@@ -427,7 +479,7 @@ class TaxInvestigationApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', __('Are you sure you want to complete this action?'), [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

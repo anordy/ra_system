@@ -26,9 +26,9 @@ class CountryEditModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|strip_tag|min:2|unique:countries,code,'.$this->country->id.',id',
-            'name' => 'required|strip_tag|min:2|unique:countries,name,'.$this->country->id.',id',
-            'nationality' => 'required|strip_tag|min:2|unique:countries,nationality,'.$this->country->id.',id',
+            'code' => 'required|strip_tag|min:2|unique:countries,code,' . $this->country->id . ',id',
+            'name' => 'required|strip_tag|min:2|unique:countries,name,' . $this->country->id . ',id',
+            'nationality' => 'required|strip_tag|min:2|unique:countries,nationality,' . $this->country->id . ',id',
         ];
     }
 
@@ -53,7 +53,11 @@ class CountryEditModal extends Component
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.country.index');
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.country.index');
         }
@@ -63,7 +67,7 @@ class CountryEditModal extends Component
     {
         $id = decrypt($id);
         $this->country = Country::find($id);
-        if(is_null($this->country)){
+        if (is_null($this->country)) {
             abort(404);
         }
         $this->code = $this->country->code;

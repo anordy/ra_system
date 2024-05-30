@@ -80,21 +80,25 @@ class DailyDebtPenaltyInterest extends Command
         if ($tax_returns) {
 
             foreach ($tax_returns as $tax_return) {
-                    DB::beginTransaction();
-                    try {
-                        // Generate penalty
-                        PenaltyForDebt::generateReturnsPenalty($tax_return);
-                        DB::commit();
-                        // Cancel previous latest bill if exists
-                        if ($tax_return->latestBill) {
-                            CancelBill::dispatch($tax_return->latestBill, 'Debt Penalty Increment');
-                        }
-                        $tax_return = TaxReturn::findOrFail($tax_return->id);
-                        GenerateControlNo::dispatch($tax_return);
-                    } catch (Exception $e) {
-                        DB::rollBack();
-                        Log::error($e);
+                DB::beginTransaction();
+                try {
+                    // Generate penalty
+                    PenaltyForDebt::generateReturnsPenalty($tax_return);
+                    DB::commit();
+                    // Cancel previous latest bill if exists
+                    if ($tax_return->latestBill) {
+                        CancelBill::dispatch($tax_return->latestBill, 'Debt Penalty Increment');
                     }
+                    $tax_return = TaxReturn::findOrFail($tax_return->id);
+                    GenerateControlNo::dispatch($tax_return);
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    Log::error('Error: ' . $e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+                }
             }
         }
     }
@@ -134,7 +138,11 @@ class DailyDebtPenaltyInterest extends Command
                     GenerateAssessmentDebtControlNo::dispatch($tax_assessment);
                 } catch (Exception $e) {
                     DB::rollBack();
-                    Log::error($e);
+                    Log::error('Error: ' . $e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
                 }
             }
         }

@@ -36,7 +36,11 @@ class WaiverController extends Controller
             return view('assesments.waiver.approval', compact('dispute', 'files', 'business', 'assesment'));
         } catch (Exception $e) {
             report($e);
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             session()->flash('warning', 'The selected waiver was not found. Please contact your administrator');
             return back();
         }
@@ -56,7 +60,11 @@ class WaiverController extends Controller
             return view('assesments.waiver.view', compact('dispute', 'files', 'business', 'assesment'));
         } catch (Exception $e) {
             report($e);
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             session()->flash('warning', 'The selected waiver was not found. Please contact your administrator');
             return back();
         }

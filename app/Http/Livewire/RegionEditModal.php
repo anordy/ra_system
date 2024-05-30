@@ -50,13 +50,17 @@ class RegionEditModal extends Component
                 'location' => $this->location
             ];
 
-            $this->triggerDualControl(get_class($this->region), $this->region->id, DualControl::EDIT, 'editing region '.$this->region->name, json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->region), $this->region->id, DualControl::EDIT, 'editing region ' . $this->region->name, json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.region.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('success', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.region.index');
         }
@@ -66,7 +70,7 @@ class RegionEditModal extends Component
     {
         $id = decrypt($id);
         $this->region = Region::find($id);
-        if(is_null($this->region)){
+        if (is_null($this->region)) {
             abort(404);
         }
         $this->name = $this->region->name;

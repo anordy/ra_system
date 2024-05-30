@@ -42,19 +42,23 @@ class RegisterCase extends Component
             DB::beginTransaction();
             $case = LegalCase::query()->create(
                 [
-                    'tax_investigation_id'=>$this->tax_inv_id,
-                    'date_opened'=>$this->date,
-                    'case_number'=>$this->case_number,
-                    'case_details'=>$this->comment,
-                    'court'=>$this->court,
-                    'case_stage_id'=>CaseStage::query()->firstOrCreate(['name'=>'Case Opening'])->id,
+                    'tax_investigation_id' => $this->tax_inv_id,
+                    'date_opened' => $this->date,
+                    'case_number' => $this->case_number,
+                    'case_details' => $this->comment,
+                    'court' => $this->court,
+                    'case_stage_id' => CaseStage::query()->firstOrCreate(['name' => 'Case Opening'])->id,
                 ]
             );
             DB::commit();
             redirect()->to(route('cases.show', encrypt($case->id)));
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

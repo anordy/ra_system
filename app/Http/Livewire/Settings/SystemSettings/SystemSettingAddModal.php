@@ -49,12 +49,14 @@ class SystemSettingAddModal extends Component
         'description.required' => 'Description is required.',
     ];
 
-    public function mount(){
+    public function mount()
+    {
         $this->categories = SystemSettingCategory::select('id', 'name')->get();
         $this->valueType = 'text';
     }
 
-    public function updated($property){
+    public function updated($property)
+    {
         if ($property == 'system_setting_category') {
             $object = $this->categories->first(function ($item) use ($property) {
                 return $item->id == $this->system_setting_category;
@@ -62,33 +64,34 @@ class SystemSettingAddModal extends Component
             $this->settingCategory = $object->code;
         }
     }
-    public function updatedName(){
+    public function updatedName()
+    {
         $this->code = str_replace(" ", "-", $this->name);
     }
     public function submit()
     {
-        
+
         if (!Gate::allows('system-setting-add')) {
             abort(403);
         }
         $this->validate();
         DB::beginTransaction();
         try {
-                $value = $this->value;
-                if ($this->valueType == 'file'){
-                    $valuePath = $this->value->store('/sign', 'local');
-                    $value = $valuePath;
-                }
+            $value = $this->value;
+            if ($this->valueType == 'file') {
+                $valuePath = $this->value->store('/sign', 'local');
+                $value = $valuePath;
+            }
 
-                $systemSetting = new SystemSetting();
-                $systemSetting['system_setting_category_id'] = $this->system_setting_category;
-                $systemSetting['name'] = $this->name;
-                $systemSetting['code'] = $this->code;
-                $systemSetting['value'] = $value;
-                $systemSetting['unit'] = $this->unit;
-                $systemSetting['description'] = $this->description;
-                $systemSetting['created_at'] = Carbon::now();
-                $systemSetting->save();
+            $systemSetting = new SystemSetting();
+            $systemSetting['system_setting_category_id'] = $this->system_setting_category;
+            $systemSetting['name'] = $this->name;
+            $systemSetting['code'] = $this->code;
+            $systemSetting['value'] = $value;
+            $systemSetting['unit'] = $this->unit;
+            $systemSetting['description'] = $this->description;
+            $systemSetting['created_at'] = Carbon::now();
+            $systemSetting->save();
 
             $this->triggerDualControl(get_class($systemSetting), $systemSetting['id'], DualControl::ADD, 'adding system setting entry');
             DB::commit();
@@ -96,7 +99,11 @@ class SystemSettingAddModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact our administrator for assistance?');
         }
     }

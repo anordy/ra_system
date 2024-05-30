@@ -25,7 +25,6 @@ class NotificationsTable extends Component
             ->where('notifiable_id', auth()->id())
             ->whereNull('read_at')
             ->increment('seen');
-   
     }
 
     public function toggleSelectAll()
@@ -43,7 +42,7 @@ class NotificationsTable extends Component
     public function read($notification)
     {
         $notification = Notification::find($notification['id']);
-        if(is_null($notification)){
+        if (is_null($notification)) {
             abort(404);
         }
         $data = $notification->data;
@@ -55,14 +54,18 @@ class NotificationsTable extends Component
             return redirect()->route($data->href, !empty($data->hrefParameters) ? encrypt($data->hrefParameters) : null);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
     public function render()
     {
-                 
+
         $notifications = Notification::where('notifiable_type', get_class(auth()->user()))
             ->where('notifiable_id', auth()->id())
             ->whereNull('read_at')

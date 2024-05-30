@@ -60,7 +60,11 @@ class BusinessAuditEditModal extends Component
                 $this->reset('taxTypes', 'locations');
             }
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong while fetching the business details');
         }
     }
@@ -87,7 +91,11 @@ class BusinessAuditEditModal extends Component
                 $this->customAlert('error', 'Failed to create tax audit record');
             }
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

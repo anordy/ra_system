@@ -80,7 +80,11 @@ trait PaymentsTrait
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             return false;
         }
@@ -727,7 +731,6 @@ trait PaymentsTrait
                     'tax_type_id' => $seaportTransportChargeTax->id
                 ];
             }
-
         }
 
         return $billItems;
@@ -801,8 +804,6 @@ trait PaymentsTrait
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
         }
-
-
     }
 
     public function generateAssessmentControlNumber($assessment)
@@ -924,7 +925,11 @@ trait PaymentsTrait
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
@@ -994,7 +999,6 @@ trait PaymentsTrait
             if (env('APP_ENV') === 'production') {
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
-
         }
     }
     public function generatePropertyTaxBillItems($propertyPayment, $taxType)
@@ -1013,7 +1017,8 @@ trait PaymentsTrait
 
         return $billItems;
     }
-    public function generateMvrControlNumber($mvr, $fee) {
+    public function generateMvrControlNumber($mvr, $fee)
+    {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
         $zmBill = ZmCore::createBill(
@@ -1052,7 +1057,7 @@ trait PaymentsTrait
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
             }
-        }else {
+        } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = random_int(2000070001000, 2000070009999);
@@ -1064,7 +1069,8 @@ trait PaymentsTrait
     }
 
 
-    public function generateMvrTransferOwnershipControlNumber($transfer, $fee) {
+    public function generateMvrTransferOwnershipControlNumber($transfer, $fee)
+    {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
         $zmBill = ZmCore::createBill(
@@ -1103,7 +1109,7 @@ trait PaymentsTrait
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
             }
-        }else {
+        } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = random_int(2000070001000, 2000070009999);
@@ -1114,7 +1120,8 @@ trait PaymentsTrait
         }
     }
 
-    public function generateMvrStatusChangeConntrolNumber($mvr, $fee) {
+    public function generateMvrStatusChangeConntrolNumber($mvr, $fee)
+    {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
         $zmBill = ZmCore::createBill(
@@ -1153,7 +1160,7 @@ trait PaymentsTrait
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
             }
-        }else {
+        } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = random_int(2000070001000, 2000070009999);
@@ -1162,9 +1169,10 @@ trait PaymentsTrait
             $zmBill->save();
             $this->flash('success', 'A control number for this verification has been generated successfully');
         }
-    }    
+    }
 
-    public function generateDLicenseControlNumber($license, $fee) {
+    public function generateDLicenseControlNumber($license, $fee)
+    {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
         $zmBill = ZmCore::createBill(
@@ -1203,7 +1211,7 @@ trait PaymentsTrait
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
             }
-        }else {
+        } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = random_int(2000070001000, 2000070009999);
@@ -1214,7 +1222,8 @@ trait PaymentsTrait
         }
     }
 
-    public function generateMvrDeregistrationControlNumber($mvr, $fee) {
+    public function generateMvrDeregistrationControlNumber($mvr, $fee)
+    {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
         $zmBill = ZmCore::createBill(
@@ -1253,7 +1262,7 @@ trait PaymentsTrait
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
             }
-        }else {
+        } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = random_int(2000070001000, 2000070009999);
@@ -1263,7 +1272,8 @@ trait PaymentsTrait
             $this->flash('success', 'A control number for this verification has been generated successfully');
         }
     }
-    public function generateTaxRefundControlNumber($taxRefund) {
+    public function generateTaxRefundControlNumber($taxRefund)
+    {
         $taxType = TaxType::select('id')->where('code', TaxType::VAT)->firstOrFail();
         $subVat = SubVat::select('gfs_code')->where('code', SubVatConstant::IMPORTS)->firstOrFail();
         $exchangeRate = 1;
@@ -1303,7 +1313,7 @@ trait PaymentsTrait
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
             }
-        }else {
+        } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = random_int(2000070001000, 2000070009999);
@@ -1313,5 +1323,4 @@ trait PaymentsTrait
             $this->flash('success', 'A control number for this verification has been generated successfully');
         }
     }
-
 }

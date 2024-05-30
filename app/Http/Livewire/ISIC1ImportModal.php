@@ -18,7 +18,7 @@ class ISIC1ImportModal extends Component
 
     public $file;
 
-    
+
     protected function rules()
     {
         return [
@@ -26,30 +26,37 @@ class ISIC1ImportModal extends Component
         ];
     }
 
-    public function submit(){
+    public function submit()
+    {
         if (!Gate::allows('setting-isic-level-one-add')) {
             abort(403);
         }
         $this->validate();
-        try{
+        try {
             $import = new ISIC1Import;
             $import->import($this->file);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
-        }catch(ValidationException $e){
-            Log::error($e);
-            if(count($e->failures()) > 0){
-                $errorName = str_replace('.','',$e->failures()[0]->errors()[0]);
+        } catch (ValidationException $e) {
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            if (count($e->failures()) > 0) {
+                $errorName = str_replace('.', '', $e->failures()[0]->errors()[0]);
                 $errorRowNo  = $e->failures()[0]->row();
-                $this->customAlert('error', $errorName.' on row '.$errorRowNo.' on your excel');
-            }else{
+                $this->customAlert('error', $errorName . ' on row ' . $errorRowNo . ' on your excel');
+            } else {
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
-            
-        }catch(Exception $e){
-            Log::error($e);
+        } catch (Exception $e) {
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
-        
     }
 
     public function render()

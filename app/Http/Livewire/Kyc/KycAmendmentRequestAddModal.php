@@ -42,16 +42,16 @@ class KycAmendmentRequestAddModal extends Component
     public $nationality;
     public $id_type;
     public $zanid;
-    public $region, $regions=[];
-    public $district, $districts=[];
-    public $ward, $wards=[];
-    public $street, $streets=[];
+    public $region, $regions = [];
+    public $district, $districts = [];
+    public $ward, $wards = [];
+    public $street, $streets = [];
 
     public function mount($id)
     {
         try {
             $this->kyc = KYC::find(decrypt($id));
-            if(is_null($this->kyc)){
+            if (is_null($this->kyc)) {
                 abort(404);
             }
             $this->kyc_id = $this->kyc->id;
@@ -99,7 +99,7 @@ class KycAmendmentRequestAddModal extends Component
                 'country_id' => $this->nationality,
                 'id_type' => $this->id_type,
             ];
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::error($exception);
             abort(500, 'Something went wrong, please contact your system administrator for support.');
         }
@@ -109,12 +109,12 @@ class KycAmendmentRequestAddModal extends Component
     {
         if ($propertyName === 'region') {
             $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
-            $this->reset('district','ward','wards','street','streets');
+            $this->reset('district', 'ward', 'wards', 'street', 'streets');
         }
 
         if ($propertyName === 'district') {
             $this->wards = Ward::where('district_id', $this->district)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
-            $this->reset('ward','streets','street');
+            $this->reset('ward', 'streets', 'street');
         }
 
         if ($propertyName === 'ward') {
@@ -136,7 +136,7 @@ class KycAmendmentRequestAddModal extends Component
             'middle_name' => 'nullable|alpha',
             'last_name' => 'required|alpha',
             'email' => 'nullable:email|unique:kycs,email,' . $this->kyc->id . ',id',
-            'mobile' => 'required|unique:kycs,mobile,'. $this->kyc->id . ',id|phone_no',
+            'mobile' => 'required|unique:kycs,mobile,' . $this->kyc->id . ',id|phone_no',
             'alt_mobile' => 'nullable|phone_no',
             'physical_address' => 'required|strip_tag',
             'region' => 'required|numeric|exists:regions,id',
@@ -229,24 +229,27 @@ class KycAmendmentRequestAddModal extends Component
 
             DB::commit();
 
-            if ($kyc_amendment){
+            if ($kyc_amendment) {
                 $message = 'We are writing to inform you that some of your ZIDRAS kyc personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                 $this->sendEmailToUser($this->kyc, $message);
             }
 
             session()->flash('success', 'Amendment details submitted. Waiting approval.');
             $this->redirect(route('kycs-amendment.index'));
-
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong');
         }
     }
 
     public function sendEmailToUser($data, $message)
     {
-        if ($message && $data){
+        if ($message && $data) {
             $smsPayload = [
                 'phone' => $data->phone,
                 'message' => 'Hello, {$data->first_name}. {$message}',

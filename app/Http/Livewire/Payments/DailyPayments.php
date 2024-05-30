@@ -25,8 +25,8 @@ class DailyPayments extends Component
     public $tax_region_id;
     public $vars;
 
-    protected $rules =[
-        'range_start'=>'required|date',
+    protected $rules = [
+        'range_start' => 'required|date',
         'range_end' => 'required|date',
     ];
 
@@ -38,7 +38,8 @@ class DailyPayments extends Component
         $this->getData();
     }
 
-    public function updated($propertyName){
+    public function updated($propertyName)
+    {
         $this->search();
     }
 
@@ -51,17 +52,22 @@ class DailyPayments extends Component
 
     public function downloadPdf()
     {
-        try{
+        try {
             $fileName = 'daily_payments_' . now()->format('d-m-Y') . '.pdf';
-            $pdf = PDF::loadView('exports.payments.pdf.daily-payments', ['vars'=>$this->vars,'taxTypes'=>$this->taxTypes]);
+            $pdf = PDF::loadView('exports.payments.pdf.daily-payments', ['vars' => $this->vars, 'taxTypes' => $this->taxTypes]);
             $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
             return response()->streamDownload(
-                fn () => print($pdf->output()), $fileName
+                fn () => print($pdf->output()),
+                $fileName
             );
-        }catch(Exception $e){
+        } catch (Exception $e) {
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
@@ -70,7 +76,7 @@ class DailyPayments extends Component
         $fileName = 'daily_payments_' . now()->format('d-m-Y') . '.xlsx';
         $title = 'Daily Receipts Provisional';
         $this->customAlert('success', 'Exporting Excel File');
-        return Excel::download(new DailyPaymentExport($this->vars,$this->taxTypes,$title), $fileName);
+        return Excel::download(new DailyPaymentExport($this->vars, $this->taxTypes, $title), $fileName);
     }
 
 

@@ -51,22 +51,24 @@ class ReturnDemandNotice extends Mailable
             DB::commit();
 
             $tax_return = $this->payload['return'];
-    
+
             $now = Carbon::now()->format('d M Y');
-    
+
             $pdf = PDF::loadView('debts.demand-notice.return-demand-notice', compact('tax_return', 'now', 'paid_within_days'));
-    
+
             $pdf->setPaper('a4', 'portrait');
             $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
-    
+
             $email = $this->markdown('emails.demand-notice.return-demand-notice')->subject("Zanzibar Revenue Authority(ZRA) Return Debt Demand Notice - " . strtoupper($tax_return->business->name));
             $email->attachData($pdf->output(), "{$tax_return->business->name}_demand_notice.pdf");
             return $email;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
-   
-
     }
 }

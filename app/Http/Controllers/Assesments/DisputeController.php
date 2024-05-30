@@ -24,7 +24,11 @@ class DisputeController extends Controller
             return view('assesments.dispute.approval', compact('dispute', 'files', 'business', 'assesment'));
         } catch (\Exception $e) {
             report($e);
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             session()->flash('warning', 'The selected audit was not found. Please contact your administrator');
             return back();
         }

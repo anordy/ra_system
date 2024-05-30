@@ -31,16 +31,20 @@ class ISIC3Import implements ToCollection, WithHeadingRow, WithValidation, Skips
                 if ($validator->fails()) {
                     throw new Exception('Correct the excel');
                 }
-                $isic2Id = ISIC2::where('code',$row['il2_code'])->firstOrFail()->id;
+                $isic2Id = ISIC2::where('code', $row['il2_code'])->firstOrFail()->id;
                 ISIC3::create([
                     'code' => $row['code'],
                     'description' => $row['description'],
-                    'isic2_id' =>$isic2Id,
+                    'isic2_id' => $isic2Id,
                 ]);
             }
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
         DB::commit();
     }

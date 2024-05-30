@@ -29,7 +29,7 @@ class EducationLevelTable extends DataTableComponent
             'class' => 'table-bordered table-sm',
         ]);
 
-        $this->setTdAttributes(function(Column $column, $row, $columnIndex, $rowIndex) {
+        $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
             if ($column->isField('id')) {
                 return [
                     'style' => 'width: 20%;',
@@ -38,8 +38,6 @@ class EducationLevelTable extends DataTableComponent
 
             return [];
         });
-
-
     }
 
     protected $listeners = [
@@ -65,13 +63,11 @@ class EducationLevelTable extends DataTableComponent
                         return <<< HTML
                             <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
                         HTML;
-                    }
-                    elseif ($value == 2) {
+                    } elseif ($value == 2) {
                         return <<< HTML
                             <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
                         HTML;
                     }
-
                 })->html(),
             Column::make('Edit Status', 'is_updated')
                 ->format(function ($value, $row) {
@@ -91,8 +87,8 @@ class EducationLevelTable extends DataTableComponent
                 })
                 ->html(),
             Column::make('Action', 'id')
-                ->format(function ($value){
-                    $value = "'".encrypt($value)."'";
+                ->format(function ($value) {
+                    $value = "'" . encrypt($value) . "'";
                     $edit = '';
                     $delete = '';
 
@@ -144,17 +140,21 @@ class EducationLevelTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $education = EducationLevel::find($data->id);
-            if(is_null($education)){
+            if (is_null($education)) {
                 abort(404);
             }
             $this->triggerDualControl(get_class($education), $education->id, DualControl::DELETE, 'deleting education level');
             DB::commit();
-            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
             return redirect()->route('settings.education-level.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
-            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
             return redirect()->route('settings.education-level.index');
         }
     }
