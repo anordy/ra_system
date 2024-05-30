@@ -236,7 +236,6 @@
             @if ($this->checkTransition('registration_officer_review'))
                 @include('livewire.approval.registration_officer_review')
             @endif
-            @include('livewire.approval.transitions')
             <div class="row mx-1">
                 <div class="col-md-12 mb-2">
                     <div class="form-group">
