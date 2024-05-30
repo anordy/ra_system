@@ -125,6 +125,9 @@
                 <th class="text-center border">
                     <strong>Status</strong>
                 </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>PBZ Status</strong>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -162,8 +165,11 @@
                     <td class="text-center border">
                         {{ $record->description ?? '-' }}
                     </td>
-                    <td class="text-center border">
-                        {{ strtoupper($record->status ?? '') ?? '-' }}
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ strtoupper($record->status ?? 'N/A') }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ strtoupper($record->pbz_status ?? 'N/A') }}
                     </td>
                 </tr>
             @endforeach

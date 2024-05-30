@@ -38,8 +38,7 @@ class SendExchangeRateSMS implements ShouldQueue
         // Send email to administrators
         $admin_role = Role::where('name', 'Administrator')->get()->first();
         if ($admin_role) {
-            $administrators = User::where('role_id', $admin_role->id)->get();
-
+            $administrators = User::where('role_id', $admin_role->id)->where('status', true)->get();
             $source = config('modulesconfig.smsheader');
             $customer_message = "{$this->payload['currency']} Exchange rate for the day {$this->payload['date']} have not been configured or approved. Please log into the system and perform configurations.";
     

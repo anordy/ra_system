@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Payments;
 
+use App\Enum\GeneralConstant;
 use App\Enum\PaymentStatus;
 use App\Models\TaxType;
 use App\Models\ZmBill;
@@ -21,6 +22,7 @@ class PaymentFilter extends Component
     public $range_start;
     public $range_end;
     public $status;
+    public $pbz_status;
 
     protected $rules = [
         'range_start' => 'required|strip_tag',
@@ -43,6 +45,7 @@ class PaymentFilter extends Component
             'currency'    => $this->currency,
             'range_start' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
             'range_end'   => date('Y-m-d 23:59:59', strtotime($this->range_end)),
+            'pbz_status' => $this->pbz_status
         ];
         $this->data = $filters;
         
@@ -69,16 +72,27 @@ class PaymentFilter extends Component
         $filter = (new ZmBill())->newQuery();
         $status = $this->status;
 
-        if (isset($data['tax_type_id']) && $data['tax_type_id'] != 'All') {
-            $filter->Where('tax_type_id', $data['tax_type_id']);
+        if (isset($data['tax_type_id']) && $data['tax_type_id'] != GeneralConstant::ALL) {
+            $filter->where('tax_type_id', $data['tax_type_id']);
         }
-        if (isset($data['currency']) && $data['currency'] != 'All') {
-            $filter->Where('currency', $data['currency']);
+        if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
+            $filter->where('currency', $data['currency']);
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
-            $filter->WhereBetween('created_at', [$data['range_start'], $data['range_end']]);
+            $filter->whereBetween('created_at', [$data['range_start'], $data['range_end']]);
         }
 
+        if ($this->pbz_status == GeneralConstant::NOT_APPLICABLE){
+            $filter->whereNull('pbz_status');
+        }
+
+        if ($this->pbz_status == GeneralConstant::PAID){
+            $filter->where('pbz_status', GeneralConstant::PAID);
+        }
+
+        if ($this->pbz_status == GeneralConstant::REVERSED){
+            $filter->where('pbz_status', GeneralConstant::REVERSED);
+        }
 
         $records  = $filter->with('billable')->where('status', $this->status)->orderBy('created_at', 'DESC')->get();
 

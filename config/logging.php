@@ -116,6 +116,10 @@ return [
             'days' => 14,
         ],
 
+        'vfms' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/vfms/laravel.log'),
+        ],
         'property-tax' => [
             'driver' => 'daily',
             'path' => storage_path('logs/jobs/property-tax/laravel.log'),

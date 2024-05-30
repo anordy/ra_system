@@ -33,4 +33,18 @@ class Ward extends Model implements Auditable
     public function scopeApproved($query){
         return $query->where('is_approved', true);
     }
+
+    public function vfms_ward(){
+        return $this->hasOne(VfmsWard::class, 'ward_id');
+    }
+
+    public function vfmsLocalityData(){
+        $district = District::select('id', 'region_id', 'name')->where('id', $this->district_id)->first();
+        $region = Region::select('name')->first();
+        return [
+            'district_name' => $district->name,
+            'locality_name' => $this->name,
+            'region_name' => $region->name
+        ];
+    }
 }

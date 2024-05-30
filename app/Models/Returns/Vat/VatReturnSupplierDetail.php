@@ -11,4 +11,8 @@ class VatReturnSupplierDetail extends Model
     use HasFactory, SoftDeletes;
     protected $table = 'vat_return_supplier_details';
     protected $guarded = [];
+
+    public function supplierDetailsItems(){
+        return $this->hasMany(SupplierDetailsItem::class, 'supplier_detail_id');
+    }
 }

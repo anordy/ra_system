@@ -7,13 +7,15 @@ use App\Events\SendSms;
 use App\Jobs\Workflow\UserUpdateActors;
 use App\Models\DualControl;
 use App\Models\DualControlHistory;
+use App\Models\VfmsWard;
+use App\Models\Ward;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Traits\Vfms\VfmsLocationTrait;
 
 trait DualControlActivityTrait
 {
-    use VerificationTrait;
-
+    use VerificationTrait, VfmsLocationTrait;
     public function triggerDualControl($model, $modelId, $action, $action_detail, $old_values = null, $edited_values = null)
     {
         try {
@@ -154,10 +156,52 @@ trait DualControlActivityTrait
             if ($data->action == DualControl::ADD) {
                 $update->is_approved = $status;
                 $update->save();
+
+                if ($data->controllable_type == Ward::class){
+
+                    $payload = $update->vfmsLocalityData();
+                    $response = $this->addWardToVfms($payload);
+                    if ($response['data']){
+                        $data = json_decode($response['data'], true);
+                        if (array_key_exists('statusCode', $data)){
+
+                            //Send email to inform admin for proper update on both end
+                            $message = "This alert email concerning creating ZIDRAS new Ward to Vfms Locality(Wards) Records. As ". $payload['locality_name'] ." ward already exists on Vfms records.";
+                            $this->sendnotificationToAdmin($message);
+
+                            $this->customAlert('warning', 'Ward already exists on Vfms records, please kindly report to administrator.');
+                            Log::channel('vfms')->error($data['statusMessage']);
+                            Log::channel('vfms')->info($response);
+                        } else {
+                            VfmsWard::create([
+                                'ward_id' => $update->id,
+                                'locality_id' => $data['locality_id'],
+                                'locality_name' => $update->name,
+                            ]);
+                        }
+                    } else {
+                        //Send email to inform admin for proper update on both end
+                        $message = "This alert email concerning creating ZIDRAS new Ward to Vfms Locality(Wards) Records. Inspect the logs as no response after new ward created on VFMS side.";
+                        $this->sendnotificationToAdmin($message);
+
+                        Log::channel('vfms')->error('No response data after new ward entry to vfms, please kindly report to administrator.');
+                        Log::channel('vfms')->info($response);
+                        $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+                    }
+                }
+
             } elseif ($data->action == DualControl::EDIT) {
-                $payload = json_decode($data->new_values);
-                $payload = (array)$payload;
-                if ($status == DualControl::APPROVE) {
+            $payload = json_decode($data->new_values);
+            $payload = (array) $payload;
+            if ($status == DualControl::APPROVE) {
+                
+                $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
+                $update->update($payload);
+                if ($data->controllable_type == DualControl::USER) {
+                    $this->sign($update);
+                    $message = 'We are writing to inform you that some of your ZRA staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                    $this->sendEmailToUser($update, $message);
+                }
 
                     $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                     $update->update($payload);

@@ -10,4 +10,5 @@ class VatZeroRatedSale extends Model
 {
     use HasFactory, SoftDeletes;
     protected $guarded = [];
+    protected $table = 'vat_zero_rated_sales';
 }

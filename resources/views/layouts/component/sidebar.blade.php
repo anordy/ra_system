@@ -822,10 +822,20 @@
                         </li>
 
                         <li class="{{ request()->is('payments/ega-charges*') ? 'active' : '' }}">
-                            <a href="{{ route('payments.ega-charges.index') }}">eGA Charges</a>
+                            <a href="{{ route('payments.ega-charges.index') }}">eGAZ Charges</a>
                         </li>
                         <li class="{{ request()->is('payments/departmental-reports*') ? 'active' : '' }}">
                             <a href="{{ route('payments.departmental-reports.index') }}">Departmental Reports</a>
+                        </li>
+                    @endcan
+                    @can('view-bank-statements')
+                        <li class="{{ request()->is('payments/pbz/statement*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.pbz.statements') }}">PBZ Statements</a>
+                        </li>
+                    @endcan
+                    @can('view-bank-transactions')
+                        <li class="{{ request()->is('payments/pbz/transaction*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.pbz.transactions') }}">PBZ Transactions</a>
                         </li>
                     @endcan
                 </ul>
@@ -949,6 +959,9 @@
                     @can('setting-bank-view')
                         <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
                             <a href="{{ route('settings.banks.index') }}">Banks</a>
+                        </li>
+                        <li class="{{ request()->is('settings/bank-accounts*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.bank-accounts.index') }}">Bank Accounts</a>
                         </li>
                     @endcan
                     @can('setting-exchange-rate-view')

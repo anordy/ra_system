@@ -11,6 +11,8 @@
 |
  */
 
+use App\Http\Controllers\BankAccountsController;
+use App\Http\Controllers\Payments\PBZController;
 use App\Http\Controllers\PropertyTax\CondominiumController;
 use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
@@ -214,7 +216,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::get('/account/security-questions', [AccountController::class, 'securityQuestions'])->name('account.security-questions');
 
     Route::prefix('settings')->name('settings.')->group(function () {
-        Route::resource('/users', UserController::class);
+        Route::resource('/users', \App\Http\Controllers\UserController::class);
         Route::resource('/roles', RoleController::class);
         Route::resource('/country', CountryController::class);
         Route::resource('/region', RegionController::class);
@@ -225,6 +227,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/street', StreetController::class);
         Route::resource('/education-level', EducationLevelController::class);
         Route::resource('/banks', BankController::class);
+        Route::resource('/bank-accounts', BankAccountsController::class);
         Route::resource('/business-categories', BusinessCategoryController::class);
         Route::resource('/taxtypes', TaxTypeController::class);
         Route::resource('/isic1', ISIC1Controller::class);
@@ -663,6 +666,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/daily-payments/{taxTypeId}', [PaymentsController::class, 'dailyPaymentsPerTaxType'])->name('daily-payments.tax-type');
         Route::get('/ega-charges/index', [PaymentsController::class, 'egaCharges'])->name('ega-charges.index');
         Route::get('/departmental-reports/index', [PaymentsController::class, 'departmentalReports'])->name('departmental-reports.index');
+        Route::get('/pbz/statements', [PBZController::class, 'statements'])->name('pbz.statements');
+        Route::get('/pbz/statement/{statement}', [PBZController::class, 'statement'])->name('pbz.statement');
+        Route::get('/pbz/transactions', [PBZController::class, 'transactions'])->name('pbz.transactions');
+        Route::get('/pbz/transactions/payment/{transaction}', [PBZController::class, 'payment'])->name('pbz.payment');
+        Route::get('/pbz/transactions/reversal/{transaction}', [PBZController::class, 'reversal'])->name('pbz.reversal');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 

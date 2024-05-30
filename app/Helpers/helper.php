@@ -188,6 +188,9 @@ function roundOff($amount, $currency)
     return $roundedAmount;
 }
 
+// Helper function to convert integer to Roman numeral count
+
+
 function getHotelStarByBusinessId($business_id)
 {
     $hotel_star = DB::table('business_hotels as b')
@@ -208,4 +211,41 @@ function getSubVatName($subVatId) {
 function formatEnum($string) {
     $string = str_replace( '_', ' ', $string);
     return ucwords($string);
+}
+
+function romanNumeralCount($number)
+{
+    // Define the Roman numeral symbols and their corresponding values
+    $symbols = [
+        1000 => 'm',
+        900 => 'cm',
+        500 => 'd',
+        400 => 'cd',
+        100 => 'c',
+        90 => 'xc',
+        50 => 'l',
+        40 => 'xl',
+        10 => 'x',
+        9 => 'ix',
+        5 => 'v',
+        4 => 'iv',
+        1 => 'i'
+    ];
+
+    // Initialize the result string
+    $result = '';
+
+    // Iterate over the symbols array
+    foreach ($symbols as $value => $symbol) {
+        // Count the number of times the symbol can be added
+        $count = intdiv($number, $value);
+
+        // Add the symbol to the result string
+        $result .= str_repeat($symbol, $count);
+
+        // Update the remaining number
+        $number %= $value;
+    }
+
+    return $result;
 }

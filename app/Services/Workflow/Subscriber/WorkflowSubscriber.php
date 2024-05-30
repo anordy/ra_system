@@ -342,7 +342,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 $hrefClient = 'debts.waiver.index';
                 $hrefAdmin = 'debts.waivers.index';
             } elseif ($placeName == 'TAXPAYER_DETAILS_AMENDMENT_VERIFICATION') {
-                $hrefClient = 'taxpayers-amendment.index';
+                $hrefClient = 'notifications';
                 $hrefAdmin = 'taxpayers-amendment.index';
             } elseif ($placeName == 'kyc_details_amendment_verification') {
                 $hrefClient = 'kycs-amendment.index';
