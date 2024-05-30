@@ -51,7 +51,7 @@
         </div>
 
     @else
-        No Reason Available
+        Reason: {{ $description ?? 'N/A' }}
     @endif
 
 </div>

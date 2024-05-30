@@ -15,8 +15,7 @@ class PendingRequestsTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-        return RoadLicense::where('road_licenses.taxpayer_id', Auth::id())
-            ->whereIn('road_licenses.status', [RoadLicenseStatus::PENDING, RoadLicenseStatus::CORRECTION])
+        return RoadLicense::whereIn('road_licenses.status', [RoadLicenseStatus::PENDING, RoadLicenseStatus::CORRECTION])
             ->orderBy('road_licenses.created_at', 'desc');
     }
 
