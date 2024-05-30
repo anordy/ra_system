@@ -18,6 +18,7 @@ use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
+use App\Http\Controllers\Returns\Chartered\CharteredController;
 use App\Http\Controllers\TaxRefund\TaxRefundController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
 use App\Http\Controllers\Tra\TraController;
@@ -459,7 +460,19 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
         // Print Returns
         Route::get('/print/{tax_return_id}', [PrintController::class, 'print'])->name('print');
+
     });
+
+    //Chartered Return
+    Route::name('chartered.')
+        ->prefix('/chartered')
+        ->group(function () {
+            Route::get('/create', [CharteredController::class, 'create'])->name('create');
+            Route::get('/index/sea', [CharteredController::class, 'indexSea'])->name('index.sea');
+            Route::get('/index/flight', [CharteredController::class, 'indexFlight'])->name('index.flight');
+            Route::get('/view/return/{return_id}', [CharteredController::class, 'show'])->name('show');
+            Route::get('/edit/return/{return_id}', [CharteredController::class, 'edit'])->name('edit');
+        });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);

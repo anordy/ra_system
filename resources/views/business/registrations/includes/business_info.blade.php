@@ -189,10 +189,21 @@
                     <span class="font-weight-bold text-uppercase">Tax Types</span>
                     <p class="my-1">
                         @foreach ($business->taxTypes as $type)
-                            {{ $type->name }};
+                            {{ $type->name }} ({{ $type->pivot->currency ?? 'N/A' }});
                         @endforeach
                     </p>
                 </div>
+
+                @if($business->lumpsumPayment)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Lumpsum Annual Estimate</span>
+                        <p class="my-1">{{ number_format($business->lumpsumPayment->annual_estimate, 2) ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Payment Quarters</span>
+                        <p class="my-1">{{ $business->lumpsumPayment->payment_quarters ?? 'N/A' }}</p>
+                    </div>
+                @endif
 
                 @if ($business->isici)
                     <div class="col-md-4 mb-3">
