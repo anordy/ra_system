@@ -2,13 +2,11 @@
 
 namespace App\Http\Livewire\Returns\BfoExciseDuty;
 
-use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\ReturnStatus;
 use App\Traits\ReturnFilterTrait;
 use Illuminate\Support\Facades\Gate;
 

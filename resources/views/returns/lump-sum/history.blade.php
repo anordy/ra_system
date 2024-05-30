@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Stamp Duty Lumpsum Tax Returns History ')
+@section('title', 'Stamp Duty Lumpsum Tax Returns History')
 
 @section('content')
     <livewire:returns.lump-sum.lump-sum-card-one />

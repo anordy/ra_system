@@ -26,9 +26,6 @@ class QuantityCertificateAdd extends Component
     public $ship;
     public $port;
     public $cargo;
-    public $liters_observed;
-    public $liters_at_20;
-    public $metric_tons;
     public $ascertained;
     public $voyage_no;
     public $configs = [];
@@ -39,15 +36,15 @@ class QuantityCertificateAdd extends Component
     protected function rules()
     {
         return [
-            'ship' => 'required',
-            'port' => 'required',
-            'voyage_no' => 'nullable',
+            'ship' => 'required|alpha_gen',
+            'port' => 'required|alpha_gen',
+            'voyage_no' => 'nullable|alpha_gen',
             'ascertained' => 'required|date|after_or_equal:today',
             'location' => [
-                'required',
+                'required', 'numeric',
                 'exists:business_locations,zin'
             ],
-            'products.*.config_id' => 'required',
+            'products.*.config_id' => 'required|numeric',
             'products.*.liters_observed' => 'required|numeric',
             'products.*.liters_at_20' => 'required|numeric',
             'products.*.metric_tons' => 'required|numeric',
@@ -57,7 +54,7 @@ class QuantityCertificateAdd extends Component
 
     protected $messages = [
         'products.*.config_id.required' => 'Product field required',
-        'products.*.liters_observed.required' => 'Listres observed field is required',
+        'products.*.liters_observed.required' => 'Litres observed field is required',
         'products.*.liters_observed.numeric' => 'Litres observed field must be a number',
         'products.*.liters_at_20.required' => 'Litres at 20 field is required',
         'products.*.liters_at_20.numeric' => 'Litres at 20 field must be a number',
@@ -74,7 +71,8 @@ class QuantityCertificateAdd extends Component
 
         $this->ascertained = Carbon::now()->toDateString();
 
-        $this->configs = PetroleumConfig::where('row_type', 'dynamic')
+        $this->configs = PetroleumConfig::select('id', 'financia_year_id', 'order', 'code', 'name', 'row_type', 'value_calculated', 'col_type', 'rate_applicable', 'rate_type', 'currency', 'rate', 'rate_usd', 'value_formular', 'formular', 'active', 'value_label', 'rate_label', 'tax_label')
+            ->where('row_type', 'dynamic')
             ->where('col_type', '!=', 'heading')
             ->get();
 

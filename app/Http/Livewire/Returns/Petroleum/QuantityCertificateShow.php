@@ -17,9 +17,6 @@ class QuantityCertificateShow extends Component
     public $port;
     public $cargo;
     public $voyage_no;
-    public $liters_observed;
-    public $liters_at_20;
-    public $metric_tons;
     public $ascertained;
     public $configs = [];
     public Collection $products;
@@ -28,7 +25,7 @@ class QuantityCertificateShow extends Component
     public function mount($id)
     {
         $id = decrypt($id);
-        $this->certificate = QuantityCertificate::with('business', 'products')->find($id);
+        $this->certificate = QuantityCertificate::with('business', 'products')->find($id, ['id', 'business_id', 'location_id', 'ship', 'port', 'voyage_no', 'ascertained', 'download_count', 'created_by', 'status', 'created_at', 'updated_at', 'certificate_no', 'quantity_certificate_attachment']);
         if(is_null($this->certificate)){
             abort(404);
         }
@@ -38,7 +35,8 @@ class QuantityCertificateShow extends Component
         $this->voyage_no = $this->certificate->voyage_no;
         $this->business = $this->certificate->location->zin;
 
-        $this->configs = PetroleumConfig::where('row_type', 'dynamic')
+        $this->configs = PetroleumConfig::select('id', 'financia_year_id', 'order', 'code', 'name', 'row_type', 'value_calculated', 'col_type', 'rate_applicable', 'rate_type', 'currency', 'rate', 'rate_usd', 'value_formular', 'formular', 'active', 'value_label', 'rate_label', 'tax_label')
+            ->where('row_type', 'dynamic')
             ->where('col_type', '!=', 'heading')
             ->get();
 

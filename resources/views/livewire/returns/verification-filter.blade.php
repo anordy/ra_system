@@ -1,5 +1,5 @@
 <div>
-    <form wire:submit.prevent="fillter">
+    <form wire:submit.prevent="filter">
         <div class="row">
             @if ($year == 'Custom Range')
 
@@ -8,11 +8,13 @@
                         <span>Return Year</span>
                     </label>
                     <select name="year" class="form-control" wire:model="year">
-                        @foreach ($optionYears as $optionYear)
-                            <option value="{{ $optionYear }}">
-                                {{ $optionYear }}
-                            </option>
-                        @endforeach
+                        @if(!empty($optionYears))
+                            @foreach ($optionYears as $optionYear)
+                                <option value="{{ $optionYear }}">
+                                    {{ $optionYear }}
+                                </option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
 
@@ -35,15 +37,16 @@
                         <span>Return Year</span>
                     </label>
                     <select name="year" class="form-control" wire:model="year">
-                        @foreach ($optionYears as $optionYear)
-                            <option value="{{ $optionYear }}">
-                                {{ $optionYear }}
-                            </option>
-                        @endforeach
+                        @if(!empty($optionYears))
+                            @foreach ($optionYears as $optionYear)
+                                <option value="{{ $optionYear }}">
+                                    {{ $optionYear }}
+                                </option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
 
-                {{-- @unless($year == 'All') --}}
                 <div class="col-md-6 form-group">
                     <label for="month" class="d-flex justify-content-between'">
                         <span>Return Month</span>
@@ -64,20 +67,19 @@
                         <option value="12">December</option>
                     </select>
                 </div>
-                {{-- @endunless --}}
             @endif
 
 
             <div class="col-md-12 text-center">
                 <div class="d-flex justify-content-end">
-                    <button type="submit" class=" btn btn-primary ml-2 px-5" wire:click='fillter()'
-                        wire:loading.attr="disabled">
-                        <div wire:loading.remove wire:target='fillter'>
+                    <button type="submit" class=" btn btn-primary ml-2 px-5" wire:click='filter()'
+                            wire:loading.attr="disabled">
+                        <div wire:loading.remove wire:target='filter'>
                             <i class="fa fa-filter"></i>
-                            Fillter
+                            Filter
                         </div>
-                        <div wire:loading wire:target='fillter'>
-                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status"> </div>
+                        <div wire:loading wire:target='filter'>
+                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status"></div>
                             Loading...
                         </div>
                     </button>

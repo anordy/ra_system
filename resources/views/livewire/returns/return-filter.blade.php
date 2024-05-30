@@ -1,5 +1,5 @@
 <div>
-    <form wire:submit.prevent="fillter">
+    <form wire:submit.prevent="filter">
         <div class="row">
             @if ($year == 'Custom Range')
                 <div class="col-md-3 form-group">
@@ -7,7 +7,7 @@
                         <span> Return Type</span>
                     </label>
                     <select name="payment_type" id="payment_type" class="form-control" wire:model="payment_type">
-                        <option value="all">All </option>
+                        <option value="all">All</option>
                         <option value="normal">Normal Return</option>
                         <option value="debt">Debt Return</option>
                     </select>
@@ -17,11 +17,13 @@
                         <span>Return Year</span>
                     </label>
                     <select name="year" class="form-control" wire:model="year">
-                        @foreach ($optionYears as $optionYear)
-                            <option value="{{ $optionYear }}">
-                                {{ $optionYear }}
-                            </option>
-                        @endforeach
+                        @if(!empty($optionYears))
+                            @foreach ($optionYears as $optionYear)
+                                <option value="{{ $optionYear }}">
+                                    {{ $optionYear }}
+                                </option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
 
@@ -44,7 +46,7 @@
                         <span> Return Type</span>
                     </label>
                     <select name="payment_type" id="payment_type" class="form-control" wire:model="payment_type">
-                        <option value="all">All </option>
+                        <option value="all">All</option>
                         <option value="normal">Normal Return</option>
                         <option value="debt">Debt Return</option>
                     </select>
@@ -55,15 +57,16 @@
                         <span>Return Year</span>
                     </label>
                     <select name="year" class="form-control" wire:model="year">
-                        @foreach ($optionYears as $optionYear)
-                            <option value="{{ $optionYear }}">
-                                {{ $optionYear }}
-                            </option>
-                        @endforeach
+                        @if(!empty($optionYears))
+                            @foreach ($optionYears as $optionYear)
+                                <option value="{{ $optionYear }}">
+                                    {{ $optionYear }}
+                                </option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
 
-                {{-- @unless($year == 'All') --}}
                 <div class="col-md-4 form-group">
                     <label for="month" class="d-flex justify-content-between'">
                         <span>Return Month</span>
@@ -84,20 +87,19 @@
                         <option value="12">December</option>
                     </select>
                 </div>
-                {{-- @endunless --}}
             @endif
 
 
             <div class="col-md-12 text-center">
                 <div class="d-flex justify-content-end">
-                    <button type="submit" class=" btn btn-primary ml-2 px-5" wire:click='fillter()'
-                        wire:loading.attr="disabled">
-                        <div wire:loading.remove wire:target='fillter'>
+                    <button type="submit" class=" btn btn-primary ml-2 px-5" wire:click='filter()'
+                            wire:loading.attr="disabled">
+                        <div wire:loading.remove wire:target='filter'>
                             <i class="fa fa-filter"></i>
-                            Fillter
+                            Filter
                         </div>
-                        <div wire:loading wire:target='fillter'>
-                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status"> </div>
+                        <div wire:loading wire:target='filter'>
+                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status"></div>
                             Loading...
                         </div>
                     </button>

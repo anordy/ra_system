@@ -5,10 +5,9 @@ namespace App\Http\Livewire\Returns;
 use App\Models\Currency;
 use App\Models\FinancialYear;
 use App\Models\TaxType;
-use App\Traits\ReturnConfigurationTrait;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
+use App\Traits\ReturnConfigurationTrait;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class AddReturnConfig extends Component
@@ -32,8 +31,8 @@ class AddReturnConfig extends Component
 
     public function mount()
     {
-        $this->year = FinancialYear::query()->where('code', date('Y'))->first();
-        if (is_null($this->year)){
+        $this->year = FinancialYear::query()->select('id')->where('code', date('Y'))->first();
+        if (is_null($this->year)) {
             abort(404, 'Financial year not found.');
         }
         $this->currencies = Currency::all();
@@ -44,99 +43,77 @@ class AddReturnConfig extends Component
     public function updated($property)
     {
         $this->bank_account = str_replace(',', '', $this->bank_account);
-        if (is_numeric($this->bank_account))
-        {
+        if (is_numeric($this->bank_account)) {
             $this->bank_account = number_format($this->bank_account);
         }
         $this->config_code = strtoupper($this->get_avatar($this->name));
 
     }
 
-//    public function formatBankAccount(){
-//        $bank_account = $this->bank_account;
-//        $bank_account = preg_replace('/[^0-9]+/', '', $bank_account);
-//        $bank_account = substr($bank_account, 0, 20);
-//        $length = strlen($bank_account);
-//        $formatted = "";
-//        for ($i = 0; $i < $length; $i++) {
-//            $formatted .= $bank_account[$i];
-//            if($i == 2 || $i == 5 || $i == 8 || $i == 11 || $i == 14 || $i == 17 || $i == 20){
-//                $formatted .= ",";
-//            }
-//        }
-//        $this->bank_account = $formatted;
-//    }
 
-    function get_avatar($str){
+    function get_avatar($str)
+    {
         $words = preg_split("/(\s|\-|\.)/", $str);
         $word = '';
         $acronym = '';
-        foreach($words as $w) {
-            $acronym .= substr($w,0,1);
+        foreach ($words as $w) {
+            $acronym .= substr($w, 0, 1);
         }
-        $word = $word . $acronym ;
+        $word = $word . $acronym;
         return $word;
     }
 
     public function submit()
     {
-        $validate = $this->validate([
-            'name'=>'required',
-            'row_type'=>'required',
-            'value_calculated'=>'required',
-            'col_type'=>'required',
-            'rate_applicable'=>'required',
-            'rate_type'=>'required',
-            'currency'=>'required',
-            'rate'=>'required',
-            'rate_usd'=>'required',
+        $this->validate([
+            'name' => 'required|alpha_gen',
+            'row_type' => 'required|alpha',
+            'value_calculated' => 'required|alpha',
+            'col_type' => 'required|alpha',
+            'rate_applicable' => 'required|alpha',
+            'rate_type' => 'required|alpha',
+            'currency' => 'required|alpha',
+            'rate' => 'required|numeric',
+            'rate_usd' => 'required|numeric',
         ]);
 
-        DB::beginTransaction();
         try {
             $this->order = $this->model::query()->select('order')->orderByDesc('id')->firstOrFail();
-            if ($this->code == TaxType::VAT)
-            {
+            if ($this->code == TaxType::VAT) {
                 $payload = [
-                    'name'=>$this->name,
-                    'code'=>$this->config_code,
-                    'order'=>$this->order->order + 1,
-                    'vat_service_code'=>$this->service_code,
-                    'financial_year_id'=>$this->year->id,
-                    'row_type'=>$this->row_type,
-                    'value_calculated'=>$this->value_calculated,
-                    'col_type'=>$this->col_type,
-                    'rate_applicable'=>$this->rate_applicable,
-                    'rate_type'=>$this->rate_type,
-                    'currency'=>$this->currency,
-                    'rate_usd'=>$this->rate_usd,
+                    'name' => $this->name,
+                    'code' => $this->config_code,
+                    'order' => $this->order->order + 1,
+                    'vat_service_code' => $this->service_code,
+                    'financial_year_id' => $this->year->id,
+                    'row_type' => $this->row_type,
+                    'value_calculated' => $this->value_calculated,
+                    'col_type' => $this->col_type,
+                    'rate_applicable' => $this->rate_applicable,
+                    'rate_type' => $this->rate_type,
+                    'currency' => $this->currency,
+                    'rate_usd' => $this->rate_usd,
                 ];
-            }
-            else
-            {
+            } else {
                 $payload = [
-                    'name'=>$this->name,
-                    'code'=>$this->config_code,
-                    'order'=>$this->order->order + 1,
-                    'financial_year_id'=>$this->year->id,
-                    'row_type'=>$this->row_type,
-                    'value_calculated'=>$this->value_calculated,
-                    'col_type'=>$this->col_type,
-                    'rate_applicable'=>$this->rate_applicable,
-                    'rate_type'=>$this->rate_type,
-                    'currency'=>$this->currency,
-                    'rate_usd'=>$this->rate_usd,
+                    'name' => $this->name,
+                    'code' => $this->config_code,
+                    'order' => $this->order->order + 1,
+                    'financial_year_id' => $this->year->id,
+                    'row_type' => $this->row_type,
+                    'value_calculated' => $this->value_calculated,
+                    'col_type' => $this->col_type,
+                    'rate_applicable' => $this->rate_applicable,
+                    'rate_type' => $this->rate_type,
+                    'currency' => $this->currency,
+                    'rate_usd' => $this->rate_usd,
                 ];
             }
 
             $this->model::query()->create($payload);
-            DB::commit();
             $this->flash('success', 'Record updated successfully');
             redirect()->route('settings.return-config.show', encrypt($this->taxtype_id));
-        }
-        catch (\Throwable $exception)
-        {
-            DB::rollBack();
+        } catch (\Throwable $exception) {
             Log::error($exception);
             $this->flash('warning', 'Something went wrong, please contact the administrator for help', [], redirect()->back()->getTargetUrl());
         }

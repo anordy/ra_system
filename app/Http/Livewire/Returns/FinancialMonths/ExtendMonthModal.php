@@ -4,18 +4,12 @@ namespace App\Http\Livewire\Returns\FinancialMonths;
 
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
-use App\Models\SevenDaysFinancialMonth;
-use App\Models\TaPaymentConfiguration;
-use App\Models\TaPaymentConfigurationHistory;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use App\Traits\CustomAlert;
 use Livewire\Component;
-use App\TaxAgentFee;
 
 class ExtendMonthModal extends Component
 {
@@ -25,7 +19,10 @@ class ExtendMonthModal extends Component
 
     public function mount($value)
     {
-        $this->years = FinancialYear::query()->where('active', 0)->orderByDesc('code')->get();
+        if (Gate::allows('setting-user-edit')) {
+            abort(403);
+        }
+        $this->years = FinancialYear::query()->select('id', 'name', 'code', 'active', 'is_approved')->where('active', 0)->orderByDesc('code')->get();
         $this->value = decrypt($value);
         $this->month = FinancialMonth::query()->select('id', 'financial_year_id', 'due_date', 'number')->where('id', $this->value)->first();
         if (is_null($this->month)){
@@ -43,9 +40,10 @@ class ExtendMonthModal extends Component
         if (!Gate::allows('setting-financial-month-extend')) {
             abort(403);
         }
-        $validate = $this->validate([
-            'year' => 'required',
-            'number' => 'required',
+
+        $this->validate([
+            'year' => 'required|numeric',
+            'number' => 'required|numeric',
             'due_date' => 'required|date'
         ],
             [
@@ -53,8 +51,8 @@ class ExtendMonthModal extends Component
             ]
         );
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $payload =
                 [
                     'financial_year_id' => $this->year,
@@ -62,7 +60,6 @@ class ExtendMonthModal extends Component
                     'due_date' => $this->due_date,
                     'updated_at' => now(),
                 ];
-
             $this->month->update($payload);
             DB::commit();
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
@@ -70,9 +67,7 @@ class ExtendMonthModal extends Component
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception);
-
             $this->flash('warning', 'Something went wrong, please contact the administrator for help', [], redirect()->back()->getTargetUrl());
-
         }
     }
 

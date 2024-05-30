@@ -206,4 +206,8 @@ class Business extends Model implements Auditable
     public function motors(){
         return $this->hasMany(PublicServiceMotor::class, 'business_id');
     }
+
+    public function lumpsumPayment() {
+        return $this->hasOne(LumpSumPayment::class, 'business_id');
+    }
 }

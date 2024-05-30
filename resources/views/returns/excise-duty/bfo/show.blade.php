@@ -3,17 +3,20 @@
 @section('title', 'View BFO Tax Return')
 
 @section('content')
-    <div class="row mx-1">
-        <div class="col-md-12">
-            <livewire:returns.return-payment :return="$return->tax_return" />
+    @if($return->tax_return)
+        <div class="row mx-1">
+            <div class="col-md-12">
+                <livewire:returns.return-payment :return="$return->tax_return"/>
+            </div>
         </div>
-    </div>
+    @endif
+
     <div class="card rounded-0">
         <div class="card-header bg-white font-weight-bold text-uppercase">
             BFO Return Details
         </div>
         <div class="card-body">
-            <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="bill-summary-tab" data-toggle="tab" href="#bill" role="tab"
                        aria-controls="bill" aria-selected="false">Bill Summary</a>
@@ -28,32 +31,34 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="penalties-tab" data-toggle="tab" href="#penalties" role="tab"
-                       aria-controls="penalties" aria-selected="false">Penaties</a>
+                       aria-controls="penalties" aria-selected="false">Penalties</a>
                 </li>
             </ul>
-            <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
+            <div class="tab-content" id="myTabContent">
                 <div class="tab-pane p-2 show active" id="bill" role="tabpanel" aria-labelledby="bill-tab">
-                    <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
+                    @if($return->tax_return->latestBill)
+                        <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
+                    @endif
                 </div>
                 <div class="tab-pane p-2 show" id="bussiness" role="tabpanel" aria-labelledby="bussiness-tab">
                     <div class="row m-2 pt-3">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
-                            <p class="my-1">{{ $return->taxtype->name }}</p>
+                            <p class="my-1">{{ $return->taxtype->name ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Filled By</span>
+                            <span class="font-weight-bold text-uppercase">Filed By</span>
                             <p class="my-1">
-                                {{ $return->business->taxpayer->first_name . ' ' . $return->business->taxpayer->middle_name . ' ' . $return->business->taxpayer->last_name }}
+                                {{ $return->business->taxpayer->full_name ?? 'N/A' }}
                             </p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Financial Year</span>
-                            <p class="my-1">{{ $return->financialYear->name }}</p>
+                            <p class="my-1">{{ $return->financialYear->name ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
-                            <p class="my-1">{{ $return->business->name }}</p>
+                            <p class="my-1">{{ $return->business->name ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Location</span>
@@ -69,37 +74,37 @@
                 <div class="tab-pane p-2 show" id="items" role="tabpanel" aria-labelledby="items-tab">
                     <table class="table table-bordered table-sm">
                         <thead>
-                        <th style="width: 30%">Excise Duty Payable Service</th>
-                        <th style="width: 20%">Value ({{ $return->currency }})</th>
-                        <th style="width: 10%">Rate</th>
-                        <th style="width: 20%">VAT ({{ $return->currency }})</th>
+                        <th class="w-30">Excise Duty Payable Service</th>
+                        <th class="w-20">Value ({{ $return->currency }})</th>
+                        <th class="w-10">Rate</th>
+                        <th class="w-20">VAT ({{ $return->currency }})</th>
                         </thead>
                         <tbody>
-                        @foreach ($return->items as $item)
-                            @if ($item->config == null)
-
-                            @else
-                                <tr @if ($item->config->col_type === 'total') class="table-active font-weight-bolder" @endif>
-                                    <td>
-                                        {{ $item->config->name }}
-                                    </td>
-                                    <td>
-                                        {{ $item->config->col_type === 'total' ? '-' : number_format($item->value, 2) }}
-                                    </td>
-                                    </td>
-                                    <td>
-                                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency ?? '-' }}
-                                    </td>
-                                    <td>
-                                        @if ($item->vat)
-                                            {{ number_format($item->vat, 2) }}
-                                        @else
-                                            0
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endif
-                        @endforeach
+                        @if(!empty($return->items))
+                            @foreach ($return->items as $item)
+                                @if ($item->config)
+                                    <tr @if ($item->config->col_type === 'total') class="table-active font-weight-bolder" @endif>
+                                        <td>
+                                            {{ $item->config->name ?? 'N/A' }}
+                                        </td>
+                                        <td>
+                                            {{ $item->config->col_type === 'total' ? '-' : number_format($item->value, 2) }}
+                                        </td>
+                                        </td>
+                                        <td>
+                                            {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency ?? '-' }}
+                                        </td>
+                                        <td>
+                                            @if ($item->vat)
+                                                {{ number_format($item->vat, 2) }}
+                                            @else
+                                                0
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        @endif
                         </tbody>
                     </table>
                 </div>
@@ -150,11 +155,12 @@
             </div>
             <div class="row mt-3">
                 <div class="col-md-12 d-flex justify-content-end">
-                    <a href="{{ route('returns.print', encrypt($return->tax_return->id)) }}" target="_blank" class="btn btn-info">
+                    <a href="{{ route('returns.print', encrypt($return->tax_return->id)) }}" target="_blank"
+                       class="btn btn-info">
                         <i class="bi bi-printer-fill mr-2"></i>
                         Print Return
                     </a>
                 </div>
             </div>
         </div>
-    @endsection
+@endsection

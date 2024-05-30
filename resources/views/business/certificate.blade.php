@@ -183,6 +183,9 @@
             padding-left: 10%;
             top: 40%;
         }
+        .multiline-font-size {
+            font-size: 1.1em !important;
+        }
     </style>
 </head>
 <body>
@@ -191,10 +194,10 @@
         <div class="watermark">Branch Copy</div>
     @endif
     @if(isset($location->business->name) && isset($location->business->taxpayer_name) && strtolower(trim($location->business->name)) != strtolower(trim($location->business->taxpayer_name)))
-        <span class="embed taxpayer">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
-        <span class="embed trading-as">T/A {{ $location->business->name }}</span>
+        <span class="embed taxpayer @if(strlen($location->business->name) > 45) multiline-font-size @endif">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
+        <span class="embed trading-as @if(strlen($location->business->name) > 45) multiline-font-size @endif">T/A {{ $location->business->name }}</span>
     @else
-        <span class="embed taxpayer-alt">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
+        <span class="embed taxpayer-alt @if(strlen($location->business->name) > 45) multiline-font-size @endif">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
     @endif
     <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
     @if($location->vrn)

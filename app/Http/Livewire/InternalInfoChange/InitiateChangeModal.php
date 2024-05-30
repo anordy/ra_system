@@ -12,6 +12,7 @@ use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
+use App\Models\TaxDepartment;
 use App\Models\Taxpayer;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
@@ -50,6 +51,7 @@ class InitiateChangeModal extends Component
     public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList  = [];
     public $previousOwner;
     public $newOwnerZno;
+    public $taxDepartment, $selectedDepartment;
 
     public function mount() {
 
@@ -65,6 +67,7 @@ class InitiateChangeModal extends Component
             'ltoStatus' => 'required_if:informationType,lto',
             'electricStatus' => 'required_if:informationType,electric',
             'taxRegionId' => 'required_if:informationType,taxRegion',
+            'selectedDepartment' => 'required_if:informationType,taxRegion',
             'businessCurrencyId' => 'required_if:informationType,currency',
             'isiic_i' => 'nullable|required_if:informationType,isic|numeric|exists:isic1s,id',
             'isiic_ii' => 'nullable|required_if:informationType,isic|numeric|exists:isic2s,id',
@@ -327,6 +330,8 @@ class InitiateChangeModal extends Component
             } else if ($this->informationType === 'taxRegion') {
                 $this->taxRegions = TaxRegion::select('id', 'name')->get();
                 $this->taxRegionId = $this->location->tax_region_id;
+                $this->taxDepartment = TaxDepartment::all();
+
             } else if ($this->informationType === 'isic') {
                 $this->isiiciList = ISIC1::all();
             } else if ($this->informationType === 'businessOwnership'){
@@ -451,6 +456,15 @@ class InitiateChangeModal extends Component
     {
         $this->isiicivList = ISIC4::where('isic3_id', $value)->get();
         $this->isiic_iv    = null;
+    }
+
+    public function selectedDepartment($value)
+    {
+        if (!is_null((int)$value)) {
+            $this->taxRegions = TaxRegion::where('department_id', $value)->get();
+        } else {
+            $this->taxRegions = [];
+        }
     }
 
     public function render()

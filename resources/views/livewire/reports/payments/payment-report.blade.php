@@ -192,7 +192,7 @@
                     </label>
                     <select name="quater" id="Quarter" wire:model="quater"
                             class="form-control {{ $errors->has('quater') ? 'is-invalid' : '' }}">
-                        <option value="">Select Quater</option>
+                        <option value="">Select Quarter</option>
                         @if ($year && $period && $tax_type_id)
                             @foreach ($optionQuarters as $optionQuarter)
                                 <option value={{ $optionQuarter }}>

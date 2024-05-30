@@ -38,8 +38,6 @@ class CompletePaymentsTable extends DataTableComponent
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
-        }  else {
-            $filter->whereBetween('created_at', [Carbon::now()->toDateString(), Carbon::now()->toDateString()]);
         }
 
         if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::NOT_APPLICABLE){

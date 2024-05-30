@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Relief\Relief;
 use App\Models\Returns\TaxReturn;
+use App\Models\Verification\TaxVerification;
 use App\Models\Vfms\VfmsBusinessUnit;
 use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
@@ -309,5 +310,10 @@ class BusinessLocation extends Model implements Auditable
             Log::error($e);
             return false;
         }
+    }
+
+    public function taxVerifications()
+    {
+        return $this->hasMany(TaxVerification::class, 'location_id'); // Assuming a many-to-many relationship
     }
 }

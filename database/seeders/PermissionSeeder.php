@@ -58,6 +58,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'return-lump-sum-payment-return-view', 'sys_module_id' => 5],
             ['name' => 'return-mobile-money-transfer-view', 'sys_module_id' => 5],
             ['name' => 'return-electronic-money-transaction-return-view', 'sys_module_id' => 5],
+            ['name' => 'print-return', 'sys_module_id' => 5],
 
             # Withholding Agent
             ['name' => 'withholding-agents-registration', 'sys_module_id' => 6],
@@ -463,6 +464,9 @@ class PermissionSeeder extends Seeder
             ['name' => 'properties-registrations', 'sys_module_id' => 31],
             ['name' => 'property-payment-extension', 'sys_module_id' => 31],
             ['name' => 'next-bills-preview', 'sys_module_id' => 31],
+
+            # Tax Refund
+            ['name' => 'port-location-view', 'sys_module_id' => 32],
         ];
 
         foreach ($data as $row) {

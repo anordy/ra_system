@@ -18,6 +18,8 @@ use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
+use App\Http\Controllers\Returns\Chartered\CharteredController;
+use App\Http\Controllers\TaxRefund\TaxRefundController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
@@ -247,7 +249,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor|MvrRegistrationType');
+                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor|MvrRegistrationType|PortLocation');
         });
         Route::name('return-config.')->prefix('return-config')->group(function () {
             Route::get('/', [ReturnController::class, 'taxTypes'])->name('index');
@@ -260,7 +262,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
         Route::get('/tax-consultant-duration', [TaxAgentController::class, 'duration'])->name('tax-consultant-duration');
 
-        Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
         Route::resource('/transaction-fees', TransactionFeeController::class);
 
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
@@ -278,6 +279,12 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     });
     Route::name('verification.')->prefix('verification')->group(function () {
         Route::get('tin/{business}', [VerificationController::class, 'tin'])->name('tin');
+    });
+
+    Route::name('tax-refund.')->prefix('tax-refund')->group(function () {
+        Route::get('tax-refund/index', [TaxRefundController::class, 'index'])->name('index');
+        Route::get('tax-refund/initiate', [TaxRefundController::class, 'init'])->name('init');
+        Route::get('tax-refund/view/{id}', [TaxRefundController::class, 'show'])->name('show');
     });
 
     Route::prefix('system')->name('system.')->group(function () {
@@ -406,7 +413,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         // seaport
         Route::get('/seaport/index', [PortReturnController::class, 'seaport'])->name('seaport.index');
         Route::get('/port/show/{return_id}', [PortReturnController::class, 'show'])->name('port.show');
-        Route::get('/port/edit/{return_id}', [PortReturnController::class, 'edit'])->name('port.edit');
 
         Route::name('stamp-duty.')->group(function () {
             Route::get('/stamp-duty', [StampDutyReturnController::class, 'index'])->name('index');
@@ -454,7 +460,19 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
         // Print Returns
         Route::get('/print/{tax_return_id}', [PrintController::class, 'print'])->name('print');
+
     });
+
+    //Chartered Return
+    Route::name('chartered.')
+        ->prefix('/chartered')
+        ->group(function () {
+            Route::get('/create', [CharteredController::class, 'create'])->name('create');
+            Route::get('/index/sea', [CharteredController::class, 'indexSea'])->name('index.sea');
+            Route::get('/index/flight', [CharteredController::class, 'indexFlight'])->name('index.flight');
+            Route::get('/view/return/{return_id}', [CharteredController::class, 'show'])->name('show');
+            Route::get('/edit/return/{return_id}', [CharteredController::class, 'edit'])->name('edit');
+        });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);

@@ -211,6 +211,88 @@ class SystemSettingsSeeder extends Seeder
                 'unit' => 'number',
                 'is_approved' => 1
             ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Tax Refund Rate',
+                'code' => SystemSetting::TAX_REFUND_RATE,
+                'description' => 'Tax Refund Rate.',
+                'value' => '0.15',
+                'unit' => 'number',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'ZRA PO BOX',
+                'code' => SystemSetting::PO_BOX,
+                'description' => 'ZRA PO BOX.',
+                'value' => 'P.O. Box 2072',
+                'unit' => 'string',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'ZRA Telephone Number',
+                'code' => SystemSetting::TEL,
+                'description' => 'ZRA Telephone Number.',
+                'value' => '255242230639/233041',
+                'unit' => 'string',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'ZRA Fax Number',
+                'code' => SystemSetting::FAX,
+                'description' => 'ZRA Fax Number.',
+                'value' => '255242233904',
+                'unit' => 'string',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Operating Office Location',
+                'code' => SystemSetting::OPERATING_OFFICE,
+                'description' => 'Operating Office Location.',
+                'value' => 'Head Office',
+                'unit' => 'string',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Operating Office email',
+                'code' => SystemSetting::EMAIL,
+                'description' => 'Operating Office email.',
+                'value' => 'zrb@zanrevenue.org',
+                'unit' => 'string',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Institution name',
+                'code' => SystemSetting::INSTITUTION_NAME,
+                'description' => 'Institution name.',
+                'value' => 'Zanzibar Revenue Authority',
+                'unit' => 'string',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Institution location',
+                'code' => SystemSetting::INSTITUTION_LOCATION,
+                'description' => 'Institution location.',
+                'value' => 'Zanzibar',
+                'unit' => 'string',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Institution website',
+                'code' => SystemSetting::INSTITUTION_WEBSITE,
+                'description' => 'Institution website.',
+                'value' => 'www.zanrevenue.org',
+                'unit' => 'string',
+                'is_approved' => 1
+            ],
+
         ];
 
         foreach ($system_settings as $system_setting) {

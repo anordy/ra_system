@@ -14,8 +14,8 @@
             <table class="table table-bordered ">
                 <thead>
                     <tr>
-                        <th>Quater</th>
-                        <th>Quater Of</th>
+                        <th>Quarter</th>
+                        <th>Quarter Of</th>
                         <th>Principal Tax Amount</th>
                         <th>Penalties</th>
                         <th>Principal Amount + penalties</th>

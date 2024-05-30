@@ -11,8 +11,6 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class CreditsTable extends DataTableComponent
 {
-
-
     public function configure(): void
     {
         $this->setPrimaryKey('id');

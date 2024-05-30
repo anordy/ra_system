@@ -39,7 +39,7 @@
                             <p class="my-1">{{ $return->taxtype->name }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <span class="font-weight-bold text-uppercase">Filled By</span>
+                            <span class="font-weight-bold text-uppercase">Filed By</span>
                             <p class="my-1">{{ $return->taxpayer->full_name ?? '' }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
@@ -67,6 +67,17 @@
                             <span class="font-weight-bold text-uppercase">Business Location</span>
                             <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
                         </div>
+
+                        @if ($riskIndicators)
+                        <div class="col-md-12 mb-3">
+                            <span class="font-weight-bold text-uppercase text-danger">Risk Indicators on this return</span>
+                            @foreach ($riskIndicators as $riskIndicator)
+                            <ul>
+                                <li><p class="my-1">{{ $riskIndicator->risk_indicator }}</p></li>
+                            </ul>    
+                            @endforeach
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

@@ -34,6 +34,15 @@ class SystemSetting extends Model implements Auditable
     const NUMBER_OF_TIMES_INTEREST_IS_COMPOUNDED_IN_PROPERTY_TAX_PER_YEAR = 'number-of-times-interest-compounded-in-property-tax-per-year';
     const PROPERTY_TAX_INTEREST_RATE = 'property-tax-interest-rate';
     const PROPERTY_TAX_TIME_VARIABLE = 'property-tax-time-variable';
+    const TAX_REFUND_RATE = 'tax-refund-rate';
+    const PO_BOX = 'po-box';
+    const TEL = 'tel-number';
+    const FAX = 'fax-number';
+    const OPERATING_OFFICE = 'operating-office';
+    const EMAIL = 'operating-email';
+    const INSTITUTION_NAME = 'institution-name';
+    const INSTITUTION_LOCATION = 'institution-location';
+    const INSTITUTION_WEBSITE = 'institution-website';
 
 
     protected $guarded = [];
