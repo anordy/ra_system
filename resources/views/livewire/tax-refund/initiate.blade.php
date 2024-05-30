@@ -34,7 +34,7 @@
                         @enderror
                     </div>
 
-                    @if($isZraRegistered === '1')
+                    @if($isZraRegistered === \App\Enum\GeneralConstant::ONE)
                         <div class="form-group col-md-4">
                             <label>Location ZTN Number *</label>
                             <input type="text" wire:model.defer="ztnNumber"
@@ -42,8 +42,11 @@
                             @error('ztnNumber')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
+                            @if($importerName)
+                                <small>{{ $importerName  }}</small>
+                            @endif
                         </div>
-                    @elseif($isZraRegistered === '0')
+                    @elseif($isZraRegistered === \App\Enum\GeneralConstant::ZERO)
                         <div class="form-group col-md-4">
                             <label>Importer Name *</label>
                             <input type="text" wire:model.defer="importerName"
@@ -83,7 +86,7 @@
                             <i class="bi bi-arrow-return-right mr-2" wire:loading.remove wire:target="proceed"></i>
                             <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
                                wire:target="proceed"></i>
-                            Proceed
+                            Verify
                         </button>
                     </div>
                 </div>
@@ -91,7 +94,7 @@
         </div>
     </div>
 
-    @if($hasRefundDocument === '1')
+    @if($hasRefundDocument === \App\Enum\GeneralConstant::ONE)
         <div class="card mt-3">
             <div class="card-header font-weight-bold bg-white">
                 Imported Goods
@@ -138,7 +141,7 @@
                                 <button class="btn btn-success mr-2 mt-4" wire:click="addItem({{ $i  }})"
                                         wire:loading.class="disabled">
                                     <i class="bi bi-plus-circle-fill mr-2"></i>
-                                    Add Imported Good
+                                    Verify & Add Good
                                 </button>
                             @endif
 
