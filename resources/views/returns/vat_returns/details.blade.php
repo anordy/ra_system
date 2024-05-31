@@ -449,6 +449,68 @@
                             </div>
 
                             <div class="card">
+                                <div class="card-header">Import Purchases Details (IM4)</div>
+                                @if(isset($return->importPurchases) && count($return->importPurchases ?? []) > 0)
+                                    <div class="card-body">
+                                        <table class="table table-sm px-2">
+                                            <thead>
+                                            <th>No</th>
+                                            <th>Supplier TIN</th>
+                                            <th>VRN</th>
+                                            <th>Tansad Number</th>
+                                            <th>Tansad Date</th>
+                                            <th>Value Excl. Tax</th>
+                                            <th>Tax Amount</th>
+                                            <th>Release Date</th>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($return->importPurchases as $itemKey => $item)
+                                                <tr>
+                                                    <td class="px-2">{{ $itemKey + 1 }}</td>
+                                                    <td class="px-2">{{ $item->supplier_tin_number ?? 'N/A' }}</td>
+                                                    <td class="px-2">{{ $item->vat_registration_number ?? 'N/A' }}</td>
+                                                    <td class="px-2">{{ $item->tansad_number ?? 'N/A' }}</td>
+                                                    <td class="px-2">{{ $item->tansad_date ?? 'N/A' }}</td>
+                                                    <td class="px-2">{{ number_format($item->value_excluding_tax ?? 0, 2) }}</td>
+                                                    <td class="px-2">{{ number_format($item->tax_amount ?? 0, 2) }}</td>
+                                                    <td class="px-2">{{ $item->release_date ?? 'N/A' }}</td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">Standard Purchases Details (IM9)</div>
+                                @if(isset($return->standardPurchases) && count($return->standardPurchases ?? []) > 0)
+                                    <div class="card-body">
+                                        <table class="table table-sm px-2">
+                                            <thead>
+                                            <th>No</th>
+                                            <th>Tansad Number</th>
+                                            <th>EFD Number</th>
+                                            <th>Item Name</th>
+                                            <th>Exclusive Tax Amount</th>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($return->standardPurchases as $itemKey => $item)
+                                                <tr>
+                                                    <td class="px-2">{{ $itemKey + 1 }}</td>
+                                                    <td class="px-2">{{ $item->tansad_number ?? 'N/A' }}</td>
+                                                    <td class="px-2">{{ $item->efd_number ?? 'N/A' }}</td>
+                                                    <td class="px-2">{{ $item->item_name ?? 'N/A' }}</td>
+                                                    <td class="px-2">{{ number_format($item->exclusive_tax_amount ?? 0, 2) }}</td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="card">
                                 <div class="card-header">Cash Sales</div>
 
                                 <div class="card-body">

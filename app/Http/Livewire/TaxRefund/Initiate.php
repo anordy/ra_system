@@ -87,8 +87,8 @@ class Initiate extends Component
                 'phone_number' => $this->phoneNumber ?? null,
                 'business_location_id' => $location->id ?? null,
                 'ztn_number' => $this->ztnNumber ?? null,
-                'payment_status' => BillStatus::SUBMITTED,
-                'payment_due_date' => Carbon::now()->addMonths(1),
+                'payment_status' => $this->hasRefundDocument === GeneralConstant::ZERO ? BillStatus::SUBMITTED : GeneralConstant::VERIFIED,
+                'payment_due_date' => $this->hasRefundDocument === GeneralConstant::ZERO ?  Carbon::now()->addMonths(1) : Carbon::now(),
                 'currency' => Currency::TZS
             ];
 
@@ -112,8 +112,8 @@ class Initiate extends Component
                 // Send Notification to Taxpayer
                 event(new SendSms(SendCustomSMS::SERVICE, NULL,
                     [
-                        'phone' => $taxRefund->businessLocation->,
-                        'message' => ""
+                        'phone' => $taxRefund->businessLocation->business->mobile,
+                        'message' => "Hello {$taxRefund->businessLocation->name}, your tax refund has been approved"
                     ]
                 ));
             }
@@ -134,7 +134,6 @@ class Initiate extends Component
                 Log::error('TAX-REFUND-INITIATE-SUBMIT', [$exception]);
                 $this->customAlert('error', 'Failed to Generate control number');
             }
-
         }
 
 
@@ -183,6 +182,7 @@ class Initiate extends Component
             // TODO: Check if TANSAD number is already added to avoid duplicates
             $exitedGood = ExitedGood::select('value_excluding_tax')
                 ->where('tansad_number', $this->allItems[$i]['tansad_number'])
+                ->where('custom_declaration_types', ExitedGood::IM9)
                 ->first();
 
             if (!$exitedGood) {
