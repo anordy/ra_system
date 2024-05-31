@@ -27,7 +27,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\ISIC1Controller;
@@ -81,7 +80,6 @@ use App\Http\Controllers\LandLease\LandLeaseController;
 use App\Http\Controllers\Setting\PenaltyRateController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Assesments\ObjectionController;
-use App\Http\Controllers\MVR\TRAChassisSearchController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Setting\ExchangeRateController;
@@ -137,8 +135,7 @@ use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
-use App\Http\Controllers\Verification\TaxVerificationApprovalController;
-use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
+use App\Http\Controllers\Verification\TaxVerificationsController;
 use App\Http\Controllers\InternalInfoChange\InternalInfoChangeController;
 use App\Http\Controllers\Reports\Department\DepartmentalReportController;
 use App\Http\Controllers\Returns\FinancialYears\FinancialYearsController;
@@ -502,10 +499,13 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     });
 
     Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {
-        Route::resource('/approvals', TaxVerificationApprovalController::class);
         Route::resource('/assessments', TaxVerificationAssessmentController::class);
-        Route::resource('/verified', TaxVerificationVerifiedController::class);
         Route::resource('/files', TaxVerificationFilesController::class);
+        Route::get('/approved', [TaxVerificationsController::class, 'approved'])->name('approved');
+        Route::get('/pending', [TaxVerificationsController::class, 'pending'])->name('pending');
+        Route::get('/unpaid', [TaxVerificationsController::class, 'unpaid'])->name('unpaid');
+        Route::get('/show/{verification}', [TaxVerificationsController::class, 'show'])->name('show');
+        Route::get('/edit/{verification}', [TaxVerificationsController::class, 'edit'])->name('edit');
     });
 
     Route::name('tax_vettings.')->prefix('tax_vettings')->group(function () {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Returns;
+namespace App\Http\Livewire\Verifications;
 
 use App\Enum\CustomMessage;
 use App\Enum\ReportStatus;
@@ -8,7 +8,7 @@ use App\Traits\CustomAlert;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
-class VerificationFilter extends Component
+class VerificationsFilter extends Component
 {
     use CustomAlert;
 
@@ -40,7 +40,7 @@ class VerificationFilter extends Component
         //add Range to year options
         $this->optionYears[] = ReportStatus::CUSTOM_RANGE;
     }
-    
+
     public function filter()
     {
         try {
@@ -61,6 +61,6 @@ class VerificationFilter extends Component
 
     public function render()
     {
-        return view('livewire.returns.verification-filter');
+        return view('livewire.verifications.verification-filter');
     }
 }

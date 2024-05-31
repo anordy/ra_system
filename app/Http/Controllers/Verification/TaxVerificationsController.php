@@ -16,22 +16,35 @@ use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Verification\TaxVerification;
 use Illuminate\Support\Facades\Gate;
 
-class TaxVerificationApprovalController extends Controller
+class TaxVerificationsController extends Controller
 {
-    public function index()
-    {
-        if (!Gate::allows('verification-approval-view')) {
+    public function approved(){
+        if (!Gate::allows('return-verification')) {
             abort(403);
         }
-        $paidAproval     = 'verification.verification-approval-table';
-        $unPaidAproval   = 'verification.verification-unpaid-approval-table';
 
-        return view('verification.approval.index', compact('paidAproval', 'unPaidAproval'));
+        return view('verifications.approved');
+    }
+
+    public function pending(){
+        if (!Gate::allows('return-verification')) {
+            abort(403);
+        }
+
+        return view('verifications.pending');
+    }
+
+    public function unpaid(){
+        if (!Gate::allows('return-verification')) {
+            abort(403);
+        }
+
+        return view('verifications.unpaid');
     }
 
     public function edit($id)
     {
-        if (!Gate::allows('verification-view')) {
+        if (!Gate::allows('verification-view-all')) {
             abort(403);
         }
 
@@ -86,7 +99,7 @@ class TaxVerificationApprovalController extends Controller
 
     public function show($id)
     {
-        if (!Gate::allows('verification-view')) {
+        if (!Gate::allows('verification-view-all')) {
             abort(403);
         }
         $verification = TaxVerification::with('assessment', 'officers')->findOrFail(decrypt($id));
@@ -126,7 +139,7 @@ class TaxVerificationApprovalController extends Controller
         } elseif ($return instanceof MnoReturn) {
             $viewRender = 'returns.excise-duty.mno.details';
 
-            return view('verification.approval.preview', compact('return', 'verification', 'riskIndicators', 'viewRender'));
+            return view('verifications.show', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         }
     }
 }

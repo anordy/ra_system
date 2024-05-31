@@ -1,9 +1,8 @@
-<div>
+<div class="py-1">
     <form wire:submit.prevent="filter">
         <div class="row">
             @if ($year == 'Custom Range')
-
-                <div class="col-md-4 form-group">
+                <div class="col form-group">
                     <label for="year" class="d-flex justify-content-between'">
                         <span>Return Year</span>
                     </label>
@@ -18,21 +17,21 @@
                     </select>
                 </div>
 
-                <div class="col-md-4 form-group">
+                <div class="col form-group">
                     <label for="month" class="d-flex justify-content-between'">
                         <span>From:</span>
                     </label>
                     <input type="date" name="from" class="form-control" wire:model="from">
                 </div>
 
-                <div class="col-md-4 form-group">
+                <div class="col form-group">
                     <label for="month" class="d-flex justify-content-between'">
                         <span>To:</span>
                     </label>
                     <input type="date" name="to" class="form-control" wire:model="to">
                 </div>
             @else
-                <div class="col-md-6 form-group">
+                <div class="col form-group">
                     <label for="year" class="d-flex justify-content-between'">
                         <span>Return Year</span>
                     </label>
@@ -47,7 +46,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-6 form-group">
+                <div class="col form-group">
                     <label for="month" class="d-flex justify-content-between'">
                         <span>Return Month</span>
                     </label>
@@ -70,20 +69,18 @@
             @endif
 
 
-            <div class="col-md-12 text-center">
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class=" btn btn-primary ml-2 px-5" wire:click='filter()'
-                            wire:loading.attr="disabled">
-                        <div wire:loading.remove wire:target='filter'>
-                            <i class="fa fa-filter"></i>
-                            Filter
-                        </div>
-                        <div wire:loading wire:target='filter'>
-                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status"></div>
-                            Loading...
-                        </div>
-                    </button>
-                </div>
+            <div class="col-auto align-content-center">
+                <button type="submit" class=" btn btn-primary ml-2 px-5" wire:click='filter()'
+                        wire:loading.attr="disabled">
+                    <div wire:loading.remove wire:target='filter'>
+                        <i class="fa fa-filter"></i>
+                        Filter
+                    </div>
+                    <div wire:loading wire:target='filter'>
+                        <div class="spinner-border mr-1 spinner-border-sm text-light" role="status"></div>
+                        Loading...
+                    </div>
+                </button>
             </div>
 
         </div>

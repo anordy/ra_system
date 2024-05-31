@@ -326,16 +326,18 @@
                 <a href="#tax_verifications" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     Returns Verifications
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}"
-                    id="tax_verifications">
-                    <li class="{{ request()->is('tax_verifications/approvals*') ? 'active' : '' }}">
-                        <a href="{{ route('tax_verifications.approvals.index') }}">Approvals</a>
+                <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}" id="tax_verifications">
+                    <li class="{{ request()->is('tax_verifications/pending*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_verifications.pending') }}">Pending Verifications</a>
+                    </li>
+                    <li class="{{ request()->is('tax_verifications/approved*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_verifications.approved') }}">Approved Verifications</a>
+                    </li>
+                    <li class="{{ request()->is('tax_verifications/unpaid*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_verifications.unpaid') }}">Unpaid Verifications</a>
                     </li>
                     <li class="{{ request()->is('tax_verifications/assessments*') ? 'active' : '' }}">
                         <a href="{{ route('tax_verifications.assessments.index') }}">Assessments</a>
-                    </li>
-                    <li class="{{ request()->is('tax_verifications/verified*') ? 'active' : '' }}">
-                        <a href="{{ route('tax_verifications.verified.index') }}">Approved Returns</a>
                     </li>
                 </ul>
             </li>
