@@ -203,19 +203,13 @@ class TaxInvestigationApprovalProcessing extends Component
 
                 $this->prepareFinalReport();
             }
-            $this->registerWorkflow($this->modelName, $this->modelId);
+            // $this->registerWorkflow($this->modelName, $this->modelId);
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
 
             DB::commit();
 
-            // if ($this->subject->status == TaxInvestigationStatus::LEGAL) {
-            //     $this->addToLegalCase();
-            // }
 
             if ($this->subject->status == TaxInvestigationStatus::APPROVED) {
-                //TODO:(Generate Assessment notice)
-
-
             }
 
             $this->flash('success', __('Approved successfully'), [], redirect()->back()->getTargetUrl());
