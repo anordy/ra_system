@@ -9,18 +9,12 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxInvestigationAssessmentPaymentsTable extends DataTableComponent
 {
-    public $model = PartialPayment::class;
 
     public function builder(): Builder
     {
-        $query = PartialPayment::query()
+        return PartialPayment::query()
             ->with('taxAssessment.business')
             ->has('taxAssessment');
-
-        // Debug to ensure relationships are loaded correctly
-        // dd($query->get());
-
-        return $query;
     }
 
     public function configure(): void
@@ -35,13 +29,13 @@ class TaxInvestigationAssessmentPaymentsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('ZTN No', 'taxAssessment.business.ztn_number')
+            Column::make('ZTN No', 'taxassessment.business.ztn_number')
                 ->sortable()
                 ->searchable(),
-            Column::make('TIN', 'taxAssessment.business.tin')
+            Column::make('TIN', 'taxassessment.business.tin')
                 ->sortable()
                 ->searchable(),
-            Column::make('Business Name', 'taxAssessment.business.name')
+            Column::make('Business Name', 'taxassessment.business.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Amount', 'amount')
@@ -50,7 +44,8 @@ class TaxInvestigationAssessmentPaymentsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
                 }),
-            Column::make('Payment Status', 'payment_status')->view('investigation.assessment-payments.includes.status')
+            Column::make('Payment Status', 'payment_status')
+                ->view('investigation.assessment-payments.includes.status')
                 ->sortable()
                 ->searchable(),
             Column::make('Application Status', 'status')

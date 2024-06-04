@@ -157,16 +157,12 @@ class WorkflowTaxInvestigationSeeder extends Seeder
             ],
         ];
 
-        // Check if a Workflow exists with the TAX_INVESTIGATION code
-        $existingWorkflow = Workflow::where('code', 'TAX_INVESTIGATION')->get();
 
-        if ($existingWorkflow) {
-            foreach ($existingWorkflow as $workflow) {
-                $workflow->delete();
-            }
-        }
-
-        Workflow::updateOrCreate([
+        Workflow::updateOrCreate(
+            [
+                'code' => 'TAX_INVESTIGATION',
+            ],
+            [
             'code' => 'TAX_INVESTIGATION',
             'summary' => 'Tax investigation workflow',
             'name' => $name,

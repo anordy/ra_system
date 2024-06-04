@@ -95,7 +95,7 @@
                         @enderror
                     </div>
                     <div class="form-group col-lg-6">
-                        <label class="control-label">Prelimanry Report</label>
+                        <label class="control-label">Preliminary Report</label>
                         <input type="file" class="form-control  @error("preliminaryReport") is-invalid @enderror"
                             wire:model.lazy="preliminaryReport">
                         @error("preliminaryReport")
@@ -104,7 +104,7 @@
                     </div>
 
                     <div class="form-group col-lg-6">
-                        <label for="exampleFormControlTextarea1">Does Investigation contain debt</label>
+                        <label for="exampleFormControlTextarea1">Does Investigation contain assessment</label>
                         <select class="form-control @error("hasAssessment") is-invalid @enderror"
                             wire:model="hasAssessment">
                             <option value='' selected>Select</option>
@@ -121,7 +121,7 @@
                         @foreach ($principalAmounts as $taxTypeKey => $principalAmount)
                             <div class="row px-3">
                                 <div class="form-group col-lg-4">
-                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Principal Amount</label>
+                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Principal Amount ({{ $currencies[$taxTypeKey] }})</label>
                                     <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control"
                                         wire:model.defer="principalAmounts.{{ $taxTypeKey }}">
                                     @error("principalAmounts.{$taxTypeKey}")
@@ -129,7 +129,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-lg-4">
-                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Interest Amount</label>
+                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Interest Amount ({{ $currencies[$taxTypeKey] }})</label>
                                     <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control"
                                         wire:model.defer="interestAmounts.{{ $taxTypeKey }}">
                                     @error("interestAmounts.{$taxTypeKey}")
@@ -137,7 +137,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-lg-4">
-                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Penalty Amount</label>
+                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Penalty Amount ({{ $currencies[$taxTypeKey] }})</label>
                                     <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control"
                                         wire:model.defer="penaltyAmounts.{{ $taxTypeKey }}">
                                     @error("penaltyAmounts.{$taxTypeKey}")
@@ -162,11 +162,11 @@
 
             @if ($this->checkTransition("taxPayer_rejected_review"))
                 <div class="pl-3 pr-3 card">
-                    <p class="card-header ">Taxpayer Rejected Investigation</p>
+                    <p class="card-header">Taxpayer Responded Investigation</p>
                     <div class="row px-2 pt-2 mb-3 ">
-                        <p> <strong> Tax Payer Rejection Reasons:</strong> <br> {{ $this->subject->rejection_reason ?? " " }}</p>
+                        <p> <strong> Tax Payer Responded Reasons:</strong> <br> {{ $this->subject->rejection_reason ?? " " }}</p>
                     </div>
-                    <div class="row px-2 ">
+                    <div class="row px-2">
                         <p> <strong> Tax Payer Supporting Documents:</strong> </p>
                     </div>
                     <div class="row">

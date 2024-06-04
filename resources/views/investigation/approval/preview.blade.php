@@ -3,13 +3,14 @@
 @section("title", "Investigation Preview")
 
 @section("content")
-    @if ($investigation->status == App\Enum\TaxInvestigationStatus::APPROVED && $investigation->assessment)
-        <div class="row m-2 pt-3">
-            <div class="col-md-12">
-                <livewire:assesments.tax-assessment-payment :assessment="$investigation->assessment" />
-            </div>
-        </div>
-    @endif
+{{--    @if ($investigation->status == App\Enum\TaxInvestigationStatus::APPROVED && $investigation->assessment)--}}
+{{--        <div class="row m-2 pt-3">--}}
+{{--            <div class="col-md-12">--}}
+{{--                <livewire:assesments.tax-assessment-payment :assessment="$investigation->assessment" />--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    @endif--}}
+
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
@@ -28,7 +29,7 @@
         <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card mt-2">
                 <div class="card-header text-uppercase font-weight-bold bg-white">
-                    TAXPAYER INFORMATIONS
+                    TAXPAYER INFORMATION'S
                 </div>
                 <div class="card-body">
                     <div class="row m-2">
@@ -155,37 +156,59 @@
                         Assessment Details
                     </div>
                     <div class="card-body">
-                        @php $grandTotal = 0; @endphp
+                        @php $grandTotal = 0; $outstandingTotal = 0; @endphp
 
                         @foreach ($taxAssessments as $taxAssessment)
                             <div>
                                 <h6>{{ $taxAssessment->taxtype->name }} Assesment :</h6>
                                 <div class="row">
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-2 mb-3">
                                         <span class="font-weight-bold text-uppercase">Principal Amount</span>
                                         <p class="my-1">{{ number_format($taxAssessment->principal_amount ?? 0, 2) }}</p>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-2 mb-3">
                                         <span class="font-weight-bold text-uppercase">Interest Amount</span>
                                         <p class="my-1">{{ number_format($taxAssessment->interest_amount ?? 0, 2) }}</p>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-2 mb-3">
                                         <span class="font-weight-bold text-uppercase">Penalty Amount</span>
                                         <p class="my-1">{{ number_format($taxAssessment->penalty_amount ?? 0, 2) }}</p>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-2 mb-3">
                                         <span class="font-weight-bold text-uppercase">Total Amount Due</span>
                                         <p class="my-1">{{ number_format($taxAssessment->total_amount ?? 0, 2) }}</p>
                                     </div>
+                                    <div class="col-md-2 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
+                                        <p class="my-1">{{ number_format($taxAssessment->outstanding_amount ?? 0, 2) }}</p>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Payment Status</span>
+                                        <p class="my-1">
+                                            @if($taxAssessment->outstanding_amount === 0 || $taxAssessment->outstanding_amount === '0')
+                                                <span class="badge badge-success">PAID</span>
+                                            @else
+                                                <span class="badge badge-warning">PENDING </span>
+                                            @endif
+                                        </p>
+                                    </div>
+
                                 </div>
-                                @php $grandTotal += $taxAssessment->total_amount; @endphp
+                                @php $grandTotal += $taxAssessment->total_amount; $outstandingTotal += $taxAssessment->outstanding_amount; @endphp
                             </div>
                         @endforeach
 
                         <div class="row justify-content-end">
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-2 mb-3">
                                 <span class="font-weight-bold text-uppercase">Grand Total Amount</span>
                                 <p class="my-1">{{ number_format($grandTotal, 2) }}</p>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <span class="font-weight-bold text-uppercase">Total Outstanding Amount</span>
+                                <p class="my-1">{{ number_format($outstandingTotal, 2) }}</p>
+                            </div>
+                            <div class="col-md-2 mb-3">
+
                             </div>
                         </div>
                     </div>
