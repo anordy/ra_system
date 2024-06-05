@@ -55,6 +55,7 @@ class TaxInvestigationApprovalProcessing extends Component
     public $subRoles = [];
     public $task;
     public $investigation;
+    public $extensionDate, $extensionReason;
 
     /**
      * Mounts the TaxInvestigationApprovalProcessing component,
@@ -81,6 +82,10 @@ class TaxInvestigationApprovalProcessing extends Component
         $this->noticeOfDiscussion = $this->subject->notice_of_discussion;
         $this->intension = $this->subject->intension;
         $this->scope = $this->subject->scope;
+        if ($this->subject->extension_date) {
+            $this->extensionDate = Carbon::create($this->subject->extension_date)->format('Y-m-d');
+        }
+        $this->extensionReason = $this->subject->extension_reason;
         $this->task = $this->subject->pinstancesActive;
 
         $this->periodFrom = $this->formatDate($this->subject->period_from);
@@ -211,6 +216,12 @@ class TaxInvestigationApprovalProcessing extends Component
 
                 $this->prepareFinalReport();
             }
+
+            if ($this->checkTransition('extension_approved')) {
+                $this->subject->preliminary_report_date = Carbon::create($this->extensionDate);
+                $this->subject->save();
+            }
+
             // $this->registerWorkflow($this->modelName, $this->modelId);
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
 

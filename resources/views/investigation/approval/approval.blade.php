@@ -168,11 +168,11 @@
                 modelId="{{ encrypt($investigation->id) }}" />
         </div>
         <div class="tab-pane fade card p-2" id="return-infos" role="tabpanel" aria-labelledby="return-infos-tab">
-            @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
+            {{-- @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
                 @livewire("investigation.declared-sales-analysis", ["investigationId" => encrypt($investigation->id), "tax_type_id" => encrypt($investigation->tax_type_id), "location_id" => encrypt($investigation->location_id)])
             @else
                 @livewire("investigation.declared-sales-analysis-instances", ["investigationId" => encrypt($investigation->id)])
-            @endif
+            @endif --}}
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">

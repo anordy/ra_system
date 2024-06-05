@@ -63,6 +63,11 @@ class WorkflowTaxInvestigationSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
+            'extension_review' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
             'taxPayer_rejected_review' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -118,6 +123,16 @@ class WorkflowTaxInvestigationSeeder extends Seeder
             'taxPayer_acceptance' => [
                 'from' => 'taxPayer_acceptance',
                 'to'   => 'final_report',
+                'condition' => '',
+            ],
+            'taxpayer_extension' => [
+                'from' => 'taxPayer_acceptance',
+                'to'   => 'extension_review',
+                'condition' => '',
+            ],
+            'extension_approved' => [
+                'from' => 'extension_review',
+                'to'   => 'taxPayer_acceptance',
                 'condition' => '',
             ],
             'taxPayer_rejected' => [
