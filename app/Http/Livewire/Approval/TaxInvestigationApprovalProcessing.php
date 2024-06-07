@@ -47,8 +47,8 @@ class TaxInvestigationApprovalProcessing extends Component
     public $interestAmounts = [];
     public $penaltyAmounts = [];
     public $taxTypeIds = [];
-    public $intension;
-    public $scope;
+    public $allegations;
+    public $descriptions;
     public $exitMinutes;
     public $taxTypes;
     public $taxType;
@@ -83,8 +83,8 @@ class TaxInvestigationApprovalProcessing extends Component
         $this->workingReport = $this->subject->working_report;
         $this->preliminaryReport = $this->subject->preliminary_report;
         $this->noticeOfDiscussion = $this->subject->notice_of_discussion;
-        $this->intension = $this->subject->intension;
-        $this->scope = $this->subject->scope;
+        $this->allegations = $this->subject->allegations;
+        $this->descriptions = $this->subject->descriptions;
         $this->task = $this->subject->pinstancesActive;
 
         $this->periodFrom = $this->formatDate($this->subject->period_from);
@@ -228,8 +228,8 @@ class TaxInvestigationApprovalProcessing extends Component
     {
         $this->validate(
             [
-                'intension' => 'required|strip_tag|string',
-                'scope' => 'required|strip_tag|string',
+                'allegations' => 'required|strip_tag|string',
+                'descriptions' => 'required|strip_tag|string',
                 'periodFrom' => 'required|date',
                 'periodTo' => 'required|after:periodFrom',
                 'teamLeader' => ['required', new NotIn([$this->teamMember])],
@@ -319,8 +319,8 @@ class TaxInvestigationApprovalProcessing extends Component
 
         $this->subject->period_to = $this->periodTo;
         $this->subject->period_from = $this->periodTo;
-        $this->subject->intension = $this->intension;
-        $this->subject->scope = $this->scope;
+        $this->subject->intension = $this->allegations;
+        $this->subject->scope = $this->descriptions;
         $this->subject->save();
 
         return [intval($this->teamLeader), intval($this->teamMember)];
