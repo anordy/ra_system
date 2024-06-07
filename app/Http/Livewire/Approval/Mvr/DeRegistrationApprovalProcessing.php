@@ -51,7 +51,7 @@ class DeRegistrationApprovalProcessing extends Component
             'comments' => 'required|strip_tag',
             'reasonsForLost' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::LOST ? 'required|strip_tag' : 'nullable',
             'clearanceEvidence' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::OUT_OF_ZANZIBAR ? ($this->clearanceEvidence === $this->subject->clearance_evidence ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf') : 'nullable',
-            'description' => ($this->subject->reason->name === MvrDeRegistrationReasonStatus::SCRAPPED || $this->subject->reason->name === MvrDeRegistrationReasonStatus::NOT_UNDER_OBLIGATION) ? ($this->description ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf') : 'nullable'
+            'description' => ($this->subject->reason->name === MvrDeRegistrationReasonStatus::SCRAPPED) ? ('required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf') : 'nullable'
         ],
             [
                 'description.required' => 'Please enter reasons for de-registration'
@@ -80,13 +80,8 @@ class DeRegistrationApprovalProcessing extends Component
                     $this->subject->police_evidence = null;
                     $this->subject->zic_evidence = null;
                     $this->subject->description = $this->description;
-                }  else if ($this->subject->reason->name === MvrDeRegistrationReasonStatus::SERVIER_ACCIDENT) {
-
-                    $zicEvidence = $this->zicEvidence;
-                    if ($this->zicEvidence != $this->subject->zic_evidence) {
-                        $zicEvidence = $this->zicEvidence->store('mvr_deregistration', 'local');
-                    }
-                    $this->subject->zic_evidence = $zicEvidence;
+                }  else {
+                    $this->subject->description = $this->reasonsForLost;
                 }
             }
 

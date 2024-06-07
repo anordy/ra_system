@@ -3,7 +3,6 @@
 @section('title', __('Road License Information'))
 
 @section('content')
-
     <ul class="nav nav-tabs shadow-sm mb-0" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" aria-controls="home" role="tab"
@@ -78,6 +77,10 @@
                             <p class="my-1">{{ $roadLicense->passengers_no ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Capacity</span>
+                            <p class="my-1">{{ $roadLicense->capacity ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Unique Number</span>
                             <p class="my-1">{{ $roadLicense->urn ?? 'N/A' }}</p>
                         </div>
@@ -96,14 +99,12 @@
                         @endif
                     </div>
                 </div>
-
-                @include('road-license.mvr_info', ['reg' => $roadLicense->registration])
-
-                <livewire:approval.road-license.approval-processing modelName="{{ \App\Models\RoadLicense\RoadLicense::class  }}"
-                                                                    modelId="{{ encrypt($roadLicense->id) }}"/>
-
             </div>
 
+            @include('road-license.mvr_info', ['reg' => $roadLicense->registration])
+
+            <livewire:approval.road-license.approval-processing modelName="{{ \App\Models\RoadLicense\RoadLicense::class  }}"
+                                                                modelId="{{ encrypt($roadLicense->id) }}"/>
         </div>
         <div class="tab-pane fade p-3" id="approval" role="tabpanel" aria-labelledby="approval-tab">
             <livewire:approval.approval-history-table modelName="{{ \App\Models\RoadLicense\RoadLicense::class  }}"

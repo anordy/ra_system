@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval\Mvr;
 
+use App\Enum\BillStatus;
 use App\Enum\GeneralConstant;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
@@ -10,6 +11,7 @@ use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
 use App\Models\DlFee;
 use App\Models\DlLicenseRestriction;
+use App\Models\DlRestriction;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
@@ -196,19 +198,20 @@ class DriverLicenseApprovalProcessing extends Component
     {
         try {
             // Fetch the fee
-            $fee = DlFee::query()->where('dl_license_duration_id', $this->subject->license_duration_id)
+            $fee = DlFee::query()
+                ->where('dl_license_duration_id', $this->subject->license_duration_id)
                 ->where('type', $this->subject->type)
                 ->first();
 
             if (empty ($fee)) {
-                // Fee not configured, display error and return
                 $errorMessage = "Driver License fee for this application is not configured";
                 $this->customAlert('error', $errorMessage);
                 return;
-            }
+            } else {
+                // Generate control number
+                $this->generateDLicenseControlNumber($this->subject, $fee);
 
-            // Generate control number
-            $this->generateDLicenseControlNumber($this->subject, $fee);
+            }
         } catch (Exception $e) {
 
             Log::error('Error generating control number: ' . $e->getMessage(), [

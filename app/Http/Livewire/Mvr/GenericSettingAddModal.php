@@ -49,7 +49,7 @@ class GenericSettingAddModal extends Component
 
     private array $enums = [
         DlFee::class => [
-            ['title' => 'Type', 'field' => 'type', 'options' => ['FRESH' => 'Fresh Applicant', 'RENEW' => 'License Renewal', 'DUPLICATE' => 'License Copy']]
+            ['title' => 'Type', 'field' => 'type', 'options' => ['FRESH' => 'Fresh Applicant', 'RENEW' => 'License Renewal', 'DUPLICATE' => 'License Copy', 'CLASS' => 'Add New Class']]
         ]
     ];
 

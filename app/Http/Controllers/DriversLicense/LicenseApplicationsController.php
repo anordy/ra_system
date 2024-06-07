@@ -35,7 +35,12 @@ class LicenseApplicationsController extends Controller
         $id = decrypt($id);
         $application = DlLicenseApplication::with(['application_license_classes', 'drivers_license', 'application_license_classes'])->findOrFail($id);
         $applicant = DlDriversLicenseOwner::query()->findOrFail($application->dl_drivers_license_owner_id);
-        $title = ['fresh' => 'New License Application', 'renew' => 'License Renewal Application', 'duplicate' => 'License Duplicate Application'][strtolower($application->type)];
+        $title = [
+            'fresh' => __('License Application (Fresh)'),
+            'renew' => __('License Application (Renewal)'),
+            'duplicate' => __('License Application (Duplicate)'),
+            'class' => __('License Application (Add new class)')
+        ][strtolower($application->type)];
         return view('driver-license.license-applications-show', compact('application', 'title', 'applicant'));
     }
 

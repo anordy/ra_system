@@ -69,13 +69,11 @@ class ApprovalProcessing extends Component
 
                 $this->subject->status = RoadLicenseStatus::APPROVED;
                 $this->subject->approved_on = Carbon::now();
-                $this->subject->urn = random_int(10000000,99999999); // TODO: Create format
+                $this->subject->urn = 'Z-' . str_pad($this->subject->id, 6, "0", STR_PAD_LEFT);
                 $this->subject->save();
 
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-
                 DB::commit();
-
                 return $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
             } catch (\Exception $exception) {
                 DB::rollBack();

@@ -67,4 +67,8 @@ class MvrRegistrationType extends Model
     public function color(){
         return $this->hasOne(MvrColor::class);
     }
+
+    public function category(){
+        return $this->belongsTo(MvrRegistrationTypeCategory::class, 'mvr_registration_type_category_id');
+    }
 }

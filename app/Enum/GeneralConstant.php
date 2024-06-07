@@ -39,6 +39,12 @@ class GeneralConstant implements Status
     const FRESH = 'fresh';
     const DUPLICATE = 'duplicate';
     const LOST = 'lost';
+    const ACTIVE = 'Active';
+    const INACTIVE = 'Inactive';
+
+    const MONTH_NUMBER = 'month_number';
+    const SINGLE_STATE = 'single_state';
+    const STATE_MACHINE = 'state_machine';
     const ADD_CLASS = 'CLASS';
 
 

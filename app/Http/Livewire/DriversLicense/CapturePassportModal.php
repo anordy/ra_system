@@ -103,9 +103,7 @@ class CapturePassportModal extends Component
             ->first();
 
         if ($originalLicense) {
-
             $newLicense = new DlDriversLicense();
-
             $arr = $originalLicense->toArray();
 
             unset($arr['id']);
@@ -113,7 +111,6 @@ class CapturePassportModal extends Component
             unset($arr['updated_at']);
 
             $newLicense->fill($arr);
-
             $newLicense->status = DlApplicationStatus::ACTIVE;
 
             if ($dla->type === DlApplicationStatus::RENEW) {
@@ -121,6 +118,8 @@ class CapturePassportModal extends Component
                 $newLicense->license_number = DlDriversLicense::getNextLicenseNumber();
                 $newLicense->issued_date = date('Y-m-d');
                 $newLicense->expiry_date = date('Y-m-d', strtotime("+{$dla->license_duration} years"));
+            } elseif($dla->type === DlApplicationStatus::ADD_CLASS){
+                $newLicense->license_number = DlDriversLicense::getNextLicenseNumber();
             }
 
             try {
