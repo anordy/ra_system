@@ -20,8 +20,8 @@ class InternalInfoChangeApprovalTable extends DataTableComponent
     {
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', InternalBusinessUpdate::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF)
             ->whereHas('actors', function ($query) {
                 $query->where('user_id', auth()->id());
             });
@@ -57,12 +57,12 @@ class InternalInfoChangeApprovalTable extends DataTableComponent
                 ->label(function ($row) {
                     $status = $row->pinstance->status;
                     return view('internal-info-change.includes.status', compact('status'));
-            }),
+                }),
             Column::make('Actions', 'pinstance.id')
                 ->label(function ($row) {
                     $id = $row->pinstance->id;
                     return view('internal-info-change.includes.approval', compact('row', 'id'));
-            }),
+                }),
         ];
     }
 }

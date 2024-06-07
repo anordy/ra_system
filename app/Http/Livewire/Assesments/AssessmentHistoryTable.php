@@ -22,7 +22,14 @@ class AssessmentHistoryTable extends DataTableComponent
     public function builder(): Builder
     {
 
-        $histories = $this->modelName::where('tax_assessment_id', $this->modelId);
+        $histories = $this->modelName::select([
+            'id',
+            'principal_amount',
+            'penalty_amount',
+            'interest_amount',
+            'total_amount',
+        ])->where('tax_assessment_id', $this->modelId);
+
         return $histories;
     }
 
@@ -39,13 +46,13 @@ class AssessmentHistoryTable extends DataTableComponent
     {
         return [
             Column::make('Principal Amount', 'principal_amount')
-                ->label(fn($row, $value) => $row->principal_amount),
+                ->label(fn ($row, $value) => $row->principal_amount),
             Column::make('Penalty', 'penalty_amount')
-                ->label(fn($row) => number_format($row->penalty_amount,2) ?? ''),
+                ->label(fn ($row) => number_format($row->penalty_amount, 2) ?? ''),
             Column::make('Interest Amount', 'interest_amount')
-                ->label(fn($row) => number_format($row->interest_amount,2) ?? ''),
+                ->label(fn ($row) => number_format($row->interest_amount, 2) ?? ''),
             Column::make('Total Amount', 'total_amount')
-                ->label(fn($row) => number_format($row->total_amount,2) ?? '')
+                ->label(fn ($row) => number_format($row->total_amount, 2) ?? '')
         ];
     }
 }

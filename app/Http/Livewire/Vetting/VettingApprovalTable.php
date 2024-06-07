@@ -82,7 +82,6 @@ class VettingApprovalTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-
     }
 
 
@@ -106,7 +105,7 @@ class VettingApprovalTable extends DataTableComponent
                 $query->where('location', Region::DTD); //this is filter by department
             })
             ->whereHas('pinstance', function ($query) {
-                $query->where('status', '!=', 'completed');
+                $query->where('status', '!=', WorkflowTask::COMPLETED);
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });
@@ -116,7 +115,7 @@ class VettingApprovalTable extends DataTableComponent
         $returnTable = TaxReturn::getTableName();
         $query = $this->dataFilter($query, $this->data, $returnTable);
         $query->orderBy('created_at', $this->orderBy);
-        
+
         return $query;
     }
 

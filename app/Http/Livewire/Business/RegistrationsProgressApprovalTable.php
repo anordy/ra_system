@@ -20,8 +20,8 @@ class RegistrationsProgressApprovalTable extends DataTableComponent
     {
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', Business::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff');
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF);
     }
 
     public function configure(): void

@@ -83,7 +83,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Reg. No.</span>
-                    <p class="my-1">{{ $business->reg_no ?? 'N/A' }} </p>
+                    <p class="my-1">{{ $business->reg_no ?? "N/A" }} </p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Owner Designation</span>
@@ -109,7 +109,7 @@
                     <span class="font-weight-bold text-uppercase">Place of Business</span>
                     <p class="my-1">{{ $business->place_of_business }}</p>
                 </div>
-             
+
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Date of Commencing Business</span>
                     <p class="my-1">{{ $business->date_of_commencing->toFormattedDateString() }}</p>
@@ -216,7 +216,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Street</span>
-                        <p class="my-1">{{ $location->street->name ?? 'N/A' }}</p>
+                        <p class="my-1">{{ $location->street->name ?? "N/A" }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Physical Address</span>
@@ -310,22 +310,22 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Status</span>
-                        @if ($consultant->status === 'pending')
+                        @if ($consultant->status === "pending")
                             <p class="my-1 text-info font-weight-bold">
                                 <i class="bi bi-clock-history mr-1"></i>
                                 Waiting Approval From Tax Agent
                             </p>
-                        @elseif($consultant->status === 'approved')
+                        @elseif($consultant->status === "approved")
                             <p class="my-1 text-success font-weight-bold">
                                 <i class="bi bi-check-circle mr-1"></i>
                                 Approved
                             </p>
-                        @elseif($consultant->status === 'rejected')
+                        @elseif($consultant->status === "rejected")
                             <p class="my-1 text-danger font-weight-bold">
                                 <i class="bi bi-x-circle-fill mr-1"></i>
                                 Rejected
                             </p>
-                        @elseif($consultant->status === 'removed')
+                        @elseif($consultant->status === "removed")
                             <p class="my-1 text-danger font-weight-bold">
                                 <i class="bi bi-trash-fill mr-1"></i>
                                 Removed. Please assign new tax agent.
@@ -416,7 +416,7 @@
                 @foreach ($business->files as $file)
                     <div class="col-md-4">
                         <a class="file-item" target="_blank"
-                            href="{{ route('business.file', encrypt($file->id)) }}">
+                            href="{{ route("business.file", encrypt($file->id)) }}">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <div style="font-weight: 500;" class="ml-1">
                                 {{ $file->type->name }}
@@ -445,8 +445,7 @@
                 @endforeach
                 @if ($business->taxpayer->tin_location)
                     <div class="col-md-4">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <a href="#" style="font-weight: 500;" class="ml-1">
                                 TIN Certificate - {{ $business->taxpayer->full_name }}
@@ -459,5 +458,5 @@
             </div>
         </div>
     </div>
-   
+
 </div>

@@ -1,8 +1,8 @@
-@extends('layouts.master')
+@extends("layouts.master")
 
-@section('title', 'Waiver & Objection Application Details')
+@section("title", "Waiver & Objection Application Details")
 
-@section('content')
+@section("content")
 
     <div class="card p-0 m-0">
 
@@ -13,8 +13,9 @@
             </nav>
             <div class="tab-content px-2 border border-top-0 pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show">
-                    @include('assesments.waiverobjection.includes.waiver_objection_info')
-                        <livewire:approval.approval-waiver-objection-processing modelName='App\Models\WaiverObjection' modelId="{{ encrypt($waiverObjection->id) }}" />
+                    @include("assesments.waiverobjection.includes.waiver_objection_info")
+                    <livewire:approval.approval-waiver-objection-processing modelName='App\Models\WaiverObjection'
+                        modelId="{{ encrypt($waiverObjection->id) }}" />
 
                 </div>
                 <div id="tab2" class="tab-pane fade">
@@ -25,14 +26,5 @@
         </div>
     </div>
 
-
 @endsection
-@section('scripts')
-    <script>
-        $(document).ready(function() {
-            $(".nav-tabs a").click(function() {
-                $(this).tab('show');
-            });
-        });
-    </script>
-@endsection
+@include("assesments.partials.inlinejs")

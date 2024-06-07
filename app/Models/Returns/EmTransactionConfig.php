@@ -9,5 +9,5 @@ class EmTransactionConfig extends Model
 {
     use HasFactory;
 
-
+    const TotalEMT = "TotalEMT";
 }

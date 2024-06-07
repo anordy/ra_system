@@ -98,7 +98,7 @@
                     <span class="font-weight-bold text-uppercase">Place of Business</span>
                     <p class="my-1">{{ $waiver->debt->business->place_of_business }}</p>
                 </div>
-   
+
             </div>
 
             @if ($waiver)
@@ -126,21 +126,23 @@
                                 <th>Penalty Amount</th>
                                 <td>{{ $waiver->debt->currency }}.
                                     {{ number_format($waiver->debt->original_penalty_amount, 2) }}</td>
-                                <td>{{ number_format($waiver->penalty_rate, 2) }} % = {{ number_format($waiver->debt->original_penalty_amount * ($waiver->penalty_rate/100), 2) }}</td>
+                                <td>{{ number_format($waiver->penalty_rate, 2) }} % =
+                                    {{ number_format($waiver->debt->original_penalty_amount * ($waiver->penalty_rate / 100), 2) }}</td>
                                 <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->penalty_amount, 2) }}</td>
                             </tr>
                             <tr>
                                 <th>Interest Amount</th>
                                 <td>{{ $waiver->debt->currency }}.
                                     {{ number_format($waiver->debt->original_interest_amount, 2) }}</td>
-                                <td>{{ number_format($waiver->interest_rate, 2) }} % = {{ number_format($waiver->debt->original_interest_amount * ($waiver->interest_rate/100), 2) }}</td>
+                                <td>{{ number_format($waiver->interest_rate, 2) }} % =
+                                    {{ number_format($waiver->debt->original_interest_amount * ($waiver->interest_rate / 100), 2) }}</td>
                                 <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->interest_amount, 2) }}
                                 </td>
                             </tr>
                             <tr>
                                 <th>Total Amount</th>
                                 <td>{{ $waiver->debt->currency }}.
-                                    {{ number_format($waiver->debt->original_total_amount, 2) ?? '' }}
+                                    {{ number_format($waiver->debt->original_total_amount, 2) ?? "" }}
                                 </td>
                                 <td></td>
                                 <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->total_amount, 2) }}
@@ -176,13 +178,12 @@
             <div class="row m-2 pt-3">
                 @foreach ($files as $file)
                     <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <a target="_blank"
-                                href="{{ route('debts.assesment.file', encrypt($file->id)) }}"
+                                href="{{ route("debts.assesment.file", encrypt($file->id)) }}"
                                 style="font-weight: 500;" class="ml-1">
-                                {{ $file['file_name'] }}
+                                {{ $file["file_name"] }}
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>
                         </div>

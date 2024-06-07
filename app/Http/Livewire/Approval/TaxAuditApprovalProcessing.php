@@ -90,6 +90,13 @@ class TaxAuditApprovalProcessing extends Component
         $this->modelId   = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
 
+        $this->exitMinutes = $this->subject->exit_minutes;
+        $this->finalReport = $this->subject->final_report;
+        $this->workingReport = $this->subject->working_report;
+        $this->preliminaryReport = $this->subject->preliminary_report;
+        $this->entryMeeting = $this->subject->entry_minutes;
+        $this->notificationLetter = $this->subject->notification_letter;
+
         $assessment = $this->subject->assessment;
         if ($assessment) {
             $this->hasAssessment = "1";
@@ -152,16 +159,8 @@ class TaxAuditApprovalProcessing extends Component
             } elseif ($taxRegion == Region::DTD && $grandTotal > 100000000) {
                 $this->forwardToCG = true;
             }
-
-
-            $this->exitMinutes = $this->subject->exit_minutes;
-            $this->finalReport = $this->subject->final_report;
-            $this->workingReport = $this->subject->working_report;
-            $this->preliminaryReport = $this->subject->preliminary_report;
-            $this->entryMeeting = $this->subject->entry_minutes;
-            $this->notificationLetter = $this->subject->notification_letter;
-
         }
+
 
         if ($this->task != null) {
             $operators = json_decode($this->task->operators);
@@ -595,7 +594,6 @@ class TaxAuditApprovalProcessing extends Component
                 throw $e;
             }
         }
-
     }
 
 

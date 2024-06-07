@@ -8,6 +8,7 @@ use App\Models\BusinessLocation;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class TaxAuditApprovalController extends Controller
 {
@@ -48,24 +49,35 @@ class TaxAuditApprovalController extends Controller
 
     public function edit($id)
     {
+        try {
+            $audit = TaxAudit::findOrFail(decrypt($id));
 
-        $audit = TaxAudit::findOrFail(decrypt($id));
+            $taxAssessments = TaxAssessment::where('assessment_id', $audit->id)
+                ->where('assessment_type', get_class($audit))->get();
 
-        $taxAssessments = TaxAssessment::where('assessment_id', $audit->id)
-            ->where('assessment_type', get_class($audit))->get();
-
-        // dd($taxAssessments);
-
-        return view('audit.approval.approval', compact('audit', 'taxAssessments'));
+            return view('audit.approval.approval', compact('audit', 'taxAssessments'));
+        } catch (\Exception $e) {
+            report($e);
+            Log::error($e);
+            session()->flash('warning', 'An error has occured . Please contact your administrator');
+            return back();
+        }
     }
 
     public function show($id)
     {
-        $audit = TaxAudit::with('assessment', 'officers', 'business')->findOrFail(decrypt($id));
+        try {
+            $audit = TaxAudit::with('assessment', 'officers', 'business')->findOrFail(decrypt($id));
 
-        $taxAssessments = TaxAssessment::where('assessment_id', $audit->id)
-            ->where('assessment_type', get_class($audit))->get();
+            $taxAssessments = TaxAssessment::where('assessment_id', $audit->id)
+                ->where('assessment_type', get_class($audit))->get();
 
-        return view('audit.preview', compact('audit', 'taxAssessment'));
+            return view('audit.preview', compact('audit', 'taxAssessments'));
+        } catch (\Exception $e) {
+            report($e);
+            Log::error($e);
+            session()->flash('warning', 'The selected audit was not found. Please contact your administrator');
+            return back();
+        }
     }
 }
