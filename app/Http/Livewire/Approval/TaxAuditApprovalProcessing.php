@@ -309,10 +309,6 @@ class TaxAuditApprovalProcessing extends Component
                 ]);
 
 
-                $taxpayer = $this->subject->business->taxpayer;
-                event(new SendMail('audit-notification-to-taxpayer', $taxpayer));
-                event(new SendSms('audit-notification-to-taxpayer', $taxpayer));
-
                 $operators = [intval($this->teamLeader), intval($this->teamMember)];
             }
 

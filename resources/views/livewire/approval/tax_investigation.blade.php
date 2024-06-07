@@ -5,7 +5,7 @@
         </div>
         <div class="card-body">
 
-            @include('layouts.component.messages')
+            @include("layouts.component.messages")
 
             @include("livewire.approval.transitions")
 
@@ -63,9 +63,9 @@
                         @enderror
                     </div>
                     <div class="col-lg-6 form-group">
-                        <label for="intension">Allegations</label>
-                        <textarea class="form-control" wire:model.lazy="intension" id="intension" rows="3"></textarea>
-                        @error("intension")
+                        <label for="allegations">Allegations</label>
+                        <textarea class="form-control" wire:model.lazy="allegations" id="allegations" rows="3"></textarea>
+                        @error("allegations")
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -73,8 +73,8 @@
                     </div>
                     <div class="col-lg-6 form-group">
                         <label for="periodTo">Descriptions</label>
-                        <textarea class="form-control" wire:model.lazy="scope" id="scope" rows="3"></textarea>
-                        @error("scope")
+                        <textarea class="form-control" wire:model.lazy="descriptions" id="descriptions" rows="3"></textarea>
+                        @error("descriptions")
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -123,7 +123,8 @@
                         @foreach ($principalAmounts as $taxTypeKey => $principalAmount)
                             <div class="row px-3">
                                 <div class="form-group col-lg-4">
-                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Principal Amount ({{ $currencies[$taxTypeKey] }})</label>
+                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Principal Amount
+                                        ({{ $currencies[$taxTypeKey] }})</label>
                                     <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control"
                                         wire:model.defer="principalAmounts.{{ $taxTypeKey }}">
                                     @error("principalAmounts.{$taxTypeKey}")
@@ -131,7 +132,8 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-lg-4">
-                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Interest Amount ({{ $currencies[$taxTypeKey] }})</label>
+                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Interest Amount
+                                        ({{ $currencies[$taxTypeKey] }})</label>
                                     <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control"
                                         wire:model.defer="interestAmounts.{{ $taxTypeKey }}">
                                     @error("interestAmounts.{$taxTypeKey}")
@@ -139,7 +141,8 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-lg-4">
-                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Penalty Amount ({{ $currencies[$taxTypeKey] }})</label>
+                                    <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Penalty Amount
+                                        ({{ $currencies[$taxTypeKey] }})</label>
                                     <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control"
                                         wire:model.defer="penaltyAmounts.{{ $taxTypeKey }}">
                                     @error("penaltyAmounts.{$taxTypeKey}")
@@ -224,22 +227,22 @@
                 </div>
             @endif
 
-            @if($this->checkTransition("extension_approved"))
+            @if ($this->checkTransition("extension_approved"))
                 <div class="row px-3">
                     <div class="col-lg-6 form-group">
                         <label for="periodFrom">Suggested Extension Date</label>
                         <input type="date" class="form-control @error("extensionDate") is-invalid @enderror"
-                               wire:model="extensionDate">
+                            wire:model="extensionDate">
                         @error("extensionDate")
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
                     </div>
                     <div class="col-lg-6 form-group">
                         <label for="periodFrom">Extension Reason</label>
                         <input type="text" disabled class="form-control"
-                               wire:model="extensionReason">
+                            wire:model="extensionReason">
                     </div>
                 </div>
             @endif
