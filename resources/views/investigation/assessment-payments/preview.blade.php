@@ -4,7 +4,6 @@
 
 @section("content")
 
-    {{-- @dd($partialPayment->bill) --}}
     @if ($partialPayment->status == App\Enum\TaxInvestigationStatus::APPROVED && $investigation->assessment)
         <div class="row m-2 pt-3">
             <div class="col-md-12">
@@ -153,37 +152,59 @@
                         Assessment Details
                     </div>
                     <div class="card-body">
-                        @php $grandTotal = 0; @endphp
+                        @php $grandTotal = 0; $outstandingTotal = 0; @endphp
 
                         @foreach ($taxAssessments as $taxAssessment)
                             <div>
                                 <h6>{{ $taxAssessment->taxtype->name }} Assesment :</h6>
                                 <div class="row">
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-2 mb-3">
                                         <span class="font-weight-bold text-uppercase">Principal Amount</span>
                                         <p class="my-1">{{ number_format($taxAssessment->principal_amount ?? 0, 2) }}</p>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-2 mb-3">
                                         <span class="font-weight-bold text-uppercase">Interest Amount</span>
                                         <p class="my-1">{{ number_format($taxAssessment->interest_amount ?? 0, 2) }}</p>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-2 mb-3">
                                         <span class="font-weight-bold text-uppercase">Penalty Amount</span>
                                         <p class="my-1">{{ number_format($taxAssessment->penalty_amount ?? 0, 2) }}</p>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-2 mb-3">
                                         <span class="font-weight-bold text-uppercase">Total Amount Due</span>
                                         <p class="my-1">{{ number_format($taxAssessment->total_amount ?? 0, 2) }}</p>
                                     </div>
+                                    <div class="col-md-2 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
+                                        <p class="my-1">{{ number_format($taxAssessment->outstanding_amount ?? 0, 2) }}</p>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Payment Status</span>
+                                        <p class="my-1">
+                                            @if($taxAssessment->outstanding_amount === 0 || $taxAssessment->outstanding_amount === '0')
+                                                <span class="badge badge-success">PAID</span>
+                                            @else
+                                                <span class="badge badge-warning">PENDING </span>
+                                            @endif
+                                        </p>
+                                    </div>
+
                                 </div>
-                                @php $grandTotal += $taxAssessment->total_amount; @endphp
+                                @php $grandTotal += $taxAssessment->total_amount; $outstandingTotal += $taxAssessment->outstanding_amount; @endphp
                             </div>
                         @endforeach
 
                         <div class="row justify-content-end">
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-2 mb-3">
                                 <span class="font-weight-bold text-uppercase">Grand Total Amount</span>
                                 <p class="my-1">{{ number_format($grandTotal, 2) }}</p>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <span class="font-weight-bold text-uppercase">Total Outstanding Amount</span>
+                                <p class="my-1">{{ number_format($outstandingTotal, 2) }}</p>
+                            </div>
+                            <div class="col-md-2 mb-3">
+
                             </div>
                         </div>
                     </div>
@@ -222,7 +243,11 @@
                             <span class="font-weight-bold text-uppercase"> {{ number_format($partialPayment->amount, 2) }} </span>
                             which is equal to
                             <span class="font-weight-bold text-uppercase">
-                                {{ number_format(($partialPayment->amount / $partialPayment->taxAssessment->outstanding_amount) * 100, 2) }}%
+                                @if($partialPayment->taxAssessment->outstanding_amount != 0)
+                                    {{ number_format(($partialPayment->amount / $partialPayment->taxAssessment->outstanding_amount) * 100, 2) }}%
+                                @else
+                                    0
+                                @endif
                             </span>
                             percent of total Outstanding Amount of {{ $partialPayment->taxAssessment->taxtype->name }} Assesment
                         </p>
@@ -232,30 +257,32 @@
 
             </div>
 
-            <form action="{{ route("tax_investigation.approve-reject", encrypt($partialPayment->id)) }}" method="POST">
-                @csrf
-                <div class="row p-3">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="comments">Comments</label>
-                            <textarea class="form-control @error("comments") is-invalid @enderror" name="comments" rows="3" required>{{ old("comments") }}</textarea>
-                            @error("comments")
+            @if($partialPayment->status === App\Enum\TaxInvestigationStatus::PENDING)
+                <form action="{{ route("tax_investigation.approve-reject", encrypt($partialPayment->id)) }}" method="POST">
+                    @csrf
+                    <div class="row p-3">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="comments">Comments</label>
+                                <textarea class="form-control @error("comments") is-invalid @enderror" name="comments" rows="3" required>{{ old("comments") }}</textarea>
+                                @error("comments")
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
-                            @enderror
+                                @enderror
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer p-2 m-0">
-                    <button type="submit" name="action" value="reject" class="btn btn-danger">
-                        Reject & Return Back
-                    </button>
-                    <button type="submit" name="action" value="approve" class="btn btn-primary">
-                        Approve & Generate Control No
-                    </button>
-                </div>
-            </form>
+                    <div class="modal-footer p-2 m-0">
+                        <button type="submit" name="action" value="reject" class="btn btn-danger">
+                            Reject & Return Back
+                        </button>
+                        <button type="submit" name="action" value="approve" class="btn btn-primary">
+                            Approve & Generate Control No
+                        </button>
+                    </div>
+                </form>
+            @endif
 
         </div>
     </div>

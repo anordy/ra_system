@@ -1,7 +1,6 @@
-@php $taxTypeCode = $taxType->code; @endphp
 @if ($withoutPurchases)
 
-    @switch($taxTypeCode)
+    {{-- @switch($taxType->code)
         @case(TaxType::EXCISE_DUTY_BFO)
             @include("investigation.approval.return-details.bfo")
         @break
@@ -33,7 +32,7 @@
         @case(TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE)
             @include("investigation.approval.return-details.sea_port")
         @break
-    @endswitch
+    @endswitch --}}
 @else
     <div class="card">
         <div class="card-body">

@@ -2,23 +2,20 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\GeneralConstant;
 use App\Enum\TaxInvestigationStatus;
+use App\Models\BusinessTaxType;
 use App\Models\CaseStage;
-use App\Models\Investigation\TaxInvestigation;
 use App\Models\Investigation\TaxInvestigationOfficer;
 use App\Models\LegalCase;
-use App\Models\Returns\ReturnStatus;
 use App\Models\Role;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
 use App\Models\User;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\NotIn;
@@ -46,6 +43,7 @@ class TaxInvestigationApprovalProcessing extends Component
     public $principalAmounts = [];
     public $interestAmounts = [];
     public $penaltyAmounts = [];
+    public $currencies = [];
     public $taxTypeIds = [];
     public $allegations;
     public $descriptions;
@@ -57,6 +55,7 @@ class TaxInvestigationApprovalProcessing extends Component
     public $subRoles = [];
     public $task;
     public $investigation;
+    public $extensionDate, $extensionReason;
 
     /**
      * Mounts the TaxInvestigationApprovalProcessing component,
@@ -76,15 +75,17 @@ class TaxInvestigationApprovalProcessing extends Component
 
         $this->subject = $this->getSubject();
 
-        // dd($this->getEnabledTransitions());
-
         $this->exitMinutes = $this->subject->exit_minutes;
         $this->finalReport = $this->subject->final_report;
         $this->workingReport = $this->subject->working_report;
         $this->preliminaryReport = $this->subject->preliminary_report;
         $this->noticeOfDiscussion = $this->subject->notice_of_discussion;
-        $this->allegations = $this->subject->allegations;
-        $this->descriptions = $this->subject->descriptions;
+        $this->allegations = $this->subject->intension;
+        $this->descriptions = $this->subject->scope;
+        if ($this->subject->extension_date) {
+            $this->extensionDate = Carbon::create($this->subject->extension_date)->format('Y-m-d');
+        }
+        $this->extensionReason = $this->subject->extension_reason;
         $this->task = $this->subject->pinstancesActive;
 
         $this->periodFrom = $this->formatDate($this->subject->period_from);
@@ -132,10 +133,21 @@ class TaxInvestigationApprovalProcessing extends Component
 
         foreach ($taxTypes as $taxType) {
             $taxTypeKey = str_replace(' ', '_', $taxType['name']);
-            $this->principalAmounts[$taxTypeKey] = null;
-            $this->interestAmounts[$taxTypeKey] = null;
-            $this->penaltyAmounts[$taxTypeKey] = null;
+            $currency = BusinessTaxType::select('currency')->where('tax_type_id', $taxType['id'])->where('business_id', $this->subject->business_id)->firstOrFail()->currency;
+
             $this->taxTypeIds[$taxTypeKey] = $taxType['id'];
+            $this->currencies[$taxTypeKey] = $currency;
+
+            if (count($this->taxAssessments) > 0) {
+                $assessment = $this->taxAssessments->where('tax_type_id', $taxType['id'])->firstOrFail();
+                $this->principalAmounts[$taxTypeKey] = $assessment->principal_amount ?? GeneralConstant::ZERO_INT;
+                $this->interestAmounts[$taxTypeKey] = $assessment->interest_amount ?? GeneralConstant::ZERO_INT;
+                $this->penaltyAmounts[$taxTypeKey] = $assessment->penalty_amount ?? GeneralConstant::ZERO_INT;
+            } else {
+                $this->principalAmounts[$taxTypeKey] = null;
+                $this->interestAmounts[$taxTypeKey] = null;
+                $this->penaltyAmounts[$taxTypeKey] = null;
+            }
         }
     }
 
@@ -203,6 +215,12 @@ class TaxInvestigationApprovalProcessing extends Component
 
                 $this->prepareFinalReport();
             }
+
+            if ($this->checkTransition('extension_approved')) {
+                $this->subject->preliminary_report_date = Carbon::create($this->extensionDate);
+                $this->subject->save();
+            }
+
             // $this->registerWorkflow($this->modelName, $this->modelId);
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
 

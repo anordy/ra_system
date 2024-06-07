@@ -63,6 +63,11 @@ class WorkflowTaxInvestigationSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
+            'extension_review' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
             'taxPayer_rejected_review' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -120,6 +125,16 @@ class WorkflowTaxInvestigationSeeder extends Seeder
                 'to'   => 'final_report',
                 'condition' => '',
             ],
+            'taxpayer_extension' => [
+                'from' => 'taxPayer_acceptance',
+                'to'   => 'extension_review',
+                'condition' => '',
+            ],
+            'extension_approved' => [
+                'from' => 'extension_review',
+                'to'   => 'taxPayer_acceptance',
+                'condition' => '',
+            ],
             'taxPayer_rejected' => [
                 'from' => 'taxPayer_acceptance',
                 'to'   => 'taxPayer_rejected_review',
@@ -157,16 +172,12 @@ class WorkflowTaxInvestigationSeeder extends Seeder
             ],
         ];
 
-        // Check if a Workflow exists with the TAX_INVESTIGATION code
-        $existingWorkflow = Workflow::where('code', 'TAX_INVESTIGATION')->get();
 
-        if ($existingWorkflow) {
-            foreach ($existingWorkflow as $workflow) {
-                $workflow->delete();
-            }
-        }
-
-        Workflow::updateOrCreate([
+        Workflow::updateOrCreate(
+            [
+                'code' => 'TAX_INVESTIGATION',
+            ],
+            [
             'code' => 'TAX_INVESTIGATION',
             'summary' => 'Tax investigation workflow',
             'name' => $name,
