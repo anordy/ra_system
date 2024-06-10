@@ -119,6 +119,10 @@ class TaxInvestigationAssessmentPaymentController extends Controller
             $businessTaxType = BusinessTaxType::where('business_id', $assesment->business_id)
                 ->where('tax_type_id', $taxType->id)->firstOrFail();
             $taxType = SubVat::findOrFail($businessTaxType->sub_vat_id, ['id', 'code', 'gfs_code']);
+        } else if ($taxType->code === TaxType::AIRPORT_SERVICE_SAFETY_FEE) {
+            $taxType = TaxType::where('code', TaxType::AIRPORT_SERVICE_CHARGE)->first();
+        } else if ($taxType->code === TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE) {
+            $taxType = TaxType::where('code', TaxType::SEAPORT_SERVICE_CHARGE)->first();
         }
 
 
@@ -149,7 +153,7 @@ class TaxInvestigationAssessmentPaymentController extends Controller
             $createdby_id = Auth::id();
             $exchange_rate = self::getExchangeRate($assesment->currency);
             $payer_id = $taxpayer->id;
-            $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
+            $expire_date = Carbon::now()->addDays(30)->toDateTimeString(); // TODO: Recheck this date
             $billableId = $partialPayment->id;
             $billableType = get_class($partialPayment);
 

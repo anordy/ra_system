@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Investigation;
 use App\Http\Controllers\Controller;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\TaxAssessments\TaxAssessment;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
@@ -50,7 +51,7 @@ class TaxInvestigationApprovalController extends Controller
             $taxAssessments = TaxAssessment::where('assessment_id', $investigation->id)
                 ->where('assessment_type', get_class($investigation))->get();
 
-            return view('investigation.approval.preview', compact('investigation', 'taxAssessments'));
+            return view('investigation.approval.preview', compact('investigation', 'taxAssessments', 'investigationDocuments'));
         } catch (\Exception $e) {
             Log::error('Error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
