@@ -23,7 +23,7 @@
                             wire:change="businessChange($event.target.value)">
                             <option value="">Select Business</option>
                             @foreach ($business as $row)
-                                <option value="{{ $row->id }}">{{ $row->name }}</option>
+                                <option value="{{ $row->id }}">{{ $row->name }} ({{ $row->ztn_number }})</option>
                             @endforeach
                         </select>
                         @error("business_id")
@@ -87,16 +87,16 @@
                     </div>
                     <div class="col-lg-12"></div>
                     <div class="col-lg-6 form-group">
-                        <label for="intension">Allegations</label>
-                        <textarea class="form-control" wire:model.defer="intension" id="intension" rows="3"></textarea>
-                        @error("intension")
+                        <label for="allegations">Allegations</label>
+                        <textarea class="form-control" wire:model.defer="allegations" id="allegations" rows="3"></textarea>
+                        @error("allegations")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-lg-6 form-group">
                         <label for="periodTo">Descriptions</label>
-                        <textarea class="form-control" wire:model.defer="scope" id="scope" rows="3"></textarea>
-                        @error("scope")
+                        <textarea class="form-control" wire:model.defer="descriptions" id="descriptions" rows="3"></textarea>
+                        @error("descriptions")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>

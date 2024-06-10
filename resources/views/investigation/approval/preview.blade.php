@@ -3,13 +3,6 @@
 @section("title", "Investigation Preview")
 
 @section("content")
-{{--    @if ($investigation->status == App\Enum\TaxInvestigationStatus::APPROVED && $investigation->assessment)--}}
-{{--        <div class="row m-2 pt-3">--}}
-{{--            <div class="col-md-12">--}}
-{{--                <livewire:assesments.tax-assessment-payment :assessment="$investigation->assessment" />--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    @endif--}}
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
@@ -63,11 +56,11 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Allegations</span>
-                            <p class="my-1">{{ $investigation->scope ?? "" }}</p>
+                            <p class="my-1">{{ $investigation->intension ?? "" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Descriptions</span>
-                            <p class="my-1">{{ $investigation->intension ?? "" }}</p>
+                            <p class="my-1">{{ $investigation->scope ?? "" }}</p>
                         </div>
                     </div>
                 </div>
@@ -157,7 +150,10 @@
                         Assessment Details
                     </div>
                     <div class="card-body">
-                        @php $grandTotal = 0; $outstandingTotal = 0; @endphp
+                        @php
+                            $grandTotal = 0;
+                            $outstandingTotal = 0;
+                        @endphp
 
                         @foreach ($taxAssessments as $taxAssessment)
                             <div>
@@ -186,7 +182,7 @@
                                     <div class="col-md-2 mb-3">
                                         <span class="font-weight-bold text-uppercase">Payment Status</span>
                                         <p class="my-1">
-                                            @if($taxAssessment->outstanding_amount === 0 || $taxAssessment->outstanding_amount === '0')
+                                            @if ($taxAssessment->outstanding_amount === 0 || $taxAssessment->outstanding_amount === "0")
                                                 <span class="badge badge-success">PAID</span>
                                             @else
                                                 <span class="badge badge-warning">PENDING </span>
@@ -195,7 +191,10 @@
                                     </div>
 
                                 </div>
-                                @php $grandTotal += $taxAssessment->total_amount; $outstandingTotal += $taxAssessment->outstanding_amount; @endphp
+                                @php
+                                    $grandTotal += $taxAssessment->total_amount;
+                                    $outstandingTotal += $taxAssessment->outstanding_amount;
+                                @endphp
                             </div>
                         @endforeach
 

@@ -25,8 +25,8 @@ class BusinessInvestigationAddModal extends Component
     public $business_id;
     public $location_ids;
     public $tax_type_ids;
-    public $intension;
-    public $scope;
+    public $allegations;
+    public $descriptions;
     public $period_from;
     public $period_to;
 
@@ -43,8 +43,8 @@ class BusinessInvestigationAddModal extends Component
             'location_ids.*' => 'required|numeric',
             'tax_type_ids' => 'required',
             'tax_type_ids.*' => 'required|numeric',
-            'intension' => 'required|strip_tag|string',
-            'scope' => 'required|strip_tag|string',
+            'allegations' => 'required|strip_tag|string',
+            'descriptions' => 'required|strip_tag|string',
             'period_from' => 'required|date|after:businesses,created_at',
             'period_to' => 'required|date|after:period_from',
         ];
@@ -99,8 +99,8 @@ class BusinessInvestigationAddModal extends Component
                 'business_id' => $this->business_id,
                 'location_id' => count($this->location_ids) <= 1 ? $this->location_ids[0] : 0,
                 'tax_type_id' => count($this->tax_type_ids) <= 1 ? $this->tax_type_ids[0] : 0,
-                'intension' => $this->intension,
-                'scope' => $this->scope,
+                'intension' => $this->allegations,
+                'scope' => $this->descriptions,
                 'period_from' => $this->period_from,
                 'period_to' => $this->period_to,
                 'created_by_id' => auth()->user()->id,
