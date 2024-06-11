@@ -193,4 +193,18 @@ class LandLeaseController extends Controller
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->download('Land Leases applications FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.pdf');
     }
+
+    public function register()
+    {
+        return view('land-lease.register-land-lease');
+    }
+
+    public function assignTaxpayer($id)
+    {
+        return view("land-lease.assign-taxpayer",compact('id'));
+    }
+    public function taxpayerView($id)
+    {
+        return view('land-lease.taxpayer-land-lease-view', compact('id'));
+    }
 }

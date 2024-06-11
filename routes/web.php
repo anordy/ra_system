@@ -623,6 +623,9 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::get('agent-trainings-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentTrainingFile'])->name('agent.trainings-file');
 
     Route::name('land-lease.')->prefix('land-lease')->group(function () {
+        Route::get('/register', [LandLeaseController::class, 'register'])->name('register');
+        Route::get('/assign-taxpayer/{id}', [LandLeaseController::class, 'assignTaxpayer'])->name('assign.taxpayer');
+        Route::get('/taxpayer/view/{id}', [LandLeaseController::class, 'taxpayerView'])->name('taxpayer.view');
         Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
         Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
         Route::get('/view/lease/payment/{id}', [LandLeaseController::class, 'viewLeasePayment'])->name('view.lease.payment');

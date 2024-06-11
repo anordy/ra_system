@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\LandLease;
 
+use App\Enum\LeaseStatus;
 use App\Models\LandLease;
+use App\Models\LeasePayment;
 use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
@@ -19,18 +21,29 @@ use Illuminate\Support\Facades\Gate;
 class LandLeaseView extends Component
 {
     use CustomAlert, PaymentsTrait;
+
     public $landLease;
     public $taxType;
     public $leasePayment;
+    public $unpaidLease;
 
     //mount function
     public function mount($enc_id)
     {
         $this->landLease = LandLease::find(decrypt($enc_id));
-        if(is_null($this->landLease)){
+        if (is_null($this->landLease)) {
             abort(404);
         }
+
+        $statuses = [
+            LeaseStatus::IN_ADVANCE_PAYMENT,
+            LeaseStatus::LATE_PAYMENT,
+            LeaseStatus::ON_TIME_PAYMENT,
+            LeaseStatus::COMPLETE
+        ];
+
         $this->taxType = TaxType::where('code', TaxType::LAND_LEASE)->first();
+        $this->unpaidLease = LeasePayment::where('land_lease_id', $this->landLease->id)->whereNotIn('status', $statuses)->exists();
     }
 
     public function render()
@@ -41,7 +54,7 @@ class LandLeaseView extends Component
     public function controlNumber()
     {
 
-        if(!Gate::allows('land-lease-generate-control-number')){
+        if (!Gate::allows('land-lease-generate-control-number')) {
             abort(403);
         }
 
@@ -132,12 +145,13 @@ class LandLeaseView extends Component
         }
     }
 
-    public function regenerate(){
-        if(!Gate::allows('land-lease-generate-control-number')){
+    public function regenerate()
+    {
+        if (!Gate::allows('land-lease-generate-control-number')) {
             abort(403);
         }
         $response = $this->regenerateControlNo($this->return->bill);
-        if ($response){
+        if ($response) {
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             return redirect()->back()->getTargetUrl();
         }

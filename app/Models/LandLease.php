@@ -10,7 +10,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class LandLease extends Model implements Auditable
 {
     use HasFactory, \OwenIt\Auditing\Auditable;
-
+    protected $guarded = [];
     public function region()
     {
         return $this->belongsTo(Region::class, 'region_id');

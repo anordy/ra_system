@@ -74,12 +74,12 @@ class LandLeaseList extends DataTableComponent
             Column::make("Region", "region.name")
                 ->searchable()
                 ->sortable(),
-            Column::make("District", "district.name")
-                ->searchable()
-                ->sortable(),
-            Column::make("Ward", "ward.name")
-                ->searchable()
-                ->sortable(),
+//            Column::make("District", "district.name")
+//                ->searchable()
+//                ->sortable(),
+//            Column::make("Ward", "ward.name")
+//                ->searchable()
+//                ->sortable(),
             Column::make("Applicant Status", "is_registered")->view("land-lease.includes.applicant-status"),
             Column::make("Actions", "id")
             ->view("land-lease.includes.actions"),

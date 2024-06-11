@@ -1,12 +1,4 @@
 <div>
-    <div class="d-flex justify-content-start mb-3">
-        <a href="{{ redirect()->back()->getTargetUrl() }}" class="btn btn-info">
-            {{-- back icon --}}
-            <i class="fas fa-arrow-left"></i>
-            Back
-        </a>
-    </div>
-
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
