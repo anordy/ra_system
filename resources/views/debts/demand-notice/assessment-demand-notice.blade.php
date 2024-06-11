@@ -137,6 +137,10 @@
             text-decoration: underline;
             text-decoration-style: dotted;
         }
+
+        .underline {
+            border:0.5px solid;
+        }
     </style>
 </head>
 
@@ -174,7 +178,7 @@
                     <p class="zrb-no"> Issuing Office: Debt Managment Section
                     </p>
                     <p>Date of issue <span class="dot">{{ $now }}</span></p>
-                    <hr style="border:0.5px solid;">
+                    <hr class="underline">
                     <br>
                 </div>
             </div>

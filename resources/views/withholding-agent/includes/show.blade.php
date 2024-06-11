@@ -1,7 +1,7 @@
 <div>
     <div class="card">
         <div class="card-body">
-            <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab"
                        aria-controls="home"
@@ -25,7 +25,7 @@
                        aria-controls="contact" aria-selected="false">Documents</a>
                 </li>
             </ul>
-            <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
+            <div class="tab-content" id="myTabContent">
 
                 <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
                     <div class="row pt-3">
@@ -70,8 +70,7 @@
                             @if($agent->status == \App\Models\TaxAgentStatus::APPROVED)
                                 <p class="my-1">{{ $agent->reference_no }}</p>
                             @else
-                                <p class="badge badge-danger px-2"
-                                   style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
+                                <p class="badge badge-danger px-2"><i
                                             class="bi bi-clock-history mr-1"></i>Pending</p>
                             @endif
                         </div>
@@ -89,25 +88,20 @@
                         <div class="col-md-3 mb-2">
                             <span class="font-weight-bold text-uppercase">Application Status</span><br>
                             @if($agent->status == \App\Models\TaxAgentStatus::PENDING)
-                                <p class="badge badge-danger py-1 px-2"
-                                   style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
+                                <p class="badge badge-danger py-1 px-2"><i
                                             class="bi bi-clock-history mr-1"></i>Pending</p>
 
                             @elseif($agent->status == \App\Models\TaxAgentStatus::APPROVED)
-                                <p class="badge badge-success py-1 px-2"
-                                   style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
+                                <p class="badge badge-success py-1 px-2"><i
                                             class="bi bi-check-circle-fill mr-1"></i>Approved</p>
                             @elseif($agent->status == \App\Models\TaxAgentStatus::VERIFIED)
-                                <p class="badge badge-success py-1 px-2"
-                                   style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
+                                <p class="badge badge-success py-1 px-2"><i
                                             class="bi bi-check-circle-fill mr-1"></i>Verified</p>
                             @elseif($agent->status == \App\Models\TaxAgentStatus::CORRECTION)
-                                <p class="badge badge-success py-1 px-2"
-                                   style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
+                                <p class="badge badge-success py-1 px-2"><i
                                             class="bi bi-check-circle-fill mr-1"></i>Corrected</p>
                             @else
-                                <p class="badge badge-danger py-1 px-2"
-                                   style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
+                                <p class="badge badge-danger py-1 px-2"><i
                                             class="bi bi-x-circle-fill mr-1"></i>Rejected</p>
                             @endif
 
@@ -144,8 +138,8 @@
                                     @if($academicRecord->certificate != null)
                                         <a class="file-item" target="_blank"
                                            href="{{ route('agent.academics-file', [$academicRecord->id, 'academic_certificate']) }}">
-                                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                            <div style="font-weight: 500;" class="ml-1">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                            <div class="ml-1 font-weight-bold">
                                                 {{getEducation($academicRecord->education_level_id)}}
                                             </div>
                                         </a>
@@ -155,8 +149,8 @@
                                     @if($academicRecord->transcript != null)
                                         <a class="file-item" target="_blank"
                                            href="{{ route('agent.academics-file', [$academicRecord->id, 'academic_transcript']) }}">
-                                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                            <div style="font-weight: 500;" class="ml-1">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                            <div class="ml-1 font-weight-bold">
                                                 {{getEducation($academicRecord->education_level_id)}}
                                             </div>
                                         </a>
@@ -196,9 +190,9 @@
                                     @if($agentProfessional->attachment != null)
                                         <a class="file-item" target="_blank"
                                            href="{{ route('agent.professionals-file', [$agentProfessional->id, 'pro_certificate']) }}">
-                                            <i class="bi bi-file-earmark-pdf-fill px-2"
-                                               style="font-size: x-large"></i>
-                                            <div style="font-weight: 500;" class="ml-1">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"
+                                              ></i>
+                                            <div class="ml-1 font-weight-bold">
                                                 {{$agentProfessional->body_name}}
                                             </div>
                                         </a>
@@ -238,9 +232,8 @@
                                     @if($agentTraining->attachment != null)
                                         <a class="file-item" target="_blank"
                                            href="{{ route('agent.trainings-file', [$agentTraining->id, 'tra_certificate']) }}">
-                                            <i class="bi bi-file-earmark-pdf-fill px-2"
-                                               style="font-size: x-large"></i>
-                                            <div style="font-weight: 500;" class="ml-1">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                            <div class="ml-1 font-weight-bold">
                                                 {{$agentTraining->org_name}}
                                             </div>
                                         </a>
@@ -261,8 +254,8 @@
                             <div class="col-md-3">
                                 <a class="file-item" target="_blank"
                                    href="{{ route('agent.file', [$agent->id, 'tin_certificate']) }}">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                    <div style="font-weight: 500;" class="ml-1">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                    <div class="ml-1 font-weight-bold">
                                         TIN Certificate
                                     </div>
                                 </a>
@@ -270,8 +263,8 @@
                             <div class="col-md-3">
                                 <a class="file-item" target="_blank"
                                    href="{{ route('agent.file', [$agent->id, 'csv']) }}">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                    <div style="font-weight: 500;" class="ml-1">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                    <div class="ml-1 font-weight-bold">
                                         CV Document
                                     </div>
                                 </a>
@@ -279,8 +272,8 @@
                             <div class="col-md-3">
                                 <a class="file-item" target="_blank"
                                    href="{{ route('agent.file', [$agent->id, 'passport_photo']) }}">
-                                    <i class="bi bi-image-fill px-2" style="font-size: x-large"></i>
-                                    <div style="font-weight: 500;" class="ml-1">
+                                    <i class="bi bi-image-fill px-2 font-x-large"></i>
+                                    <div class="ml-1 font-weight-bold">
                                         Passport Size
                                     </div>
                                 </a>
@@ -289,8 +282,8 @@
                                 <div class="col-md-3">
                                     <a class="file-item" target="_blank"
                                        href="{{ route('agent.file', [$agent->id, 'emp_letter']) }}">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                        <div style="font-weight: 500;" class="ml-1">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                        <div class="ml-1 font-weight-bold">
                                             Employer Letter
                                         </div>
                                     </a>
@@ -300,8 +293,8 @@
                                 <div class="col-md-3">
                                     <a class="file-item" target="_blank"
                                        href="{{ route('agent.file', [$agent->id, 'approval_letter']) }}">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                        <div style="font-weight: 500;" class="ml-1">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                        <div class="ml-1 font-weight-bold">
                                             Approval Letter
                                         </div>
                                     </a>

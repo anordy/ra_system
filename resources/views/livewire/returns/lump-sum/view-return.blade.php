@@ -4,11 +4,11 @@
         @if ($penalties)
 
             <div class="col-md-12 px-0">
-                <h6>Penalities for late payments</h6>
+                <h6>Penalties for late payments</h6>
                 <table class="table table-bordered normal-text">
                     <thead>
                         <tr>
-                            <th>Quater of</th>
+                            <th>Quarter of</th>
                             <th>Tax Amount</th>
                             <th>Late Payment Amount</th>
                             <th>Interest Amount</th>
@@ -43,30 +43,30 @@
         <table class="table table-bordered ">
             <tbody>
                 <tr>
-                    <td>Annual Estimates<br> <small>Maksio Ya Mwaka</small> </td>
+                    <td>Annual Estimates<br> <small>Makisio Ya Mwaka</small> </td>
                     <td> {{ number_format($return->assignedPayments->annual_estimate, 2, '.', ',') }}</td>
                 </tr>
                 <tr>
-                    <td>Payment Quaters Per Year<br> <small> Awamu Zinazolipwa Kwa Mwaka </small> </td>
+                    <td>Payment Quarters Per Year<br> <small> Awamu Zinazolipwa Kwa Mwaka </small> </td>
                     <td>{{ $return->assignedPayments->payment_quarters }}</td>
                 </tr>
                 @if ($penalties)
                     <tr>
                         <td>Payment for <br> <small> Malipo kwa ajili ya </small> </td>
                         <td>
-                            {{ getNumberOrdinal($return->quarter) }} Quater plus Penalties for late payment<br>
+                            {{ getNumberOrdinal($return->quarter) }} Quarter plus Penalties for late payment<br>
                             <small>Awamu ya {{ $return->quarter }} na Adhabu ya kuchelewesha
                                 malipo</small>
                         </td>
                     </tr>
                 @else
                     <tr>
-                        <td>Quater <br> <small> Awamu</small> </td>
+                        <td>Quarter <br> <small> Awamu</small> </td>
                         <td> {{ $return->installment }} </td>
                     </tr>
                 @endif
                 <tr>
-                    <td>Amount Paid on every Quater <br> <small>Kiasi kinacholipiwa kwa kila Awamu</small> </td>
+                    <td>Amount Paid on every Quarter <br> <small>Kiasi kinacholipiwa kwa kila Awamu</small> </td>
                     <td> {{ number_format($return->total_amount_due, 2, '.', ',') }}</td>
                 </tr>
                 @if ($penalties)

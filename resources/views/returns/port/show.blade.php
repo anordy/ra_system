@@ -17,7 +17,7 @@
         </div>
         <div class="card-body">
             <div>
-                <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab"
                             aria-controls="home" aria-selected="true">Business Details</a>
@@ -27,7 +27,7 @@
                             aria-controls="profile" aria-selected="false">Return Items</a>
                     </li>
                 </ul>
-                <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
+                <div class="tab-content" id="myTabContent">
 
                     <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
                         <div class="row m-2 pt-3">
@@ -82,10 +82,10 @@
                             <div class="col-md-12">
                                 <table class="table table-bordered table-striped normal-text">
                                     <thead>
-                                        <th style="width: 30%">Item Name</th>
-                                        <th style="width: 20%">Value</th>
-                                        <th style="width: 10%">Rate</th>
-                                        <th style="width: 20%">Tax</th>
+                                        <th>Item Name</th>
+                                        <th>Value</th>
+                                        <th>Rate</th>
+                                        <th>Tax</th>
                                     </thead>
                                     <tbody>
                                         @foreach ($return->configReturns as $item)

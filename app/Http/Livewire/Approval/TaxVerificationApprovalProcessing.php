@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\TransactionType;
+use App\Traits\TaxpayerLedgerTrait;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Role;
@@ -30,7 +32,7 @@ use App\Models\Verification\TaxVerificationOfficer;
 
 class TaxVerificationApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait, TaxpayerLedgerTrait;
     public $modelId;
     public $modelName;
     public $comments;
@@ -221,6 +223,8 @@ class TaxVerificationApprovalProcessing extends Component
                     'payment_due_date' => Carbon::now()->addDays(30)->endOfDay(),
                     'curr_payment_due_date' => Carbon::now()->addDays(30)->endOfDay(),
                 ]);
+                $assessment = $this->subject->assessment;
+                $this->recordLedger(TransactionType::DEBIT,TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());

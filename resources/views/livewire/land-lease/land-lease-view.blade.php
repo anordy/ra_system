@@ -8,7 +8,7 @@
     </div>
 
     <div class="card">
-        <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+        <ul class="nav nav-tabs shadow-sm mb-0">
             <li class="nav-item" role="presentation">
                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#lease-infos" role="tab"
                     aria-controls="lease-infos" aria-selected="true">Lease Informations</a>
@@ -120,14 +120,12 @@
                                 <span class="font-weight-bold text-uppercase">Applicant Type</span>
                                 <p class="my-1">
                                     @if ($landLease->is_registered)
-                                        <span class="badge badge-success py-1 px-2"
-                                            style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                        <span class="badge badge-success py-1 px-2 green-status">
 
                                             Registered
                                         </span>
                                     @else
-                                        <span class="badge badge-danger py-1 px-2"
-                                            style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
+                                        <span class="badge badge-danger py-1 px-2 danger-status">
 
                                             Not Registered
                                         </span>
@@ -196,8 +194,8 @@
                         <div class="col-4">
                             <a class="file-item" target="_blank"
                                 href="{{ route('land-lease.get.lease.document', ['path' => encrypt($landLease->lease_agreement_path)]) }}">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                <div style="font-weight: 500;" class="ml-1">
+                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                <div class="ml-1 font-weight-bold">
                                     Lease Agreement Document
                                 </div>
                             </a>
@@ -205,7 +203,7 @@
                     </div>
 
                     <div class="card-footer">
-                        <div class="row" style="background-color: #f5f2f2">
+                        <div class="row bg-white">
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Registered By</span>
                                 <p class="my-1">{{ $landLease->createdBy->first_name ?? '' }}
@@ -296,56 +294,47 @@
                                                     </td>
                                                     <td>
                                                         @if ($leasePayment->status === \App\Enum\LeaseStatus::IN_ADVANCE_PAYMENT)
-                                                            <span class="badge badge-success py-1 px-2"
-                                                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                                            <span class="badge badge-success py-1 px-2 green-status">
                                                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                                                 Paid In Advance
                                                             </span>
                                                         @elseif ($leasePayment->status === \App\Enum\LeaseStatus::ON_TIME_PAYMENT)
-                                                            <span class="badge badge-success py-1 px-2"
-                                                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                                            <span class="badge badge-success py-1 px-2 green-status">
                                                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                                                 Paid On Time
                                                             </span>
                                                         @elseif ($leasePayment->status === \App\Enum\LeaseStatus::LATE_PAYMENT)
-                                                            <span class="badge badge-success py-1 px-2"
-                                                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                                            <span class="badge badge-success py-1 px-2 green-status">
                                                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                                                 Paid Late
                                                             </span>
                                                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATING)
-                                                            <span class="badge badge-danger py-1 px-2"
-                                                                style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
+                                                            <span class="badge badge-danger py-1 px-2 draft-status">
                                                                 <i class="bi bi-clock-history mr-1"></i>
                                                                 Control Number Generating
                                                             </span>
                                                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATED)
-                                                            <span class="badge badge-danger py-1 px-2"
-                                                                style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
+                                                            <span class="badge badge-danger py-1 px-2 draft-status">
                                                                 <i class="bi bi-clock-history mr-1"></i>
                                                                 Control Number Generated
                                                             </span>
                                                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATION_FAILED)
-                                                            <span class="badge badge-danger py-1 px-2"
-                                                                style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
+                                                            <span class="badge badge-danger py-1 px-2 draft-status">
                                                                 <i class="bi bi-clock-history mr-1"></i>
                                                                 Control Number Generating Failed
                                                             </span>
                                                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::PAID_PARTIALLY)
-                                                            <span class="badge badge-danger py-1 px-2"
-                                                                style="border-radius: 1rem; background: rgba(220,181,53,0.35); color: #cfa51c; font-size: 85%">
+                                                            <span class="badge badge-danger py-1 px-2 pending-status">
                                                                 <i class="bi bi-pencil-square mr-1"></i>
                                                                 Paid Partially
                                                             </span>
                                                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::PENDING)
-                                                            <span class="badge badge-danger py-1 px-2"
-                                                                style="border-radius: 1rem; background: rgba(220,181,53,0.35); color: #cfa51c; font-size: 85%">
+                                                            <span class="badge badge-danger py-1 px-2 pending-status">
                                                                 <i class="bi bi-pencil-square mr-1"></i>
                                                                 Pending
                                                             </span>
                                                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::DEBT)
-                                                            <span class="badge badge-danger py-1 px-2"
-                                                                style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
+                                                            <span class="badge badge-danger py-1 px-2 danger-status">
                                                                 <i class="bi bi-record-circle mr-1"></i>
                                                                 Debt
                                                             </span>

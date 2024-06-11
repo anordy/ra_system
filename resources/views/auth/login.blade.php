@@ -130,11 +130,6 @@
                 },
                 error: error => {
                     var message = 'Something went wrong, contact support!'
-                    if (error.status == 429){
-                        message = 'Too Many Requests'
-                    } else if (error.status == 500){
-                        message = 'Internal Server error'
-                    }
                     $("#captcha_label").html('<div class="text-center px-2 py-1 text-danger">' + message + '</div>')
                 }
             });

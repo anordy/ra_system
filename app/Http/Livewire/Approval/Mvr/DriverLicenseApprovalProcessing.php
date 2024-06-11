@@ -3,13 +3,19 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\DlApplicationStatus;
 use App\Models\DlFee;
+use App\Models\DlLicenseApplication;
+use App\Models\MvrRegistrationParticularChange;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +25,7 @@ use Livewire\WithFileUploads;
 
 class DriverLicenseApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
@@ -44,9 +50,10 @@ class DriverLicenseApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-
             if ($this->checkTransition('transport_officer_review') && $transition === 'transport_officer_review') {
                 $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
+                $this->subject->save();
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
@@ -78,8 +85,6 @@ class DriverLicenseApprovalProcessing extends Component
             $this->customAlert('error', 'Something went wrong');
             return;
         }
-
-
     }
 
     public function reject($transition)
@@ -160,11 +165,10 @@ class DriverLicenseApprovalProcessing extends Component
                 $errorMessage = "Driver License fee for this application is not configured";
                 $this->customAlert('error', $errorMessage);
                 return;
-            } else {
-                // Generate control number
-                $this->generateDLicenseControlNumber($this->subject, $fee);
-
             }
+
+            // Generate control number
+            $this->generateDLicenseControlNumber($this->subject, $fee);
         } catch (Exception $e) {
 
             Log::error('Error generating control number: ' . $e->getMessage(), [

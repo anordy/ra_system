@@ -94,10 +94,10 @@
                     </tbody>
                     <tfoot>
                         <tr class="bg-secondary">
-                            <th style="width: 20%">{{ __('Total') }}</th>
-                            <th style="width: 30%"></th>
-                            <th style="width: 25%"></th>
-                            <th style="width: 25%">{{ number_format($return->total_amount_due) }}
+                            <th>{{ __('Total') }}</th>
+                            <th></th>
+                            <th></th>
+                            <th>{{ number_format($return->total_amount_due) }}
                                 {{ $return->currency }}</th>
                         </tr>
                     </tfoot>

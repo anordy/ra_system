@@ -3,15 +3,20 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\ChassisNumberChange;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistrationParticularChange;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +27,7 @@ use Livewire\WithFileUploads;
 
 class ParticularApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait,WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
@@ -33,7 +38,7 @@ class ParticularApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId   = decrypt($modelId);
+        $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
 
         if ($this->subject->change) {
@@ -44,7 +49,8 @@ class ParticularApprovalProcessing extends Component
         }
     }
 
-    public function approve($transition) {
+    public function approve($transition)
+    {
         $transition = $transition['data']['transition'];
 
         $this->validate([
@@ -75,7 +81,7 @@ class ParticularApprovalProcessing extends Component
                 ChassisNumberChange::updateOrCreate(
                     [
                         'particular_change_id' => $this->subject->id,
-                    ],[
+                    ], [
                     'color' => $this->color,
                     'engine_number' => $this->engineNo,
                     'chassis_number' => $this->chassisNo,
@@ -87,6 +93,7 @@ class ParticularApprovalProcessing extends Component
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
                 $this->subject->save();
             }
@@ -104,7 +111,7 @@ class ParticularApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            if (isset($approvalReport) && $approvalReport && Storage::exists($approvalReport)){
+            if (isset($approvalReport) && $approvalReport && Storage::exists($approvalReport)) {
                 Storage::delete($approvalReport);
             }
             Log::error('PARTICULAR-APPROVAL-APPROVE', [$exception]);
@@ -115,7 +122,20 @@ class ParticularApprovalProcessing extends Component
         // Generate Control Number after MVR SC Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
-                $this->generateControlNumber();
+                $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
+
+                $fee = MvrFee::query()->where([
+                    'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
+                    'mvr_fee_type_id' => $feeType->id,
+                    'mvr_class_id' => $this->subject->mvr_class_id
+                ])->first();
+
+                if (empty($fee)) {
+                    $this->customAlert('error', "Particular change fee for selected registration type is not configured");
+                    return;
+                }
+
+                $this->generateControlNumber($fee);
             } catch (Exception $exception) {
                 Log::error('PARTICULAR-APPROVAL-CN-GENERATION', [$exception]);
                 $this->customAlert('error', 'Failed to generate control number, please try again');
@@ -124,7 +144,8 @@ class ParticularApprovalProcessing extends Component
 
     }
 
-    public function reject($transition) {
+    public function reject($transition)
+    {
         $transition = $transition['data']['transition'];
 
         $this->validate([
@@ -180,31 +201,12 @@ class ParticularApprovalProcessing extends Component
         ]);
     }
 
-    public function generateControlNumber() {
+    public function generateControlNumber($fee)
+    {
         try {
-            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
-
-            $fee = MvrFee::query()->where([
-                'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
-                'mvr_fee_type_id' => $feeType->id,
-                'mvr_class_id' => $this->subject->mvr_class_id
-            ])->first();
-
-            if (empty($fee)) {
-                $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                return;
-            }
-
             DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-            $this->subject->save();
-
-            $this->generateMvrStatusChangeConntrolNumber($this->subject, $fee);
-
+            $this->generateMvrControlNumber($this->subject, $fee);
             DB::commit();
-
             $this->flash('success', 'Approved Successful', [], redirect()->back()->getTargetUrl());
         } catch (Exception $exception) {
             DB::rollBack();

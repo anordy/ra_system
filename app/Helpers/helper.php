@@ -213,6 +213,16 @@ function formatEnum($string) {
     return ucwords($string);
 }
 
+function getSourceName($model) {
+    if ($model == \App\Models\Returns\TaxReturn::class) {
+        return 'Return';
+    } else if ($model == \App\Models\TaxRefund\TaxRefund::class) {
+        return 'Tax Refund';
+    } else {
+        return 'N/A';
+    }
+}
+
 function romanNumeralCount($number)
 {
     // Define the Roman numeral symbols and their corresponding values

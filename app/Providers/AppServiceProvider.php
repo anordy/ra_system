@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Rules\AlphaNumSpaceRule;
 use App\Rules\AlphaGenericRule;
 use App\Rules\AlphaSpaceRule;
 use App\Rules\ArrayNumberRule;
@@ -15,9 +16,6 @@ use Illuminate\Pagination\Paginator;
 use App\Services\LivewireModal\Modals;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Livewire\DriversLicense\Wizard\LicenseDetailsStep;
-use App\Http\Livewire\DriversLicense\Wizard\ApplicationDetailsStep;
-use App\Http\Livewire\DriversLicense\Wizard\ApplicationInitialStep;
 use App\Rules\MaxFileNameLengthRule;
 
 class AppServiceProvider extends ServiceProvider
@@ -50,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend(NidaRule::handle(), NidaRule::class);
         Validator::extend(ValidPhoneNo::handle(), ValidPhoneNo::class);
         Validator::extend(AlphaSpaceRule::handle(), AlphaSpaceRule::class);
+        Validator::extend(AlphaNumSpaceRule::handle(), AlphaNumSpaceRule::class);
         Validator::extend(ArrayNumberRule::handle(), ArrayNumberRule::class);
         Validator::extend(ValidPdfContent::handle(), ValidPdfContent::class);
         Validator::extend(AlphaGenericRule::handle(), AlphaGenericRule::class);

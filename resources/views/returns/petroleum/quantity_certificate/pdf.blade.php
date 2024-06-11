@@ -126,7 +126,7 @@
 
     <div class="text-center">
         <table class="no-border">
-            <td align="left" style="width: 30%">
+            <td align="left">
                 <div style="font-size: 12px">
                     Zanzibar Revenue Authority, <br>
                     Head Office, <br>
@@ -141,7 +141,7 @@
                 <img class="header-nembo" src="{{ public_path('/images/logo.png') }}" alt="ZRA Logo">
                 <div style="font-size: 12px">www.zrbrevenue.org</div>
             </td>
-            <td align="right" style="width: 30%">
+            <td align="right">
                 <div style="text-align: left; font-size: 12px;">
                     Zanzibar Revenue Authority, <br>
                     Head Office, <br>

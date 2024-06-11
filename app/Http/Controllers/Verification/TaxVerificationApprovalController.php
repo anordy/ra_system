@@ -36,48 +36,51 @@ class TaxVerificationApprovalController extends Controller
         }
 
         $verification = TaxVerification::with('assessment', 'officers')->findOrFail(decrypt($id));
+        
+        // Get all associated RiskIndicators
+        $riskIndicators = $verification->riskIndicators;
 
         $return = $verification->taxReturn;
         if ($return instanceof PetroleumReturn) {
             $viewRender = 'returns.petroleum.filing.details';
 
-            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.approval', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof LumpSumReturn) {
             $viewRender = 'returns.lump-sum.details';
 
-            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.approval', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof HotelReturn) {
             $viewRender = 'returns.hotel.details';
 
-            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.approval', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof StampDutyReturn) {
             $viewRender = 'returns.stamp-duty.details';
 
-            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.approval', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof VatReturn) {
             $viewRender = 'returns.vat_returns.details';
 
-            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.approval', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof BfoReturn) {
             $viewRender = 'returns.excise-duty.bfo.details';
 
-            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.approval', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof EmTransactionReturn) {
             $viewRender = 'returns.excise-duty.em-transaction.details';
 
-            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.approval', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof MmTransferReturn) {
             $viewRender = 'returns.excise-duty.mm-transfer.details';
 
-            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.approval', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof PortReturn) {
             $viewRender = 'returns.port.details';
 
-            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.approval', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof MnoReturn) {
             $viewRender = 'returns.excise-duty.mno.details';
 
-            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.approval', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         }
     }
 
@@ -88,39 +91,42 @@ class TaxVerificationApprovalController extends Controller
         }
         $verification = TaxVerification::with('assessment', 'officers')->findOrFail(decrypt($id));
 
+        // Get all associated RiskIndicators
+        $riskIndicators = $verification->riskIndicators;
+
         $return = $verification->taxReturn;
         if ($return instanceof PetroleumReturn) {
             $viewRender = 'returns.petroleum.filing.details';
 
-            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.preview', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof LumpSumReturn) {
             $viewRender = 'returns.lump-sum.details';
 
-            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.preview', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof HotelReturn) {
             $viewRender = 'returns.hotel.details';
 
-            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.preview', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof StampDutyReturn) {
             $viewRender = 'returns.stamp-duty.details';
 
-            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.preview', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof VatReturn) {
             $viewRender = 'returns.vat_returns.details';
 
-            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.preview', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof MmTransferReturn) {
             $viewRender = 'returns.excise-duty.mobile-money-transfer.details';
 
-            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.preview', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof PortReturn) {
             $viewRender = 'returns.port.details';
 
-            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.preview', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         } elseif ($return instanceof MnoReturn) {
             $viewRender = 'returns.excise-duty.mno.details';
 
-            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+            return view('verification.approval.preview', compact('return', 'verification', 'riskIndicators', 'viewRender'));
         }
     }
 }

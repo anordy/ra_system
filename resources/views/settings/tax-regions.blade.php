@@ -13,7 +13,7 @@
                     @if(approvalLevel(Auth::user()->level_id, 'Maker'))
                         <button class="btn btn-primary btn-sm px-3"
                                 onclick="Livewire.emit('showModal', 'settings.tax-region.tax-region-add-modal')">
-                            <i class="fa fa-plus-circle mr-1"></i>
+                            <i class="bi bi-plus-circle-fill mr-1"></i>
                             Add tax region
                         </button>
                     @endif

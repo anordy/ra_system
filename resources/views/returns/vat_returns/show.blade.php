@@ -20,12 +20,12 @@
             of {{$return->financialMonth->name}} {{$return->financialMonth->year->code}}
         </div>
         <div class="card-body">
-            <div style="margin-left: 13px; margin-right: 15px;">
+            <div class="mx-1">
                 <livewire:returns.return-payment :return="$return->tax_return" />
             </div>
             @if(!empty($return))
                 <div>
-                    <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
+                    <ul  class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab"
                                aria-controls="home"
@@ -76,7 +76,7 @@
                                aria-controls="special-relief" aria-selected="false">Special Relief</a>
                         </li>
                     </ul>
-                    <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
+                    <div  class="tab-content" id="myTabContent">
 
                         <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
                             <div class="row m-2 pt-3">
@@ -129,21 +129,18 @@
                                     <span class="font-weight-bold text-uppercase">Return Application Status</span>
                                     <p class="my-1">
                                         @if($return->application_status == \App\Enum\ReturnApplicationStatus::SUBMITTED)
-                                            <span class="badge badge-success py-1 px-2"
-                                                  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
+                                            <span class="badge badge-success py-1 px-2 green-status"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
                                                 Submitted
                                             </span>
 
                                         @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::ADJUSTED)
-                                            <span class="badge badge-danger py-1 px-2"
-                                                  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
+                                            <span class="badge badge-danger py-1 px-2 green-status"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
                                                 Adjusted
                                             </span>
                                         @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::SELF_ASSESSMENT)
-                                            <span class="badge badge-success py-1 px-2"
-                                                  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
+                                            <span class="badge badge-success py-1 px-2 green-status"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
                                                 self Assessment
                                             </span>
@@ -158,7 +155,7 @@
                                 <div class="card-body">
 
                                     <div class="d-flex justify-content-between">
-                                        <div class="pb-2" style="width: 160px">
+                                        <div class="pb-2 w-160">
                                             <label>{{ __('Exemption Method Used') }}</label>
                                             <input readonly class="form-control" type="text"
                                                    value="{{ $return->method_used ?? 'No Method Used' }}">
@@ -167,10 +164,10 @@
                                     </div>
                                     <table class="table table-bordered ">
                                         <thead>
-                                        <th style="width: 40%">Item Name</th>
-                                        <th style="width: 20%">Value</th>
-                                        <th style="width: 20%">Rate</th>
-                                        <th class="text-right" style="width: 20%">VAT</th>
+                                        <th>Item Name</th>
+                                        <th>Value</th>
+                                        <th>Rate</th>
+                                        <th class="text-right">VAT</th>
                                         </thead>
                                         <tbody>
                                         @foreach ($return->items as $item)
@@ -362,9 +359,8 @@
                                             <div class="col-md-3">
                                                 <a class="file-item" target="_blank"
                                                    href="{{ route('returns.vat-return.withheld-file', [encrypt($file->id), 'withheld']) }}">
-                                                    <i class="bi bi-file-earmark-pdf-fill px-2"
-                                                       style="font-size: x-large"></i>
-                                                    <div style="font-weight: 500;" class="ml-1">
+                                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                                    <div class="ml-1 font-weight-bold">
                                                         View Attachment
                                                     </div>
                                                 </a>

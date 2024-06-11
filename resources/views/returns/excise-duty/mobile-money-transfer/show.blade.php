@@ -16,7 +16,7 @@
         </div>
         <div class="card-body">
             <div>
-                <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
+                <ul  class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#summary" role="tab"
                            aria-controls="home" aria-selected="true">Summary</a>
@@ -30,7 +30,7 @@
                            aria-controls="penalties" aria-selected="false">Penalties</a>
                     </li>
                 </ul>
-                <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
+                <div class="tab-content border border-white" id="myTabContent">
                     <div class="tab-pane p-2 show active" id="summary" role="tabpanel" aria-labelledby="summary-tab">
                         <div class="row m-2 pt-3">
                             <div class="col-md-4 mb-3">
@@ -66,10 +66,10 @@
                     <div class="tab-pane p-2" id="return-items" role="tabpanel" aria-labelledby="return-items-tab">
                         <table class="table table-bordered table-sm">
                             <thead>
-                            <th style="width: 30%">Item Name</th>
-                            <th style="width: 20%">Value ({{ $return->currency }})</th>
-                            <th style="width: 10%">Rate</th>
-                            <th style="width: 20%">VAT ({{ $return->currency }})</th>
+                            <th>Item Name</th>
+                            <th>Value ({{ $return->currency }})</th>
+                            <th>Rate</th>
+                            <th>VAT ({{ $return->currency }})</th>
                             </thead>
                             <tbody>
                             @foreach ($return->MmTransferReturnItems as $item)

@@ -6,7 +6,7 @@
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-        <i class="fa fa-check"></i> Verify
+        <i class="bi bi-check-circle-fill"></i> Verify
     </button>
     @endcan
 

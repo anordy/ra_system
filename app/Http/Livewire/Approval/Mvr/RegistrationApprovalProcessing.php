@@ -3,15 +3,20 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrInspectionReport;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistration;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -22,7 +27,7 @@ use Livewire\WithFileUploads;
 
 class RegistrationApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
@@ -75,7 +80,7 @@ class RegistrationApprovalProcessing extends Component
 
                 $report = MvrInspectionReport::updateOrCreate([
                     'mvr_registration_id' => $this->subject->id
-                ],[
+                ], [
                     'inspection_date' => $this->inspectionDate,
                     'report_path' => $inspectionReport,
                     'inspection_mileage' => $this->mileage,
@@ -89,6 +94,7 @@ class RegistrationApprovalProcessing extends Component
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
                 $this->subject->save();
 
@@ -118,7 +124,7 @@ class RegistrationApprovalProcessing extends Component
             return;
         }
 
-        // Generate Control Number after MVR RM Approval
+        // Generate Ledger DB and Control Number after MVR RM Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
                 $this->generateControlNumber();
@@ -181,7 +187,6 @@ class RegistrationApprovalProcessing extends Component
             'data' => [
                 'transition' => $transition
             ],
-
         ]);
     }
 
@@ -189,7 +194,6 @@ class RegistrationApprovalProcessing extends Component
     {
         try {
             $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
-
             $fee = MvrFee::query()->where([
                 'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
                 'mvr_fee_type_id' => $feeType->id,
@@ -201,17 +205,10 @@ class RegistrationApprovalProcessing extends Component
                 return;
             }
 
+
             DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-            $this->subject->save();
-
-            //Generate control number
             $this->generateMvrControlNumber($this->subject, $fee);
-
             DB::commit();
-
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $exception) {
             DB::rollBack();

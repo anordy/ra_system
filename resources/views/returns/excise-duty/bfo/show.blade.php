@@ -13,7 +13,7 @@
             BFO Return Details
         </div>
         <div class="card-body">
-            <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
+            <ul  class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="bill-summary-tab" data-toggle="tab" href="#bill" role="tab"
                        aria-controls="bill" aria-selected="false">Bill Summary</a>
@@ -31,7 +31,7 @@
                        aria-controls="penalties" aria-selected="false">Penaties</a>
                 </li>
             </ul>
-            <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
+            <div  class="tab-content" id="myTabContent">
                 <div class="tab-pane p-2 show active" id="bill" role="tabpanel" aria-labelledby="bill-tab">
                     <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
                 </div>
@@ -69,10 +69,10 @@
                 <div class="tab-pane p-2 show" id="items" role="tabpanel" aria-labelledby="items-tab">
                     <table class="table table-bordered table-sm">
                         <thead>
-                        <th style="width: 30%">Excise Duty Payable Service</th>
-                        <th style="width: 20%">Value ({{ $return->currency }})</th>
-                        <th style="width: 10%">Rate</th>
-                        <th style="width: 20%">VAT ({{ $return->currency }})</th>
+                        <th>Excise Duty Payable Service</th>
+                        <th>Value ({{ $return->currency }})</th>
+                        <th>Rate</th>
+                        <th>VAT ({{ $return->currency }})</th>
                         </thead>
                         <tbody>
                         @foreach ($return->items as $item)

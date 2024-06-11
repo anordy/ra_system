@@ -192,7 +192,7 @@
                     </label>
                     <select name="quater" id="Quarter" wire:model="quater"
                             class="form-control {{ $errors->has('quater') ? 'is-invalid' : '' }}">
-                        <option value="">Select Quater</option>
+                        <option value="">Select Quarter</option>
                         @if ($year && $period && $tax_type_id)
                             @foreach ($optionQuarters as $optionQuarter)
                                 <option value={{ $optionQuarter }}>
@@ -263,17 +263,17 @@
             @if($isReturn)
                 <table class="table table-bordered table-striped normal-text">
                     <thead>
-                    <th style="width: 20%">Business Name</th>
-                    <th style="width: 10%">Location Name</th>
-                    <th style="width: 20%">Filed By</th>
-                    <th style="width: 10%">Principal Amount</th>
-                    <th style="width: 20%">Interest</th>
-                    <th style="width: 20%">Penalty</th>
-                    <th style="width: 20%">Infrastructure</th>
-                    <th style="width: 10%">Total Amount</th>
-                    <th style="width: 20%">Outstanding Amount</th>
-                    <th style="width: 20%">Currency</th>
-                    <th style="width: 20%">Payment Status</th>
+                    <th>Business Name</th>
+                    <th>Location Name</th>
+                    <th>Filed By</th>
+                    <th>Principal Amount</th>
+                    <th>Interest</th>
+                    <th>Penalty</th>
+                    <th>Infrastructure</th>
+                    <th>Total Amount</th>
+                    <th>Outstanding Amount</th>
+                    <th>Currency</th>
+                    <th>Payment Status</th>
                     </thead>
                     <tbody>
                     @foreach ($previewData as $item)

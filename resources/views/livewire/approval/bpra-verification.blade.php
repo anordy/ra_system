@@ -26,16 +26,14 @@
                 <span class="font-weight-bold text-uppercase">Status</span>
                 @if ($business->bpra_verification_status === \App\Models\BusinessStatus::PBRA_UNVERIFIED)
                     <p class="my-1">
-                        <span class="badge badge-danger py-1 px-2 text-capitalize"
-                            style="border-radius: 1rem; background: #fde047; color: #a16207; font-size: 85%">
+                        <span class="badge badge-danger py-1 px-2 text-capitalize pending-status">
                             <i class="bi bi-record-circle mr-1"></i>
                             {{ $business->bpra_verification_status }}
                         </span>
                     </p>
                 @elseif($business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED)
                     <p class="my-1">
-                        <span class="badge badge-success py-1 px-2"
-                            style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                        <span class="badge badge-success py-1 px-2 green-status">
                             <i class="bi bi-check-circle-fill mr-1"></i>
                             Verification Successful
                         </span>
@@ -54,10 +52,10 @@
                     <table class="table table-striped table-sm">
                         <label class="font-weight-bold text-uppercase">BPRA Data Verification</label>
                         <thead>
-                            <th style="width: 18%">Property</th>
-                            <th style="width: 37%">Provided Data</th>
-                            <th style="width: 37%">BPRA Data</th>
-                            <th style="width: 8%">Status</th>
+                            <th>Property</th>
+                            <th>Provided Data</th>
+                            <th>BPRA Data</th>
+                            <th>Status</th>
                         </thead>
                         <tbody>
                             <tr>
@@ -115,7 +113,7 @@
                         </tbody>
                     </table>
                     <div class="card-body mt-0 p-2">
-                        <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+                        <ul class="nav nav-tabs shadow-sm mb-0">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active" id="directors-tab" data-toggle="tab" href="#directors"
                                     role="tab" aria-controls="directors" aria-selected="true">Directors</a>
@@ -139,11 +137,11 @@
                                     <table class="table table-striped table-sm">
                                         <label class="font-weight-bold text-uppercase mt-2">Directors</label>
                                         <thead>
-                                            <th style="width: 29%">Name</th>
-                                            <th style="width: 16%">Phone</th>
-                                            <th style="width: 10%">Email</th>
-                                            <th style="width: 20%">Gender</th>
-                                            <th style="width: 25%">Location</th>
+                                            <th >Name</th>
+                                            <th >Phone</th>
+                                            <th>Email</th>
+                                            <th>Gender</th>
+                                            <th>Location</th>
                                         </thead>
                                         <tbody>
                                             @if ($bpraResponse['directors'])
@@ -195,11 +193,11 @@
                                     <table class="table table-striped table-sm">
                                         <label class="font-weight-bold text-uppercase mt-2">Shareholders</label>
                                         <thead>
-                                            <th style="width: 29%">Name</th>
-                                            <th style="width: 16%">Phone</th>
-                                            <th style="width: 10%">Email</th>
-                                            <th style="width: 20%">Gender</th>
-                                            <th style="width: 25%">Location</th>
+                                            <th >Name</th>
+                                            <th >Phone</th>
+                                            <th>Email</th>
+                                            <th>Gender</th>
+                                            <th>Location</th>
                                         </thead>
                                         <tbody>
                                             @if (count($bpraResponse['shareHolders']))
@@ -256,11 +254,11 @@
                                         <label class="font-weight-bold text-uppercase mt-2">Shares &
                                             Distribution</label>
                                         <thead>
-                                            <th style="width: 30%">Ower Name</th>
-                                            <th style="width: 14%">No Of Shares</th>
-                                            <th style="width: 5%">Currency</th>
-                                            <th style="width: 23%">Shares Taken</th>
-                                            <th style="width: 23%">Shares Paid</th>
+                                            <th>Ower Name</th>
+                                            <th>No Of Shares</th>
+                                            <th>Currency</th>
+                                            <th>Shares Taken</th>
+                                            <th>Shares Paid</th>
                                         </thead>
                                         <tbody>
                                             @if ($bpraResponse['listShareHolderShares'])

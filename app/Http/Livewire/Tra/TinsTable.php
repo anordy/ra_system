@@ -63,11 +63,11 @@ class TinsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Synced</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Synced</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Synced</span>
+                            <span class="badge badge-success p-2 rounded-0" >Synced</span>
                         HTML;
                     }
                 })
@@ -76,11 +76,11 @@ class TinsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value === 'pending') {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Unregistered</span>
+                            <span class="badge badge-danger p-2 rounded-0" >Unregistered</span>
                         HTML;
                     } elseif ($value === 'approved') {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Registered</span>
+                            <span class="badge badge-success p-2 rounded-0" >Registered</span>
                         HTML;
                     }
                 })
