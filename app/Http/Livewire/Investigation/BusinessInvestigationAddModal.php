@@ -52,7 +52,7 @@ class BusinessInvestigationAddModal extends Component
 
     public function mount()
     {
-        $this->business = Business::all();
+        $this->business = Business::select('id', 'name', 'ztn_number')->get();
     }
 
     public function businessChange($id)

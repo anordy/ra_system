@@ -129,6 +129,7 @@ class TaxAuditApprovalProcessing extends Component
         $this->auditDocuments = DB::table('tax_audit_files')->where('tax_audit_id', $this->modelId)->get();
         $this->auditDocuments = json_decode($this->auditDocuments, true);
 
+
         if ($this->checkTransition('prepare_final_report')) {
             $this->audit = TaxAudit::find($this->modelId);
 
@@ -366,6 +367,9 @@ class TaxAuditApprovalProcessing extends Component
             }
 
             if ($this->checkTransition('preliminary_report_review')) {
+
+                $this->subject->preliminary_report_date = now();
+                $this->subject->save();
                 $operators = $this->subject->officers->pluck('user_id')->toArray();
             }
 

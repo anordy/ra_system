@@ -19,14 +19,14 @@
                 <div class="row">
                     <div class="col-md-12 form-group">
                         <label>Select Business</label>
-                        <select wire:model="business_id" class="form-control @error('business_id') is-invalid @enderror"
+                        <select wire:model="business_id" class="form-control @error("business_id") is-invalid @enderror"
                             wire:change="businessChange($event.target.value)">
                             <option value="">Select Business</option>
                             @foreach ($business as $row)
-                                <option value="{{ $row->id }}">{{ $row->name }}</option>
+                                <option value="{{ $row->id }}">{{ $row->name }} ({{ $row->ztn_number }} )</option>
                             @endforeach
                         </select>
-                        @error('business_id')
+                        @error("business_id")
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -36,17 +36,17 @@
                     <div class="col-md-6 form-group">
                         <label>Select Location</label>
                         <select wire:model="location_ids" multiple
-                            class="form-control @error('location_ids') is-invalid @enderror">
+                            class="form-control @error("location_ids") is-invalid @enderror">
                             <option value="">Select Branch</option>
                             @if ($locations)
                                 @foreach ($locations as $location)
                                     <option value="{{ $location->id }}">
-                                        {{ $location->is_headquarter ? $location->name . ' - HQ' : $location->name }}
+                                        {{ $location->is_headquarter ? $location->name . " - HQ" : $location->name }}
                                     </option>
                                 @endforeach
                             @endif
                         </select>
-                        @error('location_ids')
+                        @error("location_ids")
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -56,7 +56,7 @@
                     <div class="col-md-6 form-group">
                         <label>Tax Type</label>
                         <select wire:model="tax_type_ids" multiple
-                            class="form-control @error('tax_type_ids') is-invalid @enderror">
+                            class="form-control @error("tax_type_ids") is-invalid @enderror">
                             <option value="">Select Tax Type</option>
                             @if ($taxTypes)
                                 @foreach ($taxTypes as $taxType)
@@ -64,7 +64,7 @@
                                 @endforeach
                             @endif
                         </select>
-                        @error('tax_type_ids')
+                        @error("tax_type_ids")
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -73,7 +73,7 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Auditing From</label>
                         <input type="date" class="form-control" wire:model.defer="period_from" id="period_from">
-                        @error('period_from')
+                        @error("period_from")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -81,7 +81,7 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Auditing To</label>
                         <input type="date" class="form-control" wire:model.defer="period_to" id="period_to">
-                        @error('period_to')
+                        @error("period_to")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -89,14 +89,14 @@
                     <div class="col-lg-6 form-group">
                         <label for="intension">Intension</label>
                         <textarea class="form-control" wire:model.defer="intension" id="intension" rows="3"></textarea>
-                        @error('intension')
+                        @error("intension")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-lg-6 form-group">
                         <label for="periodTo">Scope</label>
                         <textarea class="form-control" wire:model.defer="scope" id="scope" rows="3"></textarea>
-                        @error('scope')
+                        @error("scope")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -109,7 +109,8 @@
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                    </div>Add Audit</button>
+                    </div>Add Audit
+                </button>
             </div>
         </div>
     </div>

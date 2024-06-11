@@ -51,7 +51,7 @@ class BusinessAuditAddModal extends Component
 
     public function mount($jsonData = null)
     {
-        $this->business = Business::select('id', 'name')->get();
+        $this->business = Business::select('id', 'name', 'ztn_number')->get();
 
         if (isset($jsonData)) {
             $this->business_id = $jsonData['business_id'];
