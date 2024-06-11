@@ -16,7 +16,7 @@ trait PenaltyTrait
 
 
     public function getTotalPenalties($financialMonth, $taxAmount, $taxTypeCurency){
-        $lateFilingFee = 0;
+        $lateFilingFee = 0; // 100,000
         if($this->isLateFiling($financialMonth)){
             $lateFilingFee = $this->getLateFilingFee($financialMonth, $taxAmount, $taxTypeCurency);
         }
@@ -25,23 +25,23 @@ trait PenaltyTrait
         $penaltableAmount = 0;
 
         $date = $this->getDateFromFinancialMonth($financialMonth);
-        $diffInMonths = $date->diffInMonths(Carbon::now());
-        $interestRate = InterestRate::where('year', $financialMonth->year->code)->firstOrFail()->rate;
-        $latePaymentBeforeRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'LPB')->firstOrFail()->rate;
-        $latePaymentAfterRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'LPA')->firstOrFail()->rate;
+        $diffInMonths = $date->diffInMonths(Carbon::now());// 2
+        $interestRate = InterestRate::where('year', $financialMonth->year->code)->firstOrFail()->rate; // 0.018
+        $latePaymentBeforeRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'LPB')->firstOrFail()->rate; // 0.2
+        $latePaymentAfterRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'LPA')->firstOrFail()->rate; // 0.1
 
         $paymentStructure = [];
         $penaltableAMountForPerticularMonth = 0;
         for ($i = 0; $i < $diffInMonths; $i++) {
             if($i === 0){
 
-                $penaltableAmount = $lateFilingFee + $taxAmount;
-                $latePaymentAmount = ($latePaymentBeforeRate * $penaltableAmount);
-                $penaltableAmount = $latePaymentAmount + $penaltableAmount;
-                $interestAmount = $this->calculateInterest($penaltableAmount, $interestRate, $i);
-                $penaltableAmount = $interestAmount + $penaltableAmount;
+                $penaltableAmount = $lateFilingFee + $taxAmount;// 100,000
+                $latePaymentAmount = ($latePaymentBeforeRate * $penaltableAmount); // 100,000 * 0.2 = 20,000
+                $penaltableAmount = $latePaymentAmount + $penaltableAmount; // 120,000
+                $interestAmount = $this->calculateInterest($penaltableAmount, $interestRate, $i); // 0
+                $penaltableAmount = $interestAmount + $penaltableAmount; // 120,000
 
-                $penaltableAMountForPerticularMonth = $penaltableAmount;
+                $penaltableAMountForPerticularMonth = $penaltableAmount; // 120,000
 
                 $paymentStructure[] = [
                     'returnMonth' => $date->monthName,
@@ -108,9 +108,9 @@ trait PenaltyTrait
     }
 
     public function getLateFilingFee($financialMonth, $taxAmount, $taxTypeCurency){
-        $lateFilingRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'LF')->firstOrFail()->rate;
-        $percentageFee = $lateFilingRate * $taxAmount;
-        $weGRate = $lateFilingRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'WEG')->firstOrFail()->rate;
+        $lateFilingRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'LF')->firstOrFail()->rate; // 100,000
+        $percentageFee = $lateFilingRate * $taxAmount; // 0
+        $weGRate = $lateFilingRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'WEG')->firstOrFail()->rate; // 100,000
 
         $rate = 1;
 

@@ -159,6 +159,7 @@ Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name(
 Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
     Route::get('/withholding-agent-certificate/{id}', [QRCodeCheckController::class, 'withholdingAgentCertificate'])->name('withholding-agent.certificate');
     Route::get('/business-certificate/{locationId}/{taxTypeId}', [QRCodeCheckController::class, 'businessCertificate'])->name('business.certificate');
+    Route::get('/clearance-certificate/{clearanceId}', [QRCodeCheckController::class, 'taxClearanceCertificate'])->name('tax-clearance.certificate');
     Route::get('/taxagents-certificate/{id}', [QRCodeCheckController::class, 'taxAgentsCertificate'])->name('taxagents.certificate');
     Route::get('/invoice/{id}', [QRCodeCheckController::class, 'invoice'])->name('invoice');
     Route::get('/transfer/{billId}', [QRCodeCheckController::class, 'transfer'])->name('transfer');

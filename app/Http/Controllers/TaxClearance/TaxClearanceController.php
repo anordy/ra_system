@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\TaxClearance;
 
 use App\Enum\LeaseStatus;
+use App\Enum\TaxClearanceStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\LandLeaseDebt;
@@ -18,6 +19,7 @@ use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\TaxReturn;
 use App\Models\Returns\Vat\VatReturn;
+use App\Models\Sequence;
 use App\Models\SystemSetting;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
@@ -25,12 +27,54 @@ use App\Models\TaxClearanceRequest;
 use App\Models\Verification\TaxVerification;
 use App\Traits\VerificationTrait;
 use Carbon\Carbon;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class TaxClearanceController extends Controller
 {
     use VerificationTrait;
+
+    public function generateCertNo(){
+//        fetch all approved certs
+        $certs = TaxClearanceRequest::query()->select('id', 'certificate_number', 'status')->where('status', TaxClearanceStatus::APPROVED)->get();
+
+        $year = date('Y');
+        $sequence = '00001';
+        DB::beginTransaction();
+        try {
+            foreach ($certs as $cert){
+                $cert->certificate_number = $year.$sequence;
+                $cert->save();
+
+                $incrementedDigits = (int)$sequence + 1;
+                $sequence = str_pad($incrementedDigits, strlen($sequence), '0', STR_PAD_LEFT);
+            }
+
+            $last_cert = Sequence::query()->where('name', Sequence::TAX_CLEARANCE)->first();
+            if ($last_cert){
+                if ($last_cert->update(['next_id' => $sequence, Sequence::TAX_CLEARANCE_YEAR => $year])){
+                    DB::commit();
+                    return 'success';
+                }else{
+                    DB::rollBack();
+                    return 'Could not update sequence';
+                }
+            }else{
+                DB::rollBack();
+                return 'Sequence does not exist';
+            }
+        }catch (\Exception $ex){
+            DB::rollBack();
+            return $ex;
+        }
+    }
 
     public function index()
     {
@@ -221,10 +265,29 @@ class TaxClearanceController extends Controller
 
         $location = $taxClearanceRequest->businessLocation;
 
+        $url = env('TAXPAYER_URL') . route('qrcode-check.tax-clearance.certificate', ['clearanceId' =>  base64_encode(strval($clearanceId))], 0);
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
+            ->data($url)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(207)
+            ->margin(0)
+            ->logoPath(public_path('/images/logo.png'))
+            ->logoResizeToHeight(36)
+            ->logoResizeToWidth(36)
+            ->labelText('')
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
+        header('Content-Type: ' . $result->getMimeType());
+        $dataUri = $result->getDataUri();
+
         $signaturePath = SystemSetting::certificatePath();
         $commissinerFullName = SystemSetting::commissinerFullName();
 
-        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('location', 'taxClearanceRequest', 'signaturePath', 'commissinerFullName'));
+        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('dataUri', 'location', 'taxClearanceRequest', 'signaturePath', 'commissinerFullName'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 

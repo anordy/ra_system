@@ -6,6 +6,7 @@ use App\Enum\DisputeStatus;
 use App\Enum\TaxClearanceStatus;
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Models\Sequence;
 use App\Models\TaxClearanceRequest;
 use App\Models\TaxType;
 use App\Traits\PaymentsTrait;
@@ -55,7 +56,22 @@ class TaxClearenceApprovalProcessing extends Component
         if ($this->checkTransition('crdm_review')) {
 
             try {
+//                fetch latest tax clearance certificate
+                $last_sequence = Sequence::query()->select('next_id')->where('name', Sequence::TAX_CLEARANCE)->first();
+                $last_year = Sequence::query()->select('next_id')->where('name', Sequence::TAX_CLEARANCE_YEAR)->first();
+                $cert_no = date("Y").'00001';
+                if ($last_sequence && $last_year){
+                    $incrementedDigits = $last_sequence->next_id;
+                    $year = $last_year->next_id;
+
+                    $formattedDigits = str_pad($incrementedDigits, 5, '0', STR_PAD_LEFT);
+//                    increment only if it's the same year
+                    if (date('Y') == $year){
+                        $cert_no = $year . $formattedDigits;
+                    }
+                }
                 $this->subject->status = TaxClearanceStatus::APPROVED;
+                $this->subject->certificate_number = $cert_no;
                 $this->subject->save();
     
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
