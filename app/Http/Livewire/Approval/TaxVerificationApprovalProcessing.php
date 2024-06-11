@@ -85,7 +85,7 @@ class TaxVerificationApprovalProcessing extends Component
             $roles = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
 
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
-            
+
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
         }
     }
@@ -99,7 +99,7 @@ class TaxVerificationApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
-        
+
         if ($this->checkTransition('conduct_verification')) {
             $this->validate(
                 [
@@ -226,7 +226,11 @@ class TaxVerificationApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -248,7 +252,11 @@ class TaxVerificationApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -356,7 +364,11 @@ class TaxVerificationApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 

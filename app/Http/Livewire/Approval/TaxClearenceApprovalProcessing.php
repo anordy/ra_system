@@ -37,7 +37,7 @@ class TaxClearenceApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->tax_clearence = TaxClearanceRequest::find($this->modelId);
-        if(is_null($this->tax_clearence)){
+        if (is_null($this->tax_clearence)) {
             abort(404);
         }
         $this->taxTypes = TaxType::all();
@@ -51,35 +51,38 @@ class TaxClearenceApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
-        
+
         if ($this->checkTransition('crdm_review')) {
 
             try {
                 $this->subject->status = TaxClearanceStatus::APPROVED;
                 $this->subject->save();
-    
+
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-    
+
                 $emailPayload = [
                     $this->tax_clearence->businessLocation,
                     $this->subject,
                 ];
                 event(new SendMail('tax-clearance-approved', $emailPayload));
-    
+
                 $smsPayload = [
                     $this->tax_clearence->businessLocation->taxpayer->mobile,
-                    'Your approval for tax clearance certificate of your business '.$this->tax_clearence->businessLocation->name.' has been granted, please check your email or log in to ZIDRAS to obtain your online certificate copy.'
+                    'Your approval for tax clearance certificate of your business ' . $this->tax_clearence->businessLocation->name . ' has been granted, please check your email or log in to ZIDRAS to obtain your online certificate copy.'
                 ];
                 event(new SendSms('tax-clearance-feedback-to-taxpayer', $smsPayload));
-    
+
                 $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
                 return;
             }
-
         } else {
             $this->flash('warning', 'You do not have authority to approve this request!');
         }
@@ -98,20 +101,23 @@ class TaxClearenceApprovalProcessing extends Component
 
             $mailPayload = [
                 $this->tax_clearence->businessLocation->taxpayer->email,
-                'Your approval for tax clearance certificate of your business '.$this->tax_clearence->businessLocation->name.' has been rejected, please pay off all debts to be clear for approval.'
+                'Your approval for tax clearance certificate of your business ' . $this->tax_clearence->businessLocation->name . ' has been rejected, please pay off all debts to be clear for approval.'
             ];
 
             event(new SendMail('tax-clearance-rejected', $mailPayload));
-            
+
             $smsPayload = [
                 $this->tax_clearence->businessLocation->taxpayer->mobile,
-                'Your approval for tax clearance certificate of your business '.$this->tax_clearence->businessLocation->name.' has been rejected, please pay off all debts to be clear for approval.'
+                'Your approval for tax clearance certificate of your business ' . $this->tax_clearence->businessLocation->name . ' has been rejected, please pay off all debts to be clear for approval.'
             ];
 
             event(new SendSms('tax-clearance-feedback-to-taxpayer', $smsPayload));
-
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
             return;
         }
@@ -144,5 +150,4 @@ class TaxClearenceApprovalProcessing extends Component
     {
         return view('livewire.approval.tax-clearence-approval-processing');
     }
-
 }

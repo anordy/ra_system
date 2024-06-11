@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Workflow;
+use App\Models\WorkflowTask;
 use App\Services\Workflow\Subscriber\WorkflowSubscriber;
 use App\Services\Workflow\WorkflowRegistry;
 use Illuminate\Support\Facades\Log;
@@ -34,7 +35,7 @@ trait WorkflowProcesssingTrait
                     ],
                 ];
             }
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::error($exception);
             abort(500, 'Something went wrong, please contact system administrator.');
         }
@@ -51,7 +52,7 @@ trait WorkflowProcesssingTrait
             $workflow = $registry->get($this->subject);
             $workflow->apply($this->subject, $transition, $context);
             $this->subject->save();
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::error($exception);
             throw $exception;
         }
@@ -75,5 +76,16 @@ trait WorkflowProcesssingTrait
         $workflow = $registry->get($this->subject);
 
         return $workflow->can($this->subject, $name);
+    }
+
+    public function getTransitionsComments()
+    {
+        $latestRemark = WorkflowTask::query()
+            ->where('pinstance_type', get_class($this->subject))
+            ->where('pinstance_id', $this->subject->id)
+            ->orderBy('created_at', 'desc')
+            ->value('remarks');
+
+        return $latestRemark ?: [];
     }
 }

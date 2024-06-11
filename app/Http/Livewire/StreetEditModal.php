@@ -41,7 +41,7 @@ class StreetEditModal extends Component
     {
         $this->regions = Region::select('id', 'name')->get();
         $this->street = Street::find(decrypt($id));
-        if (!$this->street){
+        if (!$this->street) {
             abort(404, 'Street not found.');
         }
         $this->name = $this->street->name;
@@ -62,7 +62,7 @@ class StreetEditModal extends Component
             $this->districts = District::where('region_id', $this->region_id)->select('id', 'name')->get();
         }
 
-        if ($propertyName === 'district_id'){
+        if ($propertyName === 'district_id') {
             $this->wards = Ward::where('district_id', $this->district_id)->where('is_approved', 1)->select('id', 'name')->get();
         }
     }
@@ -85,13 +85,17 @@ class StreetEditModal extends Component
                 'name' => $this->name,
                 'ward_id' => $this->ward_id,
             ];
-            $this->triggerDualControl(get_class($this->street), $this->street->id, DualControl::EDIT, 'editing street '.$this->street->name, json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->street), $this->street->id, DualControl::EDIT, 'editing street ' . $this->street->name, json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.street.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.street.index');
         }

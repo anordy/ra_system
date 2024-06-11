@@ -41,8 +41,12 @@ trait AuditTrait
 
         try {
             Audit::create($data);
-        } catch(Exception $e){
-            Log::error($e);
+        } catch (Exception $e) {
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 }

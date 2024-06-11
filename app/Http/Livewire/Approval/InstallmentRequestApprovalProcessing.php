@@ -58,7 +58,7 @@ class InstallmentRequestApprovalProcessing extends Component
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
-        
+
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
@@ -91,7 +91,7 @@ class InstallmentRequestApprovalProcessing extends Component
                 ]);
 
                 // Cancel Control No.
-                if ($installable->bill){
+                if ($installable->bill) {
                     $now = Carbon::now();
                     CancelBill::dispatch($installable->bill, 'Debt shifted to installments')->delay($now->addSeconds(10));
                 }
@@ -125,11 +125,14 @@ class InstallmentRequestApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact support for assistance.');
             return;
         }
-
     }
 
     public function reject($transition)
@@ -155,7 +158,11 @@ class InstallmentRequestApprovalProcessing extends Component
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }

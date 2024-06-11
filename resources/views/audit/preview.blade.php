@@ -4,7 +4,7 @@
 
 @section("content")
     @if ($audit->status == App\Enum\TaxAuditStatus::APPROVED && $audit->assessments)
-        @foreach($audit->assessments as $assessment)
+        @foreach ($audit->assessments as $assessment)
             <div class="row m-2 pt-3">
                 <div class="col-md-12">
                     <livewire:assesments.tax-assessment-payment :assessment="$assessment" />
@@ -62,7 +62,7 @@
                             <span class="font-weight-bold text-uppercase">Audit Date</span>
                             <p class="my-1">{{ $audit->auditing_date ?? "" }}</p>
                         </div>
-                        @if($audit->new_audit_date)
+                        @if ($audit->new_audit_date)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">New Proposed Audit Date</span>
                                 <p class="my-1">{{ $audit->new_audit_date }}</p>
@@ -170,8 +170,7 @@
                     </div>
                 </div>
             </div>
-
-            @if ($audit->assessments)
+            @if ($audit->assessments->isNotEmpty())
                 <div class="card">
                     <div class="card-header text-uppercase font-weight-bold bg-white">
                         Assessment Details

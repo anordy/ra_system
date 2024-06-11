@@ -69,7 +69,7 @@ class QuantityCertificateEdit extends Component
     {
         $id = decrypt($id);
         $this->certificate = QuantityCertificate::with('location', 'products')->find($id);
-        if(is_null($this->certificate)){
+        if (is_null($this->certificate)) {
             abort(404);
         }
         $this->ascertained = date('Y-m-d', strtotime($this->certificate->ascertained));
@@ -113,7 +113,7 @@ class QuantityCertificateEdit extends Component
     {
         $this->validate();
         DB::beginTransaction();
-        if($this->certificate->status == 'filled'){
+        if ($this->certificate->status == 'filled') {
             session()->flash('success', "You can't edit the already filled certificate");
             return;
         }
@@ -157,7 +157,11 @@ class QuantityCertificateEdit extends Component
             $this->redirect(route('petroleum.certificateOfQuantity.index'));
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

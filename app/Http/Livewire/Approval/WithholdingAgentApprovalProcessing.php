@@ -72,19 +72,23 @@ class WithholdingAgentApprovalProcessing extends Component
             $this->withholding_agent->app_status = WithholdingAgentStatus::APPROVED;
             $this->withholding_agent->status = 'active';
             $this->withholding_agent->approved_on = Carbon::now();
-                $this->withholding_agent->save();
+            $this->withholding_agent->save();
         }
 
         DB::beginTransaction();
         try {
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             DB::commit();
-           
+
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -112,7 +116,11 @@ class WithholdingAgentApprovalProcessing extends Component
                 $this->flash('success', 'Registration sent for correction', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
@@ -121,7 +129,11 @@ class WithholdingAgentApprovalProcessing extends Component
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
                 $this->flash('success', 'Application Rejected', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }

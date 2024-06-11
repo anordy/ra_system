@@ -21,7 +21,11 @@ class TaxAuditAssessmentController extends Controller
             return view('audit.preview', compact('audit'));
         } catch (\Exception $e) {
             report($e);
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             session()->flash('warning', 'The selected audit was not found. Please contact your administrator');
             return back();
         }

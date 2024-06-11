@@ -38,12 +38,37 @@ class WorkflowTaxInvestigationSeeder extends Seeder
                 'operator_type' => 'user',
                 'operators' => []
             ],
-            'investigation_report' => [
+            'investigation_report_review' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
-            'investigation_report_review' => [
+            'taxPayer_acceptance' => [
+                'owner' => 'taxpayer',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
+            'final_report' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
+            'final_report_review' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
+            'taxPayer_rejected' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
+            'extension_review' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
+            'taxPayer_rejected_review' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2]
@@ -54,11 +79,6 @@ class WorkflowTaxInvestigationSeeder extends Seeder
                 'operators' => [1, 2]
             ],
             'completed' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => []
-            ],
-            'legal' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => []
@@ -82,37 +102,67 @@ class WorkflowTaxInvestigationSeeder extends Seeder
             ],
             'conduct_investigation' => [
                 'from' => 'conduct_investigation',
-                'to'   => 'investigation_report',
-                'condition' => '',
-            ],
-            'investigation_report' => [
-                'from' => 'investigation_report',
                 'to'   => 'investigation_report_review',
-                'condition' => '',
-            ],
-            'investigation_report_correct' => [
-                'from' => 'investigation_report',
-                'to'   => 'conduct_investigation',
                 'condition' => '',
             ],
             'investigation_report_review' => [
                 'from' => 'investigation_report_review',
+                'to'   => 'taxPayer_acceptance',
+                'condition' => '',
+            ],
+            'prepare_final_report' => [
+                'from' => 'investigation_report_review',
+                'to'   => 'final_report',
+                'condition' => '',
+            ],
+            'investigation_report_reject' => [
+                'from' => 'investigation_report_review',
+                'to'   => 'conduct_investigation',
+                'condition' => '',
+            ],
+            'taxPayer_acceptance' => [
+                'from' => 'taxPayer_acceptance',
+                'to'   => 'final_report',
+                'condition' => '',
+            ],
+            'taxpayer_extension' => [
+                'from' => 'taxPayer_acceptance',
+                'to'   => 'extension_review',
+                'condition' => '',
+            ],
+            'extension_approved' => [
+                'from' => 'extension_review',
+                'to'   => 'taxPayer_acceptance',
+                'condition' => '',
+            ],
+            'taxPayer_rejected' => [
+                'from' => 'taxPayer_acceptance',
+                'to'   => 'taxPayer_rejected_review',
+                'condition' => '',
+            ],
+            'taxPayer_rejected_review' => [
+                'from' => 'taxPayer_rejected_review',
+                'to'   => 'conduct_investigation',
+                'condition' => '',
+            ],
+            'final_report' => [
+                'from' => 'final_report',
+                'to'   => 'final_report_review',
+                'condition' => '',
+            ],
+            'final_report_review' => [
+                'from' => 'final_report_review',
                 'to'   => 'commissioner',
                 'condition' => '',
             ],
-            'investigation_report_review_reject' => [
-                'from' => 'investigation_report_review',
-                'to'   => 'investigation_report',
+            'final_report_reject' => [
+                'from' => 'final_report_review',
+                'to'   => 'final_report',
                 'condition' => '',
             ],
             'accepted' => [
                 'from' => 'commissioner',
                 'to'   => 'completed',
-                'condition' => '',
-            ],
-            'forward_to_legal' => [
-                'from' => 'commissioner',
-                'to'   => 'legal',
                 'condition' => '',
             ],
             'rejected' => [
@@ -122,7 +172,12 @@ class WorkflowTaxInvestigationSeeder extends Seeder
             ],
         ];
 
-        Workflow::updateOrCreate([
+
+        Workflow::updateOrCreate(
+            [
+                'code' => 'TAX_INVESTIGATION',
+            ],
+            [
             'code' => 'TAX_INVESTIGATION',
             'summary' => 'Tax investigation workflow',
             'name' => $name,

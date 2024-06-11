@@ -34,7 +34,7 @@ use Spatie\ArrayToXml\ArrayToXml;
 
 class ZanMalipoController extends Controller
 {
-    use TaxVerificationTrait, AfterPaymentEvents,WorkflowProcesssingTrait;
+    use TaxVerificationTrait, AfterPaymentEvents, WorkflowProcesssingTrait;
 
     private $billable = [
         PortReturn::class,
@@ -80,7 +80,8 @@ class ZanMalipoController extends Controller
                 if (in_array($bill->billable_type, array_merge(
                     $this->billable,
                     [TaxReturn::class, TaxAssessment::class],
-                    $this->installable))) {
+                    $this->installable
+                ))) {
                     try {
                         $billable = $bill->billable;
 
@@ -92,7 +93,11 @@ class ZanMalipoController extends Controller
 
                         $billable->save();
                     } catch (\Exception $e) {
-                        Log::error($e);
+                        Log::error('Error: ' . $e->getMessage(), [
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'trace' => $e->getTraceAsString(),
+                        ]);
                     }
                 }
 
@@ -103,7 +108,8 @@ class ZanMalipoController extends Controller
                 if (in_array($bill->billable_type, array_merge(
                     $this->billable,
                     [TaxReturn::class, TaxAssessment::class],
-                    $this->installable))) {
+                    $this->installable
+                ))) {
                     try {
                         $billable = $bill->billable;
 
@@ -112,10 +118,14 @@ class ZanMalipoController extends Controller
                         } else {
                             $billable->status = ReturnStatus::CN_GENERATED;
                         }
-                        
+
                         $billable->save();
                     } catch (\Exception $e) {
-                        Log::error($e);
+                        Log::error('Error: ' . $e->getMessage(), [
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'trace' => $e->getTraceAsString(),
+                        ]);
                     }
                 }
             }
@@ -270,7 +280,11 @@ class ZanMalipoController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
@@ -286,7 +300,6 @@ class ZanMalipoController extends Controller
 
                         $assessment->payment_status = BillStatus::COMPLETE;
                         $assessment->save();
-                        
                     } else {
                         $assessment->payment_status = BillStatus::PAID_PARTIALLY;
                         $assessment->save();
@@ -298,8 +311,7 @@ class ZanMalipoController extends Controller
                     $dispute->payment_status = BillStatus::COMPLETE;
                     $dispute->save();
                 }
-
-            }elseif ($bill->billable_type == TaxAssessment::class ){
+            } elseif ($bill->billable_type == TaxAssessment::class) {
                 if ($bill->paidAmount() >= $bill->amount) {
                     $assessment = $bill->billable;
                     $assessment->payment_status = BillStatus::COMPLETE;
@@ -311,7 +323,11 @@ class ZanMalipoController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
@@ -361,7 +377,11 @@ class ZanMalipoController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
@@ -400,10 +420,13 @@ class ZanMalipoController extends Controller
                     $updateDebt->outstanding_amount = $updateLeasePayment->outstanding_amount;
                     $updateDebt->save();
                 }
-
             }
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 }

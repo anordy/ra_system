@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Audit;
 
 use App\Enum\TaxAuditStatus;
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\Region;
 use App\Models\TaxAudit\TaxAudit;
 use App\Traits\WithSearch;
@@ -136,6 +138,11 @@ class TaxAuditInitiateTable extends DataTableComponent
             $this->doTransition('start', []);
             $audit->status = TaxAuditStatus::PENDING;
             $audit->save();
+
+            $taxpayer = $audit->business->taxpayer;
+            event(new SendMail('audit-notification-to-taxpayer', $taxpayer));
+            event(new SendSms('audit-notification-to-taxpayer', $taxpayer));
+
             $this->flash('success', 'Approval initiated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

@@ -42,11 +42,11 @@ class DisputeWaiverApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->dispute = Dispute::find($this->modelId);
-        if(is_null($this->dispute)){
+        if (is_null($this->dispute)) {
             abort(404);
         }
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
-        if(is_null($this->assessment)){
+        if (is_null($this->assessment)) {
             abort(404);
         }
         $this->penalty = $this->assessment->penalty_amount;
@@ -91,7 +91,7 @@ class DisputeWaiverApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
-        
+
         if ($this->checkTransition('objection_manager_review')) {
 
             $this->validate(
@@ -117,14 +117,16 @@ class DisputeWaiverApprovalProcessing extends Component
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
             }
-
         }
 
         if ($this->checkTransition('chief_assurance_review')) {
-
         }
 
         $approveNotification = 'Approved successfully';
@@ -171,10 +173,13 @@ class DisputeWaiverApprovalProcessing extends Component
 
                 $approveNotification = 'Approved and control number has been generated successful';
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
-
         }
 
         try {
@@ -182,7 +187,11 @@ class DisputeWaiverApprovalProcessing extends Component
             $this->flash('success', $approveNotification, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
             return;
         }
@@ -197,11 +206,9 @@ class DisputeWaiverApprovalProcessing extends Component
 
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
-
             }
 
             if ($this->checkTransition('chief_assurance_reject')) {
-
             }
 
             if ($this->checkTransition('commisioner_reject')) {
@@ -214,15 +221,22 @@ class DisputeWaiverApprovalProcessing extends Component
                     DB::commit();
                 } catch (Exception $e) {
                     DB::rollBack();
-                    Log::error($e);
+                    Log::error('Error: ' . $e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
                     $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 }
-
             }
 
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -254,5 +268,4 @@ class DisputeWaiverApprovalProcessing extends Component
     {
         return view('livewire.approval.dispute-waiver-approval-processing');
     }
-
 }

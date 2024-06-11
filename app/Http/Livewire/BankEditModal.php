@@ -21,8 +21,8 @@ class BankEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|strip_tag|unique:banks,name,'.$this->bank->id.',id',
-            'full_name' => 'required|strip_tag|unique:banks,full_name,'.$this->bank->id.',id',
+            'name' => 'required|strip_tag|unique:banks,name,' . $this->bank->id . ',id',
+            'full_name' => 'required|strip_tag|unique:banks,full_name,' . $this->bank->id . ',id',
         ];
     }
 
@@ -30,7 +30,7 @@ class BankEditModal extends Component
     {
         $id = decrypt($id);
         $data = Bank::find($id);
-        if(is_null($data)){
+        if (is_null($data)) {
             abort(404);
         }
         $this->bank = $data;
@@ -52,7 +52,11 @@ class BankEditModal extends Component
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

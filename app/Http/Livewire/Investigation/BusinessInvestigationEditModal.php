@@ -36,9 +36,9 @@ class BusinessInvestigationEditModal extends Component
             'business_id' => 'required|numeric|exists:businesses,id',
             'location_id' => 'required|numeric|exists:business_locations,id',
             'tax_type_id' => 'required|numeric',
-            'intension' => 'required|strip_tag',
-            'scope' => 'required|strip_tag',
-            'period_from' => 'required|date',
+            'intension' => 'required|strip_tag|string',
+            'scope' => 'required|strip_tag|string',
+            'period_from' => 'required|date|after:businesses,created_at',
             'period_to' => 'required|date|after:period_from',
         ];
     }
@@ -52,7 +52,7 @@ class BusinessInvestigationEditModal extends Component
     {
         if ($this->business_id) {
             $this->selectedBusiness = Business::with('locations')->find($id);
-            if(is_null($this->selectedBusiness)){
+            if (is_null($this->selectedBusiness)) {
                 abort(404);
             }
             $this->taxTypes         = $this->selectedBusiness->taxTypes;
@@ -66,6 +66,7 @@ class BusinessInvestigationEditModal extends Component
     public function submit()
     {
         $this->validate();
+
         try {
             TaxInvestigation::create([
                 'business_id' => $this->business_id,
@@ -79,12 +80,19 @@ class BusinessInvestigationEditModal extends Component
                 'created_by_type' => get_class(auth()->user()),
                 'status' => 'pending'
             ]);
-            $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
+
+            $this->flash('success', __('Record added successfully'), [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            $this->customAlert('error', __('Something went wrong, please contact the administrator for help'));
         }
     }
+
 
 
     public function render()

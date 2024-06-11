@@ -23,8 +23,8 @@ class ExtendDueDateModal extends Component
 
     public $dueDate;
 
-    public function mount() {
-
+    public function mount()
+    {
     }
 
     protected function rules()
@@ -85,10 +85,13 @@ class ExtendDueDateModal extends Component
                     ->back()
                     ->getTargetUrl(),
             );
-
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }

@@ -58,7 +58,11 @@ class TaxAuditApprovalController extends Controller
             return view('audit.approval.approval', compact('audit', 'taxAssessments'));
         } catch (\Exception $e) {
             report($e);
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             session()->flash('warning', 'An error has occured . Please contact your administrator');
             return back();
         }
@@ -75,7 +79,11 @@ class TaxAuditApprovalController extends Controller
             return view('audit.preview', compact('audit', 'taxAssessments'));
         } catch (\Exception $e) {
             report($e);
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             session()->flash('warning', 'The selected audit was not found. Please contact your administrator');
             return back();
         }

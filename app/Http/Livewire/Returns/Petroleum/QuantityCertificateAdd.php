@@ -115,11 +115,11 @@ class QuantityCertificateAdd extends Component
         DB::beginTransaction();
         try {
             $location = BusinessLocation::firstWhere('zin', $this->location);
-            
+
             if ($this->quantity_certificate_attachment) {
                 $attachment_location = $this->quantity_certificate_attachment->store('/quantity-certificates', 'local-admin');
             }
-            
+
             $certificate = QuantityCertificate::create([
                 'business_id' => $location->business_id,
                 'location_id' => $location->id,
@@ -132,10 +132,10 @@ class QuantityCertificateAdd extends Component
                 'quantity_certificate_attachment' => $attachment_location,
                 'status' => QuantityCertificateStatus::DRAFT
             ]);
-            
-            $certificateNumber = 'COQ-'.$location->zin.$certificate->id;
+
+            $certificateNumber = 'COQ-' . $location->zin . $certificate->id;
             $certificateUpdate = QuantityCertificate::find($certificate->id);
-            if(is_null($certificateUpdate)){
+            if (is_null($certificateUpdate)) {
                 abort(404);
             }
             $certificateUpdate->certificate_no = $certificateNumber;
@@ -164,7 +164,11 @@ class QuantityCertificateAdd extends Component
             $this->redirect(route('petroleum.certificateOfQuantity.index'));
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             report($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }

@@ -20,14 +20,14 @@ class RoleAssignPermissionModal extends Component
     public $modules;
     public $role;
     public $permissions;
-    public $selectedPermissions =[];
+    public $selectedPermissions = [];
     public $permission_id;
 
 
     protected function rules()
     {
         return [
-            'name' => 'required|min:2|unique:roles,name,'.$this->role->id.',id',
+            'name' => 'required|min:2|unique:roles,name,' . $this->role->id . ',id',
         ];
     }
 
@@ -48,7 +48,11 @@ class RoleAssignPermissionModal extends Component
             }
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -57,7 +61,7 @@ class RoleAssignPermissionModal extends Component
     {
         $id = decrypt($id);
         $this->role = Role::find($id);
-        if(is_null($this->role)){
+        if (is_null($this->role)) {
             abort(404);
         }
         $this->selectedPermissions = $this->role->permissions->pluck('id')->toArray();

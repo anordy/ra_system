@@ -45,7 +45,11 @@ class UserChangePasswordModal extends Component
 
             $this->flash('success', 'Password updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
@@ -54,7 +58,7 @@ class UserChangePasswordModal extends Component
     public function mount($id)
     {
         $this->user = User::find(decrypt($id));
-        if (is_null($this->user)){
+        if (is_null($this->user)) {
             abort(404, 'User not found.');
         }
     }

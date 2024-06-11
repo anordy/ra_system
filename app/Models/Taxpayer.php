@@ -48,8 +48,9 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
         return 'users';
     }
 
-    public function generateReferenceNo(){
-        if ($this->reference_no){
+    public function generateReferenceNo()
+    {
+        if ($this->reference_no) {
             return true;
         }
 
@@ -57,7 +58,7 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
             DB::beginTransaction();
             $s = 'Z';
 
-            switch ($this->region->location){
+            switch ($this->region->location) {
                 case Region::UNGUJA:
                     $s = $s . 'U';
                     break;
@@ -82,59 +83,74 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
             $index->save();
 
             DB::commit();
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
-    public function country(){
+    public function country()
+    {
         return $this->belongsTo(Country::class);
     }
 
-    public function region(){
+    public function region()
+    {
         return $this->belongsTo(Region::class);
     }
-    public function district(){
+    public function district()
+    {
         return $this->belongsTo(District::class);
     }
-    public function ward(){
+    public function ward()
+    {
         return $this->belongsTo(Ward::class);
     }
 
-    public function street(){
+    public function street()
+    {
         return $this->belongsTo(Street::class);
     }
 
-    public function getLocationAttribute(){
+    public function getLocationAttribute()
+    {
         return $this->region ? $this->region->name : '';
     }
 
-    public function identification(){
+    public function identification()
+    {
         return $this->belongsTo(IDType::class, 'id_type');
     }
-    
+
     public function otp()
     {
         return $this->morphOne(UserOtp::class, 'user');
     }
 
-    public function fullname(){
-        return $this->first_name. ' '. $this->last_name;
+    public function fullname()
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 
-    public function getFullNameAttribute(){
+    public function getFullNameAttribute()
+    {
         return "{$this->first_name} {$this->middle_name} {$this->last_name}";
     }
 
 
-    public function taxAgent(){
+    public function taxAgent()
+    {
         return $this->hasOne(TaxAgent::class);
     }
 
-	public function bill(){
-		return $this->morphMany(ZmBill::class, 'user');
-	}
+    public function bill()
+    {
+        return $this->morphMany(ZmBill::class, 'user');
+    }
 
     public function createdLeases()
     {
@@ -145,17 +161,19 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
     {
         return $this->hasOne(MvrAgent::class, 'taxpayer_id');
     }
-    
+
     public function landLeaseAgent()
     {
         return $this->hasOne(LandLeaseAgent::class, 'taxpayer_id');
     }
 
-    public function landLeases() {
+    public function landLeases()
+    {
         return $this->hasMany(LandLease::class);
     }
 
-    public function leasePayments() {
+    public function leasePayments()
+    {
         return $this->hasMany(LeasePayment::class);
     }
 
@@ -164,13 +182,15 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
         return $this->morphMany(PasswordHistory::class, 'user');
     }
 
-    public function amendments(){
+    public function amendments()
+    {
         return $this->hasMany(TaxpayerAmendmentRequest::class, 'taxpayer_id');
     }
 
-    public function checkPendingAmendment(){
-        foreach ($this->amendments()->get() as $amendment){
-            if ($amendment['status'] == TaxpayerAmendmentRequest::PENDING){
+    public function checkPendingAmendment()
+    {
+        foreach ($this->amendments()->get() as $amendment) {
+            if ($amendment['status'] == TaxpayerAmendmentRequest::PENDING) {
                 return true;
             }
         }

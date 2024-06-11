@@ -24,7 +24,7 @@ class TaxTypeEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|strip_tag|unique:sub_vats,name,'.$this->taxType->id.',id',
+            'name' => 'required|strip_tag|unique:sub_vats,name,' . $this->taxType->id . ',id',
             'gfs_code' => 'required|numeric'
         ];
     }
@@ -32,7 +32,7 @@ class TaxTypeEditModal extends Component
     public function mount($id)
     {
         $this->taxType = SubVat::find(decrypt($id));
-        if (is_null($this->taxType)){
+        if (is_null($this->taxType)) {
             abort(404, 'Taxtype not found.');
         }
         $this->name =  $this->taxType->name;
@@ -53,19 +53,23 @@ class TaxTypeEditModal extends Component
         $this->validate();
         DB::beginTransaction();
         try {
-            
+
             $payload = [
                 'name' => $this->name,
                 'gfs_code' => $this->gfs_code
             ];
-            
-            $this->triggerDualControl(get_class($this->taxType), $this->taxType->id, DualControl::EDIT, 'Editing tax type '.$this->taxType->name, json_encode($this->old_values), json_encode($payload));
+
+            $this->triggerDualControl(get_class($this->taxType), $this->taxType->id, DualControl::EDIT, 'Editing tax type ' . $this->taxType->name, json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
         }
     }

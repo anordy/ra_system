@@ -21,7 +21,7 @@ class ReliefProjectEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_projects,name,'.$this->reliefProjectSection->id.',id|strip_tag',
+            'name' => 'required|unique:relief_projects,name,' . $this->reliefProjectSection->id . ',id|strip_tag',
             'description' => 'required|strip_tag',
         ];
     }
@@ -29,7 +29,7 @@ class ReliefProjectEditModal extends Component
     public function mount($id)
     {
         $data = ReliefProject::find(decrypt($id));
-        if (is_null($data)){
+        if (is_null($data)) {
             abort(404, 'Relief project not found.');
         }
         $this->reliefProjectSection = $data;
@@ -39,7 +39,7 @@ class ReliefProjectEditModal extends Component
 
     public function submit()
     {
-        if(!Gate::allows('relief-projects-edit')){
+        if (!Gate::allows('relief-projects-edit')) {
             abort(403);
         }
         $this->validate();
@@ -50,7 +50,11 @@ class ReliefProjectEditModal extends Component
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

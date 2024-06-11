@@ -11,11 +11,13 @@ use App\Models\Disputes\Dispute;
 use App\Models\Debts\DebtPenalty;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\Debts\DebtRollback;
+use App\Models\Debts\DebtWaiver;
 use App\Models\Debts\DemandNotice;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Verification\TaxVerification;
 use App\Models\Investigation\TaxInvestigation;
+use App\Models\PartialPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -122,5 +124,10 @@ class TaxAssessment extends Model implements Auditable
     public function waiver()
     {
         return $this->morphOne(DebtWaiver::class, 'debt');
+    }
+
+    public function partialPayments()
+    {
+        return $this->hasMany(PartialPayment::class);
     }
 }

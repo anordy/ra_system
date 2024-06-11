@@ -27,7 +27,7 @@ class LandLeaseView extends Component
     public function mount($enc_id)
     {
         $this->landLease = LandLease::find(decrypt($enc_id));
-        if(is_null($this->landLease)){
+        if (is_null($this->landLease)) {
             abort(404);
         }
         $this->taxType = TaxType::where('code', TaxType::LAND_LEASE)->first();
@@ -41,7 +41,7 @@ class LandLeaseView extends Component
     public function controlNumber()
     {
 
-        if(!Gate::allows('land-lease-generate-control-number')){
+        if (!Gate::allows('land-lease-generate-control-number')) {
             abort(403);
         }
 
@@ -127,17 +127,22 @@ class LandLeaseView extends Component
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
         }
     }
 
-    public function regenerate(){
-        if(!Gate::allows('land-lease-generate-control-number')){
+    public function regenerate()
+    {
+        if (!Gate::allows('land-lease-generate-control-number')) {
             abort(403);
         }
         $response = $this->regenerateControlNo($this->return->bill);
-        if ($response){
+        if ($response) {
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             return redirect()->back()->getTargetUrl();
         }

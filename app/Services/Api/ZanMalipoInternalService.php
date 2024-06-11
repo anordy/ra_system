@@ -27,88 +27,98 @@ class ZanMalipoInternalService
 
         $access_token = (new ApiAuthenticationService)->getAccessToken();
 
-        if ($access_token == null) {
-            $billable = $bill->billable;
-            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
-                $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
-                if ($bill->billable_type == TaxReturn::class && $billable->return) {
-                    $billable->return->status = ReturnStatus::CN_GENERATION_FAILED;
-                    $billable->return->save();
+        try {
+
+            if ($access_token == null) {
+                $billable = $bill->billable;
+                if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
+                    $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
+                    if ($bill->billable_type == TaxReturn::class && $billable->return) {
+                        $billable->return->status = ReturnStatus::CN_GENERATION_FAILED;
+                        $billable->return->save();
+                    }
+                } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
+                    $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;
+                    $billable->status = TaxAgentStatus::VERIFIED;
+                } else {
+                    $billable->status = ReturnStatus::CN_GENERATION_FAILED;
                 }
-            } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
-                $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;
-                $billable->status = TaxAgentStatus::VERIFIED;
+                $billable->save();
+                $bill->zan_trx_sts_code = 0;
+                $bill->zan_status = 'failed';
+                $bill->status = 'failed';
+                $bill->save();
+                $this->sign($bill);
+                return null;
             } else {
-                $billable->status = ReturnStatus::CN_GENERATION_FAILED;
+                $authorization = "Authorization: Bearer " . $access_token;
+
+                $payload = [
+                    'bill_id' => $bill->id,
+                    'generated_by' => 'ZRA',
+                    'approved_by' => 'ZRA'
+                ];
+
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => $zanmalipo_internal,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_CONNECTTIMEOUT => 30,
+
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => json_encode($payload),
+                    CURLOPT_HTTPHEADER => array(
+                        "accept: application/json",
+                        "content-type: application/json",
+                        $authorization
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+                $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+                if ($statusCode != 200) {
+                    Log::error(curl_error($curl));
+                    curl_close($curl);
+                    throw new \Exception($response);
+                }
+                curl_close($curl);
+                $res = json_decode($response, true);
+                $billable = $bill->billable;
+
+                if ($res['data']['status_code'] === 7101) {
+                    if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
+                        $billable->payment_status = ReturnStatus::CN_GENERATING;
+                    } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
+                        $billable->status = TaxAgentStatus::VERIFIED;
+                        $billable->billing_status = BillingStatus::CN_GENERATED;
+                    } else {
+                        $billable->status = ReturnStatus::CN_GENERATING;
+                    }
+                } else {
+                    if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
+                        $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
+                    } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
+                        $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;
+                        $billable->status = TaxAgentStatus::VERIFIED;
+                    } else {
+                        $billable->status = ReturnStatus::CN_GENERATION_FAILED;
+                    }
+                }
+                $billable->save();
+                $this->sign($bill);
+                return $res;
             }
-            $billable->save();
-            $bill->zan_trx_sts_code = 0;
-            $bill->zan_status = 'failed';
-            $bill->status = 'failed';
-            $bill->save();
-            $this->sign($bill);
-            return null;
-        } else {
-        $authorization = "Authorization: Bearer ". $access_token;
-
-        $payload = [
-            'bill_id' => $bill->id,
-            'generated_by' => 'ZRA',
-            'approved_by' => 'ZRA'
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $zanmalipo_internal,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_CONNECTTIMEOUT => 30,
-           
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_HTTPHEADER => array(
-                "accept: application/json",
-                "content-type: application/json",
-                $authorization
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-        if ($statusCode != 200) {
-            Log::error(curl_error($curl));
-            curl_close($curl);
-            throw new \Exception($response);
+        } catch (\Throwable $e) {
+            //throw $th;
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
-        curl_close($curl);
-        $res = json_decode($response, true);
-        $billable = $bill->billable;
-
-        if ($res['data']['status_code'] === 7101) {
-            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
-                $billable->payment_status = ReturnStatus::CN_GENERATING;
-            } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
-                $billable->status = TaxAgentStatus::VERIFIED;
-                $billable->billing_status = BillingStatus::CN_GENERATED;
-            } else  {
-                $billable->status = ReturnStatus::CN_GENERATING;
-            }
-        } else {
-            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
-                $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
-            } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
-                $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;
-                $billable->status = TaxAgentStatus::VERIFIED;
-            } else {
-                $billable->status = ReturnStatus::CN_GENERATION_FAILED;
-            }
-        }
-        $billable->save();
-        $this->sign($bill);
-        return $res;
-    }
     }
 
     /**
@@ -119,7 +129,7 @@ class ZanMalipoInternalService
         $zanmalipo_internal = config('modulesconfig.api_url') . '/zanmalipo-internal/cancelBill';
 
         $access_token = (new ApiAuthenticationService)->getAccessToken();
-        $authorization = "Authorization: Bearer ". $access_token;
+        $authorization = "Authorization: Bearer " . $access_token;
 
         $payload = [
             'bill_id' => $bill->id,
@@ -127,32 +137,41 @@ class ZanMalipoInternalService
             'staff_id' => Auth::id() ?? 0
         ];
 
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $zanmalipo_internal,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_HTTPHEADER => array(
-                "accept: application/json",
-                "content-type: application/json",
-                $authorization
-            ),
-        ));
+        try {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $zanmalipo_internal,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_HTTPHEADER => array(
+                    "accept: application/json",
+                    "content-type: application/json",
+                    $authorization
+                ),
+            ));
 
-        $response = curl_exec($curl);
-        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $response = curl_exec($curl);
+            $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-        if ($statusCode != 200) {
+            if ($statusCode != 200) {
+                curl_close($curl);
+                throw new \Exception($response);
+            }
+
             curl_close($curl);
-            throw new \Exception($response);
+            return json_decode($response, true);
+        } catch (\Throwable $e) {
+            //throw $th;
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
-
-        curl_close($curl);
-        return json_decode($response, true);
     }
 
 
@@ -164,40 +183,48 @@ class ZanMalipoInternalService
         $zanmalipo_internal = config('modulesconfig.api_url') . '/zanmalipo-internal/updateBill';
 
         $access_token = (new ApiAuthenticationService)->getAccessToken();
-        $authorization = "Authorization: Bearer ". $access_token;
+        $authorization = "Authorization: Bearer " . $access_token;
 
         $payload = [
             'bill_id' => $bill->id,
             'expire_date' => $expireDate,
             'staff_id' => Auth::id() ?? 0
         ];
+        try {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $zanmalipo_internal,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_HTTPHEADER => array(
+                    "accept: application/json",
+                    "content-type: application/json",
+                    $authorization
+                ),
+            ));
 
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $zanmalipo_internal,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_HTTPHEADER => array(
-                "accept: application/json",
-                "content-type: application/json",
-                $authorization
-            ),
-        ));
+            $response = curl_exec($curl);
+            $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-        $response = curl_exec($curl);
-        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            if ($statusCode != 200) {
+                curl_close($curl);
+                throw new \Exception($response);
+            }
 
-        if ($statusCode != 200) {
             curl_close($curl);
-            throw new \Exception($response);
+            return json_decode($response, true);
+        } catch (\Throwable $e) {
+            //throw $th;
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
-
-        curl_close($curl);
-        return json_decode($response, true);
     }
 
     /**
@@ -208,7 +235,7 @@ class ZanMalipoInternalService
         $zanmalipo_internal = config('modulesconfig.api_url') . '/zanmalipo-internal/sendRecon';
 
         $access_token = (new ApiAuthenticationService)->getAccessToken();
-        $authorization = "Authorization: Bearer ". $access_token;
+        $authorization = "Authorization: Bearer " . $access_token;
 
         $payload = [
             'recon_id' => $recon_id
@@ -221,7 +248,7 @@ class ZanMalipoInternalService
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
-           
+
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => json_encode($payload),
             CURLOPT_HTTPHEADER => array(

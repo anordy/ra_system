@@ -31,7 +31,7 @@ class CreateTaxAssessmentsTable extends Migration
             $table->decimal('original_interest_amount', 20, 2);
             $table->decimal('original_penalty_amount', 20, 2);
             $table->decimal('original_total_amount', 20, 2);
-            $table->decimal('paid_amount', 20, 2)->default();
+            $table->decimal('paid_amount', 20, 2)->default(0);
 
             $table->decimal('interest_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
@@ -41,7 +41,7 @@ class CreateTaxAssessmentsTable extends Migration
             $table->enum('payment_method', PaymentMethod::getConstants())->nullable();
 
             $table->decimal('total_amount', 20, 2);
-            $table->decimal('outstanding_amount', 20, 2)->default();
+            $table->decimal('outstanding_amount', 20, 2)->default(0);
             $table->timestamp('payment_due_date')->nullable();
             $table->timestamp('curr_payment_due_date')->nullable();
 

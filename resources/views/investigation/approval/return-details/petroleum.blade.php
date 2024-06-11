@@ -4,7 +4,7 @@
         <hr>
         <div class="row mx-2">
             @foreach ($returns as $year => $return)
-            <strong class="px-2">{{ $year }}</strong>
+                <strong class="px-2">{{ $year }}</strong>
                 @php
                     $MSP = 0;
                     $GO = 0;
@@ -36,37 +36,35 @@
 
                         @foreach ($return as $item)
                             <tr>
-                                <td>{{ $item['month'] }}</td>
-                                <td>{{ $item['MSP'] }}</td>
-                                <td>{{ $item['GO'] }}</td>
-                                <td>{{ $item['IK'] }}</td>
-                                <td>{{ $item['JET'] }}</td>
-                                <td>{{ $item['PTL'] }}</td>
-                                <td>{{ $item['IFT'] }}</td>
-                                {{-- <td>{{ $item['RDF'] }}</td> --}}
-                                <td>{{ $item['RLF'] }}</td>
-                                <td>{{ $item['HEADING1'] }}</td>
-                                <td>{{ $item['EXP'] }}</td>
-                                <td>{{ $item['LOP'] }}</td>
-                                <td>{{ $item['IMP'] }}</td>
-                                <td>{{ $item['totalValue'] }}</td>
-                                <td>{{ $item['totalVat'] }}</td>
+                                <td>{{ $item["month"] }}</td>
+                                <td>{{ $item["MSP"] }}</td>
+                                <td>{{ $item["GO"] }}</td>
+                                <td>{{ $item["IK"] }}</td>
+                                <td>{{ $item["JET"] }}</td>
+                                <td>{{ $item["PTL"] }}</td>
+                                <td>{{ $item["IFT"] }}</td>
+                                <td>{{ $item["RLF"] }}</td>
+                                <td>{{ $item["HEADING1"] }}</td>
+                                <td>{{ $item["EXP"] }}</td>
+                                <td>{{ $item["LOP"] }}</td>
+                                <td>{{ $item["IMP"] }}</td>
+                                <td>{{ $item["totalValue"] }}</td>
+                                <td>{{ $item["totalVat"] }}</td>
                             </tr>
                             @php
-                                $MSP += $item['MSP'];
-                                $GO += $item['GO'];
-                                $IK += $item['IK'];
-                                $JET += $item['JET'];
-                                $PTL += $item['PTL'];
-                                $IFT += $item['IFT'];
-                                // $RDF += $item['RDF'];
-                                $RLF += $item['RLF'];
-                                $HEADING1 += $item['HEADING1'];
-                                $EXP += $item['EXP'];
-                                $LOP += $item['LOP'];
-                                $IMP += $item['IMP'];
-                                $totalValue += $item['totalValue'];
-                                $totalVat += $item['totalVat'];
+                                $MSP += $item["MSP"];
+                                $GO += $item["GO"];
+                                $IK += $item["IK"];
+                                $JET += $item["JET"];
+                                $PTL += $item["PTL"];
+                                $IFT += $item["IFT"];
+                                $RLF += $item["RLF"];
+                                $HEADING1 += $item["HEADING1"];
+                                $EXP += $item["EXP"];
+                                $LOP += $item["LOP"];
+                                $IMP += $item["IMP"];
+                                $totalValue += $item["totalValue"];
+                                $totalVat += $item["totalVat"];
                             @endphp
                         @endforeach
                     </tbody>
@@ -79,7 +77,6 @@
                             <td>{{ number_format($JET, 2) }}</td>
                             <td>{{ number_format($PTL, 2) }}</td>
                             <td>{{ number_format($IFT, 2) }}</td>
-                            {{-- <td>{{ number_format($RDF, 2) }}</td> --}}
                             <td>{{ number_format($RLF, 2) }}</td>
                             <td>{{ number_format($HEADING1, 2) }}</td>
                             <td>{{ number_format($EXP, 2) }}</td>

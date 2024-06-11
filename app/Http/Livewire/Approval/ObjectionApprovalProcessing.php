@@ -151,7 +151,11 @@ class ObjectionApprovalProcessing extends Component
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
             }
         }
@@ -195,7 +199,7 @@ class ObjectionApprovalProcessing extends Component
                 ];
 
                 $taxpayer = $this->subject->business->taxpayer;
-    
+
                 $payer_type = get_class($taxpayer);
                 $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
                 $payer_email = $taxpayer->email;
@@ -210,7 +214,7 @@ class ObjectionApprovalProcessing extends Component
                 $expire_date = Carbon::now()->addMonth()->toDateTimeString();
                 $billableId = $this->assessment->id;
                 $billableType = get_class($this->assessment);
-    
+
                 $zmBill = ZmCore::createBill(
                     $billableId,
                     $billableType,
@@ -231,27 +235,27 @@ class ObjectionApprovalProcessing extends Component
                 );
 
                 DB::commit();
-    
+
                 if (config('app.env') != 'local') {
                     $response = ZmCore::sendBill($zmBill->id);
                     if ($response->status === ZmResponse::SUCCESS) {
                         $this->dispute->payment_status = ReturnStatus::CN_GENERATING;
                         $this->dispute->save();
-    
+
                         $this->flash('success', 'A control number has been generated successful.');
                     } else {
-    
+
                         session()->flash('error', 'Control number generation failed, try again later');
                         $this->dispute->payment_status = ReturnStatus::CN_GENERATION_FAILED;
                     }
-    
+
                     $this->dispute->save();
                 } else {
-    
+
                     // We are local
                     $this->dispute->payment_status = ReturnStatus::CN_GENERATED;
                     $this->dispute->save();
-    
+
                     // Simulate successful control no generation
                     $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                     $zmBill->zan_status = 'pending';
@@ -259,10 +263,13 @@ class ObjectionApprovalProcessing extends Component
                     $zmBill->save();
                     $this->flash('success', 'A control number for this dispute has been generated successfull and approved');
                 }
-
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
@@ -272,7 +279,11 @@ class ObjectionApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
             return;
         }
@@ -344,7 +355,7 @@ class ObjectionApprovalProcessing extends Component
                     $createdby_type,
                     $billitems
                 );
-                
+
                 DB::commit();
 
                 if (config('app.env') != 'local') {
@@ -375,10 +386,13 @@ class ObjectionApprovalProcessing extends Component
                     $this->flash('success', 'A control number for this dispute has been generated successfull and approved');
                 }
             }
-
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
@@ -387,7 +401,11 @@ class ObjectionApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }

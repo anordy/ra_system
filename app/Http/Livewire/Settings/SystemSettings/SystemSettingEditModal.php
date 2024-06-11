@@ -59,7 +59,7 @@ class SystemSettingEditModal extends Component
         $this->code = $this->systemSetting->code;
         $this->unit = $this->systemSetting->unit;
 
-        if($this->unit == SystemSetting::INPUT_TIME){
+        if ($this->unit == SystemSetting::INPUT_TIME) {
             $this->value = Carbon::createFromFormat('H:i', $this->systemSetting->value)->format('H:i');
         } else {
             $this->value = $this->systemSetting->value;
@@ -77,9 +77,9 @@ class SystemSettingEditModal extends Component
             'description' => $this->description,
         ];
 
-        if($this->unit === SystemSetting::INPUT_OPTIONS){
+        if ($this->unit === SystemSetting::INPUT_OPTIONS) {
             $this->options = json_decode($this->systemSetting->options, true);
-        } elseif($this->unit != SystemSetting::INPUT_FILE && $this->unit != SystemSetting::INPUT_TIME){
+        } elseif ($this->unit != SystemSetting::INPUT_FILE && $this->unit != SystemSetting::INPUT_TIME) {
             $this->valueType = SystemSetting::INPUT_TEXT;
         } else {
             $this->valueType = $this->unit;
@@ -94,8 +94,9 @@ class SystemSettingEditModal extends Component
     }
 
 
-    public function updated($property){
-        if ($property == 'system_setting_category'){
+    public function updated($property)
+    {
+        if ($property == 'system_setting_category') {
             $value = $this->system_setting_category;
             $object = $this->categories->first(function ($item) use ($value) {
                 return $item->id == $value;
@@ -108,12 +109,12 @@ class SystemSettingEditModal extends Component
     {
         if (!Gate::allows('system-setting-edit')) {
             abort(403);
-       }
+        }
         $this->validate();
         DB::beginTransaction();
         try {
             $value = $this->value;
-            if ($this->valueType == SystemSetting::INPUT_FILE){
+            if ($this->valueType == SystemSetting::INPUT_FILE) {
                 $valuePath = $this->value->store('/sign', 'local');
                 $value = $valuePath;
             }
@@ -125,7 +126,7 @@ class SystemSettingEditModal extends Component
                 'value' => $value,
                 'description' => $this->description,
             ];
-            
+
             $this->triggerDualControl(get_class($this->systemSetting), $this->systemSetting->id, DualControl::EDIT, 'edit system setting entry', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 10000]);
@@ -139,7 +140,11 @@ class SystemSettingEditModal extends Component
             );
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('warning', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }

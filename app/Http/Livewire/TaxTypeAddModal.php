@@ -38,17 +38,21 @@ class TaxTypeAddModal extends Component
         $newName = strtolower($this->name);
         $code = str_replace(' ', '-', $newName);
         DB::beginTransaction();
-        try{
+        try {
             $tax_type = TaxType::create([
                 'code' => $code,
                 'name' => $this->name,
             ]);
-            $this->triggerDualControl(get_class($tax_type), $tax_type->id, DualControl::ADD, 'adding tax type '.$this->name);
+            $this->triggerDualControl(get_class($tax_type), $tax_type->id, DualControl::ADD, 'adding tax type ' . $this->name);
             DB::commit();
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
-        }catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE);
         }
     }
