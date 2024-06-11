@@ -97,15 +97,19 @@ class TaxAuditApprovalProcessing extends Component
         $this->entryMeeting = $this->subject->entry_minutes;
         $this->notificationLetter = $this->subject->notification_letter;
 
+        $comments = $this->getTransitionsComments();
+
+        // dd($comments);
+
         $assessment = $this->subject->assessment;
         if ($assessment) {
-            $this->hasAssessment = "1";
+            $this->hasAssessment = True;
 
             $this->taxAssessments = TaxAssessment::where('assessment_id', $this->subject->id)
                 ->where('assessment_type', get_class($this->subject))
                 ->get();
         } else {
-            $this->hasAssessment = "0";
+            $this->hasAssessment = False;
         }
 
 
@@ -122,10 +126,8 @@ class TaxAuditApprovalProcessing extends Component
             $this->auditingDate = Carbon::create($this->subject->auditing_date)->format('Y-m-d');
         }
 
-        if ($this->checkTransition('audit_team_review')) {
-            $this->auditDocuments = DB::table('tax_audit_files')->where('tax_audit_id', $this->modelId)->get();
-            $this->auditDocuments = json_decode($this->auditDocuments, true);
-        }
+        $this->auditDocuments = DB::table('tax_audit_files')->where('tax_audit_id', $this->modelId)->get();
+        $this->auditDocuments = json_decode($this->auditDocuments, true);
 
         if ($this->checkTransition('prepare_final_report')) {
             $this->audit = TaxAudit::find($this->modelId);
@@ -212,7 +214,7 @@ class TaxAuditApprovalProcessing extends Component
 
             if ($this->notificationLetter != $this->subject->notification_letter) {
                 $this->validate([
-                    'notificationLetter' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
+                    'notificationLetter' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
                 ]);
             }
         }
@@ -228,18 +230,18 @@ class TaxAuditApprovalProcessing extends Component
 
             if ($this->preliminaryReport != $this->subject->preliminary_report) {
                 $this->validate([
-                    'preliminaryReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
+                    'preliminaryReport' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
                 ]);
             }
 
             if ($this->workingReport != $this->subject->working_report) {
                 $this->validate([
-                    'workingReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
+                    'workingReport' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
                 ]);
             }
             if ($this->entryMeeting != $this->subject->entry_minutes) {
                 $this->validate([
-                    'entryMeeting' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
+                    'entryMeeting' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
                 ]);
             }
         }
@@ -266,13 +268,13 @@ class TaxAuditApprovalProcessing extends Component
 
             if ($this->exitMinutes != $this->subject->exit_minutes) {
                 $this->validate([
-                    'exitMinutes' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
+                    'exitMinutes' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
                 ]);
             }
 
             if ($this->finalReport != $this->subject->final_report) {
                 $this->validate([
-                    'finalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100'
+                    'finalReport' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
                 ]);
             }
         };
@@ -320,6 +322,7 @@ class TaxAuditApprovalProcessing extends Component
                 }
 
                 $this->subject->notification_letter = $notificationLetter;
+                $this->subject->notification_letter_date =  Carbon::now()->addWeekdays(5);
                 $this->subject->save();
 
                 //Send Email Notification to taxpayer 
@@ -357,6 +360,7 @@ class TaxAuditApprovalProcessing extends Component
                 $this->subject->preliminary_report = $preliminaryReport;
                 $this->subject->working_report = $workingReport;
                 $this->subject->entry_minutes = $entryMeeting;
+                $this->subject->preliminary_report_date = Carbon::now()->addWeekdays(7); //add seven working days
                 $this->subject->save();
             }
 
