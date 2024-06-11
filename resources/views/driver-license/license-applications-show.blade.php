@@ -97,24 +97,20 @@
                     @endif
 
                     @if (strtolower($application->type) == 'fresh')
-
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Certificate of competence number</span>
                             <p class="my-1">{{ $application->certificate_number ?? 'N/A'}}</p>
                         </div>
-
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Confirmation Number</span>
                             <p class="my-1">{{ $application->confirmation_number ?? 'N/A' }}</p>
                         </div>
                     @endif
-
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">License Duration</span>
                         <p class="my-1">{{ $application->license_duration ?? 'N/A' }} Years</p>
 
                     </div>
-
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">License Classes</span>
                         <p class="my-1">
@@ -123,7 +119,6 @@
                                     {{ $class->license_class->name ?? 'N/A' }},
                                 @endforeach
                             @endif
-
                         </p>
                     </div>
 
@@ -141,19 +136,21 @@
                         </div>
                     @endif
 
-                    @if($application->completion_certificate)
-                        <div class="col-md-4">
-                            <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
-                                <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
-                                <a target="_blank"
-                                   href="{{ route('mvr.files', encrypt($application->completion_certificate)) }}"
-                                   class="ml-1">
-                                    Completion Certificate
-                                    <i class="bi bi-arrow-up-right-square ml-1"></i>
-                                </a>
+                    <div class="col-md-12 row">
+                        @foreach($application->certificates as $certificate)
+                            <div class="col-md-4">
+                                <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                                    <a target="_blank"
+                                       href="{{ route('mvr.files', encrypt($certificate->location)) }}"
+                                       class="ml-1">
+                                        Completion Certificate #{{ $loop->iteration }}
+                                        <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                    @endif
+                        @endforeach
+                    </div>
                 </div>
             </div>
 

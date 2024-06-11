@@ -6,6 +6,7 @@ use App\Enum\BillStatus;
 use App\Enum\GeneralConstant;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
+use App\Models\DlApplicationCertificate;
 use App\Models\DlApplicationLicenseClass;
 use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
@@ -29,8 +30,8 @@ class DriverLicenseApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $approvalReport;
-    public $competenceCertificate;
     public $selectedRestrictions, $restrictions;
+    public $attachments = [];
 
     public function mount($modelName, $modelId)
     {
@@ -39,6 +40,24 @@ class DriverLicenseApprovalProcessing extends Component
         $this->registerWorkflow($modelName, $this->modelId);
         $this->selectedRestrictions = [];
         $this->restrictions = DlRestriction::select('id', 'symbol', 'description')->get();
+        $this->attachments = [
+            [
+                'file' => '',
+            ],
+        ];
+    }
+
+
+    public function addAttachment()
+    {
+        $this->attachments[] = [
+            'file' => '',
+        ];
+    }
+
+    public function removeAttachment($i)
+    {
+        unset($this->attachments[$i]);
     }
 
     public function updatedSelectedRestrictions($value)
@@ -61,7 +80,7 @@ class DriverLicenseApprovalProcessing extends Component
             if ($this->checkTransition('transport_officer_review') && $transition === 'transport_officer_review') {
                 $this->validate([
                     'comments' => 'required|strip_tag',
-                    'competenceCertificate' => 'required|valid_pdf|max_file_name_length:100|max:3072',
+                    'attachments.*.file' => 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
                 ]);
 
                 DlLicenseRestriction::where('dl_license_application_id', $this->subject->id)->delete();
@@ -79,7 +98,14 @@ class DriverLicenseApprovalProcessing extends Component
                 }
 
                 $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
-                $this->subject->completion_certificate = $this->competenceCertificate->store('/dl_files');
+
+                foreach ($this->attachments as $attachment) {
+                    DlApplicationCertificate::create([
+                        'location' => $attachment['file']->store('dl_files'),
+                        'dl_license_application_id' => $this->subject->id
+                    ]);
+                }
+
                 $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->save();
             } else {
@@ -95,7 +121,6 @@ class DriverLicenseApprovalProcessing extends Component
                     $lastDlLicense->status = GeneralConstant::ADD_CLASS;
                     $lastDlLicense->save();
                 }
-
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);

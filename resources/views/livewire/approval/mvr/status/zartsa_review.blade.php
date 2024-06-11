@@ -12,7 +12,6 @@
                         @enderror
                     </div>
                 </div>
-
                 <div class="pt-2">
                     <div class="row pl-3 pb-2">
                         <span>Please provide additional attachments if any:</span>
@@ -52,7 +51,6 @@
                                                  x-on:livewire-upload-finish="isUploading = false"
                                                  x-on:livewire-upload-error="isUploading = false"
                                                  x-on:livewire-upload-progress="progress = $event.detail.progress">
-
                                                 <input
                                                         class="form-control @error('attachments.' . $i . '.file') is-invalid @enderror"
                                                         wire:model.lazy="attachments.{{ $i }}.file" type="file"
@@ -63,15 +61,13 @@
                                                     <progress max="100" x-bind:value="progress"></progress>
                                                 </div>
                                             </div>
-
                                             @error('attachments.' . $i . '.file')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
                                             @enderror
                                         </div>
                                     </td>
-
                                     <td style="min-width: 100%">
                                         @if (count($attachments) > 1)
                                             <div class="text-right mt-2">
@@ -83,7 +79,6 @@
                                             </div>
                                         @endif
                                     </td>
-
                                 </tr>
                             @endforeach
                             </tbody>
@@ -95,19 +90,15 @@
                             </button>
                         </div>
                     </div>
-
-
                 </div>
                 <div class="text-secondary small">
-                        <span class="font-weight-bold">
-                            {{ __('Note') }}:
-                        </span>
+                    <span class="font-weight-bold">
+                        {{ __('Note') }}:
+                    </span>
                     <span class="">
-                            {{ __('Uploaded Documents must be less than 3  MB in size') }}
-                        </span>
+                        {{ __('Uploaded Documents must be less than 3  MB in size') }}
+                    </span>
                 </div>
-
-
             </div>
         </div>
     </div>

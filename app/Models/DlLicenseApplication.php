@@ -107,4 +107,8 @@ class DlLicenseApplication extends Model implements Auditable
     {
         return $this->hasMany(DlLicenseRestriction::class,'dl_license_application_id');
     }
+
+    public function certificates(){
+        return $this->hasMany(DlApplicationCertificate::class, 'dl_license_application_id');
+    }
 }
