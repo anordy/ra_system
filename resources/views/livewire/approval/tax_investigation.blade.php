@@ -169,10 +169,10 @@
                 <div class="pl-3 pr-3 card">
                     <p class="card-header">Taxpayer Responded Investigation</p>
                     <div class="row px-2 pt-2 mb-3 ">
-                        <p> <strong> Tax Payer Responded Reasons:</strong> <br> {{ $this->subject->rejection_reason ?? " " }}</p>
+                        <p> <strong> Taxpayer Responded Reasons:</strong> <br> {{ $this->subject->rejection_reason ?? " " }}</p>
                     </div>
                     <div class="row px-2">
-                        <p> <strong> Tax Payer Supporting Documents:</strong> </p>
+                        <p> <strong> Taxpayer Supporting Documents:</strong> </p>
                     </div>
                     <div class="row">
                         @if ($investigationDocuments)
