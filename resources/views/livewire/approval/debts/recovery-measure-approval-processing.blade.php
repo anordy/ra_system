@@ -10,6 +10,9 @@
                     <hr>
 
                     <div class="row m-2 pt-3">
+                        <div class="multi-select-info pl-3 mb-3">
+                            <i class="fas fa-info-circle"></i>  {!! __('Hold <b>Ctrl</b> (Windows/Linux) or <b>Cmd</b> (Mac) while selecting measures to select multiple options.')  !!}
+                        </div>
                         <div class="col-md-12 form-group">
                             <label>Recommendation for recovery measure: *</label>
                             <select wire:model.lazy="recovery_measures" multiple size="6" class="form-control">
