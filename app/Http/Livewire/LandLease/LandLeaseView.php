@@ -26,6 +26,8 @@ class LandLeaseView extends Component
     public $taxType;
     public $leasePayment;
     public $unpaidLease;
+    public $advancePaymentStatus;
+    public const ADVANCE_PAYMENT_MAX_YEARS = 3;
 
     //mount function
     public function mount($enc_id)
@@ -44,6 +46,13 @@ class LandLeaseView extends Component
 
         $this->taxType = TaxType::where('code', TaxType::LAND_LEASE)->first();
         $this->unpaidLease = LeasePayment::where('land_lease_id', $this->landLease->id)->whereNotIn('status', $statuses)->exists();
+
+        //check for advance payment > 3 years
+        if ($this->landLease->rent_commence_date > now()->addYears(self::ADVANCE_PAYMENT_MAX_YEARS)) {
+            $this->advancePaymentStatus = true;
+        } else {
+            $this->advancePaymentStatus = false;
+        }
     }
 
     public function render()

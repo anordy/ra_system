@@ -6,11 +6,14 @@
                     {{ __('Complete pending payment to proceed with next one!') }}
                 </div>
             @else
-                <button class="btn btn-primary btn-md"
-                        onclick="Livewire.emit('showModal', 'land-lease.create-lease-payment', {{$landLease}})">
-                    <i class="fa fa-plus-circle"></i>
-                    {{ __('Create Lease Payment') }}
-                </button>
+                @if($)
+                    <button class="btn btn-primary btn-md"
+                            onclick="Livewire.emit('showModal', 'land-lease.create-lease-payment', {{$landLease}})">
+                        <i class="fa fa-plus-circle"></i>
+                        {{ __('Create Lease Payment') }}
+                    </button>
+                @endif
+
             @endif
         @else
             <div class="alert alert-warning" role="alert">

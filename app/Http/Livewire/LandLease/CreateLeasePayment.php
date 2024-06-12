@@ -27,67 +27,69 @@ class CreateLeasePayment extends Component
     public $displayMonth;
     public $eligibleToPayment = false;
     public $unpaidLease;
+    public const ADVANCE_PAYMENT_MAX_YEARS =3;
 
     public function mount($landLease)
     {
         $this->landLease = $landLease;
-        
+
         $statuses = [
             LeaseStatus::IN_ADVANCE_PAYMENT,
             LeaseStatus::LATE_PAYMENT,
             LeaseStatus::ON_TIME_PAYMENT,
             LeaseStatus::COMPLETE
         ];
-            
+
         $leasePayment = LeasePayment::where('land_lease_id', $this->landLease['id'])
-        ->whereIn('status', $statuses)
-        ->latest()->first();
+            ->whereIn('status', $statuses)
+            ->latest()->first();
 
         $this->leasePayment = $leasePayment;
-            
-            if ($this->leasePayment) {
-                $this->previousFinancialMonthDueDate = $this->leasePayment->financialMonth->due_date;
+
+        if ($this->leasePayment) {
+            $this->previousFinancialMonthDueDate = $this->leasePayment->financialMonth->due_date;
+            $paymentFinancialDate = clone $this->previousFinancialMonthDueDate->addYear();
+            $this->displayYear = $paymentFinancialDate->year;
+            $financialYear = FinancialYear::where('code', $this->displayYear)->firstOrFail('id');
+            $this->displayMonth = $paymentFinancialDate->format('F');
+            $this->paymentFinancialMonth = FinancialMonth::where('name', $this->landLease['payment_month'])->where('financial_year_id', $financialYear->id)->firstOrFail();
+        } else {
+            $leasePayment = LeasePayment::where('land_lease_id', $this->landLease['id'])
+                ->latest()->first();
+
+            if ($leasePayment) {
+                $this->previousFinancialMonthDueDate = $leasePayment->financialMonth->due_date;
                 $paymentFinancialDate = clone $this->previousFinancialMonthDueDate->addYear();
                 $this->displayYear = $paymentFinancialDate->year;
                 $financialYear = FinancialYear::where('code', $this->displayYear)->firstOrFail('id');
                 $this->displayMonth = $paymentFinancialDate->format('F');
                 $this->paymentFinancialMonth = FinancialMonth::where('name', $this->landLease['payment_month'])->where('financial_year_id', $financialYear->id)->firstOrFail();
             } else {
-                $leasePayment = LeasePayment::where('land_lease_id', $this->landLease['id'])
-                ->latest()->first();
-    
-                if ($leasePayment) {
-                    $this->previousFinancialMonthDueDate = $leasePayment->financialMonth->due_date;
-                    $paymentFinancialDate = clone $this->previousFinancialMonthDueDate->addYear();
-                    $this->displayYear = $paymentFinancialDate->year;
-                    $financialYear = FinancialYear::where('code', $this->displayYear)->firstOrFail('id');
-                    $this->displayMonth = $paymentFinancialDate->format('F');
-                    $this->paymentFinancialMonth = FinancialMonth::where('name', $this->landLease['payment_month'])->where('financial_year_id', $financialYear->id)->firstOrFail();
+                $commence_date = Carbon::parse($this->landLease['rent_commence_date']);
+                $currentYear = $commence_date->year;
+                $financialYear = FinancialYear::where('code', $currentYear)->firstOrFail('id');
+
+                if ($financialYear) {
+                    $paymentFinancialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)->where('name', $this->landLease['payment_month'])->firstOrFail();
+                    $this->paymentFinancialDate = $paymentFinancialMonth->due_date;
+                    $this->displayYear = $this->paymentFinancialDate->year;
+                    $this->displayMonth = $this->paymentFinancialDate->format('F');
+                    $this->paymentFinancialMonth = $paymentFinancialMonth;
                 } else {
-                    $commence_date = Carbon::parse($this->landLease['rent_commence_date']);
-                    $currentYear = $commence_date->year;
-                    $financialYear = FinancialYear::where('code', $currentYear)->firstOrFail('id');
-                    
-                    if ($financialYear) {
-                        $paymentFinancialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)->where('name', $this->landLease['payment_month'])->firstOrFail();
-                        $this->paymentFinancialDate = $paymentFinancialMonth->due_date;
-                        $this->displayYear = $this->paymentFinancialDate->year;
-                        $this->displayMonth = $this->paymentFinancialDate->format('F');
-                        $this->paymentFinancialMonth = $paymentFinancialMonth;
-                    } else {
-                        Log::error("LandLeasePayment: Financial year not defined, provided year: ". $financialYear);
-                        $this->customAlert('warning', __('Something went wrong, please contact ZRA support for more assist!'));
-                    }
-                    
+                    Log::error("LandLeasePayment: Financial year not defined, provided year: " . $financialYear);
+                    $this->customAlert('warning', __('Something went wrong, please contact ZRA support for more assist!'));
                 }
-                
+
             }
-            $this->checkReviewPeriod();
+
+        }
+        $this->checkReviewPeriod();
     }
 
-    function checkReviewPeriod(){
+    function checkReviewPeriod()
+    {
         $reviewYear = clone Carbon::parse($this->landLease['rent_commence_date'])->addYear($this->landLease['review_schedule']);
-        
+
         $duration = Carbon::parse($this->paymentFinancialMonth->due_date)->diffInMonths($reviewYear);
         $monthsBeforeReview = DateConfiguration::where('code', 'MonthsBeforeReview')->value('value');
 
@@ -102,27 +104,32 @@ class CreateLeasePayment extends Component
         }
     }
 
-    public function submit(){
-        
+    public function submit()
+    {
+
         if ($this->eligibleToPayment) {
+            //limit advance payment to 3 years
+            if ($this->landLease['rent_commence_date'] > now()->addYears(self::ADVANCE_PAYMENT_MAX_YEARS)) {
+                $this->customAlert('error', __('Failed, Cannot create lease payment for more than 3 years'));
+            }
             DB::beginTransaction();
             $response = $this->createLeasePayment($this->landLease, $this->paymentFinancialMonth);
-            if($response) {
+            if ($response) {
                 DB::commit();
-                $this->customAlert('success', 'Land Lease Payment for '. $this->displayMonth .' - '. $this->displayYear .' year successfully');
+                $this->customAlert('success', 'Land Lease Payment for ' . $this->displayMonth . ' - ' . $this->displayYear . ' year successfully');
 
                 if (Auth::user()->id == $this->landLease['taxpayer_id']) {
                     return redirect()->route("land-lease.taxpayer.view", ['id' => encrypt($this->landLease['id'])]);
                 } else {
                     return redirect()->route("land-lease.view", ['id' => encrypt($this->landLease['id'])]);
                 }
-                
+
             } else {
                 DB::rollBack();
                 $this->customAlert('error', __('Failed to create lease payment'));
             }
         } else {
-            $this->customAlert('warning', 'You can not create lease payment for '. $this->displayYear .'. Please wait till your contract review', ['timer' => 10000]);
+            $this->customAlert('warning', 'You can not create lease payment for ' . $this->displayYear . '. Please wait till your contract review', ['timer' => 10000]);
         }
 
 
@@ -130,6 +137,6 @@ class CreateLeasePayment extends Component
 
     public function render()
     {
-            return view('livewire.land-lease.create-lease-payment');
+        return view('livewire.land-lease.create-lease-payment');
     }
 }
