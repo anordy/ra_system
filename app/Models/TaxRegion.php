@@ -16,4 +16,9 @@ class TaxRegion extends Model implements Auditable
     public function businesses(){
         return $this->hasMany(Business::class);
     }
+
+    public function departments()
+    {
+        return $this->belongsTo(TaxDepartment::class,'department_id');
+    }
 }
