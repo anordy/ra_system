@@ -96,12 +96,12 @@ class TaxpayerLedgerController extends Controller
 
             $location = BusinessLocation::findOrFail($businessLocationId);
 
-            $tzsLedgers = $this->getLedgerByCurrency(Currencies::TZS, $businessLocationId);
-            $usdLedgers = $this->getLedgerByCurrency(Currencies::USD, $businessLocationId);
+            $tzsLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::TZS, $businessLocationId);
+            $usdLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::USD, $businessLocationId);
 
             $ledgers = [
-                'TZS' => $this->joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
-                'USD' => $this->joinLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
+                'TZS' => TaxpayerLedgerController::joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
+                'USD' => TaxpayerLedgerController::joinLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
             ];
 
             $tzsCreditSum = $tzsLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;
@@ -123,7 +123,7 @@ class TaxpayerLedgerController extends Controller
 
     }
 
-    private function getLedgerByCurrency($currency, $businessLocationId)
+    public static function getLedgerByCurrency($currency, $businessLocationId)
     {
         $debitLedgers = TaxpayerLedger::select('source_type', 'source_id', 'business_location_id', 'tax_type_id', 'currency',
             DB::raw('SUM(total_amount) as total_debit_amount')
@@ -149,7 +149,7 @@ class TaxpayerLedgerController extends Controller
         ];
     }
 
-    private function joinLedgers($debitLedgers, $creditLedgers)
+    public static function joinLedgers($debitLedgers, $creditLedgers)
     {
         $joinedLedgers = collect();
 

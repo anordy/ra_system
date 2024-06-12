@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\TaxClearance;
 
+use App\Enum\Currencies;
 use App\Enum\LeaseStatus;
 use App\Enum\TaxClearanceStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController;
+use App\Models\BusinessLocation;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\LandLeaseDebt;
 use App\Models\Returns\BFO\BfoReturn;
@@ -118,31 +121,26 @@ class TaxClearanceController extends Controller
             $this->verify($return);
         }
 
-        
-        $land_lease_debts = LandLeaseDebt::where('business_location_id', $taxClearance->business_location_id)
-            ->whereNotIn('status', [LeaseStatus::PAID_PARTIALLY, LeaseStatus::COMPLETE, LeaseStatus::LATE_PAYMENT, LeaseStatus::ON_TIME_PAYMENT, LeaseStatus::IN_ADVANCE_PAYMENT])
-            ->get();
+        $businessLocationId = $taxClearance->business_location_id;
 
-        $locations = [$taxClearance->business_location_id];
+        $tzsLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::TZS, $businessLocationId);
+        $usdLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::USD, $businessLocationId);
 
-        $investigationDebts = TaxAssessment::whereHasMorph('assessment', [TaxInvestigation::class], function($query) use($locations) {
-                $query->whereHas('taxInvestigationLocations', function($q) use($locations) {
-                    $q->whereIn('business_location_id', $locations);
-                });
-            })
-            ->get();
-        
-        $auditDebts = TaxAssessment::whereHasMorph('assessment', [TaxAudit::class], function($query) use($locations) {
-                $query->whereHas('taxAuditLocations', function($q) use($locations) {
-                    $q->whereIn('business_location_id', $locations);
-                });
-            })
-            ->get();
+        $ledgers = [
+            'TZS' => TaxpayerLedgerController::joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
+            'USD' => TaxpayerLedgerController::joinLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
+        ];
 
-        $verificateionDebts = TaxAssessment::where('location_id', $taxClearance->business_location_id)
-                                ->get();
+        $tzsCreditSum = $tzsLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;
+        $tzsDebitSum = $tzsLedgers['debitLedgers']->sum('total_debit_amount') ?? 0;
+        $usdCreditSum = $usdLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;
+        $usdDebitSum = $usdLedgers['debitLedgers']->sum('total_debit_amount') ?? 0;
 
-        return view('tax-clearance.clearance-request', compact('tax_return_debts', 'taxClearance', 'land_lease_debts', 'investigationDebts', 'auditDebts', 'verificateionDebts'));
+        $summations = [
+            'TZS' => ['credit' => $tzsCreditSum, 'debit' => $tzsDebitSum],
+            'USD' => ['credit' => $usdCreditSum, 'debit' => $usdDebitSum],
+        ];
+        return view('tax-clearance.clearance-request', compact('taxClearance', 'summations', 'ledgers'));
     }
 
     public function approval($requestId)
