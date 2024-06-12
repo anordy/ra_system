@@ -115,6 +115,19 @@
                 </div>
             @endif
 
+            @if($reg->authorization_letter)
+                <div class="col-md-3 pr-0">
+                    <div class="p-2 mb-0 d-flex rounded-sm align-items-center file-item">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                        <a target="_blank"
+                           href="{{ route('mvr.files', encrypt($reg->authorization_letter)) }}"
+                           class="ml-1">
+                            {{ __('Authorization Letter') }}
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>
