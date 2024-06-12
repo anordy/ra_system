@@ -154,6 +154,24 @@
                                     </p>
                                 </div>
                             @endif
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Lease Status</span>
+                                <p class="my-1">
+                                    @if ($landLease->lease_status == "1")
+                                        <span class="badge badge-success py-1 px-2"
+                                              style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+
+                                            Active
+                                        </span>
+                                    @else
+                                        <span class="badge badge-danger py-1 px-2"
+                                              style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
+
+                                            Inactive
+                                        </span>
+                                    @endif
+                                </p>
+                            </div>
                         </div>
 
 

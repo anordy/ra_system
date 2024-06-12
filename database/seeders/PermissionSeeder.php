@@ -137,6 +137,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'land-lease-edit', 'sys_module_id' => 16],
             ['name' => 'land-lease-delete', 'sys_module_id' => 16],
             ['name' => 'land-lease-view-own', 'sys_module_id' => 16],
+            ['name' => 'land-lease-change-status', 'sys_module_id' => 16],
 
             ['name' => 'land-lease-generate-report', 'sys_module_id' => 16],
             ['name' => 'land-lease-agent-view', 'sys_module_id' => 16],

@@ -228,6 +228,7 @@ class RegisterLandLease extends Component
 
     /*
      * Penalty on each month should be 10% of only principal and not compounded but accumulated
+     * Penalty to be calculated for active lease only
      */
     private function calculateLeasePenalties($leasePayment, $paymentFinancialMonth, $penaltyIteration)
     {
