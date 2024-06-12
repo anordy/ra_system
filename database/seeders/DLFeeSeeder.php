@@ -24,7 +24,7 @@ class DLFeeSeeder extends Seeder
                     'amount' => 10000,
                     'gfs_code' => 116101,
                     'type' => $type,
-                    'dl_licence_duration_id' => $duration
+//                    'dl_licence_duration_id' => $duration
                 ]);
             }
         }

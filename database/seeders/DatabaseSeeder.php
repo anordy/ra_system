@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use RiskIndicatorsSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -130,5 +131,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowMvrTransferOwnershipSeeder::class);
         $this->call(WorkflowMvrDriverLicenseSeeder::class);
         $this->call(WorkflowMvrDeRegistrationSeeder::class);
+        $this->call(CharteredConfigSeeder::class);
     }
 }
