@@ -510,6 +510,10 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
+
+
+        Route::get('tax-payer',[\App\Http\Controllers\Reports\TaxPayer\TaxPayerReportController::class,'index']);
+
         Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
 
