@@ -64,7 +64,7 @@ class CreateLeasePayment extends Component
                     $this->displayMonth = $paymentFinancialDate->format('F');
                     $this->paymentFinancialMonth = FinancialMonth::where('name', $this->landLease['payment_month'])->where('financial_year_id', $financialYear->id)->firstOrFail();
                 } else {
-                    $commence_date = Carbon::parse($this->landLease['commence_date']);
+                    $commence_date = Carbon::parse($this->landLease['rent_commence_date']);
                     $currentYear = $commence_date->year;
                     $financialYear = FinancialYear::where('code', $currentYear)->firstOrFail('id');
                     
@@ -86,7 +86,7 @@ class CreateLeasePayment extends Component
     }
 
     function checkReviewPeriod(){
-        $reviewYear = clone Carbon::parse($this->landLease['commence_date'])->addYear($this->landLease['review_schedule']);
+        $reviewYear = clone Carbon::parse($this->landLease['rent_commence_date'])->addYear($this->landLease['review_schedule']);
         
         $duration = Carbon::parse($this->paymentFinancialMonth->due_date)->diffInMonths($reviewYear);
         $monthsBeforeReview = DateConfiguration::where('code', 'MonthsBeforeReview')->value('value');

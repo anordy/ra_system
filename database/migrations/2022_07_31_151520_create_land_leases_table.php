@@ -19,6 +19,7 @@ class CreateLandLeasesTable extends Migration
             $table->unsignedBigInteger('taxpayer_id')->nullable();
             $table->string('dp_number');
             $table->date('commence_date');
+            $table->date('rent_commence_date');
             $table->string('payment_month');
             $table->decimal('payment_amount', 10, 2);
             $table->integer('review_schedule');

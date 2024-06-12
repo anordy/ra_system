@@ -207,4 +207,8 @@ class LandLeaseController extends Controller
     {
         return view('land-lease.taxpayer-land-lease-view', compact('id'));
     }
+    public function edit($id)
+    {
+        return view("land-lease.land-lease-edit",compact('id'));
+    }
 }

@@ -28,14 +28,14 @@
                         </span>
                     </label>
                     <input id="business_zin" name="businessZin" type="text" wire:model.lazy="businessZin"
-                        class="form-control @error('businessZin') is-invalid @enderror">
+                           class="form-control @error('businessZin') is-invalid @enderror">
                     <p class="pt-1 text-secondary font-italic">
                         {{ __('e.g') }} ( Z011100001-010 )
                     </p>
                     @error('businessZin')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
                     @enderror
                     @if ($showBusinessDetails)
                         <div class="d-flex justify-content-between">
@@ -66,11 +66,11 @@
                             </span>
                         </label>
                         <input id="zrb_number" name="zrbNumber" type="text" wire:model.lazy="zrbNumber"
-                            class="form-control @error('zrbNumber') is-invalid @enderror">
+                               class="form-control @error('zrbNumber') is-invalid @enderror">
                         @error('zrbNumber')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
                         @enderror
                         @if ($showTaxpayerDetails)
                             <div class="d-flex justify-content-between">
@@ -117,6 +117,7 @@
         <div class="row pt-3">
             <x-input name="dpNumber" label="DP Number" required></x-input>
             <x-input name="commenceDate" label="Commence Date" type='date' required></x-input>
+            <x-input name="rentCommenceDate" label="Rent Commence Date" type='date' required></x-input>
             <div class="col-md-4 form-group">
                 <label for="applicant_category" class="d-flex justify-content-between'">
                     <span>
@@ -124,7 +125,7 @@
                     </span>
                 </label>
                 <select name="paymentMonth" id="payment_month" wire:model.lazy="paymentMonth"
-                    class="form-control {{ $errors->has($paymentMonth) ? 'is-invalid' : '' }}">
+                        class="form-control {{ $errors->has($paymentMonth) ? 'is-invalid' : '' }}">
                     <option value="">{{ __('Select Payment Month') }}</option>
                     <option value="January">January</option>
                     <option value="February">February</option>
@@ -140,9 +141,9 @@
                     <option value="December">December</option>
                 </select>
                 @error('paymentMonth')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
                 @enderror
             </div>
             <div class="col-md-4 form-group">
@@ -152,12 +153,12 @@
                     </span>
                 </label>
                 <input type="number" value="3" name="reviewSchedule" id="review_schedule"
-                    wire:model="reviewSchedule"
-                    class="form-control {{ $errors->has($reviewSchedule) ? 'is-invalid' : '' }}" disabled>
+                       wire:model="reviewSchedule"
+                       class="form-control {{ $errors->has($reviewSchedule) ? 'is-invalid' : '' }}" disabled>
                 @error($reviewSchedule)
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
                 @enderror
             </div>
             <div class="col-md-4 form-group">
@@ -167,15 +168,15 @@
                     </span>
                 </label>
                 <select name="validPeriodTerm" id="valid_period_term" wire:model="validPeriodTerm"
-                    class="form-control {{ $errors->has($validPeriodTerm) ? 'is-invalid' : '' }}">
+                        class="form-control {{ $errors->has($validPeriodTerm) ? 'is-invalid' : '' }}">
                     <option value="">{{ __('Select Valid Period Term') }}</option>
                     <option value="33">{{ __('33 Years') }}</option>
                     <option value="other">{{ __('Other') }}</option>
                 </select>
                 @error($validPeriodTerm)
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
                 @enderror
             </div>
 
@@ -193,9 +194,9 @@
                     @endforeach
                 </select>
                 @error('region')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
                 @enderror
             </div>
             <div class="col-md-4 form-group">
@@ -210,9 +211,9 @@
                     @endforeach
                 </select>
                 @error('district')
-                    <div class="invalid-feedback">
-                        {{ $errors->first('district') }}
-                    </div>
+                <div class="invalid-feedback">
+                    {{ $errors->first('district') }}
+                </div>
                 @enderror
             </div>
             <div class="col-md-4 form-group">
@@ -227,18 +228,18 @@
                     @endforeach
                 </select>
                 @error('ward')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
                 @enderror
             </div>
 
 
             <div x-data="{ isUploading: false, progress: 0 }" x-on:livewire-upload-start="isUploading = true"
-                x-on:livewire-upload-finish="isUploading = false" x-on:livewire-upload-error="isUploading = false"
-                x-on:livewire-upload-progress="progress = $event.detail.progress">
+                 x-on:livewire-upload-finish="isUploading = false" x-on:livewire-upload-error="isUploading = false"
+                 x-on:livewire-upload-progress="progress = $event.detail.progress">
                 <x-input name="leaseAgreement" label="{{ __('Lease Agreement Document') }}" col="12"
-                    type="file" required></x-input>
+                         type="file" required></x-input>
 
                 <!-- Progress Bar -->
                 <div x-show="isUploading">
@@ -254,7 +255,7 @@
                 {{ __('Submit') }}
                 <i class="bi bi-chevron-right ml-1" wire:loading.remove wire:target="submit"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
-                    wire:target="submit"></i>
+                   wire:target="submit"></i>
             </button>
         </div>
     </div>

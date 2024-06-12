@@ -625,6 +625,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::name('land-lease.')->prefix('land-lease')->group(function () {
         Route::get('/register', [LandLeaseController::class, 'register'])->name('register');
         Route::get('/assign-taxpayer/{id}', [LandLeaseController::class, 'assignTaxpayer'])->name('assign.taxpayer');
+        Route::get('/edit/{id}', [LandLeaseController::class, 'edit'])->name('edit');
         Route::get('/taxpayer/view/{id}', [LandLeaseController::class, 'taxpayerView'])->name('taxpayer.view');
         Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
         Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
