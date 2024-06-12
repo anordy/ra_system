@@ -90,17 +90,17 @@ class VettingApprovalTableLto extends DataTableComponent
             ->where('is_business_lto', true)
             ->where('vetting_status', $this->vettingStatus)
             ->whereHas('pinstance', function ($query) {
-                $query->where('status', '!=', 'completed');
+                $query->where('status', '!=', WorkflowTask::COMPLETED);
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });
             });
 
-            // Apply filters
+        // Apply filters
         $returnTable = TaxReturn::getTableName();
         $query = $this->dataFilter($query, $this->data, $returnTable);
         $query->orderBy('created_at', $this->orderBy);
-        
+
         return $query;
     }
 
@@ -108,10 +108,10 @@ class VettingApprovalTableLto extends DataTableComponent
     {
         return [
             Column::make('Taxpayer Name', 'business.taxpayer_name')
-            ->format(function ($value, $row) {
-                return $value ?? 'N/A';
-            })
-            ->sortable()->searchable(),
+                ->format(function ($value, $row) {
+                    return $value ?? 'N/A';
+                })
+                ->sortable()->searchable(),
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
@@ -170,4 +170,3 @@ class VettingApprovalTableLto extends DataTableComponent
         ];
     }
 }
-

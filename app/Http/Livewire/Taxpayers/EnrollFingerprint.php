@@ -48,10 +48,10 @@ class EnrollFingerprint extends Component
                 ->where('template', '!=', null)
                 ->count();
 
-            if ($count){
+            if ($count) {
                 $this->selectedStep = 'biometric';
             }
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::error($exception);
             abort(500, 'Something went wrong, please contact your system administrator.');
         }
@@ -95,25 +95,25 @@ class EnrollFingerprint extends Component
             abort(403);
         }
 
-        if (!$kyc = $this->kyc){
+        if (!$kyc = $this->kyc) {
             $this->customAlert('error', 'Something went wrong, please contact your system administrator for support.');
             return;
         }
 
         $biometrics = Biometric::where('reference_no', $kyc->id)
-                ->get();
+            ->get();
 
         if (count($biometrics) != 4) {
             $this->customAlert('error', 'Enroll four fingers');
             return;
         }
 
-        if ($this->kyc->tin && !$this->kyc->tin_verified_at){
+        if ($this->kyc->tin && !$this->kyc->tin_verified_at) {
             $this->customAlert('error', 'TIN No. Not verified by Authorities');
             return;
         }
 
-        if ($this->kyc->zanid && !$this->kyc->zanid_verified_at){
+        if ($this->kyc->zanid && !$this->kyc->zanid_verified_at) {
             $this->customAlert('error', 'ZANID Not verified by Authorities');
             return;
         }
@@ -134,9 +134,9 @@ class EnrollFingerprint extends Component
                 ->orWhere('email', $data['email'] ?? '')
                 ->first();
 
-            if ($existingTaxpayer){
+            if ($existingTaxpayer) {
                 $existingTaxpayer->biometric_verified_at = $data['biometric_verified_at'];
-                if (!$existingTaxpayer->save()){
+                if (!$existingTaxpayer->save()) {
                     session()->flash("error", "Couldn't verify user.");
                     throw new \Exception("Couldn't verify user");
                 }
@@ -151,7 +151,6 @@ class EnrollFingerprint extends Component
                     ]);
 
                 $this->sign($existingTaxpayer);
-
             } else {
                 $taxpayer = Taxpayer::create([
                     'id_type' => $data['id_type'],
@@ -212,7 +211,11 @@ class EnrollFingerprint extends Component
             return redirect()->route('taxpayers.taxpayer.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, Could you please contact our administrator for assistance');
             return;
         }

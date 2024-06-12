@@ -40,7 +40,11 @@ class Passport extends Component
             $this->is_verified_triggered = true;
             $this->passport = $immigration_controller->getPassportData($this->kyc->passport_no, $this->kyc->permit_number);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -102,7 +106,11 @@ class Passport extends Component
             $this->customAlert('success', 'Taxpayers details has been approved successful!');
             return redirect()->route('taxpayers.enroll-fingerprint', [encrypt($this->kyc->id)]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
         }
     }
@@ -126,12 +134,17 @@ class Passport extends Component
             return redirect()->route('taxpayers.registrations.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
         }
     }
 
-    public function convertStringToCamelCase($string) {
+    public function convertStringToCamelCase($string)
+    {
         return ucfirst(strtolower($string));
     }
 

@@ -323,35 +323,35 @@ class PenaltyForDebt
             $curr_payment_due_date = Carbon::create($tax_return->curr_payment_due_date);
 
             $year = FinancialYear::where('code', $curr_payment_due_date->year)->first();
-    
+
             if (!$year) {
                 throw new \Exception("NO FINANCIAL YEAR {$curr_payment_due_date->year} DATA");
             }
-    
+
             $interestRate = InterestRate::where('year', $year->code)->first();
-    
+
             if (!$interestRate) {
                 throw new \Exception("NO INTEREST RATE FOR THE YEAR {$curr_payment_due_date->year}");
             }
-    
+
             $latePaymentAfterRate = PenaltyRate::where('financial_year_id', $year->id)
                 ->where('code', PenaltyRate::LATE_PAYMENT_AFTER)
                 ->first();
-    
+
             if (!$latePaymentAfterRate) {
                 throw new \Exception("NO LATE PAYMENT RATE FOR THE YEAR {$curr_payment_due_date->year}");
             }
-    
+
             $paymentStructure = [];
             $penaltableAmountForPerticularMonth = $tax_return->outstanding_amount;
-    
+
             $date = self::getFinancialMonthFromDate($tax_return->curr_payment_due_date, $tax_return->return_type);
-    
+
             for ($i = 0; $i < $iterations; $i++) {
 
                 $startDate = $date->due_date;
                 $endDate = self::getNextFinancialMonthDueDateFromDate($tax_return->return_type, $date->due_date)->due_date;
-    
+
                 if ($tax_return->return_type == EmTransactionReturn::class || $tax_return->return_type == MmTransferReturn::class) {
                     $latePaymentAmount = PenaltyRate::where('financial_year_id', $tax_return->financialMonth->year->id)->where('code', PenaltyRate::PENALTY_FOR_MM_TRANSACTION)->firstOrFail()->rate;
                     $latePaymentAmount = roundOff($latePaymentAmount, $tax_return->currency);
@@ -367,11 +367,11 @@ class PenaltyForDebt
                     } else {
                         $diffInDays = $endDate->diffInDays($startDate);
                     }
-                    
+
                     $interestAmount = roundOff(self::calculateInterest($penaltableAmount, $interestRate->rate, $diffInDays), $tax_return->currency);
                     $penaltableAmount = roundOff($penaltableAmount + $interestAmount, $tax_return->currency);
                 }
-    
+
                 $paymentStructure[] = [
                     // Sub Month as start date to enddate interval reflects return month
                     'returnMonth' => $date->due_date->subMonth()->monthName . '-' . $date->due_date->subMonth()->year,
@@ -387,7 +387,7 @@ class PenaltyForDebt
                 $penaltableAmountForPerticularMonth = $penaltableAmount;
                 $date = self::getFinancialMonthFromDate($paymentStructure[$i]['end_date'], $tax_return->return_type);
             }
-    
+
             if (count($paymentStructure) > 0) {
                 try {
                     foreach ($paymentStructure as $penalty) {
@@ -407,7 +407,7 @@ class PenaltyForDebt
                             'currency_rate_in_tz' => ExchangeRateTrait::getExchangeRate($tax_return->currency)
                         ]);
                     }
-                    
+
                     $totalLatePaymentPenalty = 0;
                     $totalInterest = 0;
                     foreach ($paymentStructure as $penalty) {
@@ -422,12 +422,16 @@ class PenaltyForDebt
                     $tax_return->outstanding_amount = end($paymentStructure)['penaltyAmount'];
 
                     $tax_return->save();
-        
+
                     (new PenaltyForDebt)->sign($tax_return);
-        
+
                     return $tax_return;
                 } catch (Exception $e) {
-                    Log::error($e);
+                    Log::error('Error: ' . $e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
                     throw new Exception('Failed saving debt penalties');
                 }
             }

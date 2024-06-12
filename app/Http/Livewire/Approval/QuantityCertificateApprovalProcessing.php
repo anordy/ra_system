@@ -60,7 +60,11 @@ class QuantityCertificateApprovalProcessing extends Component
                 $this->flash('success', 'Application Approved Successful', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
@@ -86,7 +90,11 @@ class QuantityCertificateApprovalProcessing extends Component
                 $this->flash('success', 'Application sent for correction', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }

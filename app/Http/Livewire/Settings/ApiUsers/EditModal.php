@@ -29,7 +29,7 @@ class EditModal extends Component
     public function mount($id)
     {
         $this->user = ApiUser::find(decrypt($id));
-        if(is_null($this->user)){
+        if (is_null($this->user)) {
             abort(404);
         }
         $this->app_name = $this->user->app_name;
@@ -85,7 +85,11 @@ class EditModal extends Component
             return redirect()->route('settings.api-users.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.api-users.index');
         }

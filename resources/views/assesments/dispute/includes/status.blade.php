@@ -1,5 +1,5 @@
 @if ($row->app_status === \App\Models\BusinessStatus::APPROVED)
-<span class="badge badge-danger py-1 px-2 green-status">
+    <span class="badge badge-danger py-1 px-2 custom-payment-box">
         <i class="bi bi-record-circle mr-1"></i>
         Approved
     </span>
@@ -13,7 +13,7 @@
         <i class="bi bi-pencil-square mr-1"></i>
         Draft
     </span>
-@elseif($row->ap_status ===\App\Enum\DisputeStatus::CORRECTION)
+@elseif($row->ap_status === \App\Enum\DisputeStatus::CORRECTION)
     <span class="badge badge-danger py-1 px-2 danger-status">
         <i class="bi bi-record-circle mr-1"></i>
         Correction
@@ -23,8 +23,7 @@
         <i class="bi bi-record-circle mr-1"></i>
         Rejected
     </span>
-
-    @elseif($row->app_status === \App\Enum\DisputeStatus::SUBMITTED)
+@elseif($row->app_status === \App\Enum\DisputeStatus::SUBMITTED)
     <span class="badge badge-danger py-1 px-2 pending-status">
         <i class="bi bi-record-circle mr-1"></i>
         Submitted

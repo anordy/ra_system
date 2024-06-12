@@ -35,8 +35,8 @@ class VerificationApprovalProgressTable extends DataTableComponent
 
         return $filter->with('pinstance', 'user')
             ->where('pinstance_type', TaxVerification::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff');
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF);
     }
 
     public function configure(): void

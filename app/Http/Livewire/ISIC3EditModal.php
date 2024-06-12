@@ -24,7 +24,7 @@ class ISIC3EditModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|strip_tag|unique:isic3s,code,'.$this->isic3->id.',id',
+            'code' => 'required|strip_tag|unique:isic3s,code,' . $this->isic3->id . ',id',
             'description' => 'required|strip_tag',
             'isic2_id' => 'required',
         ];
@@ -34,7 +34,7 @@ class ISIC3EditModal extends Component
     {
         $id = decrypt($id);
         $data = ISIC3::find($id);
-        if(is_null($data)){
+        if (is_null($data)) {
             abort(404);
         }
         $this->isic3 = $data;
@@ -60,7 +60,11 @@ class ISIC3EditModal extends Component
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

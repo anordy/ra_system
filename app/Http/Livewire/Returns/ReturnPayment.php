@@ -16,20 +16,23 @@ class ReturnPayment extends Component
 
     public $return;
 
-    public function mount($return){
+    public function mount($return)
+    {
         $this->return = $return;
     }
 
-    public function refresh(){
+    public function refresh()
+    {
         $this->return = get_class($this->return)::find($this->return->id);
-        if(is_null($this->return)){
+        if (is_null($this->return)) {
             abort(404);
         }
     }
 
-    public function regenerate(){
+    public function regenerate()
+    {
         $response = $this->regenerateControlNo($this->return->bill);
-        if ($response){
+        if ($response) {
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             return redirect(request()->header('Referer'));
         }
@@ -39,14 +42,19 @@ class ReturnPayment extends Component
     /**
      * A Safety Measure to Generate a bill that has not been generated
      */
-    public function generateBill(){
+    public function generateBill()
+    {
         try {
             $this->generateReturnControlNumber($this->return);
             $this->customAlert('success', 'Your request was submitted, you will receive your payment information shortly.');
             return redirect(request()->header('Referer'));
         } catch (Exception $e) {
             $this->customAlert('error', 'Bill could not be generated, please try again later.');
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
@@ -55,7 +63,8 @@ class ReturnPayment extends Component
         return $this->getResponseCodeStatus($code)['message'];
     }
 
-    public function render(){
+    public function render()
+    {
         return view('livewire.returns.return-payment');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Audit;
 
 use App\Http\Controllers\Controller;
 use App\Models\TaxAudit\TaxAudit;
+use Illuminate\Support\Facades\Log;
 
 class TaxAuditAssessmentController extends Controller
 {
@@ -15,7 +16,18 @@ class TaxAuditAssessmentController extends Controller
 
     public function show($id)
     {
-        $audit = TaxAudit::with('assessment', 'officers')->findOrFail(decrypt($id));
-        return view('audit.preview', compact('audit'));
+        try {
+            $audit = TaxAudit::with('assessment', 'officers', 'assessments')->findOrFail(decrypt($id));
+            return view('audit.preview', compact('audit'));
+        } catch (\Exception $e) {
+            report($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            session()->flash('warning', 'The selected audit was not found. Please contact your administrator');
+            return back();
+        }
     }
 }

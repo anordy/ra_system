@@ -14,14 +14,28 @@ class TaxAuditAssessmentTable extends DataTableComponent
 {
 
     use CustomAlert;
+    public $taxRegion;
+    public $orderBy;
 
     public $model = TaxAudit::class;
 
+    public function mount($taxRegion)
+    {
+        // if (!Gate::allows('tax-returns-vetting-view')) {
+        //     abort(403);
+        // }
+
+        $this->taxRegion = $taxRegion;
+    }
+
     public function builder(): Builder
     {
-        return TaxAudit::query()->with('business', 'location', 'taxType', 'taxAuditLocations','createdBy')
+        return TaxAudit::query()->with('business', 'location', 'taxType', 'taxAuditLocations', 'createdBy')
             ->has('assessment')
-            ->where('tax_audits.status', TaxAuditStatus::APPROVED);
+            ->where('tax_audits.status', TaxAuditStatus::APPROVED)
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->where('location', $this->taxRegion); //this is filter by department
+            });
     }
 
     public function configure(): void

@@ -33,7 +33,7 @@ class KycAmendmentRequestApprovalProcessing extends Component
             $this->amendmentRequest = $amendmentRequest;
             $this->kyc_id = $amendmentRequest->kyc_id;
             $this->registerWorkflow($modelName, $this->modelId);
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::error($exception);
             abort(500, 'Something went wrong, please contact your system administrator for support.');
         }
@@ -41,7 +41,7 @@ class KycAmendmentRequestApprovalProcessing extends Component
 
     public function approve($transition)
     {
-        if (!isset($transition['data']['transition'])){
+        if (!isset($transition['data']['transition'])) {
             $this->customAlert('Something went wrong, please contact your system administrator for support.');
             return;
         }
@@ -62,14 +62,18 @@ class KycAmendmentRequestApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
     public function reject($transition)
     {
-        if (!isset($transition['data']['transition'])){
+        if (!isset($transition['data']['transition'])) {
             $this->customAlert('Something went wrong, please contact your system administrator for support.');
             return;
         }
@@ -90,7 +94,11 @@ class KycAmendmentRequestApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

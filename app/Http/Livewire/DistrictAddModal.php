@@ -50,15 +50,19 @@ class DistrictAddModal extends Component
             $district = District::create([
                 'name' => $this->name,
                 'region_id' => $this->region_id,
-                'created_at' =>Carbon::now()
+                'created_at' => Carbon::now()
             ]);
-            $this->triggerDualControl(get_class($district), $district->id, DualControl::ADD, 'adding new district '.$this->name.'');
+            $this->triggerDualControl(get_class($district), $district->id, DualControl::ADD, 'adding new district ' . $this->name . '');
             DB::commit();
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.district.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.district.index');
         }

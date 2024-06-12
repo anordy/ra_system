@@ -23,7 +23,11 @@ trait TaxVerificationTrait
                 $verification->status = TaxVerificationStatus::PENDING;
                 $verification->save();
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
             }
         }
     }
@@ -56,9 +60,12 @@ trait TaxVerificationTrait
                 $verification = TaxVerification::create($data);
                 $verification->riskIndicators()->attach($riskIndicators);
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
             }
         }
     }
-
 }

@@ -87,13 +87,12 @@ class ReturnDebtWaiverApprovalProcessing extends Component
         if (!Gate::allows('debt-management-debts-waive')) {
             abort(403);
         }
-        
+
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
-        
-        if ($this->checkTransition('debt_manager_review')) {
 
+        if ($this->checkTransition('debt_manager_review')) {
         }
 
 
@@ -126,7 +125,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                         'interest_amount' => $this->interestAmount ?? 0,
                     ]);
 
-                    if (!$this->verify($this->debt)){
+                    if (!$this->verify($this->debt)) {
                         throw new Exception('Could not verify tax return, please contact your administrator.');
                     }
 
@@ -151,10 +150,13 @@ class ReturnDebtWaiverApprovalProcessing extends Component
 
                     event(new SendSms('debt-waiver-approval', $notification_payload));
                     event(new SendMail('debt-waiver-approval', $notification_payload));
-    
                 } catch (Exception $e) {
                     DB::rollBack();
-                    Log::error($e);
+                    Log::error('Error: ' . $e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
                     $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                     return;
                 }
@@ -167,11 +169,13 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                         GenerateControlNo::dispatch($this->debt);
                     }
                 } catch (Exception $e) {
-                    Log::error($e);
+                    Log::error('Error: ' . $e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
                 }
-    
             }
-       
         }
 
         if ($this->checkTransition('commissioner_complete')) {
@@ -241,10 +245,13 @@ class ReturnDebtWaiverApprovalProcessing extends Component
 
                 event(new SendSms('debt-waiver-approval', $notification_payload));
                 event(new SendMail('debt-waiver-approval', $notification_payload));
-
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
@@ -257,9 +264,12 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                     GenerateControlNo::dispatch($this->debt);
                 }
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
             }
-
         }
 
         try {
@@ -267,7 +277,11 @@ class ReturnDebtWaiverApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
         }
     }
@@ -316,7 +330,11 @@ class ReturnDebtWaiverApprovalProcessing extends Component
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -337,7 +355,6 @@ class ReturnDebtWaiverApprovalProcessing extends Component
             $hasLimitExceeded = $debt->outstanding_amount > $amount_limiter ? true : false;
         }
         return $hasLimitExceeded;
-
     }
 
     protected $listeners = [
@@ -366,5 +383,4 @@ class ReturnDebtWaiverApprovalProcessing extends Component
     {
         return view('livewire.approval.return-debt-waiver-approval-processing');
     }
-
 }

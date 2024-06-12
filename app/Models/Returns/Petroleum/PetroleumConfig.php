@@ -11,6 +11,8 @@ class PetroleumConfig extends Model
 
     protected $guarded = [];
 
+    const TOTAL = 'TOTAL';
+
     public static function getTableName()
     {
         return with(new static)->getTable();

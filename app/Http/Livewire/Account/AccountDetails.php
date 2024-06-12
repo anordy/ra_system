@@ -22,11 +22,11 @@ class AccountDetails extends Component
 
     public function mount()
     {
-       $this->user = User::findOrFail(Auth::id());
-       $this->first_name = $this->user->fname;
-       $this->last_name = $this->user->lname;
-       $this->email = $this->user->email;
-       $this->mobile = $this->user->phone;
+        $this->user = User::findOrFail(Auth::id());
+        $this->first_name = $this->user->fname;
+        $this->last_name = $this->user->lname;
+        $this->email = $this->user->email;
+        $this->mobile = $this->user->phone;
     }
 
     public function makeChanges()
@@ -34,7 +34,7 @@ class AccountDetails extends Component
         $this->validate();
 
         // Verify
-        if (!$this->verify($this->user)){
+        if (!$this->verify($this->user)) {
             throw new Exception('Could not verify user account.');
         }
 
@@ -48,7 +48,11 @@ class AccountDetails extends Component
             session()->flash('success', 'Your profile information has been changed successful');
             $this->redirect(route('account'));
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

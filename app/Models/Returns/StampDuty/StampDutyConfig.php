@@ -12,11 +12,24 @@ class StampDutyConfig extends Model
 
     protected $guarded = [];
 
-    public function scopeActive($query){
+    const STAMP_DUTY_CODES = [
+        'EXIMP',
+        'LOCPUR',
+        'IMPPUR',
+    ];
+
+    const STAMP_DUTY_SALES_CODES = [
+        'SUP', // Optional: Add descriptions if needed
+        'INST',
+    ];
+
+    public function scopeActive($query)
+    {
         return $query->where('is_active', true);
     }
 
-    public function headings(){
+    public function headings()
+    {
         return $this->hasMany(StampDutyConfigHead::class);
     }
 }

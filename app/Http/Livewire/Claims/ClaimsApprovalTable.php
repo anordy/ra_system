@@ -32,9 +32,9 @@ class ClaimsApprovalTable extends DataTableComponent
     {
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', TaxClaim::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
-            ->whereHas('actors', function($query){
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF)
+            ->whereHas('actors', function ($query) {
                 $query->where('user_id', auth()->id());
             })
             ->with('pinstance')->orderByDesc('id');
@@ -47,7 +47,7 @@ class ClaimsApprovalTable extends DataTableComponent
             Column::make('Business Name', 'pinstance.business.name')
                 ->label(fn ($row) => $row->pinstance->business->name ?? ''),
             Column::make('Claimed Amount', 'pinstance.amount')
-                ->label(function ($row){
+                ->label(function ($row) {
                     $formattedAmount = number_format($row->pinstance->amount, 2);
                     return "{$row->pinstance->currency}. {$formattedAmount}";
                 }),
@@ -57,11 +57,11 @@ class ClaimsApprovalTable extends DataTableComponent
                 ->label(fn ($row) => $row->pinstance->business->mobile ?? 'N/A'),
 
             Column::make('Status', 'pinstance.mobile')
-                ->label(function ($row){
+                ->label(function ($row) {
                     return view('claims.includes.status', ['row' => $row->pinstance]);
                 }),
             Column::make('Action', 'id')
-                ->label(function ($row){
+                ->label(function ($row) {
                     return view('claims.includes.actions', ['value' => $row->pinstance->id]);
                 }),
         ];

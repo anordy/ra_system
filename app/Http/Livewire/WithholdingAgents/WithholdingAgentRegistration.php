@@ -22,7 +22,7 @@ use Livewire\WithFileUploads;
 
 class WithholdingAgentRegistration extends Component
 {
-    use CustomAlert,WithFileUploads;
+    use CustomAlert, WithFileUploads;
 
     public $regions = [];
     public $districts = [];
@@ -76,7 +76,7 @@ class WithholdingAgentRegistration extends Component
             $this->wards = Ward::where('district_id', $this->district_id)->select('id', 'name')->get();
         }
 
-        if ($propertyName === 'ward_id'){
+        if ($propertyName === 'ward_id') {
             $this->streets = [];
             $this->streets = Street::where('ward_id', $this->ward_id)->select('id', 'name')->get();
         }
@@ -106,7 +106,7 @@ class WithholdingAgentRegistration extends Component
                 'street_id' => $this->street_id,
                 'approval_letter' => $this->approval_letter->store('/withholding_agents/approval_letter', "local-admin"),
             ];
-            
+
             $withholding_agent = WithholdingAgent::create($withholding_agent);
             $withholding_agent->zwnGeneration();
             $withholding_agent_resp_person_data = [
@@ -127,7 +127,11 @@ class WithholdingAgentRegistration extends Component
             return redirect()->to('/withholdingAgents/list')->with('success', "A notification for successful registration of a withholding agent for {$this->institution_name} has been sent to the responsible person.");
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -157,7 +161,6 @@ class WithholdingAgentRegistration extends Component
         }
 
         $this->search_triggered = true;
-        
     }
 
     public function render()

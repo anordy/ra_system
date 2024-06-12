@@ -28,7 +28,8 @@ class BpraVerification extends Component
     public $shares;
     public $requestSuccess;
 
-    public function mount($business){
+    public function mount($business)
+    {
         $this->business = $business;
     }
 
@@ -46,14 +47,17 @@ class BpraVerification extends Component
                 $this->shares = $this->bpraResponse['listShareHolderShares'];
             } else if ($response['message'] == 'unsuccessful') {
                 $this->customAlert('error', 'BPRA Number does not exist!');
-            }else if ($response['message'] = 'unsuccessful') {
+            } else if ($response['message'] = 'unsuccessful') {
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
-
         } catch (Exception $e) {
             $this->requestSuccess = false;
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             return $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -66,7 +70,8 @@ class BpraVerification extends Component
         return $kyc_property === $bpra_property ? true : false;
     }
 
-    public function confirm(){
+    public function confirm()
+    {
         try {
             DB::beginTransaction();
             if ($this->bpraResponse['businessData']['reg_number']) {
@@ -80,7 +85,7 @@ class BpraVerification extends Component
             $this->business->save();
 
             if ($this->directors) {
-                foreach ($this->directors as $director){
+                foreach ($this->directors as $director) {
                     BusinessDirector::create([
                         'business_id' => $director['business_id'],
                         'country' => $director['country'],
@@ -104,7 +109,7 @@ class BpraVerification extends Component
             }
 
             if ($this->shareholders) {
-                foreach ($this->shareholders as $shareholder){
+                foreach ($this->shareholders as $shareholder) {
                     BusinessShareholder::create([
                         'business_id' => $shareholder['business_id'],
                         'country' => $shareholder['country'],
@@ -134,15 +139,15 @@ class BpraVerification extends Component
                     $shareHolderID = BusinessShareholder::where('entity_name', trim($share['shareholder_name']))
                         ->orWhere('national_id', $share['item'])->first();
 
-                    if(!$shareHolderID){
+                    if (!$shareHolderID) {
                         Log::info('NO SHAREHOLDER ID');
                     } else {
                         $shareHolderID = $shareHolderID->id;
                     }
 
                     BusinessShare::create([
-                        'business_id' =>$this->business->id,
-                        'share_holder_id' =>$shareHolderID ?? 0,
+                        'business_id' => $this->business->id,
+                        'share_holder_id' => $shareHolderID ?? 0,
                         'shareholder_name' => $share['shareholder_name'],
                         'share_class' => $share['share_class'],
                         'number_of_shares' => $share['number_of_shares'],
@@ -156,13 +161,18 @@ class BpraVerification extends Component
             DB::commit();
             $this->customAlert('success', 'Bpra Verification Completed.');
         } catch (\Throwable $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
 
-    public function continueWithProvidedData(){
+    public function continueWithProvidedData()
+    {
         try {
             DB::beginTransaction();
             $this->business->bpra_verification_status = BusinessStatus::PBRA_UNVERIFIED;
@@ -171,7 +181,7 @@ class BpraVerification extends Component
             DB::commit();
             $this->customAlert('success', 'Continue with provided data successfully.');
         } catch (\Throwable $e) {
-            Log::error($e .','. Auth::user());
+            Log::error($e . ',' . Auth::user());
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

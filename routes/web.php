@@ -149,6 +149,7 @@ use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
+use App\Http\Controllers\Investigation\TaxInvestigationAssessmentPaymentController;
 
 Auth::routes(['register' => false]);
 
@@ -269,7 +270,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
 
         Route::get('/api-users', [ApiUserController::class, 'index'])->name('api-users.index');
-
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
@@ -505,10 +505,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/on-correction', [TaxReturnVettingController::class, 'onCorrection'])->name('on.correction');
         Route::get('/vetted', [TaxReturnVettingController::class, 'vetted'])->name('vetted');
         Route::get('/view/{return_id}', [TaxReturnVettingController::class, 'show'])->name('show');
-
     });
 
     Route::name('tax_auditing.')->prefix('tax_auditing')->group(function () {
+        Route::get('/businesses', [TaxAuditApprovalController::class, 'business'])->name('businesses');
+        Route::get('/business/show/{id}', [TaxAuditApprovalController::class, 'showBusiness'])->name('business.show');
         Route::resource('/approvals', TaxAuditApprovalController::class);
         Route::resource('/assessments', TaxAuditAssessmentController::class);
         Route::resource('/verified', TaxAuditVerifiedController::class);
@@ -558,7 +559,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
         Route::get('/public-service/report/payment/{parameters}', [\App\Http\Controllers\Reports\PublicService\PublicServiceReportController::class, 'exportPaymentReportPdf'])->name('public-service.payment.pdf');
         Route::get('/public-service/report/registration/{parameters}', [\App\Http\Controllers\Reports\PublicService\PublicServiceReportController::class, 'exportRegistrationReportPdf'])->name('public-service.registration.pdf');
-
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -616,12 +616,13 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         // Debt rollbacks
         Route::get('/rollbacks/return/{tax_return_id}', [DebtRollbackController::class, 'return'])->name('rollback.return');
         Route::get('/rollbacks/assessment/{assessment_id}', [DebtRollbackController::class, 'assessment'])->name('rollback.assessment');
-
     });
 
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
         Route::resource('/approvals', TaxInvestigationApprovalController::class);
         Route::resource('/assessments', TaxInvestigationAssessmentController::class);
+        Route::resource('/payments', TaxInvestigationAssessmentPaymentController::class);
+        Route::post('/approve-reject/{paymentId}', [TaxInvestigationAssessmentPaymentController::class, 'approveReject'])->name('approve-reject');
         Route::resource('/verified', TaxInvestigationVerifiedController::class);
         Route::resource('/files', TaxInvestigationFilesController::class);
     });

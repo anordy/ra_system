@@ -76,7 +76,11 @@ trait AfterPaymentEvents
                 }
             }
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
@@ -127,7 +131,11 @@ trait AfterPaymentEvents
                 }
             }
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
@@ -142,12 +150,11 @@ trait AfterPaymentEvents
                     $dispute = $bill->bill_items()->where('billable_type', Dispute::class)->firstOrFail()->billable;
 
                     $assessment = $bill->billable;
-                    
+
                     if ($assessment->app_status == TaxAssessmentStatus::WAIVER_AND_OBJECTION) {
 
                         $assessment->payment_status = BillStatus::COMPLETE;
                         $assessment->save();
-                        
                     } else {
                         $assessment->payment_status = BillStatus::PAID_PARTIALLY;
                         $assessment->save();
@@ -159,10 +166,8 @@ trait AfterPaymentEvents
 
                     $dispute->payment_status = BillStatus::COMPLETE;
                     $dispute->save();
-
-                    
                 }
-            }elseif ($bill->billable_type == TaxAssessment::class ){
+            } elseif ($bill->billable_type == TaxAssessment::class) {
                 if ($bill->paidAmount() >= $bill->amount) {
                     $assessment = $bill->billable;
                     $assessment->payment_status = BillStatus::COMPLETE;
@@ -174,7 +179,11 @@ trait AfterPaymentEvents
                 }
             }
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
@@ -215,11 +224,13 @@ trait AfterPaymentEvents
                     $updateDebt->outstanding_amount = $updateLeasePayment->outstanding_amount;
                     $updateDebt->save();
                 }
-
             }
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
-
 }

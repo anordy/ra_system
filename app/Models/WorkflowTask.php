@@ -11,6 +11,8 @@ class WorkflowTask extends Model
 
     protected $guarded = [];
 
+    const COMPLETED = 'completed';
+    const STAFF = 'staff';
     public static function getTableName()
     {
         return with(new static)->getTable();

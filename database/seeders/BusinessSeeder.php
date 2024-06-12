@@ -72,7 +72,7 @@ class BusinessSeeder extends Seeder
             "effective_date" => "2023-01-01",
             "pre_estimated_turnover" => 1200000,
             "post_estimated_turnover" => 340000,
-            "approved_on"=> Carbon::now()
+            "approved_on" => Carbon::now()
         ];
 
         $location_two = [
@@ -98,7 +98,7 @@ class BusinessSeeder extends Seeder
             "effective_date" => "2023-03-01",
             "pre_estimated_turnover" => 45000000,
             "post_estimated_turnover" => 20000000,
-            "approved_on"=> Carbon::now()
+            "approved_on" => Carbon::now()
         ];
 
         $bank = [
@@ -121,16 +121,20 @@ class BusinessSeeder extends Seeder
 
             foreach ($taxTypes as $tax) {
                 if ($tax->code == TaxType::VAT) {
-                    BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $tax->id, "currency" => "TZS", "sub_vat_id" =>  2]);
+                    BusinessTaxType::create(["business_id" => $business->id, "tax_type_id" => $tax->id, "currency" => "TZS", "sub_vat_id" =>  2]);
                 } else {
-                    BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $tax->id, "currency" => "TZS"]);
+                    BusinessTaxType::create(["business_id" => $business->id, "tax_type_id" => $tax->id, "currency" => "TZS"]);
                 }
             }
 
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 }

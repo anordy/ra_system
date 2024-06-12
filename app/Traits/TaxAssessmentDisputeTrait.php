@@ -53,10 +53,13 @@ trait TaxAssessmentDisputeTrait
 
                 $assessment->update($data);
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 throw new Exception('Failed to update assessment history');
             }
         }
     }
-
 }

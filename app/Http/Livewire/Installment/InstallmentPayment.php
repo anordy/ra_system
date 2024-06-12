@@ -25,7 +25,8 @@ class InstallmentPayment extends Component
     public $bill;
     public $activeItem;
 
-    public function mount(){
+    public function mount()
+    {
         $this->activeItem = $this->installment
             ->items()
             ->whereBetween('due_date', [
@@ -36,7 +37,8 @@ class InstallmentPayment extends Component
             ->first(); // Null value is checked from view.
     }
 
-    public function refresh(){
+    public function refresh()
+    {
         $this->activeItem = $this->installment
             ->items()
             ->whereBetween('due_date', [
@@ -47,11 +49,12 @@ class InstallmentPayment extends Component
             ->first(); // Null value is checked from view.
     }
 
-    public function generateItem(){
-        if ($this->activeItem){
+    public function generateItem()
+    {
+        if ($this->activeItem) {
             $this->customAlert('error', 'Control no. already exists!');
         }
-        
+
         $installmentRequest = $this->installment->request;
 
         try {
@@ -81,7 +84,7 @@ class InstallmentPayment extends Component
             }
 
             $payer = $installmentRequest->createdBy;
-            
+
             // Generate control no
             $payer_type     = $installmentRequest->created_by_type;
             $payer_name     = $payer->fullName;
@@ -131,13 +134,17 @@ class InstallmentPayment extends Component
             );
 
             DB::commit();
-            
+
             $this->sendBill($bill, $item);
 
             return redirect()->route('installment.show', encrypt($this->installment->id));
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

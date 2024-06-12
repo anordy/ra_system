@@ -31,7 +31,7 @@ class SystemSettingCategoryAddModal extends Component
 
     public function submit()
     {
-        
+
         if (!Gate::allows('setting-system-category-add')) {
             abort(403);
         }
@@ -49,7 +49,11 @@ class SystemSettingCategoryAddModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact our administrator for assistance?');
         }
     }

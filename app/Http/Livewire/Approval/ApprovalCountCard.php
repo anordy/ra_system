@@ -18,9 +18,9 @@ class ApprovalCountCard extends Component
     public $pending = 0;
     public $rejected = 0;
     public $approved = 0;
-     public $category;
+    public $category;
 
-    public function mount($modelName,$category = null)
+    public function mount($modelName, $category = null)
     {
         $this->category = $category;
         $user_id = auth()->id();
@@ -28,7 +28,7 @@ class ApprovalCountCard extends Component
             case 'TaxVerification':
                 $model = TaxVerification::class;
                 $workflowPending = WorkflowTask::where('pinstance_type', $model)
-                    ->where('owner', 'staff')
+                    ->where('owner', WorkflowTask::STAFF)
                     ->where('status', 'running')
                     ->whereHas('actors', function ($query) use ($user_id) {
                         $query->where('user_id', $user_id);
@@ -48,7 +48,7 @@ class ApprovalCountCard extends Component
             case 'TaxAudit':
                 $model = TaxAudit::class;
                 $workflowPending = WorkflowTask::where('pinstance_type', $model)
-                    ->where('owner', 'staff')
+                    ->where('owner', WorkflowTask::STAFF)
                     ->where('status', 'running')
                     ->whereHas('actors', function ($query) use ($user_id) {
                         $query->where('user_id', $user_id);
@@ -67,7 +67,7 @@ class ApprovalCountCard extends Component
             case 'TaxInvestigation':
                 $model = TaxInvestigation::class;
                 $workflowPending = WorkflowTask::where('pinstance_type', $model)
-                    ->where('owner', 'staff')
+                    ->where('owner', WorkflowTask::STAFF)
                     ->where('status', 'running')
                     ->whereHas('actors', function ($query) use ($user_id) {
                         $query->where('user_id', $user_id);
@@ -86,7 +86,7 @@ class ApprovalCountCard extends Component
             case 'Dispute':
                 $model = Dispute::class;
                 $workflowPending = WorkflowTask::where('pinstance_type', $model)
-                    ->where('owner', 'staff')
+                    ->where('owner', WorkflowTask::STAFF)
                     ->where('status', 'running')
                     ->whereHasMorph('pinstance', Dispute::class, function ($query) {
                         $query->where('category', $this->category);

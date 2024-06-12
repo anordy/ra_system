@@ -31,7 +31,7 @@ class InterestRateEditModal extends Component
     public function mount($id)
     {
         $data = InterestRate::find(decrypt($id));
-        if(is_null($data)){
+        if (is_null($data)) {
             abort(404);
         }
         $this->interestRate = $data;
@@ -41,7 +41,6 @@ class InterestRateEditModal extends Component
             'rate' => $this->rate,
             'year' => $this->year,
         ];
-
     }
 
     public function submit()
@@ -62,7 +61,11 @@ class InterestRateEditModal extends Component
             return redirect()->route('settings.interest-rates.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.interest-rates.index');
         }

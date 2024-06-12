@@ -7,21 +7,36 @@ use App\Models\WorkflowTask;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxAuditApprovalProgressTable extends DataTableComponent
 {
     use CustomAlert;
+    public $taxRegion;
+    public $orderBy;
 
     public $model = WorkflowTask::class;
+
+    public function mount($taxRegion = null)
+    {
+        $this->taxRegion = $taxRegion;
+        // DB::transaction(function () {
+        //     $tasks = WorkflowTask::where('pinstance_type', TaxAudit::class)->get();
+        //     TaxAudit::query()->delete();
+        //     foreach ($tasks as $task) {
+        //         $task->delete();
+        //     }
+        // });
+    }
 
     public function builder(): Builder
     {
         return WorkflowTask::with('pinstance', 'pinstance.location', 'pinstance.business', 'user')
             ->where('pinstance_type', TaxAudit::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff');
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF);
     }
 
     public function configure(): void
