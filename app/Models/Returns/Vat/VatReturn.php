@@ -4,6 +4,8 @@ namespace App\Models\Returns\Vat;
 
 use App\Models\Claims\TaxClaim;
 use App\Models\Claims\TaxCreditItem;
+use App\Models\TaxRefund\TaxRefundItem;
+use App\Models\Tra\ExitedGood;
 use App\Models\WithheldCertificate;
 use App\Models\ZmBill;
 use App\Models\TaxType;
@@ -137,5 +139,13 @@ class VatReturn extends Model
 
     public function exemptSupplies(){
         return $this->hasMany(VatExemptSupply::class, 'vat_return_id');
+    }
+
+    public function importPurchases(){
+        return $this->hasMany(ExitedGood::class, 'vat_return_id');
+    }
+
+    public function standardPurchases(){
+        return $this->hasMany(TaxRefundItem::class, 'vat_return_id');
     }
 }

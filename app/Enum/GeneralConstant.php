@@ -46,6 +46,7 @@ class GeneralConstant implements Status
     const MONTH_NUMBER = 'month_number';
     const SINGLE_STATE = 'single_state';
     const STATE_MACHINE = 'state_machine';
+    const VERIFIED = 'verified';
 
 
     public static function getConstants(): array
