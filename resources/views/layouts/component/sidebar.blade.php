@@ -413,6 +413,11 @@
                             <a href="{{ route('debts.waivers.index') }}">Waiver Requests</a>
                         </li>
                     @endcan
+                    @can('debt-management-offence-view')
+                        <li class="{{ request()->is('debts/offence*') ? 'active' : '' }}">
+                            <a href="{{ route('debts.offence.index') }}">Issue Offence</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan

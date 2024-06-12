@@ -118,6 +118,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'debt-management-airport-service-safety-fee-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-excise-duty-bfo-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-excise-duty-mno-view', 'sys_module_id' => 14],
+//            ['name' => 'debt-management-offence-view', 'sys_module_id' => 14],
 
             ['name' => 'mvr_initiate_registration', 'sys_module_id' => 15],
             ['name' => 'mvr_approve_registration', 'sys_module_id' => 15],

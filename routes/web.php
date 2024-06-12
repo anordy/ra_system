@@ -605,6 +605,9 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/rollbacks/return/{tax_return_id}', [DebtRollbackController::class, 'return'])->name('rollback.return');
         Route::get('/rollbacks/assessment/{assessment_id}', [DebtRollbackController::class, 'assessment'])->name('rollback.assessment');
 
+        // Offence
+        Route::get('/offence',[\App\Http\Controllers\Offence\OffenceController::class,'index'])->name('offence.index');
+
     });
 
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
