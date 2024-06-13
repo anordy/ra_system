@@ -1,7 +1,7 @@
 @if (count($this->getEnabledTransitions()) > 1)
     <div class="card shadow-sm mb-2 bg-white border-0 shadow-none">
         <div class="card-header font-weight-bold">
-            Public Service De-registration Approval
+            Transport Service De-registration Approval
         </div>
         <div class="card-body">
             @include('livewire.approval.transitions')

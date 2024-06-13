@@ -1,13 +1,13 @@
 @extends('layouts.master')
 
-@section('title', 'View Public Service Registration')
+@section('title', 'View Transport Service Registration')
 
 @section('content')
 
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-               aria-selected="true"> Public Service Registration Information</a>
+               aria-selected="true"> Transport Service Registration Information</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="approval-tab" data-toggle="tab" href="#approval" role="tab" aria-controls="approval"
@@ -19,7 +19,7 @@
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card">
                 <div class="card-header">
-                    Public Service Information
+                    Transport Service Information
                 </div>
                 <div class="card-body">
                     <div class="row m-2 pt-3">

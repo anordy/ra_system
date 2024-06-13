@@ -1,13 +1,13 @@
 @extends('layouts.master')
 
-@section('title', __('Public Service Temporary Closures Details'))
+@section('title', __('Transport Service Temporary Closures Details'))
 
 @section('content')
 
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-               aria-selected="true"> Public Service Temporary Closure</a>
+               aria-selected="true"> Transport Service Temporary Closure</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="approval-tab" data-toggle="tab" href="#approval" role="tab" aria-controls="approval"
@@ -19,7 +19,7 @@
         <div class="tab-pane fade show active pt-3 px-3" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card shadow-none">
                 <div class="card-header text-uppercase font-weight-bold bg-white">
-                    {{ __('Public Service Temporary Closures Details') }}
+                    {{ __('Transport Service Temporary Closures Details') }}
                 </div>
                 <div class="card-body">
                     <div class="row">

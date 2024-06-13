@@ -636,8 +636,7 @@
         {{-- TODO: Add permissions --}}
         <li class="{{ request()->is('public-service*') ? 'active' : '' }}">
             <a href="#publicServiceSubmenu" data-toggle="collapse"
-               aria-expanded="{{ request()->is('public-service*') ? 'true' : 'false' }}" class="dropdown-toggle">Public
-                Service</a>
+               aria-expanded="{{ request()->is('public-service*') ? 'true' : 'false' }}" class="dropdown-toggle">Transport Services</a>
             <ul class="collapse list-unstyled {{ request()->is('public-service*') ? 'show' : '' }}"
                 id="publicServiceSubmenu">
                 <li class="{{ request()->is('public-service/registrations*') ? 'active' : '' }}">
@@ -772,7 +771,7 @@
                         @endcan
                         @can('managerial-public-service-reports-view')
                             <li class="{{ request()->is('public-service/reports*') ? 'active' : '' }}">
-                                <a href="{{ route('public-service.report.index') }}">Public Service Reports</a>
+                                <a href="{{ route('public-service.report.index') }}">Transport Service Reports</a>
                             </li>
                         @endcan
                     @endcan
