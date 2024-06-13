@@ -107,7 +107,7 @@ class InstallmentRequestApprovalProcessing extends Component
                     'installment_from' => $this->subject->installment_from,
                     'installment_to' => $this->subject->installment_to,
                     'installment_count' => $this->subject->installment_count,
-                    'amount' => roundOff($installable->outstanding_amount, $installable->currency),
+                    'amount' => $installable->outstanding_amount,
                     'currency' => $installable->currency,
                     'status' => InstallmentStatus::ACTIVE
                 ]);
