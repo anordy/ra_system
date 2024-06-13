@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\GeneralConstant;
 use Exception;
 use App\Models\Role;
 use App\Models\User;
@@ -120,8 +121,49 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->return->save();
                 $this->return->return->save();
 
+                // Check if return is VAT and approve im4 & im9
+                if ($this->return->return_type === VatReturn::class) {
+                    $exitedGoods  = $this->return->return->importPurchases ?? [];
+                    $refundItems  = $this->return->return->standardPurchases ?? [];
+                    $supplierItems  = $this->return->return->suppliers ?? [];
+
+                    if (count($exitedGoods) > 0) {
+                        foreach ($exitedGoods as $exitedGood) {
+                            $exitedGood->status = GeneralConstant::ONE_INT;
+                            $exitedGood->save();
+
+                            if (!$exitedGood) throw new Exception('Failed to Save Exited Good');
+                        }
+                    }
+
+                    if (count($refundItems) > 0) {
+                        foreach ($refundItems as $refundItem) {
+                            $refundItem->status = GeneralConstant::ONE_INT;
+                            $refundItem->save();
+                            if (!$refundItem) throw new Exception('Failed to Save Refund Item');
+                        }
+                    }
+
+                    if (count($supplierItems) > 0) {
+                        foreach ($supplierItems as $supplierItem) {
+                            $items = $supplierItem->supplierDetailsItems ?? [];
+
+                            if (count($items) > 0) {
+                                foreach ($items as $item) {
+                                    $item->used = true;
+                                    $item->save();
+
+                                    if (!$item) throw new Exception('Failed to Save Supplier Item');
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-                
+
                 // Trigger verification
                 $this->triggerTaxVerifications($this->return, auth()->user());
                 
@@ -207,6 +249,47 @@ class TaxReturnsVettingApprovalProcessing extends Component
 
                 $this->return->vetting_status = VettingStatus::VETTED;
                 $this->return->return->vetting_status = VettingStatus::VETTED;
+
+                // Check if return is VAT and approve im4 & im9
+                if ($this->return->return_type === VatReturn::class) {
+                    $exitedGoods  = $this->return->return->importPurchases ?? [];
+                    $refundItems  = $this->return->return->standardPurchases ?? [];
+                    $supplierItems  = $this->return->return->suppliers ?? [];
+
+                    if (count($exitedGoods) > 0) {
+                        foreach ($exitedGoods as $exitedGood) {
+                            $exitedGood->status = GeneralConstant::ONE_INT;
+                            $exitedGood->save();
+
+                            if (!$exitedGood) throw new Exception('Failed to Save Exited Good');
+                        }
+                    }
+
+                    if (count($refundItems) > 0) {
+                        foreach ($refundItems as $refundItem) {
+                            $refundItem->status = GeneralConstant::ONE_INT;
+                            $refundItem->save();
+                            if (!$refundItem) throw new Exception('Failed to Save Refund Item');
+                        }
+                    }
+
+                    if (count($supplierItems) > 0) {
+                        foreach ($supplierItems as $supplierItem) {
+                            $items = $supplierItem->supplierDetailsItems ?? [];
+
+                            if (count($items) > 0) {
+                                foreach ($items as $item) {
+                                    $item->used = true;
+                                    $item->save();
+
+                                    if (!$item) throw new Exception('Failed to Save Supplier Item');
+                                }
+                            }
+                        }
+                    }
+
+                }
+
                 $this->return->save();
                 $this->return->return->save();
 
