@@ -68,26 +68,21 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3 pr-0">
-                            <div class="p-2 mb-0 d-flex rounded-sm align-items-center file-item">
-                                <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
-                                <a target="_blank"
-                                   href="{{ route('mvr.files', encrypt($transport->police_evidence)) }}"
-                                   class="ml-1">
-                                    Police Evidence
-                                    <i class="bi bi-arrow-up-right-square ml-1"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="p-2 mb-0 d-flex rounded-sm align-items-center file-item">
-                                <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
-                                <a target="_blank"
-                                   href="{{ route('mvr.files', encrypt($transport->release_letter)) }}"
-                                   class="ml-1">
-                                    Release Letter
-                                    <i class="bi bi-arrow-up-right-square ml-1"></i>
-                                </a>
+                        <div class="card-body">
+                            <div class="row">
+                                @foreach($transport->files as $file)
+                                    <div class="col-md-3 pr-0">
+                                        <div class="p-2 mb-0 d-flex rounded-sm align-items-center file-item">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                                            <a target="_blank"
+                                               href="{{ route('mvr.files', encrypt($file->location)) }}"
+                                               class="ml-1">
+                                                {{ __($file->name) }}
+                                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

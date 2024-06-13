@@ -44,55 +44,80 @@ class PlateNumbersTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+    }
 
-        $this->setAdditionalSelects(['mvr_plate_number_status']);
+    public function bulkActions(): array
+    {
+        $actions = [];
+
+        if ($this->plate_number_status === MvrPlateNumberStatus::STATUS_GENERATED){
+            $actions = ['updatePrinted' => 'Printed'];
+        }
+//        else if ($this->plate_number_status === MvrPlateNumberStatus::STATUS_PRINTED){
+//            $actions[] = ['updatedReceived' => 'Received'];
+//        } else if ($this->plate_number_status === MvrPlateNumberStatus::STATUS_RECEIVED){
+//            $actions[] = ['updateCollected' => 'Collected'];
+//        }
+//        dd($this->baseQuery()->toSql());
+
+        return $actions;
+    }
+
+    public function updatePrinted(){
+        dd($this->getSelected());
+    }
+
+    public function updateReceived(){
+
+    }
+
+    public function updateCollected(){
+
     }
 
     public function columns(): array
     {
         return [
-            Column::make(__("Chassis No"), "chassis.chassis_number")
-                ->searchable(),
+            Column::make(__("Chassis No"), "chassis.chassis_number")->searchable(),
             Column::make(__("Registration No"), "plate_number")
                 ->format(function ($value, $row) {
                     return $row->plate_number ?? 'PENDING';
                 })
                 ->searchable(),
-            Column::make(__("Reg Type"), "regtype.name")
-                ->searchable(),
-            Column::make(__("Plate Color"), "regtype.color.color")
-                ->searchable()
-                ->format(fn($value) => $value ?? 'N/A'),
-            Column::make(__("Plate Size"), "platesize.name")
-                ->searchable(),
-            Column::make(__("Registration Date"), "registered_at")
-                ->format(function ($value, $row) {
-                    return Carbon::create($row->registered_at)->format('d M Y') ?? 'N/A';
-                }),
-            Column::make('Action', 'id')
-                ->format(function ($value, $row) {
-                    if (MvrPlateNumberStatus::STATUS_GENERATED == $row->mvr_plate_number_status) {
-                        return <<< HTML
-                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToPrinted($value)"><i class="bi bi-pencil-square"></i> Update Status</button>
-                        HTML;
-                    } elseif (MvrPlateNumberStatus::STATUS_PRINTED == $row->mvr_plate_number_status) {
-                        return <<< HTML
-                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToReceived($value)"><i class="bi bi-pencil-square"></i> Update Status</button>
-                        HTML;
-                    } elseif (MvrPlateNumberStatus::STATUS_RECEIVED == $row->mvr_plate_number_status) {
-                        $id = encrypt($value);
-                        return <<< HTML
-                            <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.plate-number-collection-model', '$id')"><i class="bi bi-pencil-square"></i> Update Status</button>
-                        HTML;
-                    }
-                    return '';
-                })
-                ->html()
+//            Column::make(__("Reg Type"), "regtype.name")
+//                ->searchable(),
+//            Column::make(__("Plate Color"), "regtype.color.color")
+//                ->searchable()
+//                ->format(fn($value) => $value ?? 'N/A'),
+//            Column::make(__("Plate Size"), "platesize.name")
+//                ->searchable(),
+//            Column::make(__("Registration Date"), "registered_at")
+//                ->format(function ($value, $row) {
+//                    return Carbon::create($row->registered_at)->format('d M Y') ?? 'N/A';
+//                }),
+//            Column::make('Action', 'id')
+//                ->format(function ($value, $row) {
+//                    if (MvrPlateNumberStatus::STATUS_GENERATED == $row->mvr_plate_number_status) {
+//                        return <<< HTML
+//                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToPrinted($value)"><i class="bi bi-pencil-square"></i> Update Status</button>
+//                        HTML;
+//                    } elseif (MvrPlateNumberStatus::STATUS_PRINTED == $row->mvr_plate_number_status) {
+//                        return <<< HTML
+//                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToReceived($value)"><i class="bi bi-pencil-square"></i> Update Status</button>
+//                        HTML;
+//                    } elseif (MvrPlateNumberStatus::STATUS_RECEIVED == $row->mvr_plate_number_status) {
+//                        $id = encrypt($value);
+//                        return <<< HTML
+//                            <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.plate-number-collection-model', '$id')"><i class="bi bi-pencil-square"></i> Update Status</button>
+//                        HTML;
+//                    }
+//                    return '';
+//                })
+//                ->html()
         ];
     }
 
@@ -130,7 +155,6 @@ class PlateNumbersTable extends DataTableComponent
                 'id' => $id,
                 'status' => MvrPlateNumberStatus::STATUS_RECEIVED
             ],
-
         ]);
     }
 
@@ -164,7 +188,6 @@ class PlateNumbersTable extends DataTableComponent
                 'mvr_plate_number_status' => $data->status
             ]);
 
-
             $mvrStatusChange = MvrRegistrationStatusChange::where('registration_number',$mvr->registration_number)->first();
             if ($mvrStatusChange) {
                 $mvrStatusChange->mvr_plate_number_status = $data->status;
@@ -184,4 +207,8 @@ class PlateNumbersTable extends DataTableComponent
             $this->customAlert(GeneralConstant::WARNING, 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
+
+//    public function render(){
+//
+//    }
 }

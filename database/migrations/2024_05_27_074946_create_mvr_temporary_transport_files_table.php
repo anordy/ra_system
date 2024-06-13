@@ -16,8 +16,8 @@ class CreateMvrTemporaryTransportFilesTable extends Migration
         Schema::create('mvr_temporary_transport_files', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('mvr_temporary_transport_id');
-            $table->unsignedBigInteger('name')->nullable();
-            $table->unsignedBigInteger('location');
+            $table->string('name')->nullable();
+            $table->string('location');
             $table->softDeletes();
             $table->timestamps();
         });

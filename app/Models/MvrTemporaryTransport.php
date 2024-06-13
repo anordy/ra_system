@@ -30,4 +30,8 @@ class MvrTemporaryTransport extends Model
     public function getReferenceNumberAttribute(){
         return "Z-{$this->created_at->timestamp}";
     }
+
+    public function files(){
+        return $this->hasMany(MvrTemporaryTransportFile::class, 'mvr_temporary_transport_id');
+    }
 }

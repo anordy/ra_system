@@ -931,3 +931,13 @@ div.table-bordered {
 .z-9999 {
     z-index: 9999;
 }
+
+
+#table-bulkActionsDropdown {
+    width: 150px !important;
+    background: #f2f2f2;
+}
+
+a.dropdown-item {
+    font-size: .9rem !important;
+}
