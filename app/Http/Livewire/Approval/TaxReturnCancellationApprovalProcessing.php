@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\BillStatus;
 use App\Enum\CustomMessage;
 use App\Enum\TaxVerificationStatus;
 use App\Jobs\Bill\CancelBill;
@@ -38,6 +39,11 @@ class TaxReturnCancellationApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
+
+        if ($this->subject->taxReturn->payment_status === BillStatus::COMPLETE) {
+            $this->customAlert('warning', 'Cancellation cannot be approved when the return is in paid state');
+            return;
+        }
 
         try {
             DB::beginTransaction();

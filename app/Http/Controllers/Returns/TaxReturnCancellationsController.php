@@ -18,6 +18,7 @@ use App\Models\Returns\TaxReturnCancellation;
 use App\Models\Returns\Vat\VatReturn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class TaxReturnCancellationsController extends Controller
 {
@@ -86,5 +87,19 @@ class TaxReturnCancellationsController extends Controller
             abort(404);
         }
         return view('returns.cancellation.show', compact('return', 'viewRender', 'tax_return', 'return_','tax_return_', 'cancellation'));
+    }
+
+    public function file($path)
+    {
+        if ($path) {
+            try {
+                return Storage::disk('local-admin')->response(decrypt($path));
+            } catch (\Exception $e) {
+                report($e);
+                abort(404);
+            }
+        }
+
+        return abort(404);
     }
 }

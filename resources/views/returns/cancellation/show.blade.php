@@ -32,6 +32,35 @@
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+            <div class="p-3">
+                <h6 class="alert-heading">Reasons For Cancellation</h6>
+                <p>{{ $cancellation->reasons }}</p>
+            </div>
+
+            <div class="p-3">
+                <h6 class="alert-heading">Supporting Attachments</h6>
+            </div>
+
+            <div class="row">
+                @if(isset($cancellation->files))
+                    @foreach($cancellation->files as $file)
+                        <div class="col-md-4">
+                            <div
+                                    class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
+                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                <a target="_blank"
+                                   href="{{ route("tax-return-cancellation.file", encrypt($file->location)) }}"
+                                   style="font-weight: 500;" class="ml-1">
+                                    {{ $file->name }}
+                                    <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+
             @if (view()->exists($viewRender))
                 @php echo view($viewRender, compact('return','return_'))->render() @endphp
                 <livewire:approval.tax-return-cancellation-approval-processing modelName="{{ get_class($cancellation) }}" modelId="{{ encrypt($cancellation->id) }}"></livewire:approval.tax-return-cancellation-approval-processing>

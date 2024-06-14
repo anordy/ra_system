@@ -476,6 +476,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::name('tax-return-cancellation.')->prefix('/tax-return-cancellation')->group(function () {
         Route::get('/', [TaxReturnCancellationsController::class, 'index'])->name('index');
         Route::get('/view/{id}', [TaxReturnCancellationsController::class, 'show'])->name('show');
+        Route::get('/file/{id}', [TaxReturnCancellationsController::class, 'file'])->name('file');
     });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
