@@ -33,6 +33,22 @@
                         @enderror
                     </div>
 
+                    {{-- <div class="col-md-12 form-group">
+                        <label>Select Business</label>
+                        <input type="text" id="business-search" class="form-control" placeholder="Search Business">
+                        <select wire:model="business_id" class="form-control @error("business_id") is-invalid @enderror" id="business-select">
+                            <option value="">Select Business</option>
+                            @foreach ($business as $row)
+                                <option value="{{ $row->id }}">{{ $row->name }}</option>
+                            @endforeach
+                        </select>
+                        @error("business_id")
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div> --}}
+
                     <div class="col-md-6 form-group">
                         <label>Select Location</label>
                         <select wire:model="location_ids" multiple
@@ -114,4 +130,27 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#business-search').on('keyup', function() {
+                var searchTerm = $(this).val().toLowerCase();
+                $('#business-select option').each(function() {
+                    var text = $(this).text().toLowerCase();
+                    $(this).toggle(text.includes(searchTerm));
+                });
+            });
+
+            // Reinitialize filtering after Livewire updates
+            Livewire.hook('message.processed', (message, component) => {
+                $('#business-search').on('keyup', function() {
+                    var searchTerm = $(this).val().toLowerCase();
+                    $('#business-select option').each(function() {
+                        var text = $(this).text().toLowerCase();
+                        $(this).toggle(text.includes(searchTerm));
+                    });
+                });
+            });
+        });
+    </script>
 </div>

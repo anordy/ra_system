@@ -21,9 +21,6 @@ class TaxInvestigationApprovalTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        // WorkflowTask::where('pinstance_type', TaxInvestigation::class)->delete();
-        // TaxInvestigation::query()->delete();
-
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', TaxInvestigation::class)
             ->where('status', '!=', WorkflowTask::COMPLETED)

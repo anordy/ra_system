@@ -39,14 +39,24 @@ class TaxInvestigationAssessmentPaymentController extends Controller
             abort(403);
         }
         try {
-            $partialPayment = PartialPayment::with('taxAssessment')->findOrFail(decrypt($id));
-            $investigation = TaxInvestigation::findOrFail($partialPayment->taxAssessment->assessment_id);
-            $taxAssessments = TaxAssessment::where('assessment_id', $investigation->id)
-                ->where('assessment_type', get_class($investigation))->get();
+            $decryptedId = decrypt($id);
 
+            // Retrieve partial payment with related tax assessment
+            $partialPayment = PartialPayment::with('taxAssessment')->findOrFail($decryptedId);
 
-            return view('investigation.assessment-payments.preview', compact('investigation', 'taxAssessments', 'partialPayment'));
+            // Retrieve subject using the related tax assessment data
+            $taxAssessment = $partialPayment->taxAssessment;
+            $subject = $taxAssessment->assessment_type::findOrFail($taxAssessment->assessment_id);
+
+            // Retrieve tax assessments for the subject
+            $taxAssessments = TaxAssessment::where('assessment_id', $subject->id)
+                ->where('assessment_type', get_class($subject))
+                ->get();
+
+            return view('investigation.assessment-payments.preview', compact('subject', 'taxAssessments', 'partialPayment'));
         } catch (\Exception $e) {
+
+            dd($e);
             Log::error('Error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),

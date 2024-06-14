@@ -44,6 +44,14 @@ class TaxInvestigationAssessmentPaymentsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
                 }),
+            Column::make('Assesment Type', 'taxassessment.assessment_type')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    $row = explode('\\', $value);
+                    $row = preg_replace("/(?<!^)([A-Z])/", ' $1', $row);
+                    return end($row);
+                }),
             Column::make('Payment Status', 'payment_status')
                 ->view('investigation.assessment-payments.includes.status')
                 ->sortable()

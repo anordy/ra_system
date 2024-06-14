@@ -368,6 +368,13 @@
                 </ul>
             </li>
         @endcan
+
+        @can("tax-investigation-assessment-view")
+            <li class="{{ request()->is("tax_investigation/payments*") ? "active" : "" }}">
+                <a href="{{ route("tax_investigation.payments.index") }}">Assessments Payments</a>
+            </li>
+        @endcan
+
         @can("tax-auditing")
             <li class="{{ request()->is("tax_auditing*") ? "active" : "" }}">
                 <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
@@ -397,6 +404,7 @@
                 </ul>
             </li>
         @endcan
+
         @can("tax-investigation")
             <li class="{{ request()->is("tax_investigation*") ? "active" : "" }}">
                 <a href="#tax_investigation" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">

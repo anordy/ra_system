@@ -32,6 +32,7 @@ class BusinessAuditAddModal extends Component
     public $selectedBusiness;
     public $locations = [];
     public $taxTypes = [];
+    public $search = '';
 
 
     protected function rules()
@@ -162,6 +163,11 @@ class BusinessAuditAddModal extends Component
 
     public function render()
     {
-        return view('livewire.audit.business.add-modal');
+
+        $filteredBusinesses = Business::where('name', 'like', '%' . $this->search . '%')->get();
+
+        return view('livewire.audit.business.add-modal', [
+            'business' => $filteredBusinesses,
+        ]);
     }
 }
