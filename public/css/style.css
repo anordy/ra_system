@@ -941,3 +941,7 @@ div.table-bordered {
 a.dropdown-item {
     font-size: .9rem !important;
 }
+
+table.align-middle td, table.align-middle th {
+    vertical-align: middle !important;
+}
