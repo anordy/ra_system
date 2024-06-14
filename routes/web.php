@@ -19,6 +19,7 @@ use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
 use App\Http\Controllers\Returns\Chartered\CharteredController;
+use App\Http\Controllers\Returns\TaxReturnCancellationsController;
 use App\Http\Controllers\TaxRefund\TaxRefundController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
 use App\Http\Controllers\Tra\TraController;
@@ -470,6 +471,12 @@ Route::middleware(['2fa', 'auth'])->group(function () {
             Route::get('/view/return/{return_id}', [CharteredController::class, 'show'])->name('show');
             Route::get('/edit/return/{return_id}', [CharteredController::class, 'edit'])->name('edit');
         });
+
+    // Tax returns cancellation
+    Route::name('tax-return-cancellation.')->prefix('/tax-return-cancellation')->group(function () {
+        Route::get('/', [TaxReturnCancellationsController::class, 'index'])->name('index');
+        Route::get('/view/{id}', [TaxReturnCancellationsController::class, 'show'])->name('show');
+    });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);

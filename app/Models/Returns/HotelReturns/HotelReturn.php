@@ -13,6 +13,7 @@ use App\Models\BusinessLocation;
 use App\Models\Returns\TaxReturn;
 use App\Models\WithheldCertificate;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Verification\TaxVerification;
 use App\Models\WithheldCertificateAttachment;
@@ -26,7 +27,7 @@ use App\Models\Returns\HotelReturns\RestaurantLevyAttachment;
 
 class HotelReturn extends Model implements Auditable
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, \OwenIt\Auditing\Auditable, SoftDeletes;
 
     protected $guarded = [];
 

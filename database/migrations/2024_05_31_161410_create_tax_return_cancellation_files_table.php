@@ -16,8 +16,8 @@ class CreateTaxReturnCancellationFilesTable extends Migration
         Schema::create('tax_return_cancellation_files', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tax_return_cancellation_id');
-            $table->unsignedBigInteger('name');
-            $table->unsignedBigInteger('location');
+            $table->string('name');
+            $table->string('location');
             $table->timestamps();
         });
     }

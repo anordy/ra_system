@@ -43,12 +43,7 @@ class WorkflowTaxCancellationSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 3]
             ],
-            'department_commissioner' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 3]
-            ],
-            'general_commissioner' => [
+            'commissioner' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 3]
@@ -87,29 +82,24 @@ class WorkflowTaxCancellationSeeder extends Seeder
             ],
             'tax_manager_review' => [
                 'from' => 'tax_return_manager',
-                'to'   => 'general_commissioner',
+                'to'   => 'commissioner',
                 'condition' => '',
             ],
-            'tax_manager_recommends' => [
+            'tax_manager_reject' => [
                 'from' => 'tax_return_manager',
-                'to'   => 'department_commissioner',
+                'to'   => 'tax_return_officer',
                 'condition' => '',
             ],
-            'department_commissioner_review' => [
-                'from' => 'department_commissioner',
-                'to'   => 'general_commissioner',
+            'commissioner_review' => [
+                'from' => 'commissioner',
+                'to'   => 'completed',
                 'condition' => '',
             ],
-            'general_commissioner_review' => [
-                'from' => 'general_commissioner',
-                'to'   => 'complete',
-                'condition' => '',
-            ],
-            'general_commissioner_reject' => [
-                'from' => 'general_commissioner',
+            'commissioner_reject' => [
+                'from' => 'commissioner',
                 'to'   => 'rejected',
                 'condition' => '',
-            ],
+            ]
         ];
 
         Workflow::updateOrCreate(

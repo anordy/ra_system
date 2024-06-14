@@ -210,6 +210,9 @@
                    aria-expanded="{{ request()->is('e-filling*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
                     Returns</a>
                 <ul class="collapse list-unstyled {{ request()->is('e-filling*') ? 'show' : '' }}" id="returnsSubmenu">
+                    <li class="{{ request()->is('tax-return-cancellation*') ? 'active' : '' }}">
+                        <a href="{{ route('tax-return-cancellation.index') }}">Returns Cancellations</a>
+                    </li>
                     @can('return-hotel-levy-view')
                         <li class="{{ request()->is('e-filling/hotel*') ? 'active' : '' }}">
                             <a href="{{ route('returns.hotel.index') }}">Hotel Levy</a>

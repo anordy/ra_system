@@ -388,12 +388,10 @@ class TaxReturnsVettingApprovalProcessing extends Component
         }
 
         if ($this->checkTransition('return_vetting_manager_reject')) {
-
             try {
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
                 $this->flash('success', 'Application returned to officer', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
-                DB::rollBack();
                 Log::error($e);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }

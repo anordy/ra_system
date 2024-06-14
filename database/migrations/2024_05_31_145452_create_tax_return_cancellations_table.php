@@ -33,7 +33,8 @@ class CreateTaxReturnCancellationsTable extends Migration
 
             // Requested by
             $table->unsignedBigInteger('requested_by_id');
-            $table->unsignedBigInteger('requested_by_type');
+            $table->string('requested_by_type');
+            $table->string('status');
 
             // Track time
             $table->dateTime('submitted_at');

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TaxReturnCancellation extends Model
 {
-    use HasFactory, SoftDeletes, WorkflowTrait;
+    use HasFactory, WorkflowTrait;
 
     protected $guarded = [];
 
@@ -28,12 +28,20 @@ class TaxReturnCancellation extends Model
         return $this->belongsTo(TaxType::class);
     }
 
+    public function trashedReturn(){
+        return $this->morphTo()->withTrashed();
+    }
+
+    public function trashedTaxReturn(){
+        return $this->belongsTo(TaxReturn::class, 'tax_return_id')->withTrashed();
+    }
+
     public function return(){
         return $this->morphTo();
     }
 
     public function taxReturn(){
-        return $this->belongsTo(TaxReturn::class);
+        return $this->belongsTo(TaxReturn::class, 'tax_return_id');
     }
 
     public function files(){
