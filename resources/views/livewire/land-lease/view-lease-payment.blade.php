@@ -1,11 +1,32 @@
 <div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                @livewire('land-lease.land-lease-payment', ['leasePayment' => $leasePayment])
+    @if($pendingPartialPaymentStatus && $pendingPartialPaymentStatus->payment_status == 'pending')
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    @livewire('land-lease.land-lease-partial-payment', ['partialPayment' => $pendingPartialPaymentStatus])
+                </div>
             </div>
         </div>
-    </div>
+    @else
+        @if ($leasePayment->taxpayer->id == Auth::user()->id)
+            @if($leasePayment->status === \App\Enum\LeaseStatus::DEBT || $leasePayment->status ===
+            \App\Enum\LeaseStatus::LATE_PAYMENT || $leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATED
+            ||$leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATING || $leasePayment->status ===
+            \App\Enum\LeaseStatus::COMPLETE )
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @livewire('land-lease.land-lease-payment', ['leasePayment' => $leasePayment])
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="d-flex justify-content-start mb-3">
+                    <livewire:land-lease.payment-request-modal :landLease="$leasePayment"/>
+                </div>
+            @endif
+        @endif
+    @endif
 
     <div class="card">
 

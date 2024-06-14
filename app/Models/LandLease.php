@@ -64,4 +64,9 @@ class LandLease extends Model implements Auditable
     public function leasePayments(){
         return $this->hasMany(LeasePayment::class);
     }
+
+    public function partialPayments()
+    {
+        return $this->hasMany(PartialPayment::class);
+    }
 }

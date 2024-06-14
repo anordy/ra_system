@@ -14,6 +14,7 @@ use App\Models\Ward;
 use App\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
 use Livewire\Component;
@@ -133,11 +134,10 @@ class LandLeaseEdit extends Component
 
     public function submit()
     {
-
-//        if (auth()->user()->isLandLeaseAgent() == null) {
-//            $this->customAlert('error', __('You have no Permission to Register Land Lease'));
-//            return;
-//        }
+        if (!Gate::allows('lease-edit')) {
+            $this->customAlert('error', __('You have no Permission to Register Land Lease'));
+            return ;
+        }
 
         $this->validate();
         try {

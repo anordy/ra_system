@@ -9,6 +9,8 @@ use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use Carbon\Carbon;
+use DateInterval;
+use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -53,6 +55,9 @@ class LandLeaseView extends Component
         } else {
             $this->advancePaymentStatus = false;
         }
+
+        $this->dueDate = $this->getDueDate();
+        $this->leaseLastPaid = $this->getLastLeasePayment();
     }
 
     public function render()
@@ -165,5 +170,18 @@ class LandLeaseView extends Component
             return redirect()->back()->getTargetUrl();
         }
         $this->customAlert('error', 'Control number could not be generated, please try again later.');
+    }
+
+    public function getDueDate(): string
+    {
+        $rentCommenceDate = new DateTime($this->landLease->rent_commence_date);
+        return $rentCommenceDate->add(new DateInterval('P' . (int)$this->landLease->valid_period_term . 'Y'))
+            ->format('d F Y');
+    }
+
+    public function getLastLeasePayment()
+    {
+        return LeasePayment::where('land_lease_id', $this->landLease->id)->orderBy('id', 'desc')->first()
+            ->paid_at;
     }
 }

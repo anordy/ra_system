@@ -6,7 +6,7 @@
                     {{ __('Complete pending payment to proceed with next one!') }}
                 </div>
             @else
-                @if($)
+                @if(!$advancePaymentStatus)
                     <button class="btn btn-primary btn-md"
                             onclick="Livewire.emit('showModal', 'land-lease.create-lease-payment', {{$landLease}})">
                         <i class="fa fa-plus-circle"></i>
@@ -223,6 +223,14 @@
                             <span class="font-weight-bold text-uppercase">Valid Period Term</span>
                             <p class="my-1">{{ $landLease->valid_period_term }} Year(s)</p>
                         </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{ __('Last Payment Date') }}</span>
+                            <p class="my-1">{{ $leaseLastPaid ?? '--' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{ __('Due Date') }}</span>
+                            <p class="my-1">{{ $dueDate }}</p>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -277,16 +285,28 @@
                         <div class="">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <span class="font-weight-bold text-uppercase">Payment Month</span>
                                         <p class="my-1">
                                             {{ $landLease->payment_month }}
                                         </p>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <span class="font-weight-bold text-uppercase">Valid Period Terms</span>
                                         <p class="my-1">
                                             {{ $landLease->valid_period_term }}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <span class="font-weight-bold text-uppercase">{{ __('Due Date') }}</span>
+                                        <p class="my-1">
+                                            {{ $dueDate }}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <span class="font-weight-bold text-uppercase">{{ __('Unpaid Amount') }}</span>
+                                        <p class="my-1">
+                                            {{'--'}}
                                         </p>
                                     </div>
                                     <div class="col-md-3">

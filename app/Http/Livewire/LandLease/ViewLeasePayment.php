@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\LandLease;
 
 use App\Models\LeasePayment;
+use App\Models\PartialPayment;
 use App\Traits\PaymentsTrait;
 use App\Traits\CustomAlert;
 use Livewire\Component;
@@ -19,7 +20,10 @@ class ViewLeasePayment extends Component
         if(is_null($this->leasePayment)){
             abort(404);
         }
-        
+
+        //check if it exists in partial payments
+        $this->pendingPartialPayment = $this->getPendingPartialPayment();
+        $this->pendingPartialPaymentStatus = $this->getPartialPaymentStatus();
     }
 
     public function render()
@@ -27,4 +31,17 @@ class ViewLeasePayment extends Component
         return view('livewire.land-lease.view-lease-payment');
     }
 
+    public function getPendingPartialPayment()
+    {
+        return PartialPayment::where('payment_id', $this->leasePayment->land_lease_id)
+            ->where('status', "pending")
+            ->exists();
+    }
+
+    public function getPartialPaymentStatus()
+    {
+        return PartialPayment::where('payment_id', $this->leasePayment->land_lease_id)
+            ->where('payment_status', "pending")
+            ->first();
+    }
 }

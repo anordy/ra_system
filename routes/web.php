@@ -628,6 +628,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/edit/{id}', [LandLeaseController::class, 'edit'])->name('edit');
         Route::get('/taxpayer/view/{id}', [LandLeaseController::class, 'taxpayerView'])->name('taxpayer.view');
         Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
+        Route::get('/approval/list', [LandLeaseController::class, 'indexApprovalList'])->name('approval.list');
         Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
         Route::get('/view/lease/payment/{id}', [LandLeaseController::class, 'viewLeasePayment'])->name('view.lease.payment');
         Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
