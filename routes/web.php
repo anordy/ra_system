@@ -606,8 +606,9 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/rollbacks/assessment/{assessment_id}', [DebtRollbackController::class, 'assessment'])->name('rollback.assessment');
 
         // Offence
-        Route::get('/offence',[\App\Http\Controllers\Offence\OffenceController::class,'index'])->name('offence.index');
-
+        Route::get('/offence',[\App\Http\Controllers\Debt\OffenceController::class,'index'])->name('offence.index');
+        Route::get('/offence/create',[\App\Http\Controllers\Debt\OffenceController::class,'create'])->name('offence.create');
+        Route::get('/offence/show/{offence}',[\App\Http\Controllers\Debt\OffenceController::class,'show'])->name('offence.show');
     });
 
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {

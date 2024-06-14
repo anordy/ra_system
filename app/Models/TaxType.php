@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Offence\Offence;
 use App\Models\Returns\Vat\VatReturn;
 use App\Traits\DailyPaymentTrait;
 use Carbon\Carbon;
@@ -61,6 +62,11 @@ class TaxType extends Model implements Auditable
     public function landLeases()
     {
         return $this->hasMany(LandLease::class, 'taxpayer_id');
+    }
+
+    public function offences()
+    {
+        return $this->hasMany(Offence::class, 'tax_type');
     }
 
     public function vatReturn()
