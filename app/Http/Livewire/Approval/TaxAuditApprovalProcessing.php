@@ -78,6 +78,8 @@ class TaxAuditApprovalProcessing extends Component
     public $penaltyAmounts = [];
     public $taxTypeIds = [];
     public $task;
+    public $selectedOption;
+    public $newAuditDate;
     public $newTag;
 
 
@@ -99,8 +101,6 @@ class TaxAuditApprovalProcessing extends Component
         $this->notificationLetter = $this->subject->notification_letter;
 
         $comments = $this->getTransitionsComments();
-
-        // dd($this->getEnabledTransitions());
 
         $assessment = $this->subject->assessment;
         if ($assessment) {
@@ -251,6 +251,21 @@ class TaxAuditApprovalProcessing extends Component
                 ]);
             }
         }
+        // Validate the file inputs if the transition is for taxpayer uploads documents
+        if ($this->checkTransition('audit_date_extension_dc_review')) {
+            $this->validate(
+                ['selectedOption' => 'required|alpha'],
+                ['selectedOption.required' => 'Please select your choice.']
+            );
+
+            if ($this->selectedOption === 'changed') {
+                $this->validate(
+                    [
+                        'newAuditDate' => 'required|date',
+                    ]
+                );
+            }
+        }
 
         if ($this->checkTransition('prepare_final_report')) {
             $this->validate([
@@ -340,8 +355,11 @@ class TaxAuditApprovalProcessing extends Component
 
             //* Update the auditing date if a new audit date (Extension) is available and save the changes.
             if ($this->checkTransition('audit_date_extension_dc_review')) {
-                if ($this->subject->new_audit_date) {
+
+                if ($this->selectedOption == "accept") {
                     $this->subject->auditing_date = $this->subject->new_audit_date;
+                } elseif ($this->selectedOption == "changed") {
+                    $this->subject->auditing_date = $this->newAuditDate;
                 }
                 $this->subject->save();
             }
@@ -475,20 +493,13 @@ class TaxAuditApprovalProcessing extends Component
             DB::commit();
 
             if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
-                $this->generateControlNumber();
-
-                foreach ($this->taxAssessments as $taxAssessment) {
-                    $taxAssessment->update([
-                        'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                        'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                    ]);
-                }
 
                 event(new SendMail('audit-approved-notification', $this->subject->business->taxpayer));
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
 
             Log::error('Error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),

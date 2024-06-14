@@ -142,11 +142,6 @@ class WorkflowTaxAuditSeeder extends Seeder
                 'to'   => 'conduct_audit',
                 'condition' => '',
             ],
-            'dc_rejects_audit_date_extension' => [
-                'from' => 'audit_date_extension_dc_review',
-                'to'   => 'conduct_audit',
-                'condition' => '',
-            ],
             'conduct_audit' => [
                 'from' => 'conduct_audit',
                 'to'   => 'preliminary_report',
