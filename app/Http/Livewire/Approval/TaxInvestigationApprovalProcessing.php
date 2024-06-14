@@ -75,6 +75,8 @@ class TaxInvestigationApprovalProcessing extends Component
 
         $this->subject = $this->getSubject();
 
+        // dd($this->getEnabledTransitions());
+
         $this->exitMinutes = $this->subject->exit_minutes;
         $this->finalReport = $this->subject->final_report;
         $this->workingReport = $this->subject->working_report;

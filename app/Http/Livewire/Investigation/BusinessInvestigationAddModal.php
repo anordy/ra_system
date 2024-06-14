@@ -50,9 +50,14 @@ class BusinessInvestigationAddModal extends Component
         ];
     }
 
-    public function mount()
+    public function mount($jsonData = null)
     {
         $this->business = Business::select('id', 'name', 'ztn_number')->get();
+        if (isset($jsonData)) {
+            $this->business_id = $jsonData['business_id'];
+            $this->businessChange($this->business_id);
+            $this->location_ids[] = $jsonData['location_ids'];
+        }
     }
 
     public function businessChange($id)

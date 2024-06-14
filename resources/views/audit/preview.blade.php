@@ -29,8 +29,11 @@
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card mt-2">
-                <div class="card-header text-uppercase font-weight-bold bg-white">
-                    TAXPAYER INFORMATIONS
+                <div class="card-header d-flex justify-content-between">
+                    <div>TAXPAYER INFORMATIONS </div>
+                    <div>
+                        @livewire("audit.forward-to-investigation", ["taxAudit" => $audit->id])
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row m-2">
@@ -217,6 +220,7 @@
                 </div>
             @endif
         </div>
+
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if ($audit->location_id != 0 && $audit->tax_type_id != 0)
                 @livewire("audit.declared-sales-analysis", ["auditId" => encrypt($audit->id), "tax_type_id" => encrypt($audit->tax_type_id), "location_id" => encrypt($audit->location_id)])

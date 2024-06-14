@@ -41,6 +41,7 @@ class TaxAuditInitiateTable extends DataTableComponent
         return TaxAudit::query()
             ->with('business', 'location', 'taxType', 'createdBy')
             ->where('tax_audits.status', TaxAuditStatus::DRAFT)
+            ->where('tax_audits.forwarded_to_investigation', false)
             ->whereHas('location.taxRegion', function ($query) {
                 if ($this->taxRegion == Region::LTD) {
                     $query->whereIn('location', [Region::LTD, Region::UNGUJA]); //this is filter by department

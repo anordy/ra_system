@@ -28,6 +28,7 @@ class BusinessAuditAddModal extends Component
     public $scope;
     public $period_from;
     public $period_to;
+    public $query;
 
     public $selectedBusiness;
     public $locations = [];
@@ -73,6 +74,27 @@ class BusinessAuditAddModal extends Component
             $this->locations        = $this->selectedBusiness->locations;
         } else {
             $this->reset('taxTypes', 'locations');
+        }
+    }
+
+    public function searchBusiness()
+    {
+        $this->validate([
+            'query' => 'required|string|max:255'
+        ]);
+
+        //search for business using ztn number and tin number and name
+        $business = Business::where('ztn_number', 'like', '%' . $this->query . '%');
+        $business = $business->orWhere('tin', 'like', '%' . $this->query . '%');
+        $business = $business->orWhere('name', 'like', '%' . $this->query . '%');
+        $business = $business->get();
+
+        //change the selected business
+        if (count($business) > 0) {
+            $this->business_id = $business[0]->id;
+            $this->businessChange($this->business_id);
+        } else {
+            $this->customAlert('warning', 'No business found with the given query');
         }
     }
 
@@ -164,10 +186,6 @@ class BusinessAuditAddModal extends Component
     public function render()
     {
 
-        $filteredBusinesses = Business::where('name', 'like', '%' . $this->search . '%')->get();
-
-        return view('livewire.audit.business.add-modal', [
-            'business' => $filteredBusinesses,
-        ]);
+        return view('livewire.audit.business.add-modal');
     }
 }

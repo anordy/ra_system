@@ -27,8 +27,11 @@
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card mt-2">
-                <div class="card-header text-uppercase font-weight-bold bg-white">
-                    TAXPAYER INFORMATIONS
+                <div class="card-header d-flex justify-content-between">
+                    <div>TAXPAYER INFORMATIONS </div>
+                    <div>
+                        @livewire("audit.forward-to-investigation", ["taxAudit" => $audit->id])
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row m-2">

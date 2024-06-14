@@ -78,6 +78,7 @@ class TaxAuditApprovalProcessing extends Component
     public $penaltyAmounts = [];
     public $taxTypeIds = [];
     public $task;
+    public $newTag;
 
 
 
@@ -99,7 +100,7 @@ class TaxAuditApprovalProcessing extends Component
 
         $comments = $this->getTransitionsComments();
 
-        // dd($comments);
+        // dd($this->getEnabledTransitions());
 
         $assessment = $this->subject->assessment;
         if ($assessment) {
@@ -112,6 +113,9 @@ class TaxAuditApprovalProcessing extends Component
             $this->hasAssessment = False;
         }
 
+        if ($this->subject->preliminary_extension_attachment) {
+            $this->newTag = 'New';
+        }
 
         $this->task = $this->subject->pinstancesActive;
         if (!isNullOrEmpty($this->subject->period_from)) {
@@ -324,7 +328,7 @@ class TaxAuditApprovalProcessing extends Component
                 }
 
                 $this->subject->notification_letter = $notificationLetter;
-                $this->subject->notification_letter_date =  Carbon::now()->addWeekdays(5);
+                $this->subject->notification_letter_date = now();
                 $this->subject->save();
 
                 //Send Email Notification to taxpayer 
@@ -335,7 +339,7 @@ class TaxAuditApprovalProcessing extends Component
             }
 
             //* Update the auditing date if a new audit date (Extension) is available and save the changes.
-            if ($this->checkTransition('audit_team_review')) {
+            if ($this->checkTransition('audit_date_extension_dc_review')) {
                 if ($this->subject->new_audit_date) {
                     $this->subject->auditing_date = $this->subject->new_audit_date;
                 }
@@ -485,6 +489,7 @@ class TaxAuditApprovalProcessing extends Component
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+
             Log::error('Error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -520,7 +525,7 @@ class TaxAuditApprovalProcessing extends Component
             if ($this->checkTransition('correct_final_report')) {
                 $operators = $this->subject->officers->pluck('user_id')->toArray();
             }
-            if ($this->checkTransition('audit_team_reject_extension')) {
+            if ($this->checkTransition('dc_rejects_audit_date_extension')) {
                 $this->subject->new_audit_date = null;
                 $this->subject->save();
             }

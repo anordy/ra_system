@@ -43,12 +43,7 @@ class WorkflowTaxAuditSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => []
             ],
-            'audit_taxpayer_acceptance' => [
-                'owner' => 'taxpayer',
-                'operator_type' => 'role',
-                'operators' => []
-            ],
-            'audit_team_review' => [
+            'audit_date_extension_dc_review' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2]
@@ -134,22 +129,22 @@ class WorkflowTaxAuditSeeder extends Seeder
             ],
             'taxpayer_uploads_documents' => [
                 'from' => 'taxpayer_uploads_documents',
-                'to'   => 'audit_taxpayer_acceptance',
-                'condition' => '',
-            ],
-            'audit_taxpayer_acceptance' => [
-                'from' => 'audit_taxpayer_acceptance',
-                'to'   => 'audit_team_review',
-                'condition' => '',
-            ],
-            'audit_team_review' => [
-                'from' => 'audit_team_review',
                 'to'   => 'conduct_audit',
                 'condition' => '',
             ],
-            'audit_team_reject_extension' => [
-                'from' => 'audit_team_review',
-                'to'   => 'taxpayer_uploads_documents',
+            'taxpayer_request_audit_date_extension' => [
+                'from' => 'taxpayer_uploads_documents',
+                'to'   => 'audit_date_extension_dc_review',
+                'condition' => '',
+            ],
+            'audit_date_extension_dc_review' => [
+                'from' => 'audit_date_extension_dc_review',
+                'to'   => 'conduct_audit',
+                'condition' => '',
+            ],
+            'dc_rejects_audit_date_extension' => [
+                'from' => 'audit_date_extension_dc_review',
+                'to'   => 'conduct_audit',
                 'condition' => '',
             ],
             'conduct_audit' => [
@@ -170,6 +165,11 @@ class WorkflowTaxAuditSeeder extends Seeder
             'preliminary_report_review' => [
                 'from' => 'preliminary_report_review',
                 'to'   => 'taxpayer_accept_preliminary_report',
+                'condition' => '',
+            ],
+            'foward_to_final_report_preparation' => [
+                'from' => 'preliminary_report_review',
+                'to'   => 'prepare_final_report',
                 'condition' => '',
             ],
             'correct_preliminary_report_review' => [
