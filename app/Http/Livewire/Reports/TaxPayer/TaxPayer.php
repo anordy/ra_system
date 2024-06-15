@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Reports\TaxPayer;
 
 use App\Models\Reports\Report;
 use App\Models\Reports\ReportType;
+use App\ReportHelpers\TaxPayerReport;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -33,7 +34,6 @@ class TaxPayer extends Component
 
     public  function  updated($property){
         if ($property=='report_type_id'){
-
             $this->reports=   Report::query()
                 ->select('code','name','has_parameter', 'id')
                 ->where('report_type_id',$this->report_type_id)
@@ -49,13 +49,45 @@ class TaxPayer extends Component
         $report_code = $this->report_code;
 
         try {
-            if (is_null($start_date)) {
-                // Fetch data without date range
-                $results = self::gfsCodeRevenue(false,null);
-            } else {
-                // Fetch data with date range
-                $results = self::gfsCodeRevenue(false,['start_date'=>$start_date,'end_date'=>$end_date]);
+
+            if ($report_code=='100'){
+                $results=   self::getGfsData($start_date,$end_date);
             }
+            elseif ($report_code=='101'){
+                $results =  $this->getTaxPayerData($start_date,$end_date);
+            }
+
+            elseif ($report_code=='102'){
+                $results =  $this->getTaxPayerContributionData($start_date,$end_date);
+            }
+
+            elseif ($report_code=='103'){
+                $results =  TaxPayerReport::getTaxPayerForPastTwelveMonth();
+            }
+
+            elseif ($report_code=='104'){
+                $results =  $this->getHotelDataReport($start_date,$end_date);
+            }
+
+            elseif ($report_code=='105'){
+                $results =  $this->getRentingPremisses($start_date,$end_date);
+            }
+
+            elseif ($report_code=='106'){
+                $results =  $this->getFiledTaxPayer($start_date,$end_date);
+            }
+
+            elseif ($report_code=='107'){
+                $results =  $this->getNonFiledTaxPayer($start_date,$end_date);
+            }
+
+            elseif ($report_code=='108'){
+                $results =  $this->getFiledTaxPayer($start_date,$end_date);
+            }
+
+
+            dd($results);
+
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -63,6 +95,60 @@ class TaxPayer extends Component
 
     }
 
+    public  static  function  getRentingPremisses($start_date,$end_date){
+        if (is_null($start_date)) {
+            // Fetch data without date range
+            $results = TaxPayerReport::getRentingPremissesData(false,null);
+        } else {
+            // Fetch data with date range
+            $results = TaxPayerReport::getRentingPremissesData(false,['start_date'=>$start_date,'end_date'=>$end_date]);
+        }
+        return $results;
+    }
+
+    public  static  function  getTaxPayerContributionData($start_date,$end_date){
+        if (is_null($start_date)) {
+            // Fetch data without date range
+            $results = TaxPayerReport::getTaxPayerContribution(false,null);
+        } else {
+            // Fetch data with date range
+            $results = TaxPayerReport::getTaxPayerContribution(false,['start_date'=>$start_date,'end_date'=>$end_date]);
+        }
+        return $results;
+    }
+
+    public  static  function  getTaxPayerData($start_date,$end_date){
+        if (is_null($start_date)) {
+            // Fetch data without date range
+            $results = TaxPayerReport::getTaxPayer(false,null);
+        } else {
+            // Fetch data with date range
+            $results = TaxPayerReport::getTaxPayer(false,['start_date'=>$start_date,'end_date'=>$end_date]);
+        }
+        return $results;
+    }
+
+    public  static  function  getHotelDataReport($start_date,$end_date){
+        if (is_null($start_date)) {
+            // Fetch data without date range
+            $results = TaxPayerReport::getHotelData(false,null);
+        } else {
+            // Fetch data with date range
+            $results = TaxPayerReport::getHotelData(false,['start_date'=>$start_date,'end_date'=>$end_date]);
+        }
+        return $results;
+    }
+
+    public  static  function  getGfsData($start_date,$end_date){
+        if (is_null($start_date)) {
+            // Fetch data without date range
+            $results = self::gfsCodeRevenue(false,null);
+        } else {
+            // Fetch data with date range
+            $results = self::gfsCodeRevenue(false,['start_date'=>$start_date,'end_date'=>$end_date]);
+        }
+        return $results;
+    }
 
     public  static  function gfsCodeRevenue($selector,$data){
 
@@ -88,6 +174,18 @@ class TaxPayer extends Component
         }
 
         return $data;
+    }
+
+    private function getFiledTaxPayer($start_date, $end_date)
+    {
+        if (is_null($start_date)) {
+            // Fetch data without date range
+            $results = TaxPayerReport::getFiledTaxPayerData(false,null);
+        } else {
+            // Fetch data with date range
+            $results = TaxPayerReport::getFiledTaxPayerData(false,['start_date'=>$start_date,'end_date'=>$end_date]);
+        }
+        return $results;
     }
 
 }
