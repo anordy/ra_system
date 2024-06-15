@@ -8,10 +8,10 @@
                 <div class="col-md-12">
                     <table class="table table-bordered table-sm">
                         <thead>
-                            <th style="width: 30%">Item Name(TZS)</th>
-                            <th style="width: 20%">Value</th>
-                            <th style="width: 10%">Rate</th>
-                            <th style="width: 20%">VAT</th>
+                            <th>Item Name(TZS)</th>
+                            <th>Value</th>
+                            <th>Rate</th>
+                            <th>VAT</th>
                         </thead>
                         <tbody>
                             @foreach ($return->configReturns as $item)
@@ -45,10 +45,10 @@
             <div class="col-md-12">
                 <table class="table table-bordered table-striped normal-text">
                     <thead>
-                        <th style="width: 30%">{{ __('Item Name') }}</th>
-                        <th style="width: 20%">{{ __('Value') }}</th>
-                        <th style="width: 10%">{{ __('Rate') }}</th>
-                        <th style="width: 20%">{{ __('Tax') }}</th>
+                        <th>{{ __('Item Name') }}</th>
+                        <th>{{ __('Value') }}</th>
+                        <th>{{ __('Rate') }}</th>
+                        <th>{{ __('Tax') }}</th>
                     </thead>
                     <tbody>
                         @foreach ($return_->configReturns as $item)

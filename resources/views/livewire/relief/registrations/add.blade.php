@@ -117,12 +117,12 @@
             <table class="table table-border table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col" style="text-align:center">SN</th>
-                        <th scope="col" style="text-align:center">Item Name *</th>
-                        <th scope="col" style="text-align:center">Quantity *</th>
-                        <th scope="col" style="text-align:center">Unit Cost*</th>
-                        <th scope="col" style="text-align:center">Unit Name</th>
-                        <th scope="col" style="text-align:center">Amount</th>
+                        <th scope="col" class="text-center">SN</th>
+                        <th scope="col" class="text-center">Item Name *</th>
+                        <th scope="col" class="text-center">Quantity *</th>
+                        <th scope="col" class="text-center">Unit Cost*</th>
+                        <th scope="col" class="text-center">Unit Name</th>
+                        <th scope="col" class="text-center">Amount</th>
                     </tr>
                 </thead>
                 @foreach ($items as $i => $item)
@@ -182,7 +182,7 @@
                                 {{ number_format($item['amount']) }}
                             @endif
                         </td>
-                        <td style="min-width: 100%">
+                        <td class="min-width-100">
                             @if (count($items) > 1)
                                 <div class="text-right mt-2">
                                     <button class="btn btn-danger btn-sm" wire:click="removeItem({{ $i }})">
@@ -332,7 +332,7 @@
                             </div>
                         </td>
 
-                        <td style="min-width: 100%">
+                        <td class="min-width-100">
                             @if (count($attachments) > 1)
                                 <div class="text-right mt-2">
                                     <button class="btn btn-danger btn-sm"

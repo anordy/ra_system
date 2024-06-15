@@ -1,12 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Owner Transfer Requests')
+@section('title', 'Ownership Transfer Requests')
 
 @section('content')
     <div class="card mt-3">
-        <div class="card-header">
-            Requests
-        </div>
+        <div class="card-header">OwnerShip Transfer Requests</div>
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">

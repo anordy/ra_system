@@ -1,5 +1,5 @@
 <div>
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    <ul class="nav nav-tabs shadow-sm mb-0">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Complainant</a>
@@ -62,8 +62,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Dispute Category</span> <br>
-                    <span class="badge badge-danger py-1 px-2"
-                        style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
+                    <span class="badge badge-danger py-1 px-2 file-blue-border">
                         <i class="bi bi-clock-history mr-1"></i>
                         {{ $dispute->category }}
                     </span>
@@ -196,12 +195,11 @@
             <div class="row m-2 pt-3">
                 @foreach ($files as $file)
                     <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
                                 href="{{ route('assesments.waiver.files', encrypt($file['file_path'])) }}"
-                                style="font-weight: 500;" class="ml-1">
+                                class="ml-1 font-weight-bold">
                                 {{ $file['file_name'] }}
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>
@@ -255,12 +253,11 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
                                 href="{{ route('assesments.waiver.files', encrypt($dispute->dispute_report)) }}"
-                                style="font-weight: 500;" class="ml-1">
+                                class="ml-1 font-weight-bold">
                                 dispute Report
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>
@@ -270,12 +267,11 @@
 
                     @if ($dispute->notice_report)
                         <div class="col-md-3">
-                            <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                 <a target="_blank"
                                     href="{{ route('assesments.waiver.files', encrypt($dispute->notice_report)) }}"
-                                    style="font-weight: 500;" class="ml-1">
+                                    class="ml-1 font-weight-bold">
                                     Notice Report
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>
                                 </a>
@@ -286,12 +282,11 @@
 
                     @if ($dispute->setting_report)
                         <div class="col-md-3">
-                            <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                 <a target="_blank"
                                     href="{{ route('assesments.waiver.files', encrypt($dispute->setting_report)) }}"
-                                    style="font-weight: 500;" class="ml-1">
+                                    class="ml-1 font-weight-bold">
                                     Setting Report
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>
                                 </a>

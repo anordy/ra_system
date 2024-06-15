@@ -21,7 +21,7 @@
                                 <div class="card-tools">
                                     <button class="btn btn-info btn-sm"
                                             onclick="Livewire.emit('showModal', 'returns.financial-months.add-month-modal')"><i
-                                                class="fa fa-plus-circle"></i> Add
+                                                class="bi bi-plus-circle-fill"></i> Add
                                     </button>
                                 </div>
                             @endcan
@@ -40,7 +40,7 @@
                                 <div class="card-tools">
                                     <button class="btn btn-info btn-sm"
                                             onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.add-month-modal')"><i
-                                                class="fa fa-plus-circle"></i> Add
+                                                class="bi bi-plus-circle-fill"></i> Add
                                     </button>
                                 </div>
                             @endcan

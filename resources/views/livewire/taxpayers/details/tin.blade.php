@@ -40,10 +40,10 @@
                         <table class="table table-striped table-sm">
                             <label class="font-weight-bold text-uppercase">TIN Verification</label>
                             <thead>
-                            <th style="width: 37%">Property</th>
-                            <th style="width: 37%">Provided Data</th>
-                            <th style="width: 18%">TRA Data</th>
-                            <th style="width: 8%">Status</th>
+                            <th>Property</th>
+                            <th>Provided Data</th>
+                            <th>TRA Data</th>
+                            <th>Status</th>
                             </thead>
                             <tbody>
                             <tr>
@@ -186,10 +186,10 @@
 {{--                    <table class="table table-striped table-sm">--}}
 {{--                        <label class="font-weight-bold text-uppercase">Zan ID Data Verification</label>--}}
 {{--                        <thead>--}}
-{{--                        <th style="width: 37%">Property</th>--}}
-{{--                        <th style="width: 37%">Provided Data</th>--}}
-{{--                        <th style="width: 18%">Zan ID Data</th>--}}
-{{--                        <th style="width: 8%">Status</th>--}}
+{{--                        <th>Property</th>--}}
+{{--                        <th>Provided Data</th>--}}
+{{--                        <th>Zan ID Data</th>--}}
+{{--                        <th>Status</th>--}}
 {{--                        </thead>--}}
 {{--                        <tbody>--}}
 {{--                        <tr>--}}

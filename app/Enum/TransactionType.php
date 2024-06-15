@@ -6,8 +6,8 @@ use ReflectionClass;
 
 class TransactionType implements Status
 {
-    const CREDIT = 'CR';
-    const DEBIT = 'DR';
+    public const DEBIT = 'DEBIT';
+    public const CREDIT = 'CREDIT';
 
     static function getConstants(): array
     {

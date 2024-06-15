@@ -34,8 +34,6 @@ class OwnershipTransferRequestsTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
 
-        $this->setAdditionalSelects(['mvr_transfer_category_id', 'mvr_request_status_id']);
-
 	    $this->setTableWrapperAttributes([
 	      'default' => true,
 	      'class' => 'table-bordered table-sm',

@@ -16,6 +16,7 @@
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
+            page-break-before: always
             /*margin: -70px;*/
         }
         .embed {
@@ -186,6 +187,9 @@
         .multiline-font-size {
             font-size: 1.1em !important;
         }
+        .qr-code-height {
+            height: 189px
+        }
     </style>
 </head>
 <body>
@@ -232,9 +236,9 @@
         COMMISSIONER GENERAL
     </span>
     <div class="qr-code">
-        <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
+        <img class="img-fluid qr-code-height" src="{{ $dataUri }}">
     </div>
 </body>
-<body class="page-two" style="page-break-before: always">
+<body class="page-two">
 </body>
 </html>

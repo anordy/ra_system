@@ -50,6 +50,10 @@
         .commissioner-name {
             text-transform: capitalize;
         }
+
+        .width-100 {
+            width: 100px;
+        }
     </style>
 </head>
     <body>
@@ -88,12 +92,12 @@
                         </div>
                     </td>
                     <td>
-                        <div><span style="width: 100px">Modal: </span> <span>{{strtoupper($motor_vehicle->chassis->model_type)}}</span></div>
-                        <div><span style="width: 100px">Capacity: </span> <span>{{$motor_vehicle->chassis->engine_cubic_capacity ?? 'N/A'}} cc</span></div>
-                        <div><span style="width: 100px">Engine: </span> <span>{{$motor_vehicle->chassis->engine_number}}</span></div>
-                        <div><span style="width: 100px">Type: </span> <span>{{$motor_vehicle->chassis->body_type}}</span></div>
-                        <div><span style="width: 100px">Color: </span> <span>{{$motor_vehicle->chassis->color}}</span></div>
-                        <div><span style="width: 100px">Cert No.: </span> <span>{{$motor_vehicle->certificate_number}}</span></div>
+                        <div><span class="width-100">Modal: </span> <span>{{strtoupper($motor_vehicle->chassis->model_type)}}</span></div>
+                        <div><span class="width-100">Capacity: </span> <span>{{$motor_vehicle->chassis->engine_cubic_capacity ?? 'N/A'}} cc</span></div>
+                        <div><span class="width-100">Engine: </span> <span>{{$motor_vehicle->chassis->engine_number}}</span></div>
+                        <div><span class="width-100">Type: </span> <span>{{$motor_vehicle->chassis->body_type}}</span></div>
+                        <div><span class="width-100">Color: </span> <span>{{$motor_vehicle->chassis->color}}</span></div>
+                        <div><span class="width-100">Cert No.: </span> <span>{{$motor_vehicle->certificate_number}}</span></div>
                     </td>
                 </tr>
             </table>
@@ -101,7 +105,7 @@
         </div>
         <br>
         <br>
-       <div style="text-align: center">
+       <div class="text-center">
             <span class="commissioner-signature">
                 <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
             </span>

@@ -20,6 +20,7 @@ use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
 use App\Http\Controllers\Returns\Chartered\CharteredController;
 use App\Http\Controllers\Returns\TaxReturnCancellationsController;
+use App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController;
 use App\Http\Controllers\TaxRefund\TaxRefundController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
 use App\Http\Controllers\Tra\TraController;
@@ -781,8 +782,10 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     // Finance
     Route::name('finance.')->prefix('finance')->group(function () {
-        Route::get('/taxpayer/ledger', [FinanceController::class, 'taxpayerLedgersList'])->name('taxpayer.ledgers');
-        Route::get('/taxpayer/ledger/{id}', [FinanceController::class, 'taxpayerLedger'])->name('taxpayer.ledger.details');
+        Route::get('/taxpayer/ledger', [TaxpayerLedgerController::class, 'search'])->name('taxpayer.ledger.search');
+        Route::get('/taxpayer/ledger/{businessLocationId}/tax/{taxTypeId}', [TaxpayerLedgerController::class, 'show'])->name('taxpayer.ledger.show');
+        Route::get('/taxpayer/ledger/{businessLocationId}/summary', [TaxpayerLedgerController::class, 'summary'])->name('taxpayer.ledger.summary');
+        Route::get('/taxpayer/ledger/{businessId}/summary/business', [TaxpayerLedgerController::class, 'businessSummary'])->name('taxpayer.ledger.business-summary');
     });
 
     Route::prefix('public-service')->as('public-service.')->group(function () {

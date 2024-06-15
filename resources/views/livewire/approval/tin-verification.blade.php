@@ -26,16 +26,14 @@
                 <span class="font-weight-bold text-uppercase">Status</span>
                 @if ($business->tin_verification_status === \App\Enum\TinVerificationStatus::UNVERIFIED)
                     <p class="my-1">
-                        <span class="badge badge-danger py-1 px-2 text-capitalize"
-                            style="border-radius: 1rem; background: #fde047; color: #a16207; font-size: 85%">
+                        <span class="badge badge-danger py-1 px-2 text-capitalize pending-status">
                             <i class="bi bi-record-circle mr-1"></i>
                             {{ $business->tin_verification_status }}
                         </span>
                     </p>
                 @elseif($business->tin_verification_status === \App\Enum\TinVerificationStatus::APPROVED)
                     <p class="my-1">
-                        <span class="badge badge-success py-1 px-2"
-                            style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                        <span class="badge badge-success py-1 px-2 green-status">
                             <i class="bi bi-check-circle-fill mr-1"></i>
                             Verification Successful
                         </span>

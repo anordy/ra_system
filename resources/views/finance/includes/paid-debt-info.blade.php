@@ -1,5 +1,5 @@
 <div class="">
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    <ul class="nav nav-tabs shadow-sm mb-0">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="unpaid-return-debts-{{$location_id}}-tab" data-toggle="tab" href="#unpaid-return-debts-{{$location_id}}" role="tab" aria-controls="unpaid-return-debts-{{$location_id}}"
                 aria-selected="true">Return Debts</a>

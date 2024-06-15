@@ -3,28 +3,29 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\DebtWaiverCategory;
-use App\Traits\VerificationTrait;
-use Exception;
-use Carbon\Carbon;
-use App\Events\SendSms;
-use App\Models\TaxType;
-use Livewire\Component;
+use App\Enum\TransactionType;
 use App\Events\SendMail;
-use App\Models\WaiverStatus;
+use App\Events\SendSms;
 use App\Jobs\Bill\CancelBill;
-use App\Traits\PaymentsTrait;
-use Livewire\WithFileUploads;
-use App\Models\Debts\DebtWaiver;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Jobs\Debt\GenerateControlNo;
-use Illuminate\Support\Facades\Gate;
-use App\Traits\WorkflowProcesssingTrait;
+use App\Models\Debts\DebtWaiver;
+use App\Models\TaxType;
+use App\Models\WaiverStatus;
 use App\Traits\CustomAlert;
+use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
+use App\Traits\VerificationTrait;
+use App\Traits\WorkflowProcesssingTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class ReturnDebtWaiverApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, CustomAlert, VerificationTrait;
+    use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, CustomAlert, VerificationTrait, TaxpayerLedgerTrait;
     public $modelId;
     public $debt;
     public $modelName;
@@ -216,6 +217,25 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                 $notification_payload = [
                     'debt' => $this->debt,
                 ];
+
+                // Record debit action for ledger
+                // Subject is DebtWaiver
+                // Insert ledger
+                if (!$this->debt_waiver->ledger) {
+                    $this->recordLedger(
+                        TransactionType::DEBIT,
+                        DebtWaiver::class,
+                        $this->subject->id,
+                        $this->debt->principal_amount,
+                        $this->penaltyAmountDue,
+                        $this->interestAmountDue,
+                        array_sum([$this->debt->principal_amount, $this->penaltyAmountDue, $this->interestAmountDue]),
+                        $this->debt->tax_type_id,
+                        $this->debt->currency,
+                        $this->debt->business->taxpayer_id,
+                        $this->debt->location_id ?? null,
+                    );
+                }
 
                 DB::commit();
 

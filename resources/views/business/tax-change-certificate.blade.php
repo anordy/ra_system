@@ -127,6 +127,9 @@
             left: -17%;
             top: 40%;
         }
+        .qr-code-height {
+            height: 189px
+        }
     </style>
 
 </head>
@@ -166,7 +169,7 @@
         {{$commissinerFullName}}
     </span>
     <div class="qr-code">
-        <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
+        <img class="img-fluid qr-code-height" src="{{ $dataUri }}">
     </div>
 </body>
 

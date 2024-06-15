@@ -21,7 +21,7 @@ use App\Models\TaxAssessments\TaxAssessment;
 
 class PenaltyForDebt
 {
-    use ExchangeRateTrait, VerificationTrait;
+    use ExchangeRateTrait, VerificationTrait, TaxpayerLedgerTrait;
 
     public static function getTotalPenalties($debtId, $date, $taxAmount, $period)
     {
@@ -168,6 +168,8 @@ class PenaltyForDebt
             $tax_return->outstanding_amount = round($penaltableAmount, 2);
             $tax_return->save();
 
+            TaxpayerLedgerTrait::recordLedgerDebt(TaxReturn::class, $tax_return->id, $tax_return->interest, $tax_return->penalty, $tax_return->total_amount);
+
             (new PenaltyForDebt)->sign($tax_return);
 
             self::recordReturnDebtState($tax_return, $previous_debt_penalty_id, $debtPenalty->id);
@@ -175,6 +177,7 @@ class PenaltyForDebt
             throw $e;
         }
     }
+
 
     /**
      * Generate debt assessment penalty
@@ -252,6 +255,9 @@ class PenaltyForDebt
             $assessment->total_amount = round($penaltableAmount, 2);
             $assessment->outstanding_amount = round($penaltableAmount, 2);
             $assessment->save();
+
+            TaxpayerLedgerTrait::recordLedgerDebt(TaxAssessment::class, $assessment->id, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount);
+
             self::recordAssessmentDebtState($assessment, $previous_debt_penalty_id, $debtPenalty->id);
         } catch (Exception $e) {
             throw $e;
@@ -324,7 +330,6 @@ class PenaltyForDebt
             throw $e;
         }
     }
-
 
     public static function getPostVettingPenalties($tax_return, $iterations)
     {
@@ -457,7 +462,6 @@ class PenaltyForDebt
 
         return $financialMonth;
     }
-
 
     public static function getNextFinancialMonth($financialMonth, $return_type)
     {

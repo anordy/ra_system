@@ -11,12 +11,12 @@
             of {{$return->financialMonth->name ?? 'N/A'}} {{$return->financialMonth->year->code ?? 'N/A'}}
         </div>
         <div class="card-body">
-            <div>
-                <livewire:returns.return-payment :return="$return->tax_return"/>
+            <div class="mx-1">
+                <livewire:returns.return-payment :return="$return->tax_return" />
             </div>
             @if(!empty($return))
                 <div>
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <ul  class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab"
                                aria-controls="home"
@@ -68,7 +68,7 @@
                                aria-controls="special-relief" aria-selected="false">Special Relief</a>
                         </li>
                     </ul>
-                    <div class="tab-content" id="myTabContent">
+                    <div  class="tab-content" id="myTabContent">
 
                         <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
                             <div class="row m-2 pt-3">
@@ -121,18 +121,18 @@
                                     <span class="font-weight-bold text-uppercase">Return Application Status</span>
                                     <p class="my-1">
                                         @if($return->application_status == \App\Enum\ReturnApplicationStatus::SUBMITTED)
-                                            <span class="badge badge-success py-1 px-2"><i
+                                            <span class="badge badge-success py-1 px-2 green-status"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
                                                 Submitted
                                             </span>
 
                                         @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::ADJUSTED)
-                                            <span class="badge badge-danger py-1 px-2"><i
+                                            <span class="badge badge-danger py-1 px-2 green-status"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
                                                 Adjusted
                                             </span>
                                         @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::SELF_ASSESSMENT)
-                                            <span class="badge badge-success py-1 px-2"><i
+                                            <span class="badge badge-success py-1 px-2 green-status"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
                                                 self Assessment
                                             </span>
@@ -147,7 +147,7 @@
                                 <div class="card-body">
 
                                     <div class="d-flex justify-content-between">
-                                        <div class="pb-2">
+                                        <div class="pb-2 w-160">
                                             <label>{{ __('Exemption Method Used') }}</label>
                                             <input readonly class="form-control" type="text"
                                                    value="{{ $return->method_used ?? 'No Method Used' }}">
@@ -351,20 +351,17 @@
                                 @if(count($return->vatWithheld) > 0)
                                     <label>Withheld Attachment</label>
                                     <div class="row">
-                                        @if(!empty($return->vatWithheld))
-                                            @foreach($return->vatWithheld as $file)
-                                                <div class="col-md-3">
-                                                    <a class="file-item" target="_blank"
-                                                       href="{{ route('returns.vat-return.withheld-file', [encrypt($file->id), 'withheld']) }}">
-                                                        <i class="bi bi-file-earmark-pdf-fill px-2"
-                                                           style="font-size: x-large"></i>
-                                                        <div style="font-weight: 500;" class="ml-1">
-                                                            View Attachment
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            @endforeach
-                                        @endif
+                                        @foreach($return->vatWithheld as $file)
+                                            <div class="col-md-3">
+                                                <a class="file-item" target="_blank"
+                                                   href="{{ route('returns.vat-return.withheld-file', [encrypt($file->id), 'withheld']) }}">
+                                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                                    <div class="ml-1 font-weight-bold">
+                                                        View Attachment
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 @endif
                             </div>

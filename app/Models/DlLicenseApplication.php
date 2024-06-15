@@ -6,7 +6,7 @@
 
 namespace App\Models;
 
-use App\Services\ZanMalipo\ZmCore;
+use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -77,6 +77,10 @@ class DlLicenseApplication extends Model implements Auditable
 		return $this->belongsTo(DlDriversLicenseOwner::class,'dl_drivers_license_owner_id');
 	}
 
+    public function applicant(){
+        return $this->belongsTo(Taxpayer::class);
+    }
+
         public function license_duration()
 	{
 		return $this->belongsTo(DlLicenseDuration::class,'dl_license_duration_id');
@@ -103,4 +107,12 @@ class DlLicenseApplication extends Model implements Auditable
         return $bill_item->bill ??  null;
     }
 
+    public function license(){
+        return $this->belongsTo(DlDriversLicense::class, 'dl_drivers_license_id');
+    }
+
+    public function ledger()
+    {
+        return $this->morphOne(TaxpayerLedger::class, 'source');
+    }
 }

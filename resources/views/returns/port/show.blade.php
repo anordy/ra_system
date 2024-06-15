@@ -21,7 +21,7 @@
                             aria-controls="profile" aria-selected="false">Return Items</a>
                     </li>
                 </ul>
-                <div  class="tab-content" id="myTabContent">
+                <div class="tab-content" id="myTabContent">
 
                     <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
                         <div class="row m-2 pt-3">

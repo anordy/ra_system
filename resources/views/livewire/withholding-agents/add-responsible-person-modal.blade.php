@@ -31,11 +31,11 @@
 
                         {{-- Responsible person lookup --}}
                         @if ($search_triggered && !empty($taxpayer))
-                            <div class="col-12 p-3" style="border: 1px solid #ede6e6;">
+                            <div class="col-12 p-3 border border-white">
                                 <div class="row">
                                     <div class="col-12">
                                         <br>
-                                        <h6 class="text-center pb-2" style="border-bottom: 1px solid silver">Responsible
+                                        <h6 class="text-center pb-2 border border-white">Responsible
                                             Person
                                             Details
                                         </h6>

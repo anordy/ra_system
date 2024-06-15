@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Gate;
 
 class FinanceController extends Controller
 {
-    //
     public function taxpayerLedgersList(){
         if (!Gate::allows('view-taxpayer-ledgers')) {
             abort(403);

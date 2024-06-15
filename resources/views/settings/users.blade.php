@@ -13,7 +13,7 @@
                     @if(approvalLevel(Auth::user()->level_id, 'Maker'))
                     <button class="btn btn-info btn-sm"
                     onclick="Livewire.emit('showModal', 'user-add-modal')"><i
-                        class="fa fa-plus-circle"></i>
+                        class="bi bi-plus-circle-fill"></i>
                     Add</button>
                     @endif
                 @endcan

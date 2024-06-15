@@ -606,7 +606,7 @@
                     Registration</a>
                 <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
                     @can('motor-vehicle-registration')
-                        <li class="{{ request()->is('mvr/registration') ? 'active' : '' }}">
+                        <li class="{{ request()->is('mvr/registration*') ? 'active' : '' }}">
                             <a href="{{ route('mvr.registration.index') }}">Motor Vehicle Registration</a>
                         </li>
                     @endcan
@@ -618,7 +618,7 @@
                     @endcan
 
                     @can('motor-vehicle-status-change-request')
-                        <li class="{{ request()->is('mvr/registration/status') ? 'active' : '' }}">
+                        <li class="{{ request()->is('mvr/registration/status*') ? 'active' : '' }}">
                             <a href="{{ route('mvr.registration.status.index') }}">Status Change Request</a>
                         </li>
                     @endcan
@@ -874,7 +874,7 @@
                 <ul class="collapse list-unstyled {{ request()->is('finance*') ? 'show' : '' }}" id="finance">
                     @can('view-taxpayer-ledgers')
                         <li class="{{ request()->is('finance/taxpayer/ledger*') ? 'active' : '' }}">
-                            <a href="{{ route('finance.taxpayer.ledgers') }}">Taxpayer Ledgers</a>
+                            <a href="{{ route('finance.taxpayer.ledger.search') }}">Taxpayer Ledgers</a>
                         </li>
                     @endcan
                 </ul>
@@ -1250,8 +1250,7 @@
                     <a href="{{ route('account.security-questions') }}">{{ __("Security Questions") }}</a>
                 </li> --}}
                 <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
-                    <a href="{{ route('logout') }}"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a href="{{ route('logout') }}" class="logout-link">
                         {{ __("Log out") }}
                     </a>
                 </li>
@@ -1271,9 +1270,8 @@
         </a>
 
         <div class="pr-1">
-            <a class="text-white" href="{{ route('logout') }}"
-               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="fa fa-sign-out-alt"></i>
+            <a class="text-white logout-link" href="{{ route('logout') }}">
+                <i class="bi bi-box"></i>
             </a>
 
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

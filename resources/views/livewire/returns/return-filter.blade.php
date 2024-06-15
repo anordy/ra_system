@@ -92,11 +92,11 @@
 
             <div class="col-md-12 text-center">
                 <div class="d-flex justify-content-end">
-                    <button type="submit" class=" btn btn-primary ml-2 px-5" wire:click='filter()'
-                            wire:loading.attr="disabled">
-                        <div wire:loading.remove wire:target='filter'>
-                            <i class="fa fa-filter"></i>
-                            Filter
+                    <button type="submit" class=" btn btn-primary ml-2 px-5" wire:click='fillter()'
+                        wire:loading.attr="disabled">
+                        <div wire:loading.remove wire:target='fillter'>
+                            <i class="bi bi-filter"></i>
+                            Fillter
                         </div>
                         <div wire:loading wire:target='filter'>
                             <div class="spinner-border mr-1 spinner-border-sm text-light" role="status"></div>

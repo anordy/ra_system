@@ -265,7 +265,7 @@
                     {{-- <h6 class="pb-2">Responsible Person Details</h6> --}}
                     <div class="col-12 p-3">
                         @if (!empty($business))
-                            <div class="card-body mb-2" style="border: 1px solid #ede6e6;">
+                            <div class="card-body mb-2 border border-white">
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <span class="font-weight-bold text-uppercase">Business Name</span>
@@ -289,7 +289,7 @@
                             </div>
                         @endif
 
-                        <div class="card-body" style="border: 1px solid #ede6e6;">
+                        <div class="card-body border border-white">
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">Full Name</span>

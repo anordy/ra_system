@@ -9,7 +9,7 @@
             <div class="card-tools">
                 @can('land-lease-register-agent')
                     <a href="{{route('land-lease.agent.create')}}">
-                        <button class="btn btn-info btn-sm"><i class="fa fa-plus-circle"></i>Register</button>
+                        <button class="btn btn-info btn-sm"><i class="bi bi-plus-circle-fill"></i>Register</button>
                     </a>
                 @endcan
             </div>

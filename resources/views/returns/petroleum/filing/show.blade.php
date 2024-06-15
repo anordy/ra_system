@@ -16,7 +16,7 @@
             Petroleum Tax Return
         </div>
         <div class="card-body">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <ul  class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#summary" role="tab"
                        aria-controls="home" aria-selected="true">Summary</a>
@@ -30,7 +30,7 @@
                        aria-controls="penalties" aria-selected="false">Penalties</a>
                 </li>
             </ul>
-            <div class="tab-content" id="myTabContent">
+            <div class="tab-content border border-white" id="myTabContent">
 
                 <div class="tab-pane p-2 show active" id="summary" role="tabpanel" aria-labelledby="summary-tab">
                     <div class="row m-2 pt-3">

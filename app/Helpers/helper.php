@@ -262,4 +262,15 @@ function interestRate()
 {
     $interestRate = InterestRate::where('year', Carbon::now()->year)->firstOrFail();
     return number_format($interestRate->rate, 4);
+
+}
+
+function getSourceName($model) {
+    if ($model == \App\Models\Returns\TaxReturn::class) {
+        return 'Return';
+    } else if ($model == \App\Models\TaxRefund\TaxRefund::class) {
+        return 'Tax Refund';
+    } else {
+        return 'N/A';
+    }
 }

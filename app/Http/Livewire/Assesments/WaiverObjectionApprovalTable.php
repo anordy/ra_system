@@ -52,7 +52,7 @@ class WaiverObjectionApprovalTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $transition = str_replace('_', ' ', $row->pinstancesActive->name ?? '');
                     return <<<HTML
-                       <span class="badge badge-info py-1 px-2"  style="border-radius: 1rem; font-size: 85%">
+                       <span class="badge badge-info py-1 px-2">
                         <i class="bi bi-clock mr-1"></i>
                         {$transition}
                     </span>

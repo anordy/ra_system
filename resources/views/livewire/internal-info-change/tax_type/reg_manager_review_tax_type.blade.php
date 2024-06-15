@@ -47,14 +47,12 @@
                                            wire:model="selectedTaxTypes.{{ $key }}.sub_vat_name"
                                            wire:keyup="subCategorySearchUpdate({{$key}}, $event.target.value)">
                                     @if($selectedTaxTypes[$key]['show_hide_options'])
-                                        <div class="position-absolute" style="z-index: 1" wire:loading
-                                             wire:target="subCategorySearchUpdate">
+                                        <div class="position-absolute z-index-1" wire:loading wire:target="subCategorySearchUpdate">
                                             Loading....
                                         </div>
                                         <div wire:loading.remove>
                                             @if($subVatOptions)
-                                                <div class="position-absolute border-bottom rounded"
-                                                     style="overflow: hidden;z-index: 1;">
+                                                <div class="position-absolute border-bottom rounded sub-vat-items">
                                                     <ul class="customized-dropdown-menu pb-2">
                                                         @foreach($subVatOptions as $sub)
                                                             <li wire:click="selectSubVat({{$key}}, {{$sub}})">
