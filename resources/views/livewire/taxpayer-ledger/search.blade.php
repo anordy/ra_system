@@ -7,19 +7,13 @@
             <div class="card-body">
                 <div class="p-3">
                     <h3>Search Taxpayer Account</h3>
-                    <p>Search Taxpayer ledger account by Z Number or Business Name etc.</p>
+                    <p>Search Taxpayer ledger account by Z Number.</p>
                     <hr/>
                     <div class="row">
 
                         <div class="form-group col-md-6">
-                            <label class="font-weight-bold">Business Name.</label>
-                            <input type="text" wire:model.defer="businessName" wire:keydown="search()"
-                                   class="form-control @error('businessName') is-invalid @enderror">
-                        </div>
-
-                        <div class="form-group col-md-6">
                             <label class="font-weight-bold">ZTN Number</label>
-                            <input type="text" wire:model.defer="ztnNumber" wire:keydown="search()"
+                            <input type="text" wire:model.defer="ztnNumber"
                                    class="form-control @error('ztnNumber') is-invalid @enderror">
                         </div>
 
@@ -67,15 +61,44 @@
                 </div>
 
                 @if(count($accounts) > 0)
+                    <hr>
+                    <table class="table table-sm table-borderless px-2">
+                        <thead>
+                        <tr>
+                            <th>Business Name</th>
+                            <th>ZTN Number</th>
+                            <th>TIN</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="px-2">{{ $business->name ?? 'N/A' }}</td>
+                            <td class="px-2"> {{ $business->ztn_number ?? ''  }}</td>
+                            <td class="px-2"> {{ $business->tin ?? ''  }}</td>
+                            <td class="px-2">
+                                @if(isset($business->id))
+                                    <button wire:click="getLedgersByBusiness({{ $business->id  }}, '{{ $taxTypeId ?? \App\Enum\ReportStatus::All }}')"
+                                            class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-eye-fill mr-1"></i> View Account
+                                    </button>
+                                    <a href="{{ route('finance.taxpayer.ledger.business-summary', ['businessId' => encrypt($business->id)]) }}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-eye-fill mr-1"></i> View Taxpayer Business Summary
+                                    </a>
+                                @endif
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <hr>
                     <table class="table table-sm px-2">
-                        <label class="font-weight-bold">Search Results</label>
+                        <label class="font-weight-bold">Branch/Location Results</label>
                         <thead>
                         <tr>
                             <th>No</th>
-                            <th>Business Name</th>
                             <th>Branch Name</th>
-                            <th>ZTN Number</th>
-                            <th>TIN</th>
+                            <th>ZTN Location Number</th>
                             <th>Tax Type Account</th>
                             <th>Action</th>
                         </tr>
@@ -84,10 +107,8 @@
                         @foreach($accounts as $key => $account)
                             <tr>
                                 <td class="px-2">{{ $key+1 }}.</td>
-                                <td class="px-2">{{ $account->location->business->name ?? 'N/A' }}</td>
                                 <td class="px-2">{{ $account->location->name ?? 'N/A' }}</td>
                                 <td class="px-2">{{ $account->location->zin ?? 'N/A' }}</td>
-                                <td class="px-2">{{ $account->business->tin ?? 'N/A' }}</td>
                                 <td class="px-2">{{ $account->taxtype->name ?? 'N/A'  }}</td>
                                 <td class="px-2">
                                     @if(isset($account->location->id))
@@ -97,7 +118,7 @@
                                         </button>
                                         <a href="{{ route('finance.taxpayer.ledger.summary', ['businessLocationId' => encrypt($account->location->id)]) }}"
                                            class="btn btn-outline-primary btn-sm">
-                                            <i class="bi bi-eye-fill mr-1"></i> View Taxpayer Summary
+                                            <i class="bi bi-eye-fill mr-1"></i> View Taxpayer Branch Summary
                                         </a>
                                     @endif
                                 </td>
@@ -106,7 +127,7 @@
                         </tbody>
                     </table>
                 @else
-                    @if($businessName || $ztnNumber)
+                    @if($ztnNumber)
                         <span class="text-center">No results found</span>
                     @endif
                 @endif

@@ -7,6 +7,7 @@ use App\Enum\CustomMessage;
 use App\Enum\ReportStatus;
 use App\Enum\TransactionType;
 use App\Http\Controllers\Controller;
+use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\TaxType;
@@ -123,6 +124,44 @@ class TaxpayerLedgerController extends Controller
 
     }
 
+    public function businessSummary($businessId)
+    {
+        if (!Gate::allows('view-taxpayer-ledgers')) {
+            abort(403);
+        }
+
+        try {
+            $businessId = decrypt($businessId);
+
+            $location = Business::findOrFail($businessId)->headquarter;
+
+            $tzsLedgers = $this->getBusinessLedgerByCurrency(Currencies::TZS, $businessId);
+            $usdLedgers = $this->getBusinessLedgerByCurrency(Currencies::USD, $businessId);
+
+            $ledgers = [
+                'TZS' => $this->joinBusinessLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
+                'USD' => $this->joinBusinessLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
+            ];
+
+            $tzsCreditSum = $tzsLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;
+            $tzsDebitSum = $tzsLedgers['debitLedgers']->sum('total_debit_amount') ?? 0;
+            $usdCreditSum = $usdLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;
+            $usdDebitSum = $usdLedgers['debitLedgers']->sum('total_debit_amount') ?? 0;
+
+            $summations = [
+                'TZS' => ['credit' => $tzsCreditSum, 'debit' => $tzsDebitSum],
+                'USD' => ['credit' => $usdCreditSum, 'debit' => $usdDebitSum],
+            ];
+
+            return view('taxpayer-ledger.summary', compact('ledgers', 'summations', 'location'));
+        } catch (\Exception $exception) {
+            Log::error('TAXPAYER-LEDGER-CONTROLLER', [$exception]);
+            session()->flash('error', CustomMessage::error());
+            return back();
+        }
+
+    }
+
     private function getLedgerByCurrency($currency, $businessLocationId)
     {
         $debitLedgers = TaxpayerLedger::select('source_type', 'source_id', 'business_location_id', 'tax_type_id', 'currency',
@@ -141,6 +180,32 @@ class TaxpayerLedgerController extends Controller
             ->where('transaction_type', TransactionType::CREDIT)
             ->where('currency', $currency)
             ->groupBy('source_type', 'source_id', 'business_location_id', 'tax_type_id', 'currency')
+            ->get();
+
+        return [
+            'debitLedgers' => $debitLedgers,
+            'creditLedgers' => $creditLedgers,
+        ];
+    }
+
+    private function getBusinessLedgerByCurrency($currency, $businessId)
+    {
+        $debitLedgers = TaxpayerLedger::select('source_type', 'source_id', 'business_id', 'tax_type_id', 'currency',
+            DB::raw('SUM(total_amount) as total_debit_amount')
+        )
+            ->where('business_id', $businessId)
+            ->where('transaction_type', TransactionType::DEBIT)
+            ->where('currency', $currency)
+            ->groupBy('source_type', 'source_id', 'business_id', 'tax_type_id', 'currency')
+            ->get();
+
+        $creditLedgers = TaxpayerLedger::select('source_type', 'source_id', 'business_id', 'tax_type_id', 'currency',
+            DB::raw('SUM(total_amount) as total_credit_amount')
+        )
+            ->where('business_id', $businessId)
+            ->where('transaction_type', TransactionType::CREDIT)
+            ->where('currency', $currency)
+            ->groupBy('source_type', 'source_id', 'business_id', 'tax_type_id', 'currency')
             ->get();
 
         return [
@@ -186,6 +251,56 @@ class TaxpayerLedgerController extends Controller
                     'source_type' => $sourceType,
                     'source_id' => $sourceId,
                     'business_location_id' => $businessLocationId,
+                    'tax_type_name' => $item->taxtype->name,
+                    'tax_type_id' => $taxTypeId,
+                    'currency' => $currency,
+                    'total_debit_amount' => $item->total_debit_amount, // Set default value
+                    'total_credit_amount' => 0, // Set default value
+                ];
+            }
+
+            $joinedLedgers->push($existingItem);
+        });
+
+        return $joinedLedgers;
+    }
+    private function joinBusinessLedgers($debitLedgers, $creditLedgers)
+    {
+        $joinedLedgers = collect();
+
+        $debitLedgers->each(function ($item) use ($joinedLedgers, $creditLedgers) {
+            // Extract key values
+            $sourceType = $item->source_type;
+            $sourceId = $item->source_id;
+            $businessId = $item->business_id;
+            $taxTypeId = $item->tax_type_id;
+            $currency = $item->currency;
+
+            // Check if the key combination already exists in the joined collection
+            $existingItem = $creditLedgers->where('source_type', $sourceType)
+                ->where('source_id', $sourceId)
+                ->where('business_id', $businessId)
+                ->where('tax_type_id', $taxTypeId)
+                ->where('currency', $currency)
+                ->first();
+
+            // If the key combination doesn't exist, create a new item with default values
+            if ($existingItem) {
+                $existingItem = (object)[
+                    'source_type' => $sourceType,
+                    'source_id' => $sourceId,
+                    'business_id' => $businessId,
+                    'tax_type_name' => $item->taxtype->name,
+                    'tax_type_id' => $taxTypeId,
+                    'currency' => $currency,
+                    'total_debit_amount' => $item->total_debit_amount, // Set default value
+                    'total_credit_amount' => $existingItem->total_credit_amount, // Set default value
+                ];
+            } else {
+                $existingItem = (object)[
+                    'source_type' => $sourceType,
+                    'source_id' => $sourceId,
+                    'business_id' => $businessId,
                     'tax_type_name' => $item->taxtype->name,
                     'tax_type_id' => $taxTypeId,
                     'currency' => $currency,
