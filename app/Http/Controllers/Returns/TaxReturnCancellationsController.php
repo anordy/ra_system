@@ -33,12 +33,12 @@ class TaxReturnCancellationsController extends Controller
 
         $cancellation = TaxReturnCancellation::findOrFail(decrypt($id));
 
-        $tax_return = $cancellation->taxReturn;
+        $tax_return = $cancellation->taxReturn ?? $cancellation->trashedTaxReturn;
 
-        $return = $tax_return->return;
+        $return = $tax_return->return ?? $cancellation->trashedReturn->return;
 
-        if ($return->penalties) {
-            $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
+        if (isset($return->penalties)) {
+            $return->penalties = $return->penalties->concat($return->tax_return->penalties ?? [])->sortBy('tax_amount');
         }
 
         $return_ = null;

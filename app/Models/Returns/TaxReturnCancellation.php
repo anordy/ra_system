@@ -29,7 +29,9 @@ class TaxReturnCancellation extends Model
     }
 
     public function trashedReturn(){
-        return $this->morphTo()->withTrashed();
+        return $this->trashedTaxReturn()->with(['return' => function ($query) {
+            $query->withTrashed();
+        }]);
     }
 
     public function trashedTaxReturn(){

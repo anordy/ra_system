@@ -292,6 +292,16 @@ class SystemSettingsSeeder extends Seeder
                 'unit' => 'string',
                 'is_approved' => 1
             ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Override VFMS Link',
+                'code' => SystemSetting::OVERRIDE_VFMS_LINK,
+                'description' => 'Override VFMS Link.',
+                'value' => 0,
+                'unit' => SystemSetting::INPUT_OPTIONS,
+                'is_approved' => 1,
+                'options' => json_encode(['disabled' => 0, 'enabled' => 1])
+            ],
 
         ];
 

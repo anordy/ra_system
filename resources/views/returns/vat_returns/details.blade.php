@@ -587,7 +587,9 @@
                     </div>
                 </div>
                 <div class="tab-pane p-2" id="payment-summary" role="tabpanel" aria-labelledby="payment-summary-tab">
-                    <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
+                    @if($return->tax_return->latestBill)
+                        <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
+                    @endif
                 </div>
 
                 <div class="tab-pane p-2" id="withheld" role="tabpanel" aria-labelledby="withheld-tab">

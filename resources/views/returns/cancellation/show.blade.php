@@ -5,12 +5,12 @@
 @section('content')
     <div class="row mx-1">
         <div class="col-md-12">
-            <livewire:returns.return-payment :return="$return->tax_return" />
+            <livewire:returns.return-payment :return="$tax_return" />
         </div>
         {{-- Payment for Port return in USD --}}
-        @if ($return_ && $return_->tax_return)
+        @if ($return_ && $tax_return_)
             <div class="col-md-12">
-                <livewire:returns.return-payment :return="$return_->tax_return" />
+                <livewire:returns.return-payment :return="$tax_return_" />
             </div>
         @endif
 
