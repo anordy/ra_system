@@ -754,6 +754,12 @@
                                 <a href="{{ route('reports.payments') }}">Payment Reports</a>
                             </li>
                         @endcan
+
+                            @can('managerial-payment-report-view')
+                                <li class="{{ request()->is('reports/tax-payer*') ? 'active' : '' }}">
+                                    <a href="{{ route('reports.tax-payer') }}">Taxpayer Reports</a>
+                                </li>
+                            @endcan
                     @endcan
 
                 </ul>

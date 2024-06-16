@@ -5,7 +5,7 @@
 @section('content')
     <div class="card">
         <div class="card-header text-uppercase font-weight-bold">
-            Tax Payer Report'
+            Tax Payer Report
         </div>
         <div class="card-body mt-0">
             @livewire('reports.tax-payer.tax-payer')
