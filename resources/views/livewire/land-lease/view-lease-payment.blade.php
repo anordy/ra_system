@@ -44,6 +44,7 @@
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase">Status</span>
                     <p class="my-1">
+
                         @if ($leasePayment->status === \App\Enum\LeaseStatus::IN_ADVANCE_PAYMENT)
                             <span class="badge badge-success py-1 px-2"
                                 style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">

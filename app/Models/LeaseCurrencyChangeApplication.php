@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class LeaseCurrencyChangeApplication extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    public function landLease()
+    {
+        return $this->belongsTo(LandLease::class, 'land_lease_id');
+    }
+}

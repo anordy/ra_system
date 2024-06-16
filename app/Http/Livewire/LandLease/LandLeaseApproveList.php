@@ -170,7 +170,7 @@ class LandLeaseApproveList extends DataTableComponent
                     $partialPayment->update(['status' => 'approved']);
                     $this->generateControlNumber($partialPayment);
                     //update lease payment
-                    $this->updateLeasePayment($partialPayment->payment_id);
+                    $this->updateLeasePayment($partialPayment->payment_id, $partialPayment->amount);
                     DB::commit();
                     $this->customAlert('success', 'Lease payment approved successfully', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
                     break;
@@ -316,8 +316,9 @@ class LandLeaseApproveList extends DataTableComponent
         return $landLease->taxpayer;
     }
 
-    public function updateLeasePayment($leaseId)
+    public function updateLeasePayment($leaseId,$amount)
     {
-        LeasePayment::where('land_lease_id', $leaseId)->update(['status' => LeaseStatus::CN_GENERATED]);
+        LeasePayment::where('land_lease_id', $leaseId)->update(['total_amount' => $amount,'status' =>
+            LeaseStatus::CN_GENERATED]);
     }
 }

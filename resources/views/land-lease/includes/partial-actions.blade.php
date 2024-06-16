@@ -1,9 +1,9 @@
+
 <a href="{{ route('land-lease.view', encrypt($row['landlease.id'])) }}" class="btn btn-outline-secondary btn-sm">
     <i class="bi bi-eye-fill mr-1"></i> {{ __('View') }}
 </a>
 
 {{--TODO: approval/rejection should have permissions--}}
-
 @if($row->status == 'pending')
     <button wire:click="approve({{ $row->id }})"
             class="btn btn-outline-success btn-sm"

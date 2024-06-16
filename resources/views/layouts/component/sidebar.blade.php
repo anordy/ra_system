@@ -698,7 +698,7 @@
                         </li>
                     @endcan
                         <li class="{{ request()->is('land-lease/approval/list*') ? 'active' : '' }}">
-                            <a href="{{ route('land-lease.approval.list') }}">Land Lease Payment Approval</a>
+                            <a href="{{ route('land-lease.approval.list') }}">Land Lease Approvals</a>
                         </li>
                     @can('land-lease-generate-report')
                         <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
