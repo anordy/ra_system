@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxAuditStatus;
+use App\Enum\TransactionType;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\BusinessDeregistration;
@@ -22,6 +23,7 @@ use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\ExchangeRateTrait;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -36,7 +38,8 @@ use Livewire\WithFileUploads;
 
 class TaxAuditApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait, ExchangeRateTrait;
+    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait, TaxpayerLedgerTrait;
+
     public $modelId;
     public $modelName;
     public $comments;
@@ -493,6 +496,14 @@ class TaxAuditApprovalProcessing extends Component
             DB::commit();
 
             if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
+                $this->generateControlNumber();
+                $this->subject->assessment->update([
+                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                    'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                ]);
+                $assessment = $this->subject->assessment;
+                $this->recordLedger(TransactionType::DEBIT, TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
+
 
                 event(new SendMail('audit-approved-notification', $this->subject->business->taxpayer));
             }

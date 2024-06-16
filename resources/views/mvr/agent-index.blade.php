@@ -5,16 +5,15 @@
 @section('content')
     <div class="card mt-3">
         <div class="card-header">
-            <h5>Transport Agents</h5>
+            Transport Agents
             <div class="card-tools">
                 @can('mvr_register_agent')
                     <a href="{{route('mvr.agent.create')}}">
-                        <button class="btn btn-info btn-sm"><i class="fa fa-plus-circle"></i>Register</button>
+                        <button class="btn btn-info btn-sm"><i class="bi bi-plus-circle-fill"></i>Register</button>
                     </a>
                 @endcan
             </div>
         </div>
-
         <div class="card-body">
             <livewire:mvr.agents-table />
         </div>

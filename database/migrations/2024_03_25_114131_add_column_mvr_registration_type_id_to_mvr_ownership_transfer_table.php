@@ -15,7 +15,6 @@ class AddColumnMvrRegistrationTypeIdToMvrOwnershipTransferTable extends Migratio
     {
         Schema::table('mvr_ownership_transfer', function (Blueprint $table) {
             $table->string('mvr_registration_type_id')->nullable();
-            $table->string('mvr_transfer_category_id')->nullable()->change();
             $table->string('old_plate_number')->nullable();
         });
     }

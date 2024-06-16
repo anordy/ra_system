@@ -115,12 +115,11 @@
                         @endif
                         @if ($audit->preliminary_report)
                             <div class="col-md-3">
-                                <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                    class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                     <a target="_blank"
                                         href="{{ route("tax_auditing.files.show", encrypt($audit->preliminary_report)) }}"
-                                        style="font-weight: 500;" class="ml-1">
+                                        class="ml-1 font-weight-bold">
                                         Preliminary Report
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
@@ -129,12 +128,11 @@
                         @endif
                         @if ($audit->working_report)
                             <div class="col-md-3">
-                                <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                    class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                     <a target="_blank"
                                         href="{{ route("tax_auditing.files.show", encrypt($audit->working_report)) }}"
-                                        style="font-weight: 500;" class="ml-1">
+                                        class="ml-1 font-weight-bold">
                                         Auditing Working Paper
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
@@ -143,12 +141,11 @@
                         @endif
                         @if ($audit->final_report)
                             <div class="col-md-3">
-                                <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                    class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                     <a target="_blank"
                                         href="{{ route("tax_auditing.files.show", encrypt($audit->final_report)) }}"
-                                        style="font-weight: 500;" class="ml-1">
+                                        class="ml-1 font-weight-bold">
                                         Final Report
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
@@ -157,12 +154,11 @@
                         @endif
                         @if ($audit->exit_minutes)
                             <div class="col-md-3">
-                                <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                    class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                     <a target="_blank"
                                         href="{{ route("tax_auditing.files.show", encrypt($audit->exit_minutes)) }}"
-                                        style="font-weight: 500;" class="ml-1">
+                                        class="ml-1 font-weight-bold">
                                         Exit Minutes
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>

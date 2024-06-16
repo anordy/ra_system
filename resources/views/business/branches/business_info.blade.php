@@ -1,5 +1,5 @@
 <div class="row">
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    <ul class="nav nav-tabs shadow-sm mb-0" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Business Information</a>
@@ -83,7 +83,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Reg. No.</span>
-                    <p class="my-1">{{ $business->reg_no ?? "N/A" }} </p>
+                    <p class="my-1">{{ $business->reg_no ?? 'N/A' }} </p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Owner Designation</span>
@@ -109,7 +109,7 @@
                     <span class="font-weight-bold text-uppercase">Place of Business</span>
                     <p class="my-1">{{ $business->place_of_business }}</p>
                 </div>
-
+             
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Date of Commencing Business</span>
                     <p class="my-1">{{ $business->date_of_commencing->toFormattedDateString() }}</p>
@@ -152,7 +152,7 @@
         <div class="tab-pane fade" id="location" role="tabpanel" aria-labelledby="location-tab">
             @if ($location = $business->headquarter)
                 <div class="col-md-12 mt-1 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 font-weight-bold" style="flex: 1;">Headquarter</h6>
+                    <h6 class="mb-0 font-weight-bold flex-grow-1">Headquarter</h6>
                     <a class="btn btn-outline-success btn-sm mt-1">
                         <i class="bi bi-patch-check"></i>
                         Print Certificate
@@ -216,7 +216,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Street</span>
-                        <p class="my-1">{{ $location->street->name ?? "N/A" }}</p>
+                        <p class="my-1">{{ $location->street->name ?? 'N/A' }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Physical Address</span>
@@ -310,22 +310,22 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Status</span>
-                        @if ($consultant->status === "pending")
+                        @if ($consultant->status === 'pending')
                             <p class="my-1 text-info font-weight-bold">
                                 <i class="bi bi-clock-history mr-1"></i>
                                 Waiting Approval From Tax Agent
                             </p>
-                        @elseif($consultant->status === "approved")
+                        @elseif($consultant->status === 'approved')
                             <p class="my-1 text-success font-weight-bold">
                                 <i class="bi bi-check-circle mr-1"></i>
                                 Approved
                             </p>
-                        @elseif($consultant->status === "rejected")
+                        @elseif($consultant->status === 'rejected')
                             <p class="my-1 text-danger font-weight-bold">
                                 <i class="bi bi-x-circle-fill mr-1"></i>
                                 Rejected
                             </p>
-                        @elseif($consultant->status === "removed")
+                        @elseif($consultant->status === 'removed')
                             <p class="my-1 text-danger font-weight-bold">
                                 <i class="bi bi-trash-fill mr-1"></i>
                                 Removed. Please assign new tax agent.
@@ -415,10 +415,10 @@
             <div class="row m-2 pt-3">
                 @foreach ($business->files as $file)
                     <div class="col-md-4">
-                        <a class="file-item" target="_blank"
-                            href="{{ route("business.file", encrypt($file->id)) }}">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <div style="font-weight: 500;" class="ml-1">
+                        <a class="file-item file-blue-border" target="_blank"
+                            href="{{ route('business.file', encrypt($file->id)) }}">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <div class="ml-1 font-weight-bold">
                                 {{ $file->type->name }}
                                 @if ($file->type->short_name === \App\Models\BusinessFileType::TIN)
                                     - {{ $file->taxpayer->full_name }}
@@ -431,10 +431,10 @@
                 @foreach ($business->partners as $partner)
                     @if ($partner->tin)
                         <div class="col-md-4">
-                            <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                <a href="#" style="font-weight: 500;" class="ml-1">
+                            <div
+                                class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                <a href="#" class="ml-1 font-weight-bold">
                                     TIN Certificate - {{ $partner->taxpayer->full_name }}
                                     (<b>{{ $partner->taxpayer->reference_no }}</b>)
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -445,9 +445,9 @@
                 @endforeach
                 @if ($business->taxpayer->tin_location)
                     <div class="col-md-4">
-                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <a href="#" style="font-weight: 500;" class="ml-1">
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <a href="#" class="ml-1 font-weight-bold">
                                 TIN Certificate - {{ $business->taxpayer->full_name }}
                                 (<b>{{ $business->taxpayer->reference_no }}</b>)
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -458,5 +458,5 @@
             </div>
         </div>
     </div>
-
+   
 </div>

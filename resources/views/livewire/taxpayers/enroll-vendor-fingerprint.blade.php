@@ -45,7 +45,7 @@
                         <tr>
                             <th width="20%" align="center">
                                 Index <br>
-                                <i class="bi bi-fingerprint" style="font-size: 50px"></i> <br>
+                                <i class="bi bi-fingerprint font-size-50"></i> <br>
                                 @if (!$this->enrolled('left', 'index'))
                                     <button class="btn btn-outline-info btn-sm"
                                         onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal','{{ encrypt($kyc->id) }}','left','index')">Click
@@ -56,7 +56,7 @@
                             </th>
                             <th width="20%" align="center">
                                 Thumb <br>
-                                <i class="bi bi-fingerprint" style="font-size: 50px"></i> <br>
+                                <i class="bi bi-fingerprint font-size-50"></i> <br>
                                 @if (!$this->enrolled('left', 'thumb'))
                                     <button class="btn btn-outline-info btn-sm"
                                         onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal','{{ encrypt($kyc->id) }}','left','thumb')">Click
@@ -78,7 +78,7 @@
                         <tr>
                             <th width="20%" align="center">
                                 Index <br>
-                                <i class="bi bi-fingerprint" style="font-size: 50px"></i> <br>
+                                <i class="bi bi-fingerprint font-size-50"></i> <br>
                                 @if (!$this->enrolled('right', 'index'))
                                     <button class="btn btn-outline-info btn-sm"
                                         onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal','{{ encrypt($kyc->id) }}','right','index')">Click
@@ -89,7 +89,7 @@
                             </th>
                             <th width="20%" align="center">
                                 Thumb <br>
-                                <i class="bi bi-fingerprint" style="font-size: 50px"></i> <br>
+                                <i class="bi bi-fingerprint font-size-50"></i> <br>
                                 @if (!$this->enrolled('right', 'thumb'))
                                     <button class="btn btn-outline-info btn-sm" onclick="Livewire.emit('showModal', 'taxpayers.bio-enroll-vendor-modal','{{ encrypt($kyc->id) }}','right','thumb')">Click
                                         To Enroll</button>

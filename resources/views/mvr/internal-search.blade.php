@@ -12,7 +12,7 @@
                    New Search
                    <button class="btn btn-primary btn-sm"
                            onclick="Livewire.emit('showModal', '{{$action}}',{{$motor_vehicle->id}})"><i
-                               class="fa fa-forward"></i>
+                               class="bi bi-arrow-right"></i>
                        Initiate Request</button>
                </div>
            </div>
@@ -146,16 +146,12 @@
 
    @else
        <div class="card mt-3">
-           <div class="card-header">
-               <div class="card-tools">
-                   New Search
-               </div>
-           </div>
+          
            <div class="card-body">
 
                <div class="row">
                    <div class="col-md-12 mb-3">
-                       <div class="text-center m-3 text-center h3"><i class="fa fa-search text-danger"></i></div>
+                       <div class="text-center m-3 text-center h3"><i class="bi bi-search text-danger"></i></div>
                        @if(\Route::currentRouteName() === 'mvr.internal-search-dr')
                            <h3 class="font-weight-bold text-center m-3 text-danger">Motor Vehicle with {{$search_type}} {{$number}} has not been processed for Deregistration or has not been Registered</h3>
                        @else

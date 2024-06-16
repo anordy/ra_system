@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Enum\ReportStatus;
+use App\Enum\GeneralConstant;
 use App\Models\Returns\ReturnStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -44,22 +45,22 @@ trait ReturnFilterTrait
         $m6 = clone $model;
 
         //All Filings
-        $vars['totalSubmittedReturns'] = $m1->count();
+        $vars['totalSubmittedReturns'] = $m1->count() ?? GeneralConstant::ZERO_INT;
 
         //late filings
-        $vars['totalLateFiledReturns'] = $m2->whereColumn('created_at', '>', 'filing_due_date')->count();
+        $vars['totalLateFiledReturns'] = $m2->whereColumn('created_at', '>', 'filing_due_date')->count() ?? GeneralConstant::ZERO_INT;
 
         //In-Time filings
-        $vars['totalInTimeFiledReturns'] = $m3->whereColumn('created_at', '<=', 'filing_due_date')->count();
+        $vars['totalInTimeFiledReturns'] = $m3->whereColumn('created_at', '<=', 'filing_due_date')->count() ?? GeneralConstant::ZERO_INT;
 
         //All paid returns
-        $vars['totalPaidReturns'] = $m4->whereNotNull('paid_at')->count();
+        $vars['totalPaidReturns'] = $m4->whereNotNull('paid_at')->count() ?? GeneralConstant::ZERO_INT;
 
         //total unpaid returns
-        $vars['totalUnpaidReturns'] = $m5->whereNull('paid_at')->count();
+        $vars['totalUnpaidReturns'] = $m5->whereNull('paid_at')->count() ?? GeneralConstant::ZERO_INT;
 
         //total late paid returns
-        $vars['totalLatePaidReturns'] = $m6->whereColumn('paid_at', '>', 'payment_due_date')->count();
+        $vars['totalLatePaidReturns'] = $m6->whereColumn('paid_at', '>', 'payment_due_date')->count() ?? GeneralConstant::ZERO_INT;
 
         return $vars;
     }
@@ -81,10 +82,10 @@ trait ReturnFilterTrait
         $totalTaxAmount = $returnClass2->where($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->sum("{$returnTableName}.total_amount_due");
 
         return  [
-            'totalTaxAmount'   => $totalTaxAmount,
-            'totalLateFiling'  => $penaltyData->sum('totallatefiling'),
-            'totalLatePayment' => $penaltyData->sum('totallatepayment'),
-            'totalRate'        => $penaltyData->sum('totalrate'),
+            'totalTaxAmount'   => $totalTaxAmount ?? GeneralConstant::ZERO_INT,
+            'totalLateFiling'  => $penaltyData->sum('totallatefiling') ?? GeneralConstant::ZERO_INT,
+            'totalLatePayment' => $penaltyData->sum('totallatepayment') ?? GeneralConstant::ZERO_INT,
+            'totalRate'        => $penaltyData->sum('totalrate') ?? GeneralConstant::ZERO_INT,
         ];
     }
 
@@ -106,10 +107,10 @@ trait ReturnFilterTrait
         $totalTaxAmount = $returnClass2->whereNotIn($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->sum("{$returnTableName}.total_amount_due");
 
         return  [
-            'totalTaxAmount'   => $totalTaxAmount,
-            'totalLateFiling'  => $penaltyData->sum('totallatefiling'),
-            'totalLatePayment' => $penaltyData->sum('totallatepayment'),
-            'totalRate'        => $penaltyData->sum('totalrate'),
+            'totalTaxAmount'   => $totalTaxAmount ?? GeneralConstant::ZERO_INT,
+            'totalLateFiling'  => $penaltyData->sum('totallatefiling') ?? GeneralConstant::ZERO_INT,
+            'totalLatePayment' => $penaltyData->sum('totallatepayment') ?? GeneralConstant::ZERO_INT,
+            'totalRate'        => $penaltyData->sum('totalrate') ?? GeneralConstant::ZERO_INT,
         ];
     }
 }

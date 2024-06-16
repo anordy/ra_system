@@ -64,15 +64,15 @@ class StreetTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Approved</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                            <span class="badge badge-success p-2 rounded-0" >Approved</span>
                         HTML;
                     } elseif ($value == 2) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                            <span class="badge badge-danger p-2 rounded-0" >Rejected</span>
                         HTML;
                     }
                 })
@@ -81,11 +81,11 @@ class StreetTable extends DataTableComponent
                 ->format(function ($value) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Updated</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                            <span class="badge badge-success p-2 rounded-0" >Updated</span>
                         HTML;
                     }
                 })
@@ -98,12 +98,12 @@ class StreetTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-street-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'street-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="street-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
                             HTML;
                         }
                         if (Gate::allows('setting-street-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete = <<<HTML
-                                <button class="btn btn-danger btn-sm" wire:cl   ick="delete($value)"><i class="fa fa-trash"></i> </button>
+                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash-fill"></i> </button>
                             HTML;
                         }
                     }

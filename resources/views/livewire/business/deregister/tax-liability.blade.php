@@ -7,7 +7,7 @@
             @if ($can_initiate_audit && !$deregister->audit)
                 <button class="btn btn-info btn-sm"
                     onclick="Livewire.emit('showModal', 'business.deregister.initiate-audit-modal', '{{ encrypt($deregister_id) }}')">
-                    <i class="fa fa-plus-circle"></i>
+                    <i class="bi bi-plus-circle-fill"></i>
                     Initiate Audit
                 </button>
             @endif
@@ -35,7 +35,7 @@
     <hr>
 
     <div>
-        <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+        <ul class="nav nav-tabs shadow-sm mb-0">
             <li class="nav-item" role="presentation">
                 <a class="nav-link active" id="return-debts-tab" data-toggle="tab" href="#return-debts" role="tab"
                     aria-controls="return-debts" aria-selected="true">Return Debts</a>

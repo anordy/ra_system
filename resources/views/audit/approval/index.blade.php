@@ -9,7 +9,7 @@
             Tax Audit Approvals
             <div class="card-tools">
                 <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'audit.business-audit-add-modal')">
-                    <i class="fa fa-plus-circle"></i>
+                    <i class="bi bi-plus-circle-fill"></i>
                     Add To Audit
                 </button>
             </div>

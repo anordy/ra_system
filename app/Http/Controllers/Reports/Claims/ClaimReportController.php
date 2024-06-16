@@ -13,6 +13,8 @@ class ClaimReportController extends Controller
 {
     use ClaimReportTrait;
 
+    const REPORT_TYPE = "All Claim reports ";
+
     public function init(){
         if (!Gate::allows('managerial-claim-report-view')) {
             abort(403);
@@ -47,20 +49,16 @@ class ClaimReportController extends Controller
             $records = $this->getRecords($parameters);
 
             if ($parameters['duration'] == 'yearly') {
-                if ($parameters['year'] == 'all') {
-                    $title = 'All Claim reports';
+                if ($parameters['status'] != 'both') {
+                    $title = $parameters['status'] . ' claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
                 } else {
-                    if ($parameters['status'] != 'both') {
-                        $title = $parameters['status'] . ' claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
-                    } else {
-                        $title = 'All claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
-                    }
+                    $title = self::REPORT_TYPE . 'from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
                 }
             } else {
                 if ($parameters['status'] != 'both') {
                     $title = $parameters['status'] . ' claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
                 } else {
-                    $title = 'All Claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
+                    $title = self::REPORT_TYPE . 'from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
                 }
             }
             $records = $records->get();

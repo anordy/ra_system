@@ -16,10 +16,10 @@
                                 <strong>{{ $business_update->created_at->toFormattedDateString() }}</strong></label>
                         </div>
                         <thead>
-                            <th style="width: 20%">Property</th>
-                            <th style="width: 30%">Old Values</th>
-                            <th style="width: 30%">New Values</th>
-                            <th style="width: 20%">Status</th>
+                            <th>Property</th>
+                            <th>Old Values</th>
+                            <th>New Values</th>
+                            <th>Status</th>
                         </thead>
                         <tbody>
                             <tr>
@@ -142,10 +142,10 @@
                     <table class="table table-bordered table-striped table-sm">
                         <label class="font-weight-bold text-uppercase">Business Location</label>
                         <thead>
-                            <th style="width: 20%">Property</th>
-                            <th style="width: 30%">Old Values</th>
-                            <th style="width: 30%">New Values</th>
-                            <th style="width: 20%">Status</th>
+                            <th>Property</th>
+                            <th>Old Values</th>
+                            <th>New Values</th>
+                            <th>Status</th>
                         </thead>
                         <tbody>
                             <tr>
@@ -300,8 +300,8 @@
                             <strong>{{ $business_update->created_at->toFormattedDateString() }}</strong></label>
                     </div>
                     <thead>
-                        <th style="width: 50%">Old Bank Information</th>
-                        <th style="width: 50%">Updated Bank Information</th>
+                        <th>Old Bank Information</th>
+                        <th>Updated Bank Information</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -347,8 +347,8 @@
                             <strong>{{ $business_update->created_at->toFormattedDateString() }}</strong></label>
                     </div>
                     <thead>
-                        <th style="width: 50%">Old Attachments</th>
-                        <th style="width: 50%">Updated Attachments</th>
+                        <th>Old Attachments</th>
+                        <th>Updated Attachments</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -359,8 +359,8 @@
                                     <div class="col-md-12">
                                         <a class="file-item" target="_blank"
                                             href="{{ route('business.file', encrypt($file->id)) }}">
-                                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                            <div style="font-weight: 500;" class="ml-1">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                            <div class="ml-1 font-weight-bold">
                                                 {{ $this->getNameById('file_type_id',$file->business_file_type_id) ?? 'N/A' }}
                                             </div>
                                         </a>
@@ -376,8 +376,8 @@
                                         <div class="col-md-12">
                                             <a class="file-item" target="_blank"
                                                 href="{{ route('business.file-location', encrypt($file->location)) }}">
-                                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                                <div style="font-weight: 500;" class="ml-1">
+                                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                                <div class="ml-1 font-weight-bold">
                                                     {{ $file->name ?? 'N/A' }}
                                                 </div>
                                             </a>
@@ -387,8 +387,8 @@
                                         <div class="col-md-12">
                                             <a class="file-item" target="_blank"
                                                 href="{{ route('business.file-location', encrypt($file->tin_location)) }}">
-                                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                                <div style="font-weight: 500;" class="ml-1">
+                                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                                <div class="ml-1 font-weight-bold">
                                                 TIN for {{ $file->reference_no ?? 'N/A' }}
                                                 </div>
                                             </a>
@@ -405,10 +405,10 @@
                     <table class="table table-striped table-sm">
                         <label class="font-weight-bold text-uppercase">{{ $business_update->business->name }} Consultant / Preparer</label>
                         <thead>
-                            <th style="width: 30%">Property</th>
-                            <th style="width: 25%">Old Values</th>
-                            <th style="width: 25%">New Values</th>
-                            <th style="width: 20%">Status</th>
+                            <th>Property</th>
+                            <th>Old Values</th>
+                            <th>New Values</th>
+                            <th>Status</th>
                         </thead>
                         <tbody>
 
@@ -485,8 +485,8 @@
                     <div class="col-md-3">
                         <a class="file-item" target="_blank"
                            href="{{ route('business.contract.file', encrypt($business_update->id)) }}">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <div style="font-weight: 500;" class="ml-1">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <div class="ml-1 font-weight-bold">
                                 View Agent Contract
                             </div>
                         </a>
@@ -500,10 +500,10 @@
                 <table class="table table-striped table-sm">
                     <label class="font-weight-bold text-uppercase">{{ $business_update->business->name }} Hotel Information</label>
                     <thead>
-                        <th style="width: 30%">Property</th>
-                        <th style="width: 25%">Old Values</th>
-                        <th style="width: 25%">New Values</th>
-                        <th style="width: 20%">Status</th>
+                        <th>Property</th>
+                        <th>Old Values</th>
+                        <th>New Values</th>
+                        <th>Status</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -655,10 +655,10 @@
                     <table class="table table-striped table-sm">
                         <label class="font-weight-bold text-uppercase">{{ $business_update->business->name }} Hotel Information</label>
                         <thead>
-                        <th style="width: 30%">Property</th>
-                        <th style="width: 25%">Old Values</th>
-                        <th style="width: 25%">New Values</th>
-                        <th style="width: 20%">Status</th>
+                        <th>Property</th>
+                        <th>Old Values</th>
+                        <th>New Values</th>
+                        <th>Status</th>
                         </thead>
                         <tbody>
                         <tr>

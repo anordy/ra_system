@@ -1,5 +1,5 @@
 <div class="mt-4 mx-4">
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    <ul class="nav nav-tabs shadow-sm mb-0">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Waiver Details</a>
@@ -108,10 +108,10 @@
                             <label class="text-left font-weight-bold text-uppercase">Waiver Breakdown</label>
                         </div>
                         <thead>
-                            <th style="width: 20%"></th>
-                            <th class="text-uppercase" style="width: 30%">Pre-waived Figure (Debt Figure)</th>
-                            <th class="text-uppercase" style="width: 30%">Waived Percentage</th>
-                            <th class="text-uppercase" style="width: 30%">Post-waived Figure</th>
+                            <th class="w-20"></th>
+                            <th class="text-uppercase w-30">Pre-waived Figure (Debt Figure)</th>
+                            <th class="text-uppercase w-30">Waived Percentage</th>
+                            <th class="text-uppercase w-30">Post-waived Figure</th>
                         </thead>
                         <tbody>
                             <tr>
@@ -178,11 +178,11 @@
             <div class="row m-2 pt-3">
                 @foreach ($files as $file)
                     <div class="col-md-3">
-                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
                                 href="{{ route("debts.assesment.file", encrypt($file->id)) }}"
-                                style="font-weight: 500;" class="ml-1">
+                                class="ml-1 font-weight-bold">
                                 {{ $file["file_name"] }}
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>

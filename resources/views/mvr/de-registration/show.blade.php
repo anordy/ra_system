@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
-@section('title', 'Show Motor Vehicle Registration')
+@section('title', 'Motor Vehicle De-registration Details')
 
 @section('content')
 
-    @if($mvrDeregistration->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT || $mvrDeregistration->status === \App\Enum\MvrRegistrationStatus::APPROVED
-                     )
-        @livewire('mvr.payment.deregistration-fee-payment', ['deregistration' => $mvrDeregistration])
+    @if($mvrDeregistration->status === \App\Enum\MvrRegistrationStatus::STATUS_PENDING_PAYMENT
+        || $mvrDeregistration->status === \App\Enum\MvrRegistrationStatus::APPROVED)
+        @livewire('mvr.fee-payment', ['motorVehicle' => $mvrDeregistration])
     @endif
 
     <ul class="nav nav-tabs shadow-sm mb-0" id="myTab" role="tablist">

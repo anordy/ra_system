@@ -7,13 +7,14 @@
                 <h5 class="text-uppercase">Chassis Number: {{$chassis}}</h5>
                 <div class="card-tools p-4">
                     @can('mvr_initiate_registration')
-                    <button class="btn btn-info btn-sm"><i class="fa fa-search"></i>
-                        New Search
-                    </button>
-                    <button class="btn btn-primary btn-sm">
-                        <i class="fa fa-arrow-right"></i>
-                        Proceed With Registration
-                    </button>
+                    <button class="btn btn-info btn-sm"
+                            onclick="Livewire.emit('showModal', 'mvr.chassis-number-search','mvr.chassis-search')"><i
+                                class="bi bi-search"></i>
+                        New Search</button>
+                    <button class="btn btn-primary btn-sm"
+                            onclick="Livewire.emit('showModal', 'mvr.upload-inspection-report','{{$chassis}}')"><i
+                                class="bi bi-arrow-right"></i>
+                        Proceed With Registration</button>
                     @endcan
                 </div>
             </div>
@@ -118,7 +119,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <div class="text-center m-3 text-center h3"><i class="fa fa-search text-danger"></i></div>
+                                <div class="text-center m-3 text-center h3"><i class="bi bi-search text-danger"></i></div>
                                 <h3 class="font-weight-bold text-center m-3 text-danger">{{$message}}</h3>
                             </div>
                         </div>

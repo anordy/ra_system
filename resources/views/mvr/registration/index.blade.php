@@ -1,13 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'List Motor Vehicle Registration')
+@section('title', 'Motor Vehicle Registrations')
 
 @section('content')
 
     <div class="card mt-3">
-        <div class="card-header">
-            <h5>Motor Vehicles</h5>
-        </div>
+        <div class="card-header">Motor Vehicle Registrations</div>
 
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">

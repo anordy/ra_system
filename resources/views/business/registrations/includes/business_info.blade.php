@@ -1,5 +1,5 @@
 <div class="pt-3 px-2">
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    <ul class="nav nav-tabs shadow-sm mb-0">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Business Information</a>
@@ -36,19 +36,17 @@
             <a class="nav-link" id="business-attachment-tab" data-toggle="tab" href="#business-attachment"
                 role="tab" aria-controls="business-attachment" aria-selected="false">Business Attachments</a>
         </li>
-        @if (
-            $business->reg_no &&
-                $business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
+        @if ($business->reg_no && $business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
                 (count($directors) || count($shareholders) || count($shares)))
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="bpra-information-tab" data-toggle="tab" href="#bpra-information"
-                    role="tab" aria-controls="bpra-information" aria-selected="false">BPRA Information</a>
-            </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="bpra-information-tab" data-toggle="tab" href="#bpra-information"
+                        role="tab" aria-controls="bpra-information" aria-selected="false">BPRA Information</a>
+                </li>
         @endif
-        @if ($business->tin && $business->tininformation && $business->tin_verification_status === \App\Enum\TinVerificationStatus::APPROVED)
+        @if($business->tin && $business->tininformation && $business->tin_verification_status === \App\Enum\TinVerificationStatus::APPROVED)
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="tin-information-tab" data-toggle="tab" href="#tin-information"
-                    role="tab" aria-controls="tin-information" aria-selected="false">TIN Information</a>
+                   role="tab" aria-controls="tin-information" aria-selected="false">TIN Information</a>
             </li>
         @endif
     </ul>
@@ -84,11 +82,11 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Name</span>
-                    <p class="my-1">{{ $business->name ?? "" }}</p>
+                    <p class="my-1">{{ $business->name ?? '' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Category</span>
-                    <p class="my-1">{{ $business->category->name ?? "" }}</p>
+                    <p class="my-1">{{ $business->category->name ?? '' }}</p>
                 </div>
                 @if ($business->business_type === \App\Models\BusinessType::HOTEL)
                     <div class="col-md-4 mb-3">
@@ -102,14 +100,14 @@
 
                     {{-- Start Will be implementated after TRA intergration --}}
                     {{-- @if (isset($verified))
-                        @if ($verified == "verified")
+                        @if ($verified == 'verified')
                             <span class="font-weight-light text-success">
-                                <i class="fa fa-check" aria-hidden="true"></i>
+                                <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
                                 TIN Number Verified
                             </span>
                         @else
                             <span class="font-weight-light text-danger">
-                                <i class="fa fa-times" aria-hidden="true"></i>
+                                <i class="bi bi-x-circle-fill" aria-hidden="true"></i>
                                 {{ $verified }}
                             </span>
                         @endif
@@ -129,9 +127,9 @@
                 @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Reg. No.</span>
-                    <p class="my-1">{{ $business->reg_no ?? "N/A" }}</p>
+                    <p class="my-1">{{ $business->reg_no ?? 'N/A' }}</p>
                 </div>
-                @if ($business->taxpayer_name)
+                @if($business->taxpayer_name)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Taxpayer Name</span>
                         <p class="my-1">{{ $business->taxpayer_name }}</p>
@@ -232,7 +230,7 @@
         <div class="tab-pane fade" id="location" role="tabpanel" aria-labelledby="location-tab">
             @if ($location = $business->headquarter)
                 <div class="col-md-12 mt-3">
-                    <h6 class="mb-0 font-weight-bold" style="flex: 1;">Headquarter</h6>
+                    <h6 class="mb-0 font-weight-bold">Headquarter</h6>
                     <hr class="mt-2 mb-3" />
                 </div>
                 <div class="row m-2">
@@ -296,7 +294,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Electric Metre No.</span>
-                        <p class="my-1">{{ $location->meter_no ?? "N/A" }}</p>
+                        <p class="my-1">{{ $location->meter_no ?? 'N/A' }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Region.</span>
@@ -351,7 +349,7 @@
                             <div>
                                 @foreach ($business->taxTypes as $type)
                                     <a target="_blank"
-                                        href="{{ route("business.certificate", ["location" => encrypt($location->id), "type" => encrypt($type->id)]) }}"
+                                        href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
                                         class="btn btn-success btn-sm mt-1 text-white">
                                         <i class="bi bi-patch-check"></i>
                                         {{ $type->name }} Certificate
@@ -439,7 +437,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Street</span>
-                            <p class="my-1">{{ $location->street->name ?? "N/A" }}</p>
+                            <p class="my-1">{{ $location->street->name ?? 'N/A' }}</p>
                         </div>
                         @if ($location->physical_address)
                             <div class="col-md-4 mb-3">
@@ -451,13 +449,13 @@
                             <span class="font-weight-bold text-uppercase">House No.</span>
                             <p class="my-1">{{ $location->house_no }}</p>
                         </div>
-                        @if ($location->latitude)
+                        @if($location->latitude)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Latitude</span>
                                 <p class="my-1">{{ $location->latitude }}</p>
                             </div>
                         @endif
-                        @if ($location->longitude)
+                        @if($location->longitude)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Longitude</span>
                                 <p class="my-1">{{ $location->longitude }}</p>
@@ -494,7 +492,7 @@
                                 <div>
                                     @foreach ($business->taxTypes as $type)
                                         <a target="_blank"
-                                            href="{{ route("business.certificate", ["location" => encrypt($location->id), "type" => encrypt($type->id)]) }}"
+                                            href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
                                             class="btn btn-success btn-sm mt-1 text-white">
                                             <i class="bi bi-patch-check"></i>
                                             {{ $type->name }} Certificate
@@ -504,7 +502,7 @@
                             @endif
                         </div>
                     </div>
-                    <hr style="margin-top: -16px" class="mx-3" />
+                    <hr class="mx-3" />
                 @endforeach
             @endif
         </div>
@@ -537,22 +535,22 @@
 
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="col-md-12 mt-4">
-                <span class="pt-3 mb-0 font-weight-bold">{{ __("Assistants") }}</span>
+                <span class="pt-3 mb-0 font-weight-bold">{{ __('Assistants') }}</span>
                 <hr class="mt-2 mb-3" />
             </div>
             <div class="row m-2 mb-3">
-                @if ($business->assistants()->count())
-                    @foreach ($business->assistants()->active()->with("taxpayer")->get() as $index => $assistant)
+                @if($business->assistants()->count())
+                    @foreach($business->assistants()->active()->with('taxpayer')->get() as $index => $assistant)
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">{{ $index + 1 }}. {{ __("Name") }}</span>
+                            <span class="font-weight-bold text-uppercase">{{$index + 1}}. {{ __('Name') }}</span>
                             <p class="my-1">{{ $assistant->taxpayer->fullName }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">{{ __("Ref No") }}.</span>
+                            <span class="font-weight-bold text-uppercase">{{ __('Ref No') }}.</span>
                             <p class="my-1">{{ $assistant->taxpayer->reference_no }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">{{ __("Mobile No") }}.</span>
+                            <span class="font-weight-bold text-uppercase">{{ __('Mobile No') }}.</span>
                             <p class="my-1">{{ $assistant->taxpayer->mobile }}</p>
                         </div>
                     @endforeach
@@ -561,48 +559,48 @@
                 @endif
             </div>
             <div class="col-md-12 mt-1">
-                <span class="pt-3 mb-0 font-weight-bold">{{ __("Tax Consultant") }}</span>
+                <span class="pt-3 mb-0 font-weight-bold">{{ __('Tax Consultant') }}</span>
                 <hr class="mt-2 mb-3" />
             </div>
             <div class="row m-2">
-                @if ($consultant = $business->consultants()->latest()->first())
-                    @if ($consultant->status !== "removed")
+                @if($consultant = $business->consultants()->latest()->first())
+                    @if ($consultant->status !== 'removed')
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">{{ __("Consultant Name") }}</span>
+                            <span class="font-weight-bold text-uppercase">{{ __('Consultant Name') }}</span>
                             <p class="my-1">{{ $consultant->taxpayer->first_name }}
                                 {{ $consultant->taxpayer->last_name }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">{{ __("Consultant Ref No") }}.</span>
+                            <span class="font-weight-bold text-uppercase">{{ __('Consultant Ref No') }}.</span>
                             <p class="my-1">{{ $consultant->taxpayer->taxAgent->reference_no }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">{{ __("Consultant Mobile No") }}.</span>
+                            <span class="font-weight-bold text-uppercase">{{ __('Consultant Mobile No') }}.</span>
                             <p class="my-1">{{ $consultant->taxpayer->mobile }}</p>
                         </div>
                     @endif
 
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">{{ __("Consultant Status") }}</span>
-                        @if ($consultant->status === "pending")
+                        <span class="font-weight-bold text-uppercase">{{ __('Consultant Status') }}</span>
+                        @if ($consultant->status === 'pending')
                             <p class="my-1 text-info font-weight-bold">
                                 <i class="bi bi-clock-history mr-1"></i>
-                                {{ __("Waiting Approval From Tax Agent") }}
+                                {{ __('Waiting Approval From Tax Agent') }}
                             </p>
-                        @elseif($consultant->status === "approved")
+                        @elseif($consultant->status === 'approved')
                             <p class="my-1 text-success font-weight-bold">
                                 <i class="bi bi-check-circle mr-1"></i>
-                                {{ __("Approved") }}
+                                {{ __('Approved') }}
                             </p>
-                        @elseif($consultant->status === "rejected")
+                        @elseif($consultant->status === 'rejected')
                             <p class="my-1 text-danger font-weight-bold">
                                 <i class="bi bi-x-circle-fill mr-1"></i>
-                                {{ __("Rejected") }}
+                                {{ __('Rejected') }}
                             </p>
-                        @elseif($consultant->status === "removed")
+                        @elseif($consultant->status === 'removed')
                             <p class="my-1 text-danger font-weight-bold">
                                 <i class="bi bi-trash-fill mr-1"></i>
-                                {{ __("Removed. Please assign new tax agent") }}.
+                                {{ __('Removed. Please assign new tax agent') }}.
                             </p>
                         @endif
                     </div>
@@ -614,7 +612,7 @@
             </div>
             <div class="row m-2">
                 <div class="col-md-12">
-                    <span class="mb-0 font-weight-bold" style="flex: 1;">Business Registered By</span>
+                    <span class="mb-0 font-weight-bold">Business Registered By</span>
                     <hr class="mt-2 mb-3" />
                 </div>
                 <div class="col-md-4 mb-3">
@@ -669,31 +667,31 @@
                 <div class="row m-2 pt-3">
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Company Name</span>
-                        <p class="my-1">{{ $hotel->company_name ?? "N/A" }}</p>
+                        <p class="my-1">{{ $hotel->company_name ?? 'N/A' }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Management Company</span>
-                        <p class="my-1">{{ $hotel->management_company ?? "N/A" }}</p>
+                        <p class="my-1">{{ $hotel->management_company ?? 'N/A'}}</p>
                     </div>
                     @if ($hotel->business_reg_no)
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Registration No</span>
                             <p class="my-1">{{ $hotel->business_reg_no }}</p>
-                        </div>
+                        </div> 
                     @endif
                     @if ($hotel->old_business_reg_no)
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Old Business Registration No</span>
-                            <p class="my-1">{{ $hotel->old_business_reg_no }}</p>
-                        </div>
-                    @endif
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Old Business Registration No</span>
+                        <p class="my-1">{{ $hotel->old_business_reg_no }}</p>
+                    </div> 
+                @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Hotel Location</span>
                         <p class="my-1">{{ $hotel->hotel_location }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Hotel Star Rating</span>
-                        <p class="my-1">{{ $hotel->star->name ?? "N/A" }}</p>
+                        <p class="my-1">{{ $hotel->star->name ?? 'N/A' }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Number of Rooms</span>
@@ -717,8 +715,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Average Charging Rate (Per night per person for bed and breakfast)</span>
-                        <p class="my-1">{{ $hotel->average_rate ? number_format($hotel->average_rate) : "N/A" }} {{ $business->currency->iso }}
-                        </p>
+                        <p class="my-1">{{ $hotel->average_rate ? number_format($hotel->average_rate) : 'N/A' }} {{ $business->currency->iso }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Other Services</span>
@@ -734,10 +731,10 @@
                 @foreach ($business->files as $file)
                     <div class="col-md-4">
                         <a class="file-item" target="_blank"
-                            href="{{ route("business.file", encrypt($file->id)) }}">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <div style="font-weight: 500;" class="ml-1">
-                                {{ $file->type->name ?? "N/A" }}
+                            href="{{ route('business.file', encrypt($file->id)) }}">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <div class="ml-1 font-weight-bold">
+                                {{ $file->type->name ?? 'N/A' }}
                                 @if ($file->type->short_name === \App\Models\BusinessFileType::TIN)
                                     - {{ $file->taxpayer->full_name }} (<b>{{ $file->taxpayer->reference_no }}</b>)
                                 @endif
@@ -748,12 +745,11 @@
                 @foreach ($business->partners as $partner)
                     @if ($partner->tin)
                         <div class="col-md-4">
-                            <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                 <a target="_blank"
-                                    href="{{ route("business.tin.file", encrypt($partner->taxpayer_id)) }}"
-                                    style="font-weight: 500;" class="ml-1">
+                                    href="{{ route('business.tin.file', encrypt($partner->taxpayer_id)) }}"
+                                    class="ml-1 font-weight-bold">
                                     TIN Certificate - {{ $partner->taxpayer->full_name }}
                                     (<b>{{ $partner->taxpayer->reference_no }}</b>)
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -764,11 +760,11 @@
                 @endforeach
                 @if ($business->taxpayer->tin_location)
                     <div class="col-md-4">
-                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
-                                href="{{ route("business.tin.file", encrypt($business->taxpayer_id)) }}"
-                                style="font-weight: 500;" class="ml-1">
+                                href="{{ route('business.tin.file', encrypt($business->taxpayer_id)) }}"
+                                class="ml-1 font-weight-bold">
                                 TIN Certificate - {{ $business->taxpayer->full_name }}
                                 (<b>{{ $business->taxpayer->reference_no }}</b>)
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -779,52 +775,47 @@
             </div>
         </div>
 
-        @if (
-            $business->reg_no &&
-                $business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
-                (count($directors) || count($shareholders) || count($shares)))
+        @if ($business->reg_no && $business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
+            (count($directors) || count($shareholders) || count($shares)))
             <div class="tab-pane fade p-4" id="bpra-information" role="tabpanel"
                 aria-labelledby="bpra-information-tab">
                 <div class="pt-2">
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business No.</span>
-                            <p class="my-1">{{ $business->reg_no ?? "N/A" }}</p>
+                            <p class="my-1">{{ $business->reg_no ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
                             <p class="my-1">{{ $business->name }}</p>
                         </div>
-
+            
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Status</span>
                             @if ($business->bpra_verification_status === \App\Models\BusinessStatus::PENDING)
                                 <p class="my-1">
-                                    <span class="badge badge-danger py-1 px-2 text-capitalize"
-                                        style="border-radius: 1rem; background: #9ca3af; color: #374151; font-size: 85%">
+                                    <span class="badge badge-danger py-1 px-2 text-capitalize pending-status">
                                         <i class="bi bi-record-circle mr-1"></i>
                                         {{ $business->bpra_verification_status }}
                                     </span>
                                 </p>
                             @elseif ($business->bpra_verification_status === \App\Models\BusinessStatus::PBRA_UNVERIFIED)
                                 <p class="my-1">
-                                    <span class="badge badge-danger py-1 px-2 text-capitalize"
-                                        style="border-radius: 1rem; background: #fde047; color: #a16207; font-size: 85%">
+                                    <span class="badge badge-danger py-1 px-2 text-capitalize pending-status">
                                         <i class="bi bi-record-circle mr-1"></i>
                                         {{ $business->bpra_verification_status }}
                                     </span>
                                 </p>
                             @elseif($business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED)
                                 <p class="my-1">
-                                    <span class="badge badge-success py-1 px-2"
-                                        style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                    <span class="badge badge-success py-1 px-2 green-status">
                                         <i class="bi bi-check-circle-fill mr-1"></i>
                                         Verification Successful
                                     </span>
                                 </p>
                             @endif
                         </div>
-
+                
                     </div>
                 </div>
                 <table class="table table-striped table-sm table-bordered">
@@ -841,29 +832,29 @@
                             @foreach ($directors as $director)
                                 <tr>
                                     <td class="">
-                                        {{ $director["first_name"] }}
-                                        {{ $director["middle_name"] }}
-                                        {{ $director["last_name"] }}
+                                        {{ $director['first_name'] }}
+                                        {{ $director['middle_name'] }}
+                                        {{ $director['last_name'] }}
                                     </td>
                                     <td class="">
-                                        {{ $director["mob_phone"] }}
+                                        {{ $director['mob_phone'] }}
                                     </td>
                                     <td class="">
-                                        {{ $director["email"] }}
+                                        {{ $director['email'] }}
                                     </td>
                                     <td class="">
-                                        @if (substr($director["gender"] ?? "", 3) == "M")
+                                        @if (substr($director['gender'] ?? '', 3) == 'M')
                                             MALE
-                                        @elseif (substr($director["gender"] ?? "", 3) == "F")
+                                        @elseif (substr($director['gender'] ?? '', 3) == 'F')
                                             FEMALE
                                         @else
                                             -
                                         @endif
                                     </td>
                                     <td class="">
-                                        {{ $director["city_name"] }}
+                                        {{ $director['city_name'] }}
                                         <div>
-                                            {{ $director["first_line"] }}
+                                            {{ $director['first_line'] }}
                                         </div>
                                     </td>
                                 </tr>
@@ -892,18 +883,18 @@
                             @foreach ($shareholders as $shareholder)
                                 <tr>
                                     <td class="">
-                                        {{ $shareholder["entity_name"] ? $shareholder["entity_name"] : $shareholder["first_name"] . " " . $shareholder["middle_name"] . " " . $shareholder["last_name"] ?? "N/A" }}
+                                        {{ $shareholder['entity_name'] ? $shareholder['entity_name'] : $shareholder['first_name'] . ' ' . $shareholder['middle_name'] . ' ' . $shareholder['last_name'] ?? 'N/A' }}
                                     </td>
                                     <td class="">
-                                        {{ $shareholder["mob_phone"] }}
+                                        {{ $shareholder['mob_phone'] }}
                                     </td>
                                     <td class="">
-                                        {{ $shareholder["email"] }}
+                                        {{ $shareholder['email'] }}
                                     </td>
                                     <td class="">
-                                        @if (substr($shareholder["gender"] ?? "", 3) == "M")
+                                        @if (substr($shareholder['gender'] ?? '', 3) == 'M')
                                             MALE
-                                        @elseif (substr($shareholder["gender"] ?? "", 3) == "F")
+                                        @elseif (substr($shareholder['gender'] ?? '', 3) == 'F')
                                             FEMALE
                                         @else
                                             -
@@ -911,10 +902,10 @@
                                     </td>
 
                                     <td class="">
-                                        @if ($shareholder["city_name"])
-                                            {{ $shareholder["city_name"] }}
+                                        @if ($shareholder['city_name'])
+                                            {{ $shareholder['city_name'] }}
                                             <div>
-                                                {{ $shareholder["first_line"] }}
+                                                {{ $shareholder['first_line'] }}
                                             </div>
                                         @else
                                             N/A
@@ -933,11 +924,11 @@
                     <label class="font-weight-bold text-uppercase mt-2">Shares &
                         Distribution</label>
                     <thead>
-                        <th style="width: 30%">Ower Name</th>
-                        <th style="width: 14%">No Of Shares</th>
-                        <th style="width: 5%">Currency</th>
-                        <th style="width: 23%">Shares Taken</th>
-                        <th style="width: 23%">Shares Paid</th>
+                        <th>Ower Name</th>
+                        <th>No Of Shares</th>
+                        <th>Currency</th>
+                        <th>Shares Taken</th>
+                        <th>Shares Paid</th>
                     </thead>
                     <tbody>
                         @if (count($shares) > 0)
@@ -945,19 +936,19 @@
                             @foreach ($shares as $share)
                                 <tr>
                                     <td class="">
-                                        {{ $share["shareholder_name"] }}
+                                        {{ $share['shareholder_name'] }}
                                     </td>
                                     <td class="">
-                                        {{ $share["number_of_shares"] }}
+                                        {{ $share['number_of_shares'] }}
                                     </td>
                                     <td class="">
-                                        {{ $share["currency"] }}
+                                        {{ $share['currency'] }}
                                     </td>
                                     <td class="">
-                                        {{ $share["number_of_shares_taken"] }}
+                                        {{ $share['number_of_shares_taken'] }}
                                     </td>
                                     <td class="">
-                                        {{ $share["number_of_shares_paid"] }}
+                                        {{ $share['number_of_shares_paid'] }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -971,107 +962,107 @@
             </div>
         @endif
 
-        @if ($business->tin && $business->tininformation && $business->tin_verification_status === \App\Enum\TinVerificationStatus::APPROVED)
+        @if($business->tin && $business->tininformation && $business->tin_verification_status === \App\Enum\TinVerificationStatus::APPROVED)
             <div class="tab-pane fade p-4" id="tin-information" role="tabpanel"
-                aria-labelledby="tin-information-tab">
-                <div class="pt-2">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card-body mt-0 p-2">
-                                <div class="row my-2">
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">TIN</span>
-                                        <p class="my-1">{{ $business->tininformation->tin }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">First Name</span>
-                                        <p class="my-1">{{ $business->tininformation->first_name }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Middle Name</span>
-                                        <p class="my-1">{{ $business->tininformation->middle_name ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Last Name</span>
-                                        <p class="my-1">{{ $business->tininformation->last_name ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Email</span>
-                                        <p class="my-1">{{ $business->tininformation->email ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Mobile</span>
-                                        <p class="my-1">{{ $business->tininformation->mobile ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Gender</span>
-                                        <p class="my-1">{{ $business->tininformation->gender }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Date of Birth</span>
-                                        <p class="my-1">{{ $business->tininformation->date_of_birth ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Nationality</span>
-                                        <p class="my-1">{{ $business->tininformation->nationality ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Taxpayer Name</span>
-                                        <p class="my-1">{{ $business->tininformation->taxpayer_name ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Trading Name</span>
-                                        <p class="my-1">{{ $business->tininformation->trading_name ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">District</span>
-                                        <p class="my-1">{{ $business->tininformation->district }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Region</span>
-                                        <p class="my-1">{{ $business->tininformation->region }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Street</span>
-                                        <p class="my-1">{{ $business->tininformation->street }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Postal City</span>
-                                        <p class="my-1">{{ $business->tininformation->postal_city ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Plot Number</span>
-                                        <p class="my-1">{{ $business->tininformation->plot_number ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Block Number</span>
-                                        <p class="my-1">{{ $business->tininformation->block_number ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Vat Registration Number</span>
-                                        <p class="my-1">{{ $business->tininformation->vat_registration_number ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Status</span>
-                                        <p class="my-1">{{ $business->tininformation->status ?? "N/A" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Is Business TIN</span>
-                                        <p class="my-1">{{ $business->tininformation->is_business_tin == 1 ? "Yes" : "No" }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Is Entity TIN</span>
-                                        <p class="my-1">{{ $business->tininformation->is_entity_tin == 1 ? "Yes" : "No" }}</p>
-                                    </div>
+             aria-labelledby="tin-information-tab">
+            <div class="pt-2">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-body mt-0 p-2">
+                            <div class="row my-2">
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">TIN</span>
+                                    <p class="my-1">{{ $business->tininformation->tin }}</p>
                                 </div>
-
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">First Name</span>
+                                    <p class="my-1">{{ $business->tininformation->first_name }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Middle Name</span>
+                                    <p class="my-1">{{ $business->tininformation->middle_name ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Last Name</span>
+                                    <p class="my-1">{{ $business->tininformation->last_name ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Email</span>
+                                    <p class="my-1">{{ $business->tininformation->email ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Mobile</span>
+                                    <p class="my-1">{{ $business->tininformation->mobile ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Gender</span>
+                                    <p class="my-1">{{ $business->tininformation->gender }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Date of Birth</span>
+                                    <p class="my-1">{{ $business->tininformation->date_of_birth ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Nationality</span>
+                                    <p class="my-1">{{ $business->tininformation->nationality ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Taxpayer Name</span>
+                                    <p class="my-1">{{ $business->tininformation->taxpayer_name ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Trading Name</span>
+                                    <p class="my-1">{{ $business->tininformation->trading_name ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">District</span>
+                                    <p class="my-1">{{ $business->tininformation->district }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Region</span>
+                                    <p class="my-1">{{ $business->tininformation->region }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Street</span>
+                                    <p class="my-1">{{ $business->tininformation->street }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Postal City</span>
+                                    <p class="my-1">{{ $business->tininformation->postal_city ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Plot Number</span>
+                                    <p class="my-1">{{ $business->tininformation->plot_number ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Block Number</span>
+                                    <p class="my-1">{{ $business->tininformation->block_number ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Vat Registration Number</span>
+                                    <p class="my-1">{{ $business->tininformation->vat_registration_number ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Status</span>
+                                    <p class="my-1">{{ $business->tininformation->status ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Is Business TIN</span>
+                                    <p class="my-1">{{ $business->tininformation->is_business_tin == 1 ? 'Yes' : 'No' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Is Entity TIN</span>
+                                    <p class="my-1">{{ $business->tininformation->is_entity_tin == 1 ? 'Yes' : 'No' }}</p>
+                                </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
 
                 </div>
+
             </div>
+        </div>
         @endif
     </div>
 </div>

@@ -1,5 +1,5 @@
 <div class="">
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    <ul class="nav nav-tabs shadow-sm mb-0">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="return-debts-tab" data-toggle="tab" href="#return-debts" role="tab" aria-controls="return-debts"
                 aria-selected="true">Return Debts</a>

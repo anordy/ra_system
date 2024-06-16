@@ -1,14 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'List Motor Vehicle Registration Particular Change')
+@section('title', 'Motor Vehicle Particular Changes')
 
 @section('content')
 
     <div class="card mt-3">
-        <div class="card-header">
-            <h5>Motor Vehicles</h5>
-        </div>
-
+        <div class="card-header">Motor Vehicle Particular Changes</div>
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">

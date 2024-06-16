@@ -9,7 +9,7 @@
             <div class="text-uppercase font-weight-bold">VAT Return Configuration</div>
             <div class="card-tools">
                     <a class="btn btn-info btn-sm" href="">
-                        <i class="fa fa-plus-circle"></i> Add
+                        <i class="bi bi-plus-circle-fill"></i> Add
                     </a>
             </div>
         </div>

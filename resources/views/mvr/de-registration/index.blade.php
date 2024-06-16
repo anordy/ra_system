@@ -1,14 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'List Motor Vehicle De-Registration')
+@section('title', 'Motor Vehicle De-registrations')
 
 @section('content')
 
     <div class="card mt-3">
-        <div class="card-header">
-            <h5>Deregistered Motor Vehicles</h5>
-        </div>
-
+        <div class="card-header">Deregistered Motor Vehicles</div>
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">

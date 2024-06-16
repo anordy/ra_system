@@ -49,6 +49,9 @@ trait RegistrationReportTrait
                     $businessLocations = $businessLocations->where('businesses.previous_zno', null)
                         ->where('business_locations.is_headquarter', 1);
                 break;
+
+            default:
+                throw new \Exception("Invalid Business Report Type");
         }
 
         if ($parameters['year'] != ReportStatus::all && $parameters['year'] != ReportStatus::range) {

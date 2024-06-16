@@ -68,6 +68,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MvrFeeTypesTableSeeder::class);
         $this->call(MvrTransmissionTypeTableSeeder::class);
         $this->call(MvrTransferReasonTableSeeder::class);
+        $this->call(DeRegistrationReasonsStatusSeeder::class);
         $this->call(RecoveryMeasureCategoriesSeeder::class);
         $this->call(BloodGroupSeeder::class);
         $this->call(DLClassSeeder::class);
@@ -123,5 +124,14 @@ class DatabaseSeeder extends Seeder
         $this->call(PublicServicePaymentCategorySeeder::class);
         $this->call(PublicServicePaymentsIntervalSeeder::class);
         $this->call(RiskIndicatorsSeeder::class);
+        $this->call(WorkflowPublicServiceTemporaryClosureSeeder::class);
+        $this->call(WorkflowPublicServiceDeRegistrationSeeder::class);
+        $this->call(WorkflowPublicServiceRegistrationSeeder::class);
+        $this->call(WorkflowMvrRegistrationSeeder::class);
+        $this->call(WorkflowMvrRegistrationStatusChangeSeeder::class);
+        $this->call(WorkflowMvrRegistrationParticularChangeSeeder::class);
+        $this->call(WorkflowMvrTransferOwnershipSeeder::class);
+        $this->call(WorkflowMvrDriverLicenseSeeder::class);
+        $this->call(WorkflowMvrDeRegistrationSeeder::class);
     }
 }

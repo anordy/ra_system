@@ -64,16 +64,16 @@ class FinancialMonthsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Approved</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                            <span class="badge badge-success p-2 rounded-0" >Approved</span>
                         HTML;
                     }
                     elseif ($value == 2) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                            <span class="badge badge-danger p-2 rounded-0" >Rejected</span>
                         HTML;
                     }
 
@@ -82,11 +82,11 @@ class FinancialMonthsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Updated</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                            <span class="badge badge-success p-2 rounded-0" >Updated</span>
                         HTML;
                     }
                 })
@@ -99,12 +99,12 @@ class FinancialMonthsTable extends DataTableComponent
                     $value = "'".encrypt($value)."'";
                     if (Gate::allows('setting-user-edit') && $this->canDualControl) {
                         $edit = <<< HTML
-                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.financial-months.edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.financial-months.edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
                                 HTML;
                     }
                     if ($this->today == $value){
                         $extend = <<< HTML
-                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'returns.financial-months.extend-month-modal',$value)"><i class="fa fa-edit mr-1"></i>Extend</button>
+                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'returns.financial-months.extend-month-modal',$value)"><i class="bi bi-pencil-square mr-1"></i>Extend</button>
                 HTML;}
                     return $edit.$extend;
                 })

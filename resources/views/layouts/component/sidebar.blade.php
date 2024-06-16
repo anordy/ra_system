@@ -204,31 +204,6 @@
             </li>
         @endcan
 
-        {{-- TODO: Add permissions --}}
-        <li class="{{ request()->is("public-service*") ? "active" : "" }}">
-            <a href="#publicServiceSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is("public-service*") ? "true" : "false" }}" class="dropdown-toggle">Public
-                Service</a>
-            <ul class="collapse list-unstyled {{ request()->is("public-service*") ? "show" : "" }}"
-                id="publicServiceSubmenu">
-                <li class="{{ request()->is("public-service/registrations*") ? "active" : "" }}">
-                    <a href="{{ route("public-service.registrations.index") }}">Registrations</a>
-                </li>
-                <li class="{{ request()->is("public-service/temporary-closures*") ? "active" : "" }}">
-                    <a href="{{ route("public-service.temporary-closures") }}">Temporary Closures</a>
-                </li>
-                <li class="{{ request()->is("public-service/de-registrations*") ? "active" : "" }}">
-                    <a href="{{ route("public-service.de-registrations") }}">De-registrations</a>
-                </li>
-                <li class="{{ request()->is("public-service/payments*") ? "active" : "" }}">
-                    <a href="{{ route("public-service.payments.index") }}">Returns Payments</a>
-                </li>
-                <li class="{{ request()->is("public-service/reports*") ? "active" : "" }}">
-                    <a href="{{ route("public-service.report.index") }}">Reports</a>
-                </li>
-            </ul>
-        </li>
-
         @can("tax-return")
             <li class="{{ request()->is("e-filling*") ? "active" : "" }}">
                 <a href="#returnsSubmenu" data-toggle="collapse"
@@ -624,7 +599,7 @@
                     Registration</a>
                 <ul class="collapse list-unstyled {{ request()->is("mvr*") ? "show" : "" }}" id="mvrSubmenu">
                     @can("motor-vehicle-registration")
-                        <li class="{{ request()->is("mvr/registration") ? "active" : "" }}">
+                        <li class="{{ request()->is("mvr/registration*") ? "active" : "" }}">
                             <a href="{{ route("mvr.registration.index") }}">Motor Vehicle Registration</a>
                         </li>
                     @endcan
@@ -636,12 +611,12 @@
                     @endcan
 
                     @can("motor-vehicle-status-change-request")
-                        <li class="{{ request()->is("mvr/registration/status") ? "active" : "" }}">
+                        <li class="{{ request()->is("mvr/registration/status*") ? "active" : "" }}">
                             <a href="{{ route("mvr.registration.status.index") }}">Status Change Request</a>
                         </li>
                     @endcan
                     {{--                        @can("motor-vehicle-status-change-request") --}}
-                    <li class="{{ request()->is("mvr/registration/particular") ? "active" : "" }}">
+                    <li class="{{ request()->is("mvr/registration/particular*") ? "active" : "" }}">
                         <a href="{{ route("mvr.registration.particular.index") }}">Particular Change Request</a>
                     </li>
                     {{--                        @endcan --}}
@@ -666,6 +641,32 @@
                 </ul>
             </li>
             @endif
+
+            {{-- TODO: Add permissions --}}
+            <li class="{{ request()->is("public-service*") ? "active" : "" }}">
+                <a href="#publicServiceSubmenu" data-toggle="collapse"
+                    aria-expanded="{{ request()->is("public-service*") ? "true" : "false" }}" class="dropdown-toggle">Public
+                    Service</a>
+                <ul class="collapse list-unstyled {{ request()->is("public-service*") ? "show" : "" }}"
+                    id="publicServiceSubmenu">
+                    <li class="{{ request()->is("public-service/registrations*") ? "active" : "" }}">
+                        <a href="{{ route("public-service.registrations.index") }}">Registrations</a>
+                    </li>
+                    <li class="{{ request()->is("public-service/temporary-closures*") ? "active" : "" }}">
+                        <a href="{{ route("public-service.temporary-closures") }}">Temporary Closures</a>
+                    </li>
+                    <li class="{{ request()->is("public-service/de-registrations*") ? "active" : "" }}">
+                        <a href="{{ route("public-service.de-registrations") }}">De-registrations</a>
+                    </li>
+                    <li class="{{ request()->is("public-service/payments*") ? "active" : "" }}">
+                        <a href="{{ route("public-service.payments.index") }}">Returns Payments</a>
+                    </li>
+                    <li class="{{ request()->is("public-service/reports*") ? "active" : "" }}">
+                        <a href="{{ route("public-service.report.index") }}">Reports</a>
+                    </li>
+                </ul>
+            </li>
+
             @can("driver-licences-view")
                 <li class="{{ request()->is("drivers-license*") || request()->is("rio*") ? "active" : "" }}">
                     <a href="#dlSubmenu" data-toggle="collapse"
@@ -675,14 +676,13 @@
                         id="dlSubmenu">
                         @can("driver-licences-application")
                             <li
-                                class="{{ request()->is("drivers-license/applications") || request()->is("drivers-license*") ? "active" : "" }}">
+                                class="{{ request()->is("drivers-license/applications*") ? "active" : "" }}">
                                 <a href="{{ route("drivers-license.applications") }}">Driver's License Applications</a>
                             </li>
                         @endcan
 
                         @can("driver-licences-view")
-                            <li
-                                class="{{ request()->is("drivers-license/license*") || request()->is("drivers-license*") ? "active" : "" }}">
+                            <li class="{{ request()->is("drivers-license/license*") ? "active" : "" }}">
                                 <a href="{{ route("drivers-license.licenses") }}">Driver's Licenses</a>
                             </li>
                         @endcan
@@ -696,6 +696,7 @@
                     </ul>
                 </li>
                 @endif
+
                 @can("land-lease-management")
                     <li class="{{ request()->is("land-lease*") ? "active" : "" }}">
                         <a href="#landLeaseSubmenu" data-toggle="collapse"
@@ -856,7 +857,7 @@
                         <ul class="collapse list-unstyled {{ request()->is("finance*") ? "show" : "" }}" id="finance">
                             @can("view-taxpayer-ledgers")
                                 <li class="{{ request()->is("finance/taxpayer/ledger*") ? "active" : "" }}">
-                                    <a href="{{ route("finance.taxpayer.ledgers") }}">Taxpayer Ledgers</a>
+                                    <a href="{{ route("finance.taxpayer.ledger.search") }}">Taxpayer Ledgers</a>
                                 </li>
                             @endcan
                         </ul>
@@ -1228,8 +1229,7 @@
                     <a href="{{ route('account.security-questions') }}">{{ __("Security Questions") }}</a>
                 </li> --}}
                         <li class="{{ request()->is("account/security-questions") ? "active" : "" }}">
-                            <a href="{{ route("logout") }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a href="{{ route("logout") }}" class="logout-link">
                                 {{ __("Log out") }}
                             </a>
                         </li>
@@ -1249,9 +1249,8 @@
                 </a>
 
                 <div class="pr-1">
-                    <a class="text-white" href="{{ route("logout") }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="fa fa-sign-out-alt"></i>
+                    <a class="text-white logout-link" href="{{ route("logout") }}">
+                        <i class="bi bi-box"></i>
                     </a>
 
                     <form id="logout-form" action="{{ route("logout") }}" method="POST" class="d-none">
