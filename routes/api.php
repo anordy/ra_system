@@ -13,3 +13,5 @@
 */
 
 use Illuminate\Support\Facades\Route;
+
+Route::get('certs', [\App\Http\Controllers\TaxClearance\TaxClearanceController::class, 'generateCertNo']);

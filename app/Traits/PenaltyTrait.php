@@ -312,4 +312,3 @@ trait PenaltyTrait
 
     }
 }
-

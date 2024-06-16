@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\TaxClearance;
 
+use App\Enum\Currencies;
 use App\Enum\LeaseStatus;
+use App\Enum\TaxClearanceStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController;
+use App\Models\BusinessLocation;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\LandLeaseDebt;
 use App\Models\Returns\BFO\BfoReturn;
@@ -18,6 +22,7 @@ use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\TaxReturn;
 use App\Models\Returns\Vat\VatReturn;
+use App\Models\Sequence;
 use App\Models\SystemSetting;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
@@ -25,12 +30,54 @@ use App\Models\TaxClearanceRequest;
 use App\Models\Verification\TaxVerification;
 use App\Traits\VerificationTrait;
 use Carbon\Carbon;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class TaxClearanceController extends Controller
 {
     use VerificationTrait;
+
+    public function generateCertNo(){
+//        fetch all approved certs
+        $certs = TaxClearanceRequest::query()->select('id', 'certificate_number', 'status')->where('status', TaxClearanceStatus::APPROVED)->get();
+
+        $year = date('Y');
+        $sequence = '00001';
+        DB::beginTransaction();
+        try {
+            foreach ($certs as $cert){
+                $cert->certificate_number = $year.$sequence;
+                $cert->save();
+
+                $incrementedDigits = (int)$sequence + 1;
+                $sequence = str_pad($incrementedDigits, strlen($sequence), '0', STR_PAD_LEFT);
+            }
+
+            $last_cert = Sequence::query()->where('name', Sequence::TAX_CLEARANCE)->first();
+            if ($last_cert){
+                if ($last_cert->update(['next_id' => $sequence, Sequence::TAX_CLEARANCE_YEAR => $year])){
+                    DB::commit();
+                    return 'success';
+                }else{
+                    DB::rollBack();
+                    return 'Could not update sequence';
+                }
+            }else{
+                DB::rollBack();
+                return 'Sequence does not exist';
+            }
+        }catch (\Exception $ex){
+            DB::rollBack();
+            return $ex;
+        }
+    }
 
     public function index()
     {
@@ -74,31 +121,26 @@ class TaxClearanceController extends Controller
             $this->verify($return);
         }
 
-        
-        $land_lease_debts = LandLeaseDebt::where('business_location_id', $taxClearance->business_location_id)
-            ->whereNotIn('status', [LeaseStatus::PAID_PARTIALLY, LeaseStatus::COMPLETE, LeaseStatus::LATE_PAYMENT, LeaseStatus::ON_TIME_PAYMENT, LeaseStatus::IN_ADVANCE_PAYMENT])
-            ->get();
+        $businessLocationId = $taxClearance->business_location_id;
 
-        $locations = [$taxClearance->business_location_id];
+        $tzsLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::TZS, $businessLocationId);
+        $usdLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::USD, $businessLocationId);
 
-        $investigationDebts = TaxAssessment::whereHasMorph('assessment', [TaxInvestigation::class], function($query) use($locations) {
-                $query->whereHas('taxInvestigationLocations', function($q) use($locations) {
-                    $q->whereIn('business_location_id', $locations);
-                });
-            })
-            ->get();
-        
-        $auditDebts = TaxAssessment::whereHasMorph('assessment', [TaxAudit::class], function($query) use($locations) {
-                $query->whereHas('taxAuditLocations', function($q) use($locations) {
-                    $q->whereIn('business_location_id', $locations);
-                });
-            })
-            ->get();
+        $ledgers = [
+            'TZS' => TaxpayerLedgerController::joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
+            'USD' => TaxpayerLedgerController::joinLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
+        ];
 
-        $verificateionDebts = TaxAssessment::where('location_id', $taxClearance->business_location_id)
-                                ->get();
+        $tzsCreditSum = $tzsLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;
+        $tzsDebitSum = $tzsLedgers['debitLedgers']->sum('total_debit_amount') ?? 0;
+        $usdCreditSum = $usdLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;
+        $usdDebitSum = $usdLedgers['debitLedgers']->sum('total_debit_amount') ?? 0;
 
-        return view('tax-clearance.clearance-request', compact('tax_return_debts', 'taxClearance', 'land_lease_debts', 'investigationDebts', 'auditDebts', 'verificateionDebts'));
+        $summations = [
+            'TZS' => ['credit' => $tzsCreditSum, 'debit' => $tzsDebitSum],
+            'USD' => ['credit' => $usdCreditSum, 'debit' => $usdDebitSum],
+        ];
+        return view('tax-clearance.clearance-request', compact('taxClearance', 'summations', 'ledgers'));
     }
 
     public function approval($requestId)
@@ -221,10 +263,29 @@ class TaxClearanceController extends Controller
 
         $location = $taxClearanceRequest->businessLocation;
 
+        $url = env('TAXPAYER_URL') . route('qrcode-check.tax-clearance.certificate', ['clearanceId' =>  base64_encode(strval($clearanceId))], 0);
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
+            ->data($url)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(207)
+            ->margin(0)
+            ->logoPath(public_path('/images/logo.png'))
+            ->logoResizeToHeight(36)
+            ->logoResizeToWidth(36)
+            ->labelText('')
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
+        header('Content-Type: ' . $result->getMimeType());
+        $dataUri = $result->getDataUri();
+
         $signaturePath = SystemSetting::certificatePath();
         $commissinerFullName = SystemSetting::commissinerFullName();
 
-        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('location', 'taxClearanceRequest', 'signaturePath', 'commissinerFullName'));
+        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('dataUri', 'location', 'taxClearanceRequest', 'signaturePath', 'commissinerFullName'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 
