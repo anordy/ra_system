@@ -103,7 +103,8 @@ class TaxAuditApprovalProcessing extends Component
         $this->entryMeeting = $this->subject->entry_minutes;
         $this->notificationLetter = $this->subject->notification_letter;
 
-        $comments = $this->getTransitionsComments();
+        $comments = $this->getEnabledTransitions();
+
 
         $assessment = $this->subject->assessment;
         if ($assessment) {
@@ -387,13 +388,12 @@ class TaxAuditApprovalProcessing extends Component
                 $this->subject->preliminary_report = $preliminaryReport;
                 $this->subject->working_report = $workingReport;
                 $this->subject->entry_minutes = $entryMeeting;
-                $this->subject->preliminary_report_date = Carbon::now()->addWeekdays(7); //add seven working days
                 $this->subject->save();
             }
 
             if ($this->checkTransition('preliminary_report_review')) {
 
-                $this->subject->preliminary_report_date = now();
+                $this->subject->preliminary_report_date = now()->addWeekdays(7);
                 $this->subject->save();
                 $operators = $this->subject->officers->pluck('user_id')->toArray();
             }
@@ -469,6 +469,8 @@ class TaxAuditApprovalProcessing extends Component
             }
 
             if ($this->checkTransition('accepted')) {
+
+
                 // Notify audit manager to continue with business/location de-registration request if exists
                 $deregister = BusinessDeregistration::where('tax_audit_id', $this->subject->id)->get()->first();
 

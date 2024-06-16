@@ -1,7 +1,9 @@
 <div>
     @if ($showButton)
-        <button wire:click="$set('showModal', true)" class="btn btn-primary">Forward to Investigation
-            <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading></i>
+        <button type="button" class="btn btn-primary"
+            wire:click="confirmPopUpModal('forward')">
+            Forward to Investigation
+            <i class="spinner-border spinner-border-sm " role="status" wire:loading></i>
         </button>
     @endif
 

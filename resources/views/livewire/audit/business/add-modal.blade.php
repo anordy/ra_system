@@ -44,8 +44,8 @@
                                 @enderror
                                 <div class="col-md-2">
                                     <button type="button" class="form-control btn btn-primary btn-sm" wire:click="searchBusiness">
+                                        <i class="bi bi-search" wire:loading.remove wire:target="searchBusiness"></i>
                                         <i wire:loading wire:target="searchBusiness" class="spinner-border mr-1 spinner-border-sm text-light"></i>
-                                        <i class="fa fa-search" wire:loading.remove wire:target="searchBusiness"></i>
                                     </button>
                                 </div>
                             </div>

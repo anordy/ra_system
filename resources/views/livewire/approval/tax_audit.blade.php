@@ -1,4 +1,4 @@
-@if (count($this->getEnabledTransitions()) >= 1)
+@if (count($this->getEnabledTransitions()) >= 1 && $this->subject->forwarded_to_investigation == 0)
     <div class="card shadow-sm mb-2 bg-white">
         <div class="card-header text-uppercase font-weight-bold bg-white">
             Tax Auditing Approval
@@ -344,7 +344,6 @@
                         </div>
                     </div>
                 @endforeach
-
             @endif
 
             <div class="text-secondary small px-3">

@@ -3,6 +3,7 @@
 
 namespace App\Http\Livewire\Audit;
 
+use App\Enum\TaxAuditStatus;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\Investigation\TaxInvestigationLocation;
@@ -26,7 +27,7 @@ class ForwardToInvestigation extends Component
     {
         $this->taxAudit = $taxAudit;
 
-        if ($taxAudit->forwarded_to_investigation) {
+        if ($taxAudit->forwarded_to_investigation || $taxAudit->status = TaxAuditStatus::APPROVED) {
             $this->showButton = false;
         }
     }
@@ -84,6 +85,27 @@ class ForwardToInvestigation extends Component
             $this->showModal = false;
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
+    }
+    protected $listeners = [
+        'forward', 'reject'
+    ];
+
+    public function confirmPopUpModal($action)
+    {
+        $this->customAlert('warning', 'Are you sure you want to foward to investigation', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $action
+            ],
+
+        ]);
     }
 
     public function render()

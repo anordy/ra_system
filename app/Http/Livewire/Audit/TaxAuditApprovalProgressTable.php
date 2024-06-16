@@ -29,11 +29,17 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
         return WorkflowTask::with('pinstance', 'pinstance.location', 'pinstance.business', 'user')
             ->where('pinstance_type', TaxAudit::class)
             ->where('status', '!=', WorkflowTask::COMPLETED)
-            // ->where('pinstance', function ($query) {
-            //     $query->where('pinstance.forwarded_to_investigation', false);
-            // })
+            ->whereHasMorph(
+                'pinstance',
+                [TaxAudit::class],
+                function ($query) {
+                    $query->where('forwarded_to_investigation', false);
+                }
+            )
             ->where('owner', WorkflowTask::STAFF);
     }
+
+
 
     public function configure(): void
     {
