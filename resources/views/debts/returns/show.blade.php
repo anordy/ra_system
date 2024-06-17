@@ -179,17 +179,5 @@
                 </div>
             </div>
         </div>
-
     @endif
-
-@endsection
-
-@section('scripts')
-    <script>
-        $(document).ready(function() {
-            $(".nav-tabs a").click(function() {
-                $(this).tab('show');
-            });
-        });
-    </script>
 @endsection

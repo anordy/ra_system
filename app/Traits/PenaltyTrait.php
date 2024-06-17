@@ -191,5 +191,19 @@ trait PenaltyTrait
                                 ->firstOrFail();
         return $financialMonth;
     }
+
+    public function getFinancialMonthFromDate($date)
+    {
+        try {
+            $date = Carbon::create($date);
+            return FinancialMonth::select('id', 'name', 'financial_year_id', 'due_date', 'number')
+                ->whereRaw('EXTRACT(YEAR FROM due_date) = ' . $date->year . '')
+                ->whereRaw('EXTRACT(MONTH FROM due_date)  = ' . $date->month . ' ')
+                ->firstOrFail();
+        } catch (Exception $exception) {
+            Log::error('TRAITS-PENALTY-TRAIT-GET-NEXT-FINANCIAL-MONTH-DUE-DATE-FROM-DATE', [$exception]);
+            throw $exception;
+        }
+    }
 }
 

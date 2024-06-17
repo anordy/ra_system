@@ -41,6 +41,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Debt\AssessmentDebtController;
 use App\Http\Controllers\Debt\DebtRollbackController;
 use App\Http\Controllers\Debt\ReturnDebtController;
+use App\Http\Controllers\Debt\TransportServicesDebtController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
 use App\Http\Controllers\EducationLevelController;
@@ -605,6 +606,10 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/assesments/file/{fileId}', [AssessmentDebtController::class, 'getAttachment'])->name('assessment.file');
         Route::get('/assessment/waiver/show/{assessment_id}', [AssessmentDebtController::class, 'showWaiver'])->name('assessment.waiver.show');
         Route::get('/assessments/waiver/show/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('assessments.waivers.approval');
+
+        // Transport Services Debts
+        Route::get('/transport-services', [TransportServicesDebtController::class, 'index'])->name('transports.index');
+        Route::get('/transport-services/{transport}', [TransportServicesDebtController::class, 'show'])->name('transports.show');
 
         // Debt rollbacks
         Route::get('/rollbacks/return/{tax_return_id}', [DebtRollbackController::class, 'return'])->name('rollback.return');

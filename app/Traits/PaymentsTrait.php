@@ -1210,4 +1210,56 @@ trait PaymentsTrait
         }
     }
 
+    public function generatePublicServiceControlNumber($psReturn) {
+        $taxType = TaxType::select('id', 'gfs_code')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+        $exchangeRate = $this->getExchangeRate($psReturn->currency);
+        $startDate = Carbon::create($psReturn->start_date)->format('d M Y H:i:s');
+        $endDate = Carbon::create($psReturn->end_date)->format('d M Y H:i:s');
+
+        $zmBill = ZmCore::createBill(
+            $psReturn->id,
+            get_class($psReturn),
+            $taxType->id,
+            $psReturn->taxpayer_id,
+            Taxpayer::class,
+            $psReturn->taxpayer->fullname,
+            $psReturn->taxpayer->email,
+            ZmCore::formatPhone($psReturn->taxpayer->mobile),
+            Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
+            "Public Service Payment for {$psReturn->motor->mvr->plate_number} from {$startDate} to {$endDate}",
+            ZmCore::PAYMENT_OPTION_EXACT,
+            $psReturn->currency,
+            $exchangeRate,
+            $psReturn->taxpayer_id,
+            Taxpayer::class,
+            [
+                [
+                    'billable_id' => $psReturn->id,
+                    'billable_type' => get_class($psReturn),
+                    'tax_type_id' => $taxType->id,
+                    'amount' => $psReturn->amount,
+                    'currency' => $psReturn->currency,
+                    'exchange_rate' => $exchangeRate,
+                    'equivalent_amount' => $psReturn->amount * $exchangeRate,
+                    'gfs_code' => $taxType->gfs_code
+                ]
+            ]
+        );
+
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($zmBill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                session()->flash('success', 'A control number request was sent successful.');
+            } else {
+                session()->flash('error', 'Control number generation failed, try again later');
+            }
+        }else {
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
+            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
+            $zmBill->billable->save();
+            $zmBill->save();
+        }
+    }
 }

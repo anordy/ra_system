@@ -408,6 +408,11 @@
                             <a href="{{ route('debts.assessments.index') }}">Assessment Debts</a>
                         </li>
                     @endcan
+                    @can('debt-management-transports-debt-view')
+                        <li class="{{ request()->is('debts/assessments*') ? 'active' : '' }}">
+                            <a href="{{ route('debts.transports.index') }}">Transport Service Debts</a>
+                        </li>
+                    @endcan
                     @can('debt-management-waiver-debt-view')
                         <li class="{{ request()->is('debts/waiver*') ? 'active' : '' }}">
                             <a href="{{ route('debts.waivers.index') }}">Waiver Requests</a>

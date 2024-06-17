@@ -32,6 +32,8 @@ class SystemSetting extends Model implements Auditable
     const OTHER_BUSINESS_BUILDING = 'other-business-building-property-tax-amount';
 
     const NUMBER_OF_TIMES_INTEREST_IS_COMPOUNDED_IN_PROPERTY_TAX_PER_YEAR = 'number-of-times-interest-compounded-in-property-tax-per-year';
+    const NUMBER_OF_TIMES_INTEREST_IS_COMPOUNDED_IN_PUBLIC_SERVICE_PER_YEAR = 'number-of-times-interest-compounded-in-public-service-per-year';
+    const PUBLIC_SERVICE_INTEREST_RATE = 'public-service-interest-rate';
     const PROPERTY_TAX_INTEREST_RATE = 'property-tax-interest-rate';
     const PROPERTY_TAX_TIME_VARIABLE = 'property-tax-time-variable';
 
