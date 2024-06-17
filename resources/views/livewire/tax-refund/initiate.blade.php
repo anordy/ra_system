@@ -177,7 +177,7 @@
                             <i class="bi bi-send mr-1" wire:loading.remove wire:target="submit"></i>
                             <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                                wire:target="submit"></i>
-                            Generate Control Number
+                            Complete Verification
                         </button>
                     </div>
                 </div>
