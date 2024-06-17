@@ -372,18 +372,24 @@ class DeclaredSalesAnalysis extends Component
     protected function formatDataArray($yearReturnGroup)
     {
         $yearData = [];
+
         foreach ($yearReturnGroup as $keyYear => $monthreturnGroup) {
-            $monthData = array_map(function ($returnItems) use ($keyYear) {
+            $monthData = [];
+            foreach ($monthreturnGroup as $keyMonth => $returnItems) {
                 $itemValue = [
-                    'month' => $returnItems['keyMonth'],
-                    'totalValue' => array_sum(array_column($returnItems, 'value')),
-                    'totalVat' => array_sum(array_column($returnItems, 'vat')),
+                    'month' => $keyMonth,
                 ];
+                $totalVat = 0;
+                $totalValue = 0;
                 foreach ($returnItems as $keyItem => $item) {
                     $itemValue[$item['code']] = $item['value'];
+                    $totalValue += $item['value'];
+                    $totalVat += $item['vat'];
                 }
-                return $itemValue;
-            }, $monthreturnGroup);
+                $itemValue['totalValue'] = $totalValue;
+                $itemValue['totalVat'] = $totalVat;
+                $monthData[] = $itemValue;
+            }
             $yearData[$keyYear] = $monthData;
         }
 
@@ -394,22 +400,33 @@ class DeclaredSalesAnalysis extends Component
     protected function formatDataArrayPort($yearReturnGroup)
     {
         $yearData = [];
-        foreach ($yearReturnGroup as $keyYear => $monthreturnGroup) {
-            $monthData = array_map(function ($returnItems) {
-                $itemValue = [
-                    'month' => $returnItems['keyMonth'],
-                    'totalValue' => array_sum(array_column($returnItems, 'value')),
-                ];
 
-                return $returnItems->reduce(function ($carry, $item) use (&$itemValue) {
-                    $itemValue[$item['code']] = $item['value'] ?? null;
-                    $carry['totalVat' . $item['currency']] = ($carry['totalVat' . $item['currency']] ?? 0) + $item['vat'];
-                    return $carry;
-                }, $itemValue);
-            }, $monthreturnGroup);
+        foreach ($yearReturnGroup as $keyYear => $monthreturnGroup) {
+            $monthData = [];
+            foreach ($monthreturnGroup as $keyMonth => $returnItems) {
+                $itemValue = [
+                    'month' => $keyMonth,
+                ];
+                $totalVatTzs = 0;
+                $totalVatUsd = 0;
+                $totalValue = 0;
+                foreach ($returnItems as $keyItem => $item) {
+                    $itemValue[$item['code']] = $item['value'];
+                    if ($item['currency'] == 'TZS') {
+                        $totalVatTzs += $item['vat'];
+                    } else {
+                        $totalVatUsd += $item['vat'];
+                    }
+                    $totalValue += $item['value'];
+                    // $totalVat += $item['vat'];
+                }
+                $itemValue['totalValue'] = $totalValue;
+                $itemValue['totalVatTzs'] = $totalVatTzs;
+                $itemValue['totalVatUsd'] = $totalVatUsd;
+                $monthData[] = $itemValue;
+            }
             $yearData[$keyYear] = $monthData;
         }
-
         return $yearData;
     }
 
@@ -417,18 +434,29 @@ class DeclaredSalesAnalysis extends Component
     protected function formatQuaters($yearReturnGroup)
     {
         $yearData = [];
+
         foreach ($yearReturnGroup as $keyYear => $quaterReturnGroup) {
-            $quarterData = array_map(function ($returnItems) {
+            $quarterData = [];
+            foreach ($quaterReturnGroup as $keyMonth => $returnItems) {
                 $itemValue = [
-                    'quarter' => $returnItems['keyMonth'],
-                    'installment' => $returnItems['installment'],
-                    'quarter_name' => $returnItems['quarter_name'],
-                    'amountWithPenalties' => $returnItems['total_amount_due_with_penalties'],
-                    'principalAmount' => $returnItems['total_amount_due'],
-                    'Penalties' => (float)$returnItems['total_amount_due_with_penalties'] - (float)$returnItems['total_amount_due'],
+                    'quarter' => $keyMonth,
                 ];
-                return $itemValue;
-            }, $quaterReturnGroup);
+
+                foreach ($returnItems as $keyItem => $item) {
+                    $installment = $item['installment'];
+                    $quatersName = $item['quarter_name'];
+                    $amountDue = $item['total_amount_due'];
+                    $amountDueWithPenalties = $item['total_amount_due_with_penalties'];
+                    $totalPenalties = $amountDueWithPenalties - $amountDue;
+
+                    $itemValue['installment'] = $installment;
+                    $itemValue['quarter_name'] = $quatersName;
+                    $itemValue['amountWithPenalties'] = $amountDueWithPenalties;
+                    $itemValue['principalAmount'] = $amountDue;
+                    $itemValue['Penalties'] = $totalPenalties;
+                    $quarterData[] = $itemValue;
+                }
+            }
             $yearData[$keyYear] = $quarterData;
         }
 
@@ -445,8 +473,6 @@ class DeclaredSalesAnalysis extends Component
         $this->processStampDutyData($configs);
 
         $returns = $this->replaceRecursiveArrays($this->purchases, $this->sales);
-
-        // dd($returns);
 
 
         $calculations = collect(array_map(function ($returns) {

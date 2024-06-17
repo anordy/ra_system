@@ -196,6 +196,8 @@
                                         <p class="my-1">
                                             @if ($taxAssessment->outstanding_amount === 0 || $taxAssessment->outstanding_amount === "0")
                                                 <span class="badge badge-success">PAID</span>
+                                            @elseif($taxAssessment->outstanding_amount < $taxAssessment->total_amount)
+                                                <span class="badge badge-warning">PAID PARTIALLY </span>
                                             @else
                                                 <span class="badge badge-warning">PENDING </span>
                                             @endif
