@@ -23,14 +23,21 @@ class ForwardToInvestigation extends Component
     public $showModal = false;
     public $showButton = true;
 
+    /**
+     * Mounts the component with the provided TaxAudit model instance.
+     * If the tax audit has already been forwarded to investigation or has been approved, the show button flag is set to false.
+     *
+     * @param TaxAudit $taxAudit The tax audit model instance to mount the component with.
+     */
     public function mount(TaxAudit $taxAudit)
     {
         $this->taxAudit = $taxAudit;
 
-        if ($taxAudit->forwarded_to_investigation || $taxAudit->status = TaxAuditStatus::APPROVED) {
+        if ($taxAudit->forwarded_to_investigation || $taxAudit->status == TaxAuditStatus::APPROVED) {
             $this->showButton = false;
         }
     }
+
 
     public function forward()
     {
