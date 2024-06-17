@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMvrColorTable extends Migration
+class ModifyMvrColorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateMvrColorTable extends Migration
      */
     public function up()
     {
-        Schema::create('mvr_colors', function (Blueprint $table) {
-            $table->id();
-            $table->string('name',100);
-            $table->string('hex_value',10)->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('mvr_colors', function (Blueprint $table) {
+            $table->unsignedBigInteger('mvr_registration_type_id');
+            $table->dropColumn('name');
+            $table->string('color');
         });
     }
 
@@ -29,6 +27,6 @@ class CreateMvrColorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mvr_colors');
+        //
     }
 }
