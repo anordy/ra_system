@@ -66,6 +66,7 @@ class DailyDebtCalculateCommand extends Command
         /**
          * Get all tax returns which are normal
          * CONDITION 1: For a return to be debt the filing due date must exceed 30 days to now
+         * CONDITION 1 CORRECTION: for a return to be a debt today's date must be 1st of month
          * CONDITION 2: The return is not be paid at all
          * date1 - date2: if date1 is greater than date2 the result will be positive
          */
@@ -75,7 +76,19 @@ class DailyDebtCalculateCommand extends Command
             ->where('vetting_status', VettingStatus::VETTED)
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
-
+//         $tax_returns = TaxReturn::selectRaw('tax_returns.*, ROUND(CURRENT_DATE - CAST(curr_payment_due_date as date)) as days_passed,
+//             TRUNC(ADD_MONTHS(CURRENT_DATE, 1), \'MM\') - CURRENT_DATE AS days_to_next_month,
+//             TRUNC(ADD_MONTHS(CAST(curr_payment_due_date as date), 1), \'MM\') - CURRENT_DATE AS days_to_next_pay,
+//             TRUNC(ADD_MONTHS(CAST(curr_payment_due_date as date), 1), \'MM\') AS hiyo')
+//             ->whereIn('return_category', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
+// //            ->whereRaw("
+// //                CURRENT_DATE >=
+// //                TRUNC(ADD_MONTHS(CAST(curr_payment_due_date as date), 1), 'MM')
+// //            ") // Select records where the current date is the 1st of the month after curr_payment_due_date or later
+//             ->where('vetting_status', VettingStatus::VETTED)
+//             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
+//             ->get();
+        // dd($tax_returns);
         foreach ($tax_returns as $tax_return) {
             DB::beginTransaction();
                 try {
@@ -85,11 +98,14 @@ class DailyDebtCalculateCommand extends Command
                      * 2. application_step from filing to debt
                      */
                     if ($tax_return->days_passed < 30) {
-                        $tax_return->update([
-                            'return_category' => ReturnCategory::DEBT,
-                            'application_step' => ApplicationStep::DEBT
-                        ]);
-                        $tax_return->return->update(['return_category' => ReturnCategory::DEBT]);
+//                        if(heck 1st){
+                            $tax_return->update([
+                                'return_category' => ReturnCategory::DEBT,
+                                'application_step' => ApplicationStep::DEBT
+                            ]);
+                            $tax_return->return->update(['return_category' => ReturnCategory::DEBT]);
+//                        }
+
                     } else {
                         /**
                          * Mark return process as overdue if days_passed is greater than 30 days (Meaning 30 days as debt and another 30 days makes it an overdue)

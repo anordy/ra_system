@@ -579,6 +579,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
             Route::get('show/{debtId}', [InstallmentRequestController::class, 'show'])->name('show');
             Route::get('edit/{debtId}', [InstallmentRequestController::class, 'edit'])->name('edit');
             Route::get('file/{file}', [InstallmentRequestController::class, 'file'])->name('file');
+
+        });
+        Route::prefix('/extension')->name('extensions.')->group(function (){
+            Route::get('/', [\App\Http\Controllers\Installment\InstallmentExtensionController::class, 'index'])->name('index');
+            Route::get('/show/{id}', [\App\Http\Controllers\Installment\InstallmentExtensionController::class, 'show'])->name('show');
         });
     });
 

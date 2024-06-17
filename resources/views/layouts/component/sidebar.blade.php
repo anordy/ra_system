@@ -477,8 +477,13 @@
                         </li>
                     @endcan
                     @can('payment-installment-request-view')
-                        <li class="{{ request()->is('installments-e-filling/requests*') ? 'active' : '' }}">
+                        <li class="{{ request()->is('installments-e-filling/requests/*') ? 'active' : '' }}">
                             <a href="{{ route('installment.requests.index') }}">Installment Requests</a>
+                        </li>
+                    @endcan
+                    @can('payment-installment-view')
+                        <li class="{{ request()->is('installments-e-filling/extension*') ? 'active' : '' }}">
+                            <a href="{{ route('installment.extensions.index') }}">Installments Extension</a>
                         </li>
                     @endcan
                 </ul>
