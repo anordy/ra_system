@@ -70,25 +70,20 @@ class DailyDebtCalculateCommand extends Command
          * CONDITION 2: The return is not be paid at all
          * date1 - date2: if date1 is greater than date2 the result will be positive
          */
-        $tax_returns = TaxReturn::selectRaw('tax_returns.*, ROUND(CURRENT_DATE - CAST(curr_payment_due_date as date)) as days_passed')
-            ->whereIn('return_category', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
-            ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0") // Since filing due date is of last month
-            ->where('vetting_status', VettingStatus::VETTED)
-            ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
-            ->get();
-//         $tax_returns = TaxReturn::selectRaw('tax_returns.*, ROUND(CURRENT_DATE - CAST(curr_payment_due_date as date)) as days_passed,
-//             TRUNC(ADD_MONTHS(CURRENT_DATE, 1), \'MM\') - CURRENT_DATE AS days_to_next_month,
-//             TRUNC(ADD_MONTHS(CAST(curr_payment_due_date as date), 1), \'MM\') - CURRENT_DATE AS days_to_next_pay,
-//             TRUNC(ADD_MONTHS(CAST(curr_payment_due_date as date), 1), \'MM\') AS hiyo')
-//             ->whereIn('return_category', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
-// //            ->whereRaw("
-// //                CURRENT_DATE >=
-// //                TRUNC(ADD_MONTHS(CAST(curr_payment_due_date as date), 1), 'MM')
-// //            ") // Select records where the current date is the 1st of the month after curr_payment_due_date or later
-//             ->where('vetting_status', VettingStatus::VETTED)
-//             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
-//             ->get();
-        // dd($tax_returns);
+
+         $tax_returns = TaxReturn::selectRaw('tax_returns.*, ROUND(CURRENT_DATE - CAST(curr_payment_due_date as date)) as days_passed,
+             TRUNC(ADD_MONTHS(CURRENT_DATE, 1), \'MM\') - CURRENT_DATE AS days_to_next_month,
+             TRUNC(ADD_MONTHS(CAST(curr_payment_due_date as date), 1), \'MM\') - CURRENT_DATE AS days_to_next_pay,
+             TRUNC(ADD_MONTHS(CAST(curr_payment_due_date as date), 1), \'MM\') AS hiyo')
+             ->whereIn('return_category', [ReturnCategory::NORMAL])
+             ->whereRaw("
+                 CURRENT_DATE >=
+                 TRUNC(ADD_MONTHS(CAST(curr_payment_due_date as date), 1), 'MM')
+             ")
+             ->where('vetting_status', VettingStatus::VETTED)
+             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
+             ->get();
+//         dd($tax_returns);
         foreach ($tax_returns as $tax_return) {
             DB::beginTransaction();
                 try {
@@ -97,27 +92,12 @@ class DailyDebtCalculateCommand extends Command
                      * 1. return_category from normal to debt
                      * 2. application_step from filing to debt
                      */
-                    if ($tax_return->days_passed < 30) {
-//                        if(heck 1st){
-                            $tax_return->update([
-                                'return_category' => ReturnCategory::DEBT,
-                                'application_step' => ApplicationStep::DEBT
-                            ]);
-                            $tax_return->return->update(['return_category' => ReturnCategory::DEBT]);
-//                        }
+                    $tax_return->update([
+                        'return_category' => ReturnCategory::DEBT,
+                        'application_step' => ApplicationStep::DEBT
+                    ]);
+                    $tax_return->return->update(['return_category' => ReturnCategory::DEBT]);
 
-                    } else {
-                        /**
-                         * Mark return process as overdue if days_passed is greater than 30 days (Meaning 30 days as debt and another 30 days makes it an overdue)
-                         * 1. return_category from debt to overdue
-                         * 2. application_step from debt to overdue
-                         */
-                        $tax_return->update([
-                            'return_category' => ReturnCategory::OVERDUE,
-                            'application_step' => ApplicationStep::OVERDUE
-                        ]);
-                        $tax_return->return->update(['return_category' => ReturnCategory::OVERDUE]);
-                    }
                     DB::commit();
                 } catch (Exception $e) {
                     DB::rollBack();
