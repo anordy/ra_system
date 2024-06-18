@@ -1,32 +1,52 @@
 <div>
-    @if($pendingPartialPaymentStatus && $pendingPartialPaymentStatus->payment_status == 'pending')
+
+    @if($partialPayment)
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    @livewire('land-lease.land-lease-partial-payment', ['partialPayment' => $pendingPartialPaymentStatus])
+                    @livewire('land-lease.land-lease-partial-payment', ['partialPayment' =>
+                    $partialPayment])
                 </div>
             </div>
         </div>
     @else
-        @if ($leasePayment->taxpayer->id == Auth::user()->id)
-            @if($leasePayment->status === \App\Enum\LeaseStatus::DEBT || $leasePayment->status ===
-            \App\Enum\LeaseStatus::LATE_PAYMENT || $leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATED
-            ||$leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATING || $leasePayment->status ===
-            \App\Enum\LeaseStatus::COMPLETE )
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            @livewire('land-lease.land-lease-payment', ['leasePayment' => $leasePayment])
-                        </div>
-                    </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    @livewire('land-lease.land-lease-payment', ['leasePayment' => $leasePayment])
                 </div>
-            @else
-                <div class="d-flex justify-content-start mb-3">
-                    <livewire:land-lease.payment-request-modal :landLease="$leasePayment"/>
-                </div>
-            @endif
-        @endif
+            </div>
+        </div>
     @endif
+
+    {{--    @if($pendingPartialPaymentStatus && $pendingPartialPaymentStatus->payment_status == 'pending')--}}
+    {{--        <div class="container-fluid">--}}
+    {{--            <div class="row">--}}
+    {{--                <div class="col-md-12">--}}
+    {{--                    @livewire('land-lease.land-lease-partial-payment', ['partialPayment' => $pendingPartialPaymentStatus])--}}
+    {{--                </div>--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--    @else--}}
+    {{--        @if ($leasePayment->taxpayer->id == Auth::user()->id)--}}
+    {{--            @if($leasePayment->status === \App\Enum\LeaseStatus::DEBT || $leasePayment->status ===--}}
+    {{--            \App\Enum\LeaseStatus::LATE_PAYMENT || $leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATED--}}
+    {{--            ||$leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATING || $leasePayment->status ===--}}
+    {{--            \App\Enum\LeaseStatus::COMPLETE )--}}
+    {{--                <div class="container-fluid">--}}
+    {{--                    <div class="row">--}}
+    {{--                        <div class="col-md-12">--}}
+    {{--                            @livewire('land-lease.land-lease-payment', ['leasePayment' => $leasePayment])--}}
+    {{--                        </div>--}}
+    {{--                    </div>--}}
+    {{--                </div>--}}
+    {{--            @else--}}
+    {{--                <div class="d-flex justify-content-start mb-3">--}}
+    {{--                    <livewire:land-lease.payment-request-modal :landLease="$leasePayment"/>--}}
+    {{--                </div>--}}
+    {{--            @endif--}}
+    {{--        @endif--}}
+    {{--    @endif--}}
 
     <div class="card">
 
@@ -47,55 +67,55 @@
 
                         @if ($leasePayment->status === \App\Enum\LeaseStatus::IN_ADVANCE_PAYMENT)
                             <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Paid In Advance
                             </span>
                         @elseif ($leasePayment->status === \App\Enum\LeaseStatus::ON_TIME_PAYMENT)
                             <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Paid On Time
                             </span>
                         @elseif ($leasePayment->status === \App\Enum\LeaseStatus::LATE_PAYMENT)
                             <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Paid Late
                             </span>
                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATING)
                             <span class="badge badge-danger py-1 px-2"
-                                style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
+                                  style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
                                 <i class="bi bi-clock-history mr-1"></i>
                                 Control Number Generating
                             </span>
                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATED)
                             <span class="badge badge-danger py-1 px-2"
-                                style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
+                                  style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
                                 <i class="bi bi-clock-history mr-1"></i>
                                 Control Number Generated
                             </span>
                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATION_FAILED)
                             <span class="badge badge-danger py-1 px-2"
-                                style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
+                                  style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
                                 <i class="bi bi-clock-history mr-1"></i>
                                 Control Number Generating Failed
                             </span>
                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::PAID_PARTIALLY)
                             <span class="badge badge-danger py-1 px-2"
-                                style="border-radius: 1rem; background: rgba(220,181,53,0.35); color: #cfa51c; font-size: 85%">
+                                  style="border-radius: 1rem; background: rgba(220,181,53,0.35); color: #cfa51c; font-size: 85%">
                                 <i class="bi bi-pencil-square mr-1"></i>
                                 Paid Partially
                             </span>
                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::PENDING)
                             <span class="badge badge-danger py-1 px-2"
-                                style="border-radius: 1rem; background: rgba(220,181,53,0.35); color: #cfa51c; font-size: 85%">
+                                  style="border-radius: 1rem; background: rgba(220,181,53,0.35); color: #cfa51c; font-size: 85%">
                                 <i class="bi bi-pencil-square mr-1"></i>
                                 Pending
                             </span>
                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::DEBT)
                             <span class="badge badge-danger py-1 px-2"
-                                style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
+                                  style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
                                 <i class="bi bi-record-circle mr-1"></i>
                                 Debt
                             </span>
@@ -119,34 +139,34 @@
                 <div class="card-body mt-0 p-2">
                     <table class="table table-md">
                         <thead>
-                            <tr>
-                                <th>Month</th>
-                                <th>Tax Amount</th>
-                                <th>Penalty Amount</th>
-                                <th>Total Amount</th>
-                            </tr>
+                        <tr>
+                            <th>Month</th>
+                            <th>Tax Amount</th>
+                            <th>Penalty Amount</th>
+                            <th>Total Amount</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @foreach ($leasePayment->penalties as $penalty)
-                                <tr>
-                                    <td>
-                                        {{ Carbon\Carbon::parse($penalty->start_date)->format('F') }} -
-                                        {{ Carbon\Carbon::parse($penalty->start_date)->year }}
-                                    </td>
-                                    <td>
-                                        {{ number_format($penalty->tax_amount, 2) }}
-                                        {{ $penalty->currency }}
-                                    </td>
-                                    <td>
-                                        {{ number_format($penalty->penalty_amount, 2) }}
-                                        {{ $penalty->currency }}
-                                    </td>
-                                    <td>
-                                        {{ number_format($penalty->total_amount, 2) }}
-                                        {{ $penalty->currency }}
-                                    </td>
-                                </tr>
-                            @endforeach
+                        @foreach ($leasePayment->penalties as $penalty)
+                            <tr>
+                                <td>
+                                    {{ Carbon\Carbon::parse($penalty->start_date)->format('F') }} -
+                                    {{ Carbon\Carbon::parse($penalty->start_date)->year }}
+                                </td>
+                                <td>
+                                    {{ number_format($penalty->tax_amount, 2) }}
+                                    {{ $penalty->currency }}
+                                </td>
+                                <td>
+                                    {{ number_format($penalty->penalty_amount, 2) }}
+                                    {{ $penalty->currency }}
+                                </td>
+                                <td>
+                                    {{ number_format($penalty->total_amount, 2) }}
+                                    {{ $penalty->currency }}
+                                </td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -214,7 +234,7 @@
             <div class="row">
                 <div class="col-4">
                     <a class="file-item" target="_blank"
-                        href="{{ route('land-lease.get.lease.document', ['path' => encrypt($leasePayment->landLease->lease_agreement_path)]) }}">
+                       href="{{ route('land-lease.get.lease.document', ['path' => encrypt($leasePayment->landLease->lease_agreement_path)]) }}">
                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                         <div style="font-weight: 500;" class="ml-1">
                             Lease Agreement Document

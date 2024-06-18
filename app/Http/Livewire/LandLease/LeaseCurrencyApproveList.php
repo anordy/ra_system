@@ -168,12 +168,9 @@ class LeaseCurrencyApproveList extends DataTableComponent
                         $this->cancelBill($bill, $leaseCurrencyChange->reason);
                     }
 
-                    $leasePayment = LeasePayment::where('land_lease_id', $leaseCurrencyChange->land_lease_id)->latest()->first();
+                    $leasePayment = $this->updateLeasePayment($leaseCurrencyChange->land_lease_id, $leaseCurrencyChange->to_currency);
 
-                    $leasePaymentUpdated = $this->updateLeasePayment($leaseCurrencyChange->land_lease_id, $leaseCurrencyChange->to_currency, $leasePayment->total_amount);
-
-                    if ($leasePaymentUpdated) {
-                        $this->generateControlNumber($leasePaymentUpdated);
+                    if ($leasePayment) {
                         DB::commit();
                         $this->customAlert('success', 'Lease currency change has been approved successfully', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
                         return;
@@ -207,15 +204,18 @@ class LeaseCurrencyApproveList extends DataTableComponent
         return Taxpayer::where('id', $id)->first()->fullname;
     }
 
-    public function updateLeasePayment($leaseId, $currency, $amount)
+    public function updateLeasePayment($leaseId, $currency)
     {
         $leasePayment = LeasePayment::where('land_lease_id', $leaseId)->first();
 
-        if ($leasePayment){
-            $leasePayment->total_amount = $this->convertToTsh($amount);
+        if ($leasePayment) {
+            $leasePayment->total_amount = $this->convertToTsh($leasePayment->total_amount);
+            $leasePayment->outstanding_amount = $this->convertToTsh($leasePayment->outstanding_amount);
+            $leasePayment->total_amount_with_penalties = $this->convertToTsh($leasePayment->total_amount_with_penalties);
             $leasePayment->currency = $currency;
             $leasePayment->save();
         }
+        $leasePayment->refresh();
         return $leasePayment;
     }
 
@@ -227,7 +227,6 @@ class LeaseCurrencyApproveList extends DataTableComponent
             ->first();
 
         if ($partialPayment) {
-            $partialPayment->update(['payment_status' => 'cancelled']);
             return ZmBill::where('billable_id', $partialPayment->id)
                 ->where('billable_type', get_class($partialPayment))
                 ->first();
@@ -237,7 +236,6 @@ class LeaseCurrencyApproveList extends DataTableComponent
         $leasePayment = LeasePayment::where('land_lease_id', $leaseId)->first();
 
         if ($leasePayment) {
-            $leasePayment->update(['status' => 'debt']);
             return ZmBill::where('billable_id', $leasePayment->id)
                 ->where('billable_type', get_class($leasePayment))
                 ->first();

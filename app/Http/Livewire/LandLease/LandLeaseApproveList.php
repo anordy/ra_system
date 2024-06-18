@@ -160,7 +160,7 @@ class LandLeaseApproveList extends DataTableComponent
         try {
             $data = (object)$value['data'];
             //change status on partial payment
-            $partialPayment = PartialPayment::where('id', $data->id)->first();
+            $partialPayment = PartialPayment::where('id', $data->id)->latest()->first();
             if (is_null($partialPayment)) {
                 abort(404);
             }
@@ -168,9 +168,9 @@ class LandLeaseApproveList extends DataTableComponent
             switch ($data->action) {
                 case 'approve':
                     $partialPayment->update(['status' => 'approved']);
-                    $this->generateControlNumber($partialPayment);
+                    $partialPayment->refresh();
+//                 $this->generateControlNumber($partialPayment);
                     //update lease payment
-                    $this->updateLeasePayment($partialPayment->payment_id, $partialPayment->amount);
                     DB::commit();
                     $this->customAlert('success', 'Lease payment approved successfully', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
                     break;
@@ -186,6 +186,7 @@ class LandLeaseApproveList extends DataTableComponent
         } catch (\Exception $exception) {
             DB::rollBack();
             Log::error("ACTION-LEASE-REQUEST: " . json_encode($exception->getMessage()));
+            Log::error("ACTION-LEASE-REQUEST: " . json_encode($exception->getLine()));
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
@@ -221,8 +222,8 @@ class LandLeaseApproveList extends DataTableComponent
                 'billable_id' => $partialPayment->id,
                 'billable_type' => get_class($partialPayment),
                 'use_item_ref_on_pay' => 'N',
-                'amount' => roundOff($partialPayment->amount, $this->getLeaseCurrency($landLease)),
-                'currency' => $this->getLeaseCurrency($landLease),
+                'amount' => roundOff($partialPayment->amount, $partialPayment->currency),
+                'currency' => $partialPayment->currency,
                 'gfs_code' => $taxTypes->gfs_code,
                 'tax_type_id' => $taxTypes->id
             ],
@@ -244,10 +245,10 @@ class LandLeaseApproveList extends DataTableComponent
             $payer_phone = $this->getTaxPayer($landLease)->mobile;
             $description = "Land Lease payment for {$taxTypes->code}";
             $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-            $currency = $this->getLeaseCurrency($landLease);
+            $currency = $partialPayment->currency;
             $createdby_type = get_class(Auth::user());
             $createdby_id = Auth::id();
-            $exchange_rate = self::getExchangeRate($this->getLeaseCurrency($landLease));
+            $exchange_rate = self::getExchangeRate($partialPayment->currency);
             $payer_id = $this->getTaxPayer($landLease)->id;
             $expire_date = Carbon::now()->addDays(30)->toDateTimeString(); // TODO: Recheck this date
             $billableId = $partialPayment->id;
@@ -281,8 +282,9 @@ class LandLeaseApproveList extends DataTableComponent
                 $control_number = null;
             } else {
                 // We are local
-                $partialPayment->payment_status = LeaseStatus::PENDING;
-                $partialPayment->save();
+
+//                $partialPayment->payment_status = LeaseStatus::PENDING;
+//                $partialPayment->save();
 
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -306,19 +308,9 @@ class LandLeaseApproveList extends DataTableComponent
         }
     }
 
-    public function getLeaseCurrency($landLease)
-    {
-        return LeasePayment::select('currency')->where('land_lease_id', $landLease->id)->first()->currency;
-    }
-
     public function getTaxPayer($landLease)
     {
         return $landLease->taxpayer;
     }
 
-    public function updateLeasePayment($leaseId,$amount)
-    {
-        LeasePayment::where('land_lease_id', $leaseId)->update(['total_amount' => $amount,'status' =>
-            LeaseStatus::CN_GENERATED]);
-    }
 }
