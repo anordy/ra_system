@@ -83,8 +83,10 @@
             </label>
             <select name="format" id="format" wire:model="format"
                     class="form-control {{ $errors->has('format') ? 'is-invalid' : '' }}">
-                <option value="EXCEL" >EXCEL</option>
-                <option value="P" >PDF</option>
+                <option value="" selected >--Choose option--</option>
+                @foreach(\App\Enum\ReportFormats::getConstants() as $reports)
+                    <option value="{{ $reports }}" >{{ $reports }}</option>
+                @endforeach
 
             </select>
             @error('format')
@@ -93,8 +95,17 @@
             </div>
             @enderror
         </div>
-        <div class="col-md-4 ">
+        <div class="col-md-4">
             <button class="btn btn-primary btn-cm" wire:click="submit">Submit</button>
         </div>
+
+        @if ($fileName)
+            <div class="col-md-12 d-flex justify-content-end mt-4">
+                <a href="{{ route('reports.tax-payer.download.pdf', [$fileName]) }}" class="btn btn-danger">
+                    <i class="bi bi-file-earmark-pdf ml-1" wire:loading.remove wire:target="exportExcel"></i>
+                    Download Pdf
+                </a>
+            </div>
+        @endif
     </div>
 </div>

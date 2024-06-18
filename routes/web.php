@@ -19,6 +19,7 @@ use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
+use App\Http\Controllers\Reports\TaxPayer\TaxPayerReportController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -512,7 +513,9 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::name('reports.')->prefix('reports')->group(function () {
 
 
-        Route::get('tax-payer',[\App\Http\Controllers\Reports\TaxPayer\TaxPayerReportController::class,'index'])->name('tax-payer');
+        Route::get('tax-payer',[TaxPayerReportController::class,'index'])->name('tax-payer');
+        Route::get('/tax-payer/download-report-pdf/{fileName}', [TaxPayerReportController::class, 'exportTaxpayerReportPdf'])->name('tax-payer.download.pdf');
+
 
         Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');

@@ -33,34 +33,31 @@ class TaxPayerReport
 
     public static function getTaxPayerContribution(bool $selector, $data)
     {
-        if ($selector){
-            $res  =  DB::select("
-                                    select tx.total_amount,tx.created_at, bl.name as business_location,bl.created_at,b.name as business_name,bl.zin,tr.name as tax_region_name,bl.tax_region_id
-                                    
-                                    from tax_returns  tx
-                                    inner join businesses b on b.id  = tx.business_id
-                                    inner join business_locations bl on bl.business_id=  b.id
-                                    inner join tax_regions tr  on tr.id  =  bl.tax_region_id 
-                                    
-                                    where  tx.payment_status  = 'complete';");
-        }else{
-            $data =     DB::select("
-                                    select tx.total_amount,tx.created_at, bl.name as business_location,bl.created_at,b.name as business_name,bl.zin,tr.name as tax_region_name,bl.tax_region_id
-                                    
-                                    from tax_returns  tx
-                                    inner join businesses b on b.id  = tx.business_id
-                                    inner join business_locations bl on bl.business_id=  b.id
-                                    inner join tax_regions tr  on tr.id  =  bl.tax_region_id 
-                                    
-                                    where  tx.payment_status  = 'complete';
-                                    AND bl.created_at BETWEEN TO_DATE(:start_date, 'YYYY-MM-DD') AND TO_DATE(:end_date, 'YYYY-MM-DD')
-                                ", [
-                                'start_date' => $data['start_date'],
-                                'end_date' => $data['end_date']
-                            ]);
+        if ($selector) {
+            $results = DB::select("
+            SELECT tx.total_amount, tx.created_at, bl.name AS business_location, bl.created_at, b.name AS business_name, bl.zin, tr.name AS tax_region_name, bl.tax_region_id
+            FROM tax_returns tx
+            INNER JOIN businesses b ON b.id = tx.business_id
+            INNER JOIN business_locations bl ON bl.business_id = b.id
+            INNER JOIN tax_regions tr ON tr.id = bl.tax_region_id
+            WHERE tx.payment_status = 'complete'
+        ");
+        } else {
+            $results = DB::select("
+            SELECT tx.total_amount, tx.created_at, bl.name AS business_location, bl.created_at, b.name AS business_name, bl.zin, tr.name AS tax_region_name, bl.tax_region_id
+            FROM tax_returns tx
+            INNER JOIN businesses b ON b.id = tx.business_id
+            INNER JOIN business_locations bl ON bl.business_id = b.id
+            INNER JOIN tax_regions tr ON tr.id = bl.tax_region_id
+            WHERE tx.payment_status = 'complete'
+            AND bl.created_at BETWEEN TO_DATE(:start_date, 'YYYY-MM-DD') AND TO_DATE(:end_date, 'YYYY-MM-DD')
+        ", [
+                'start_date' => $data['start_date'],
+                'end_date' => $data['end_date']
+            ]);
         }
 
-        return $data;
+        return $results;
     }
 
 
