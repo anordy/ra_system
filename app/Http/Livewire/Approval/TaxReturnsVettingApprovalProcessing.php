@@ -131,8 +131,9 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 if ($this->return->return_type === VatReturn::class) {
                     $refundItems  = $this->return->return->standardPurchases ?? [];
                     $supplierItems  = $this->return->return->suppliers ?? [];
+                    $exitedGoods  = $this->return->return->importPurchases ?? [];
 
-                    if (count($exitedGoods) > 0) {
+                    if (count($exitedGoods ?? []) > 0) {
                         foreach ($exitedGoods as $exitedGood) {
                             $exitedGood->status = GeneralConstant::ONE_INT;
                             $exitedGood->save();

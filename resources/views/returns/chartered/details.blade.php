@@ -4,7 +4,7 @@
             {{ $return->financialMonth->year->code }}</h6>
         <hr>
         <div class="row">
-            @if ($return->configReturns)
+            @if (isset($return->items) && $return->items)
                 <div class="col-md-12">
                     <table class="table table-bordered table-sm">
                         <thead>
@@ -14,7 +14,7 @@
                             <th style="width: 20%">VAT</th>
                         </thead>
                         <tbody>
-                            @foreach ($return->configReturns as $item)
+                            @foreach ($return->items as $item)
                                 <tr>
                                     <td>{{ $item->config->name ?? 'name' }}</td>
                                     <td>{{ number_format($item->value, 2) }}</td>
@@ -38,7 +38,7 @@
                 </div>
             @endif
 
-            @if (isset($return_) && $return_->configReturns)
+            @if (isset($return_) && $return_->items)
             <div class="col-md-12">
                 <p class="text-uppercase font-weight-bold">{{ __('Return Items') }} (USD)</p>
             </div>
@@ -51,7 +51,7 @@
                         <th style="width: 20%">{{ __('Tax') }}</th>
                     </thead>
                     <tbody>
-                        @foreach ($return_->configReturns as $item)
+                        @foreach ($return_->items as $item)
                             <tr>
                                 <td>{{ $item->config->name }}</td>
                                 <td>{{ number_format($item->value, 2) }}</td>
@@ -97,7 +97,7 @@
                     </thead>
 
                     <tbody>
-                        @if (count($return->penalties))
+                        @if (count($return->penalties ?? []))
                             @foreach ($return->penalties as $penalty)
                                 <tr>
                                     <td>{{ $penalty['financial_month_name'] }}</td>
@@ -119,28 +119,6 @@
                                     </td>
                                 </tr>
                             @endforeach
-
-                             {{-- @foreach ($return->penalties->where('currency', 'USD') as $penalty)
-                                <tr>
-                                    <td>{{ $penalty['financial_month_name'] }}</td>
-                                    <td>{{ number_format($penalty['tax_amount'], 2) }}
-                                        <strong>{{ $penalty->currency }}</strong>
-                                    </td>
-                                    <td>{{ number_format($penalty['late_filing'], 2) }}
-                                        <strong>{{ $penalty->currency }}</strong>
-                                    </td>
-                                    <td>{{ number_format($penalty['late_payment'], 2) }}
-                                        <strong>{{ $penalty->currency }}</strong>
-                                    </td>
-                                    <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
-                                    <td>{{ number_format($penalty['rate_amount'], 2) }}
-                                        <strong>{{ $penalty->currency }}</strong>
-                                    </td>
-                                    <td>{{ number_format($penalty['penalty_amount'], 2) }}
-                                        <strong>{{ $penalty->currency }}</strong>
-                                    </td>
-                                </tr>
-                            @endforeach --}}
                         @else
                             <tr>
                                 <td colspan="7" class="text-center py-3">
@@ -166,7 +144,7 @@
                     </thead>
 
                     <tbody>
-                        @if (isset($return_) && count($return_->penalties))
+                        @if (isset($return_) && count($return_->penalties ?? []))
                             @foreach ($return_->penalties->where('currency', 'USD') as $penalty)
                                 <tr>
                                     <td>{{ $penalty['financial_month_name'] }}</td>

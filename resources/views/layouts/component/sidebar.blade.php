@@ -306,7 +306,7 @@
         @endcan
 
 
-        @can('petroleum-management')
+        @can('return-chartered-view')
             <li class="{{ request()->is('chartered*') ? 'active' : '' }}">
                 <a href="#chartered" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Chartered Tax
                     Returns</a>
