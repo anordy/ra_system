@@ -99,7 +99,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Department</span>
-                    <p class="my-1">{{ $waiver->debt->location->taxRegion->departments->name }}</p>
+                    <p class="my-1">{{ $waiver->debt->location->taxRegion->departments->name ?? 'N/A' }}</p>
                 </div>
 
             </div>
