@@ -96,7 +96,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
         }
 
 
-        if ($this->checkTransition('crdm_complete')) {
+        if ($this->checkTransition('commissioner_general_complete')) {
             if (!$this->forwardToCommisioner) {
                 if ($this->debt_waiver->category === DebtWaiverCategory::INTEREST) {
                     $this->validate([
@@ -173,7 +173,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
        
         }
 
-        if ($this->checkTransition('commissioner_complete')) {
+        if ($this->checkTransition('commissioner_general_complete')) {
             if ($this->debt_waiver->category === DebtWaiverCategory::INTEREST) {
                 $this->validate([
                     'interestPercent' => 'required|numeric|min:1|max:50',
@@ -268,7 +268,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                 // event(new SendMail('business-registration-correction', $this->subject->id));
             }
 
-            if ($this->checkTransition('crdm_reject')) {
+            if ($this->checkTransition('commissioner_general_reject')) {
                 $this->subject->status = WaiverStatus::REJECTED;
                 $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();
