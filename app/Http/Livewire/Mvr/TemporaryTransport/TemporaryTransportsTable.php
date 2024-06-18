@@ -23,7 +23,6 @@ class TemporaryTransportsTable extends DataTableComponent
     public function builder(): Builder
     {
         $query =  MvrTemporaryTransport::query()
-            ->where('mvr_temporary_transports.taxpayer_id', Auth::id())
             ->orderBy('mvr_temporary_transports.created_at', 'desc');
 
         if ($this->status !== null) {

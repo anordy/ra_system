@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -116,8 +115,8 @@
             <td class="td-content align-center"><b>"Tulipe Kodi kwa Maendeleo ya Zanzibar"</b></td>
         </tr>
     </table>
-    <div id="qr-code">
-        <img class="img-fluid" src="{{ $dataUri }}" alt="qr-code"/>
+    <div id="qr-code" width="100%" style="text-align: center; margin-top: 100px">
+        <img src="{{ $dataUri }}" alt="qr-code"/>
     </div>
 </div>
 <div class="align-center" style="position:fixed; bottom: 0">

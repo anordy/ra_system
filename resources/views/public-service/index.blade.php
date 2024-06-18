@@ -7,7 +7,6 @@
         <div class="card-header">
             Transport Service Registrations
         </div>
-
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -28,7 +27,6 @@
                     @livewire('public-service.registration.registration-table', ['status' => \App\Enum\PublicServiceMotorStatus::PENDING])
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

@@ -5,7 +5,7 @@
 @section('content')
     <div class="card">
         <div class="card-header text-uppercase font-weight-bold bg-white">
-            {{ __('Public Service Payments') }}
+            {{ __('Transport Service Payments') }}
         </div>
 
         <div class="card-body">

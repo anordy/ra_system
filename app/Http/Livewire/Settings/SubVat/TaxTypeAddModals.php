@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
 use Livewire\Component;
 
-class TaxTypeAddModal extends Component
+class TaxTypeAddModals extends Component
 {
 
     use CustomAlert, DualControlActivityTrait;

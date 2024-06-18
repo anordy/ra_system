@@ -23,18 +23,21 @@
         </div>
         @if ($this->checkTransition('mvr_registration_officer_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filled
-                    Incorrect
-                    return to Applicant</button>
-                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'mvr_registration_officer_review')">Approve
-                    & Forward</button>
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'rejected')">
+                    Reject Application
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'mvr_registration_officer_review')">
+                    Approve & Forward
+                </button>
             </div>
         @elseif($this->checkTransition('mvr_registration_manager_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'mvr_registration_officer_reject')">Reject &
-                    Return</button>
-                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'mvr_registration_manager_review')">Approve &
-                    Forward</button>
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'rejected')">
+                    Reject Application
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'mvr_registration_manager_review')">
+                    Approve
+                </button>
             </div>
         @endif
     </div>

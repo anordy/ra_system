@@ -23,6 +23,7 @@ class CreatePublicServiceInterestsTable extends Migration
             $table->decimal('period', 20, 2);
             $table->decimal('amount', 20, 2);
             $table->dateTime('payment_date');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

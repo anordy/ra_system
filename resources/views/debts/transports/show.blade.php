@@ -6,7 +6,7 @@
     <nav class="nav nav-tabs mt-0 border-top-0">
         <a href="#tab1" class="nav-item nav-link active">Debt Details</a>
         <a href="#tab2" class="nav-item nav-link">Business Information</a>
-        <a href="#tab3" class="nav-item nav-link">Public Service Details</a>
+        <a href="#tab3" class="nav-item nav-link">Transport Service Details</a>
         <a href="#tab4" class="nav-item nav-link">Motor Vehicle Registration Details</a>
     </nav>
 

@@ -75,18 +75,14 @@ class TemporaryTransportApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('application_filled_incorrect')) {
-                $this->subject->status = MvrTemporaryTransportStatus::CORRECTION;
-                $this->subject->save();
-            }
-
+            $this->subject->status = MvrTemporaryTransportStatus::REJECTED;
+            $this->subject->save();
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-
             DB::commit();
 
             if ($this->subject->status == MvrTemporaryTransportStatus::CORRECTION) {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle temporary transportation request for {$this->subject->mvr->plate_number} requires correction, please login to the system to perform data update."]));
+                Hello {$this->subject->taxpayer->fullname}, your motor vehicle temporary transportation request for {$this->subject->mvr->plate_number} was rejected."]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
