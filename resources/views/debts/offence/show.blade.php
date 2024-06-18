@@ -6,12 +6,10 @@
 
     <div class="container-fluid">
         <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
-
                     <div class="col-md-3">
                         <span class="font-weight-bold text-uppercase">Payment Due Date</span>
                         <p class="my-1">{{ $bill->created_at->addMonth(1)->format('d-m-Y') }}</p>
                     </div>
-{{--                @if($activeItem)--}}
                     <div class="col-md-2">
                         <span class="font-weight-bold text-uppercase">Amount</span>
                         <p class="my-1">{{$bill->amount}}</p>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Debt;
 
 use App\Http\Controllers\Controller;
+use App\Models\Installment\InstallmentItem;
 use App\Models\Offence\Offence;
 use App\Models\ZmBill;
 use Illuminate\Http\Request;
@@ -53,15 +54,17 @@ class OffenceController extends Controller
      * @param  \App\Models\Offence\Offence  $offence
      * @return \Illuminate\Http\Response
      */
-    public function show( $offence)
+    public function show( $offenceId)
     {
         if (!Gate::allows('debt-management-offence-view')) {
             abort(403);
         }
        try{
-//            dd($offence);
-           $bill = ZmBill::where('billable_id',decrypt($offence))->first();
-            $offence = Offence::with('taxTypes')->find(decrypt($offence));
+           $offence = Offence::with('taxTypes')->find(decrypt($offenceId));
+           $bill = ZmBill::where('billable_id',decrypt($offenceId))
+                        ->where('billable_type',get_class($offence))
+//                        ->where('status',Offence::PENDING)
+                        ->first();
 
 
             return  view('debts.offence.show',compact('offence','bill'));
