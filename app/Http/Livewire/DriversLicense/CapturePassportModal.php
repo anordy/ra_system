@@ -143,6 +143,7 @@ class CapturePassportModal extends Component
                 'license_restrictions' => $dla->license_restrictions ?? 'none',
                 'dl_license_application_id' => $dla->id,
                 'dl_license_duration_id' => $dla->license_duration_id,
+                'status' => DlApplicationStatus::ACTIVE
             ]);
         }
 

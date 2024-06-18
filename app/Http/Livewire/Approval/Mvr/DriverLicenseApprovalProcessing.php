@@ -113,11 +113,9 @@ class DriverLicenseApprovalProcessing extends Component
                     'comments' => 'required|strip_tag',
                 ]);
 
-                $dlAppLicenseClass = DlApplicationLicenseClass::where('dl_license_application_id', $this->subject->id)->count();
                 $lastDlLicense = DlDriversLicense::where('dl_drivers_license_owner_id', $this->subject->dl_drivers_license_owner_id)->latest()->first();
-                $lastDlLicenseClass = $lastDlLicense->drivers_license_classes->count();
 
-                if ($lastDlLicenseClass < $dlAppLicenseClass) {
+                if ($this->subject->type == GeneralConstant::ADD_CLASS) {
                     $lastDlLicense->status = GeneralConstant::ADD_CLASS;
                     $lastDlLicense->save();
                 }
@@ -233,9 +231,12 @@ class DriverLicenseApprovalProcessing extends Component
                 $this->customAlert('error', $errorMessage);
                 return;
             } else {
-                // Generate control number
-                $this->generateDLicenseControlNumber($this->subject, $fee);
-
+                $classFactor = 1;
+                if ($this->subject->type == GeneralConstant::ADD_CLASS) {
+                    $classFactor = $this->subject->application_license_classes->count() -
+                        $this->subject->previousApplication->application_license_classes->count();
+                }
+                $this->generateDLicenseControlNumber($this->subject, $fee, $classFactor);
             }
         } catch (Exception $e) {
 

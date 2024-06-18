@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\DriversLicense\Payment;
 
 use App\Enum\CustomMessage;
+use App\Enum\GeneralConstant;
 use App\Models\DlFee;
 use App\Services\ZanMalipo\GepgResponse;
 use Exception;
@@ -55,7 +56,17 @@ class FeePayment extends Component
                 return;
             }
 
-            $this->generateDLicenseControlNumber($this->license, $this->fee);
+            if($this->license->type == GeneralConstant::ADD_CLASS){
+                $classFactor = 1;
+                if ($this->license->type == GeneralConstant::ADD_CLASS) {
+                    $classFactor = $this->license->application_license_classes->count() -
+                        $this->license->previousApplication->application_license_classes->count();
+                }
+                $this->generateDLicenseControlNumber($this->license, $this->fee, $classFactor);
+
+            } else {
+                $this->generateDLicenseControlNumber($this->license, $this->fee);
+            }
             $this->customAlert('success', CustomMessage::RECEIVE_PAYMENT_SHORTLY);
             return redirect(request()->header('Referer'));
         } catch (Exception $e) {

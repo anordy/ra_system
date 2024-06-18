@@ -136,7 +136,7 @@
     <div id="dob">{{ \Carbon\Carbon::parse($license->drivers_license_owner->dob)->format('d/m/Y') }}</div>
     <div id="restrictions">
         @foreach($license->licenseRestrictions as $lR)
-            {{ $lR->restriction->symbol }} @if(!$loop->last)/ @endif
+            {{ $lR->restriction->symbol }} @if(!$loop->last) / @endif
         @endforeach
     </div>
     <div id="issue">{{ \Carbon\Carbon::parse($license->issued_date)->format('d/m/Y') }}</div>
@@ -144,7 +144,7 @@
     <div id="blood-group">{{ $license->drivers_license_owner->blood_group }}</div>
     <div id="class">
         @foreach ($license->drivers_license_classes as $class)
-            {{ $class->license_class->name }}/
+            {{ $class->license_class->name }} @if(!$loop->last) / @endif
         @endforeach
     </div>
 

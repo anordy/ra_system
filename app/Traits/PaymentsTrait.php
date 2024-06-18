@@ -1061,7 +1061,7 @@ trait PaymentsTrait
      * @throws \DOMException
      * @throws \Exception
      */
-    public function generateDLicenseControlNumber($license, $fee)
+    public function generateDLicenseControlNumber($license, $fee, $classFactor = 1)
     {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
@@ -1086,10 +1086,10 @@ trait PaymentsTrait
                     'billable_id' => $license->id,
                     'billable_type' => get_class($license),
                     'tax_type_id' => $taxType->id,
-                    'amount' => $fee->amount,
+                    'amount' => $fee->amount * $classFactor,
                     'currency' => Currencies::TZS,
                     'exchange_rate' => 1,
-                    'equivalent_amount' => $fee->amount,
+                    'equivalent_amount' => $fee->amount * $classFactor,
                     'gfs_code' => $taxType->gfs_code
                 ]
             ]
