@@ -27,6 +27,7 @@ class LandLeaseController extends Controller
         }
         return view('land-lease.land-lease-list');
     }
+
     public function indexApprovalList()
     {
         if (!Gate::allows('land-lease-view')) {
@@ -217,5 +218,13 @@ class LandLeaseController extends Controller
     public function edit($id)
     {
         return view("land-lease.land-lease-edit",compact('id'));
+    }
+    public function completeRegistrationView($id)
+    {
+        return view("land-lease.land-lease-complete-registration",compact('id'));
+    }
+    public function registrationView($id)
+    {
+        return view("land-lease.land-lease-registration-view",compact('id'));
     }
 }

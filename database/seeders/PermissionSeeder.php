@@ -145,6 +145,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'land-lease-change-agent-status', 'sys_module_id' => 16],
             ['name' => 'land-lease-generate-control-number', 'sys_module_id' => 16],
             ['name' => 'land-lease-approve-currency-change-application', 'sys_module_id' => 16],
+            ['name' => 'land-lease-approve-registration', 'sys_module_id' => 16],
+            ['name' => 'land-lease-notification', 'sys_module_id' => 16],
 
 
             # Manage Payments

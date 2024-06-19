@@ -26,7 +26,7 @@ class LandLeaseList extends DataTableComponent
     //create builder function
     public function builder(): builder
     {
-        return LandLease::query();
+        return LandLease::where('lease_status',1);
     }
 
     public function configure(): void
@@ -92,8 +92,7 @@ class LandLeaseList extends DataTableComponent
                 ->sortable(),
             Column::make("Lease Status", "lease_status")->view('land-lease.includes.lease-status'),
             Column::make("Applicant Status", "is_registered")->view("land-lease.includes.applicant-status"),
-            Column::make("Actions", "id")
-                ->view("land-lease.includes.actions"),
+            Column::make("Actions", "id")->view("land-lease.includes.actions"),
         ];
     }
 
