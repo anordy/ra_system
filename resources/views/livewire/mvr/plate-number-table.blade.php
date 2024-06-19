@@ -38,9 +38,9 @@
                     <td>{{ $row->chassis->chassis_number }}</td>
                     <td>{{ $row->plate_number }}</td>
                     <td>{{ $row->registration_number }}</td>
-                    <td>{{ $row->regtype->name ?? 'N/A' }}</td>
-                    <td>{{ $row->regtype->color->color ?? 'N/A' }}</td>
-                    <td>{{ $row->platesize->name }}</td>
+                    <td>{{ $row->regtype? $row->regtype->name : 'N/A' }}</td>
+                    <td>{{ $row->regtype ? $row->regtype->color->color : 'N/A' }}</td>
+                    <td>{{ $row->platesize ? $row->platesize->name : 'n/a' }}</td>
                     <td>{{ $row->registered_at }}</td>
                     <td>
                         @if($plate_number_status === \App\Models\MvrPlateNumberStatus::STATUS_GENERATED)

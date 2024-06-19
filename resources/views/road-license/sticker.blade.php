@@ -50,7 +50,7 @@
             position: fixed;
             top: 620px;
             left: 320px;
-            width: 400px;
+            width: 700px;
         }
 
         #reg-no {
@@ -131,7 +131,7 @@
 <div id="model">{{ strtoupper($roadLicense->registration->chassis->model_type ?? 'N/A') }}</div>
 <div id="issued-date">{{ \Carbon\Carbon::parse($roadLicense->issued_date)->format('d/m/Y') }}</div>
 <div id="expiry-date">{{ \Carbon\Carbon::parse($roadLicense->expire_date)->format('d/m/Y') }}</div>
-<div id="category">{{ strtoupper($roadLicense->registration->class->name ?? 'N/A') }} ({{ strtoupper($roadLicense->registration->regtype->category->name ?? 'N/A') }})</div>
+<div id="category">{{ strtoupper($roadLicense->registration->class->name ?? 'N/A') }} ({{ strtoupper($roadLicense->registration->regtype->name ?? 'N/A') }})</div>
 <div id="paid-amount-words">
 
 </div>
