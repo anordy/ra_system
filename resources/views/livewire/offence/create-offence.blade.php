@@ -5,73 +5,100 @@
             <h3>{{ __('Offence Registration') }}</h3>
             <p>{{ __('Please provide all the required information to continue') }}.</p>
             <hr />
-            <div class="row">
 
-               <div class="form-group col-md-4">
-                  <label class="font-weight-bold">{{ __('Debtor name') }} *</label>
-                  <input type="text"  id="name" class="form-control" wire:model.lazy="name" required>
-                  @error('name')
-                  <span class="text-danger">{{ $message }}</span>
-                  @enderror
+            <!-- Option to ask for Znumber -->
+            <div class="form-group">
+               <label>{{ __('Do you have a Znumber?') }}</label>
+               <div>
+                  <label class="radio-inline mr-3">
+                     <input type="radio" name="has_znumber" value="yes" wire:model="hasZnumber"> {{ __('Yes') }}
+                  </label>
+                  <label class="radio-inline">
+                     <input type="radio" name="has_znumber" value="no" wire:model="hasZnumber"> {{ __('No') }}
+                  </label>
                </div>
-               <div class="form-group col-md-4">
-                  <label class="font-weight-bold">{{ __('Debtor Mobile') }}  *</label>
-                  <input type="text" id="mobile" class="form-control" wire:model.lazy="mobile" required>
-                  @error('mobile')
-                  <span class="text-danger">{{ $message }}</span>
-                  @enderror
-               </div>
-               <div class="form-group col-md-4">
-                  <label class="font-weight-bold">{{ __('Amount') }}  *</label>
-                  <input type="text"  id="amount" class="form-control" wire:model.lazy="amount" required>
-                  @error('amount')
-                  <span class="text-danger">{{ $message }}</span>
-                  @enderror
-               </div>
+            </div>
 
-               <div class="form-group col-md-6">
-                  <label class="font-weight-bold">{{ __('Tax Type') }} *</label>
-                     <select class="form-control @error('taxTypes') is-invalid @enderror" wire:model.lazy="taxType"   required>
-                     <option value="" >{{ __('Please choose') }}...</option>
-                     @foreach($taxTypes as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                     @endforeach
-                  </select>
-                  @error('businessType')
+            <!-- Conditional input box for Znumber -->
+            @if ($hasZnumber == 'yes')
+               <div class="form-group">
+                  <label class="font-weight-bold">{{ __('Znumber') }} *</label>
+                  <div class="input-group">
+                     <input type="text" id="znumber" class="form-control" wire:model="znumber">
+                     <div class="input-group-append">
+                        <button class="btn btn-success" type="button" wire:click="fetchBusinessDetails" wire:loading.attr="disabled">
+                           <span wire:loading wire:target="fetchBusinessDetails" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                           <span wire:loading.remove wire:target="fetchBusinessDetails">{{ __('Fetch') }}</span>
+                        </button>
+                     </div>
+                  </div>
+                  @error('znumber')
+                  <span class="text-danger">{{ $message }}</span>
+                  @enderror
+               </div>
+            @endif
+
+            <!-- Fields for other information -->
+            @if($hasZnumber)
+               <div class="row">
+                  <div class="form-group col-md-4">
+                     <label class="font-weight-bold">{{ __('Debtor name') }} *</label>
+                     <input type="text" id="name" class="form-control" wire:model.lazy="name" @if($hasZnumber == 'yes') readonly @endif>
+                     @error('name')
                      <span class="text-danger">{{ $message }}</span>
-                  @enderror
+                     @enderror
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label class="font-weight-bold">{{ __('Debtor Mobile') }}  *</label>
+                     <input type="text" id="mobile" class="form-control" wire:model.lazy="mobile" @if($hasZnumber == 'yes') readonly @endif>
+                     @error('mobile')
+                     <span class="text-danger">{{ $message }}</span>
+                     @enderror
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label class="font-weight-bold">{{ __('Amount') }}  *</label>
+                     <input type="text" id="amount" class="form-control" wire:model.lazy="amount" >
+                     @error('amount')
+                     <span class="text-danger">{{ $message }}</span>
+                     @enderror
+                  </div>
+
+                  <div class="form-group col-md-6">
+                     <label class="font-weight-bold">{{ __('Tax Type') }} *</label>
+                     <select class="form-control @error('taxType') is-invalid @enderror" wire:model.lazy="taxType" >
+                        <option value="" >{{ __('Please choose') }}...</option>
+                        @foreach($taxTypes as $category)
+                           <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                     </select>
+                     @error('taxType')
+                     <span class="text-danger">{{ $message }}</span>
+                     @enderror
+                  </div>
+
+                  <div class="form-group col-md-6">
+                     <label class="font-weight-bold">{{ __('Currency') }} *</label>
+                     <select class="form-control @error('currency') is-invalid @enderror" wire:model.lazy="currency" >
+                        <option value="" >{{ __('Please choose') }}...</option>
+                        @foreach($currencies as $currencyOption)
+                           <option value="{{ $currencyOption->iso }}">{{ $currencyOption->name }}</option>
+                        @endforeach
+                     </select>
+                     @error('currency')
+                     <span class="text-danger">{{ $message }}</span>
+                     @enderror
+                  </div>
                </div>
+            @endif
 
-               <div class="form-group col-md-6">
-                  <label class="font-weight-bold">{{ __('Currency') }} *</label>
-                  <select class="form-control @error('currencies') is-invalid @enderror" wire:model.lazy="currency" >
-                     <option value="" >{{ __('Please choose') }}...</option>
-                     @foreach($currencies as $currency)
-                        <option value="{{ $currency->iso }}">{{ $currency->name }}</option>
-                     @endforeach
-                  </select>
-                  @error('currency')
-                  <span class="text-danger">{{ $message }}</span>
-                  @enderror
-               </div>
-
-
-
-
-
-
-
-
-               <div class="col-md-12 text-right">
-                  <button class="btn btn-primary rounded-0" wire:click="submit" wire:loading.attr="disable">
-                     <i class="bi bi-arrow-return-right mr-2" wire:loading.remove wire:target="submit"></i>
-                     <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading wire:target="submit"></i>
-                     {{ __('Save') }}
-                  </button>
-               </div>
+            <div class="col-md-12 text-right">
+               <button class="btn btn-primary rounded-0" wire:click="submit" wire:loading.attr="disabled">
+                  <i class="bi bi-arrow-return-right mr-2" wire:loading.remove wire:target="submit"></i>
+                  <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading wire:target="submit"></i>
+                  {{ __('Save') }}
+               </button>
             </div>
          </div>
       </div>
    </div>
-
 </div>
