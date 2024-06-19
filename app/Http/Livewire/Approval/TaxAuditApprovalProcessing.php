@@ -86,7 +86,6 @@ class TaxAuditApprovalProcessing extends Component
     public $newTag;
 
 
-
     public function mount($modelName, $modelId)
     {
         $this->taxTypes = TaxType::all();
@@ -104,7 +103,6 @@ class TaxAuditApprovalProcessing extends Component
         $this->notificationLetter = $this->subject->notification_letter;
 
         $comments = $this->getEnabledTransitions();
-
 
         $assessment = $this->subject->assessment;
         if ($assessment) {
@@ -366,6 +364,8 @@ class TaxAuditApprovalProcessing extends Component
                     $this->subject->auditing_date = $this->newAuditDate;
                 }
                 $this->subject->save();
+
+                $operators = array_values($this->subject->officers->pluck('user_id')->toArray());
             }
 
             if ($this->checkTransition('conduct_audit')) {
@@ -395,6 +395,17 @@ class TaxAuditApprovalProcessing extends Component
 
                 $this->subject->preliminary_report_date = now()->addWeekdays(7);
                 $this->subject->save();
+
+                //Send Exit Minute and Preliminary reports
+                if ($this->subject->exit_minutes != null && $this->subject->preliminary_report != null) {
+                    event(new SendMail('send-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
+                }
+
+                $operators = $this->subject->officers->pluck('user_id')->toArray();
+            }
+
+            if ($this->checkTransition('audit_date_extension_dc_review')) {
+
                 $operators = $this->subject->officers->pluck('user_id')->toArray();
             }
 
@@ -463,13 +474,9 @@ class TaxAuditApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            //Send Exit Minute and Preliminary reports
-            if ($this->subject->exit_minutes != null && $this->subject->preliminary_report != null) {
-                event(new SendMail('send-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
-            }
-
             if ($this->checkTransition('accepted')) {
 
+                event(new SendMail('audit-approved-notification', $this->subject->business->taxpayer));
 
                 // Notify audit manager to continue with business/location de-registration request if exists
                 $deregister = BusinessDeregistration::where('tax_audit_id', $this->subject->id)->get()->first();
@@ -498,19 +505,16 @@ class TaxAuditApprovalProcessing extends Component
             DB::commit();
 
             if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
-                $this->generateControlNumber();
                 $this->subject->assessment->update([
                     'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
                     'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
                 ]);
                 $assessment = $this->subject->assessment;
                 $this->recordLedger(TransactionType::DEBIT, TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
-
-
-                event(new SendMail('audit-approved-notification', $this->subject->business->taxpayer));
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+            $this->customAlert('success', 'Approved successfully');
         } catch (Exception $e) {
             DB::rollBack();
 

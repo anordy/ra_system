@@ -28,8 +28,6 @@ class BusinessAuditAddModal extends Component
     public $scope;
     public $period_from;
     public $period_to;
-    public $query;
-
     public $selectedBusiness;
     public $locations = [];
     public $taxTypes = [];
@@ -53,7 +51,7 @@ class BusinessAuditAddModal extends Component
 
     public function mount($jsonData = null)
     {
-        $this->business = Business::select('id', 'name', 'ztn_number')->get();
+        $this->business = Business::select('id', 'name', 'reg_no')->get();
 
         if (isset($jsonData)) {
             $this->business_id = $jsonData['business_id'];
@@ -80,21 +78,26 @@ class BusinessAuditAddModal extends Component
     public function searchBusiness()
     {
         $this->validate([
-            'query' => 'required|string|max:255'
+            'search' => 'required|string|max:255'
         ]);
+        $this->search = trim($this->search);
 
-        //search for business using ztn number and tin number and name
-        $business = Business::where('ztn_number', 'like', '%' . $this->query . '%');
-        $business = $business->orWhere('tin', 'like', '%' . $this->query . '%');
-        $business = $business->orWhere('name', 'like', '%' . $this->query . '%');
-        $business = $business->get();
+        // Convert the search search to lowercase
+        $searchTerm = strtolower($this->search);
 
-        //change the selected business
+        // Search for business using reg number, tin number, and name (case-insensitive)
+        $business = Business::where(DB::raw('LOWER(reg_no)'), 'like', '%' . $searchTerm . '%')
+            ->orWhere(DB::raw('LOWER(tin)'), 'like', '%' . $searchTerm . '%')
+            ->orWhere(DB::raw('LOWER(name)'), 'like', '%' . $searchTerm . '%')
+            ->get();
+
+
+        // Change the selected business
         if (count($business) > 0) {
             $this->business_id = $business[0]->id;
             $this->businessChange($this->business_id);
         } else {
-            $this->customAlert('warning', 'No business found with the given query');
+            $this->customAlert('warning', 'No business found with the given Search');
         }
     }
 

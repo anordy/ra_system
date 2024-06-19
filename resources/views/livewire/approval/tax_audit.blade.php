@@ -498,7 +498,7 @@
                         wire:click="confirmPopUpModal('reject', 'rejected')">
                         Reject & Return Back
                     </button>
-                    <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'completed')">
+                    <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'accepted')">
                         Approve & Complete
                     </button>
                 </div>

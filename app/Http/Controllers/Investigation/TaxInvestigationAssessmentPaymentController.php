@@ -10,6 +10,7 @@ use App\Models\PartialPayment;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxAssessments\TaxAssessment;
+use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
@@ -44,9 +45,10 @@ class TaxInvestigationAssessmentPaymentController extends Controller
             // Retrieve partial payment with related tax assessment
             $partialPayment = PartialPayment::with('taxAssessment')->findOrFail($decryptedId);
 
-            // Retrieve subject using the related tax assessment data
+            // Extract tax assessment and subject from the retrieved data
             $taxAssessment = $partialPayment->taxAssessment;
-            $subject = $taxAssessment->assessment_type::findOrFail($taxAssessment->assessment_id);
+            // $subject = $taxAssessment->assessment_type::findOrFail($taxAssessment->assessment_id);
+            $subject = TaxAudit::findOrFail($taxAssessment->assessment_id);
 
             // Retrieve tax assessments for the subject
             $taxAssessments = TaxAssessment::where('assessment_id', $subject->id)
@@ -56,7 +58,6 @@ class TaxInvestigationAssessmentPaymentController extends Controller
             return view('investigation.assessment-payments.preview', compact('subject', 'taxAssessments', 'partialPayment'));
         } catch (\Exception $e) {
 
-            dd($e);
             Log::error('Error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),

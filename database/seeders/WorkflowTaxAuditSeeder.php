@@ -106,7 +106,7 @@ class WorkflowTaxAuditSeeder extends Seeder
             'completed' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2]
+                'operators' => []
             ],
         ];
 

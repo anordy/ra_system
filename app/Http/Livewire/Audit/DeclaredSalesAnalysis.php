@@ -373,28 +373,35 @@ class DeclaredSalesAnalysis extends Component
     {
         $yearData = [];
 
-        foreach ($yearReturnGroup as $keyYear => $monthreturnGroup) {
-            $monthData = [];
-            foreach ($monthreturnGroup as $keyMonth => $returnItems) {
-                $itemValue = [
-                    'month' => $keyMonth,
-                ];
-                $totalVat = 0;
-                $totalValue = 0;
-                foreach ($returnItems as $keyItem => $item) {
-                    $itemValue[$item['code']] = $item['value'];
-                    $totalValue += $item['value'];
-                    $totalVat += $item['vat'];
+        if (is_array($yearReturnGroup) || is_object($yearReturnGroup)) {
+            foreach ($yearReturnGroup as $keyYear => $monthreturnGroup) {
+                $monthData = [];
+                if (is_array($monthreturnGroup) || is_object($monthreturnGroup)) {
+                    foreach ($monthreturnGroup as $keyMonth => $returnItems) {
+                        $itemValue = [
+                            'month' => $keyMonth,
+                        ];
+                        $totalVat = 0;
+                        $totalValue = 0;
+                        if (is_array($returnItems) || is_object($returnItems)) {
+                            foreach ($returnItems as $keyItem => $item) {
+                                $itemValue[$item['code']] = $item['value'];
+                                $totalValue += $item['value'];
+                                $totalVat += $item['vat'];
+                            }
+                        }
+                        $itemValue['totalValue'] = $totalValue;
+                        $itemValue['totalVat'] = $totalVat;
+                        $monthData[] = $itemValue;
+                    }
                 }
-                $itemValue['totalValue'] = $totalValue;
-                $itemValue['totalVat'] = $totalVat;
-                $monthData[] = $itemValue;
+                $yearData[$keyYear] = $monthData;
             }
-            $yearData[$keyYear] = $monthData;
         }
 
         return $yearData;
     }
+
 
 
     protected function formatDataArrayPort($yearReturnGroup)

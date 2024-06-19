@@ -24,7 +24,7 @@
                                 wire:change="businessChange($event.target.value)">
                                 <option value="">Select Business</option>
                                 @foreach ($business as $row)
-                                    <option value="{{ $row->id }}">{{ $row->name }} ({{ $row->ztn_number }} )</option>
+                                    <option value="{{ $row->id }}">{{ $row->name }} ({{ $row->reg_no }} )</option>
                                 @endforeach
                             </select>
                             @error("business_id")
@@ -36,8 +36,8 @@
                         <div class="col-md-6">
                             <label>Search business</label>
                             <div class="d-flex">
-                                <input type="text" class="form-control" @error("query") is-invalid @enderror" wire:model.defer="query">
-                                @error("query")
+                                <input type="text" class="form-control" @error("search") is-invalid @enderror" wire:model.defer="search">
+                                @error("search")
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

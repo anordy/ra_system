@@ -207,6 +207,7 @@
 
                 </div>
             @endif
+            <livewire:approval.tax-audit-approval-processing modelName='{{ get_class($audit) }}' modelId="{{ encrypt($audit->id) }}" />
         </div>
 
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
