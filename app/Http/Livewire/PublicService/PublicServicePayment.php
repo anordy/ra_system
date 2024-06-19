@@ -34,7 +34,7 @@ class PublicServicePayment extends Component
     }
 
     public function regenerate(){
-        $response = $this->regenerateControlNo($this->return->bill);
+        $response = $this->regeneratePublicServiceControlNo($this->return->bill);
         if ($response){
             $this->customAlert('success', __('Your request was submitted, you will receive your payment information shortly.'));
             $this->return = get_class($this->return)::find($this->return->id);
