@@ -48,6 +48,16 @@ class ReturnDebtWaiverApprovalProcessing extends Component
         $this->taxTypes = TaxType::all();
         $this->registerWorkflow($modelName, $this->modelId);
         $this->forwardToCommisioner = $this->canForwardToCommisioner($this->debt);
+        $this->penaltyPercent = $this->debt_waiver->penalty_rate ?? 0;
+        $this->interestPercent = $this->debt_waiver->interest_rate ?? 0;
+
+        $this->penaltyAmount = roundOff(($this->debt->penalty * $this->penaltyPercent) / 100, $this->debt->currency);
+        $this->interestAmount = roundOff(($this->debt->interest * $this->interestPercent) / 100, $this->debt->currency);
+        $this->penaltyAmountDue = $this->debt->penalty - $this->penaltyAmount;
+        $this->interestAmountDue = $this->debt->interest - $this->interestAmount;
+        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->debt->principal);
+        $this->total = round($this->total, 2);
+
     }
 
     public function updated($propertyName)
@@ -95,82 +105,42 @@ class ReturnDebtWaiverApprovalProcessing extends Component
 
         }
 
-
-        if ($this->checkTransition('commissioner_general_complete')) {
-            if (!$this->forwardToCommisioner) {
-                if ($this->debt_waiver->category === DebtWaiverCategory::INTEREST) {
-                    $this->validate([
-                        'interestPercent' => 'required|numeric|min:1|max:50',
-                    ]);
-                } else if ($this->debt_waiver->category === DebtWaiverCategory::PENALTY) {
-                    $this->validate([
-                        'penaltyPercent' => 'required|numeric|min:1|max:100',
-                    ]);
-                } else if ($this->debt_waiver->category === DebtWaiverCategory::BOTH) {
-                    $this->validate([
-                        'interestPercent' => 'required|numeric|min:1|max:50',
-                        'penaltyPercent' => 'required|numeric|min:1|max:100',
-                    ]);
-                } else {
-                    $this->customAlert('warning', 'Invalid Debt Waiver Category');
-                    return;
-                }
-
-                DB::beginTransaction();
-                try {
-                    $this->debt_waiver->update([
-                        'penalty_rate' => $this->penaltyPercent ?? 0,
-                        'interest_rate' => $this->interestPercent ?? 0,
-                        'penalty_amount' => $this->penaltyAmount ?? 0,
-                        'interest_amount' => $this->interestAmount ?? 0,
-                    ]);
-
-                    if (!$this->verify($this->debt)){
-                        throw new Exception('Could not verify tax return, please contact your administrator.');
-                    }
-
-                    $this->debt->update([
-                        'penalty' => $this->penaltyAmountDue,
-                        'interest' => $this->interestAmountDue,
-                        'total_amount' => $this->total,
-                        'outstanding_amount' => $this->total,
-                        'application_status' => 'waiver',
-                    ]);
-
-                    $this->sign($this->debt);
-
-                    $this->subject->status = WaiverStatus::APPROVED;
-                    $this->subject->save();
-
-                    $notification_payload = [
-                        'debt' => $this->debt,
-                    ];
-
-                    DB::commit();
-
-                    event(new SendSms('debt-waiver-approval', $notification_payload));
-                    event(new SendMail('debt-waiver-approval', $notification_payload));
-    
-                } catch (Exception $e) {
-                    DB::rollBack();
-                    Log::error($e);
-                    $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
-                    return;
-                }
-
-                try {
-                    if ($this->debt->bill) {
-                        CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->onQueue('high');
-                        GenerateControlNo::dispatch($this->debt);
-                    } else {
-                        GenerateControlNo::dispatch($this->debt);
-                    }
-                } catch (Exception $e) {
-                    Log::error($e);
-                }
-    
+        if ($this->checkTransition('department_commissioner_review')) {
+            if ($this->debt_waiver->category === DebtWaiverCategory::INTEREST) {
+                $this->validate([
+                    'interestPercent' => 'required|numeric|min:1|max:50',
+                ]);
+            } else if ($this->debt_waiver->category === DebtWaiverCategory::PENALTY) {
+                $this->validate([
+                    'penaltyPercent' => 'required|numeric|min:1|max:100',
+                ]);
+            } else if ($this->debt_waiver->category === DebtWaiverCategory::BOTH) {
+                $this->validate([
+                    'interestPercent' => 'required|numeric|min:1|max:50',
+                    'penaltyPercent' => 'required|numeric|min:1|max:100',
+                ]);
+            } else {
+                $this->customAlert('warning', 'Invalid Debt Waiver Category');
+                return;
             }
-       
+
+
+            DB::beginTransaction();
+            try {
+                $this->debt_waiver->update([
+                    'penalty_rate' => $this->penaltyPercent ?? 0,
+                    'interest_rate' => $this->interestPercent ?? 0
+                ]);
+
+                DB::commit();
+
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+                return;
+            }
+
         }
 
         if ($this->checkTransition('commissioner_general_complete')) {
