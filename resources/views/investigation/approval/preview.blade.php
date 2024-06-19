@@ -69,7 +69,14 @@
             @if ($investigation->officers->count() > 0)
                 <div class="card">
                     <div class="card-header text-uppercase font-weight-bold bg-white">
-                        Investigation Details
+                        <div class="row">
+                            <div class="col">Investigation Details</div>
+                            <div class="col-md-2">
+                                <button class="btn btn-warning" onclick="Livewire.emit('showModal', 'investigation.edit-investigation-members-modal', '{{ encrypt($investigation) }}')">
+                                    <i class="bi bi-pencil"></i> Edit members
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -144,6 +151,16 @@
                 </div>
             @endif
 
+            <div class="card">
+                <div class="card-header text-uppercase font-weight-bold bg-white">
+                    Approval comments
+                </div>
+                <div class="card-body">
+                    <livewire:approval.approval-history-table modelName='{{ get_class($investigation) }}'
+                                                              modelId="{{ encrypt($investigation->id) }}" isSummary="{{ true }}" />
+                </div>
+            </div>
+
             @if ($investigation->assessment)
                 <div class="card">
                     <div class="card-header text-uppercase font-weight-bold bg-white">
@@ -212,7 +229,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             @endif
 
@@ -221,18 +237,17 @@
 
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            {{-- @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
+            @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
                 @livewire("investigation.declared-sales-analysis", ["investigationId" => encrypt($investigation->id), "tax_type_id" => encrypt($investigation->tax_type_id), "location_id" => encrypt($investigation->location_id)])
             @else
                 @livewire("investigation.declared-sales-analysis-instances", ["investigationId" => encrypt($investigation->id)])
-            @endif --}}
+            @endif
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">
                 <div class="card-body">
                     <livewire:approval.approval-history-table modelName='{{ get_class($investigation) }}'
                         modelId="{{ encrypt($investigation->id) }}" />
-
                 </div>
             </div>
         </div>

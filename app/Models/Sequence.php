@@ -13,5 +13,7 @@ class Sequence extends Model
     const TAX_CLEARANCE = 'taxClearance';
     const TAX_CLEARANCE_YEAR = 'taxClearanceYear';
 
+    protected $fillable = ['next_id'];
+
     protected $guarded = [];
 }

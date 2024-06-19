@@ -62,7 +62,7 @@ class TaxClearanceController extends Controller
 
             $last_cert = Sequence::query()->where('name', Sequence::TAX_CLEARANCE)->first();
             if ($last_cert){
-                if ($last_cert->update(['next_id' => $sequence, Sequence::TAX_CLEARANCE_YEAR => $year])){
+                if ($last_cert->update(['next_id' => $sequence])){
                     DB::commit();
                     return 'success';
                 }else{
@@ -109,7 +109,6 @@ class TaxClearanceController extends Controller
             ->with('businessLocation.business')
             ->firstOrFail();
 
-
         $tax_return_debts = TaxReturn::where('location_id', $taxClearance->business_location_id)
             ->where('business_id', $taxClearance->business_id)
             ->where('payment_status', '!=', ReturnStatus::COMPLETE)
@@ -140,6 +139,7 @@ class TaxClearanceController extends Controller
             'TZS' => ['credit' => $tzsCreditSum, 'debit' => $tzsDebitSum],
             'USD' => ['credit' => $usdCreditSum, 'debit' => $usdDebitSum],
         ];
+
         return view('tax-clearance.clearance-request', compact('taxClearance', 'summations', 'ledgers'));
     }
 
@@ -167,32 +167,27 @@ class TaxClearanceController extends Controller
         foreach ($tax_return_debts as $return) {
             $this->verify($return);
         }
+        $businessLocationId = $taxClearance->business_location_id;
 
-        $land_lease_debts = LandLeaseDebt::where('business_location_id', $taxClearance->business_location_id)
-        ->whereNotIn('status', [LeaseStatus::PAID_PARTIALLY, LeaseStatus::COMPLETE, LeaseStatus::LATE_PAYMENT, LeaseStatus::ON_TIME_PAYMENT, LeaseStatus::IN_ADVANCE_PAYMENT])
-        ->get();
-        
-        $locations = [$taxClearance->business_location_id];
-        
-        $investigationDebts = TaxAssessment::whereHasMorph('assessment', [TaxInvestigation::class], function($query) use($locations) {
-                $query->whereHas('taxInvestigationLocations', function($q) use($locations) {
-                    $q->whereIn('business_location_id', $locations);
-                });
-            })
-            ->get();
-        
-        $auditDebts = TaxAssessment::whereHasMorph('assessment', [TaxAudit::class], function($query) use($locations) {
-                $query->whereHas('taxAuditLocations', function($q) use($locations) {
-                    $q->whereIn('business_location_id', $locations);
-                });
-            })
-            ->get();
+        $tzsLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::TZS, $businessLocationId);
+        $usdLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::USD, $businessLocationId);
 
-        $verificateionDebts = TaxAssessment::whereHasMorph('assessment', [TaxVerification::class])
-                                ->where('location_id', $taxClearance->business_location_id)
-                                ->get();
+        $ledgers = [
+            'TZS' => TaxpayerLedgerController::joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
+            'USD' => TaxpayerLedgerController::joinLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
+        ];
+
+        $tzsCreditSum = $tzsLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;
+        $tzsDebitSum = $tzsLedgers['debitLedgers']->sum('total_debit_amount') ?? 0;
+        $usdCreditSum = $usdLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;
+        $usdDebitSum = $usdLedgers['debitLedgers']->sum('total_debit_amount') ?? 0;
+
+        $summations = [
+            'TZS' => ['credit' => $tzsCreditSum, 'debit' => $tzsDebitSum],
+            'USD' => ['credit' => $usdCreditSum, 'debit' => $usdDebitSum],
+        ];
         
-        return view('tax-clearance.approval', compact('tax_return_debts', 'taxClearance', 'land_lease_debts', 'investigationDebts', 'auditDebts', 'verificateionDebts'));
+        return view('tax-clearance.approval', compact('taxClearance', 'summations', 'ledgers'));
     }
 
     public function generateReturnsDebts($business_location_id)
@@ -263,7 +258,7 @@ class TaxClearanceController extends Controller
 
         $location = $taxClearanceRequest->businessLocation;
 
-        $url = env('TAXPAYER_URL') . route('qrcode-check.tax-clearance.certificate', ['clearanceId' =>  base64_encode(strval($clearanceId))], 0);
+        $url = config('modulesconfig.taxpayer_url') . route('qrcode-check.tax-clearance.certificate', ['clearanceId' =>  base64_encode($taxClearanceRequestId)], 0);
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])

@@ -208,8 +208,8 @@ class DeclaredSalesAnalysis extends Component
             ->get()->groupBy(['year', 'month']);
 
         $yearData = $this->formatDataArray($yearReturnGroup);
-
-        $this->withoutPurchases = true;
+//
+//        $this->withoutPurchases = true;
         $this->returns = $yearData;
         $this->headersPetroleum = $headers;
     }
@@ -392,9 +392,10 @@ class DeclaredSalesAnalysis extends Component
     {
         $yearData = [];
         foreach ($yearReturnGroup as $keyYear => $monthreturnGroup) {
+            $monthreturnGroup = $monthreturnGroup->toArray();
             $monthData = array_map(function ($returnItems) use ($keyYear) {
                 $itemValue = [
-                    'month' => $returnItems['keyMonth'],
+                    'month' => array_column($returnItems, 'month')[0],
                     'totalValue' => array_sum(array_column($returnItems, 'value')),
                     'totalVat' => array_sum(array_column($returnItems, 'vat')),
                 ];
@@ -414,9 +415,10 @@ class DeclaredSalesAnalysis extends Component
     {
         $yearData = [];
         foreach ($yearReturnGroup as $keyYear => $monthreturnGroup) {
+            $monthreturnGroup = $monthreturnGroup->toArray();
             $monthData = array_map(function ($returnItems) {
                 $itemValue = [
-                    'month' => $returnItems['keyMonth'],
+                    'month' => array_column($returnItems, 'month')[0],
                     'totalValue' => array_sum(array_column($returnItems, 'value')),
                 ];
 
@@ -437,14 +439,16 @@ class DeclaredSalesAnalysis extends Component
     {
         $yearData = [];
         foreach ($yearReturnGroup as $keyYear => $quaterReturnGroup) {
+            $quaterReturnGroup = $quaterReturnGroup->toArray();
             $quarterData = array_map(function ($returnItems) {
+//                dd(array_column($returnItems, 'return_months'));
                 $itemValue = [
-                    'quarter' => $returnItems['keyMonth'],
-                    'installment' => $returnItems['installment'],
-                    'quarter_name' => $returnItems['quarter_name'],
-                    'amountWithPenalties' => $returnItems['total_amount_due_with_penalties'],
-                    'principalAmount' => $returnItems['total_amount_due'],
-                    'Penalties' => (float)$returnItems['total_amount_due_with_penalties'] - (float)$returnItems['total_amount_due'],
+                    'quarter' => array_column($returnItems, 'return_months'),
+                    'installment' => array_column($returnItems, 'installment'),
+                    'quarter_name' => array_column($returnItems, 'quarter_name'),
+                    'amountWithPenalties' => array_column($returnItems, 'total_amount_due_with_penalties'),
+                    'principalAmount' => array_column($returnItems, 'total_amount_due'),
+                    'Penalties' => (float)array_column($returnItems, 'total_amount_due_with_penalties') - (float)array_column($returnItems, 'total_amount_due'),
                 ];
                 return $itemValue;
             }, $quaterReturnGroup);

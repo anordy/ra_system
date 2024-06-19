@@ -51,7 +51,7 @@ class TaxInvestigationApprovalController extends Controller
             $taxAssessments = TaxAssessment::where('assessment_id', $investigation->id)
                 ->where('assessment_type', get_class($investigation))->get();
 
-            return view('investigation.approval.preview', compact('investigation', 'taxAssessments', 'investigationDocuments'));
+            return view('investigation.approval.preview', compact('investigation', 'taxAssessments'));
         } catch (\Exception $e) {
             Log::error('Error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),

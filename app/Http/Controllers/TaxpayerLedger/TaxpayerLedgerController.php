@@ -38,6 +38,7 @@ class TaxpayerLedgerController extends Controller
 
             $tzsLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
                 ->where('business_location_id', $businessLocationId)
+                ->where('tax_type_id', $taxTypeId)
                 ->where('currency', Currencies::TZS)
                 ->orderBy('source_type', 'ASC')
                 ->orderBy('source_id', 'ASC')
@@ -45,10 +46,17 @@ class TaxpayerLedgerController extends Controller
 
             $usdLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
                 ->where('business_location_id', $businessLocationId)
+                ->where('tax_type_id', $taxTypeId)
                 ->where('currency', Currencies::USD)
                 ->orderBy('source_type', 'ASC')
                 ->orderBy('source_id', 'ASC')
-                ->orderBy('financial_month_id', 'ASC');
+                ->orderBy('financial_month_id', 'ASC')
+                ->get();
+
+            $ledgers = [
+                'USD' => $usdLedgers,
+                'TZS' => $tzsLedgers
+            ];
 
             $locationName = BusinessLocation::findOrFail($businessLocationId, ['name'])->name;
 

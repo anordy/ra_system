@@ -8,7 +8,7 @@
                 <table class="table table-sm px-2">
                     <thead>
                     <tr>
-                        <th>No</th>
+                        <th>#</th>
                         <th>Tax Type</th>
                         <th>Debit Amount</th>
                         <th>Credit Amount</th>
@@ -27,7 +27,7 @@
                     @endforeach
                     <tr>
                         <td class="px-2"></td>
-                        <td class="px-2"></td>
+                        <td class="px-2">@if(count($ledgers['TZS']) <= 0) N/A @endif</td>
                         <td class="px-2 font-weight-bold">{{ number_format($summations['TZS']['debit'], 2) }}</td>
                         <td class="px-2 font-weight-bold">{{ number_format($summations['TZS']['credit'], 2)   }}</td>
                         <td class="px-2 font-weight-bold">{{ number_format($summations['TZS']['credit'] - $summations['TZS']['debit'], 2)   }}</td>
@@ -47,7 +47,7 @@
                 <table class="table table-sm px-2">
                     <thead>
                     <tr>
-                        <th>No</th>
+                        <th>#</th>
                         <th>Tax Type</th>
                         <th>Debit Amount</th>
                         <th>Credit Amount</th>
@@ -66,7 +66,7 @@
                     @endforeach
                     <tr>
                         <td class="px-2"></td>
-                        <td class="px-2"></td>
+                        <td class="px-2">N/A</td>
                         <td class="px-2 font-weight-bold">{{ number_format($summations['USD']['debit'], 2) }}</td>
                         <td class="px-2 font-weight-bold">{{ number_format($summations['USD']['credit'], 2)   }}</td>
                         <td class="px-2 font-weight-bold">{{ number_format($summations['USD']['credit'] - $summations['USD']['debit'], 2)   }}</td>

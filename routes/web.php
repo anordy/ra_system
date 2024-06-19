@@ -21,6 +21,7 @@ use App\Http\Controllers\PublicService\PublicServiceController;
 use App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController;
 use App\Http\Controllers\TaxRefund\TaxRefundController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
+use App\Http\Controllers\RoadLicense\RoadLicenseController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -162,11 +163,12 @@ Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name(
 Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
     Route::get('/withholding-agent-certificate/{id}', [QRCodeCheckController::class, 'withholdingAgentCertificate'])->name('withholding-agent.certificate');
     Route::get('/business-certificate/{locationId}/{taxTypeId}', [QRCodeCheckController::class, 'businessCertificate'])->name('business.certificate');
-    Route::get('/clearance-certificate/{clearanceId}', [QRCodeCheckController::class, 'taxClearanceCertificate'])->name('tax-clearance.certificate');
     Route::get('/taxagents-certificate/{id}', [QRCodeCheckController::class, 'taxAgentsCertificate'])->name('taxagents.certificate');
     Route::get('/invoice/{id}', [QRCodeCheckController::class, 'invoice'])->name('invoice');
     Route::get('/transfer/{billId}', [QRCodeCheckController::class, 'transfer'])->name('transfer');
     Route::get('/mvr/de-registration/{id}', [QRCodeCheckController::class, 'mvrDeregistrationCertificate'])->name('mvr.de-registration');
+    Route::get('/mvr/registration/{id}', [QRCodeCheckController::class, 'mvrRegistrationCertificate'])->name('mvr.registration');
+    Route::get('/road-license/{roadLicenseId}', [QRCodeCheckController::class, 'roadLicenseSticker'])->name('road-license.sticker');
 });
 
 Route::middleware('auth')->group(function () {
@@ -176,17 +178,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/kill', [TwoFactorAuthController::class, 'kill'])->name('session.kill');
 
     // OTP using Security Qns
-    //Route::get('2fa/security-questions', [TwoFactorAuthController::class, 'securityQuestions'])->name('2fa.security-questions');
+    Route::get('2fa/security-questions', [TwoFactorAuthController::class, 'securityQuestions'])->name('2fa.security-questions');
 
     Route::get('password/change', [ChangePasswordController::class, 'index'])->name('password.change');
     Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.store');
 });
 
-// Route::middleware(['2fa', 'auth'])->group(function (){
-//     Route::get('/account/login-security-questions', [AccountController::class, 'preSecurityQuestions'])->name('account.pre-security-questions');
-// });
+ Route::middleware(['2fa', 'auth'])->group(function (){
+     Route::get('/account/login-security-questions', [AccountController::class, 'preSecurityQuestions'])->name('account.pre-security-questions');
+ });
 
-Route::middleware(['2fa', 'auth'])->group(function () {
+Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
 
@@ -251,7 +253,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor|MvrRegistrationType|PortLocation');
+                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlRestriction|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor|MvrRegistrationType');
         });
         Route::name('return-config.')->prefix('return-config')->group(function () {
             Route::get('/', [ReturnController::class, 'taxTypes'])->name('index');
@@ -520,6 +522,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
+        Route::get('tax-payer',[\App\Http\Controllers\Reports\TaxPayer\TaxPayerReportController::class,'index']);
+
         Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
 
@@ -721,6 +725,12 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/agent', [AgentsController::class, 'index'])->name('agent');
         Route::get('/agent/create', [AgentsController::class, 'create'])->name('agent.create');
         Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
+    });
+
+    Route::name('road-license.')->prefix('road-license')->group(function () {
+        Route::get('/show/{id}', [RoadLicenseController::class, 'show'])->name('show');
+        Route::get('/index', [RoadLicenseController::class, 'index'])->name('index');
+        Route::get('/sticker/{id}', [RoadLicenseController::class, 'sticker'])->name('sticker');
     });
 
     Route::prefix('drivers-license')->as('drivers-license.')->group(function () {

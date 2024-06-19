@@ -53,12 +53,13 @@ class TaxClearenceApprovalProcessing extends Component
             'comments' => 'required|string|strip_tag',
         ]);
 
-        if ($this->checkTransition('crdm_review')) {
+        if ($this->checkTransition('review')) {
 
-            try {
 //                fetch latest tax clearance certificate
-                $last_sequence = Sequence::query()->select('next_id')->where('name', Sequence::TAX_CLEARANCE)->first();
-                $last_year = Sequence::query()->select('next_id')->where('name', Sequence::TAX_CLEARANCE_YEAR)->first();
+            $last_sequence = Sequence::query()->select('next_id')->where('name', Sequence::TAX_CLEARANCE)->first();
+            $last_year = Sequence::query()->select('next_id')->where('name', Sequence::TAX_CLEARANCE_YEAR)->first();
+            DB::beginTransaction();
+            try {
                 $cert_no = date("Y").'00001';
                 if ($last_sequence && $last_year){
                     $incrementedDigits = $last_sequence->next_id;
@@ -68,13 +69,30 @@ class TaxClearenceApprovalProcessing extends Component
 //                    increment only if it's the same year
                     if (date('Y') == $year){
                         $cert_no = $year . $formattedDigits;
+                    }else{
+//                        update year
+                        $last_year->next_id = date('Y');
+                        if (!$last_year->save()){
+                            DB::rollBack();
+                            $this->customAlert('error', 'Could not generate certificate.');
+                            return;
+                        }
                     }
+
+                    $affectedRows = DB::update('UPDATE sequences SET next_id = next_id + 1 WHERE name = ?', [Sequence::TAX_CLEARANCE]);
+                    if ($affectedRows === 0){
+                        DB::rollBack();
+                        $this->customAlert('error', 'Could not generate certificate.');
+                        return;
+                    }
+
                 }
                 $this->subject->status = TaxClearanceStatus::APPROVED;
                 $this->subject->certificate_number = $cert_no;
                 $this->subject->save();
 
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+                DB::commit();
 
                 $emailPayload = [
                     $this->tax_clearence->businessLocation,
@@ -99,9 +117,13 @@ class TaxClearenceApprovalProcessing extends Component
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
                 return;
             }
-        } else {
-            $this->flash('warning', 'You do not have authority to approve this request!');
+        }else if ($this->checkTransition('officer_review')) {
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+        }else{
+            $this->flash('success', 'You do not have permission to this action!', [], redirect()->back()->getTargetUrl());
         }
+ 	
     }
 
     public function reject($transition)

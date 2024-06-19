@@ -30,17 +30,41 @@
                     </div>
                     <div class="col-lg-6 form-group">
                         <label for="exampleFormControlTextarea1">Team Member</label>
-                        <select class="form-control @error("teamMember") is-invalid @enderror" wire:model="teamMember">
-                            <option value='null' disabled selected>Select</option>
-                            @foreach ($staffs as $row)
-                                <option value="{{ $row->id }}">{{ $row->full_name }}</option>
-                            @endforeach
-                        </select>
-                        @error("teamMember")
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                        <button class="btn btn-primary float-right" wire:click="addSelect">+ Add member</button>
+                        @foreach($teamMembers as $key => $teamMember)
+                            @if($key > 0)
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <select class="form-control @error("teamMembers.{{ $key }}") is-invalid @enderror" wire:model="teamMembers.{{ $key }}">
+                                            <option value='' disabled selected>Select</option>
+                                            @foreach ($staffs as $row)
+                                                <option value="{{ $row->id }}">{{ $row->full_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error("teamMembers.{{ $key }}")
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-danger" wire:click="removeSelect({{ $key }})">Remove</button>
+                                    </div>
+                                </div>
+                            @else
+                                <select class="form-control mt-2 @error("teamMembers.{{ $key }}") is-invalid @enderror" wire:model="teamMembers.{{ $key }}">
+                                    <option value='' disabled selected>Select</option>
+                                    @foreach ($staffs as $row)
+                                        <option value="{{ $row->id }}">{{ $row->full_name }}</option>
+                                    @endforeach
+                                </select>
+                                @error("teamMembers.{{ $key }}")
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            @endif
+                        @endforeach
                     </div>
                     <div class="col-lg-6 form-group">
                         <label for="periodFrom">Investigation Period From</label>
@@ -331,6 +355,10 @@
             </div>
         @elseif ($this->checkTransition("extension_approved"))
             <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-danger"
+                        wire:click="confirmPopUpModal('rejectExtension', 'extension_approved')">
+                    Reject extension
+                </button>
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'extension_approved')">
                     Agree/Amend to Extension Date
                 </button>
