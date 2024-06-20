@@ -143,7 +143,7 @@
             </div>
 
             @if ($validPeriodTerm == 'other')
-                <x-input name="customPeriod" type="number" label="{{ __('Specify Valid Period') }} (Days) *"></x-input>
+                <x-input name="customPeriod" type="number" label="{{ __('Specify Valid Period') }} (Years) *"></x-input>
             @endif
 
             <x-input name="paymentAmount" type="number" label="{{ __('Payment Amount') }} (USD)" required></x-input>
