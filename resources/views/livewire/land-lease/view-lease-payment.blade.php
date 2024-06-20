@@ -222,10 +222,7 @@
                     <span class="font-weight-bold text-uppercase">Payment Amount</span>
                     <p class="my-1">{{ number_format($leasePayment->landLease->payment_amount) }} USD</p>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Valid Period Term</span>
-                    <p class="my-1">{{ $leasePayment->landLease->valid_period_term }} years</p>
-                </div>
+              
             </div>
 
             <div class="row">
