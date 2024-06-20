@@ -54,12 +54,12 @@ class LandLeaseRegistrationApproveList extends DataTableComponent
             Column::make("Completed Date", 'completed_at')
                 ->searchable()
                 ->sortable(),
-//            Column::make("Initiator", 'created_by')
-//                ->format(function ($value, $row) {
-//                    return $this->getInitiator($row['created_by']);
-//                })
-//                ->searchable()
-//                ->sortable(),
+            /*Column::make("Initiator", 'created_by')
+                ->format(function ($value, $row) {
+                    return $this->getInitiator($row['created_by']);
+                })
+                ->searchable()
+                ->sortable(),*/
             Column::make("Approval Status", "approval_status")->view("land-lease.includes.registration-approval-status"),
             Column::make("Reject Reason", "comments")
                 ->format(function ($value, $row) {
