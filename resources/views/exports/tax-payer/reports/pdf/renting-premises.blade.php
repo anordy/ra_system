@@ -42,6 +42,10 @@
             font-size: 30px;
         }
 
+        .title {
+            text-transform: uppercase;
+        }
+
         .table {
             border: 1px solid black;
             width: 100%;
@@ -56,6 +60,10 @@
 
         .text-center {
             text-align: center;
+        }
+
+        .text-end{
+            text-align: right;
         }
 
 
@@ -77,7 +85,7 @@
     <tr>
         <th class="text-center" colspan="15">
             <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
-            <strong>{{ $title }}</strong><br>
+            <strong class="title">{{ $tittle }}</strong><br>
         </th>
     </tr>
     </thead>
@@ -90,100 +98,52 @@
             <strong>S/N</strong>
         </th>
         <th class="text-center border">
-            <strong>Tax Payer</strong>
+            <strong>BUSINESS NAME</strong>
         </th>
         <th class="text-center border">
-            <strong>Business</strong>
+            <strong>BUSINESS LOCATION</strong>
         </th>
         <th class="text-center border">
-            <strong>Location</strong>
+            <strong>ZIN</strong>
         </th>
         <th class="text-center border">
-            <strong>Tax Type</strong>
+            <strong>FULL NAME</strong>
         </th>
         <th class="text-center border">
-            <strong>Currency</strong>
+            <strong>PHONE NUMBER</strong>
         </th>
         <th class="text-center border">
-            <strong>Amount</strong>
-        </th>
-        <th class="text-center border">
-            <strong>Financial Month</strong>
-        </th>
-        <th class="text-center border">
-            <strong>Financial Year</strong>
-        </th>
-        <th class="text-center border">
-            <strong>Created At</strong>
-        </th>
-        <th class="text-center border">
-            <strong>Claim Status</strong>
-        </th>
-        <th class="text-center border">
-            <strong>Approved On</strong>
-        </th>
-        <th class="text-center border">
-            <strong>Payment Method</strong>
-        </th>
-        <th class="text-center border">
-            <strong>Installments Count</strong>
-        </th>
-        <th class="text-center border">
-            <strong>Payment Status</strong>
+            <strong>CREATED AT</strong>
         </th>
     </tr>
     </thead>
     <tbody>
-{{--    @foreach ($records as $index => $record)--}}
-{{--        <tr>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $index + 1 }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->business->taxpayer->first_name.' '.$record->business->taxpayer->middle_name.' '.$record->business->taxpayer->last_name ?? '-' }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->business->name ?? '-' }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->location->name ?? '-' }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->taxType->name ?? '-' }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->currency ?? '-' }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->amount===null?'-':number_format($record->amount, 2) }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->financialMonth->name ?? '-'}}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->financialMonth->year->code ?? '-'}}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->created_at ?? '-' }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->status ?? '-' }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->approved_on ?? '-' }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->payment_method ?? '-' }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->installments_count ?? '-' }}--}}
-{{--            </td>--}}
-{{--            <td class="text-center border">--}}
-{{--                {{ $record->payment_status ?? '-' }}--}}
-{{--            </td>--}}
+    @foreach ($records as $index => $record)
+        <tr>
+            <td class="text-center border">
+                {{ $index + 1 }}
+            </td>
+            <td class="text-center border">
+                {{ $record->business_name ?? '-' }}
+            </td>
+            <td class="text-center border">
+                {{ $record->business_location ?? '-' }}
+            </td>
+            <td class="text-center border">
+                {{ $record->zin ?? '-'}}
+            </td>
+            <td class="text-center border">
+                {{ $record->first_name ?? ''}} {{ $record->middle_name ?? ''}} {{ $record->last_name ?? ''}}
+            </td>
+            <td class="text-center border">
+                {{ $record->mobile ?? '-'}}
+            </td>
+            <td class="text-center border">
+                {{ date('Y-m-d', strtotime($record->created_at)) ?? '-' }}
+            </td>
 
-{{--        </tr>--}}
-{{--    @endforeach--}}
+        </tr>
+    @endforeach
     </tbody>
 </table>
 </body>

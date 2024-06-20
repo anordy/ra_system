@@ -115,7 +115,7 @@ class TaxPayer extends Component
 
             if ($this->format == ReportFormats::PDF) {
                 $this->fileName = $this->exportPdf($results, $payload);
-                $this->customAlert('success', 'Exporting Pdf File');
+                $this->customAlert('success', 'Report exported successfully. Download the Pdf File');
 
             }
 
