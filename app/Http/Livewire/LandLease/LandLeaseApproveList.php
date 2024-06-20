@@ -169,7 +169,7 @@ class LandLeaseApproveList extends DataTableComponent
                 case 'approve':
                     $partialPayment->update(['status' => 'approved']);
                     $partialPayment->refresh();
-//                 $this->generateControlNumber($partialPayment);
+					$this->generateControlNumber($partialPayment);
                     //update lease payment
                     DB::commit();
                     $this->customAlert('success', 'Lease payment approved successfully', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
