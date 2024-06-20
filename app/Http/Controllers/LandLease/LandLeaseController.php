@@ -105,7 +105,7 @@ class LandLeaseController extends Controller
             session()->flash('error', 'Status failed to change');
             return redirect()->back();
         }
-        
+
     }
 
     public function downloadLandLeaseReportPdf($datesJson)
@@ -132,8 +132,8 @@ class LandLeaseController extends Controller
         }
 
         $landLeases = $landLeases->whereNotNull('completed_at')->get();
-        $from = \Carbon\Carbon::parse($dates['startDate']); 
-        $to = \Carbon\Carbon::parse($dates['endDate']); 
+        $from = \Carbon\Carbon::parse($dates['startDate']);
+        $to = \Carbon\Carbon::parse($dates['endDate']);
         $startDate= $from->format('Y-m-d');
         $endDate = $to->format('Y-m-d');
         $pdf = PDF::loadView('exports.land-lease.pdf.land-lease-report',compact('landLeases','startDate','endDate'));
@@ -149,7 +149,7 @@ class LandLeaseController extends Controller
         if (!Gate::allows('land-lease-generate-report')) {
             abort(403);
         }
-        
+
         $data = json_decode(decrypt($parameter),true);
         $dates = $data['dates'];
         $status = $data['status'];
@@ -166,16 +166,16 @@ class LandLeaseController extends Controller
                 $months = $this->getMonthList($dates);
                 $years = $this->getYearList($dates);
                 $leasePayments = LeasePayment::query()
-                ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
-                ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
-                ->whereIn("land_leases.{$this->date_type}", $months)
-                ->whereIn("financial_years.code", $years);
+                    ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
+                    ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+                    ->whereIn("land_leases.{$this->date_type}", $months)
+                    ->whereIn("financial_years.code", $years);
 
             } elseif ($date_type == 'payment_year') {
                 $years = $this->getYearList($dates);
                 $leasePayments = LeasePayment::query()
-                ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
-                ->whereIn("financial_years.code", $years);
+                    ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+                    ->whereIn("financial_years.code", $years);
 
             }else {
                 $leasePayments = LeasePayment::query()->whereBetween("lease_payments.{$date_type}", [$dates['startDate'], $dates['endDate']]);
@@ -192,8 +192,8 @@ class LandLeaseController extends Controller
         }
 
         $leasePayments = $leasePayments->get();
-        $from = \Carbon\Carbon::parse($dates['startDate']); 
-        $to = \Carbon\Carbon::parse($dates['endDate']); 
+        $from = \Carbon\Carbon::parse($dates['startDate']);
+        $to = \Carbon\Carbon::parse($dates['endDate']);
         $startDate= $from->format('Y-m-d');
         $endDate = $to->format('Y-m-d');
         $pdf = PDF::loadView('exports.land-lease.pdf.lease-payment-report',compact('leasePayments','startDate','endDate'));
