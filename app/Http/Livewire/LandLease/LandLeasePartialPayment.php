@@ -4,6 +4,7 @@ namespace App\Http\Livewire\LandLease;
 
 use App\Models\LeasePayment;
 use App\Models\TaxType;
+use App\Models\ZmBill;
 use App\Services\ZanMalipo\GepgResponse;
 use App\Traits\PaymentsTrait;
 use App\Traits\PenaltyTrait;
@@ -38,10 +39,11 @@ class LandLeasePartialPayment extends Component
     }
 
     public function regenerate(){
-        $response = $this->regenerateControlNo($this->leasePayment->bill());
+		//dd($this->leasePartialPayment->bill);
+        $response = $this->regenerateControlNo($this->leasePartialPayment->bill);
         if ($response){
             session()->flash('success', __('Your request was submitted, you will receive your payment information shortly.'));
-            $this->leasePayment = get_class($this->leasePayment)::find($this->leasePayment->id);
+            $this->leasePayment = get_class($this->leasePartialPayment)::find($this->leasePartialPayment->id);
         } else {
             $this->customAlert('error', __('Control number could not be generated, please try again later.'));
         }
@@ -66,4 +68,6 @@ class LandLeasePartialPayment extends Component
     public function render(){
         return view('livewire.land-lease.land-lease-partial-payment');
     }
+	
+	
 }
