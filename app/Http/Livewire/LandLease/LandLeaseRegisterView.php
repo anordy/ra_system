@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\LandLease;
 
 use App\Models\LandLease;
+use App\Models\LandLeaseFiles;
 use App\Models\User;
 use App\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +36,9 @@ class LandLeaseRegisterView extends Component
     {
         //get land lease
         $this->landLease = LandLease::find(decrypt($enc_id));
-        $this->previousLeaseAgreementPath = $this->landLease->lease_agreement_path;
+        $this->previousLeaseAgreementPath = LandLeaseFiles::select('file_path','name')
+            ->where('land_lease_id',
+            $this->landLease->id)->get();
     }
 
 
@@ -48,15 +51,20 @@ class LandLeaseRegisterView extends Component
     public function submit($action)
     {
         if (!Gate::allows('land-lease-approve-registration')) {
-            $this->customAlert('error','You are not allowed to perform this action, Contact administrator.');
+            $this->customAlert('error', 'You are not allowed to perform this action, Contact administrator.');
             return;
         }
         try {
             $landLease = $this->landLease;
+            //check if it was approved earlier
+            if ($landLease->approval_status !== 'pending') {
+                $this->customAlert('error', 'This Lease is already actioned, Contact administrator.');
+                return;
+            }
             switch ($action) {
                 case 'approved':
                     $landLease->update(['approval_status' => 'approved', 'approved_by' => Auth::user()->id, 'approved_at' => now
-                    ()]);
+                    (), 'comments' => $this->comments]);
                     break;
                 case 'rejected':
                     $landLease->update(['approval_status' => 'rejected', 'is_registered' => false, 'lease_status' => 2,
@@ -93,5 +101,7 @@ class LandLeaseRegisterView extends Component
             ));
         }
     }
+
+
 }
 

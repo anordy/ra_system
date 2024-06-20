@@ -6,15 +6,18 @@
             </div>
 
             <div class="row mt-5">
-                <div class="col-4">
-                    <a class="file-item" target="_blank"
-                       href="{{ route('land-lease.get.lease.document', ['path' => encrypt($previousLeaseAgreementPath)]) }}">
-                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                        <div style="font-weight: 500;" class="ml-1">
-                            {{ __('Lease Agreement Document (Preview)') }}
-                        </div>
-                    </a>
-                </div>
+                @foreach($previousLeaseAgreementPath as $file)
+                    <div class="col-4">
+                        <a class="file-item" target="_blank"
+                           href="{{ route('land-lease.get.lease.document', ['path' => encrypt($file->file_path)]) }}">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <div style="font-weight: 500;" class="ml-1">
+                                {{ $file->name }}
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+
                 <div class="col-8">
                     <label> <b>{{ __('Comments (Optional)') }}</b></label>
                     <textarea class="form-control" rows="4" placeholder="comments (optional)"

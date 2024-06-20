@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\LandLease;
 
+use App\Models\LandLeaseFiles;
 use App\Models\LeasePayment;
 use App\Models\PartialPayment;
 use App\Traits\PaymentsTrait;
@@ -14,6 +15,7 @@ class ViewLeasePayment extends Component
     public $landLease;
     public $leasePayment;
     public $partialPayment;
+    public $previousLeaseAgreementPath;
 
     public function mount($enc_id)
     {
@@ -21,7 +23,9 @@ class ViewLeasePayment extends Component
         if(is_null($this->leasePayment)){
             abort(404);
         }
-
+        $this->previousLeaseAgreementPath = LandLeaseFiles::select('file_path','name')
+            ->where('land_lease_id',
+                $this->leasePayment->land_lease_id)->get();
         //check if it exists in partial payments
         $this->pendingPartialPayment = $this->getPendingPartialPayment();
         $this->pendingPartialPaymentStatus = $this->getPartialPaymentStatus();

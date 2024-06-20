@@ -40,6 +40,10 @@ class LandLease extends Model implements Auditable
     {
         return $this->belongsTo(Taxpayer::class, 'created_by');
     }
+    public function completedBy()
+    {
+        return $this->belongsTo(User::class, 'completed_by');
+    }
 
     public function zmBills()
     {

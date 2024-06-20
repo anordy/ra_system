@@ -4,6 +4,7 @@ namespace App\Http\Livewire\LandLease;
 
 use App\Enum\LeaseStatus;
 use App\Models\LandLease;
+use App\Models\LandLeaseFiles;
 use App\Models\LeasePayment;
 use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
@@ -32,13 +33,16 @@ class LandLeaseView extends Component
     public const ADVANCE_PAYMENT_MAX_YEARS = 3;
 
     //mount function
+    public $leaseDocuments;
+
     public function mount($enc_id)
     {
+
         $this->landLease = LandLease::find(decrypt($enc_id));
         if (is_null($this->landLease)) {
             abort(404);
         }
-
+        $this->leaseDocuments = $this->leaseDocuments($this->landLease->id);
         $statuses = [
             LeaseStatus::IN_ADVANCE_PAYMENT,
             LeaseStatus::LATE_PAYMENT,
@@ -183,5 +187,10 @@ class LandLeaseView extends Component
     {
         return LeasePayment::where('land_lease_id', $this->landLease->id)->orderBy('id', 'desc')->first()
             ->paid_at;
+    }
+
+    public function leaseDocuments($id)
+    {
+        return LandLeaseFiles::select('name','file_path')->where('land_lease_id', $id)->get();
     }
 }

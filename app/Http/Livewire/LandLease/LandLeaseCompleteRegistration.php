@@ -130,7 +130,7 @@ class LandLeaseCompleteRegistration extends Component
         }
 
         if ($propertyName === 'zrbNumber') {
-            $taxPayer = TaxPayer::where('reference_no', $this->zrbNumber)->first();
+            $taxPayer = DB::table('taxpayers')->where('reference_no', $this->zrbNumber)->first();
             if ($taxPayer) {
                 $this->taxpayerName = $taxPayer->first_name . ' ' . $taxPayer->last_name;
                 $this->showTaxpayerDetails = true;
@@ -327,7 +327,7 @@ class LandLeaseCompleteRegistration extends Component
                 $this->createLeasePayment($this->landLease);
             } else {
                 if ($this->applicantType == 'registered') {
-                    $taxpayer = TaxPayer::where('reference_no', $this->zrbNumber)->first();
+                    $taxpayer = DB::table('taxpayers')->where('reference_no', $this->zrbNumber)->first();
 
                     $this->landLease->is_registered = true;
                     $this->landLease->taxpayer_id = $taxpayer->id;

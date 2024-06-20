@@ -3,19 +3,37 @@
         <div class="card-header text-uppercase font-weight-bold bg-white">
             {{ __('Lease Information') }}
         </div>
-        <div class="row pt-3">
-            <div x-data="{ isUploading: false, progress: 0 }" x-on:livewire-upload-start="isUploading = true"
-                 x-on:livewire-upload-finish="isUploading = false" x-on:livewire-upload-error="isUploading = false"
-                 x-on:livewire-upload-progress="progress = $event.detail.progress">
-                <x-input name="leaseAgreement" label="{{ __('Lease Agreement Document') }}" col="12"
-                         type="file" required></x-input>
+        @foreach ($files as $index => $file)
+            <div class="row mb-3 mt-3">
 
-                <!-- Progress Bar -->
-                <div x-show="isUploading">
-                    <progress max="100" x-bind:value="progress"></progress>
+                <div class="col-md-4">
+                    <label>{{__("Document Name*")}}</label>
+                    <input type="text" wire:model.defer="files.{{ $index }}.name" class="form-control"
+                           placeholder="Enter Document Name" value="{{ $file["name"] }}">
+                    @error("files.$index.name")
+                    <span class="text-danger">{{ __("Document name is required") }}</span>
+                    @enderror
                 </div>
+                <div class="col-md-4">
+                    <label>{{__("File*")}}</label>
+                    <input type="file" wire:model.defer="files.{{ $index }}.file" class="form-control">
+                    @error("files.$index.file")
+                    <span class="text-danger">{{ __("This field is required. PDF Format accepted") }}</span>
+                    @enderror
+                </div>
+                @if ($index > 0)
+                    <div class="col-md-1">
+                        <button wire:click="removeFileInput({{ $index }})" class="btn btn-danger">
+                            Remove
+                        </button>
+                    </div>
+                @endif
             </div>
-        </div>
+        @endforeach
+
+        <button wire:click="addFileInput" wire:loading.attr="disabled" class="btn btn-primary">Add More
+            File
+        </button>
     </div>
 
     <div class="row mt-3">

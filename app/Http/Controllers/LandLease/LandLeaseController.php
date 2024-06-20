@@ -131,7 +131,7 @@ class LandLeaseController extends Controller
             $landLeases = clone $landLeases->where('land_leases.taxpayer_id', $taxpayer_id);
         }
 
-        $landLeases = $landLeases->get();
+        $landLeases = $landLeases->whereNotNull('completed_at')->get();
         $from = \Carbon\Carbon::parse($dates['startDate']); 
         $to = \Carbon\Carbon::parse($dates['endDate']); 
         $startDate= $from->format('Y-m-d');

@@ -56,9 +56,12 @@ class LandLeaseExport implements FromView, WithEvents,ShouldAutoSize
     public function view(): View
     {
         if ($this->startDate == null && $this->endDate == null) {
-            $landLeases =  LandLease::query()->get();
+            $landLeases =  LandLease::whereNotNull('land_leases.completed_at')->get();
         } else {
-            $landLeases = LandLease::query()->with('taxpayer', 'region', 'district', 'ward')->whereBetween('land_leases.created_at', [$this->startDate, $this->endDate])->get();
+            $landLeases = LandLease::query()->with('taxpayer', 'region', 'district', 'ward')
+                ->whereBetween('land_leases.created_at', [$this->startDate, $this->endDate])
+                ->whereNotNull('land_leases.completed_at')
+                ->get();
         }
 
         if ($this->taxpayer_id) {

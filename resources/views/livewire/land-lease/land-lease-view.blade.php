@@ -2,9 +2,9 @@
     <div class="d-flex justify-content-start mb-3">
         @if ($this->landLease->taxpayer_id)
             @if ($unpaidLease)
-                <div class="alert alert-warning" role="alert">
-                    {{ __('Complete pending payment to proceed with next one!') }}
-                </div>
+                {{--                <div class="alert alert-warning" role="alert">--}}
+                {{--                    {{ __('Complete pending payment to proceed with next one!') }}--}}
+                {{--                </div>--}}
             @else
                 @if(!$advancePaymentStatus)
                     <button class="btn btn-primary btn-md"
@@ -216,10 +216,6 @@
                             <p class="my-1">{{ number_format($landLease->payment_amount) }} USD</p>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <span class="font-weight-bold text-uppercase">Review Schedule</span>
-                            <p class="my-1">{{ $landLease->review_schedule }} years</p>
-                        </div>
-                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Valid Period Term</span>
                             <p class="my-1">{{ $landLease->valid_period_term }} Year(s)</p>
                         </div>
@@ -233,29 +229,32 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-4">
-                            <a class="file-item" target="_blank"
-                               href="{{ route('land-lease.get.lease.document', ['path' => encrypt($landLease->lease_agreement_path)]) }}">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                <div style="font-weight: 500;" class="ml-1">
-                                    Lease Agreement Document
-                                </div>
-                            </a>
+
+                        <div class="row">
+                            @foreach($leaseDocuments as $file)
+                            <div class="col-4">
+                                <a class="file-item" target="_blank"
+                                   href="{{ route('land-lease.get.lease.document', ['path' => encrypt
+                                   ($file->file_path)]) }}">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                    <div style="font-weight: 500;" class="ml-1">
+                                        {{$file->name}}
+                                    </div>
+                                </a>
+                            </div>
+                            @endforeach
                         </div>
-                    </div>
 
                     <div class="card-footer">
                         <div class="row" style="background-color: #f5f2f2">
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Registered By</span>
-                                <p class="my-1">{{ $landLease->createdBy->first_name ?? '' }}
-                                    {{ $landLease->createdBy->middle_name ?? '' }}
-                                    {{ $landLease->createdBy->last_name ?? '' }}</p>
+                                <p class="my-1">{{ $landLease->completedBy->fname ?? '' }}
+                                    {{ $landLease->completedBy->lname ?? '' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Register At</span>
-                                <p class="my-1">{{ $landLease->created_at }}</p>
+                                <p class="my-1">{{ $landLease->completed_at }}</p>
                             </div>
                             @if ($landLease->edited_by != null)
                                 <div class="col-md-3 mb-3">

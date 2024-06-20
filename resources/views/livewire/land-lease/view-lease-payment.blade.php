@@ -1,6 +1,5 @@
 <div>
-
-    @if($partialPayment)
+    @if($partialPayment && $partialPayment->bill)
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -10,13 +9,15 @@
             </div>
         </div>
     @else
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    @livewire('land-lease.land-lease-payment', ['leasePayment' => $leasePayment])
+        @if($leasePayment->bill)
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        @livewire('land-lease.land-lease-payment', ['leasePayment' => $leasePayment])
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
     @endif
 
     {{--    @if($pendingPartialPaymentStatus && $pendingPartialPaymentStatus->payment_status == 'pending')--}}
@@ -125,7 +126,7 @@
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase">Paid At</span>
                     <p class="my-1">
-                        {{ $leasePayment->paid_at ?? '--' }}
+                        {{ $leasePayment->paid_at ?? 'not done' }}
                     </p>
                 </div>
             </div>
@@ -222,38 +223,36 @@
                     <p class="my-1">{{ number_format($leasePayment->landLease->payment_amount) }} USD</p>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Review Schedule</span>
-                    <p class="my-1">{{ $leasePayment->landLease->review_schedule }} years</p>
-                </div>
-                <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Valid Period Term</span>
                     <p class="my-1">{{ $leasePayment->landLease->valid_period_term }} years</p>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-4">
-                    <a class="file-item" target="_blank"
-                       href="{{ route('land-lease.get.lease.document', ['path' => encrypt($leasePayment->landLease->lease_agreement_path)]) }}">
-                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                        <div style="font-weight: 500;" class="ml-1">
-                            Lease Agreement Document
-                        </div>
-                    </a>
-                </div>
+                @foreach($previousLeaseAgreementPath as $file)
+                    <div class="col-4">
+                        <a class="file-item" target="_blank"
+                           href="{{ route('land-lease.get.lease.document', ['path' => encrypt($file->file_path)]) }}">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <div style="font-weight: 500;" class="ml-1">
+                                {{$file->name}}
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+
             </div>
 
             <div class="card-footer">
                 <div class="row" style="background-color: #f5f2f2">
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Registered By</span>
-                        <p class="my-1">{{ $leasePayment->landLease->createdBy->first_name ?? '' }}
-                            {{ $leasePayment->landLease->createdBy->middle_name ?? '' }}
-                            {{ $leasePayment->landLease->createdBy->last_name ?? '' }}</p>
+                        <p class="my-1">{{ $leasePayment->landLease->completedBy->fname ?? '' }}
+                            {{ $leasePayment->landLease->completedBy->lname ?? '' }}</p>
                     </div>
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Register At</span>
-                        <p class="my-1">{{ $leasePayment->landLease->created_at }}</p>
+                        <p class="my-1">{{ $leasePayment->landLease->completed_at }}</p>
                     </div>
                     @if ($leasePayment->landLease->edited_by != null)
                         <div class="col-md-3 mb-3">
