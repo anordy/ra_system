@@ -93,9 +93,8 @@ class RegisterLandLease extends Component
 
         foreach ($leaseOfficers as $leaseOfficer) {
             $leaseOfficer->notify(new DatabaseNotification(
-                'Land Lease Approve Notification',
-                "Land Lease has been approved by " . auth()->user()->fname . " " . auth()
-                    ->user()->lname,
+                'Land Lease Registration',
+                "Land Lease has been registered ",
                 'land-lease.list',
             ));
         }
