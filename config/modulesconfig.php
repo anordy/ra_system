@@ -48,6 +48,12 @@ return [
         'server_username' => secEnv('VERIFICATION_SERVER_USERNAME'),
         'server_password' => secEnv('VERIFICATION_SERVER_PASSWORD'),
         'server_token' => secEnv('VERIFICATION_SERVER_TOKEN')
+    ],
+
+    'jasper' => [
+        'JSP_URL' => env('JSP_URL'),
+        'JSP_USER' => env('JSP_USER'),
+        'JSP_PASSWORD' => env('JSP_PASSWORD'),
     ]
 ]
 ?>

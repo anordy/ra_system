@@ -19,6 +19,7 @@ class CreateReportsTable extends Migration
             $table->boolean('has_parameter');
             $table->bigInteger('report_type_id');
             $table->string('code', 20);
+            $table->string('report_url', 100);
             $table->timestamps();
         });
     }

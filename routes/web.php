@@ -19,6 +19,7 @@ use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
+use App\Http\Controllers\Reports\GeneralReportsController;
 use App\Http\Controllers\Reports\TaxPayer\TaxPayerReportController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
@@ -211,6 +212,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         });
     });
 
+    Route::get('/reports/general', [GeneralReportsController::class, 'initial'])->name('reports.general.initial');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::get('/account', [AccountController::class, 'show'])->name('account');
     Route::get('/account/security-questions', [AccountController::class, 'securityQuestions'])->name('account.security-questions');

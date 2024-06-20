@@ -6,8 +6,9 @@ use ReflectionClass;
 
 class ReportFormats implements Status
 {
-    const PDF = 'PDF';
-    const EXCEL = 'EXCEL';
+    const  PDF = 'pdf';
+    const  EXCEL = 'xlsx';
+    const  CSV = 'csv';
 
     static function getConstants(): array
     {
