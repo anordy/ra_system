@@ -302,12 +302,7 @@
                                             {{ $dueDate }}
                                         </p>
                                     </div>
-                                    <div class="col-md-3">
-                                        <span class="font-weight-bold text-uppercase">{{ __('Unpaid Amount') }}</span>
-                                        <p class="my-1">
-                                            {{'--'}}
-                                        </p>
-                                    </div>
+                                   
                                     <div class="col-md-3">
                                     </div>
                                 </div>
