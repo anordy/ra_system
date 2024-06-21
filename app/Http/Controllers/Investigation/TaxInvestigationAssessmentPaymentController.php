@@ -4,28 +4,18 @@
 namespace App\Http\Controllers\Investigation;
 
 use App\Http\Controllers\Controller;
-use App\Models\BusinessTaxType;
-use App\Models\Investigation\TaxInvestigation;
 use App\Models\PartialPayment;
-use App\Models\Returns\ReturnStatus;
-use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
-use App\Models\TaxType;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
-use App\Traits\ExchangeRateTrait;
 use App\Traits\PaymentsTrait;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class TaxInvestigationAssessmentPaymentController extends Controller
 {
-    use PaymentsTrait, ExchangeRateTrait;
+    use PaymentsTrait;
     public function index()
     {
         if (!Gate::allows('tax-investigation-assessment-view')) {
@@ -47,8 +37,8 @@ class TaxInvestigationAssessmentPaymentController extends Controller
 
             // Extract tax assessment and subject from the retrieved data
             $taxAssessment = $partialPayment->taxAssessment;
-            // $subject = $taxAssessment->assessment_type::findOrFail($taxAssessment->assessment_id);
-            $subject = TaxAudit::findOrFail($taxAssessment->assessment_id);
+            $subject = $taxAssessment->assessment_type::findOrFail($taxAssessment->assessment_id);
+            // $subject = TaxAudit::findOrFail($taxAssessment->assessment_id);
 
             // Retrieve tax assessments for the subject
             $taxAssessments = TaxAssessment::where('assessment_id', $subject->id)
@@ -88,12 +78,7 @@ class TaxInvestigationAssessmentPaymentController extends Controller
 
 
                 // Generate control number
-                $controlNumber = $this->generateControlNumber($partialPayment);
-
-                // Update partialPayment with control number
-                $partialPayment->control_number = $controlNumber;
-                $partialPayment->save();
-
+                $this->generatePartialPaymentControlNo($partialPayment);
                 DB::commit();
                 return redirect()->back()->with('success', 'Assessment approved and control number generated.');
             } else {
@@ -114,107 +99,6 @@ class TaxInvestigationAssessmentPaymentController extends Controller
             ]);
             // Return an error response
             return redirect()->back()->withError('Something went wrong Please contact your admin');
-        }
-    }
-
-
-    private function generateControlNumber($partialPayment)
-    {
-        $assesment = $partialPayment->taxAssessment;
-
-        $taxType = TaxType::findOrFail($assesment->tax_type_id, ['id', 'code', 'gfs_code']);
-
-        $taxTypes = TaxType::select('id', 'code', 'gfs_code')->where('code', 'investigation')->first();
-
-        if ($taxType->code === TaxType::VAT) {
-            $businessTaxType = BusinessTaxType::where('business_id', $assesment->business_id)
-                ->where('tax_type_id', $taxType->id)->firstOrFail();
-            $taxType = SubVat::findOrFail($businessTaxType->sub_vat_id, ['id', 'code', 'gfs_code']);
-        } else if ($taxType->code === TaxType::AIRPORT_SERVICE_SAFETY_FEE) {
-            $taxType = TaxType::where('code', TaxType::AIRPORT_SERVICE_CHARGE)->first();
-        } else if ($taxType->code === TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE) {
-            $taxType = TaxType::where('code', TaxType::SEAPORT_SERVICE_CHARGE)->first();
-        }
-
-
-        $billitems = [
-            [
-                'billable_id' => $partialPayment->id,
-                'billable_type' => get_class($partialPayment),
-                'use_item_ref_on_pay' => 'N',
-                'amount' => roundOff($partialPayment->amount, $assesment->currency),
-                'currency' => $assesment->currency,
-                'gfs_code' => $taxType->gfs_code,
-                'tax_type_id' => $taxType->id
-            ],
-        ];
-
-        try {
-
-            $taxpayer = $assesment->business->taxpayer;
-
-            $payer_type = get_class($assesment->business);
-            $payer_name = $assesment->business->name;
-            $payer_email = $taxpayer->email;
-            $payer_phone = $taxpayer->mobile;
-            $description = "Tax Investigation assesment payment for {$taxType->code}";
-            $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-            $currency = $assesment->currency;
-            $createdby_type = get_class(Auth::user());
-            $createdby_id = Auth::id();
-            $exchange_rate = self::getExchangeRate($assesment->currency);
-            $payer_id = $taxpayer->id;
-            $expire_date = Carbon::now()->addDays(30)->toDateTimeString(); // TODO: Recheck this date
-            $billableId = $partialPayment->id;
-            $billableType = get_class($partialPayment);
-
-            DB::beginTransaction();
-
-            $zmBill = ZmCore::createBill(
-                $billableId,
-                $billableType,
-                $taxTypes->id,
-                $payer_id,
-                $payer_type,
-                $payer_name,
-                $payer_email,
-                $payer_phone,
-                $expire_date,
-                $description,
-                $payment_option,
-                $currency,
-                $exchange_rate,
-                $createdby_id,
-                $createdby_type,
-                $billitems
-            );
-            DB::commit();
-
-            if (config('app.env') != 'local') {
-                $this->generateGeneralControlNumber($zmBill);
-                $control_number = null;
-            } else {
-                // We are local
-                $partialPayment->payment_status = ReturnStatus::CN_GENERATED;
-                $partialPayment->save();
-
-                // Simulate successful control no generation
-                $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-                $zmBill->zan_status = 'pending';
-                $zmBill->control_number = random_int(2000070001000, 2000070009999);
-                $zmBill->save();
-
-                $control_number = $zmBill->control_number;
-            }
-
-            return $control_number;
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
         }
     }
 }
