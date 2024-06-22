@@ -12,22 +12,22 @@
         </thead>
 
         <tbody>
-        @if(count($extensions))
-            @foreach ($extensions as $extension)
+        @if(count($partials))
+            @foreach ($partials as $partial)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $extension->installment->installable->business->name }}</td>
-                    <td>{{ $extension->installment->installable->taxType->name}}</td>
-                    <td>{{ $extension->installment->installable->currency }}</td>
-                    {{--                    <td>{{ $extension }}</td>--}}
+                    <td>{{ $partial->installmentItem->installment->installable->business->name }}</td>
+                    <td>{{ $partial->installmentItem->installment->installable->taxType->name }}</td>
+                    <td>{{ $partial->installmentItem->installment->installable->currency  }}</td>
+
                     <td>
                            <span class="badge badge-info py-1 px-2">
                                 <i class="bi bi-clock-history mr-1"></i>
-                                {{ $extension->status }}
+                                {{ $partial->status }}
                             </span>
                     </td>
                     <td>
-                        <a href="{{ route('installment.extensions.show', ['id'=> encrypt($extension->id)]) }}" class="btn btn-outline-info btn-sm">
+                        <a href="{{ route('installment.extensions.show.partial', ['id'=> encrypt($partial->id)]) }}" class="btn btn-outline-info btn-sm">
                             <i class="bi bi-eye"></i> View
                         </a>
                     </td>
@@ -36,7 +36,7 @@
         @else
             <tr>
                 <td colspan="7" class="text-center py-3">
-                    No extension(s).
+                    No Partial Payment(s).
                 </td>
             </tr>
         @endif

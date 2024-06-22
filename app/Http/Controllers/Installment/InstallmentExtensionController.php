@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Installment;
 
 use App\Http\Controllers\Controller;
 use App\Models\Installment\InstallmentExtensionRequest;
+use App\Models\PartialPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -54,6 +55,17 @@ class InstallmentExtensionController extends Controller
         try {
             $extension = InstallmentExtensionRequest::with('installment')->findOrFail(decrypt($id));
             return view('installment.requests.extension.show',compact('extension'));
+        }catch (Exception $e){
+            return back()->with('error','Failed to fetch Extension');
+        }
+
+    }
+
+    public function showPartial($id)
+    {
+        try {
+            $partial = PartialPayment::with('installmentItem.installment')->findOrFail(decrypt($id));
+            return view('installment.requests.extension.show-partial',compact('partial'));
         }catch (Exception $e){
             return back()->with('error','Failed to fetch Extension');
         }
