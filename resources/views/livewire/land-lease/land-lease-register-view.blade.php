@@ -5,7 +5,7 @@
                 {{ __('Lease Document Verification') }}
             </div>
 
-            <div class="row mt-5">
+            <div class="row mt-3">
                 @foreach($previousLeaseAgreementPath as $file)
                     <div class="col-4">
                         <a class="file-item" target="_blank"
@@ -17,7 +17,8 @@
                         </a>
                     </div>
                 @endforeach
-
+            </div>
+            <div class="row mt-3">
                 <div class="col-8">
                     <label> <b>{{ __('Comments (Optional)') }}</b></label>
                     <textarea class="form-control" rows="4" placeholder="comments (optional)"
@@ -37,22 +38,28 @@
 
         <div class="row mt-3">
             <div class="col-md-12 d-flex justify-content-start">
-                <button class="btn btn-warning ml-1" @if(!$confirmed) disabled @endif wire:click="submit('approved')" wire:loading.attr="disabled">
+                <button class="btn btn-warning ml-1" @if(!$confirmed) disabled @endif
+                wire:click="submit('approved')"
+                        wire:loading.attr="disabled" wire:target="submit('approved')">
                     {{ __('Approve Lease') }}
-                    <i class="bi bi-chevron-right ml-1" wire:loading.remove wire:target="submit"></i>
+                    <i class="bi bi-chevron-right ml-1" wire:loading.remove wire:target="submit('approved')"></i>
                     <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
-                       wire:target="submit"></i>
-                </button>
-            </div>
-            <div class="col-md-12 d-flex justify-content-start mt-3">
-                <button class="btn btn-danger ml-1" @if(!$confirmed) disabled @endif wire:click="submit('rejected')"
-                        wire:loading.attr="disabled">
-                    {{ __('Reject Lease') }}
-                    <i class="bi bi-chevron-right ml-1" wire:loading.remove wire:target="submit"></i>
-                    <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
-                       wire:target="submit"></i>
+                       wire:target="submit('approved')"></i>
                 </button>
             </div>
         </div>
+        <div class="row mt-3">
+            <div class="col-md-12 d-flex justify-content-start mt-3">
+                <button class="btn btn-danger ml-1" @if(!$confirmed) disabled @endif
+                wire:click="submit('rejected')"
+                        wire:loading.attr="disabled" wire:target="submit('rejected')">
+                    {{ __('Reject Lease') }}
+                    <i class="bi bi-chevron-right ml-1" wire:loading.remove wire:target="submit('rejected')"></i>
+                    <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
+                       wire:target="submit('rejected')"></i>
+                </button>
+            </div>
+        </div>
+
     </div>
 </div>

@@ -123,12 +123,6 @@
                         @endif
                     </p>
                 </div>
-                <div class="col-md-4">
-                    <span class="font-weight-bold text-uppercase">Paid At</span>
-                    <p class="my-1">
-                        {{ $leasePayment->paid_at ?? 'not done' }}
-                    </p>
-                </div>
             </div>
         </div>
 
@@ -254,9 +248,8 @@
                     @if ($leasePayment->landLease->edited_by != null)
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Edited By</span>
-                            <p class="my-1">{{ $leasePayment->landLease->editedBy->first_name ?? '' }}
-                                {{ $leasePayment->landLease->createdBy->middle_name ?? '' }}
-                                {{ $leasePayment->landLease->editedBy->last_name ?? '' }}</p>
+                            <p class="my-1">{{ $leasePayment->landLease->editedBy->fname ?? '' }}
+                                {{ $leasePayment->landLease->editedBy->lname ?? '' }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Edited At</span>

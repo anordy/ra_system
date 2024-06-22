@@ -171,6 +171,9 @@ class LeaseCurrencyApproveList extends DataTableComponent
                     $leasePayment = $this->updateLeasePayment($leaseCurrencyChange->land_lease_id, $leaseCurrencyChange->to_currency);
 
                     if ($leasePayment) {
+                        $leasePayment->landLease->payment_amount = $leasePayment->total_amount;
+                        $leasePayment->landLease->save();
+
                         DB::commit();
                         $this->customAlert('success', 'Lease currency change has been approved successfully', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
                         return;

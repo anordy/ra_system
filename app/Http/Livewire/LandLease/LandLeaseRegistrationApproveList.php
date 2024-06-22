@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\LandLease;
 
 use App\Models\LandLease;
+use App\Models\Taxpayer;
 use App\Models\User;
 use App\Notifications\DatabaseNotification;
 use App\Traits\CustomAlert;
@@ -51,15 +52,16 @@ class LandLeaseRegistrationApproveList extends DataTableComponent
             Column::make("Created Date", 'created_at')
                 ->searchable()
                 ->sortable(),
-            Column::make("Completed Date", 'completed_at')
+            Column::make("Created By", 'created_by')
+                ->format(
+                    function ($value, $row) {
+                       return $this->getInitiator($row['created_by']);
+                    }
+                )
                 ->searchable()
                 ->sortable(),
-            /*Column::make("Initiator", 'created_by')
-                ->format(function ($value, $row) {
-                    return $this->getInitiator($row['created_by']);
-                })
-                ->searchable()
-                ->sortable(),*/
+            Column::make('Completed Date', 'completed_at')
+                ->sortable(),
             Column::make("Approval Status", "approval_status")->view("land-lease.includes.registration-approval-status"),
             Column::make("Reject Reason", "comments")
                 ->format(function ($value, $row) {

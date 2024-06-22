@@ -34,6 +34,11 @@ class LandLeaseView extends Component
 
     //mount function
     public $leaseDocuments;
+    /**
+     * @var string
+     */
+    public $dueDate;
+    public $leaseLastPaid;
 
     public function mount($enc_id)
     {
@@ -61,7 +66,7 @@ class LandLeaseView extends Component
         }
 
         $this->dueDate = $this->getDueDate();
-        $this->leaseLastPaid = $this->getLastLeasePayment();
+        //$this->leaseLastPaid = $this->getLastLeasePayment();
     }
 
     public function render()
@@ -183,11 +188,10 @@ class LandLeaseView extends Component
             ->format('d F Y');
     }
 
-    public function getLastLeasePayment()
-    {
-        return LeasePayment::where('land_lease_id', $this->landLease->id)->orderBy('id', 'desc')->first()
-            ->paid_at;
-    }
+//    public function getLastLeasePayment()
+//    {
+//        return LeasePayment::where('land_lease_id', $this->landLease->id)->orderBy('id', 'desc')->first()->paid_at;
+//    }
 
     public function leaseDocuments($id)
     {

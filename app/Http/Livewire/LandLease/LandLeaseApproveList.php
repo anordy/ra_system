@@ -169,7 +169,7 @@ class LandLeaseApproveList extends DataTableComponent
                 case 'approve':
                     $partialPayment->update(['status' => 'approved']);
                     $partialPayment->refresh();
-					$this->generateControlNumber($partialPayment);
+					$this->generateLeasePartialPaymentControlNo($partialPayment);
                     //update lease payment
                     DB::commit();
                     $this->customAlert('success', 'Lease payment approved successfully', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
@@ -243,7 +243,7 @@ class LandLeaseApproveList extends DataTableComponent
 
             $payer_email = $this->getTaxPayer($landLease)->email;
             $payer_phone = $this->getTaxPayer($landLease)->mobile;
-            $description = "Land Lease payment for {$taxTypes->code}";
+            $description = "Land Lease payment";
             $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
             $currency = $partialPayment->currency;
             $createdby_type = get_class(Auth::user());
@@ -282,10 +282,6 @@ class LandLeaseApproveList extends DataTableComponent
                 $control_number = null;
             } else {
                 // We are local
-
-//                $partialPayment->payment_status = LeaseStatus::PENDING;
-//                $partialPayment->save();
-
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $zmBill->zan_status = 'pending';

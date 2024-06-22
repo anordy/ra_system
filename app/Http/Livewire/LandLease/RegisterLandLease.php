@@ -18,7 +18,6 @@ class RegisterLandLease extends Component
 {
     use CustomAlert, WithFileUploads, CheckReturnConfigurationTrait;
 
-    public $leaseAgreement;
     public $files = [];
 
     public function mount()
@@ -35,56 +34,69 @@ class RegisterLandLease extends Component
     {
         return [
             'files.*.file' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
-            'files.*.name' => 'required|string|max:255',
+            'files.*.name' => 'required|string|strip_tag|max:255',
         ];
     }
 
     public function submit()
     {
+        // Validate input
         $this->validate();
 
         try {
+            // Start database transaction
             DB::beginTransaction();
-            //$leaseAgreementPath = $this->leaseAgreement->store('/lease_agreement_documents', 'local-admin');
 
+            // Create a new land lease record
             $landLease = LandLease::create([
                 'lease_agreement_path' => 'null',
                 'created_by' => Auth::user()->id,
                 'lease_status' => 2,
             ]);
 
+            // Check if the land lease creation was successful
+            if (!$landLease) {
+                $this->customAlert('error', __('Something went wrong, please try again later'));
+                return;
+            }
+
+            // Process each file in the $this->files array
             foreach ($this->files as $fileData) {
                 $file = $fileData['file'];
-                $filePath = $file->store('/lease_agreement_documents', 'local-admin'); // Store the file and get the file path
+                // Store the file and get the file path
+                $filePath = $file->store('/lease_agreement_documents', 'local-admin');
 
                 // Insert file details into the database
                 DB::table('land_lease_files')->insert([
                     'land_lease_id' => $landLease->id,
                     'name' => $fileData['name'],
                     'file_path' => $filePath,
-                    'approval_status' => "approved",
+                    'approval_status' => 'approved',
                 ]);
             }
 
             // Reset component state after successful upload
-            $this->files = [];
-            $this->files[] = ['file' => '', 'name' => '']; // Add empty placeholders
+            $this->files = [['file' => '', 'name' => '']]; // Add empty placeholders
 
-            if ($landLease) {
-                $this->createNotification();
-                DB::commit();
-                $this->customAlert('success', __('Land Lease registered successfully'));
-                return redirect()->route('land-lease.approval.list');
-            }
-            $this->customAlert('error', __('Something went wrong, Try again later'));
-            return redirect()->back();
+            // Create notification for lease officers
+            $this->createNotification();
+
+            // Commit the transaction
+            DB::commit();
+
+            // Display success message and redirect
+            $this->customAlert('success', __('Land Lease registered successfully'));
+            return redirect()->route('land-lease.approval.list');
+
         } catch (\Exception $e) {
+            // Rollback the transaction in case of an error
             DB::rollBack();
+            // Log the error for debugging
             Log::error("REGISTER-LAND-LEASE-EXCEPTION: " . json_encode($e->getMessage()));
+            // Display error message
             $this->customAlert('error', __('Failed to register lease'));
         }
     }
-
     public function createNotification()
     {
         $leaseOfficers = User::whereHas('role.permissions', function ($query) {
@@ -96,6 +108,7 @@ class RegisterLandLease extends Component
                 'Land Lease Registration',
                 "Land Lease has been registered ",
                 'land-lease.list',
+                'land-lease',
             ));
         }
     }

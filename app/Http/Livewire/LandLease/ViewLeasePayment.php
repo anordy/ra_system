@@ -29,7 +29,8 @@ class ViewLeasePayment extends Component
         //check if it exists in partial payments
         $this->pendingPartialPayment = $this->getPendingPartialPayment();
         $this->pendingPartialPaymentStatus = $this->getPartialPaymentStatus();
-        $this->partialPayment = PartialPayment::where('payment_id', $this->leasePayment->land_lease_id)->latest()->first();
+        $this->partialPayment = PartialPayment::where('payment_id', $this->leasePayment->land_lease_id)->where('payment_type',get_class($this->leasePayment->landLease))
+            ->latest()->first();
     }
 
     public function render()

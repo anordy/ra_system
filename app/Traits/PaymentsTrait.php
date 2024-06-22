@@ -199,7 +199,7 @@ trait PaymentsTrait
         $payer_phone = $taxpayer->mobile;
         $description = "Payment for Land Lease with DP number {$leasePayment->landLease->dp_number}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-        $currency = 'USD';
+        $currency = $leasePayment->currency;
         $createdby_type = get_class(Auth::user());
         $createdby_id = Auth::id();
         $payer_id = $taxpayer->id;
@@ -980,6 +980,7 @@ trait PaymentsTrait
 
         }
     }
+
     public function generatePropertyTaxBillItems($propertyPayment, $taxType)
     {
         $property = $propertyPayment->property;
@@ -996,7 +997,9 @@ trait PaymentsTrait
 
         return $billItems;
     }
-    public function generateMvrControlNumber($mvr, $fee) {
+
+    public function generateMvrControlNumber($mvr, $fee)
+    {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
         $zmBill = ZmCore::createBill(
@@ -1035,7 +1038,7 @@ trait PaymentsTrait
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
             }
-        }else {
+        } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = random_int(2000070001000, 2000070009999);
@@ -1047,7 +1050,8 @@ trait PaymentsTrait
     }
 
 
-    public function generateMvrTransferOwnershipControlNumber($transfer, $fee) {
+    public function generateMvrTransferOwnershipControlNumber($transfer, $fee)
+    {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
         $zmBill = ZmCore::createBill(
@@ -1086,7 +1090,7 @@ trait PaymentsTrait
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
             }
-        }else {
+        } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = random_int(2000070001000, 2000070009999);
@@ -1097,7 +1101,8 @@ trait PaymentsTrait
         }
     }
 
-    public function generateMvrStatusChangeConntrolNumber($mvr, $fee) {
+    public function generateMvrStatusChangeConntrolNumber($mvr, $fee)
+    {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
         $zmBill = ZmCore::createBill(
@@ -1136,7 +1141,7 @@ trait PaymentsTrait
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
             }
-        }else {
+        } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = random_int(2000070001000, 2000070009999);
@@ -1145,9 +1150,10 @@ trait PaymentsTrait
             $zmBill->save();
             $this->flash('success', 'A control number for this verification has been generated successfully');
         }
-    }    
+    }
 
-    public function generateDLicenseControlNumber($license, $fee) {
+    public function generateDLicenseControlNumber($license, $fee)
+    {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
         $zmBill = ZmCore::createBill(
@@ -1186,7 +1192,7 @@ trait PaymentsTrait
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
             }
-        }else {
+        } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = random_int(2000070001000, 2000070009999);
@@ -1197,7 +1203,8 @@ trait PaymentsTrait
         }
     }
 
-    public function generateMvrDeregistrationControlNumber($mvr, $fee) {
+    public function generateMvrDeregistrationControlNumber($mvr, $fee)
+    {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = 1;
         $zmBill = ZmCore::createBill(
@@ -1236,7 +1243,7 @@ trait PaymentsTrait
             } else {
                 session()->flash('error', 'Control number generation failed, try again later');
             }
-        }else {
+        } else {
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = random_int(2000070001000, 2000070009999);
@@ -1244,6 +1251,85 @@ trait PaymentsTrait
             $zmBill->billable->save();
             $zmBill->save();
             $this->flash('success', 'A control number for this verification has been generated successfully');
+        }
+    }
+
+    public function generateLeasePartialPaymentControlNo($partialPayment)
+    {
+        $landLease = $partialPayment->landlease;
+
+        $taxTypes = TaxType::select('id', 'code', 'gfs_code')->where('code', 'land-lease')->first();
+
+        $billitems = [
+            [
+                'billable_id' => $partialPayment->id,
+                'billable_type' => get_class($partialPayment),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => roundOff($partialPayment->amount, $partialPayment->currency),
+                'currency' => $partialPayment->currency,
+                'gfs_code' => $taxTypes->gfs_code,
+                'tax_type_id' => $taxTypes->id
+            ],
+        ];
+
+
+        $taxpayer = $this->getTaxPayer($landLease)->first_name . ' ' . $this->getTaxPayer($landLease)->last_name;
+
+        if ($landLease->category == 'business') {
+            $payer_name = $landLease->businessLocation->business->name;
+            $payer_type = get_class($landLease->businessLocation->business);
+        } else {
+            $payer_name = $taxpayer;
+            $payer_type = get_class($this->getTaxPayer($landLease));
+        }
+
+        $payer_email = $this->getTaxPayer($landLease)->email;
+        $payer_phone = $this->getTaxPayer($landLease)->mobile;
+        $description = "Land Lease payment";
+        $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
+        $currency = $partialPayment->currency;
+        $createdby_type = get_class(Auth::user());
+        $createdby_id = Auth::id();
+        $exchange_rate = self::getExchangeRate($partialPayment->currency);
+        $payer_id = $this->getTaxPayer($landLease)->id;
+        $expire_date = Carbon::now()->addDays(30)->toDateTimeString(); // TODO: Recheck this date
+        $billableId = $partialPayment->id;
+        $billableType = get_class($partialPayment);
+
+        DB::beginTransaction();
+
+        $zmBill = ZmCore::createBill(
+            $billableId,
+            $billableType,
+            $taxTypes->id,
+            $payer_id,
+            $payer_type,
+            $payer_name,
+            $payer_email,
+            $payer_phone,
+            $expire_date,
+            $description,
+            $payment_option,
+            $currency,
+            $exchange_rate,
+            $createdby_id,
+            $createdby_type,
+            $billitems
+        );
+
+        DB::commit();
+        if (false) {
+            (new ZanMalipoInternalService)->createBill($zmBill);
+        } else {
+            // We are local
+            $partialPayment->payment_status = ReturnStatus::CN_GENERATED;
+            $partialPayment->save();
+
+            // Simulate successful control no generation
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = random_int(2000070001000, 2000070009999);
+            $zmBill->save();
         }
     }
 

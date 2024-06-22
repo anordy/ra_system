@@ -36,9 +36,7 @@ class LandLeaseRegisterView extends Component
     {
         //get land lease
         $this->landLease = LandLease::find(decrypt($enc_id));
-        $this->previousLeaseAgreementPath = LandLeaseFiles::select('file_path','name')
-            ->where('land_lease_id',
-            $this->landLease->id)->get();
+        $this->previousLeaseAgreementPath = $this->getLeaseFiles();
     }
 
 
@@ -61,6 +59,7 @@ class LandLeaseRegisterView extends Component
                 $this->customAlert('error', 'This Lease is already actioned, Contact administrator.');
                 return;
             }
+
             switch ($action) {
                 case 'approved':
                     $landLease->update(['approval_status' => 'approved', 'approved_by' => Auth::user()->id, 'approved_at' => now
@@ -73,7 +72,7 @@ class LandLeaseRegisterView extends Component
                     break;
             }
 
-            //$this->createNotification();
+            $this->createNotification();
 
             //redirect to route "land-lease.index"
             $this->customAlert('success', "Lease is $action successfully.");
@@ -88,20 +87,30 @@ class LandLeaseRegisterView extends Component
 
     public function createNotification()
     {
-        $leaseOfficers = User::whereHas('role', function ($query) {
-            $query->where('name', 'Land Lease Officer');
+        $leaseOfficers = User::whereHas('role.permissions', function ($query) {
+            $query->where('name', 'land-lease-notification');
         })->get();
 
         foreach ($leaseOfficers as $leaseOfficer) {
             $leaseOfficer->notify(new DatabaseNotification(
-                $subject = 'Land Lease Approve Notification',
-                $message = "Land Lease has been approved by " . auth()->user()->fname . " " . auth()
-                        ->user()->lname,
+                $subject = 'Land Lease Approve Documents',
+                $message = "Land Lease has been documents have been approved",
                 $href = 'land-lease.list',
             ));
         }
     }
 
+    public function updated($propertyName)
+    {
 
+        if ($propertyName === 'confirmed' || $propertyName === 'approve' || $propertyName === 'rejected') {
+            $this->previousLeaseAgreementPath = $this->getLeaseFiles();
+        }
+    }
+
+    public function getLeaseFiles()
+    {
+        return LandLeaseFiles::select('file_path', 'name')->where('land_lease_id', $this->landLease->id)->get();
+    }
 }
 

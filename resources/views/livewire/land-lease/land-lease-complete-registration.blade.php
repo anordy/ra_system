@@ -95,6 +95,8 @@
             <x-input name="dpNumber" label="DP Number" required></x-input>
             <x-input name="commenceDate" label="Commence Date" type='date' required></x-input>
             <x-input name="rentCommenceDate" label="Rent Commence Date" type='date' required></x-input>
+            <x-input name="area" x-data x-mask:dynamic="$money($input)" label="Area" type='text' required></x-input>
+            <x-input name="usedFor" label="Lease For" type='text' required></x-input>
             <div class="col-md-4 form-group">
                 <label for="applicant_category" class="d-flex justify-content-between'">
                     <span>
@@ -146,7 +148,8 @@
                 <x-input name="customPeriod" type="number" label="{{ __('Specify Valid Period') }} (Years) *"></x-input>
             @endif
 
-            <x-input name="paymentAmount" type="number" label="{{ __('Payment Amount') }} (USD)" required></x-input>
+            <x-input name="paymentAmount" x-data x-mask:dynamic="$money($input)" type="text" label="{{ __('Payment
+            Amount') }} (USD)" required></x-input>
             <div class="col-md-4 form-group">
                 <label>{{ __('Region') }} *</label>
                 <select wire:model.lazy="region" class="form-control @error('region') is-invalid @enderror">
@@ -198,8 +201,26 @@
 
         </div>
     </div>
+    <div class="pt-4">
+        <div class="card-header text-uppercase font-weight-bold bg-white">
+            {{ __('Lease Documents') }}
+        </div>
+        <div class="row pt-3">
+            @foreach($previousLeaseAgreementPath as $file)
+                <div class="col-md-3 form-group">
+                    <a class="file-item" target="_blank"
+                       href="{{ route('land-lease.get.lease.document', ['path' => encrypt($file->file_path)]) }}">
+                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div style="font-weight: 500;" class="ml-1">
+                            {{ $file->name }} <small class="text-danger">{{__("(Preview)")}}</small>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    </div>
 
-    <div class="row mt-3">
+    <div class="row m-3">
         <div class="col-md-12 d-flex justify-content-end">
             <button class="btn btn-primary ml-1" wire:click="submit" wire:loading.attr="disabled">
                 {{ __('Submit') }}
