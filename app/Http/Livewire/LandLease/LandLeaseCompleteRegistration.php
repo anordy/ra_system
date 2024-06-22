@@ -9,8 +9,8 @@ use App\Models\BusinessLocation;
 use App\Models\District;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
+use App\Models\LandLeaseFiles;
 use App\Models\Region;
-use App\Models\TaxPayer;
 use App\Models\Ward;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -56,14 +56,17 @@ class LandLeaseCompleteRegistration extends Component
     public $businessName;
     public $showTaxpayerDetails;
     public $taxpayerName;
+    public $area;
+    public $usedFor;
 
-    public $leaseAgreement;
     public $customPeriod;
     public $landLease;
+    public $previousLeaseAgreementPath;
 
     public function mount($enc_id)
     {
         $this->landLease = LandLease::find(decrypt($enc_id));
+        $this->previousLeaseAgreementPath = $this->getLeaseFiles();
         $this->applicantType = 'registered';
         $this->reviewSchedule = 3;
         $this->validPeriodTerm = 33;
@@ -97,10 +100,12 @@ class LandLeaseCompleteRegistration extends Component
             'paymentMonth' => 'required|strip_tag',
             'reviewSchedule' => 'required|strip_tag',
             'validPeriodTerm' => 'required|strip_tag',
-            'paymentAmount' => 'required|numeric',
+            'paymentAmount' => 'required|thousand_separator',
             'region' => 'required',
             'district' => 'required',
             'ward' => 'required',
+            'area' => 'required|thousand_separator',
+            'usedFor' => 'required|strip_tag',
             //'leaseAgreement' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
             'customPeriod' => 'nullable|numeric|min:33',
             'rentCommenceDate' => 'required|strip_tag',
@@ -115,6 +120,7 @@ class LandLeaseCompleteRegistration extends Component
 
     public function updated($propertyName)
     {
+        $this->previousLeaseAgreementPath = $this->getLeaseFiles();
         if ($propertyName === 'region') {
             $this->districts = District::where('region_id', intval($this->region))
                 ->select('id', 'name')
@@ -296,6 +302,8 @@ class LandLeaseCompleteRegistration extends Component
 
         try {
             DB::beginTransaction();
+            $area = str_replace(',', '', $this->area);
+            $paymentAmount = str_replace(',', '', $this->paymentAmount);
 
             if ($this->isBusiness == '1') {
                 $businessLocation = BusinessLocation::where('zin', $this->businessZin)->first();
@@ -303,13 +311,15 @@ class LandLeaseCompleteRegistration extends Component
                 $this->landLease->is_registered = true;
                 $this->landLease->taxpayer_id = $businessLocation->taxpayer->id;
                 $this->landLease->business_location_id = $businessLocation->id;
+                $this->landLease->area = $area;
+                $this->landLease->lease_for = $this->usedFor;
                 $this->landLease->commence_date = $this->commenceDate;
                 $this->landLease->rent_commence_date = $this->rentCommenceDate;
                 $this->landLease->dp_number = $this->dpNumber;
                 $this->landLease->payment_month = $this->paymentMonth;
                 $this->landLease->review_schedule = $this->reviewSchedule;
                 $this->landLease->valid_period_term = ($this->validPeriodTerm == 'other') ? $this->customPeriod : $this->validPeriodTerm;
-                $this->landLease->payment_amount = $this->paymentAmount;
+                $this->landLease->payment_amount = $paymentAmount;
                 $this->landLease->region_id = $this->region;
                 $this->landLease->district_id = $this->district;
                 $this->landLease->ward_id = $this->ward;
@@ -331,13 +341,15 @@ class LandLeaseCompleteRegistration extends Component
 
                     $this->landLease->is_registered = true;
                     $this->landLease->taxpayer_id = $taxpayer->id;
+                    $this->landLease->area = $area;
+                    $this->landLease->lease_for = $this->usedFor;
                     $this->landLease->commence_date = $this->commenceDate;
                     $this->landLease->rent_commence_date = $this->rentCommenceDate;
                     $this->landLease->dp_number = $this->dpNumber;
                     $this->landLease->payment_month = $this->paymentMonth;
                     $this->landLease->review_schedule = $this->reviewSchedule;
                     $this->landLease->valid_period_term = ($this->validPeriodTerm == 'other') ? $this->customPeriod : $this->validPeriodTerm;
-                    $this->landLease->payment_amount = $this->paymentAmount;
+                    $this->landLease->payment_amount = $paymentAmount;
                     $this->landLease->region_id = $this->region;
                     $this->landLease->district_id = $this->district;
                     $this->landLease->ward_id = $this->ward;
@@ -352,12 +364,14 @@ class LandLeaseCompleteRegistration extends Component
                 } else {
                     $this->landLease->is_registered = false;
                     $this->landLease->commence_date = $this->commenceDate;
+                    $this->landLease->area = $area;
+                    $this->landLease->lease_for = $this->usedFor;
                     $this->landLease->rent_commence_date = $this->rentCommenceDate;
                     $this->landLease->dp_number = $this->dpNumber;
                     $this->landLease->payment_month = $this->paymentMonth;
                     $this->landLease->review_schedule = $this->reviewSchedule;
                     $this->landLease->valid_period_term = ($this->validPeriodTerm == 'other') ? $this->customPeriod : $this->validPeriodTerm;
-                    $this->landLease->payment_amount = $this->paymentAmount;
+                    $this->landLease->payment_amount = $paymentAmount;
                     $this->landLease->region_id = $this->region;
                     $this->landLease->district_id = $this->district;
                     $this->landLease->ward_id = $this->ward;
@@ -386,5 +400,9 @@ class LandLeaseCompleteRegistration extends Component
             Log::error($e);
             $this->customAlert('error', __('Failed to register lease'));
         }
+    }
+    public function getLeaseFiles()
+    {
+        return LandLeaseFiles::select('file_path', 'name')->where('land_lease_id', $this->landLease->id)->get();
     }
 }
