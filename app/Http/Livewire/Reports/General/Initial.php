@@ -3,10 +3,10 @@
 namespace App\Http\Livewire\Reports\General;
 
 use App\Enum\CustomMessage;
-use App\Models\Report\Parameter;
-use App\Models\Report\ReportParameter;
-use App\Models\Reports\Report;
-use App\Models\Reports\ReportType;
+use App\Models\Parameter;
+use App\Models\Report;
+use App\Models\ReportParameter;
+use App\Models\ReportType;
 use App\Services\JasperReport\ReportService;
 use App\Traits\CustomAlert;
 use Illuminate\Support\Facades\Log;
@@ -104,9 +104,7 @@ class Initial extends Component
         $formattedParameters = [];
 
         foreach ($this->parameters as $parameter) {
-            $formattedParameters[] = [
-                $parameter['code'] => $parameter['value'] ?? null
-            ];
+            $formattedParameters[$parameter['code']] = $parameter['value'] ?? null;
         }
 
         try {

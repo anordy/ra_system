@@ -25,6 +25,8 @@ use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
 use App\Models\MvrTransmissionType;
+use App\Models\Parameter;
+use App\Models\Report;
 use Illuminate\Support\Facades\Gate;
 
 class MvrGenericSettingController extends Controller
@@ -79,7 +81,12 @@ class MvrGenericSettingController extends Controller
             $permission = 'setting-mvr-color-view';
         } else if ($class === MvrRegistrationType::class) {
             $permission = 'setting-mvr-color-view';
+        } else if ($class === Parameter::class) {
+            $permission = 'setting-mvr-plate-size-view';
+        } else if ($class === Report::class) {
+            $permission = 'setting-mvr-plate-size-view';
         }
+
 
         if (!Gate::allows($permission)) {
             abort(403);

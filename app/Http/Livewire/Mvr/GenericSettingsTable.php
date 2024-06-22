@@ -12,6 +12,8 @@ use App\Models\MvrFee;
 use App\Models\MvrModel;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferFee;
+use App\Models\Parameter;
+use App\Models\Report;
 use App\Traits\CustomAlert;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -150,6 +152,16 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("Type", "type")->sortable(),
                 Column::make("Duration", "license_duration.number_of_years")->sortable(),
             ],
+            Parameter::class => [
+                Column::make("Code", "code")->sortable(),
+                Column::make("Input Type", "input_type")->sortable(),
+                Column::make("Model", "model_name")->sortable(),
+                Column::make("Description", "description")->sortable()
+            ],
+            Report::class => [
+                Column::make("Report Type", "report_type.name")->sortable(),
+                Column::make('URL', 'report_url')
+            ]
         ];
 
         return $model_extra_columns[$this->model]??[];

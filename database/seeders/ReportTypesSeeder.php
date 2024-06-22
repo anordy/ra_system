@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enum\GeneralReportType;
-use App\Models\Reports\ReportType;
+use App\Models\ReportType;
 use Illuminate\Database\Seeder;
 
 class ReportTypesSeeder extends Seeder

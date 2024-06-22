@@ -15,6 +15,9 @@ use App\Models\MvrModel;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
+use App\Models\Parameter;
+use App\Models\Report;
+use App\Models\ReportType;
 use App\Traits\CustomAlert;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -40,11 +43,17 @@ class GenericSettingAddModal extends Component
             ['title'=>'Fee Type/Category','class'=>MvrFeeType::class,'field'=>'mvr_fee_type_id']
         ],
         DlFee::class=>[['title'=>'License Duration','field'=>'dl_license_duration_id', 'class'=>DlLicenseDuration::class,'value_field'=>'number_of_years']],
+        Report::class => [
+            ['title'=>'Report Type','class'=>ReportType::class,'field'=>'report_type_id'],
+        ]
     ];
 
     private array $enums = [
         DlFee::class=>[
             ['title'=>'Type','field'=>'type','options'=>['FRESH'=>'Fresh Applicant','RENEW'=>'License Renewal','DUPLICATE'=>'License Copy']]
+        ],
+        Parameter::class => [
+            ['title' => 'Input Type', 'field' => 'input_type', 'options' => ['date' => 'Date', 'text' => 'Text', 'select' => 'Select']]
         ]
     ];
 
@@ -56,6 +65,14 @@ class GenericSettingAddModal extends Component
         DlFee::class=>[['title'=>'Amount','field'=>'amount','type'=>'number']],
         DlLicenseClass::class=>[['title'=>'Description','field'=>'description']],
         MvrRegistrationType::class=>[['title'=>'Initial Plate Number','field'=>'initial_plate_number']],
+        Parameter::class => [
+            ['title'=>'Code','field'=>'code'],
+            ['title'=>'Model','field'=>'model_name'],
+            ['title'=>'Description','field'=>'description'],
+        ],
+        Report::class => [
+            ['title'=>'URL','field'=>'report_url'],
+        ]
     ];
 
     private $no_name_column = [
@@ -66,7 +83,8 @@ class GenericSettingAddModal extends Component
         MvrFee::class=>['data.amount'=>'required|numeric'],
         MvrTransferFee::class=>['data.amount'=>'required|numeric'],
         DlFee::class=>['data.amount'=>'required|numeric'],
-        MvrRegistrationType::class=>['data.initial_plate_number' => 'required|alpha_num']
+        MvrRegistrationType::class=>['data.initial_plate_number' => 'required|alpha_num'],
+
     ];
 
     /**

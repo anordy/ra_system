@@ -1174,7 +1174,14 @@
                             <a href="{{ route('settings.zrb-bank-accounts.index') }}">ZRA Bank Accounts</a>
                         </li>
                     @endcan
-
+{{--                    @can('setting-report-parameter-view')--}}
+                        <li class="{{ request()->is('settings/mvr-generic/Parameter') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'ReportParameter') }}">Report Parameters</a>
+                        </li>
+                        <li class="{{ request()->is('settings/mvr-generic/Report') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'Report') }}">Report Parameters</a>
+                        </li>
+{{--                    @endcan--}}
                     @can('setting-api-user-view')
                         <li class="{{ request()->is('settings/api-users*') ? 'active' : '' }}">
                             <a href="{{ route('settings.api-users.index') }}">API User</a>
