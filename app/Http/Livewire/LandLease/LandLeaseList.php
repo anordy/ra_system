@@ -26,7 +26,7 @@ class LandLeaseList extends DataTableComponent
     //create builder function
     public function builder(): builder
     {
-        return LandLease::where('lease_status',1);
+        return LandLease::whereNotNull('completed_at');
     }
 
     public function configure(): void
@@ -45,21 +45,6 @@ class LandLeaseList extends DataTableComponent
             Column::make("DP Number", "dp_number")
                 ->searchable()
                 ->sortable(),
-            Column::make("Name", "business_location_id")
-                ->format(
-                    function ($value, $row) {
-                        if ($row->category == 'business') {
-                            return $this->getBusinessName(encrypt($value));
-                        } else {
-                            if ($row->is_registered == 1) {
-                                return $this->getApplicantName(encrypt($row->taxpayer_id));
-                            } else {
-                                return $row->name;
-                            }
-                        }
-                    }
-                )
-                ->sortable(),
             Column::make("Applicant Type", "category")
                 ->format(function ($value) {
                     return ucwords($value);
@@ -67,19 +52,14 @@ class LandLeaseList extends DataTableComponent
                 ->searchable()
                 ->sortable(),
 
-            Column::make("Commence Date", "commence_date")
-                ->format(function ($value, $row) {
-                    return date('d/m/Y', strtotime($value));
-                })
+            Column::make("Lease For", "lease_for")
                 ->searchable()
                 ->sortable(),
-            Column::make("Payment Month", "payment_month")
-                ->searchable()
-                ->sortable(),
-            Column::make('Payment Amount (USD)', 'payment_amount')
+            Column::make("Area", "area")
                 ->format(function ($value, $row) {
                     return number_format($value);
                 })
+                ->searchable()
                 ->sortable(),
             Column::make("Region", "region.name")
                 ->searchable()
@@ -89,6 +69,11 @@ class LandLeaseList extends DataTableComponent
                 ->sortable(),
             Column::make("Ward", "ward.name")
                 ->searchable()
+                ->sortable(),
+            Column::make('Payment Amount (USD)', 'payment_amount')
+                ->format(function ($value, $row) {
+                    return number_format($value);
+                })
                 ->sortable(),
             Column::make("Lease Status", "lease_status")->view('land-lease.includes.lease-status'),
             Column::make("Applicant Status", "is_registered")->view("land-lease.includes.applicant-status"),
