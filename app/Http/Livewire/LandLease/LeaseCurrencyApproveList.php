@@ -244,7 +244,6 @@ class LeaseCurrencyApproveList extends DataTableComponent
                 ->first();
         }
 
-        // Return null if no bill is found
         return null;
     }
 
