@@ -19,7 +19,7 @@ class ApiUser extends Model implements PayloadInterface, Auditable
      * @var array
      */
     protected $fillable = [
-        'app_name', 'app_url', 'username', 'password'
+        'app_name', 'app_url', 'username', 'password', 'auth_token'
     ];
 
     /**

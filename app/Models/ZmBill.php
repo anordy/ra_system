@@ -89,4 +89,12 @@ class ZmBill extends Model implements Auditable, PayloadInterface
     public function egaCharges(){
         return $this->hasOne(ZmEgaCharge::class);
     }
+
+    public function pbzTransaction(){
+        return $this->belongsTo(PBZTransaction::class, 'control_number', 'control_number');
+    }
+
+    public function pbzReversal(){
+        return $this->belongsTo(PBZReversal::class, 'control_number', 'control_number');
+    }
 }

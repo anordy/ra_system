@@ -11,12 +11,16 @@
 |
  */
 
+use App\Http\Controllers\BankAccountsController;
+use App\Http\Controllers\Payments\PBZController;
 use App\Http\Controllers\PropertyTax\CondominiumController;
 use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
+use App\Http\Controllers\Reports\GeneralReportsController;
+use App\Http\Controllers\Reports\TaxPayer\TaxPayerReportController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -208,12 +212,13 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         });
     });
 
+    Route::get('/reports/general', [GeneralReportsController::class, 'initial'])->name('reports.general.initial');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::get('/account', [AccountController::class, 'show'])->name('account');
     Route::get('/account/security-questions', [AccountController::class, 'securityQuestions'])->name('account.security-questions');
 
     Route::prefix('settings')->name('settings.')->group(function () {
-        Route::resource('/users', UserController::class);
+        Route::resource('/users', \App\Http\Controllers\UserController::class);
         Route::resource('/roles', RoleController::class);
         Route::resource('/country', CountryController::class);
         Route::resource('/region', RegionController::class);
@@ -224,6 +229,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/street', StreetController::class);
         Route::resource('/education-level', EducationLevelController::class);
         Route::resource('/banks', BankController::class);
+        Route::resource('/bank-accounts', BankAccountsController::class);
         Route::resource('/business-categories', BusinessCategoryController::class);
         Route::resource('/taxtypes', TaxTypeController::class);
         Route::resource('/isic1', ISIC1Controller::class);
@@ -507,6 +513,12 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
+
+
+        Route::get('tax-payer',[TaxPayerReportController::class,'index'])->name('tax-payer');
+        Route::get('/tax-payer/download-report-pdf/{fileName}', [TaxPayerReportController::class, 'exportTaxpayerReportPdf'])->name('tax-payer.download.pdf');
+
+
         Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
 
@@ -668,6 +680,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/daily-payments/{taxTypeId}', [PaymentsController::class, 'dailyPaymentsPerTaxType'])->name('daily-payments.tax-type');
         Route::get('/ega-charges/index', [PaymentsController::class, 'egaCharges'])->name('ega-charges.index');
         Route::get('/departmental-reports/index', [PaymentsController::class, 'departmentalReports'])->name('departmental-reports.index');
+        Route::get('/pbz/statements', [PBZController::class, 'statements'])->name('pbz.statements');
+        Route::get('/pbz/statement/{statement}', [PBZController::class, 'statement'])->name('pbz.statement');
+        Route::get('/pbz/transactions', [PBZController::class, 'transactions'])->name('pbz.transactions');
+        Route::get('/pbz/transactions/payment/{transaction}', [PBZController::class, 'payment'])->name('pbz.payment');
+        Route::get('/pbz/transactions/reversal/{transaction}', [PBZController::class, 'reversal'])->name('pbz.reversal');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 

@@ -50,6 +50,8 @@ class SysModuleSeeder extends Seeder
 
             ['id' => 33, 'code' => 'vfm-integration', 'name' => 'VFMS Integration'],
 
+            ['id' => 32, 'code' => 'vfm-integration', 'name' => 'VFMS Integration'],
+
 
         ];
         foreach ($data as $row) {

@@ -156,6 +156,9 @@ class PermissionSeeder extends Seeder
             ['name' => 'view-ega-charges', 'sys_module_id' => 17],
             ['name' => 'view-departmental-reports', 'sys_module_id' => 17],
             ['name' => 'view-recon', 'sys_module_id' => 17],
+            ['name' => 'request-bank-statements', 'sys_module_id' => 17],
+            ['name' => 'view-bank-statements', 'sys_module_id' => 17],
+            ['name' => 'view-bank-transactions', 'sys_module_id' => 17],
 
             # Setting
             ['name' => 'setting-user-view', 'sys_module_id' => 18],
@@ -447,6 +450,12 @@ class PermissionSeeder extends Seeder
             # Legal Cases
             ['name' => 'legal-cases-view', 'sys_module_id' => 30],
             ['name' => 'legal-cases-appeal', 'sys_module_id' => 30],
+
+            # Vfms Integration
+            ['name' => 'vfms-business-unit-data-linking', 'sys_module_id' => 31],
+            ['name' => 'vfms-znumber-verification', 'sys_module_id' => 31],
+            ['name' => 'vfms-associated-business-unit-edit', 'sys_module_id' => 31],
+            ['name' => 'vfms-business-unit-update', 'sys_module_id' => 31],
 
             # Property Tax
             ['name' => 'survey-solution-registration', 'sys_module_id' => 31],

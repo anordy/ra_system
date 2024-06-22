@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\Vfms\ClientNotificationMail;
 use App\Jobs\Account\SendReferenceNumberMail;
 use App\Jobs\PropertyTax\SendPropertyTaxApprovalMail;
 use App\Jobs\PropertyTax\SendPropertyTaxCorrectionMail;
@@ -241,6 +242,8 @@ class SendMailFired
             SendToCorrectionReturnMail::dispatch($event->tokenId);
         } else if ($event->service === SendBranchRegisteredMail::SERVICE){
             SendBranchRegisteredMail::dispatch($event->tokenId);
+        } else if ($event->service === ClientNotificationMail::SERVICE){
+            ClientNotificationMail::dispatch($event->tokenId);
         } else if ($event->service === SendReferenceNumberMail::SERVICE){
             SendReferenceNumberMail::dispatch($event->tokenId);
         } else if ($event->service === SendQuantityCertificateMail::SERVICE){

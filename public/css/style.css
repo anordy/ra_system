@@ -937,3 +937,8 @@ div.table-bordered {
     border: 1px solid silver;
     object-fit: contain;
 }
+
+.btn-cm{
+
+    margin-top: 30px;
+}

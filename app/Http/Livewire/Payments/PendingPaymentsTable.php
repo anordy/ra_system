@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire\Payments;
 
+use App\Enum\GeneralConstant;
 use App\Enum\PaymentStatus;
-use App\Models\TaxType;
 use App\Models\ZmBill;
-use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class PendingPaymentsTable extends DataTableComponent
 {
@@ -29,14 +29,29 @@ class PendingPaymentsTable extends DataTableComponent
         $data   = $this->data;
         $filter = (new ZmBill())->newQuery();
 
-        if (isset($data['tax_type_id']) && $data['tax_type_id'] != 'All') {
+        if (isset($data['tax_type_id']) && $data['tax_type_id'] != GeneralConstant::ALL) {
             $filter->Where('tax_type_id', $data['tax_type_id']);
         }
-        if (isset($data['currency']) && $data['currency'] != 'All') {
+        if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
             $filter->Where('currency', $data['currency']);
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
+        }  else {
+            $filter->whereBetween('created_at', [Carbon::now()->toDateString(), Carbon::now()->toDateString()]);
+        }
+
+
+        if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::NOT_APPLICABLE){
+            $filter->whereNull('pbz_status');
+        }
+
+        if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::PAID){
+            $filter->where('pbz_status', 'paid');
+        }
+
+        if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::REVERSED){
+            $filter->where('pbz_status', 'reversed');
         }
 
         return $filter->with('billable')->whereIn('status', [PaymentStatus::PENDING])->orderBy('created_at', 'DESC');
@@ -87,6 +102,7 @@ class PendingPaymentsTable extends DataTableComponent
             ->sortable()
             ->searchable(),
             Column::make('Status', 'status'),
+            Column::make('PBZ Status', 'pbz_status')->view('payments.includes.pbz-status'),
             Column::make('Actions', 'id')
                 ->view('payments.includes.actions'),
         ];
