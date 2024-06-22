@@ -74,19 +74,19 @@ class AssignTaxpayer extends Component
             DB::commit();
 
             //redirect to route "land-lease.index"
-            $this->flash('success', __('Edited successfully'));
+            session()->flash('success', __('Taxpayer is assigned successfully'));
             return redirect()->route("land-lease.list");
 
         } catch (\Exception$e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            $this->flash('error', __('Failed to edit Lease'));
+            session()->flash('error', __('Failed to assign taxpayer'));
         }
     }
     public function updated($propertyName)
     {
         if ($propertyName === 'zrbNumber') {
-            $taxPayer = TaxPayer::where('reference_no', $this->zrbNumber)->first();
+            $taxPayer = DB::table('taxpayers')->where('reference_no', $this->zrbNumber)->first();
             if ($taxPayer) {
                 $this->taxpayerId = $taxPayer->id;
                 $this->taxpayerName = $taxPayer->first_name . ' ' . $taxPayer->last_name;
