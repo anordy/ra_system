@@ -255,21 +255,23 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <p class="p-3">
-                            Tax payer wants to make a payment of
-                            <span class="font-weight-bold text-uppercase">{{ number_format($partialPayment->amount, 2) }}</span>
-                            which is equal to
-                            <span class="font-weight-bold text-uppercase">
-                                @if ($partialPayment->taxAssessment->outstanding_amount != 0)
-                                    {{ number_format(max(0, min(($partialPayment->amount / $partialPayment->taxAssessment->outstanding_amount) * 100, 100)), 2) }}%
-                                @else
-                                    0
-                                @endif
-                            </span>
-                            percent of total Outstanding Amount of {{ $partialPayment->taxAssessment->taxtype->name }} Assessment
-                        </p>
-                    </div>
+                    @if ($partialPayment->taxAssessment->outstanding_amount >= 0)
+                        <div class="row">
+                            <p class="p-3">
+                                Tax payer wants to make a payment of
+                                <span class="font-weight-bold text-uppercase">{{ number_format($partialPayment->amount, 2) }}</span>
+                                which is equal to
+                                <span class="font-weight-bold text-uppercase">
+                                    @if ($partialPayment->taxAssessment->outstanding_amount != 0)
+                                        {{ number_format(max(0, min(($partialPayment->amount / $partialPayment->taxAssessment->outstanding_amount) * 100, 100)), 2) }}%
+                                    @else
+                                        0
+                                    @endif
+                                </span>
+                                percent of total Outstanding Amount of {{ $partialPayment->taxAssessment->taxtype->name }} Assessment
+                            </p>
+                        </div>
+                    @endif
 
                 </div>
 

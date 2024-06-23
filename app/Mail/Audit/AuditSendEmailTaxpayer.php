@@ -29,6 +29,6 @@ class AuditSendEmailTaxpayer extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.audit.email-to-taxpayer');
+        return $this->markdown('emails.audit.email-to-taxpayer')->subject('Selection For Tax Audit');
     }
 }

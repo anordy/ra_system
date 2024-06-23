@@ -37,7 +37,7 @@ class SendSmsToTaxPayer implements ShouldQueue
         $send_to = $this->payload->mobile;
         $sendToName = $this->payload->first_name;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Hello {{ $sendToName }}, Your Business has been selected to be audited, two weeks before auditing you will be notified and specified the exact date.";
+        $customer_message = "Hello $sendToName , Your Business has been selected to be audited, two weeks before auditing you will be notified and specified the exact date.";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }
