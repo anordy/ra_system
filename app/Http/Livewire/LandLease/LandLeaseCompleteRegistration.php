@@ -107,7 +107,7 @@ class LandLeaseCompleteRegistration extends Component
             'area' => 'required|thousand_separator',
             'usedFor' => 'required|strip_tag',
             //'leaseAgreement' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
-            'customPeriod' => 'nullable|numeric|min:33',
+            'customPeriod' => 'nullable|numeric|min:33|max:99',
             'rentCommenceDate' => 'required|strip_tag',
         ];
     }
