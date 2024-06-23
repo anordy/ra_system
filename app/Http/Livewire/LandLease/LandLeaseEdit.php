@@ -10,6 +10,7 @@ use App\Models\LandLeaseHistory;
 use App\Models\Region;
 use App\Models\TaxPayer;
 use App\Models\Ward;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -82,7 +83,8 @@ class LandLeaseEdit extends Component
             }
         }
         $this->applicantType = $this->landLease->is_registered ? 'registered' : 'unregistered';
-        $this->commenceDate = $this->landLease->commence_date;
+        $this->commenceDate =  Carbon::parse($this->landLease->commence_date)->format('Y-m-d');
+        $this->rentCommenceDate = Carbon::parse($this->landLease->rent_commence_date)->format('Y-m-d');
         $this->dpNumber = $this->landLease->dp_number;
         $this->paymentMonth = $this->landLease->payment_month;
         $this->reviewSchedule = $this->landLease->review_schedule;
@@ -95,6 +97,8 @@ class LandLeaseEdit extends Component
         $this->ward = $this->landLease->ward_id;
 
         $this->showEditDocument = false;
+
+
     }
 
     public function render()
