@@ -36,6 +36,7 @@ class SystemSetting extends Model implements Auditable
     const PUBLIC_SERVICE_INTEREST_RATE = 'public-service-interest-rate';
     const PROPERTY_TAX_INTEREST_RATE = 'property-tax-interest-rate';
     const PROPERTY_TAX_TIME_VARIABLE = 'property-tax-time-variable';
+    const TAX_REFUND_RATE = 'tax-refund-rate';
 
 
     protected $guarded = [];

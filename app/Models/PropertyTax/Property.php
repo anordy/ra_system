@@ -6,6 +6,7 @@ use App\Models\District;
 use App\Models\Region;
 use App\Models\Street;
 use App\Models\Taxpayer;
+use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\Ward;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -72,5 +73,10 @@ class Property extends Model
 
     public function ownership(){
         return $this->belongsTo(PropertyOwnershipType::class, 'ownership_type_id');
+    }
+
+    public function ledger()
+    {
+        return $this->morphOne(TaxpayerLedger::class, 'source');
     }
 }

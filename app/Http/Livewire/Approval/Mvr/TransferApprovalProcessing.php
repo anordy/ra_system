@@ -3,14 +3,19 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\CustomMessage;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
+use App\Models\MvrOwnershipTransfer;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +25,7 @@ use Livewire\WithFileUploads;
 
 class TransferApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;

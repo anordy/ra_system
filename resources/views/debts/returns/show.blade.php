@@ -6,15 +6,15 @@
             <div class="d-flex justify-content-end pb-2">
                 @if (!$tax_return->rollback && (count($tax_return->penalties) > 0) || count($tax_return->return->penalties) > 0)
                     <a href="{{ route('debts.rollback.return', encrypt($tax_return->id)) }}"
-                        class="btn btn-info btn-sm text-white mr-2" style="color: white !important;"><i
+                        class="btn btn-info btn-sm text-white mr-2"><i
                             class="bi bi-arrow-left-right text-white"></i>
                         Rollback Penalty & Interest
                     </a>
                 @endif
                 @if (($tax_return->recoveryMeasure->status ?? '') != 'unassigned' && $tax_return->return_category == 'overdue')
                     <a href="{{ route('debts.debt.recovery', encrypt($tax_return->id)) }}"
-                        class="btn btn-info btn-sm text-white" style="color: white !important;"><i
-                            class="fa fa-plus text-white"></i>
+                        class="btn btn-info btn-sm text-white"><i
+                            class="bi bi-plus-circle-fill text-white"></i>
                         Assign Recovery Measure
                     </a>
                 @endif
@@ -117,8 +117,8 @@
                             <div class="col-md-4 mb-3">
                                 <a class="file-item" target="_blank"
                                     href="{{ route('extension.file', encrypt($extension->attachment)) }}">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                    <div style="font-weight: 500;" class="ml-1">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                    <div class="ml-1 font-weight-bold">
                                         <span class="font-weight-bold text-uppercase">Attachment</span>
                                     </div>
                                 </a>
@@ -168,8 +168,8 @@
                             <div class="col-md-4 mb-3">
                                 <a class="file-item" target="_blank"
                                     href="{{ route('installment.requests.file', encrypt($installment->attachment)) }}">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                    <div style="font-weight: 500;" class="ml-1">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                    <div class="ml-1 font-weight-bold">
                                         <span class="font-weight-bold text-uppercase">Attachment</span>
                                     </div>
                                 </a>

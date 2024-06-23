@@ -8,6 +8,7 @@ use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\PropertyTax\PaymentInterest;
 use App\Models\PropertyTax\Property;
+use App\Models\PropertyTax\PropertyPayment;
 use App\Models\Region;
 use App\Models\SystemSetting;
 use Carbon\Carbon;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Log;
 
 trait PropertyTaxTrait
 {
+
+    use TaxpayerLedgerTrait;
 
     public function generateMonthlyInterest($propertyPayment) {
         // Check if payment due date diff in days btn now is 30 days
@@ -45,6 +48,8 @@ trait PropertyTaxTrait
                 $propertyPayment->curr_payment_date = $newPaymentDate;
                 $propertyPayment->payment_category = PropertyPaymentCategoryStatus::DEBT;
                 $propertyPayment->save();
+
+                TaxpayerLedgerTrait::recordLedgerDebt(PropertyPayment::class, $propertyPayment->id, $propertyPayment->interest, 0, $propertyPayment->total_amount);
 
                 $currFinancialMonth = $this->getCurrentPropertyTaxFinancialMonth();
 

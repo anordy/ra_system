@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    <ul class="nav nav-tabs shadow-sm mb-0">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true"> {{ $location->name }} Branch Information</a>
@@ -145,8 +145,7 @@
                                 Rejected
                             </span>
                         @elseif($location->status === \App\Models\BranchStatus::TEMP_CLOSED)
-                            <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #dc354559; color: #cf1c2d;; font-size: 85%">
+                            <span class="badge badge-success py-1 px-2">
                                 {{ __('Closed') }}
                             </span>
                         @else

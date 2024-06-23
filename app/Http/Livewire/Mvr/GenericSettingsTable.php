@@ -14,6 +14,8 @@ use App\Models\MvrFee;
 use App\Models\MvrModel;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferFee;
+use App\Models\TaxRefund\PortLocation;
+use App\Traits\WithSearch;
 use App\Traits\CustomAlert;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -162,6 +164,9 @@ class GenericSettingsTable extends DataTableComponent
             MvrClass::class => [
                 Column::make("Code", "code")->sortable(),
                 Column::make("Category", "category")->sortable(),
+            ],
+            PortLocation::class => [
+                Column::make("Region", "region.name")->sortable(),
             ]
         ];
 

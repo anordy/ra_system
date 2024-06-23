@@ -84,7 +84,7 @@
             <div class="modal-footer">
                 @if(empty($appeal->case_outcome))
                     <button class="btn btn-sm btn-primary mt-2"
-                            onclick="Livewire.emit('showModal', 'cases.close-appeal-model',{{\App\Models\CaseAppeal::query()->where(['case_id'=>$case->id])->whereNull('case_outcome_id')->first()->id}})"><i class="fa fa-cross"></i>
+                            onclick="Livewire.emit('showModal', 'cases.close-appeal-model',{{\App\Models\CaseAppeal::query()->where(['case_id'=>$case->id])->whereNull('case_outcome_id')->first()->id}})"><i class="bi bi-x-circle-fill"></i>
                         Close Appeal
                     </button>
                 @endif

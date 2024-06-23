@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\PublicService\PublicServiceMotor;
+use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\Tra\ChassisNumber;
 use App\Models\Tra\Tin;
 use App\Traits\WorkflowTrait;

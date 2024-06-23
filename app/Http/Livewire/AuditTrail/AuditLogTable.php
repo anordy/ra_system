@@ -55,7 +55,7 @@ class AuditLogTable extends DataTableComponent
                     if(Gate::allows('system-audit-trail-view')) {
                         $id = "'".encrypt($value)."'";
                         return <<< HTML
-                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'audit-view-modal',$id)"><i class="fa fa-eye"></i> </button>
+                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'audit-view-modal',$id)"><i class="bi bi-eye-fill"></i> </button>
                         HTML;
                     }
                 })

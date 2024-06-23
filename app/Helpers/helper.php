@@ -249,3 +249,13 @@ function romanNumeralCount($number)
 
     return $result;
 }
+
+function getSourceName($model) {
+    if ($model == \App\Models\Returns\TaxReturn::class) {
+        return 'Return';
+    } else if ($model == \App\Models\TaxRefund\TaxRefund::class) {
+        return 'Tax Refund';
+    } else {
+        return 'N/A';
+    }
+}

@@ -8,6 +8,7 @@ use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxType;
 use App\Traits\ReturnFilterTrait;
+use App\Traits\VettingFilterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -17,9 +18,13 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class VettingApprovalTableNtl extends DataTableComponent
 {
-    use  ReturnFilterTrait;
+    use VettingFilterTrait;
 
     protected $model = TaxReturn::class;
+
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
+
+    public $data = [];
 
     public $vettingStatus, $orderBy;
 
@@ -36,6 +41,12 @@ class VettingApprovalTableNtl extends DataTableComponent
         } else {
             $this->orderBy = 'ASC';
         }
+    }
+
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->emit('$refresh');
     }
 
     public function configure(): void
@@ -74,7 +85,7 @@ class VettingApprovalTableNtl extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
+        $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
             ->whereIn('code', [
                 TaxType::AIRPORT_SERVICE_CHARGE,
@@ -93,19 +104,28 @@ class VettingApprovalTableNtl extends DataTableComponent
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });
-            })
-            ->orderBy('created_at', $this->orderBy);
+            });
+
+        // Apply filters
+        $returnTable = TaxReturn::getTableName();
+        $query = $this->dataFilter($query, $this->data, $returnTable);
+        $query->orderBy('created_at', $this->orderBy);
+
+        return $query;
     }
 
     public function columns(): array
     {
         return [
             Column::make('Taxpayer Name', 'business.taxpayer_name')
-            ->format(function ($value, $row) {
-                return $value ?? 'N/A';
-            })
-            ->sortable()->searchable(),
+                ->format(function ($value, $row) {
+                    return $value ?? 'N/A';
+                })
+                ->sortable()->searchable(),
             Column::make('Business Name', 'business.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Old ZRA No', 'business.previous_zno')
                 ->sortable()
                 ->searchable(),
             Column::make('Branch', 'location.name')

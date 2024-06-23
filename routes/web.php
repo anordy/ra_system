@@ -75,6 +75,8 @@ use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
+use App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController;
+use App\Http\Controllers\TaxRefund\TaxRefundController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
 use App\Http\Controllers\QRCodeCheckController;
 use App\Http\Controllers\QRCodeGeneratorController;
@@ -250,7 +252,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlRestriction|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrRegistrationType');
+                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlRestriction|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrRegistrationType|PortLocation');
         });
         Route::name('return-config.')->prefix('return-config')->group(function () {
             Route::get('/', [ReturnController::class, 'taxTypes'])->name('index');
@@ -281,6 +283,12 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
     });
     Route::name('verification.')->prefix('verification')->group(function () {
         Route::get('tin/{business}', [VerificationController::class, 'tin'])->name('tin');
+    });
+
+    Route::name('tax-refund.')->prefix('tax-refund')->group(function () {
+        Route::get('tax-refund/index', [TaxRefundController::class, 'index'])->name('index');
+        Route::get('tax-refund/initiate', [TaxRefundController::class, 'init'])->name('init');
+        Route::get('tax-refund/view/{id}', [TaxRefundController::class, 'show'])->name('show');
     });
 
     Route::prefix('system')->name('system.')->group(function () {
@@ -772,8 +780,10 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
 
     // Finance
     Route::name('finance.')->prefix('finance')->group(function () {
-        Route::get('/taxpayer/ledger', [FinanceController::class, 'taxpayerLedgersList'])->name('taxpayer.ledgers');
-        Route::get('/taxpayer/ledger/{id}', [FinanceController::class, 'taxpayerLedger'])->name('taxpayer.ledger.details');
+        Route::get('/taxpayer/ledger', [TaxpayerLedgerController::class, 'search'])->name('taxpayer.ledger.search');
+        Route::get('/taxpayer/ledger/{businessLocationId}/tax/{taxTypeId}', [TaxpayerLedgerController::class, 'show'])->name('taxpayer.ledger.show');
+        Route::get('/taxpayer/ledger/{businessLocationId}/summary', [TaxpayerLedgerController::class, 'summary'])->name('taxpayer.ledger.summary');
+        Route::get('/taxpayer/ledger/{businessId}/summary/business', [TaxpayerLedgerController::class, 'businessSummary'])->name('taxpayer.ledger.business-summary');
     });
 
     Route::prefix('public-service')->as('public-service.')->group(function () {

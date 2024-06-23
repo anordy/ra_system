@@ -60,9 +60,9 @@
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
                                     <th></th>
-                                    <th style="width: 35%">Current Owner</th>
-                                    <th style="width: 35%">New Owner</th>
-                                    <th style="width: 20%">Status</th>
+                                    <th>Current Owner</th>
+                                    <th>New Owner</th>
+                                    <th>Status</th>
                                     </thead>
                                     <tbody>
                                     <tr>
@@ -103,9 +103,9 @@
                             <label class="text-left font-weight-bold text-uppercase">Hotel Stars Rating Change</label>
                         </div>
                         <thead>
-                            <th style="width: 30%">Current Star Rating</th>
-                            <th style="width: 30%">New Star Rating</th>
-                            <th style="width: 20%">Status</th>
+                            <th>Current Star Rating</th>
+                            <th>New Star Rating</th>
+                            <th>Status</th>
                         </thead>
                         <tbody>
                             <tr>
@@ -129,9 +129,9 @@
                                     <label class="text-left font-weight-bold text-uppercase">Effective Date Change</label>
                                 </div>
                                 <thead>
-                                <th style="width: 30%">Current Effective Date</th>
-                                <th style="width: 30%">New Effective Date</th>
-                                <th style="width: 20%">Status</th>
+                                <th>Current Effective Date</th>
+                                <th>New Effective Date</th>
+                                <th>Status</th>
                                 </thead>
                                 <tbody>
                                 <tr>
@@ -160,9 +160,9 @@
                                     <label class="text-left font-weight-bold text-uppercase">Current Tax Types</label>
                                 </div>
                                 <thead>
-                                <th style="width: 30%">Tax Type Name</th>
-                                <th style="width: 30%">Currency</th>
-                                <th style="width: 30%">Sub VAT Category (If available)</th>
+                                <th>Tax Type Name</th>
+                                <th>Currency</th>
+                                <th>Sub VAT Category (If available)</th>
                                 </thead>
                                 <tbody>
                                     @foreach($oldTaxes as $oldTax)
@@ -181,9 +181,9 @@
                                     <label class="text-left font-weight-bold text-uppercase">Current Tax Types</label>
                                 </div>
                                 <thead>
-                                <th style="width: 30%">Tax Type Name</th>
-                                <th style="width: 30%">Currency</th>
-                                <th style="width: 30%">Sub VAT Category (If available)</th>
+                                <th>Tax Type Name</th>
+                                <th>Currency</th>
+                                <th>Sub VAT Category (If available)</th>
                                 </thead>
                                 <tbody>
                                 @foreach($newTaxes as $newTax)
@@ -206,9 +206,9 @@
                                     <label class="text-left font-weight-bold text-uppercase">Business Electric Change</label>
                                 </div>
                                 <thead>
-                                <th style="width: 30%">Current Business Electric Status</th>
-                                <th style="width: 30%">New Business Electric Status</th>
-                                <th style="width: 20%">Status</th>
+                                <th>Current Business Electric Status</th>
+                                <th>New Business Electric Status</th>
+                                <th>Status</th>
                                 </thead>
                                 <tbody>
                                 <tr>
@@ -232,9 +232,9 @@
                                     <label class="text-left font-weight-bold text-uppercase">Business LTO Change</label>
                                 </div>
                                 <thead>
-                                <th style="width: 30%">Current Business LTO Status</th>
-                                <th style="width: 30%">New Business LTO Status</th>
-                                <th style="width: 20%">Status</th>
+                                <th>Current Business LTO Status</th>
+                                <th>New Business LTO Status</th>
+                                <th>Status</th>
                                 </thead>
                                 <tbody>
                                 <tr>
@@ -258,9 +258,9 @@
                                     <label class="text-left font-weight-bold text-uppercase">Tax Region Change</label>
                                 </div>
                                 <thead>
-                                <th style="width: 30%">Current Tax Region</th>
-                                <th style="width: 30%">New Tax Region</th>
-                                <th style="width: 20%">Status</th>
+                                <th>Current Tax Region</th>
+                                <th>New Tax Region</th>
+                                <th>Status</th>
                                 </thead>
                                 <tbody>
                                 <tr>
@@ -284,9 +284,9 @@
                                     <label class="text-left font-weight-bold text-uppercase">Business Currency Type Change</label>
                                 </div>
                                 <thead>
-                                <th style="width: 30%">Current Business Currency Status</th>
-                                <th style="width: 30%">New Business Currency Status</th>
-                                <th style="width: 20%">Status</th>
+                                <th>Current Business Currency Status</th>
+                                <th>New Business Currency Status</th>
+                                <th>Status</th>
                                 </thead>
                                 <tbody>
                                 <tr>
@@ -310,10 +310,10 @@
                                     <label class="text-left font-weight-bold text-uppercase">ISIIC Codes Change</label>
                                 </div>
                                 <thead>
-                                <th style="width: 30%">ISIIC Level</th>
-                                <th style="width: 30%">Current ISIIC Code</th>
-                                <th style="width: 30%">New ISIIC Code</th>
-                                <th style="width: 20%">Status</th>
+                                <th>ISIIC Level</th>
+                                <th>Current ISIIC Code</th>
+                                <th>New ISIIC Code</th>
+                                <th>Status</th>
                                 </thead>
                                 <tbody>
                                 @php

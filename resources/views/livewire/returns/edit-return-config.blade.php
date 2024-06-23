@@ -57,9 +57,11 @@
             <label>Currency</label>
             <select disabled class="form-control" wire:model="currency">
                 <option value="">--Choose currency--</option>
-                @foreach($currencies as $currency)
-                    <option value="{{$currency->iso}}">{{$currency->name}}</option>
-                @endforeach
+                @if(!empty($currencies))
+                    @foreach($currencies as $currency)
+                        <option value="{{$currency->iso}}">{{$currency->name}}</option>
+                    @endforeach
+                @endif
             </select>
         </div>
         <div class="col-md-4 mb-2">

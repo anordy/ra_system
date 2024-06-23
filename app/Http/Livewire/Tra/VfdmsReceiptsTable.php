@@ -65,11 +65,11 @@ class VfdmsReceiptsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >No</span>
+                            <span class="badge badge-success p-2 rounded-0" >No</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Yes</span>
+                            <span class="badge badge-danger p-2 rounded-0" >Yes</span>
                         HTML;
                     }
                 })
@@ -78,11 +78,11 @@ class VfdmsReceiptsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >No</span>
+                            <span class="badge badge-success p-2 rounded-0" >No</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Yes</span>
+                            <span class="badge badge-danger p-2 rounded-0" >Yes</span>
                         HTML;
                     }
                 })
@@ -91,11 +91,11 @@ class VfdmsReceiptsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >No</span>
+                            <span class="badge badge-success p-2 rounded-0" >No</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Yes</span>
+                            <span class="badge badge-danger p-2 rounded-0" >Yes</span>
                         HTML;
                     }
                 })

@@ -74,7 +74,6 @@ class WithholdingAgentsTable extends DataTableComponent
 
     public function changeStatus($id)
     {
-//        todo: encrypt id && select only columns that's needed
         $withholding_agent = WithholdingAgent::select('id', 'status')->findOrFail(decrypt($id));
         $status = $withholding_agent->status == 'active' ? 'Deactivate' : 'Activate';
         $this->customAlert('warning', "Are you sure you want to {$status} ?", [
@@ -96,7 +95,6 @@ class WithholdingAgentsTable extends DataTableComponent
 
     public function confirmed($value)
     {
-//        todo: select only columns that's needed
         try {
             $data = (object) $value['data'];
             $withholding_agent = WithholdingAgent::select('id','status')->findOrFail(decrypt($data->id));
@@ -112,7 +110,7 @@ class WithholdingAgentsTable extends DataTableComponent
             $this->flash('success', 'Status updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->customAlert('warning', 'Something whent wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models\PropertyTax;
 use App\Enum\PaymentExtensionStatus;
 use App\Models\Currency;
 use App\Models\FinancialYear;
+use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -58,5 +59,10 @@ class PropertyPayment extends Model
 
     public function checkAnyPendingExtensionRequest(){
         return $this->paymentExtension()->where('status', PaymentExtensionStatus::PENDING)->exists();
+    }
+
+    public function ledger()
+    {
+        return $this->morphOne(TaxpayerLedger::class, 'source');
     }
 }

@@ -79,8 +79,8 @@
                     <div class="col-4">
                         <a class="file-item" target="_blank"
                             href="{{ route('reliefs.get.attachment', ['path' => encrypt($reliefAttachment->file_path)]) }}">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <div style="font-weight: 500;" class="ml-1">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <div class="ml-1 font-weight-bold">
                                 {{ $reliefAttachment->file_name }}
                             </div>
                         </a>
@@ -92,7 +92,7 @@
         </div>
 
         <div class="card-footer">
-            <div class="row" style="background-color: #faecec">
+            <div class="row">
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Registered By</span>
                     <p class="my-1">{{ $relief->createdBy->fname ?? '' }} {{ $relief->createdBy->mname ?? '' }}

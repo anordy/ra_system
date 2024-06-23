@@ -17,7 +17,7 @@
         </td>
     </tr>
     <tr>
-        <td>Payment Quaters Per Year<br> <span> Awamu Zinazolipwa Kwa Mwaka </span> </td>
+        <td>Payment Quarters Per Year<br> <span> Awamu Zinazolipwa Kwa Mwaka </span> </td>
         <td>{{ $return->assignedPayments->payment_quarters }}</td>
     </tr>
     @if ($return->penalties)
@@ -29,12 +29,12 @@
         </tr>
     @else
         <tr>
-            <td>Quater of <br> <span>Awamu ya</span> </td>
+            <td>Quarter of <br> <span>Awamu ya</span> </td>
             <td> {{ $return->installment }} </td>
         </tr>
     @endif
     <tr>
-        <td>Amount Paid on every Quater <br> <span>Kiasi kinacholipiwa kwa kila Awamu</span> </td>
+        <td>Amount Paid on every Quarter <br> <span>Kiasi kinacholipiwa kwa kila Awamu</span> </td>
         <td>
             {{ number_format($return->total_amount_due, 2, '.', ',') }}
             <b>{{ $return->currency }}</b>

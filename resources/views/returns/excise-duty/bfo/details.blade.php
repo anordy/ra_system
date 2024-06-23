@@ -6,10 +6,10 @@
             <div class="col-md-12">
                 <table class="table table-bordered table-sm">
                     <thead>
-                    <th style="width: 30%">Item Name</th>
-                    <th style="width: 20%">Value</th>
-                    <th style="width: 10%">Rate</th>
-                    <th style="width: 20%">VAT</th>
+                    <th>Item Name</th>
+                    <th>Value</th>
+                    <th>Rate</th>
+                    <th>VAT</th>
                     </thead>
                     <tbody>
                     @foreach ($return->configReturns as $item)

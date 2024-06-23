@@ -2,26 +2,28 @@
 
 namespace App\Http\Livewire\Approval;
 
-use Exception;
-use App\Events\SendSms;
-use App\Models\TaxType;
-use Livewire\Component;
+use App\Enum\TransactionType;
 use App\Events\SendMail;
-use App\Models\WaiverStatus;
+use App\Events\SendSms;
 use App\Jobs\Bill\CancelBill;
-use App\Traits\PaymentsTrait;
-use Livewire\WithFileUploads;
-use App\Models\Debts\DebtWaiver;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Gate;
-use App\Traits\WorkflowProcesssingTrait;
-use App\Traits\CustomAlert;
 use App\Jobs\Debt\GenerateAssessmentDebtControlNo;
+use App\Models\Debts\DebtWaiver;
+use App\Models\TaxType;
+use App\Models\WaiverStatus;
+use App\Traits\CustomAlert;
+use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
+use App\Traits\WorkflowProcesssingTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class AssessmentDebtWaiverApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, CustomAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, CustomAlert, TaxpayerLedgerTrait;
     public $modelId;
     public $debt;
     public $modelName;
@@ -173,6 +175,22 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 $this->subject->status = WaiverStatus::APPROVED;
                 $this->subject->save();
 
+                if (!$this->debt_waiver->ledger) {
+                    $this->recordLedger(
+                        TransactionType::DEBIT,
+                        DebtWaiver::class,
+                        $this->subject->id,
+                        $this->debt->principal_amount,
+                        $this->penaltyAmountDue,
+                        $this->interestAmountDue,
+                        array_sum([$this->debt->principal_amount, $this->penaltyAmountDue, $this->interestAmountDue]),
+                        $this->debt->tax_type_id,
+                        $this->debt->currency,
+                        $this->debt->business->taxpayer_id,
+                        $this->debt->location_id ?? null,
+                    );
+                }
+
                 DB::commit();
 
                 $notification_payload = [
@@ -192,6 +210,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             try {
                 if ($this->debt->bill) {
                     CancelBill::dispatch($this->debt->bill, 'Debt has been waived');
+                    // Cancel previous debit action ?
                     GenerateAssessmentDebtControlNo::dispatch($this->debt);
                 } else {
                     GenerateAssessmentDebtControlNo::dispatch($this->debt);

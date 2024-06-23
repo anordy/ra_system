@@ -59,11 +59,11 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Return Category</span>
-                            <p class="my-1"><span class="badge badge-info py-1 px-2 text-uppercase" style="border-radius: 1rem; font-size: 85%">{{ $return->return_category }}</span></p>
+                            <p class="my-1"><span class="badge badge-info py-1 px-2 text-uppercase">{{ $return->return_category }}</span></p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase" >{{ __('Vetting Status') }}</span>
-                            <p class="my-1"><span class="badge badge-info py-1 px-2 text-uppercase" style="border-radius: 1rem; font-size: 85%">{{ $return->vetting_status }}</span></p>
+                            <p class="my-1"><span class="badge badge-info py-1 px-2 text-uppercase">{{ $return->vetting_status }}</span></p>
                         </div>
                     </div>
                     <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
@@ -71,10 +71,10 @@
                 <div id="payment-structure" class="tab-pane fade p-4">
                     <table class="table table-bordered mb-0 normal-text">
                         <thead>
-                        <th style="width: 30%">Item Name</th>
-                        <th style="width: 20%">Value (TZS)</th>
-                        <th style="width: 10%">Rate</th>
-                        <th style="width: 20%">Tax (TZS)</th>
+                        <th>Item Name</th>
+                        <th>Value (TZS)</th>
+                        <th>Rate</th>
+                        <th>Tax (TZS)</th>
                         </thead>
                         <tbody>
                         @foreach ($return->items as $item)
@@ -110,10 +110,10 @@
                         </tbody>
                         <tfoot>
                         <tr class="bg-secondary">
-                            <th style="width: 20%">Total</th>
-                            <th style="width: 30%"></th>
-                            <th style="width: 25%"></th>
-                            <th style="width: 25%">{{ number_format($return->total_amount_due, 2) }}</th>
+                            <th>Total</th>
+                            <th></th>
+                            <th></th>
+                            <th>{{ number_format($return->total_amount_due, 2) }}</th>
                         </tr>
                         </tfoot>
                     </table>
@@ -188,8 +188,8 @@
                     </table>
                     @if($return->withheld_certificates_summary)
                         <a class="file-item d-inline-flex pr-3 mr-2"  target="_blank"  href="{{ route('returns.stamp-duty.withheld-certificates-summary', encrypt($return->id)) }}">
-                            <i class="bi bi-file-earmark-excel px-2" style="font-size: x-large"></i>
-                            <div style="font-weight: 500;" class="ml-1">
+                            <i class="bi bi-file-earmark-excel px-2 font-x-large"></i>
+                            <div class="ml-1 font-weight-bold">
                                 Withheld Certificates Summary
                             </div>
                             <i class="bi bi-arrow-up-right-square ml-2"></i>
@@ -198,8 +198,8 @@
 
                     @foreach($return->withheldCertificates as $certificate)
                         <a class="file-item d-inline-flex pr-3 mr-2"  target="_blank"  href="{{ route('returns.stamp-duty.withheld-certificate', encrypt($certificate->id)) }}">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <div style="font-weight: 500;" class="ml-1">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <div class="ml-1 font-weight-bold">
                                 Withheld Certificate {{ $loop->index + 1 }}
                             </div>
                             <i class="bi bi-arrow-up-right-square ml-2"></i>

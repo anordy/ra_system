@@ -43,20 +43,17 @@
                                     <span class="font-weight-bold text-uppercase">Status</span>
                                     <p class="my-1">
                                         @if ($result->status === 'approved')
-                                            <span class="badge badge-success py-1 px-2"
-                                                  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                            <span class="badge badge-success py-1 px-2">
                                         <i class="bi bi-check-circle-fill mr-1"></i>
                                         {{ ucwords($result->status) }}
                                     </span>
                                         @elseif($result->status === 'pending')
-                                            <span class="badge badge-warning py-1 px-2"
-                                                  style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
+                                            <span class="badge badge-warning py-1 px-2">
                                         <i class="bi bi-clock-history mr-1"></i>
                                         {{ ucwords($result->status) }}
                                     </span>
                                         @elseif($result->status === 'reject')
-                                            <span class="badge badge-danger py-1 px-2"
-                                                  style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
+                                            <span class="badge badge-danger py-1 px-2">
                                         <i class="bi bi-clock-history mr-1"></i>
                                         {{ ucwords($result->status) }}
                                     </span>

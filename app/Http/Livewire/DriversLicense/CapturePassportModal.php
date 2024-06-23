@@ -124,8 +124,12 @@ class CapturePassportModal extends Component
 
             try {
                 // Delete existing license class associations
-                $newLicense->drivers_license_classes()->delete();
+                // TODO: WHY ?
+                // Take old classes and associate with the new driver license
+                //$newLicense->drivers_license_classes()->delete();
                 $newLicense->save();
+                $dla->drivers_license_id = $newLicense->id;
+                $dla->save();
 
             } catch (Exception $exception) {
                 Log::error('DRIVERS-LICENSE-CAPTURE-PASSPORT-MODAL-GENERATE-LICENSE', [$exception]);
@@ -141,7 +145,7 @@ class CapturePassportModal extends Component
                 'issued_date' => date('Y-m-d'),
                 'expiry_date' => date('Y-m-d', strtotime("+{$dla->license_duration} years")),
                 'license_restrictions' => $dla->license_restrictions ?? 'none',
-                'dl_license_application_id' => $dla->id,
+                'dl_license_application_id' => $dla->id, // remove column
                 'dl_license_duration_id' => $dla->license_duration_id,
                 'status' => DlApplicationStatus::ACTIVE
             ]);
@@ -163,7 +167,6 @@ class CapturePassportModal extends Component
         $dla->licenseRestrictions()->update(['dl_license_id' => $newLicense->id]);
 
         $this->licenseId = $newLicense->id;
-
         return $newLicense;
     }
 

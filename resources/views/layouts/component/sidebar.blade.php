@@ -587,7 +587,7 @@
                     Registration</a>
                 <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
                     @can('motor-vehicle-registration')
-                        <li class="{{ request()->is('mvr/registration') ? 'active' : '' }}">
+                        <li class="{{ request()->is('mvr/registration*') ? 'active' : '' }}">
                             <a href="{{ route('mvr.registration.index') }}">Motor Vehicle Registration</a>
                         </li>
                     @endcan
@@ -599,7 +599,7 @@
                     @endcan
 
                     @can('motor-vehicle-status-change-request')
-                        <li class="{{ request()->is('mvr/registration/status') ? 'active' : '' }}">
+                        <li class="{{ request()->is('mvr/registration/status*') ? 'active' : '' }}">
                             <a href="{{ route('mvr.registration.status.index') }}">Status Change Request</a>
                         </li>
                     @endcan
@@ -856,7 +856,32 @@
                 <ul class="collapse list-unstyled {{ request()->is('finance*') ? 'show' : '' }}" id="finance">
                     @can('view-taxpayer-ledgers')
                         <li class="{{ request()->is('finance/taxpayer/ledger*') ? 'active' : '' }}">
-                            <a href="{{ route('finance.taxpayer.ledgers') }}">Taxpayer Ledgers</a>
+                            <a href="{{ route('finance.taxpayer.ledger.search') }}">Taxpayer Ledgers</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+
+        @can('tax-refund')
+            <li class="{{ request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'active' : '' }}">
+                <a href="#tax-refund" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    Tax Refund
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'show' : '' }}" id="tax-refund">
+                    @can('port-location-view')
+                        <li class="{{ request()->is('settings/mvr-generic/PortLocation') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'PortLocation') }}">Port Locations</a>
+                        </li>
+                    @endcan
+                    @can('port-location-view')
+                        <li class="{{ request()->is('tax-refund/initiate') ? 'active' : '' }}">
+                            <a href="{{ route('tax-refund.init') }}">Initiate</a>
+                        </li>
+                    @endcan
+                    @can('port-location-view')
+                        <li class="{{ request()->is('tax-refund/index') ? 'active' : '' }}">
+                            <a href="{{ route('tax-refund.index') }}">Tax Refunds</a>
                         </li>
                     @endcan
                 </ul>
@@ -899,9 +924,9 @@
 
 
         @can('setting')
-            <li class="{{ request()->is('settings*') ? 'active' : '' }}">
+            <li class="{{ request()->is('settings*') && !request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'active' : '' }}">
                 <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
-                <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
+                <ul class="collapse list-unstyled {{ request()->is('settings*') && !request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'show' : '' }}" id="settings">
                     @can('setting-user-view')
                         <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
                             <a href="{{ route('settings.users.index') }}">Users</a>
@@ -1203,8 +1228,7 @@
                     <a href="{{ route('account.security-questions') }}">{{ __("Security Questions") }}</a>
                 </li>
                 <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
-                    <a href="{{ route('logout') }}"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a href="{{ route('logout') }}" class="logout-link">
                         {{ __("Log out") }}
                     </a>
                 </li>
@@ -1224,9 +1248,8 @@
         </a>
 
         <div class="pr-1">
-            <a class="text-white" href="{{ route('logout') }}"
-               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="fa fa-sign-out-alt"></i>
+            <a class="text-white logout-link" href="{{ route('logout') }}">
+                <i class="bi bi-box"></i>
             </a>
 
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

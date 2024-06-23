@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\Tra\ChassisNumber;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -118,5 +119,8 @@ class MvrRegistrationStatusChange extends Model
         return $plate_number;
     }
 
-
+    public function ledger()
+    {
+        return $this->morphOne(TaxpayerLedger::class, 'source');
+    }
 }

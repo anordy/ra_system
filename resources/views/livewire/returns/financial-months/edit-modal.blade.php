@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <h5 class="modal-title text-uppercase text-center">Editing financial month</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
-                            class="fa fa-times-circle"></i></button>
+                            class="bi bi-x-circle-fill"></i></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -12,9 +12,11 @@
                         <label class="control-label">Year</label>
                         <select wire:model.lazy="year" name="year" id="year" class="form-control">
                             <option value="">select year</option>
-                            @foreach($years as $year)
-                                <option value="{{$year->id}}">{{$year->code}}</option>
-                            @endforeach
+                            @if(!empty($years))
+                                @foreach($years as $year)
+                                    <option value="{{$year->id}}">{{$year->code}}</option>
+                                @endforeach
+                            @endif
                         </select>
                         @error('year')
                         <span class="text-danger">{{ $message }}</span>
@@ -56,7 +58,9 @@
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                    </div>Update</button>
+                    </div>
+                    Update
+                </button>
             </div>
         </div>
     </div>

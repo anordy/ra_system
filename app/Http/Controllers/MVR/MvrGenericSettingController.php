@@ -26,6 +26,7 @@ use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
 use App\Models\MvrTransmissionType;
+use App\Models\TaxRefund\PortLocation;
 use Illuminate\Support\Facades\Gate;
 
 class MvrGenericSettingController extends Controller
@@ -33,7 +34,13 @@ class MvrGenericSettingController extends Controller
 
     public function index($model)
     {
-        $class = 'App\Models\\' . $model;
+
+        if ($model === 'PortLocation') {
+            $class = PortLocation::class;
+        } else {
+            $class = 'App\Models\\' . $model;
+        }
+
         abort_if(!class_exists($class), 404);
 
         $permission = '';
@@ -82,6 +89,8 @@ class MvrGenericSettingController extends Controller
             $permission = 'setting-dl-restriction-view';
         } else if ($class === MvrClass::class){
             $permission = 'setting-mvr-class-view';
+        }  else if ($class === PortLocation::class) {
+            $permission = 'port-location-view';
         }
 
         if (!Gate::allows($permission)) {

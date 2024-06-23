@@ -35,7 +35,7 @@ class VerificationFilter extends Component
         $this->optionYears[] = 'Custom Range';
     }
     
-    public function fillter()
+    public function filter()
     {
         $filters = [
             'year' => $this->year,

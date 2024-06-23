@@ -2,10 +2,10 @@
     <h6 class="text-uppercase mt-4 mb-2 font-weight-bold">Stamp duty return details</h6>
     <table class="table table-bordered">
         <thead>
-        <th style="width: 30%">Item Name</th>
-        <th style="width: 20%">Value</th>
-        <th style="width: 10%">Rate</th>
-        <th style="width: 20%">TAX</th>
+        <th>Item Name</th>
+        <th>Value</th>
+        <th>Rate</th>
+        <th>TAX</th>
         </thead>
         <tbody>
         @foreach ($return->items as $item)
@@ -49,10 +49,10 @@
         </tbody>
         <tfoot>
         <tr>
-            <th style="width: 20%">Total Amount Without Penalties</th>
-            <th style="width: 30%"></th>
-            <th style="width: 25%"></th>
-            <th style="width: 25%">{{ number_format($return->total_amount_due, 2) }}</th>
+            <th>Total Amount Without Penalties</th>
+            <th></th>
+            <th></th>
+            <th>{{ number_format($return->total_amount_due, 2) }}</th>
         </tr>
         </tfoot>
     </table>
@@ -133,8 +133,8 @@
         @if($return->withheld_certificates_summary)
             <a class="file-item d-inline-flex pr-3 mr-2" target="_blank"
                href="{{ route('returns.stamp-duty.withheld-certificates-summary', encrypt($return->id)) }}">
-                <i class="bi bi-file-earmark-excel px-2" style="font-size: x-large"></i>
-                <div style="font-weight: 500;" class="ml-1">
+                <i class="bi bi-file-earmark-excel px-2 font-x-large"></i>
+                <div class="ml-1 font-weight-bold">
                     Withheld Certificates Summary
                 </div>
                 <i class="bi bi-arrow-up-right-square ml-2"></i>
@@ -144,8 +144,8 @@
         @foreach($return->withheldCertificates as $certificate)
             <a class="file-item d-inline-flex pr-3 mr-2" target="_blank"
                href="{{ route('returns.stamp-duty.withheld-certificate', encrypt($certificate->id)) }}">
-                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                <div style="font-weight: 500;" class="ml-1">
+                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                <div class="ml-1 font-weight-bold">
                     Withheld Certificate {{ $loop->index + 1 }}
                 </div>
                 <i class="bi bi-arrow-up-right-square ml-2"></i>

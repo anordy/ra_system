@@ -7,7 +7,6 @@ use App\Enum\GeneralConstant;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\DlApplicationCertificate;
-use App\Models\DlApplicationLicenseClass;
 use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
 use App\Models\DlFee;
@@ -15,6 +14,7 @@ use App\Models\DlLicenseRestriction;
 use App\Models\DlRestriction;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +24,7 @@ use Livewire\WithFileUploads;
 
 class DriverLicenseApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
@@ -238,6 +238,9 @@ class DriverLicenseApprovalProcessing extends Component
                 }
                 $this->generateDLicenseControlNumber($this->subject, $fee, $classFactor);
             }
+
+            // Generate control number
+            $this->generateDLicenseControlNumber($this->subject, $fee);
         } catch (Exception $e) {
 
             Log::error('Error generating control number: ' . $e->getMessage(), [

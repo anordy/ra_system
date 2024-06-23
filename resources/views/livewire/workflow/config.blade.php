@@ -21,7 +21,7 @@
                     @if ($row['owner'] != 'taxpayer')
                         <button class="btn btn-outline-info btn-sm"
                             onclick="Livewire.emit('showModal', 'workflow.workflow-place-update-modal',{{ $workflow->id }},'{{ $key }}')"><i
-                                class="fa fa-cog"></i>
+                                class="bi bi-gear-fill"></i>
                             Configure </button>
                     @endif
                 </td>

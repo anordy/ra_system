@@ -3,7 +3,9 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\MvrClass;
@@ -12,8 +14,11 @@ use App\Models\MvrFeeType;
 use App\Models\MvrInspectionReport;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationType;
+use App\Models\MvrRegistration;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -24,7 +29,7 @@ use Livewire\WithFileUploads;
 
 class RegistrationApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
@@ -219,6 +224,7 @@ class RegistrationApprovalProcessing extends Component
                 $this->customAlert('error', "Registration fee for selected registration type is not configured");
                 return;
             }
+
 
             DB::beginTransaction();
             $this->generateMvrControlNumber($this->subject, $fee);

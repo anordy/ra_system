@@ -6,6 +6,8 @@ use App\Enum\BillStatus;
 use App\Enum\Currencies;
 use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
+use App\Enum\SubVatConstant;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendZanMalipoSMS;
 use App\Models\BusinessTaxType;
@@ -17,6 +19,7 @@ use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\Taxpayer;
+use App\Models\TaxRefund\TaxRefund;
 use App\Models\TaxType;
 use App\Models\ZmBill;
 use App\Models\ZmBillChange;
@@ -31,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 
 trait PaymentsTrait
 {
-    use ExchangeRateTrait, VerificationTrait;
+    use ExchangeRateTrait, VerificationTrait, TaxpayerLedgerTrait;
 
     /**
      * @param ZmBill $bill
@@ -64,7 +67,7 @@ trait PaymentsTrait
                 $bill->save();
 
                 $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
-                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
 
                 event(new SendSms(SendZanMalipoSMS::SERVICE, null, [
                     'mobile_no' => ZmCore::formatPhone($bill->payer_phone_number),
@@ -174,7 +177,7 @@ trait PaymentsTrait
             $bill->save();
 
             $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
-            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
 
             dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
 
@@ -783,7 +786,7 @@ trait PaymentsTrait
                 $bill->save();
 
                 $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
-                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
 
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
@@ -908,6 +911,21 @@ trait PaymentsTrait
     {
         $taxType = TaxType::where('code', TaxType::PROPERTY_TAX)->firstOrFail();
 
+        if (!$propertyPayment->ledger) {
+            $this->recordLedger(
+                TransactionType::DEBIT,
+                get_class($propertyPayment),
+                $propertyPayment->id,
+                $propertyPayment->amount,
+                $propertyPayment->interest,
+                0,
+                array_sum([$propertyPayment->amount, $propertyPayment->interest]),
+                $taxType->id,
+                Currencies::TZS,
+                $propertyPayment->property->taxpayer_id
+            );
+        }
+
         $property = $propertyPayment->property;
         $exchange_rate = $this->getExchangeRate($propertyPayment->currency->iso);
         $payer_type = get_class($property->taxpayer);
@@ -962,7 +980,7 @@ trait PaymentsTrait
             $bill->save();
 
             $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
-            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
 
             if (env('APP_ENV') === 'production') {
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
@@ -994,6 +1012,11 @@ trait PaymentsTrait
     public function generateMvrControlNumber($mvr, $fee)
     {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+
+        if (!$mvr->ledger) {
+            $this->recordDebitLedger($mvr, $fee->amount, $taxType->id);
+        }
+
         $exchangeRate = 1;
         $bill = ZmCore::createBill(
             $mvr->id,
@@ -1035,7 +1058,7 @@ trait PaymentsTrait
             $bill->billable->save();
             $bill->save();
 
-            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
             dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
@@ -1047,6 +1070,11 @@ trait PaymentsTrait
     public function generateMvrTransferOwnershipControlNumber($transfer, $fee)
     {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+
+        if (!$transfer->ledger) {
+            $this->recordDebitLedger($transfer, $fee->amount, $taxType->id, $transfer->motor_vehicle->taxpayer_id);
+        }
+
         $exchangeRate = 1;
         $bill = ZmCore::createBill(
             $transfer->id,
@@ -1088,7 +1116,7 @@ trait PaymentsTrait
             $bill->billable->save();
             $bill->save();
 
-            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
             dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
@@ -1100,6 +1128,12 @@ trait PaymentsTrait
     public function generateDLicenseControlNumber($license, $fee, $classFactor = 1)
     {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+
+        if (!$license->ledger) {
+            $taxpayerId = $license->drivers_license_owner->taxpayer_id ?? $license->applicant->id;
+            $this->recordDebitLedger($license, $fee->amount, $taxType->id, $taxpayerId);
+        }
+
         $exchangeRate = 1;
         $bill = ZmCore::createBill(
             $license->id,
@@ -1141,7 +1175,7 @@ trait PaymentsTrait
             $bill->billable->save();
             $bill->save();
 
-            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
             dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
@@ -1153,6 +1187,11 @@ trait PaymentsTrait
     public function generateMvrDeregistrationControlNumber($mvr, $fee)
     {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+
+        if (!$mvr->ledger) {
+            $this->recordDebitLedger($mvr, $fee->amount, $taxType->id);
+        }
+
         $exchangeRate = 1;
         $bill = ZmCore::createBill(
             $mvr->id,
@@ -1194,7 +1233,7 @@ trait PaymentsTrait
             $bill->billable->save();
             $bill->save();
 
-            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
             dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
@@ -1206,6 +1245,12 @@ trait PaymentsTrait
     public function generateMvrParticularChangeControlNumber($mvr, $fee)
     {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+        $exchangeRate = 1;
+
+        if (!$mvr->ledger) {
+            $this->recordDebitLedger($mvr, $fee->amount, $taxType->id);
+        }
+
         $exchangeRate = 1;
         $bill = ZmCore::createBill(
             $mvr->id,
@@ -1247,7 +1292,7 @@ trait PaymentsTrait
             $bill->billable->save();
             $bill->save();
 
-            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
             dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
@@ -1298,8 +1343,58 @@ trait PaymentsTrait
             $bill->billable->save();
             $bill->save();
 
-            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
             dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
+        }
+    }
+
+    /**
+     * @throws \DOMException
+     */
+    public function generateTaxRefundControlNumber($taxRefund)
+    {
+        $taxType = TaxType::select('id')->where('code', TaxType::VAT)->firstOrFail();
+        $subVat = SubVat::select('gfs_code')->where('code', SubVatConstant::IMPORTS)->firstOrFail();
+        $exchangeRate = 1;
+        $bill = ZmCore::createBill(
+            $taxRefund->id,
+            get_class($taxRefund),
+            $taxType->id,
+            $taxRefund->id,
+            TaxRefund::class,
+            $taxRefund->importer_name,
+            null,
+            ZmCore::formatPhone($taxRefund->phone_number),
+            Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
+            "Tax refund for {$taxRefund->importer_name}",
+            ZmCore::PAYMENT_OPTION_EXACT,
+            $taxRefund->currency,
+            $exchangeRate,
+            auth()->user()->id,
+            get_class(auth()->user()),
+            [
+                [
+                    'billable_id' => $taxRefund->id,
+                    'billable_type' => get_class($taxRefund),
+                    'tax_type_id' => $taxType->id,
+                    'amount' => $taxRefund->total_payable_amount,
+                    'currency' => Currencies::TZS,
+                    'exchange_rate' => 1,
+                    'equivalent_amount' => $taxRefund->total_payable_amount,
+                    'gfs_code' => $subVat->gfs_code
+                ]
+            ]
+        );
+        if (config('app.env') != 'local') {
+            (new ZanMalipoInternalService)->createBill($bill);
+        } else {
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = random_int(2000070001000, 2000070009999);
+            $bill->billable->payment_status = BillStatus::CN_GENERATED;
+            $bill->billable->save();
+            $bill->save();
+            $this->flash('success', 'A control number for this verification has been generated successfully');
         }
     }
 }

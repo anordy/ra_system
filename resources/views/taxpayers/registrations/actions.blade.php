@@ -8,8 +8,7 @@
             <i class="bi bi-pen mr-1"></i> Amendment Request
         </button>
 @else
-    <span class="badge badge-warning py-1 px-2"
-      style="border-radius: 1rem; background: #fed7aa; color: #c2410c; font-size: 85%">
+    <span class="badge badge-warning py-1 px-2 pending-status">
         <i class="bi bi-hourglass-split mr-1"></i>
         Pending Amendment
     </span>

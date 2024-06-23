@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Installment;
 
 use App\Enum\BillStatus;
+use App\Enum\TransactionType;
 use App\Models\Installment\InstallmentItem;
 use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
@@ -61,6 +62,23 @@ class InstallmentPayment extends Component
                 'currency' => $this->installment->currency,
                 'due_date' => $this->installment->getNextPaymentDate()->toDateTimeString()
             ]);
+
+            // Insert ledger
+            if (!$this->installment->ledger) {
+                $this->recordLedger(
+                    TransactionType::DEBIT,
+                    get_class($this->installment),
+                    $this->installment->id,
+                    $this->installment->amount,
+                    0,
+                    0,
+                    $this->installment->amount,
+                    $this->installment->tax_type_id,
+                    $this->installment->currency,
+                    $this->installment->business->taxpayer_id,
+                    $this->installment->location_id,
+                );
+            }
 
             $payer = $installmentRequest->createdBy;
             

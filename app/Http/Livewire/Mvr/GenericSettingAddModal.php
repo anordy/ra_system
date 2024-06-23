@@ -16,6 +16,8 @@ use App\Models\MvrModel;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
+use App\Models\Region;
+use App\Models\TaxRefund\PortLocation;
 use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use Exception;
@@ -45,6 +47,7 @@ class GenericSettingAddModal extends Component
             ['title' => 'Motor vehicle Registration Type', 'class' => MvrRegistrationType::class, 'field' => 'mvr_registration_type_id'],
         ],
         DlFee::class => [['title' => 'License Duration', 'field' => 'dl_license_duration_id', 'class' => DlLicenseDuration::class, 'value_field' => 'number_of_years']],
+        PortLocation::class => [['title' => 'Region', 'field' => 'region_id', 'class' => Region::class, 'value_field' => 'region_id']],
     ];
 
     private array $enums = [
@@ -90,7 +93,8 @@ class GenericSettingAddModal extends Component
         MvrClass::class => [
             'data.code' => ['required', 'gs_unique', 'alpha', 'max:5'],
             'data.category' => ['required', 'alpha', 'max:1'],
-        ]
+        ],
+        PortLocation::class => ['relation_data.region_id' => 'required|exists:regions,id', 'name' => 'alpha_num_space']
     ];
 
     /**
@@ -135,7 +139,8 @@ class GenericSettingAddModal extends Component
         $this->prepareEnums();
     }
 
-    protected function messages(){
+    protected function messages()
+    {
         return [
             '*.*.required' => 'This field is required.',
             '*.required' => 'This field is required.',
@@ -216,7 +221,7 @@ class GenericSettingAddModal extends Component
                 }
             }
 
-            if ($this->model == \App\Models\MvrFee::class){
+            if ($this->model == \App\Models\MvrFee::class) {
                 $data['mvr_plate_number_type_id'] = $this->plateNoType;
                 $data['gfs_code'] = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first()->gfs_code;
             }

@@ -4,5 +4,5 @@
 </a>
 
 @if ($row->reconcstscode != 7101)
-    <button class="btn btn-success btn-sm" wire:click="triggerResendReconModal({{ $row->id }})"><i class="fa fa-sync"></i> Resend</button>
+    <button class="btn btn-success btn-sm" wire:click="triggerResendReconModal({{ $row->id }})"><i class="bi bi-arrow-repeat"></i> Resend</button>
 @endif
