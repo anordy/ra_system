@@ -40,7 +40,7 @@ class LandLeaseApproveList extends DataTableComponent
 
     public function builder(): builder
     {
-        return PartialPayment::with('landlease')->where('payment_type', $this->model);
+        return PartialPayment::with('landlease')->where('payment_type', $this->model)->orderByDesc('partial_payments.id');
     }
 
     public function configure(): void
@@ -57,16 +57,12 @@ class LandLeaseApproveList extends DataTableComponent
     {
         return [
             Column::make("S/N", 'id')
-                ->searchable()
-                ->sortable()
-            ,
-            Column::make("DP Number", 'landlease.dp_number')
+                ->format(function ($value, $row) {
+                    return $row['rn'];
+                })
                 ->searchable()
                 ->sortable(),
-            Column::make("Commence Date", "landlease.commence_date")
-                ->format(function ($value, $row) {
-                    return date('d/m/Y', strtotime($value));
-                })
+            Column::make("DP Number", 'landlease.dp_number')
                 ->searchable()
                 ->sortable(),
             Column::make("Request Amount(USD)", 'amount')
@@ -79,6 +75,9 @@ class LandLeaseApproveList extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($value, 2, '.', ',');
                 })
+                ->searchable()
+                ->sortable(),
+            Column::make("Reason", "comments")
                 ->searchable()
                 ->sortable(),
             Column::make("Approval Status", "status")->view("land-lease.includes.approval-status",),

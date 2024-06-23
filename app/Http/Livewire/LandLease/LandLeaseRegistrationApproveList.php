@@ -27,7 +27,7 @@ class LandLeaseRegistrationApproveList extends DataTableComponent
 
     public function builder(): builder
     {
-        return LandLease::query();
+        return LandLease::query()->orderByDesc('id');
 
     }
 
@@ -52,10 +52,10 @@ class LandLeaseRegistrationApproveList extends DataTableComponent
             Column::make("Created Date", 'created_at')
                 ->searchable()
                 ->sortable(),
-            Column::make("Created By", 'created_by')
+            Column::make("Completed By", 'completed_by')
                 ->format(
                     function ($value, $row) {
-                       return $this->getInitiator($row['created_by']);
+                       return $this->getInitiator($row['completed_by']) ?? '';
                     }
                 )
                 ->searchable()
@@ -98,8 +98,11 @@ class LandLeaseRegistrationApproveList extends DataTableComponent
 
     public function getInitiator($id)
     {
-        $initiator = User::findorFail($id);
-        return $initiator ? $initiator->fname . ' ' . $initiator->lname : '-';
+        $initiator = User::find($id);
+        if ($initiator){
+            return $initiator->fname . ' ' . $initiator->lname;
+        }
+        return null;
     }
 
 }

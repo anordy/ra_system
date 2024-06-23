@@ -41,8 +41,9 @@ class LeaseCurrencyApproveList extends DataTableComponent
 
     public function builder(): builder
     {
-        return LeaseCurrencyChangeApplication::with('landlease');
+        return LeaseCurrencyChangeApplication::with('landlease')->orderByDesc('lease_currency_change_applications.id');
     }
+
 
     public function configure(): void
     {
@@ -57,6 +58,9 @@ class LeaseCurrencyApproveList extends DataTableComponent
     {
         $columns = [
             Column::make("S/N", 'id')
+                ->format(function ($value, $row) {
+                    return $row['rn'];
+                })
                 ->searchable()
                 ->sortable(),
             Column::make("Tax Payer", 'taxpayer_id')
@@ -173,7 +177,6 @@ class LeaseCurrencyApproveList extends DataTableComponent
                     if ($leasePayment) {
                         $leasePayment->landLease->payment_amount = $leasePayment->total_amount;
                         $leasePayment->landLease->save();
-
                         DB::commit();
                         $this->customAlert('success', 'Lease currency change has been approved successfully', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
                         return;
@@ -244,6 +247,7 @@ class LeaseCurrencyApproveList extends DataTableComponent
                 ->first();
         }
 
+        // Return null if no bill is found
         return null;
     }
 
