@@ -41,6 +41,7 @@ class TaxAuditInitiateTable extends DataTableComponent
         return TaxAudit::query()
             ->with('business', 'location', 'taxType', 'createdBy')
             ->where('tax_audits.status', TaxAuditStatus::DRAFT)
+            ->where('tax_audits.forwarded_to_investigation', false)
             ->whereHas('location.taxRegion', function ($query) {
                 if ($this->taxRegion == Region::LTD) {
                     $query->whereIn('location', [Region::LTD, Region::UNGUJA]); //this is filter by department
@@ -176,7 +177,7 @@ class TaxAuditInitiateTable extends DataTableComponent
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->customAlert('warning', 'Something whent wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

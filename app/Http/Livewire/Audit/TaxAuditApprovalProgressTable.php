@@ -22,13 +22,6 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
     public function mount($taxRegion = null)
     {
         $this->taxRegion = $taxRegion;
-        // DB::transaction(function () {
-        //     $tasks = WorkflowTask::where('pinstance_type', TaxAudit::class)->get();
-        //     TaxAudit::query()->delete();
-        //     foreach ($tasks as $task) {
-        //         $task->delete();
-        //     }
-        // });
     }
 
     public function builder(): Builder
@@ -36,8 +29,17 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
         return WorkflowTask::with('pinstance', 'pinstance.location', 'pinstance.business', 'user')
             ->where('pinstance_type', TaxAudit::class)
             ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->whereHasMorph(
+                'pinstance',
+                [TaxAudit::class],
+                function ($query) {
+                    $query->where('forwarded_to_investigation', false);
+                }
+            )
             ->where('owner', WorkflowTask::STAFF);
     }
+
+
 
     public function configure(): void
     {

@@ -38,7 +38,8 @@ use Livewire\WithFileUploads;
 
 class TaxAuditApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait, ExchangeRateTrait;
+    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait, TaxpayerLedgerTrait;
+
     public $modelId;
     public $modelName;
     public $comments;
@@ -80,7 +81,9 @@ class TaxAuditApprovalProcessing extends Component
     public $penaltyAmounts = [];
     public $taxTypeIds = [];
     public $task;
-
+    public $selectedOption;
+    public $newAuditDate;
+    public $newTag;
 
 
     public function mount($modelName, $modelId)
@@ -99,9 +102,7 @@ class TaxAuditApprovalProcessing extends Component
         $this->entryMeeting = $this->subject->entry_minutes;
         $this->notificationLetter = $this->subject->notification_letter;
 
-        $comments = $this->getTransitionsComments();
-
-        // dd($comments);
+        $comments = $this->getEnabledTransitions();
 
         $assessment = $this->subject->assessment;
         if ($assessment) {
@@ -114,6 +115,9 @@ class TaxAuditApprovalProcessing extends Component
             $this->hasAssessment = False;
         }
 
+        if ($this->subject->preliminary_extension_attachment) {
+            $this->newTag = 'New';
+        }
 
         $this->task = $this->subject->pinstancesActive;
         if (!isNullOrEmpty($this->subject->period_from)) {
@@ -247,6 +251,21 @@ class TaxAuditApprovalProcessing extends Component
                 ]);
             }
         }
+        // Validate the file inputs if the transition is for taxpayer uploads documents
+        if ($this->checkTransition('audit_date_extension_dc_review')) {
+            $this->validate(
+                ['selectedOption' => 'required|alpha'],
+                ['selectedOption.required' => 'Please select your choice.']
+            );
+
+            if ($this->selectedOption === 'changed') {
+                $this->validate(
+                    [
+                        'newAuditDate' => 'required|date',
+                    ]
+                );
+            }
+        }
 
         if ($this->checkTransition('prepare_final_report')) {
             $this->validate([
@@ -324,22 +343,27 @@ class TaxAuditApprovalProcessing extends Component
                 }
 
                 $this->subject->notification_letter = $notificationLetter;
-                $this->subject->notification_letter_date =  Carbon::now()->addWeekdays(5);
+                $this->subject->notification_letter_date = now();
                 $this->subject->save();
 
-                //Send Email Notification to taxpayer
+                //Send Email Notification to taxpayer 
                 event(new SendMail('notification-letter-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
 
-                //Send SMS Notification to taxpayer
+                //Send SMS Notification to taxpayer 
                 event(new SendSms('notification-letter-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
             }
 
             //* Update the auditing date if a new audit date (Extension) is available and save the changes.
-            if ($this->checkTransition('audit_team_review')) {
-                if ($this->subject->new_audit_date) {
+            if ($this->checkTransition('audit_date_extension_dc_review')) {
+
+                if ($this->selectedOption == "accept") {
                     $this->subject->auditing_date = $this->subject->new_audit_date;
+                } elseif ($this->selectedOption == "changed") {
+                    $this->subject->auditing_date = $this->newAuditDate;
                 }
                 $this->subject->save();
+
+                $operators = array_values($this->subject->officers->pluck('user_id')->toArray());
             }
 
             if ($this->checkTransition('conduct_audit')) {
@@ -362,11 +386,24 @@ class TaxAuditApprovalProcessing extends Component
                 $this->subject->preliminary_report = $preliminaryReport;
                 $this->subject->working_report = $workingReport;
                 $this->subject->entry_minutes = $entryMeeting;
-                $this->subject->preliminary_report_date = Carbon::now()->addWeekdays(7); //add seven working days
                 $this->subject->save();
             }
 
             if ($this->checkTransition('preliminary_report_review')) {
+
+                $this->subject->preliminary_report_date = now()->addWeekdays(7);
+                $this->subject->save();
+
+                //Send Exit Minute and Preliminary reports
+                if ($this->subject->exit_minutes != null && $this->subject->preliminary_report != null) {
+                    event(new SendMail('send-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
+                }
+
+                $operators = $this->subject->officers->pluck('user_id')->toArray();
+            }
+
+            if ($this->checkTransition('audit_date_extension_dc_review')) {
+
                 $operators = $this->subject->officers->pluck('user_id')->toArray();
             }
 
@@ -435,12 +472,10 @@ class TaxAuditApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            //Send Exit Minute and Preliminary reports
-            if ($this->subject->exit_minutes != null && $this->subject->preliminary_report != null) {
-                event(new SendMail('send-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
-            }
-
             if ($this->checkTransition('accepted')) {
+
+                event(new SendMail('audit-approved-notification', $this->subject->business->taxpayer));
+
                 // Notify audit manager to continue with business/location de-registration request if exists
                 $deregister = BusinessDeregistration::where('tax_audit_id', $this->subject->id)->get()->first();
 
@@ -468,20 +503,19 @@ class TaxAuditApprovalProcessing extends Component
             DB::commit();
 
             if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
-                $this->generateControlNumber();
-
-                foreach ($this->taxAssessments as $taxAssessment) {
-                    $taxAssessment->update([
-                        'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                        'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                    ]);
-                }
-
-                event(new SendMail('audit-approved-notification', $this->subject->business->taxpayer));
+                $this->subject->assessment->update([
+                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                    'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                ]);
+                $assessment = $this->subject->assessment;
+                $this->recordLedger(TransactionType::DEBIT, TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+            $this->customAlert('success', 'Approved successfully');
         } catch (Exception $e) {
+            DB::rollBack();
+
             Log::error('Error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -491,118 +525,6 @@ class TaxAuditApprovalProcessing extends Component
         }
     }
 
-    public function generateControlNumber()
-    {
-        foreach ($this->taxAssessments as $taxAssessment) {
-
-            $assessment = $taxAssessment;
-            $taxType = TaxType::findOrFail($assessment->tax_type_id, ['id', 'code', 'gfs_code']);
-
-            $taxTypes = TaxType::select('id', 'code', 'gfs_code')->get();
-
-            if ($taxType->code === TaxType::VAT) {
-                $businessTaxType = BusinessTaxType::where('business_id', $assessment->business_id)
-                    ->where('tax_type_id', $taxType->id)->firstOrFail();
-                $taxType = SubVat::findOrFail($businessTaxType->sub_vat_id, ['id', 'code', 'gfs_code']);
-            }
-
-            $billitems = [
-                [
-                    'billable_id' => $assessment->id,
-                    'billable_type' => get_class($assessment),
-                    'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($assessment->principal_amount, $assessment->currency),
-                    'currency' => $assessment->currency,
-                    'gfs_code' => $taxType->gfs_code,
-                    'tax_type_id' => $taxType->id
-                ],
-                [
-                    'billable_id' => $assessment->id,
-                    'billable_type' => get_class($assessment),
-                    'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($assessment->interest_amount, $assessment->currency),
-                    'currency' => $assessment->currency,
-                    'gfs_code' => $taxType->gfs_code,
-                    'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->firstOrFail()->id
-                ],
-                [
-                    'billable_id' => $assessment->id,
-                    'billable_type' => get_class($assessment),
-                    'use_item_ref_on_pay' => 'N',
-                    'amount' => roundOff($assessment->penalty_amount, $assessment->currency),
-                    'currency' => $assessment->currency,
-                    'gfs_code' => $taxType->gfs_code,
-                    'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->firstOrFail()->id
-                ]
-            ];
-
-            try {
-
-                $taxpayer = $this->subject->business->taxpayer;
-
-                $payer_type = get_class($this->subject->business);
-                $payer_name = $this->subject->business->name;
-                $payer_email = $taxpayer->email;
-                $payer_phone = $taxpayer->mobile;
-                $description = "Tax Auditing Assessment for {$taxType}";
-                $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-                $currency = $assessment->currency;
-                $createdby_type = get_class(Auth::user());
-                $createdby_id = Auth::id();
-                $exchange_rate = self::getExchangeRate($assessment->currency);
-                $payer_id = $taxpayer->id;
-                $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
-                $billableId = $assessment->id;
-                $billableType = get_class($assessment);
-
-                DB::beginTransaction();
-
-                $zmBill = ZmCore::createBill(
-                    $billableId,
-                    $billableType,
-                    $this->taxTypes->where('code', 'audit')->first()->id,  //TODO: need to be disscussed
-                    $payer_id,
-                    $payer_type,
-                    $payer_name,
-                    $payer_email,
-                    $payer_phone,
-                    $expire_date,
-                    $description,
-                    $payment_option,
-                    $currency,
-                    $exchange_rate,
-                    $createdby_id,
-                    $createdby_type,
-                    $billitems
-                );
-                DB::commit();
-
-                if (config('app.env') != 'local') {
-                    $this->generateGeneralControlNumber($zmBill);
-                } else {
-                    // We are local
-                    $assessment->payment_status = ReturnStatus::CN_GENERATED;
-                    $assessment->save();
-
-                    // Simulate successful control no generation
-                    $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-                    $zmBill->zan_status = 'pending';
-                    $zmBill->control_number = random_int(2000070001000, 2000070009999);
-                    $zmBill->save();
-
-                    $this->customAlert('success', 'A control number for this verification has been generated successfully');
-                }
-            } catch (Exception $e) {
-                DB::rollBack();
-                Log::error('Error: ' . $e->getMessage(), [
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine(),
-                    'trace' => $e->getTraceAsString(),
-                ]);
-                throw $e;
-            }
-        }
-    }
 
 
     public function hasNoticeOfAttachmentChange($value)
@@ -629,7 +551,7 @@ class TaxAuditApprovalProcessing extends Component
             if ($this->checkTransition('correct_final_report')) {
                 $operators = $this->subject->officers->pluck('user_id')->toArray();
             }
-            if ($this->checkTransition('audit_team_reject_extension')) {
+            if ($this->checkTransition('dc_rejects_audit_date_extension')) {
                 $this->subject->new_audit_date = null;
                 $this->subject->save();
             }

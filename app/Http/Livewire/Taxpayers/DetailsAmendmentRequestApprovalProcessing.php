@@ -34,7 +34,7 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
             $this->amendmentRequest = $amendmentRequest;
             $this->taxpayer_id = $amendmentRequest->taxpayer_id;
             $this->registerWorkflow($modelName, $this->modelId);
-        } catch (\Exception $exception) {
+        } catch (\Exception $exception){
             Log::error($exception);
             abort(500, 'Something went wrong, please contact your system administrator.');
         }
@@ -147,7 +147,7 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
 
     public function sendEmailToUser($data, $message)
     {
-        if ($data && $message) {
+        if ($data && $message){
             $smsPayload = [
                 'phone' => $data->phone,
                 'message' => "Hello, {$data->first_name}. {$message}",

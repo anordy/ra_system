@@ -2,8 +2,14 @@
 
 @section("title", "Investigation Preview")
 
-@section("content")
-
+@section('content')
+    @if ($investigation->status == App\Enum\TaxInvestigationStatus::APPROVED && $investigation->assessment)
+        <div class="row m-2 pt-3">
+            <div class="col-md-12">
+                <livewire:assesments.tax-assessment-payment :assessment="$investigation->assessment" />
+            </div>
+        </div>
+    @endif
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
@@ -22,7 +28,7 @@
         <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card mt-2">
                 <div class="card-header text-uppercase font-weight-bold bg-white">
-                    TAXPAYER INFORMATION'S
+                    TAXPAYER INFORMATIONS
                 </div>
                 <div class="card-body">
                     <div class="row m-2">

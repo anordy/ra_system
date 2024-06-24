@@ -51,21 +51,19 @@ class WithholdingAgentsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Commencing Date', 'date_of_commencing')
-                ->format(function ($value, $row) {
-                    return Carbon::create($row->date_of_commencing)->toFormattedDateString();
-                })
+                ->format(function($value, $row) { return Carbon::create($row->date_of_commencing)->toFormattedDateString(); })
                 ->sortable(),
             Column::make('Status', 'status')
                 ->format(function ($value, $row) {
-                    if ($row->status == 'active') {
-                        return <<< HTML
+                        if ($row->status == 'active') {
+                                return <<< HTML
                                     <span class="badge badge-success">Active</span>
                             HTML;
-                    } else if ($row->status == 'inactive') {
-                        return <<< HTML
+                        } else if ($row->status == 'inactive') {
+                            return <<< HTML
                             <span class="badge badge-danger">Inactive</span>
-                            HTML;
-                    }
+                            HTML; 
+                        }
                 })
                 ->html(true),
             Column::make('Action', 'id')
@@ -76,7 +74,6 @@ class WithholdingAgentsTable extends DataTableComponent
 
     public function changeStatus($id)
     {
-        //        todo: encrypt id && select only columns that's needed
         $withholding_agent = WithholdingAgent::select('id', 'status')->findOrFail(decrypt($id));
         $status = $withholding_agent->status == 'active' ? 'Deactivate' : 'Activate';
         $this->customAlert('warning', "Are you sure you want to {$status} ?", [
@@ -98,10 +95,9 @@ class WithholdingAgentsTable extends DataTableComponent
 
     public function confirmed($value)
     {
-        //        todo: select only columns that's needed
         try {
             $data = (object) $value['data'];
-            $withholding_agent = WithholdingAgent::select('id', 'status')->findOrFail(decrypt($data->id));
+            $withholding_agent = WithholdingAgent::select('id','status')->findOrFail(decrypt($data->id));
             if ($withholding_agent->status == 'active') {
                 $withholding_agent->update([
                     'status' => 'inactive'
@@ -113,11 +109,7 @@ class WithholdingAgentsTable extends DataTableComponent
             }
             $this->flash('success', 'Status updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            Log::error($e);
             $this->customAlert('warning', 'Something went wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }

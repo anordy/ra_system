@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">Business Location</span>
-                                    <p class="my-1">{{ $claim->location->name ?? "Headquarter" }}</p>
+                                    <p class="my-1">{{ $claim->location->name ?? 'Headquarter' }}</p>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">Financial Month</span>
@@ -62,16 +62,12 @@
                                     <p class="my-1">{{ $claim->financialMonth->year->name }}</p>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">Initial Claimed Amount</span>
-                                    <p class="my-1">{{ number_format($claim->original_figure, 2) }} {{ $claim->currency }}</p>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">Agreed Claim Amount</span>
-                                    <p class="my-1" id="agreed-amount">{{ number_format($claim->amount, 2) }} {{ $claim->currency }}</p>
-                                </div>
-                                <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">Claim Status</span>
                                     <p class="my-1">{{ ucfirst($claim->status) }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Claimed Amount</span>
+                                    <p class="my-1">{{ number_format($claim->amount, 2) }} {{ $claim->currency }}</p>
                                 </div>
                                 <div class="col-md-8 mb-3">
                                     <livewire:claims.set-figure.set-figure-component :taxClaimId="$claim->id" />
@@ -153,7 +149,7 @@
                                  class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
                                 <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                 <a target="_blank"
-                                   href="{{ route("claims.files.show", encrypt($claim->assessment->report_path)) }}"
+                                   href="{{ route('claims.files.show', encrypt($claim->assessment->report_path)) }}"
                                    class="ml-1 font-weight-bold">
                                     Assessment Report
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -195,13 +191,4 @@
 
     <livewire:approval.tax-claim-approval-processing modelId="{{ encrypt($claim->id) }}"
         modelName="{{ get_class($claim) }}" />
-
-    <script>
-        document.addEventListener('livewire:load', function() {
-            Livewire.on('agreedAmountUpdated', function(updatedAmount) {
-                // Update the Agreed Claimed Amount in the parent blade file using jQuery with thousand separator
-                $('#agreed-amount').text(new Intl.NumberFormat().format(updatedAmount) + ' {{ $claim->currency }}');
-            });
-        });
-    </script>
 @endsection

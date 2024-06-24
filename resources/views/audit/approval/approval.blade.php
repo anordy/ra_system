@@ -27,8 +27,11 @@
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card mt-2">
-                <div class="card-header text-uppercase font-weight-bold bg-white">
-                    TAXPAYER INFORMATIONS
+                <div class="card-header d-flex justify-content-between">
+                    <div>TAXPAYER INFORMATIONS </div>
+                    <div>
+                        @livewire("audit.forward-to-investigation", ["taxAudit" => $audit->id])
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row m-2">
@@ -60,7 +63,7 @@
                             <span class="font-weight-bold text-uppercase">Audit Date</span>
                             <p class="my-1">{{ $audit->auditingDate() ?? "" }}</p>
                         </div>
-                        @if($audit->new_audit_date)
+                        @if ($audit->new_audit_date)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">New Proposed Audit Date</span>
                                 <p class="my-1">{{ $audit->new_audit_date }}</p>
@@ -180,19 +183,22 @@
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
                                         <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                                        <p class="my-1">{{ number_format($taxAssessment->principal_amount ?? 0, 2) }}</p>
+                                        <p class="my-1">{{ number_format($taxAssessment->principal_amount ?? 0, 2) }} {{ $taxAssessment->currency }}
+                                        </p>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                                        <p class="my-1">{{ number_format($taxAssessment->interest_amount ?? 0, 2) }}</p>
+                                        <p class="my-1">{{ number_format($taxAssessment->interest_amount ?? 0, 2) }} {{ $taxAssessment->currency }}
+                                        </p>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                                        <p class="my-1">{{ number_format($taxAssessment->penalty_amount ?? 0, 2) }}</p>
+                                        <p class="my-1">{{ number_format($taxAssessment->penalty_amount ?? 0, 2) }} {{ $taxAssessment->currency }}
+                                        </p>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <span class="font-weight-bold text-uppercase">Total Amount Due</span>
-                                        <p class="my-1">{{ number_format($taxAssessment->total_amount ?? 0, 2) }}</p>
+                                        <p class="my-1">{{ number_format($taxAssessment->total_amount ?? 0, 2) }} {{ $taxAssessment->currency }}</p>
                                     </div>
                                 </div>
                                 @php $grandTotal += $taxAssessment->total_amount; @endphp
@@ -202,7 +208,7 @@
                         <div class="row justify-content-end">
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Grand Total Amount</span>
-                                <p class="my-1">{{ number_format($grandTotal, 2) }}</p>
+                                <p class="my-1">{{ number_format($grandTotal, 2) }} {{ $taxAssessment->currency }}</p>
                             </div>
                         </div>
                     </div>

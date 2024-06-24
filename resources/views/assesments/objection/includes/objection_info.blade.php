@@ -238,8 +238,9 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3">
-                    <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
-                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                    <div
+                        class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                         <a target="_blank"
                             href="{{ route("assesments.waiver.files", encrypt($objection->objection_report)) }}"
                             class="ml-1 font-weight-bold">
@@ -251,8 +252,9 @@
 
                 @if ($objection->notice_report)
                     <div class="col-md-3">
-                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div
+                            class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
                                 href="{{ route("assesments.waiver.files", encrypt($objection->notice_report)) }}"
                                 class="ml-1 font-weight-bold">
@@ -265,8 +267,9 @@
 
                 @if ($objection->setting_report)
                     <div class="col-md-3">
-                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div
+                            class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
                                 href="{{ route("assesments.waiver.files", encrypt($objection->setting_report)) }}"
                                 class="ml-1 font-weight-bold">

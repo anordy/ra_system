@@ -33,4 +33,9 @@ class PartialPayment extends Model
     {
         return $this->morphMany(ZmBill::class, 'billable')->latest();
     }
+
+    public function payment()
+    {
+        return $this->morphTo();
+    }
 }

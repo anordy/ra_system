@@ -178,8 +178,8 @@
             <div class="row m-2 pt-3">
                 @foreach ($files as $file)
                     <div class="col-md-3">
-                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
                                 href="{{ route("debts.assesment.file", encrypt($file->id)) }}"
                                 class="ml-1 font-weight-bold">

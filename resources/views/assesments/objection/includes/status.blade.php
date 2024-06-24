@@ -17,13 +17,13 @@
                 Rejected Changes
             </span>
         @elseif($row->businessUpdate->status === \App\Models\BusinessStatus::APPROVED)
-            <span class="badge badge-success py-1 px-2 custom-payment-box">
+            <span class="badge badge-success py-1 px-2 px-2 green-status">
                 <i class="bi bi-check-circle-fill mr-1"></i>
                 Approved
             </span>
         @endif
     @else
-        <span class="badge badge-success py-1 px-2 custom-payment-box">
+        <span class="badge badge-success py-1 px-2 green-status">
             <i class="bi bi-check-circle-fill mr-1"></i>
             Approved
         </span>

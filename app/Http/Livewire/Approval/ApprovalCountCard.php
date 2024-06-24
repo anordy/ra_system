@@ -50,6 +50,13 @@ class ApprovalCountCard extends Component
                 $workflowPending = WorkflowTask::where('pinstance_type', $model)
                     ->where('owner', WorkflowTask::STAFF)
                     ->where('status', 'running')
+                    ->whereHasMorph(
+                        'pinstance',
+                        [TaxAudit::class],
+                        function ($query) {
+                            $query->where('forwarded_to_investigation', false);
+                        }
+                    )
                     ->whereHas('actors', function ($query) use ($user_id) {
                         $query->where('user_id', $user_id);
                     })

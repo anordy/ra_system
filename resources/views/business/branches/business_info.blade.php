@@ -310,22 +310,22 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Status</span>
-                        @if ($consultant->status === "pending")
+                        @if ($consultant->status === 'pending')
                             <p class="my-1 text-info font-weight-bold">
                                 <i class="bi bi-clock-history mr-1"></i>
                                 Waiting Approval From Tax Agent
                             </p>
-                        @elseif($consultant->status === "approved")
+                        @elseif($consultant->status === 'approved')
                             <p class="my-1 text-success font-weight-bold">
                                 <i class="bi bi-check-circle mr-1"></i>
                                 Approved
                             </p>
-                        @elseif($consultant->status === "rejected")
+                        @elseif($consultant->status === 'rejected')
                             <p class="my-1 text-danger font-weight-bold">
                                 <i class="bi bi-x-circle-fill mr-1"></i>
                                 Rejected
                             </p>
-                        @elseif($consultant->status === "removed")
+                        @elseif($consultant->status === 'removed')
                             <p class="my-1 text-danger font-weight-bold">
                                 <i class="bi bi-trash-fill mr-1"></i>
                                 Removed. Please assign new tax agent.
@@ -445,9 +445,9 @@
                 @endforeach
                 @if ($business->taxpayer->tin_location)
                     <div class="col-md-4">
-                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <a href="#" style="font-weight: 500;" class="ml-1">
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <a href="#" class="ml-1 font-weight-bold">
                                 TIN Certificate - {{ $business->taxpayer->full_name }}
                                 (<b>{{ $business->taxpayer->reference_no }}</b>)
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>

@@ -100,50 +100,50 @@
             </div>
 
             @if ($waiver)
-                <div class="mx-4">
-                    <table class="table table-bordered table-striped table-sm">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label class="text-left font-weight-bold text-uppercase">Waiver Breakdown</label>
-                        </div>
-                        <thead>
-                            <th class="w-20"></th>
-                            <th class="text-uppercase w-30">Pre-waived Figure (Debt Figure)</th>
-                            <th class="text-uppercase w-30">Waived Percentage</th>
-                            <th class="text-uppercase w-30">Post-waived Figure</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Principal Amount</th>
-                                <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->return->principal, 2) }}</td>
-                                <td>-</td>
-                                <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->principal, 2) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Penalty Amount</th>
-                                <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->return->penalty, 2) }}</td>
-                                <td>{{ number_format($waiver->penalty_rate, 2) }} % = {{ number_format($waiver->penalty_amount, 2) }}</td>
-                                <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->penalty, 2) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Interest Amount</th>
-                                <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->return->interest, 2) }}</td>
-                                <td>{{ number_format($waiver->interest_rate, 2) }} % = {{ number_format($waiver->interest_amount, 2) }}</td>
-                                <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->interest, 2) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Total Amount</th>
-                                <td></td>
-                                <td></td>
-                                <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->total_amount, 2) }}</td>
-                            </tr>
-
-                        </tbody>
-                    </table>
+            <div class="mx-4">
+            <table class="table table-bordered table-striped table-sm">
+                <div class="d-flex justify-content-between align-items-center">
+                    <label class="text-left font-weight-bold text-uppercase">Waiver Breakdown</label>
                 </div>
+                <thead>
+                    <th class="w-20"></th>
+                    <th class="text-uppercase w-30">Pre-waived Figure (Debt Figure)</th>
+                    <th class="text-uppercase w-30">Waived Percentage</th>
+                    <th class="text-uppercase w-30">Post-waived Figure</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Principal Amount</th>
+                        <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->return->principal, 2) }}</td>
+                        <td>-</td>
+                        <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->principal, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Penalty Amount</th>
+                        <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->return->penalty, 2) }}</td>
+                        <td>{{ number_format($waiver->penalty_rate, 2) }} % = {{ number_format($waiver->penalty_amount, 2) }}</td>
+                        <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->penalty, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Interest Amount</th>
+                        <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->return->interest, 2) }}</td>
+                        <td>{{ number_format($waiver->interest_rate, 2) }} % = {{ number_format($waiver->interest_amount, 2) }}</td>
+                        <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->interest, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Amount</th>
+                        <td></td>
+                        <td></td>
+                        <td>{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->total_amount, 2) }}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+            </div>
             @endif
 
             <livewire:approval.return-debt-waiver-approval-processing modelName='App\Models\Debts\DebtWaiver'
-                modelId="{{ encrypt($waiver->id) }}" />
+            modelId="{{ encrypt($waiver->id) }}" />
         </div>
 
         <div class="tab-pane fade" id="ground" role="tabpanel" aria-labelledby="ground-tab">
@@ -164,12 +164,12 @@
 
                 @foreach ($files as $file)
                     <div class="col-md-3">
-                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
-                                href="{{ route("debts.return.file", encrypt($file->id)) }}"
+                                href="{{ route('debts.return.file', encrypt($file->id)) }}"
                                 class="ml-1 font-weight-bold">
-                                {{ $file["file_name"] }}
+                                {{ $file['file_name'] }}
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>
                         </div>
@@ -181,7 +181,7 @@
 
         <div class="tab-pane m-2 fade" id="approval" role="tabpanel" aria-labelledby="approval-tab">
             <livewire:approval.approval-history-table modelName='App\Models\Debts\DebtWaiver'
-                modelId="{{ encrypt($waiver->id) }}" />
+            modelId="{{ encrypt($waiver->id) }}" />
         </div>
     </div>
 

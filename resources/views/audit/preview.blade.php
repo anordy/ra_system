@@ -3,15 +3,7 @@
 @section("title", "Approval Details")
 
 @section("content")
-    @if ($audit->status == App\Enum\TaxAuditStatus::APPROVED && $audit->assessments)
-        @foreach ($audit->assessments as $assessment)
-            <div class="row m-2 pt-3">
-                <div class="col-md-12">
-                    <livewire:assesments.tax-assessment-payment :assessment="$assessment" />
-                </div>
-            </div>
-        @endforeach
-    @endif
+
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
@@ -29,8 +21,11 @@
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card mt-2">
-                <div class="card-header text-uppercase font-weight-bold bg-white">
-                    TAXPAYER INFORMATIONS
+                <div class="card-header d-flex justify-content-between">
+                    <div>TAXPAYER INFORMATIONS </div>
+                    <div>
+                        @livewire("audit.forward-to-investigation", ["taxAudit" => $audit->id])
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row m-2">
@@ -180,19 +175,22 @@
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
                                         <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                                        <p class="my-1">{{ number_format($taxAssessment->principal_amount ?? 0, 2) }}</p>
+                                        <p class="my-1">{{ number_format($taxAssessment->principal_amount ?? 0, 2) }} {{ $taxAssessment->currency }}
+                                        </p>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                                        <p class="my-1">{{ number_format($taxAssessment->interest_amount ?? 0, 2) }}</p>
+                                        <p class="my-1">{{ number_format($taxAssessment->interest_amount ?? 0, 2) }} {{ $taxAssessment->currency }}
+                                        </p>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                                        <p class="my-1">{{ number_format($taxAssessment->penalty_amount ?? 0, 2) }}</p>
+                                        <p class="my-1">{{ number_format($taxAssessment->penalty_amount ?? 0, 2) }} {{ $taxAssessment->currency }}
+                                        </p>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <span class="font-weight-bold text-uppercase">Total Amount Due</span>
-                                        <p class="my-1">{{ number_format($taxAssessment->total_amount ?? 0, 2) }}</p>
+                                        <p class="my-1">{{ number_format($taxAssessment->total_amount ?? 0, 2) }} {{ $taxAssessment->currency }}</p>
                                     </div>
                                 </div>
                                 @php $grandTotal += $taxAssessment->total_amount; @endphp
@@ -202,14 +200,16 @@
                         <div class="row justify-content-end">
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Grand Total Amount</span>
-                                <p class="my-1">{{ number_format($grandTotal, 2) }}</p>
+                                <p class="my-1">{{ number_format($grandTotal, 2) }} {{ $taxAssessment->currency }}</p>
                             </div>
                         </div>
                     </div>
 
                 </div>
             @endif
+            <livewire:approval.tax-audit-approval-processing modelName='{{ get_class($audit) }}' modelId="{{ encrypt($audit->id) }}" />
         </div>
+
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if ($audit->location_id != 0 && $audit->tax_type_id != 0)
                 @livewire("audit.declared-sales-analysis", ["auditId" => encrypt($audit->id), "tax_type_id" => encrypt($audit->tax_type_id), "location_id" => encrypt($audit->location_id)])

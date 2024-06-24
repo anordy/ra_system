@@ -230,9 +230,6 @@ function roundOff($amount, $currency)
     return $roundedAmount;
 }
 
-// Helper function to convert integer to Roman numeral count
-
-
 function getHotelStarByBusinessId($business_id)
 {
     $hotel_star = DB::table('business_hotels as b')
@@ -258,7 +255,8 @@ function formatEnum($string)
     return ucwords($string);
 }
 
-function getSourceName($model) {
+function getSourceName($model)
+{
     if ($model == \App\Models\Returns\TaxReturn::class) {
         return 'Return';
     } else if ($model == \App\Models\TaxRefund\TaxRefund::class) {

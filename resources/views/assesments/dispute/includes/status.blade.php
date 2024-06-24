@@ -1,5 +1,5 @@
 @if ($row->app_status === \App\Models\BusinessStatus::APPROVED)
-    <span class="badge badge-danger py-1 px-2 custom-payment-box">
+    <span class="badge badge-danger py-1 px-2 green-status">
         <i class="bi bi-record-circle mr-1"></i>
         Approved
     </span>

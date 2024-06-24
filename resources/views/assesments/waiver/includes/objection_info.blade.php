@@ -68,26 +68,26 @@
                     </span>
                 </div>
                 @if ($dispute->waiver_category)
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Waiver Type</span>
-                        <p class="my-1">
-                            @if ($dispute->waiver_category == "interest")
-                                Interest
-                            @elseif($dispute->waiver_category == "penalty")
-                                Penalty
-                            @else
-                                Penalty & Interest
-                            @endif
-                        </p>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Waived Penalty Rate</span>
-                        <p class="my-1">{{ $dispute->penalty_rate }}%</p>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Waived Interest Rate</span>
-                        <p class="my-1">{{ $dispute->interest_rate }}%</p>
-                    </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Waiver Type</span>
+                    <p class="my-1">
+                        @if ($dispute->waiver_category == 'interest')
+                            Interest
+                        @elseif($dispute->waiver_category == 'penalty')
+                            Penalty
+                        @else
+                            Penalty & Interest
+                        @endif
+                    </p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Waived Penalty Rate</span>
+                    <p class="my-1">{{ $dispute->penalty_rate }}%</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Waived Interest Rate</span>
+                    <p class="my-1">{{ $dispute->interest_rate }}%</p>
+                </div>
                 @endif
                 @if ($business->business_type === \App\Models\BusinessType::HOTEL)
                     <div class="col-md-4 mb-3">
@@ -101,7 +101,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Reg. No.</span>
-                    <p class="my-1">{{ $business->reg_no ?? "N/A" }} </p>
+                    <p class="my-1">{{ $business->reg_no ?? 'N/A' }} </p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Owner Designation</span>
@@ -140,17 +140,17 @@
             <div class="row m-2">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount In Dispute</span>
-                    <p class="my-1">{{ number_format($dispute->tax_in_dispute, 2) }} Tzs</p>
+                    <p class="my-1">{{ number_format($dispute->tax_in_dispute,2) }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount Not in Dispute</span>
-                    <p class="my-1">{{ number_format($dispute->tax_not_in_dispute, 2) }} Tzs</p>
+                    <p class="my-1">{{ number_format($dispute->tax_not_in_dispute,2) }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Assesed Amount</span>
-                    <p class="my-1">{{ number_format($dispute->tax_in_dispute + $dispute->tax_not_in_dispute, 2) }} TZS</p>
+                    <p class="my-1">{{ number_format($dispute->tax_in_dispute + $dispute->tax_not_in_dispute,2) }} TZS</p>
                 </div>
 
             </div>
@@ -163,7 +163,7 @@
                 <h6 class="pt-3 mb-0 font-weight-bold">Assessment History</h6>
                 <hr class="mt-2 mb-3" />
                 <livewire:assesments.assessment-history-table modelName='App\Models\TaxAssessments\TaxAssessmentHistory'
-                    modelId="{{ encrypt($assesment->id) }}" />
+                        modelId="{{ encrypt($assesment->id) }}" />
             </div>
         </div>
 
@@ -192,12 +192,12 @@
             <div class="row m-2 pt-3">
                 @foreach ($files as $file)
                     <div class="col-md-3">
-                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
-                                href="{{ route("assesments.waiver.files", encrypt($file["file_path"])) }}"
+                                href="{{ route('assesments.waiver.files', encrypt($file['file_path'])) }}"
                                 class="ml-1 font-weight-bold">
-                                {{ $file["file_name"] }}
+                                {{ $file['file_name'] }}
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>
                         </div>
@@ -217,23 +217,23 @@
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                        <p class="my-1">{{ number_format($assesment->principal_amount, 2) ?? "" }}</p>
+                        <p class="my-1">{{ number_format($assesment->principal_amount,2) ?? '' }}</p>
                     </div>
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                        <p class="my-1">{{ number_format($assesment->penalty_amount, 2) ?? "" }}</p>
+                        <p class="my-1">{{ number_format($assesment->penalty_amount,2) ?? '' }}</p>
                     </div>
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                        <p class="my-1">{{ number_format($assesment->interest_amount, 2) ?? "" }}</p>
+                        <p class="my-1">{{ number_format($assesment->interest_amount,2) ?? '' }}</p>
                     </div>
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Total Amount Due</span>
-                        <p class="my-1">{{ number_format($assesment->total_amount, 2) ?? "" }}</p>
+                        <p class="my-1">{{ number_format($assesment->total_amount ,2)?? '' }}</p>
                     </div>
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
-                        <p class="my-1">{{ number_format($assesment->outstanding_amount, 2) ?? "" }}</p>
+                        <p class="my-1">{{ number_format($assesment->outstanding_amount ,2)?? '' }}</p>
                     </div>
                 </div>
             </div>
@@ -248,10 +248,10 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-3">
-                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
-                                href="{{ route("assesments.waiver.files", encrypt($dispute->dispute_report)) }}"
+                                href="{{ route('assesments.waiver.files', encrypt($dispute->dispute_report)) }}"
                                 class="ml-1 font-weight-bold">
                                 dispute Report
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -261,10 +261,10 @@
 
                     @if ($dispute->notice_report)
                         <div class="col-md-3">
-                            <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
+                            <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
                                 <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                 <a target="_blank"
-                                    href="{{ route("assesments.waiver.files", encrypt($dispute->notice_report)) }}"
+                                    href="{{ route('assesments.waiver.files', encrypt($dispute->notice_report)) }}"
                                     class="ml-1 font-weight-bold">
                                     Notice Report
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -275,10 +275,10 @@
 
                     @if ($dispute->setting_report)
                         <div class="col-md-3">
-                            <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center highlighted-file-box">
+                            <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
                                 <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                 <a target="_blank"
-                                    href="{{ route("assesments.waiver.files", encrypt($dispute->setting_report)) }}"
+                                    href="{{ route('assesments.waiver.files', encrypt($dispute->setting_report)) }}"
                                     class="ml-1 font-weight-bold">
                                     Setting Report
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>

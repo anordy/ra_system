@@ -17,21 +17,6 @@
                     </div>
                 @endif
                 <div class="row">
-{{--                    <div class="col-md-12 form-group">--}}
-{{--                        <label>Select Business</label>--}}
-{{--                        <select wire:model="business_id" class="form-control @error("business_id") is-invalid @enderror"--}}
-{{--                            wire:change="businessChange($event.target.value)">--}}
-{{--                            <option value="">Select Business</option>--}}
-{{--                            @foreach ($business as $row)--}}
-{{--                                <option value="{{ $row->id }}">{{ $row->name }} ({{ $row->ztn_number }})</option>--}}
-{{--                            @endforeach--}}
-{{--                        </select>--}}
-{{--                        @error("business_id")--}}
-{{--                            <div class="invalid-feedback">--}}
-{{--                                {{ $message }}--}}
-{{--                            </div>--}}
-{{--                        @enderror--}}
-{{--                    </div>--}}
                     <div class="col-md-12 form-group">
                         <input
                                 wire:model.defer="selectedBusiness"

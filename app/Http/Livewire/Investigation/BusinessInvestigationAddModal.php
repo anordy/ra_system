@@ -84,10 +84,14 @@ class BusinessInvestigationAddModal extends Component
             ->toArray();
     }
 
-    public function mount()
+    public function mount($jsonData = null)
     {
-//        dd(Business::query()->where('name', 'Timers')->first());
         $this->resetFields();
+        if (isset($jsonData)) {
+            $this->business_id = $jsonData['business_id'];
+            $this->businessChange($this->business_id);
+            $this->location_ids[] = $jsonData['location_ids'];
+        }
     }
 
 

@@ -47,6 +47,13 @@ class TaxAuditApprovalTable extends DataTableComponent
         $data = WorkflowTask::with('pinstance', 'pinstance.location', 'pinstance.business', 'user')
             ->where('pinstance_type', TaxAudit::class)
             ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->whereHasMorph(
+                'pinstance',
+                [TaxAudit::class],
+                function ($query) {
+                    $query->where('forwarded_to_investigation', false);
+                }
+            )
             ->where('owner', WorkflowTask::STAFF)
             ->whereHas('actors', function ($query) {
                 $query->where('user_id', auth()->id());
