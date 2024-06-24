@@ -38,7 +38,8 @@ class FeePayment extends Component
                 $this->fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
                     'mvr_class_id' => $this->motorVehicle->mvr_class_id,
-                    'mvr_fee_type_id' => $this->feeType->id
+                    'mvr_fee_type_id' => $this->feeType->id,
+                    'mvr_plate_number_type_id' => $this->motorVehicle->mvr_plate_number_type_id
                 ])->first();
                 break;
 
@@ -48,7 +49,8 @@ class FeePayment extends Component
                 $this->fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
                     'mvr_class_id' => $this->motorVehicle->mvr_class_id,
-                    'mvr_fee_type_id' => $this->feeType->id
+                    'mvr_fee_type_id' => $this->feeType->id,
+                    'mvr_plate_number_type_id' => $this->motorVehicle->mvr_plate_number_type_id
                 ])->first();
                 break;
 
@@ -58,7 +60,8 @@ class FeePayment extends Component
                 $this->fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->motorVehicle->motor_vehicle->mvr_registration_type_id,
                     'mvr_class_id' => $this->motorVehicle->motor_vehicle->mvr_class_id,
-                    'mvr_fee_type_id' => $this->feeType->id
+                    'mvr_fee_type_id' => $this->feeType->id,
+                    'mvr_plate_number_type_id' => $this->motorVehicle->motor_vehicle->mvr_plate_number_type_id
                 ])->first();
                 break;
 
@@ -68,7 +71,8 @@ class FeePayment extends Component
                 $this->fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
                     'mvr_class_id' => $this->motorVehicle->mvr_class_id,
-                    'mvr_fee_type_id' => $this->feeType->id
+                    'mvr_fee_type_id' => $this->feeType->id,
+                    'mvr_plate_number_type_id' => $this->motorVehicle->mvr_plate_number_type_id
                 ])->first();
                 break;
 
@@ -78,7 +82,8 @@ class FeePayment extends Component
                 $this->fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->motorVehicle->registration->mvr_registration_type_id,
                     'mvr_fee_type_id' => $this->feeType->id,
-                    'mvr_class_id' => $this->motorVehicle->registration->mvr_class_id
+                    'mvr_class_id' => $this->motorVehicle->registration->mvr_class_id,
+                    'mvr_plate_number_type_id' => $this->motorVehicle->registration->mvr_plate_number_type_id
                 ])->first();
                 break;
 

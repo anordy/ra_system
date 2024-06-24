@@ -118,6 +118,8 @@ class CapturePassportModal extends Component
                 $newLicense->license_number = DlDriversLicense::getNextLicenseNumber();
                 $newLicense->issued_date = date('Y-m-d');
                 $newLicense->expiry_date = date('Y-m-d', strtotime("+{$dla->license_duration} years"));
+            } elseif($dla->type === DlApplicationStatus::ADD_CLASS){
+                $newLicense->license_number = DlDriversLicense::getNextLicenseNumber();
             }
 
             try {
@@ -145,6 +147,7 @@ class CapturePassportModal extends Component
                 'license_restrictions' => $dla->license_restrictions ?? 'none',
                 'dl_license_application_id' => $dla->id, // remove column
                 'dl_license_duration_id' => $dla->license_duration_id,
+                'status' => DlApplicationStatus::ACTIVE
             ]);
         }
 
@@ -159,6 +162,9 @@ class CapturePassportModal extends Component
                 'dl_license_class_id' => $class->dl_license_class_id
             ]);
         }
+
+        // Update restrictions
+        $dla->licenseRestrictions()->update(['dl_license_id' => $newLicense->id]);
 
         $this->licenseId = $newLicense->id;
         return $newLicense;

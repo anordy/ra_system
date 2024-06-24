@@ -196,7 +196,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Color</span>
-                    <p class="my-1">{{ $motor_vehicle->color->name }}</p>
+                    <p class="my-1">{{ $motor_vehicle->regtype->color->color }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Inspection Report</span>

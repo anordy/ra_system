@@ -39,7 +39,6 @@ class TaxReturn extends Model implements PayloadInterface
         'paid_at' => 'datetime'
     ];
 
-
     public function taxtype()
     {
         return $this->belongsTo(TaxType::class, 'tax_type_id');

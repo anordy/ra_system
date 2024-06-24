@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'Public Service De-registrations')
+@section('title', 'Transport Service De-registrations')
 
 @section('content')
     <div class="card mt-3">
         <div class="card-header">
-            Public Service De-registrations
+            Transport Service De-registrations
         </div>
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">

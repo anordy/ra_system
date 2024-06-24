@@ -8,6 +8,7 @@ use App\Enum\PublicServiceMotorStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\Business;
+use App\Models\BusinessCategory;
 use App\Models\PublicService\PublicServicePayment;
 use App\Models\PublicService\PublicServicePaymentCategory;
 use App\Models\PublicService\PublicServicePaymentInterval;
@@ -41,16 +42,16 @@ class PublicServiceRegistrationApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
-        $this->psPaymentMonths = PublicServicePaymentInterval::select('id', 'value')->get();
 
         if ($this->subject->payment) {
             $this->psPayment = $this->subject->payment;
             $this->psPaymentCategoryId = $this->subject->payment->public_service_payment_category_id;
             $paymentMonth = $this->subject->payment->payment_months;
-            $this->psPaymentMonthId = $this->psPaymentMonths->where('value', $paymentMonth)->firstOrFail()->id;
+            $this->psPaymentMonthId = PublicServicePaymentInterval::query()->where('value', $paymentMonth)->first()->id;
         }
 
         $this->psPaymentCategories = PublicServicePaymentCategory::select('id', 'name', 'turnover_tax')->get();
+        $this->psPaymentMonths = PublicServicePaymentInterval::select('id', 'value')->get();
     }
 
     public function approve($transition)
@@ -66,8 +67,14 @@ class PublicServiceRegistrationApprovalProcessing extends Component
         if ($this->checkTransition('public_service_registration_officer_review')) {
             $this->validate([
                 'psPaymentCategoryId' => 'required|numeric|exists:public_service_payment_categories,id',
-                'psPaymentMonthId' => 'required|numeric|exists:public_service_payments_interval,id',
+                'psPaymentMonthId' => [
+                    'required',
+                    'numeric',
+                    'exists:public_service_payments_interval,id'
+                ],
                 'comments' => 'required|strip_tag',
+            ], [
+                'psPaymentMonthId.exists' => 'Payment month id does not exist'
             ]);
 
             try {

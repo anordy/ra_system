@@ -38,12 +38,12 @@ class DeregistrationsTable extends DataTableComponent
                 ->searchable(),
             Column::make(__("Reason"), "reason.name")
                 ->searchable(),
-            Column::make(__("Plate No"), "registration.plate_number")
+            Column::make(__("Registration No"), "registration.plate_number")
                 ->format(function ($value, $row) {
                     return $value ?? 'PENDING';
                 })
                 ->searchable(),
-            Column::make(__("Reg No"), "registration.registration_number")
+            Column::make(__("Serial No"), "registration.registration_number")
                 ->format(function ($value, $row) {
                     return $value ?? 'N/A';
                 })

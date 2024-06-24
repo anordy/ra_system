@@ -88,7 +88,7 @@
     <tr>
         <th class="text-center" colspan="15">
             <strong>ZANZIBAR Revenue Authority</strong><br>
-            <strong>Report of {{ $parameters['reg_type']  }} Public Service Registration </strong><br>
+            <strong>Report of {{ $parameters['reg_type']  }} Transport Service Registration </strong><br>
             @if($parameters['range_start'] && $parameters['range_end'])
                 <strong>From {{ date("M, d Y", strtotime($parameters['range_start'])) }} To {{ date("M, d Y",
                     strtotime($parameters['range_end'])) }} </strong><br>
@@ -125,7 +125,7 @@
                 <strong>Registered On</strong>
             </th>
             <th class="text-center border">
-                <strong>Public Service Status</strong>
+                <strong>Transport Service Status</strong>
             </th>
             <th class="text-center border">
                 <strong>MVR Status</strong>

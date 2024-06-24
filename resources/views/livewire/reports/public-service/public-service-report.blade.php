@@ -61,7 +61,7 @@
             </div>
             <div class="col-md-4 form-group">
                 <label for="registration_type" class="d-flex justify-content-between'">
-                    Public Service Status
+                    Transport Service Status
                 </label>
                 <select wire:model="publicServiceStatus" class="form-control {{ $errors->has('publicServiceStatus') ? 'is-invalid' : '' }}">
                     <option>Choose Registration Type</option>

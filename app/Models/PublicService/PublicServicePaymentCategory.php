@@ -11,4 +11,6 @@ class PublicServicePaymentCategory extends Model
 
     protected $guarded = [];
 
+    const COMPANY = 'Company';
+
 }
