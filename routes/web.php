@@ -18,6 +18,8 @@ use App\Http\Controllers\PropertyTax\PropertyTaxController;
 use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
+use App\Http\Controllers\Returns\Chartered\CharteredController;
+use App\Http\Controllers\Returns\TaxReturnCancellationsController;
 use App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController;
 use App\Http\Controllers\TaxRefund\TaxRefundController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
@@ -28,7 +30,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\ISIC1Controller;
@@ -82,7 +83,6 @@ use App\Http\Controllers\LandLease\LandLeaseController;
 use App\Http\Controllers\Setting\PenaltyRateController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Assesments\ObjectionController;
-use App\Http\Controllers\MVR\TRAChassisSearchController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Setting\ExchangeRateController;
@@ -138,8 +138,7 @@ use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
-use App\Http\Controllers\Verification\TaxVerificationApprovalController;
-use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
+use App\Http\Controllers\Verification\TaxVerificationsController;
 use App\Http\Controllers\InternalInfoChange\InternalInfoChangeController;
 use App\Http\Controllers\Reports\Department\DepartmentalReportController;
 use App\Http\Controllers\Returns\FinancialYears\FinancialYearsController;
@@ -266,7 +265,6 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
 
         Route::get('/tax-consultant-duration', [TaxAgentController::class, 'duration'])->name('tax-consultant-duration');
 
-        Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
         Route::resource('/transaction-fees', TransactionFeeController::class);
 
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
@@ -417,7 +415,6 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         // seaport
         Route::get('/seaport/index', [PortReturnController::class, 'seaport'])->name('seaport.index');
         Route::get('/port/show/{return_id}', [PortReturnController::class, 'show'])->name('port.show');
-        Route::get('/port/edit/{return_id}', [PortReturnController::class, 'edit'])->name('port.edit');
 
         Route::name('stamp-duty.')->group(function () {
             Route::get('/stamp-duty', [StampDutyReturnController::class, 'index'])->name('index');
@@ -465,6 +462,25 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
 
         // Print Returns
         Route::get('/print/{tax_return_id}', [PrintController::class, 'print'])->name('print');
+
+    });
+
+    //Chartered Return
+    Route::name('chartered.')
+        ->prefix('/chartered')
+        ->group(function () {
+            Route::get('/create', [CharteredController::class, 'create'])->name('create');
+            Route::get('/index/sea', [CharteredController::class, 'indexSea'])->name('index.sea');
+            Route::get('/index/flight', [CharteredController::class, 'indexFlight'])->name('index.flight');
+            Route::get('/view/return/{return_id}', [CharteredController::class, 'show'])->name('show');
+            Route::get('/edit/return/{return_id}', [CharteredController::class, 'edit'])->name('edit');
+        });
+
+    // Tax returns cancellation
+    Route::name('tax-return-cancellation.')->prefix('/tax-return-cancellation')->group(function () {
+        Route::get('/', [TaxReturnCancellationsController::class, 'index'])->name('index');
+        Route::get('/view/{id}', [TaxReturnCancellationsController::class, 'show'])->name('show');
+        Route::get('/file/{id}', [TaxReturnCancellationsController::class, 'file'])->name('file');
     });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
@@ -495,10 +511,13 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
     });
 
     Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {
-        Route::resource('/approvals', TaxVerificationApprovalController::class);
         Route::resource('/assessments', TaxVerificationAssessmentController::class);
-        Route::resource('/verified', TaxVerificationVerifiedController::class);
         Route::resource('/files', TaxVerificationFilesController::class);
+        Route::get('/approved', [TaxVerificationsController::class, 'approved'])->name('approved');
+        Route::get('/pending', [TaxVerificationsController::class, 'pending'])->name('pending');
+        Route::get('/unpaid', [TaxVerificationsController::class, 'unpaid'])->name('unpaid');
+        Route::get('/show/{verification}', [TaxVerificationsController::class, 'show'])->name('show');
+        Route::get('/edit/{verification}', [TaxVerificationsController::class, 'edit'])->name('edit');
     });
 
     Route::name('tax_vettings.')->prefix('tax_vettings')->group(function () {

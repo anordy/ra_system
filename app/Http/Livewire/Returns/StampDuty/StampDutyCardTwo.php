@@ -2,14 +2,21 @@
 
 namespace App\Http\Livewire\Returns\StampDuty;
 
+use App\Enum\CustomMessage;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\StampDuty\StampDutyReturnPenalty;
+use App\Traits\CustomAlert;
 use App\Traits\ReturnFilterTrait;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
+/**
+ * Display total paid and unpaid amount for tax return in USD and TZS i.e. total tax amount, total late filing
+ * total late payment and total interest
+ */
 class StampDutyCardTwo extends Component
 {
-    use ReturnFilterTrait;
+    use ReturnFilterTrait, CustomAlert;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     protected $data;
@@ -20,9 +27,14 @@ class StampDutyCardTwo extends Component
 
     public function filterData($data)
     {
-        $this->emit('$refresh');
-        $this->data = $data;
-        self::mount();
+        try {
+            $this->emit('$refresh');
+            $this->data = $data;
+            self::mount();
+        } catch (\Exception $exception) {
+            Log::error('RETURNS-STAMP-DUTY-CARD-TWO', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
+        }
     }
 
     public function mount()

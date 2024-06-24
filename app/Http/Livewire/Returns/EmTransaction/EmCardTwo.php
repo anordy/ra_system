@@ -2,14 +2,17 @@
 
 namespace App\Http\Livewire\Returns\EmTransaction;
 
+use App\Enum\CustomMessage;
 use App\Models\Returns\EmTransactionPenalty;
 use App\Models\Returns\EmTransactionReturn;
+use App\Traits\CustomAlert;
 use App\Traits\ReturnFilterTrait;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class EmCardTwo extends Component
 {
-    use ReturnFilterTrait;
+    use ReturnFilterTrait, CustomAlert;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     protected $data;
@@ -20,9 +23,14 @@ class EmCardTwo extends Component
 
     public function filterData($data)
     {
-        $this->emit('$refresh');
-        $this->data = $data;
-        self::mount();
+        try {
+            $this->emit('$refresh');
+            $this->data = $data;
+            self::mount();
+        } catch (\Exception $exception) {
+            Log::error('RETURNS-EM-CARD-TWO', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
+        }
     }
 
     public function mount()

@@ -4,7 +4,11 @@ namespace App\Http\Livewire\TaxRefund;
 
 use App\Enum\BillStatus;
 use App\Enum\CustomMessage;
+use App\Enum\GeneralConstant;
+use App\Events\SendSms;
+use App\Jobs\SendCustomSMS;
 use App\Models\BusinessLocation;
+use App\Models\Currency;
 use App\Models\SystemSetting;
 use App\Models\TaxRefund\PortLocation;
 use App\Models\TaxRefund\TaxRefund;
@@ -25,7 +29,7 @@ class Initiate extends Component
     public $hasRefundDocument = false;
     public $ztnNumber, $importerName, $phoneNumber, $importerTIN, $importerVRN, $portId, $totalPayableAmount = 0;
     public $ports = [];
-    public $rate;
+    public $rate, $location;
 
     public function mount()
     {
@@ -37,37 +41,41 @@ class Initiate extends Component
     {
         $this->validate([
             'portId' => 'required|numeric|exists:port_locations,id',
-            'ztnNumber' => 'nullable|required_if:isZraRegistered,1|exists:business_locations,zin',
-            'isZraRegistered' => 'required',
-            'hasRefundDocument' => 'required',
-            'importerName' => 'nullable|required_if:isZraRegistered,0|alpha_space',
-            'phoneNumber' => 'nullable|required_if:isZraRegistered,0|phone_no',
+            'ztnNumber' => 'nullable|required_if:isZraRegistered,' . GeneralConstant::ONE . '|exists:business_locations,zin',
+            'isZraRegistered' => 'required|numeric',
+            'hasRefundDocument' => 'required|numeric',
+            'importerName' => 'nullable|required_if:isZraRegistered,' . GeneralConstant::ZERO . '|alpha_space',
+            'phoneNumber' => 'nullable|required_if:isZraRegistered,' . GeneralConstant::ZERO . '|phone_no',
         ], [
             'importerName.required_if' => 'Importer name is required',
             'phoneNumber.required_if' => 'Phone number is required',
             'ztnNumber.required_if' => 'Location ztn number is required',
+            'isZraRegistered.numeric' => 'Invalid choice format',
+            'hasRefundDocument.numeric' => 'Invalid choice format',
         ]);
+
+        if ($this->ztnNumber) {
+            $this->location = BusinessLocation::with(['business:id,name,mobile'])
+                ->select('id', 'business_id', 'name')
+                ->where('zin', $this->ztnNumber)
+                ->first();
+
+            if (!$this->location) {
+                $this->customAlert('warning', 'Business Location Not Found');
+                return;
+            }
+
+            $this->importerName = $this->location->name;
+            $this->phoneNumber = $this->location->business->mobile;
+        }
 
     }
 
     public function submit()
     {
+        $this->proceed();
+
         try {
-            if ($this->ztnNumber) {
-                $location = BusinessLocation::with(['business:id,name,mobile'])
-                    ->select('id', 'business_id', 'name')
-                    ->where('zin', $this->ztnNumber)
-                    ->first();
-
-                if (!$location) {
-                    $this->customAlert('warning', 'Business Location Not Found');
-                    return;
-                }
-
-                $this->importerName = $location->name;
-                $this->phoneNumber = $location->business->mobile;
-            }
-
             DB::beginTransaction();
 
             $refundData = [
@@ -79,10 +87,9 @@ class Initiate extends Component
                 'phone_number' => $this->phoneNumber ?? null,
                 'business_location_id' => $location->id ?? null,
                 'ztn_number' => $this->ztnNumber ?? null,
-                'payment_status' => BillStatus::SUBMITTED,
-                // TODO: Confirm with Business on control number expiration period
-                'payment_due_date' => Carbon::now()->addMonths(1),
-                'currency' => 'TZS'
+                'payment_status' => $this->hasRefundDocument === GeneralConstant::ZERO ? BillStatus::SUBMITTED : GeneralConstant::VERIFIED,
+                'payment_due_date' => $this->hasRefundDocument === GeneralConstant::ZERO ?  Carbon::now()->addMonths(1) : Carbon::now(),
+                'currency' => Currency::TZS
             ];
 
             $taxRefund = TaxRefund::create($refundData);
@@ -100,6 +107,18 @@ class Initiate extends Component
                 TaxRefundItem::create($data);
             }
             DB::commit();
+
+           if ($taxRefund->businessLocation) {
+               // Send Notification to Taxpayer
+               event(new SendSms(SendCustomSMS::SERVICE, NULL,
+                   [
+                       'phone' => $taxRefund->businessLocation->mobile,
+                       'message' => "Tax refund received"
+                   ]
+               ));
+           }
+
+
             $this->customAlert('success', 'Refund added successfully');
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -108,12 +127,15 @@ class Initiate extends Component
             return;
         }
 
-        try {
-            $this->generateTaxRefundControlNumber($taxRefund);
-        }catch (\Exception $exception) {
-            Log::error('TAX-REFUND-INITIATE-SUBMIT', [$exception]);
-            $this->customAlert('error', 'Failed to Generate control number');
+        if ($this->hasRefundDocument === GeneralConstant::ZERO) {
+            try {
+                $this->generateTaxRefundControlNumber($taxRefund);
+            } catch (\Exception $exception) {
+                Log::error('TAX-REFUND-INITIATE-SUBMIT', [$exception]);
+                $this->customAlert('error', 'Failed to Generate control number');
+            }
         }
+
 
         return redirect()->route('tax-refund.show', [encrypt($taxRefund->id)]);
     }
@@ -127,7 +149,7 @@ class Initiate extends Component
         }
 
         $exploded = explode('.', $propertyName);
-        if (count($exploded) == 3 && $exploded['0'] == 'allItems' && ($exploded[2] == 'item_name' || $exploded[2] == 'excl_tax_amount')){
+        if (count($exploded) == 3 && $exploded['0'] == 'allItems' && ($exploded[2] == 'item_name' || $exploded[2] == 'excl_tax_amount')) {
             $this->addItem($exploded[1], false);
         }
 
@@ -141,12 +163,11 @@ class Initiate extends Component
 
     public function addItem($i, $addRow = true)
     {
-        // TODO: Remove hardcoded validation variables
         $this->validate([
-            'allItems.*.tansad_number' => 'required_if:hasRefundDocument,1|min:4|max:14|alpha_num|exists:exited_goods,tansad_number',
-            'allItems.*.efd_number' => 'required_if:hasRefundDocument,1|min:4|max:14|alpha_num|exists:efdms_receipts,receipt_number',
-            'allItems.*.item_name' => 'required_if:hasRefundDocument,0|alpha_num_space',
-            'allItems.*.excl_tax_amount' => 'required_if:hasRefundDocument,0|numeric',
+            'allItems.*.tansad_number' => 'required_if:hasRefundDocument,' . GeneralConstant::ONE . '|min:4|max:14|alpha_num|exists:exited_goods,tansad_number',
+            'allItems.*.efd_number' => 'required_if:hasRefundDocument,' . GeneralConstant::ONE . '|min:4|max:14|alpha_num|exists:efdms_receipts,receipt_number',
+            'allItems.*.item_name' => 'required_if:hasRefundDocument,' . GeneralConstant::ZERO . '|alpha_num_space',
+            'allItems.*.excl_tax_amount' => 'required_if:hasRefundDocument,' . GeneralConstant::ZERO . '|numeric',
         ], [
             'allItems.*.tansad_number.required' => 'Tansad number is required',
             'allItems.*.tansad_number.exists' => 'Tansad number not found',
@@ -157,14 +178,25 @@ class Initiate extends Component
         ]);
 
 
-        if ($this->hasRefundDocument === "1") {
+        if ($this->hasRefundDocument === GeneralConstant::ONE) {
             // TODO: Check if TANSAD number is already added to avoid duplicates
             $exitedGood = ExitedGood::select('value_excluding_tax')
                 ->where('tansad_number', $this->allItems[$i]['tansad_number'])
+                ->where('custom_declaration_types', ExitedGood::IM9)
                 ->first();
 
             if (!$exitedGood) {
                 $this->customAlert('warning', "Exited Good with TANSAD number {$this->allItems[$i]['tansad_number']} not found");
+                return;
+            }
+
+            $utilized = TaxRefundItem::select('id')
+                ->orWhere('tansad_number', $this->allItems[$i]['tansad_number'])
+                ->orWhere('efd_number', $this->allItems[$i]['efd_number'])
+                ->first();
+
+            if ($utilized) {
+                $this->customAlert('warning', "The provided TANSAD number or EFD Receipt number has already been utilized");
                 return;
             }
 
@@ -176,7 +208,7 @@ class Initiate extends Component
             $this->totalPayableAmount += $item['excl_tax_amount'];
         }
 
-        if($addRow){
+        if ($addRow) {
             $this->allItems[] = [
                 'tansad_number' => '',
                 'efd_number' => '',

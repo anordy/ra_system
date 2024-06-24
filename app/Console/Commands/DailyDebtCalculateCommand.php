@@ -120,6 +120,7 @@ class DailyDebtCalculateCommand extends Command
     {
         Log::channel('dailyJobs')->info("Daily Debt marking for assessment process started");
 
+        // TODO: Get only approved assessment
         $tax_assessments = TaxAssessment::selectRaw('tax_assessments.*, CURRENT_DATE - CAST(curr_payment_due_date as date) as days_passed')
             ->whereIn('assessment_step', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
             ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0")

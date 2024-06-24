@@ -67,7 +67,7 @@
                 </tr>
                 @if ($penalties->count() > 0)
                     <tr>
-                        <td>Late payments penalities <br> <small>Adhabu ya kuchelewesha malipo</small> </td>
+                        <td>Late payments penalties <br> <small>Adhabu ya kuchelewesha malipo</small> </td>
                         <td> {{ number_format($return->total_amount_due_with_penalties - $return->total_amount_due, 2, '.', ',') }}
                         </td>
                     </tr>

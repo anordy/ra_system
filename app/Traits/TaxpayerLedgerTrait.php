@@ -48,7 +48,7 @@ trait TaxpayerLedgerTrait
             }
 
             if ($sourceType === TaxReturn::class) {
-                $hasClaim = TaxReturn::findOrFail($sourceId, ['has_claim']);
+                $hasClaim = TaxReturn::findOrFail($sourceId, ['has_claim'])->has_claim;
 
                 if ($hasClaim) {
                     $principalAmount = 0;

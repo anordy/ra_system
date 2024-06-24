@@ -33,7 +33,7 @@
         </div>
         @if ($this->checkTransition('objection_manager_review'))
             <div class="modal-footer p-2 m-0">
-                {{-- <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled
+                {{-- <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filed
                     Incorrect
                     return to Applicant</button> --}}
                 <button type="button" class="btn btn-primary"

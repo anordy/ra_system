@@ -12,7 +12,8 @@
                                     wire:model="selectedTaxTypes.{{ $key }}.tax_type_id">
                                 <option value="" selected disabled>--Select---</option>
                                 @foreach ($taxTypes as $type)
-                                    <option value="{{ $type->id }}" @if ($type->id === $selectedTaxTypes[$key]['tax_type_id']) disabled @endif>{{ $type->name }}</option>
+                                    <option value="{{ $type->id }}"
+                                            @if ($type->id === $selectedTaxTypes[$key]['tax_type_id']) disabled @endif>{{ $type->name }}</option>
                                 @endforeach
                             </select>
                             @error("selectedTaxTypes.{$key}.tax_type_id")
@@ -42,7 +43,9 @@
                                 <label class="form-label">VAT Category Type</label>
                                 <div class="position-relative">
                                     <input type="hidden" wire:model="selectedTaxTypes.{{ $key }}.sub_vat_id">
-                                    <input type="text" class="form-control" placeholder="Search..." wire:model="selectedTaxTypes.{{ $key }}.sub_vat_name" wire:keyup="subCategorySearchUpdate({{$key}}, $event.target.value)">
+                                    <input type="text" class="form-control" placeholder="Search..."
+                                           wire:model="selectedTaxTypes.{{ $key }}.sub_vat_name"
+                                           wire:keyup="subCategorySearchUpdate({{$key}}, $event.target.value)">
                                     @if($selectedTaxTypes[$key]['show_hide_options'])
                                         <div class="position-absolute z-index-1" wire:loading wire:target="subCategorySearchUpdate">
                                             Loading....
@@ -75,6 +78,22 @@
                         </div>
                     @endif
 
+                    @if(count($lumpsumPayment))
+                        <div class="col-md-5 mb-3">
+                            <span class="font-weight-bold text-uppercase">Annual Estimate</span>
+                            <p class="my-1">{{ $lumpsumPayment['annual_estimate'] ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Payment Quarters</span>
+                            <p class="my-1">{{ $lumpsumPayment['payment_quarters'] ?? '' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Currency</span>
+                            <p class="my-1">{{ $lumpsumPayment['currency'] ?? 'N/A' }}</p>
+                        </div>
+                    @endif
+
+
                     @if ($showLumpsumOptions === true)
                         <div class="col-md-5">
                             <div class="form-group">
@@ -84,7 +103,8 @@
                                         wire:model="selectedTaxTypes.{{ $key }}.annual_estimate">
                                     <option value="" selected disabled>--Select---</option>
                                     @foreach($annualSales as $annualSale)
-                                        <option value="{{$annualSale['payments_per_year']}}"> {{number_format($annualSale['min_sales_per_year'],2)}} - {{ number_format($annualSale['max_sales_per_year'],2)}} </option>
+                                        <option value="{{$annualSale['payments_per_year']}}"> {{number_format($annualSale['min_sales_per_year'],2)}}
+                                            - {{ number_format($annualSale['max_sales_per_year'],2)}} </option>
                                     @endforeach
                                 </select>
                                 @error("selectedTaxTypes.{$key}.annual_estimate")
@@ -96,13 +116,17 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="form-label">Payment per year </label>
-                                    <input type="text" value="{{number_format((int)$selectedTaxType['annual_estimate'] )}}" class="form-control" disabled>
+                                    <input type="text"
+                                           value="{{number_format((int)$selectedTaxType['annual_estimate'] )}}"
+                                           class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="form-label">Payment per three months </label>
-                                    <input type="text" value="{{number_format((int)$selectedTaxType['annual_estimate']/4)}}" class="form-control" disabled>
+                                    <input type="text"
+                                           value="{{number_format((int)$selectedTaxType['annual_estimate']/4)}}"
+                                           class="form-control" disabled>
                                 </div>
                             </div>
                         @endforeach

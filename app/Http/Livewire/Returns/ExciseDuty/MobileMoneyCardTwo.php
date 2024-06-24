@@ -2,14 +2,17 @@
 
 namespace App\Http\Livewire\Returns\ExciseDuty;
 
+use App\Enum\CustomMessage;
 use App\Models\Returns\MmTransferPenalty;
 use App\Models\Returns\MmTransferReturn;
+use App\Traits\CustomAlert;
 use App\Traits\ReturnFilterTrait;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class MobileMoneyCardTwo extends Component
 {
-    use ReturnFilterTrait;
+    use ReturnFilterTrait, CustomAlert;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     protected $data;
@@ -20,9 +23,14 @@ class MobileMoneyCardTwo extends Component
 
     public function filterData($data)
     {
-        $this->emit('$refresh');
-        $this->data = $data;
-        self::mount();
+        try {
+            $this->emit('$refresh');
+            $this->data = $data;
+            self::mount();
+        } catch (\Exception $exception) {
+            Log::error('RETURNS-MOBILE-MONEY-CARD-TWO', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
+        }
     }
 
     public function mount()

@@ -16,7 +16,7 @@ class CreateBusinessesTable extends Migration
         Schema::create('businesses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_category_id'); // Sole / Partner / Company / NGO
-            $table->unsignedBigInteger('taxpayer_id'); // Main owner
+            $table->unsignedBigInteger('taxpayer_id')->index(); // Main owner
             $table->string('bpra_no')->nullable();
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed', 'temp_closed', 'deregistered'])->default('draft');
             $table->enum('business_type', ['hotel', 'other','electricity'])->default('other');

@@ -14,7 +14,7 @@
         </div>
         <div class="card-body">
             <div>
-                <ul  class="nav nav-tabs" id="myTab" role="tablist">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <a class="nav-link active" id="bill-summary-tab" data-toggle="tab" href="#bill" role="tab"
                             aria-controls="bill" aria-selected="false">Bill Summary</a>
@@ -29,10 +29,10 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link" id="penalties-tab" data-toggle="tab" href="#penalties" role="tab"
-                            aria-controls="penalties" aria-selected="false">Penaties</a>
+                            aria-controls="penalties" aria-selected="false">Penalties</a>
                     </li>
                 </ul>
-                <div class="tab-content border border-white" id="myTabContent">
+                <div class="tab-content" id="myTabContent">
                     <div class="tab-pane p-2 show active" id="bill" role="tabpanel" aria-labelledby="bill-tab">
                         <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
                     </div>
@@ -64,21 +64,23 @@
                         <div class="col-md-12">
                             <table class="table table-bordered table-sm">
                                 <thead>
-                                    <th>Item Name</th>
-                                    <th>Input Value</th>
-                                    <th>Rate</th>
-                                    <th>VAT</th>
+                                    <th class="w-30">Item Name</th>
+                                    <th class="w-20">Input Value</th>
+                                    <th class="w-10">Rate</th>
+                                    <th class="w-20">VAT</th>
                                 </thead>
                                 <tbody>
+                                @if(!empty($return->items))
                                     @foreach ($return->items as $item)
-                                    <tr class="{{ $item->config->col_type == 'total' ? 'table-active font-weight-bolder' : ''}}">
-                                        <td>{{ $item->config->name ?? 'name' }}</td>
-                                        <td>{{ $item->config->col_type =='total' ? '' : number_format($item->value, 2) }}</td>
-                                        <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' :
+                                        <tr class="{{ $item->config->col_type == 'total' ? 'table-active font-weight-bolder' : ''}}">
+                                            <td>{{ $item->config->name ?? 'name' }}</td>
+                                            <td>{{ $item->config->col_type =='total' ? '' : number_format($item->value, 2) }}</td>
+                                            <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' :
                                             $item->config->rate_usd ?? '' }}</td>
-                                        <td>{{ number_format($item->vat, 2) }}</td>
-                                    </tr>
+                                            <td>{{ number_format($item->vat, 2) }}</td>
+                                        </tr>
                                     @endforeach
+                                @endif
                                 </tbody>
                             </table>
 

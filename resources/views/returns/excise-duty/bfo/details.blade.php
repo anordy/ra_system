@@ -1,42 +1,44 @@
 <div class="card p-0 m-0">
     <div class="card-body">
-        <h6 class="text-uppercase mt-2 ml-2">Filled Return Details For {{ $return->taxtype->name }}</h6>
+        <h6 class="text-uppercase mt-2 ml-2">Filed Return Details For {{ $return->taxtype->name ?? 'N/A' }}</h6>
         <hr>
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-bordered table-sm">
                     <thead>
-                    <th>Item Name</th>
-                    <th>Value</th>
-                    <th>Rate</th>
-                    <th>VAT</th>
+                    <th class="w-30">Item Name</th>
+                    <th class="w-20">Value</th>
+                    <th class="w-10">Rate</th>
+                    <th class="w-20">VAT</th>
                     </thead>
                     <tbody>
-                    @foreach ($return->configReturns as $item)
-                        @if($item->config->col_type == 'total')
-                            <tr>
-                                <td colspan="3">{{ $item->config->name ?? 'name' }}</td>
-                                <td>{{ number_format($item->vat, 2) }}</td>
-                            </tr>
-                        @else
-                            <tr>
-                                <td>{{ $item->config->name ?? 'name' }}</td>
-                                <td>{{ number_format($item->value, 2) }}</td>
-                                <td>
-                                    @if ($item->config->rate_type == 'percentage')
-                                        {{ $item->config->rate }} %
-                                    @elseif ($item->config->rate_type == 'fixed')
-                                        @if ($item->config->currency == 'TZS')
-                                            {{ $item->config->rate }} {{ $item->config->currency }}
-                                        @elseif ($item->config->currency == 'USD')
-                                            {{ $item->config->rate_usd }} {{ $item->config->currency }}
+                    @if(!empty($return->configReturns))
+                        @foreach ($return->configReturns as $item)
+                            @if($item->config->col_type == 'total')
+                                <tr>
+                                    <td colspan="3">{{ $item->config->name ?? 'N/A' }}</td>
+                                    <td>{{ number_format($item->vat, 2) }}</td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td>{{ $item->config->name ?? 'N/A' }}</td>
+                                    <td>{{ number_format($item->value, 2) }}</td>
+                                    <td>
+                                        @if ($item->config->rate_type == 'percentage')
+                                            {{ $item->config->rate ?? 'N/A' }} %
+                                        @elseif ($item->config->rate_type == 'fixed')
+                                            @if ($item->config->currency == 'TZS')
+                                                {{ $item->config->rate ?? 'N/A' }} {{ $item->config->currency ?? 'N/A' }}
+                                            @elseif ($item->config->currency == 'USD')
+                                                {{ $item->config->rate_usd ?? 'N/A' }} {{ $item->config->currency ?? 'N/A' }}
+                                            @endif
                                         @endif
-                                    @endif
-                                </td>
-                                <td>{{ number_format($item->vat, 2) }}</td>
-                            </tr>
-                        @endif
-                    @endforeach
+                                    </td>
+                                    <td>{{ number_format($item->vat, 2) }}</td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    @endif
                     </tbody>
                 </table>
             </div>

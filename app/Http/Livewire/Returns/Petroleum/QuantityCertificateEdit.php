@@ -6,7 +6,6 @@ use Exception;
 use Livewire\Component;
 use App\Traits\CustomAlert;
 use Livewire\WithFileUploads;
-use App\Models\BusinessLocation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -24,9 +23,6 @@ class QuantityCertificateEdit extends Component
     public $ship;
     public $port;
     public $cargo;
-    public $liters_observed;
-    public $liters_at_20;
-    public $metric_tons;
     public $ascertained;
     public $configs = [];
     public $quantity_certificate_attachment;
@@ -38,15 +34,15 @@ class QuantityCertificateEdit extends Component
     protected function rules()
     {
         return [
-            'ship' => 'required|strip_tag',
-            'port' => 'required|strip_tag',
-            'voyage_no' => 'nullable|strip_tag',
+            'ship' => 'required|strip_tag|alpha_gen',
+            'port' => 'required|strip_tag|alpha_gen',
+            'voyage_no' => 'nullable|strip_tag|alpha_num',
             'ascertained' => 'required|date',
             'location' => [
-                'required',
+                'required', 'alpha_gen',
                 'exists:business_locations,zin'
             ],
-            'products.*.config_id' => 'required',
+            'products.*.config_id' => 'required|numeric',
             'products.*.liters_observed' => 'required|numeric',
             'products.*.liters_at_20' => 'required|numeric',
             'products.*.metric_tons' => 'required|numeric',
@@ -56,7 +52,7 @@ class QuantityCertificateEdit extends Component
 
     protected $messages = [
         'products.*.config_id.required' => 'Product field required',
-        'products.*.liters_observed.required' => 'Listres observed field is required',
+        'products.*.liters_observed.required' => 'Litres observed field is required',
         'products.*.liters_observed.numeric' => 'Litres observed field must be a number',
         'products.*.liters_at_20.required' => 'Litres at 20 field is required',
         'products.*.liters_at_20.numeric' => 'Litres at 20 field must be a number',
@@ -68,8 +64,8 @@ class QuantityCertificateEdit extends Component
     public function mount($id)
     {
         $id = decrypt($id);
-        $this->certificate = QuantityCertificate::with('location', 'products')->find($id);
-        if (is_null($this->certificate)) {
+        $this->certificate = QuantityCertificate::with('location', 'products')->find($id, ['id', 'business_id', 'location_id', 'ship', 'port', 'voyage_no', 'ascertained', 'download_count', 'created_by', 'status', 'created_at', 'updated_at', 'certificate_no', 'quantity_certificate_attachment']);
+        if(is_null($this->certificate)){
             abort(404);
         }
         $this->ascertained = date('Y-m-d', strtotime($this->certificate->ascertained));
@@ -78,7 +74,8 @@ class QuantityCertificateEdit extends Component
         $this->voyage_no = $this->certificate->voyage_no;
         $this->location = $this->certificate->location->zin ?? '';
 
-        $this->configs = PetroleumConfig::where('row_type', 'dynamic')
+        $this->configs = PetroleumConfig::select('id', 'financia_year_id', 'order', 'code', 'name', 'row_type', 'value_calculated', 'col_type', 'rate_applicable', 'rate_type', 'currency', 'rate', 'rate_usd', 'value_formular', 'formular', 'active', 'value_label', 'rate_label', 'tax_label')
+            ->where('row_type', 'dynamic')
             ->where('col_type', '!=', 'heading')
             ->get();
 

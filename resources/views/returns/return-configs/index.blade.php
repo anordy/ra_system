@@ -16,14 +16,10 @@
     <div class="card">
         <div class="card-header bg-white text-uppercase font-weight-bold">
             {{ $code }} return configurations
-            {{--            <div class="card-tools"> --}}
-            {{--                <a href="{{route('settings.return-config.create', [encrypt($id), encrypt($code)])}}" class="btn btn-info btn-sm"><i class="bi bi-plus-circle-fill"></i> --}}
-            {{--                    New Configuration</a> --}}
-            {{--            </div> --}}
         </div>
         <div class="card-body">
             
-            @if ($code == \App\Models\TaxType::LUMPSUM_PAYMENT || $code == 'lumpsum payment')
+            @if ($code == \App\Models\TaxType::LUMPSUM_PAYMENT)
                 <table class="table table-bordered myTable1">
                     <thead>
                         <tr>
@@ -36,6 +32,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                    @if($configs)
                         @foreach ($configs as $index => $config)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
@@ -46,13 +43,14 @@
                                 <td>
                                     @can('setting-return-configuration-edit')
                                         <a href="{{ route('settings.return-config.edit', [encrypt($id), encrypt($code), encrypt($config->id)]) }}"
-                                            class="btn btn-outline-success">
+                                           class="btn btn-outline-success">
                                             <i class="bi bi-pencil pr-1"></i>Edit
                                         </a>
                                     @endcan
                                 </td>
                             </tr>
                         @endforeach
+                    @endif
                     </tbody>
                 </table>
             @else
@@ -69,11 +67,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($configs as $index => $config)
+                    @if($configs)
+                        @foreach ($configs as $i => $conf)
                             <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $config->name }}</td>
-                                <td>{{ $config->code }}</td>
+                                <td>{{ $i + 1 }}</td>
+                                <td>{{ $conf->name }}</td>
+                                <td>{{ $conf->code }}</td>
                                 <td>
                                     @if ($config->rate_applicable == 0)
                                         <span class="badge badge-danger py-1 px-2 danger-status"><i
@@ -87,21 +86,21 @@
                                 </td>
 
                                 <td>
-                                    @if ($config->currency == 'TZS')
-                                        {{ number_format($config->rate, 2) }}
-                                    @elseif ($config->currency == 'USD')
-                                        {{ number_format($config->rate_usd, 2) }}
+                                    @if ($conf->currency == 'TZS')
+                                        {{ number_format($conf->rate, 2) }}
+                                    @elseif ($conf->currency == 'USD')
+                                        {{ number_format($conf->rate_usd, 2) }}
                                     @endif
                                     <strong>
-                                        @if ($config->rate_type == 'percentage')
+                                        @if ($conf->rate_type == 'percentage')
                                             %
                                         @endif
                                     </strong>
                                 </td>
-                                <td>{{ $config->currency }}</td>
+                                <td>{{ $conf->currency }}</td>
                                 <td>
                                     @can('setting-return-configuration-edit')
-                                        <a href="{{ route('settings.return-config.edit', [encrypt($id), encrypt($code), encrypt($config->id)]) }}"
+                                        <a href="{{ route('settings.return-config.edit', [encrypt($id), encrypt($code), encrypt($conf->id)]) }}"
                                             class="btn btn-outline-success">
                                             <i class="bi bi-pencil pr-1"></i>Edit
                                         </a>
@@ -109,6 +108,7 @@
                                 </td>
                             </tr>
                         @endforeach
+                    @endif
                     </tbody>
                 </table>
             @endif

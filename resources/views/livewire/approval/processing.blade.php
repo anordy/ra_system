@@ -235,7 +235,6 @@
             @if ($this->checkTransition('registration_officer_review'))
                 @include('livewire.approval.registration_officer_review')
             @endif
-            @include('livewire.approval.transitions')
             <div class="row mx-1">
                 <div class="col-md-12 mb-2">
                     <div class="form-group">
@@ -259,7 +258,7 @@
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                    </div>Filled Incorrect return to Applicant
+                    </div>Filed Incorrect return to Applicant
                 </button>
 
                 <button wire:click="confirmPopUpModal('approve', 'registration_officer_review')"

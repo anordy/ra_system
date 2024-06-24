@@ -69,9 +69,6 @@
                                     <span class="font-weight-bold text-uppercase">Claimed Amount</span>
                                     <p class="my-1">{{ number_format($claim->amount, 2) }} {{ $claim->currency }}</p>
                                 </div>
-                                <div class="col-md-8 mb-3">
-                                    <livewire:claims.set-figure.set-figure-component :taxClaimId="$claim->id" />
-                                </div>
                             </div>
                         </div>
                         @if ($return = $claim->oldReturn)

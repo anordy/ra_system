@@ -50,56 +50,28 @@ class VettingApprovalTablePemba extends DataTableComponent
         $this->emit('$refresh');
     }
 
-    public function filters(): array
-    {
-        return [
-            SelectFilter::make('Tax Region')
-                ->options([
-                    'Kaskazini Pemba' => 'Kaskazini Pemba',
-                    'Kusini Pemba' => 'Kusini Pemba',
-                ])
-                ->filter(function (Builder $builder, string $value) {
-                    if ($value != 'all') {
-                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
-                            $query->where('name', $value);
-                        });
-                    }
-                }),
-        ];
-    }
-
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setFilterLayoutSlideDown();
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+
     }
 
     public function builder(): Builder
     {
         $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
             ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
-            ->whereNotIn('code', [
-                TaxType::AIRPORT_SERVICE_CHARGE,
-                TaxType::SEAPORT_TRANSPORT_CHARGE,
-                TaxType::AIRPORT_SAFETY_FEE,
-                TaxType::SEAPORT_SERVICE_CHARGE,
-                TaxType::ROAD_LICENSE_FEE,
-                TaxType::INFRASTRUCTURE,
-                TaxType::RDF
-            ])
             ->where('parent', 0)
-            ->where('is_business_lto', false)
-            ->where('is_business_lto', false)
+            ->where('vetting_status', $this->vettingStatus)
             ->whereHas('location.taxRegion', function ($query) {
                 $query->where('location', Region::PEMBA); //this is filter by department
             })
             ->whereHas('pinstance', function ($query) {
-                $query->where('status', '!=', WorkflowTask::COMPLETED);
+                $query->where('status', '!=', 'completed');
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });

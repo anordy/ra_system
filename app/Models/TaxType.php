@@ -50,12 +50,15 @@ class TaxType extends Model implements Auditable
     public const GOVERNMENT_FEE = 'government-fee';
     public const DEBTS = 'debts';
     public const AIRBNB = 'hotel-airbnb';
-
     public const PROPERTY_TAX = 'property-tax';
+
+    public const CHARTERED_SEA = 'chartered-sea';
+
+    public const CHARTERED_FLIGHT = 'chartered-flight';
 
 
     protected $fillable = [
-        'name', 'gfs_code', 'is_approved', 'is_updated'
+        'name', 'gfs_code', 'is_approved', 'is_updated', 'category'
     ];
 
     public function landLeases()

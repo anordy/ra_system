@@ -36,7 +36,7 @@ class AirbnbReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $tax    = TaxType::where('code', TaxType::AIRBNB)->first();
+        $tax    = TaxType::select('id')->where('code', TaxType::AIRBNB)->first();
         if (!$tax) {
             abort(404);
         }

@@ -35,7 +35,7 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>
-                    Filled Incorrect return to Applicant
+                    Filed Incorrect return to Applicant
                 </button>
 
                 <button wire:click="confirmPopUpModal('approve', 'registration_officer_review')"

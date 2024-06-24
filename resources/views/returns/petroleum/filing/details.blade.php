@@ -1,10 +1,10 @@
 <div class="card p-0 m-0">
     <div class="card-body">
-        <h6 class="text-uppercase mt-2 ml-2">Filled Return Details For {{ $return->taxtype->name }}</h6>
+        <h6 class="text-uppercase mt-2 ml-2">Filed Return Details For {{ $return->taxtype->name ?? 'N/A' }}</h6>
         <hr>
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-bordered table-sm">
+                <table class="table table-bordered table-responsive table-sm">
                     <thead>
                         <th>Item Name</th>
                         <th>Value</th>
@@ -12,6 +12,7 @@
                         <th>VAT</th>
                     </thead>
                     <tbody>
+                    @if(!empty($return->configReturns))
                         @foreach ($return->configReturns as $item)
                             <tr>
                                 <td>{{ $item->config->name ?? 'name' }}</td>
@@ -23,13 +24,14 @@
                                         @if ($item->config->currency == 'TZS')
                                             {{ $item->config->rate }} {{ $item->config->currency }}
                                         @elseif ($item->config->currency == 'USD')
-                                        {{ $item->config->rate_usd }} {{ $item->config->currency }}
+                                            {{ $item->config->rate_usd }} {{ $item->config->currency }}
                                         @endif
                                     @endif
                                 </td>
                                 <td>{{ number_format($item->vat, 2) }}</td>
                             </tr>
                         @endforeach
+                    @endif
                     </tbody>
                     
                 </table>
