@@ -36,6 +36,18 @@ class LandLeaseController extends Controller
         return view('land-lease.view-land-lease', compact('id'));
     }
 
+    public function completeRegistrationView($id)
+    {
+        return view("land-lease.land-lease-complete-registration",compact('id'));
+    }
+
+    public function indexApprovalList()
+    {
+        if (!Gate::allows('land-lease-view')) {
+            abort(403);
+        }
+        return view('land-lease.land-lease-approval-list');
+    }
     public function viewLeasePayment($id)
     {
         if (!Gate::allows('land-lease-edit')) {
