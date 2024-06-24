@@ -70,4 +70,9 @@ class MvrRegistration extends Model
     public function temporaryTransports(){
         return $this->hasMany(MvrTemporaryTransport::class);
     }
+
+    public function ledger()
+    {
+        return $this->morphOne(TaxpayerLedger::class, 'source');
+    }
 }

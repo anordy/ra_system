@@ -1251,7 +1251,6 @@ trait PaymentsTrait
             $this->recordDebitLedger($mvr, $fee->amount, $taxType->id);
         }
 
-        $exchangeRate = 1;
         $bill = ZmCore::createBill(
             $mvr->id,
             get_class($mvr),
@@ -1302,6 +1301,10 @@ trait PaymentsTrait
         $exchangeRate = $this->getExchangeRate($psReturn->currency);
         $startDate = Carbon::create($psReturn->start_date)->format('d M Y H:i:s');
         $endDate = Carbon::create($psReturn->end_date)->format('d M Y H:i:s');
+
+        if (!$psReturn->ledger) {
+            $this->recordDebitLedger($psReturn, $psReturn->amount, $taxType->id);
+        }
 
         $bill = ZmCore::createBill(
             $psReturn->id,

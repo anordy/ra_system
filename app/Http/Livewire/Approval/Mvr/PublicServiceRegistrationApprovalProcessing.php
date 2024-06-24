@@ -50,20 +50,8 @@ class PublicServiceRegistrationApprovalProcessing extends Component
             $this->psPaymentMonthId = PublicServicePaymentInterval::query()->where('value', $paymentMonth)->first()->id;
         }
 
-        if (strtolower($this->subject->business->category->name) == BusinessCategory::COMPANY) {
-            $this->psPaymentCategories = PublicServicePaymentCategory::query()
-                ->select('id', 'name', 'turnover_tax')
-                ->where('name', PublicServicePaymentCategory::COMPANY)
-                ->get();
-
-            $this->psPaymentMonths = PublicServicePaymentInterval::query()
-                ->where('value', PublicServicePaymentInterval::ANNUAL)
-                ->select('id', 'value')
-                ->get();
-        } else {
-            $this->psPaymentCategories = PublicServicePaymentCategory::select('id', 'name', 'turnover_tax')->get();
-            $this->psPaymentMonths = PublicServicePaymentInterval::select('id', 'value')->get();
-        }
+        $this->psPaymentCategories = PublicServicePaymentCategory::select('id', 'name', 'turnover_tax')->get();
+        $this->psPaymentMonths = PublicServicePaymentInterval::select('id', 'value')->get();
     }
 
     public function approve($transition)
