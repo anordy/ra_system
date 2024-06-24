@@ -62,18 +62,36 @@
                             <thead>
                             <tr>
                                 <th>Installment Phase</th>
-                                <th>Start Date</th>
+{{--                                <th>Start Date</th>--}}
                                 <th>Due Date</th>
+                                <th>Amount</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @for($i = 1; $i <= $installment->installment_count; $i++)
+                            @foreach ($installment->installmentLists as $item)
                                 <tr>
-                                    <td>{{ $i }}</td>
-                                    <td>{{ $installment->installment_from->addMonths($i - 1)->toDayDateTimeString() }}</td>
-                                    <td>{{ $installment->installment_from->addMonths($i)->toDayDateTimeString() }}</td>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{\Carbon\Carbon::parse($item->due_date)->toDayDateTimeString()}}</td>
+{{--                                    <td></td>--}}
+                                    <td>{{number_format(roundOff($item->amount,$installment->installable->currency),2)}}</td>
+                                    <td>
+                                        @if ($item->paid_at)
+                                            <button class="btn btn-success btn-sm">
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                        @endif
+                                    </td>
+
                                 </tr>
-                            @endfor
+                            @endforeach
+
+{{--                            @for($i = 1; $i <= $installment->installment_count; $i++)--}}
+{{--                                <tr>--}}
+{{--                                    <td>{{ $i }}</td>--}}
+{{--                                    <td>{{ $installment->installment_from->addMonths($i - 1)->toDayDateTimeString() }}</td>--}}
+{{--                                    <td>{{ $installment->installment_from->addMonths($i)->toDayDateTimeString() }}</td>--}}
+{{--                                </tr>--}}
+{{--                            @endfor--}}
                             </tbody>
                         </table>
                     </div>
