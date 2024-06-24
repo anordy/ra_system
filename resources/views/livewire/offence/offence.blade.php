@@ -12,7 +12,7 @@
             <th>Debtor Name</th>
             <th>Amount</th>
             <th>Currency</th>
-            <th>tax Type</th>
+            <th>Tax Type</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
