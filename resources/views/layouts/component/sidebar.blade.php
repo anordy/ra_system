@@ -457,6 +457,11 @@
                             <a href="{{ route("debts.waivers.index") }}">Waiver Requests</a>
                         </li>
                     @endcan
+                    @can('debt-management-offence-view')
+                        <li class="{{ request()->is('debts/offence*') ? 'active' : '' }}">
+                            <a href="{{ route('debts.offence.index') }}">Issue Offence</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan
@@ -515,9 +520,14 @@
                             <a href="{{ route("installment.index") }}">Installments</a>
                         </li>
                     @endcan
-                    @can("payment-installment-request-view")
-                        <li class="{{ request()->is("installments-e-filling/requests*") ? "active" : "" }}">
-                            <a href="{{ route("installment.requests.index") }}">Installment Requests</a>
+                    @can('payment-installment-request-view')
+                        <li class="{{ request()->is('installments-e-filling/requests/*') ? 'active' : '' }}">
+                            <a href="{{ route('installment.requests.index') }}">Installment Requests</a>
+                        </li>
+                    @endcan
+                    @can('payment-installment-view')
+                        <li class="{{ request()->is('installments-e-filling/extension*') ? 'active' : '' }}">
+                            <a href="{{ route('installment.extensions.index') }}">Installments Extension</a>
                         </li>
                     @endcan
                 </ul>
@@ -746,68 +756,89 @@
                     @can('land-lease-generate-report')
                         <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
                             <a href="{{ route('land-lease.generate.report') }}">General Report</a>
-                                </li>
-                                <li class="{{ request()->is("land-lease/payment-report*") ? "active" : "" }}">
-                                    <a href="{{ route("land-lease.payment.report") }}">Payment Report</a>
+                        </li>
+                        <li class="{{ request()->is('land-lease/payment-report*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.payment.report') }}">Payment Report</a>
+                        </li>
+                    @endcan
+                    @can('land-lease-agent-view')
+                        <li class="{{ request()->is('land-lease/agents*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.agents') }}">Land Lease Agents</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+
+        <li class="{{ request()->is('reports.general.initial*') ? 'active' : '' }}">
+            <a href="#generalReportsSubmenu" data-toggle="collapse"
+               aria-expanded="{{ request()->is('reports/general*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                General Reports
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('reports/general*') ? 'show' : '' }}"
+                id="generalReportsSubmenu">
+                <li class="{{ request()->is('reports/general*') ? 'active' : '' }}">
+                    <a href="{{ route('reports.general.initial') }}">All Reports</a>
+                </li>
+            </ul>
+        </li>
+
+
+        @can('managerial-report')
+            <li class="{{ request()->is('reports*') ? 'active' : '' }}">
+                <a href="#reportSubmenu" data-toggle="collapse"
+                   aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                    Managerial reports
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('reports*') ? 'show' : '' }}" id="reportSubmenu">
+                    @can('managerial-report-view')
+                        @can('managerial-return-report-view')
+                            <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.returns') }}">Return Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-departmental-report-view')
+                            <li class="{{ request()->is('reports/departmental*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.departmental') }}">Departmental Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-assessment-report-view')
+                            <li class="{{ request()->is('reports/assesments*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.assesments') }}">Assessment Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-dispute-report-view')
+                            <li class="{{ request()->is('reports/disputes*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.disputes') }}">Dispute Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-business-report-view')
+                            <li class="{{ request()->is('reports/business*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.business.init') }}">Registration Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-claim-report-view')
+                            <li class="{{ request()->is('reports/claims*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.claims.init') }}">Claim Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-debt-report-view')
+                            <li class="{{ request()->is('reports/debts*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.debts') }}">Debt Reports</a>
+                            </li>
+                        @endcan
+                        @can('managerial-payment-report-view')
+                            <li class="{{ request()->is('reports/payments*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.payments') }}">Payment Reports</a>
+                            </li>
+                        @endcan
+
+                            @can('managerial-payment-report-view')
+                                <li class="{{ request()->is('reports/tax-payer*') ? 'active' : '' }}">
+                                    <a href="{{ route('reports.tax-payer') }}">Taxpayer Reports</a>
                                 </li>
                             @endcan
-                            @can("land-lease-agent-view")
-                                <li class="{{ request()->is("land-lease/agents*") ? "active" : "" }}">
-                                    <a href="{{ route("land-lease.agents") }}">Land Lease Agents</a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </li>
-                @endcan
-                @can("managerial-report")
-                    <li class="{{ request()->is("reports*") ? "active" : "" }}">
-                        <a href="#reportSubmenu" data-toggle="collapse"
-                            aria-expanded="{{ request()->is("reports*") ? "true" : "false" }}" class="dropdown-toggle">
-                            Managerial reports
-                        </a>
-                        <ul class="collapse list-unstyled {{ request()->is("reports*") ? "show" : "" }}" id="reportSubmenu">
-                            @can("managerial-report-view")
-                                @can("managerial-return-report-view")
-                                    <li class="{{ request()->is("reports/returns*") ? "active" : "" }}">
-                                        <a href="{{ route("reports.returns") }}">Return Reports</a>
-                                    </li>
-                                @endcan
-                                @can("managerial-departmental-report-view")
-                                    <li class="{{ request()->is("reports/departmental*") ? "active" : "" }}">
-                                        <a href="{{ route("reports.departmental") }}">Departmental Reports</a>
-                                    </li>
-                                @endcan
-                                @can("managerial-assessment-report-view")
-                                    <li class="{{ request()->is("reports/assesments*") ? "active" : "" }}">
-                                        <a href="{{ route("reports.assesments") }}">Assessment Reports</a>
-                                    </li>
-                                @endcan
-                                @can("managerial-dispute-report-view")
-                                    <li class="{{ request()->is("reports/disputes*") ? "active" : "" }}">
-                                        <a href="{{ route("reports.disputes") }}">Dispute Reports</a>
-                                    </li>
-                                @endcan
-                                @can("managerial-business-report-view")
-                                    <li class="{{ request()->is("reports/business*") ? "active" : "" }}">
-                                        <a href="{{ route("reports.business.init") }}">Registration Reports</a>
-                                    </li>
-                                @endcan
-                                @can("managerial-claim-report-view")
-                                    <li class="{{ request()->is("reports/claims*") ? "active" : "" }}">
-                                        <a href="{{ route("reports.claims.init") }}">Claim Reports</a>
-                                    </li>
-                                @endcan
-                                @can("managerial-debt-report-view")
-                                    <li class="{{ request()->is("reports/debts*") ? "active" : "" }}">
-                                        <a href="{{ route("reports.debts") }}">Debt Reports</a>
-                                    </li>
-                                @endcan
-                                @can("managerial-payment-report-view")
-                                    <li class="{{ request()->is("reports/payments*") ? "active" : "" }}">
-                                        <a href="{{ route("reports.payments") }}">Payment Reports</a>
-                                    </li>
-                                @endcan
-                            @endcan
+                    @endcan
 
                         </ul>
                     </li>

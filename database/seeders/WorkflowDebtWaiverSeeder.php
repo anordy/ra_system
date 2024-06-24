@@ -33,12 +33,12 @@ class WorkflowDebtWaiverSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 9]
             ],
-            'crdm' => [
+            'department_commissioner' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 10]
             ],
-            'commissioner' => [
+            'commissioner_general' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 7]
@@ -62,38 +62,31 @@ class WorkflowDebtWaiverSeeder extends Seeder
             ],
             'debt_manager_review' => [
                 'from' => 'debt_manager',
-                'to'   => 'crdm',
+                'to'   => 'department_commissioner',
                 'condition' => '',
             ],
-            'crdm_review' => [
-                'from' => 'crdm',
-                'to'   => 'commissioner',
+            'department_commissioner_review' => [
+                'from' => 'department_commissioner',
+                'to'   => 'commissioner_general',
                 'condition' => '',
             ],
-            'crdm_complete' => [
-                'from' => 'crdm',
+            'commissioner_general_complete' => [
+                'from' => 'commissioner_general',
                 'to'   => 'completed',
                 'condition' => '',
             ],
-            'crdm_reject' => [
-                'from' => 'crdm',
+            'commissioner_general_reject' => [
+                'from' => 'commissioner_general',
                 'to'   => 'rejected',
-                'condition' => '',
-            ],
-            'commissioner_reject' => [
-                'from' => 'commissioner',
-                'to'   => 'rejected',
-                'condition' => '',
-            ],
-            'commissioner_complete' => [
-                'from' => 'commissioner',
-                'to'   => 'completed',
                 'condition' => '',
             ],
 
         ];
 
-        Workflow::updateOrCreate([
+        Workflow::updateOrCreate(
+            [
+                'code' => 'DEBT_WAIVER',
+            ],[
             'code' => 'DEBT_WAIVER',
             'summary' => 'Debt Waiver Workflow',
             'name' => $name,

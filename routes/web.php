@@ -24,6 +24,8 @@ use App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController;
 use App\Http\Controllers\TaxRefund\TaxRefundController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
 use App\Http\Controllers\RoadLicense\RoadLicenseController;
+use App\Http\Controllers\Reports\GeneralReportsController;
+use App\Http\Controllers\Reports\TaxPayer\TaxPayerReportController;
 use App\Http\Controllers\Tra\TraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -215,6 +217,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         });
     });
 
+    Route::get('/reports/general', [GeneralReportsController::class, 'initial'])->name('reports.general.initial');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::get('/account', [AccountController::class, 'show'])->name('account');
     Route::get('/account/security-questions', [AccountController::class, 'securityQuestions'])->name('account.security-questions');
@@ -541,7 +544,11 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
 
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
-        Route::get('tax-payer',[\App\Http\Controllers\Reports\TaxPayer\TaxPayerReportController::class,'index']);
+
+
+        Route::get('tax-payer',[TaxPayerReportController::class,'index'])->name('tax-payer');
+        Route::get('/tax-payer/download-report-pdf/{fileName}', [TaxPayerReportController::class, 'exportTaxpayerReportPdf'])->name('tax-payer.download.pdf');
+
 
         Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
@@ -614,6 +621,11 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
             Route::get('show/{debtId}', [InstallmentRequestController::class, 'show'])->name('show');
             Route::get('edit/{debtId}', [InstallmentRequestController::class, 'edit'])->name('edit');
             Route::get('file/{file}', [InstallmentRequestController::class, 'file'])->name('file');
+
+        });
+        Route::prefix('/extension')->name('extensions.')->group(function (){
+            Route::get('/', [\App\Http\Controllers\Installment\InstallmentExtensionController::class, 'index'])->name('index');
+            Route::get('/show/{id}', [\App\Http\Controllers\Installment\InstallmentExtensionController::class, 'show'])->name('show');
         });
     });
 
@@ -639,6 +651,11 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         // Debt rollbacks
         Route::get('/rollbacks/return/{tax_return_id}', [DebtRollbackController::class, 'return'])->name('rollback.return');
         Route::get('/rollbacks/assessment/{assessment_id}', [DebtRollbackController::class, 'assessment'])->name('rollback.assessment');
+
+        // Offence
+        Route::get('/offence',[\App\Http\Controllers\Debt\OffenceController::class,'index'])->name('offence.index');
+        Route::get('/offence/create',[\App\Http\Controllers\Debt\OffenceController::class,'create'])->name('offence.create');
+        Route::get('/offence/show/{offence}',[\App\Http\Controllers\Debt\OffenceController::class,'show'])->name('offence.show');
     });
 
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {

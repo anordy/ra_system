@@ -48,7 +48,7 @@ class SysModuleSeeder extends Seeder
             ['id' => 31, 'code' => 'property-tax', 'name' => 'Property Tax'],
             ['id' => 32, 'code' => 'tax-refund', 'name' => 'Tax Refund'],
 
-            ['id' => 32, 'code' => 'vfm-integration', 'name' => 'VFMS Integration'],
+            ['id' => 33, 'code' => 'vfm-integration', 'name' => 'VFMS Integration'],
 
 
         ];
