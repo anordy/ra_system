@@ -1059,6 +1059,10 @@ table.align-middle td, table.align-middle th {
 }
 
 .btn-cm {
-
     margin-top: 30px;
+}
+
+.logout-link:hover {
+    background: #085b86 !important;
+    color: #0080c1 !important;
 }
