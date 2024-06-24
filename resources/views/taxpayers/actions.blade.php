@@ -16,3 +16,7 @@
 @if ($row->is_first_login == 1)
     <button class="m-1 btn btn-outline-secondary btn-sm" wire:click="resendCredential({{$row->id}})"><i class="bi bi-envelope-fill"></i> Send credentials</button>
 @endif
+
+@if ($row->failed_verification == 1)
+    <button class="m-1 btn btn-outline-secondary btn-sm" wire:click="openVerifyAccountModal({{$row->id}})"><i class="bi bi-shield-check"></i> Re-verify</button>
+@endif
