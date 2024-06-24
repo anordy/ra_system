@@ -180,6 +180,8 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 // Trigger verification
                 $this->triggerTaxVerifications($this->return, auth()->user());
 
+                DB::commit();
+
                 if ($tax_return->return_type != PortReturn::class) {
                     $this->generateReturnControlNumber($tax_return);
                 } else {
