@@ -28,6 +28,14 @@ class LandLeaseController extends Controller
         return view('land-lease.land-lease-list');
     }
 
+    public function indexApprovalList()
+    {
+        if (!Gate::allows('land-lease-view')) {
+            abort(403);
+        }
+        return view('land-lease.land-lease-approval-list');
+    }
+
     public function view($id)
     {
         if (!Gate::allows('land-lease-view')) {
@@ -36,18 +44,6 @@ class LandLeaseController extends Controller
         return view('land-lease.view-land-lease', compact('id'));
     }
 
-    public function completeRegistrationView($id)
-    {
-        return view("land-lease.land-lease-complete-registration",compact('id'));
-    }
-
-    public function indexApprovalList()
-    {
-        if (!Gate::allows('land-lease-view')) {
-            abort(403);
-        }
-        return view('land-lease.land-lease-approval-list');
-    }
     public function viewLeasePayment($id)
     {
         if (!Gate::allows('land-lease-edit')) {
@@ -82,8 +78,7 @@ class LandLeaseController extends Controller
         return view('land-lease.agent-create');
     }
 
-    public function agentsList()
-    {
+    public function agentsList(){
         if (!Gate::allows('land-lease-agent-view')) {
             abort(403);
         }
@@ -95,25 +90,22 @@ class LandLeaseController extends Controller
         if (!Gate::allows('land-lease-agent-view')) {
             abort(403);
         }
-        $data = json_decode(decrypt($payload), true);
+        $data = json_decode(decrypt($payload),true);
         try {
-            if ($data['active']) {
-                LandLeaseAgent::where('id', $data['id'])->update(['status' => 'ACTIVE']);
-            } else {
-                LandLeaseAgent::where('id', $data['id'])->update(['status' => 'INACTIVE']);
+            if($data['active']){
+                LandLeaseAgent::where('id',$data['id'])->update(['status'=>'ACTIVE']);
+            }else{
+                LandLeaseAgent::where('id',$data['id'])->update(['status'=>'INACTIVE']);
             }
             session()->flash('success', 'Status Changes');
             return redirect()->back();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            Log::error($e);
             session()->flash('error', 'Status failed to change');
             return redirect()->back();
         }
+
     }
 
     public function downloadLandLeaseReportPdf($datesJson)
@@ -139,12 +131,12 @@ class LandLeaseController extends Controller
             $landLeases = clone $landLeases->where('land_leases.taxpayer_id', $taxpayer_id);
         }
 
-        $landLeases = $landLeases->get();
+        $landLeases = $landLeases->whereNotNull('completed_at')->get();
         $from = \Carbon\Carbon::parse($dates['startDate']);
         $to = \Carbon\Carbon::parse($dates['endDate']);
-        $startDate = $from->format('Y-m-d');
+        $startDate= $from->format('Y-m-d');
         $endDate = $to->format('Y-m-d');
-        $pdf = PDF::loadView('exports.land-lease.pdf.land-lease-report', compact('landLeases', 'startDate', 'endDate'));
+        $pdf = PDF::loadView('exports.land-lease.pdf.land-lease-report',compact('landLeases','startDate','endDate'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
@@ -158,7 +150,7 @@ class LandLeaseController extends Controller
             abort(403);
         }
 
-        $data = json_decode(decrypt($parameter), true);
+        $data = json_decode(decrypt($parameter),true);
         $dates = $data['dates'];
         $status = $data['status'];
         $date_type = $data['date_type'];
@@ -178,14 +170,17 @@ class LandLeaseController extends Controller
                     ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
                     ->whereIn("land_leases.{$this->date_type}", $months)
                     ->whereIn("financial_years.code", $years);
+
             } elseif ($date_type == 'payment_year') {
                 $years = $this->getYearList($dates);
                 $leasePayments = LeasePayment::query()
                     ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
                     ->whereIn("financial_years.code", $years);
-            } else {
+
+            }else {
                 $leasePayments = LeasePayment::query()->whereBetween("lease_payments.{$date_type}", [$dates['startDate'], $dates['endDate']]);
             }
+
         }
 
         if ($status) {
@@ -199,11 +194,37 @@ class LandLeaseController extends Controller
         $leasePayments = $leasePayments->get();
         $from = \Carbon\Carbon::parse($dates['startDate']);
         $to = \Carbon\Carbon::parse($dates['endDate']);
-        $startDate = $from->format('Y-m-d');
+        $startDate= $from->format('Y-m-d');
         $endDate = $to->format('Y-m-d');
-        $pdf = PDF::loadView('exports.land-lease.pdf.lease-payment-report', compact('leasePayments', 'startDate', 'endDate'));
+        $pdf = PDF::loadView('exports.land-lease.pdf.lease-payment-report',compact('leasePayments','startDate','endDate'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->download('Land Leases applications FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.pdf');
+    }
+
+    public function register()
+    {
+        return view('land-lease.register-land-lease');
+    }
+
+    public function assignTaxpayer($id)
+    {
+        return view("land-lease.assign-taxpayer",compact('id'));
+    }
+    public function taxpayerView($id)
+    {
+        return view('land-lease.taxpayer-land-lease-view', compact('id'));
+    }
+    public function edit($id)
+    {
+        return view("land-lease.land-lease-edit",compact('id'));
+    }
+    public function completeRegistrationView($id)
+    {
+        return view("land-lease.land-lease-complete-registration",compact('id'));
+    }
+    public function registrationView($id)
+    {
+        return view("land-lease.land-lease-registration-view",compact('id'));
     }
 }
