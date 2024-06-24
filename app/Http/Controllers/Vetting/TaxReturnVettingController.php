@@ -61,7 +61,7 @@ class TaxReturnVettingController extends Controller
 
         $return = $tax_return->return;
 
-        if ($return->penalties) {
+        if ($return->penalties ?? []) {
             $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
         }
 
