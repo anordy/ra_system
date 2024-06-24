@@ -8,6 +8,7 @@ use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxType;
+use App\Models\WorkflowTask;
 use App\Traits\ReturnFilterTrait;
 use App\Traits\VettingFilterTrait;
 use Carbon\Carbon;
