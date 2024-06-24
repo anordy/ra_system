@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Road License Sticker</title>
     <style>
@@ -116,9 +115,7 @@
 
     </style>
 </head>
-
 <body>
-
 <div id="no-top">{{ strtoupper($stickerNo) }}</div>
 <div id="no-inner">{{ strtoupper($stickerNo) }}</div>
 <div id="owner-name">{{ strtoupper($roadLicense->taxpayer->fullname() ?? 'N/A') }}</div>
@@ -133,14 +130,11 @@
 <div id="expiry-date">{{ \Carbon\Carbon::parse($roadLicense->expire_date)->format('d/m/Y') }}</div>
 <div id="category">{{ strtoupper($roadLicense->registration->class->name ?? 'N/A') }} ({{ strtoupper($roadLicense->registration->regtype->name ?? 'N/A') }})</div>
 <div id="paid-amount-words">
-
 </div>
 <div id="paid-amount-number">
 </div>
 <div id="qr-code">
      <img src="{{ $dataUri }}" alt="QR Code" width="150" height="150">
 </div>
-
 </body>
-
 </html>

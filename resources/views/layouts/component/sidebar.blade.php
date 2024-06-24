@@ -1389,7 +1389,7 @@
                 </li>
             </ul>
 
-            <div class="profile d-flex justify-content-between align-items-center">
+            <div class="profile d-flex justify-content-between align-items-center p-0">
                 <a href="{{ route("account") }}" class="d-flex align-items-center justify-content-between">
                     <div>
                         <i class="far fa-2x fa-user-circle"></i>
@@ -1401,10 +1401,9 @@
                 </a>
 
                 <div class="pr-1">
-                    <a class="text-white logout-link" href="{{ route("logout") }}">
-                        <i class="bi bi-box"></i>
+                    <a class="text-white logout-link" href="{{ route("logout") }}" title="Logout">
+                        <i class="bi bi-box-arrow-right"></i>
                     </a>
-
                     <form id="logout-form" action="{{ route("logout") }}" method="POST" class="d-none">
                         @csrf
                     </form>
