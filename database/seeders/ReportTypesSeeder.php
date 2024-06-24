@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Enum\GeneralReportType;
+use App\Models\Reports\Report;
 use App\Models\Reports\ReportType;
+use App\Models\ZrbBankAccount;
 use Illuminate\Database\Seeder;
 
 class ReportTypesSeeder extends Seeder
@@ -16,8 +17,8 @@ class ReportTypesSeeder extends Seeder
     public function run()
     {
         $types = [
-            ['name' => GeneralReportType::TAXPAYER_REGISTRATION],
-            ['name' => GeneralReportType::RETURNS],
+            ['name' => 'TAX PAYER REGISTRATION'],
+            ['name' => 'RETURNS'],
         ];
 
         foreach ($types as $type) {
