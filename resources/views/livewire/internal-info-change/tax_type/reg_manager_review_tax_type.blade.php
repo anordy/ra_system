@@ -78,7 +78,7 @@
                         </div>
                     @endif
 
-                    @if($lumpsumPayment)
+                    @if(count($lumpsumPayment))
                         <div class="col-md-5 mb-3">
                             <span class="font-weight-bold text-uppercase">Annual Estimate</span>
                             <p class="my-1">{{ $lumpsumPayment['annual_estimate'] ?? 'N/A' }}</p>
