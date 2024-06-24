@@ -39,7 +39,7 @@ class BranchesApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
-        
+
         if ($this->checkTransition('registration_officer_review')) {
             $this->validate([
                 'selectedTaxRegion' => 'required|strip_tag',
@@ -56,7 +56,7 @@ class BranchesApprovalProcessing extends Component
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
                 return;
             }
-            
+
             $lump_sum_payemnt = LumpSumPayment::where('business_id', $this->subject->business_id)->first() ?? null;
 
             if ($lump_sum_payemnt != null) {
@@ -85,9 +85,12 @@ class BranchesApprovalProcessing extends Component
         try {
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
-            
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -118,7 +121,11 @@ class BranchesApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

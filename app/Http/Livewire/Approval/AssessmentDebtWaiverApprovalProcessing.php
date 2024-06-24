@@ -88,9 +88,8 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
-        
-        if ($this->checkTransition('debt_manager_review')) {
 
+        if ($this->checkTransition('debt_manager_review')) {
         }
 
         if ($this->checkTransition('crdm_complete')) {
@@ -124,13 +123,16 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                     ];
 
                     DB::commit();
-    
+
                     event(new SendSms('debt-waiver-approval', $notification_payload));
                     event(new SendMail('debt-waiver-approval', $notification_payload));
-    
                 } catch (Exception $e) {
                     DB::rollBack();
-                    Log::error($e);
+                    Log::error('Error: ' . $e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
                     $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                     return;
                 }
@@ -143,11 +145,13 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                         GenerateAssessmentDebtControlNo::dispatch($this->debt);
                     }
                 } catch (Exception $e) {
-                    Log::error($e);
+                    Log::error('Error: ' . $e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
                 }
-    
             }
-       
         }
 
         if ($this->checkTransition('commissioner_complete')) {
@@ -199,10 +203,13 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
 
                 event(new SendSms('debt-waiver-approval', $notification_payload));
                 event(new SendMail('debt-waiver-approval', $notification_payload));
-
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
@@ -215,18 +222,24 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 } else {
                     GenerateAssessmentDebtControlNo::dispatch($this->debt);
                 }
-
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
             }
-
         }
 
         try {
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             DB::rollBack();
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
         }
@@ -274,7 +287,11 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -295,7 +312,6 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             $hasLimitExceeded = $debt->outstanding_amount > $amount_limiter ? true : false;
         }
         return $hasLimitExceeded;
-
     }
 
     protected $listeners = [
@@ -324,5 +340,4 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
     {
         return view('livewire.approval.assessment-debt-waiver-approval-processing');
     }
-
 }

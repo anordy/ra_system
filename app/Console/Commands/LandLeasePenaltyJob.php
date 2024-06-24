@@ -65,6 +65,7 @@ class LandLeasePenaltyJob extends Command
 
         $leasePayments = LeasePayment::whereIn('status', $statues)
             ->where('due_date', '<', Carbon::now())
+            ->where('lease_status', LeaseStatus::ACTIVE)
             ->get();
         foreach ($leasePayments as $key => $leasePayment) {
 
@@ -129,32 +130,33 @@ class LandLeasePenaltyJob extends Command
 
     private function calculateLeasePenalties($leasePayment, $paymentFinancialMonthDueDate, $penaltyIteration)
     {
+        //check lease if active, proceed else don't calculate penalty
+
         $currentFinancialYearId = FinancialYear::where('code', Carbon::now()->year)->firstOrFail()->id;
         $penaltyRate = PenaltyRate::where('financial_year_id', $currentFinancialYearId)
             ->where('code', 'LeasePenaltyRate')
             ->firstOrFail()->rate;
 
-        $wholeTotalAmount = 0;
-        for ($i = 1; $i <= $penaltyIteration; $i++) {
-            $rentRemain = $i == 1 ? $leasePayment->total_amount : $wholeTotalAmount;
+        $principalAmount = $leasePayment->total_amount;
+        $penaltyAmountAccumulated = 0;
 
-            $penaltyAmount = round($rentRemain * $penaltyRate, 2);
-            $totalAmount = round($rentRemain + $penaltyAmount, 2);
+        for ($i = 1; $i <= $penaltyIteration; $i++) {
+            $penaltyAmount = round($principalAmount * $penaltyRate, 2);
+            $penaltyAmountAccumulated += $penaltyAmount;
+            $totalAmount = round($principalAmount + $penaltyAmountAccumulated, 2);
 
             LeasePaymentPenalty::create([
                 'lease_payment_id' => $leasePayment->id,
-                'tax_amount' => $rentRemain,
+                'tax_amount' => $principalAmount,
                 'rate_percentage' => $penaltyRate,
                 'penalty_amount' => $penaltyAmount,
                 'total_amount' => $totalAmount,
                 'start_date' => $this->getFirstLastDateOfMonth($paymentFinancialMonthDueDate, $i)[0],
                 'end_date' => $this->getFirstLastDateOfMonth($paymentFinancialMonthDueDate, $i)[1],
             ]);
-
-            $wholeTotalAmount = $totalAmount;
         }
 
-        return $wholeTotalAmount;
+        return $principalAmount + $penaltyAmountAccumulated;
     }
 
     public function getFirstLastDateOfMonth($due_date, $i)

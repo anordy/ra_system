@@ -88,6 +88,6 @@ class EmTransactionReturn extends Model
     }
 
     public function tax_return(){
-        return $this->morphOne(TaxReturn::class, 'return');
+        return $this->morphOne(TaxReturn::class, 'return')->withTrashed();
     }
 }

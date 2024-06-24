@@ -49,7 +49,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">ZTN Number</span>
-                    <p class="my-1">{{ $waiver->debt->business->ztn_number ?? 'N/A' }}</p>
+                    <p class="my-1">{{ $waiver->debt->business->ztn_number ?? "N/A" }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Name</span>
@@ -97,6 +97,11 @@
                     <span class="font-weight-bold text-uppercase">Place of Business</span>
                     <p class="my-1">{{ $waiver->debt->business->place_of_business }}</p>
                 </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Department</span>
+                    <p class="my-1">{{ $waiver->debt->location->taxRegion->department->name ?? 'N/A' }}</p>
+                </div>
+
             </div>
 
             @if ($waiver)

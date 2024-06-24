@@ -11,11 +11,13 @@ use App\Models\Disputes\Dispute;
 use App\Models\Debts\DebtPenalty;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\Debts\DebtRollback;
+use App\Models\Debts\DebtWaiver;
 use App\Models\Debts\DemandNotice;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Verification\TaxVerification;
 use App\Models\Investigation\TaxInvestigation;
+use App\Models\PartialPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -29,7 +31,8 @@ class TaxAssessment extends Model implements Auditable
         'curr_payment_due_date' => 'datetime'
     ];
 
-    public function dispute(){
+    public function dispute()
+    {
         return $this->belongsTo(Dispute::class);
     }
 
@@ -73,7 +76,8 @@ class TaxAssessment extends Model implements Auditable
         return $query->where('assessment_type', TaxInvestigation::class);
     }
 
-    public function bills(){
+    public function bills()
+    {
         return $this->morphMany(ZmBill::class, 'billable');
     }
 
@@ -82,7 +86,8 @@ class TaxAssessment extends Model implements Auditable
         return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 
-    public function getBillAttribute(){
+    public function getBillAttribute()
+    {
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
 
@@ -91,7 +96,8 @@ class TaxAssessment extends Model implements Auditable
         return $this->morphMany(ZmBill::class, 'billable')->latest();
     }
 
-    public function rollback(){
+    public function rollback()
+    {
         return $this->morphOne(DebtRollback::class, 'debt');
     }
 
@@ -100,7 +106,8 @@ class TaxAssessment extends Model implements Auditable
         return $this->bills()->where('status', 'paid');
     }
 
-    public function penalties(){
+    public function penalties()
+    {
         return $this->morphMany(DebtPenalty::class, 'debt');
     }
 
@@ -114,7 +121,13 @@ class TaxAssessment extends Model implements Auditable
         return $this->morphMany(DemandNotice::class, 'debt');
     }
 
-    public function waiver(){
+    public function waiver()
+    {
         return $this->morphOne(DebtWaiver::class, 'debt');
+    }
+
+    public function partialPayments()
+    {
+        return $this->hasMany(PartialPayment::class);
     }
 }

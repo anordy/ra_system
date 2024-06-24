@@ -30,6 +30,24 @@ a:focus {
     border: none;
 }
 
+.custom-payment-box {
+    border-radius: 1rem;
+    background: #72DC3559;
+    color: #319e0a;
+    font-size: 85%;
+}
+
+.highlighted-file-box {
+    background: #faf5f5;
+    color: #036a9e;
+    border: .5px solid #036a9e24;
+    padding: 2px;
+    margin-bottom: 3px;
+    display: flex;
+    border-radius: 4px;
+    align-items: center;
+}
+
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
@@ -129,6 +147,10 @@ a[data-toggle="collapse"] {
     max-width: 250px;
     color: white;
     padding: 8px;
+}
+
+.custom-card-header {
+    color: #0080c1;
 }
 
 /* ---------------------------------------------------
@@ -581,10 +603,6 @@ select {
     border-radius: 0 !important;
 }
 
-.nav-link {
-    padding: 0.5rem 2rem;
-}
-
 /* ---------------------------------------------------
     FILE ITEMS
 ----------------------------------------------------- */
@@ -1026,4 +1044,21 @@ a.dropdown-item {
 
 table.align-middle td, table.align-middle th {
     vertical-align: middle !important;
+}
+
+.dl-photo-2 img {
+    width: 250px;
+    max-height: 250px;
+    overflow: hidden;
+    border: 1px solid silver;
+    object-fit: contain;
+}
+
+.font-x-large {
+    font-size: x-large;
+}
+
+.btn-cm {
+
+    margin-top: 30px;
 }

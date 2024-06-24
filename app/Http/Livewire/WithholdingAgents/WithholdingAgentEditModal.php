@@ -80,7 +80,7 @@ class WithholdingAgentEditModal extends Component
         $this->fax = $this->withholding_agent->fax;
         $this->date_of_commencing = Carbon::create($this->withholding_agent->date_of_commencing)->format('Y-m-d');
 
-        if ($this->street_id){
+        if ($this->street_id) {
             $this->streets = Street::where('ward_id', $this->ward_id)->select('id', 'name')->get();
         }
     }
@@ -97,7 +97,7 @@ class WithholdingAgentEditModal extends Component
             $this->wards = Ward::where('district_id', $this->district_id)->select('id', 'name')->get();
         }
 
-        if ($propertyName === 'ward_id'){
+        if ($propertyName === 'ward_id') {
             $this->streets = [];
             $this->streets = Street::where('ward_id', $this->ward_id)->select('id', 'name')->get();
         }
@@ -127,11 +127,14 @@ class WithholdingAgentEditModal extends Component
                 'fax' => $this->fax,
                 'alt_mobile' => $this->alt_mobile,
             ]);
-            
-            $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
 
+            $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

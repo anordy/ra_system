@@ -136,7 +136,6 @@ class Initial extends Component
                 if (!$kyc) {
                     $this->customAlert('warning', 'Property Tax Account Could not be created, missing data');
                     return;
-
                 }
 
                 $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at', 'verified_by', 'comments'])->toArray();

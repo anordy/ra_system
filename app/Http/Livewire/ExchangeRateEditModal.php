@@ -54,7 +54,11 @@ class ExchangeRateEditModal extends Component
             return redirect()->route('settings.exchange-rate.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('success', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.exchange-rate.index');
         }
@@ -64,7 +68,7 @@ class ExchangeRateEditModal extends Component
     {
         $id = decrypt($id);
         $this->exchange_rate = ExchangeRate::find($id);
-        if(is_null($this->exchange_rate)){
+        if (is_null($this->exchange_rate)) {
             abort(404);
         }
         $this->spot_buying = $this->exchange_rate->spot_buying;

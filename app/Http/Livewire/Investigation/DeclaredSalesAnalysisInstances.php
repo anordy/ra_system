@@ -13,8 +13,8 @@ class DeclaredSalesAnalysisInstances extends Component
     use CustomAlert;
 
     public $investigation;
-    public $locations;
-    public $taxTypes;
+    public $locations = [];
+    public $taxTypes = [];
 
     public function mount($investigationId)
     {

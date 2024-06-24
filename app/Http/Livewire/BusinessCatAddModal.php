@@ -32,13 +32,17 @@ class BusinessCatAddModal extends Component
         }
 
         $this->validate();
-        try{
+        try {
             BusinessCategory::create([
                 'name' => $this->name,
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
-        }catch(Exception $e){
-            Log::error($e);
+        } catch (Exception $e) {
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }

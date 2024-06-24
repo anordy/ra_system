@@ -21,7 +21,7 @@ class EfdmsReceiptSeeder extends Seeder
             $exclusiveTax =  (int) (1000 * ceil(random_int(5000,1000000) / 1000));
 
             EfdmsReceipt::create([
-                'seller_tin' => random_int(111111111,999999999),
+                'seller_tin' => 111111111,
                 'receipt_number' => random_int(100000000, 999999999),
                 'receipt_date' => Carbon::now(),
                 'verification_code' => random_int(100000000, 999999999),

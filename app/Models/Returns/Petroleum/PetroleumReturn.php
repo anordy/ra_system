@@ -14,10 +14,11 @@ use App\Models\Verification\TaxVerification;
 use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PetroleumReturn extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
@@ -81,7 +82,7 @@ class PetroleumReturn extends Model
     }
 
     public function tax_return(){
-        return $this->morphOne(TaxReturn::class, 'return');
+        return $this->morphOne(TaxReturn::class, 'return')->withTrashed();
     }
 
     public function items(){

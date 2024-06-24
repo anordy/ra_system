@@ -72,7 +72,7 @@
         @if ($this->checkTransition('zbs_officer_review'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger"
-                        wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filled
+                        wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filed
                     Incorrect
                     return to Applicant
                 </button>

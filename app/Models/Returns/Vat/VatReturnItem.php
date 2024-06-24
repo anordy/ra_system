@@ -14,7 +14,7 @@ class VatReturnItem extends Model
     use HasFactory, SoftDeletes;
 
     public function getsubVatCode(){
-        $vat = VatReturn::findOrFail($this->return_id, ['sub_vat_id']);
+        $vat = VatReturn::withTrashed()->findOrFail($this->return_id, ['sub_vat_id']);
         $subVat = SubVat::findOrFail((int)$vat->sub_vat_id);
         return in_array($subVat->code, [SubVatConstant::FINANCIALSERVICES, SubVatConstant::TELECOMMUNICATIONDATASERVICES, SubVatConstant::TELECOMMUNICATIONVOICESERVICES, SubVatConstant::TELEPHONE]);
     }

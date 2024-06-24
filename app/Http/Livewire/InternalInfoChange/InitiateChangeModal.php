@@ -12,6 +12,7 @@ use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
+use App\Models\TaxDepartment;
 use App\Models\Taxpayer;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
@@ -50,9 +51,10 @@ class InitiateChangeModal extends Component
     public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList  = [];
     public $previousOwner;
     public $newOwnerZno;
+    public $taxDepartment, $selectedDepartment;
 
-    public function mount() {
-
+    public function mount()
+    {
     }
 
     protected function rules()
@@ -65,6 +67,7 @@ class InitiateChangeModal extends Component
             'ltoStatus' => 'required_if:informationType,lto',
             'electricStatus' => 'required_if:informationType,electric',
             'taxRegionId' => 'required_if:informationType,taxRegion',
+            'selectedDepartment' => 'required_if:informationType,taxRegion',
             'businessCurrencyId' => 'required_if:informationType,currency',
             'isiic_i' => 'nullable|required_if:informationType,isic|numeric|exists:isic1s,id',
             'isiic_ii' => 'nullable|required_if:informationType,isic|numeric|exists:isic2s,id',
@@ -75,7 +78,7 @@ class InitiateChangeModal extends Component
                 'required_if:informationType,businessOwnership',
                 'exists:taxpayers,reference_no',
                 function ($attribute, $value, $fail) {
-                    if ($this->previousOwner->reference_no == $value){
+                    if ($this->previousOwner->reference_no == $value) {
                         $fail('Please provide a different taxpayer number from the existing one.');
                     }
                 }
@@ -92,8 +95,8 @@ class InitiateChangeModal extends Component
     public function submit()
     {
         $this->validate();
-        
-        try{
+
+        try {
             DB::beginTransaction();
 
             // Record data to be altered in Business hotel stars
@@ -144,12 +147,12 @@ class InitiateChangeModal extends Component
 
                     // Save after final approval
                     $lumpsumPayment = [
-                            'filed_by_id' => auth()->user()->id,
-                            'business_id' => $this->location->business_id,
-                            'business_location_id' => $this->location->business_id,
-                            'annual_estimate' => $annualEstimate[0],
-                            'payment_quarters' => $quarters[0],
-                            'currency' => $currency[0],
+                        'filed_by_id' => auth()->user()->id,
+                        'business_id' => $this->location->business_id,
+                        'business_location_id' => $this->location->business_id,
+                        'annual_estimate' => $annualEstimate[0],
+                        'payment_quarters' => $quarters[0],
+                        'currency' => $currency[0],
                     ];
                 }
 
@@ -189,7 +192,6 @@ class InitiateChangeModal extends Component
                     'old_values' => !$this->ltoStatus,
                     'new_values' => $this->ltoStatus,
                 ]);
-
             }
 
             if ($this->informationType === 'taxRegion') {
@@ -244,7 +246,7 @@ class InitiateChangeModal extends Component
             }
 
 
-            if ($this->informationType === 'businessOwnership'){
+            if ($this->informationType === 'businessOwnership') {
                 $newOwner = Taxpayer::where('reference_no', $this->newOwnerZno)->firstOrFail();
                 $internalChange = InternalBusinessUpdate::create([
                     'business_id' => $this->location->business_id,
@@ -255,16 +257,20 @@ class InitiateChangeModal extends Component
                     'new_values' => json_encode(['reference_no' => $this->newOwnerZno, 'name' => $newOwner->fullName]),
                 ]);
             }
-         
+
             DB::commit();
 
             $this->registerWorkflow(get_class($internalChange), $internalChange->id);
             $this->doTransition('registration_manager_review', ['status' => 'agree']);
 
             $this->flash('success', 'Data forwarded for approval', [], redirect()->back()->getTargetUrl());
-        }catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -277,7 +283,7 @@ class InitiateChangeModal extends Component
             // Load hotel stars & Business hotel if hotelStars info type is selected
             if ($this->informationType === 'hotelStars') {
                 if ($this->location->business->business_type === 'hotel') {
-                    $this->hotelStars = HotelStar::select('id', 'no_of_stars', 'name')->orderBy('id','asc')->get();
+                    $this->hotelStars = HotelStar::select('id', 'no_of_stars', 'name')->orderBy('id', 'asc')->get();
                     $this->businessHotel = BusinessHotel::select('id', 'location_id', 'hotel_star_id')->with('star')->where('location_id', $this->location->id)->first();;
                 } else {
                     $this->customAlert('error', 'Business Location is not of Hotel Type');
@@ -296,7 +302,7 @@ class InitiateChangeModal extends Component
                         'tax_type_id' => $value->id,
                         'sub_vat_id' => $value->pivot->sub_vat_id,
                         'sub_vat_name' => $value->pivot->sub_vat_id ? $subVat['name'] : null,
-                        'show_hide_options'=> false,
+                        'show_hide_options' => false,
                     ];
                 }
 
@@ -311,7 +317,6 @@ class InitiateChangeModal extends Component
                 }
 
                 $this->oldTaxes = $this->selectedTaxTypes;
-
             } else if ($this->informationType === 'lto') {
                 $this->showLto = true;
                 $this->ltoStatus = boolval($this->location->business->is_business_lto);
@@ -327,9 +332,11 @@ class InitiateChangeModal extends Component
             } else if ($this->informationType === 'taxRegion') {
                 $this->taxRegions = TaxRegion::select('id', 'name')->get();
                 $this->taxRegionId = $this->location->tax_region_id;
+                $this->taxDepartment = TaxDepartment::all();
+
             } else if ($this->informationType === 'isic') {
                 $this->isiiciList = ISIC1::all();
-            } else if ($this->informationType === 'businessOwnership'){
+            } else if ($this->informationType === 'businessOwnership') {
                 $this->previousOwner = $this->location->business->taxpayer;
             }
         } else {
@@ -374,7 +381,6 @@ class InitiateChangeModal extends Component
                 ];
 
                 $this->annualSales = LumpSumConfig::select('id', 'min_sales_per_year', 'max_sales_per_year', 'payments_per_year', 'payments_per_installment')->get()->toArray();
-
             } else {
                 $this->showLumpsumOptions = false;
             }
@@ -402,24 +408,27 @@ class InitiateChangeModal extends Component
         unset($this->selectedTaxTypes[$index]);
     }
 
-    public function checkArrayKey($array, $column, $value, $givenKey) {
+    public function checkArrayKey($array, $column, $value, $givenKey)
+    {
         $keys = array_keys(array_column($array, $column), $value);
         $checkedKey = (count($keys) > 0) ? $keys[0] : false;
         return $checkedKey == $givenKey;
     }
 
-    public function subCategorySearchUpdate($key, $value){
+    public function subCategorySearchUpdate($key, $value)
+    {
         $this->selectedTaxTypes[$key]['show_hide_options'] = true;
-        if (strlen($value) >= 3){
+        if (strlen($value) >= 3) {
             $this->subVatOptions  = SubVat::select('id', 'name')->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$value}%"])->get();
-        } else{
+        } else {
             $this->subVatOptions  = $this->defaultSubVatOptions;
         }
     }
 
-    public function selectSubVat($key, $subVat){
+    public function selectSubVat($key, $subVat)
+    {
         $sameKey = $this->checkArrayKey($this->selectedTaxTypes, 'sub_vat_id', $subVat['id'], $key);
-        if (in_array($subVat['id'], array_column($this->selectedTaxTypes, 'sub_vat_id')) && !$sameKey){
+        if (in_array($subVat['id'], array_column($this->selectedTaxTypes, 'sub_vat_id')) && !$sameKey) {
             $this->alert('warning', 'Sub Vat is already selected');
             return;
         }
@@ -451,6 +460,15 @@ class InitiateChangeModal extends Component
     {
         $this->isiicivList = ISIC4::where('isic3_id', $value)->get();
         $this->isiic_iv    = null;
+    }
+
+    public function selectedDepartment($value)
+    {
+        if (!is_null((int)$value)) {
+            $this->taxRegions = TaxRegion::where('department_id', $value)->get();
+        } else {
+            $this->taxRegions = [];
+        }
     }
 
     public function render()

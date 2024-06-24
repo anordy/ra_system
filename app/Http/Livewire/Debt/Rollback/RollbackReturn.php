@@ -25,10 +25,11 @@ class RollbackReturn extends Component
         $this->return_id = decrypt($return_id);
     }
 
-    public function rollback() {
+    public function rollback()
+    {
         if (!Gate::allows('debt-management-debt-rollback')) {
             abort(403);
-        }   
+        }
         $tax_return = TaxReturn::findOrFail($this->return_id);
 
         if ($tax_return->rollback) {
@@ -38,7 +39,11 @@ class RollbackReturn extends Component
                 $this->rollBackLatestReturnDebtPenalty($tax_return);
                 $this->customAlert('success', 'Penalty & Interest rolled back successful');
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('warning', $e->getMessage());
             }
         }

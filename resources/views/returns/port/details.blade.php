@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-body">
-        <h6 class="text-uppercase mt-2 ml-2">Filled Return Details for {{ $return->financialMonth->name }},
+        <h6 class="text-uppercase mt-2 ml-2">Filed Return Details for {{ $return->financialMonth->name }},
             {{ $return->financialMonth->year->code }}</h6>
         <hr>
         <div class="row">
@@ -198,6 +198,21 @@
                     </tbody>
                 </table>
             </div>
+
+                @if ($return->attachment_path)
+                    <div class="col-md-4">
+                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
+                             class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <a target="_blank"
+                               href="{{ route('tax_investigation.files.show', encrypt($return->attachment_path)) }}"
+                               class="ml-1 font-weight-bold">
+                                Attachment
+                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endif
         </div>
     </div>
 </div>

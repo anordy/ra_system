@@ -39,7 +39,11 @@ class RegistrationsController extends Controller
             $kyc = KYC::findOrFail(decrypt($kycId));
             return view('taxpayers.registrations.show', compact('kyc'));
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             session()->flash('error', 'Something went wrong, please contact the administrator for help');
             return redirect()->back();
         }
@@ -56,7 +60,11 @@ class RegistrationsController extends Controller
             $kyc = KYC::with('region:id,name', 'district:id,name', 'ward:id,name', 'street:id,name')->findOrFail(decrypt($kycId));
             return view('taxpayers.registrations.enroll-fingerprint', compact('kyc'));
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             session()->flash('error', 'Something went wrong, please contact the administrator for help');
             return redirect()->back();
         }
@@ -83,7 +91,7 @@ class RegistrationsController extends Controller
             if ($kyc->is_citizen == '1' && isNullOrEmpty($kyc->zanid_verified_at)) {
                 session()->flash('error', 'User ZANID not verified by authorities');
                 return redirect()->back();
-            } else if($kyc->is_citizen == '0' && (isNullOrEmpty($kyc->passport_verified_at))) {
+            } else if ($kyc->is_citizen == '0' && (isNullOrEmpty($kyc->passport_verified_at))) {
                 session()->flash('error', 'User Passport Number not verified by authorities');
                 return redirect()->back();
             }
@@ -122,7 +130,11 @@ class RegistrationsController extends Controller
             return redirect()->route('taxpayers.taxpayer.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             session()->flash('error', 'Something went wrong, please contact the administrator for help');
             return redirect()->route('taxpayers.registrations.index');
         }

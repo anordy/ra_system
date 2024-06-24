@@ -22,7 +22,8 @@ class AuthenticationFired
     /**
      * Handle user login events.
      */
-    public function handleUserLogin($event) {
+    public function handleUserLogin($event)
+    {
         $data = [
             'auditable_id' => auth()->user()->id,
             'event'      => Audit::LOGGED_IN,
@@ -39,15 +40,20 @@ class AuthenticationFired
 
         try {
             Audit::create($data);
-        } catch(Exception $e){
-            Log::error($e);
+        } catch (Exception $e) {
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
- 
+
     /**
      * Handle user logout events.
      */
-    public function handleUserLogout($event) {
+    public function handleUserLogout($event)
+    {
         $data = [
             'auditable_id' => auth()->user()->id,
             'event'      => Audit::LOGGED_OUT,
@@ -64,8 +70,12 @@ class AuthenticationFired
 
         try {
             Audit::create($data);
-        } catch(Exception $e){
-            Log::error($e);
+        } catch (Exception $e) {
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
@@ -80,7 +90,7 @@ class AuthenticationFired
             'Illuminate\Auth\Events\Login',
             'App\Listeners\AuthenticationFired@handleUserLogin'
         );
- 
+
         $events->listen(
             'Illuminate\Auth\Events\Logout',
             'App\Listeners\AuthenticationFired@handleUserLogout'

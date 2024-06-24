@@ -146,7 +146,11 @@ class ChangesApprovalProcessing extends Component
                         $this->subject->status = BusinessStatus::APPROVED;
                         DB::commit();
                     } catch (Exception $e) {
-                        Log::error($e);
+                        Log::error('Error: ' . $e->getMessage(), [
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'trace' => $e->getTraceAsString(),
+                        ]);
                         DB::rollBack();
                         $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                     }
@@ -214,7 +218,11 @@ class ChangesApprovalProcessing extends Component
                         }
                         DB::commit();
                     } catch (Exception $e) {
-                        Log::error($e);
+                        Log::error('Error: ' . $e->getMessage(), [
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'trace' => $e->getTraceAsString(),
+                        ]);
                         DB::rollBack();
                         $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                     }
@@ -259,7 +267,11 @@ class ChangesApprovalProcessing extends Component
                         $this->subject->status = BusinessStatus::APPROVED;
                         DB::commit();
                     } catch (Exception $e) {
-                        Log::error($e);
+                        Log::error('Error: ' . $e->getMessage(), [
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'trace' => $e->getTraceAsString(),
+                        ]);
                         DB::rollBack();
                         $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                     }
@@ -308,7 +320,11 @@ class ChangesApprovalProcessing extends Component
                         $this->subject->status = BusinessStatus::APPROVED;
                         DB::commit();
                     } catch (Exception $e) {
-                        Log::error($e);
+                        Log::error('Error: ' . $e->getMessage(), [
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'trace' => $e->getTraceAsString(),
+                        ]);
                         DB::rollBack();
                         $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                     }
@@ -380,8 +396,8 @@ class ChangesApprovalProcessing extends Component
                     } catch (Exception $e) {
                         DB::rollBack();
                         Log::error('CHANGE-BUSINESS-INFO-APPROVE', [$e->getMessage()]);
-                        $this->customAlert('error', CustomMessage::error());                    }
-
+                        $this->customAlert('error', CustomMessage::error());
+                    }
                 }
             }
         } catch (Exception $e) {

@@ -9,6 +9,7 @@ use App\Models\Disputes\Dispute;
 use App\Models\TaxAssessments\TaxAssessment;
 use Exception;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class WaiverController extends Controller
@@ -23,20 +24,50 @@ class WaiverController extends Controller
 
     public function approval($waiverId)
     {
-        $dispute = Dispute::findOrFail(decrypt($waiverId));
-        $assesment = TaxAssessment::findOrFail($dispute->assesment_id);
-        $business = Business::findOrFail($dispute->business_id);
-        $files = DisputeAttachment::where('dispute_id', $dispute->id)->get();
-        return view('assesments.waiver.approval', compact('dispute', 'files', 'business', 'assesment'));
+        if (!Gate::allows('tax-auditing-approval-view')) {
+            abort(403);
+        }
+
+        try {
+            $dispute = Dispute::findOrFail(decrypt($waiverId));
+            $assesment = TaxAssessment::findOrFail($dispute->assesment_id);
+            $business = Business::findOrFail($dispute->business_id);
+            $files = DisputeAttachment::where('dispute_id', $dispute->id)->get();
+            return view('assesments.waiver.approval', compact('dispute', 'files', 'business', 'assesment'));
+        } catch (Exception $e) {
+            report($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            session()->flash('warning', 'The selected waiver was not found. Please contact your administrator');
+            return back();
+        }
     }
 
-      public function view($waiverId)
+    public function view($waiverId)
     {
-        $dispute = Dispute::findOrFail(decrypt($waiverId));
-        $assesment = TaxAssessment::findOrFail($dispute->assesment_id);
-        $business = Business::findOrFail($dispute->business_id);
-        $files = DisputeAttachment::where('dispute_id', $dispute->id)->get();
-        return view('assesments.waiver.view', compact('dispute', 'files', 'business', 'assesment'));
+        if (!Gate::allows('tax-auditing-approval-view')) {
+            abort(403);
+        }
+
+        try {
+            $dispute = Dispute::findOrFail(decrypt($waiverId));
+            $assesment = TaxAssessment::findOrFail($dispute->assesment_id);
+            $business = Business::findOrFail($dispute->business_id);
+            $files = DisputeAttachment::where('dispute_id', $dispute->id)->get();
+            return view('assesments.waiver.view', compact('dispute', 'files', 'business', 'assesment'));
+        } catch (Exception $e) {
+            report($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            session()->flash('warning', 'The selected waiver was not found. Please contact your administrator');
+            return back();
+        }
     }
     public function files($path)
     {

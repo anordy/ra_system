@@ -6,13 +6,13 @@
         <div class="card-body">
             @include('livewire.approval.transitions')
 
-            @if ($this->checkTransition('crdm_review'))
+            @if ($this->checkTransition('department_commissioner_review'))
                 @if (!$forwardToCommisioner)
                     @include('livewire.approval.debts.crdm_or_commissioner_review')
                 @endif
             @endif
 
-            @if ($this->checkTransition('commissioner_complete'))
+            @if ($this->checkTransition('commissioner_general_complete'))
                 @include('livewire.approval.debts.crdm_or_commissioner_review')
             @endif
 
@@ -36,39 +36,30 @@
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'debt_manager_review')">Approve
                     & Forward</button>
             </div>
-        @elseif ($this->checkTransition('crdm_review'))
+        @elseif ($this->checkTransition('department_commissioner_review'))
             <div class="modal-footer p-2 m-0">
-                @if ($forwardToCommisioner)
-                    <button button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'crdm_review')">Approve
-                        & Forward</button>
-                @else
-                    <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'crdm_reject')">
-                        <div wire:loading wire:target="reject('crdm_reject')">
+
+
+                    <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'department_commissioner_review')">
+                        <div wire:loading wire:target="approve('department_commissioner_review')">
                             <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
-                        </div>Reject
+                        </div>Approve & Foward
                     </button>
-                    <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'crdm_complete')">
-                        <div wire:loading wire:target="approve('crdm_complete')">
-                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        </div>Approve & Complete
-                    </button>
-                @endif
+
             </div>
-        @elseif ($this->checkTransition('commissioner_complete'))
+        @elseif ($this->checkTransition('commissioner_general_complete'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commissioner_reject')">
-                    <div wire:loading wire:target="reject('commissioner_reject')">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commissioner_general_reject')">
+                    <div wire:loading wire:target="reject('commissioner_general_reject')">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>Reject
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commissioner_complete')">
-                    <div wire:loading wire:target="approve('commissioner_complete')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commissioner_general_complete')">
+                    <div wire:loading wire:target="approve('commissioner_general_complete')">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>

@@ -102,7 +102,7 @@ class ReliefRegistrations extends Component
 
     public function save()
     {
-        if(!Gate::allows('relief-registration-create')){
+        if (!Gate::allows('relief-registration-create')) {
             abort(403);
         }
         $this->validate();
@@ -152,7 +152,11 @@ class ReliefRegistrations extends Component
             return redirect()->route('reliefs.applications.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -190,7 +194,7 @@ class ReliefRegistrations extends Component
             } else {
                 $this->optionSupplierLocations = Business::select('id')->find($this->supplier)->locations;
                 $supplierLocation = $this->optionSupplierLocations->first();
-                if (is_null($supplierLocation)){
+                if (is_null($supplierLocation)) {
                     abort(404);
                 }
                 $this->supplierLocation = $supplierLocation->id;
@@ -204,12 +208,12 @@ class ReliefRegistrations extends Component
             } else {
                 $this->optionProjects = ReliefProjectList::where('project_id', $this->projectSection)->get();
                 $project = $this->optionProjects->firstOrFail();
-                if (is_null($project)){
+                if (is_null($project)) {
                     abort(404);
                 }
                 $this->project = $project->id;
                 $projectRate = $this->optionProjects->firstOrFail();
-                if (is_null($projectRate)){
+                if (is_null($projectRate)) {
                     abort(404);
                 }
                 $this->rate = $projectRate->rate;

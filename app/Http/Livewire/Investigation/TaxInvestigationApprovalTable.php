@@ -23,8 +23,8 @@ class TaxInvestigationApprovalTable extends DataTableComponent
     {
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', TaxInvestigation::class)
-            ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->where('owner', WorkflowTask::STAFF)
             ->whereHas('actors', function ($query) {
                 $query->where('user_id', auth()->id());
             });

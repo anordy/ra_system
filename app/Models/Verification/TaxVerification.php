@@ -2,14 +2,14 @@
 
 namespace App\Models\Verification;
 
-use App\Models\RiskIndicator;
-use App\Models\TaxType;
 use App\Models\Business;
-use App\Traits\WorkflowTrait;
 use App\Models\BusinessLocation;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\RiskIndicator;
 use App\Models\TaxAssessments\TaxAssessment;
+use App\Models\TaxType;
+use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class TaxVerification extends Model implements Auditable
@@ -17,22 +17,16 @@ class TaxVerification extends Model implements Auditable
     use HasFactory, WorkflowTrait, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
-    
+
     public static function getTableName()
     {
         return with(new static)->getTable();
     }
 
-    // public function taxType()
-    // {
-    //     return $this->belongsTo(TaxType::class,'tax_type_id');
-    // }
-
-      public function taxtype()
+    public function taxtype()
     {
-        return $this->belongsTo(TaxType::class,'tax_type_id');
+        return $this->belongsTo(TaxType::class, 'tax_type_id');
     }
-
 
     public function taxReturn()
     {
@@ -69,8 +63,8 @@ class TaxVerification extends Model implements Auditable
         return $this->hasMany(TaxVerificationOfficer::class, 'verification_id', 'id');
     }
 
-     public function riskIndicators()
-     {
-         return $this->belongsToMany(RiskIndicator::class, 'tax_verification_risk_indicator', 'verification_id', 'risk_indicator_id');
-     }
+    public function riskIndicators()
+    {
+        return $this->belongsToMany(RiskIndicator::class, 'tax_verification_risk_indicator', 'verification_id', 'risk_indicator_id');
+    }
 }

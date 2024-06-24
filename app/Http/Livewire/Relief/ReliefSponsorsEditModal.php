@@ -22,7 +22,7 @@ class ReliefSponsorsEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_ministries,name,'.$this->reliefSponsor->id.',id|strip_tag',
+            'name' => 'required|unique:relief_ministries,name,' . $this->reliefSponsor->id . ',id|strip_tag',
             'acronym' => 'required|strip_tag',
         ];
     }
@@ -30,7 +30,7 @@ class ReliefSponsorsEditModal extends Component
     public function mount($id)
     {
         $data = ReliefSponsor::find($id);
-        if (is_null($data)){
+        if (is_null($data)) {
             abort(404, 'Sponsor not found');
         }
         $this->reliefSponsor = $data;
@@ -41,7 +41,7 @@ class ReliefSponsorsEditModal extends Component
 
     public function submit()
     {
-        if(!Gate::allows('relief-ministries-edit')){
+        if (!Gate::allows('relief-ministries-edit')) {
             abort(403);
         }
         $this->validate();
@@ -53,7 +53,11 @@ class ReliefSponsorsEditModal extends Component
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

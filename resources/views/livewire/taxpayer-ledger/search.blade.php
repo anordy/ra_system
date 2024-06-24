@@ -13,7 +13,7 @@
 
                         <div class="form-group col-md-6">
                             <label class="font-weight-bold">ZTN Number</label>
-                            <input type="text" wire:model.defer="ztnNumber"
+                            <input type="text" wire:model.defer="ztnNumber" wire:keydown.enter="search()"
                                    class="form-control @error('ztnNumber') is-invalid @enderror">
                         </div>
 

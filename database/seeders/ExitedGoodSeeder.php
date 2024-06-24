@@ -22,8 +22,9 @@ class ExitedGoodSeeder extends Seeder
             ExitedGood::create([
                 'good_id' => random_int(1,999999999),
                 'supplier_tin_number' => random_int(111111111,999999999),
+                'owner_tin_number' => 111111111,
                 'tansad_number' => random_int(100000000, 999999999),
-                'tansad_date' => Carbon::now(),
+                'tansad_date' => Carbon::now()->subMonths(2),
 //                'verification_code' => random_int(100000000, 999999999),
                 'value_excluding_tax' => $exclusiveTax,
                 'tax_amount' => $exclusiveTax / 0.18,

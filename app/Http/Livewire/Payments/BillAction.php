@@ -77,7 +77,11 @@ class BillAction extends Component
                 $this->refresh();
                 $this->customAlert('success', 'Bill cancellation request has been sent');
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         } else if ($this->action == 'update') {
@@ -88,7 +92,11 @@ class BillAction extends Component
                 $this->refresh();
                 $this->customAlert('success', 'Bill update request has been sent');
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }

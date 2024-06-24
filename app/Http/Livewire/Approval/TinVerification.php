@@ -24,42 +24,51 @@ class TinVerification extends Component
 
     public $requestSuccess;
 
-    public function mount($business){
+    public function mount($business)
+    {
         $this->business = $business;
     }
 
     public function validateTinNumber()
     {
         try {
-                $traService = new TraInternalService();
-                $response = $traService->getTinNumber($this->business->tin);
+            $traService = new TraInternalService();
+            $response = $traService->getTinNumber($this->business->tin);
 
-                if ($response && $response['data']) {
-                    $this->tin = $response['data'];
-                } else if ($response && $response['data'] == null) {
-                    $this->customAlert('warning', $response['message']);
-                    return;
-                } else {
-                    $this->customAlert('error', 'Something went wrong');
-                    return;
-                }
-
+            if ($response && $response['data']) {
+                $this->tin = $response['data'];
+            } else if ($response && $response['data'] == null) {
+                $this->customAlert('warning', $response['message']);
+                return;
+            } else {
+                $this->customAlert('error', 'Something went wrong');
+                return;
+            }
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
     }
 
-    public function save(){
+    public function save()
+    {
         try {
             $this->business->tin_verification_status = TinVerificationStatus::APPROVED;
             $this->business->save();
 
             $this->customAlert('success', 'TIN Verification Completed.');
         } catch (\Throwable $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }

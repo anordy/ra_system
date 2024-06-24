@@ -26,11 +26,12 @@ class LandLeaseReportTable extends DataTableComponent
         $taxpayer_id = $this->taxpayer_id;
         
         if ($dates == []) {
-            $model = LandLease::query();
+            $model = LandLease::whereNotNull('completed_at');
         } elseif ($dates['startDate'] == null || $dates['endDate'] == null) {
-            $model = LandLease::query();
+            $model = LandLease::whereNotNull('completed_at');
         } else {
-            $model =  LandLease::query()->whereBetween('land_leases.created_at', [$dates['startDate'], $dates['endDate']]);
+            $model =  LandLease::query()->whereBetween('land_leases.created_at', [$dates['startDate'], $dates['endDate']])
+            ->whereNotNull('land_leases.completed_at');
         }
 
         if ($taxpayer_id) {
@@ -122,12 +123,12 @@ class LandLeaseReportTable extends DataTableComponent
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make('Review Shedule', 'review_schedule')
-                ->format(function ($value, $row) {
-                    return $value . ' years';
-                })
-                ->searchable()
-                ->sortable(),
+//            Column::make('Review Shedule', 'review_schedule')
+//                ->format(function ($value, $row) {
+//                    return $value . ' years';
+//                })
+//                ->searchable()
+//                ->sortable(),
             Column::make('Contact Person', 'taxpayer_id')
                 ->format(
                     function ($value, $row) {
@@ -160,8 +161,8 @@ class LandLeaseReportTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            Column::make('Actions', 'id')
-                ->view('land-lease.includes.actions'),
+//            Column::make('Actions', 'id')
+//                ->view('land-lease.includes.actions'),
         ];
     }
 

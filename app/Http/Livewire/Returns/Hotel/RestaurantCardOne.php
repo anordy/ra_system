@@ -2,14 +2,21 @@
 
 namespace App\Http\Livewire\Returns\Hotel;
 
+use App\Enum\CustomMessage;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\TaxType;
+use App\Traits\CustomAlert;
 use App\Traits\ReturnFilterTrait;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
+/**
+ * Display summary of returns data i.e. total filed, late filed,
+ * in-time filed, paid, unpaid and late paid returns
+ */
 class RestaurantCardOne extends Component
 {
-    use ReturnFilterTrait;
+    use ReturnFilterTrait, CustomAlert;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     protected $data;
@@ -17,9 +24,14 @@ class RestaurantCardOne extends Component
 
     public function filterData($data)
     {
-        $this->emit('$refresh');
-        $this->data = $data;
-        self::mount();
+        try {
+            $this->emit('$refresh');
+            $this->data = $data;
+            self::mount();
+        } catch (\Exception $exception) {
+            Log::error('RETURNS-RESTAURANT-CARD-ONE', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
+        }
     }
 
     public function mount()

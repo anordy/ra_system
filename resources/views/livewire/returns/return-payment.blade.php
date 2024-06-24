@@ -97,8 +97,14 @@
             <span class="font-weight-bold text-uppercase">
                 Total Tax Payable
             </span>
-                <p class="my-1">{{ number_format($return->total_amount, 2) }} {{ $return->currency }}
-                </p>
+                @if($return->total_amount === \App\Enum\GeneralConstant::ZERO_INT)
+                    <p class="my-1">N/A
+                    </p>
+                @else
+                    <p class="my-1">{{ number_format($return->total_amount, 2) }} {{ $return->currency }}
+                    </p>
+                @endif
+
             </div>
         @endif
         @if ($return->total_amount > 0)

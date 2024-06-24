@@ -32,7 +32,7 @@ class ApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
-//        todo: encrypt modelID
+        //        todo: encrypt modelID
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
@@ -48,7 +48,7 @@ class ApprovalProcessing extends Component
         }
         $type = 'Renewal Fee';
         // TODO: check if queried objects exist
-        $duration = TaPaymentConfiguration::query()->select('id', 'category', 'duration', 'is_citizen' )
+        $duration = TaPaymentConfiguration::query()->select('id', 'category', 'duration', 'is_citizen')
             ->where('category', $type)->where('is_citizen', $this->renew->tax_agent->taxpayer->is_citizen)->first();
         if ($duration == null) {
             $this->customAlert('error', 'The duration for consultant renew does not exist');
@@ -94,7 +94,11 @@ class ApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }
@@ -115,7 +119,11 @@ class ApprovalProcessing extends Component
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }

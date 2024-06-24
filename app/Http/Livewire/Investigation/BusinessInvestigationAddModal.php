@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Investigation;
 
 use App\Models\Business;
+use App\Models\FinancialYear;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\Investigation\TaxInvestigationLocation;
 use App\Models\Investigation\TaxInvestigationTaxType;
@@ -18,14 +19,16 @@ class BusinessInvestigationAddModal extends Component
 
     use CustomAlert;
 
+    public $query;
+    public $highlightIndex;
     public $name;
     public $description;
     public $business;
     public $business_id;
     public $location_ids;
     public $tax_type_ids;
-    public $intension;
-    public $scope;
+    public $allegations;
+    public $descriptions;
     public $period_from;
     public $period_to;
 
@@ -42,16 +45,58 @@ class BusinessInvestigationAddModal extends Component
             'location_ids.*' => 'required|numeric',
             'tax_type_ids' => 'required',
             'tax_type_ids.*' => 'required|numeric',
-            'intension' => 'required|strip_tag',
-            'scope' => 'required|strip_tag',
-            'period_from' => 'required|date',
+            'allegations' => 'required|strip_tag|string',
+            'descriptions' => 'required|strip_tag|string',
+            'period_from' => 'required|date|after:businesses,created_at',
             'period_to' => 'required|date|after:period_from',
         ];
     }
 
-    public function mount()
+
+
+    public function resetFields() {
+        $this->query = '';
+        $this->business = [];
+        $this->highlightIndex = 0;
+    }
+
+    public function incrementHighlight() {
+        if ($this->highlightIndex === count($this->business) - 1) {
+            $this->highlightIndex = 0;
+            return;
+        }
+        $this->highlightIndex++;
+    }
+
+    public function decrementHighlight() {
+        if ($this->highlightIndex === 0) {
+            $this->highlightIndex = count($this->business) - 1;
+            return;
+        }
+        $this->highlightIndex--;
+    }
+
+    public function updatedQuery() {
+        $this->business = Business::query()->select('id', 'name', 'ztn_number')
+            ->where('name', 'like', '%' . $this->query . '%')
+            ->orWhere('ztn_number', 'like', '%' . $this->query . '%')
+            ->get()
+            ->toArray();
+    }
+
+    public function mount($jsonData = null)
     {
-        $this->business = Business::all();
+        $this->resetFields();
+        if (isset($jsonData)) {
+            $this->business_id = $jsonData['business_id'];
+            $this->businessChange($this->business_id);
+            $this->location_ids[] = $jsonData['location_ids'];
+        }
+    }
+
+
+    public function selectBusiness() {
+        $this->selectedBusiness = $this->contacts[$this->highlightIndex] ?? null;
     }
 
     public function businessChange($id)
@@ -94,11 +139,12 @@ class BusinessInvestigationAddModal extends Component
         DB::beginTransaction();
         try {
             $taxInvestigation = TaxInvestigation::create([
+                'case_number' => TaxInvestigation::generateNewCaseNumber(),
                 'business_id' => $this->business_id,
                 'location_id' => count($this->location_ids) <= 1 ? $this->location_ids[0] : 0,
                 'tax_type_id' => count($this->tax_type_ids) <= 1 ? $this->tax_type_ids[0] : 0,
-                'intension' => $this->intension,
-                'scope' => $this->scope,
+                'intension' => $this->allegations,
+                'scope' => $this->descriptions,
                 'period_from' => $this->period_from,
                 'period_to' => $this->period_to,
                 'created_by_id' => auth()->user()->id,
@@ -125,10 +171,15 @@ class BusinessInvestigationAddModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
+
 
     public function render()
     {

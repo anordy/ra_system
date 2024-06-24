@@ -7,6 +7,7 @@ use App\Models\MvrDeregistration;
 use App\Models\MvrRegistration;
 use App\Models\RoadLicense\RoadLicense;
 use App\Models\TaxAgent;
+use App\Models\TaxClearanceRequest;
 use App\Models\TaxType;
 use App\Models\WithholdingAgent;
 use App\Models\ZmBill;

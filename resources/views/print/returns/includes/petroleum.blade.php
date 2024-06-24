@@ -26,7 +26,7 @@
                     @if($item->config->rate_usd)
                         {{ $item->config->rate_usd }} USD
                     @else
-                        {{ $item->config->rate }}
+                        {{ $item->config->rate == 0 ? 1 : $item->config->rate }} {{ $item->config->currency ?? 'N/A' }}
                     @endif
                 @endif
             </td>

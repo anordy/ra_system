@@ -127,7 +127,6 @@
                     <span class="font-weight-bold text-uppercase">Place of Business</span>
                     <p class="my-1">{{ $business->place_of_business }}</p>
                 </div>
-   
 
             </div>
         </div>
@@ -154,7 +153,6 @@
                     <p class="my-1">{{ number_format($dispute->tax_in_dispute + $dispute->tax_not_in_dispute,2) }} TZS</p>
                 </div>
 
-
             </div>
             {{-- @endif --}}
 
@@ -179,7 +177,6 @@
 
             </div>
         </div>
-
 
         <div class="tab-pane fade" id="reason" role="tabpanel" aria-labelledby="reason-tab">
             <div class="row m-2 pt-3">
@@ -210,7 +207,6 @@
             </div>
         </div>
     </div>
-
 
     @if ($assesment)
         <div class="card my-4 rounded-0">
@@ -244,7 +240,6 @@
         </div>
     @endif
 
-
     @if ($dispute->dispute_report)
         <div class="card my-4 rounded-0">
             <div class="card-header font-weight-bold bg-white">
@@ -264,7 +259,6 @@
                         </div>
                     </div>
 
-
                     @if ($dispute->notice_report)
                         <div class="col-md-3">
                             <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
@@ -278,7 +272,6 @@
                             </div>
                         </div>
                     @endif
-
 
                     @if ($dispute->setting_report)
                         <div class="col-md-3">

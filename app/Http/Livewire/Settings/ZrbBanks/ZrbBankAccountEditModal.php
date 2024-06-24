@@ -51,7 +51,8 @@ class ZrbBankAccountEditModal extends Component
         'currency.required' => 'currency is required.',
     ];
 
-    public function mount($id){
+    public function mount($id)
+    {
         $this->zrbBankAccount = ZrbBankAccount::findOrFail(decrypt($id));
         $this->bank_id = $this->zrbBankAccount->bank_id;
         $this->account_name = $this->zrbBankAccount->account_name;
@@ -77,7 +78,7 @@ class ZrbBankAccountEditModal extends Component
 
     public function submit()
     {
-        
+
         if (!Gate::allows('zrb-bank-account-edit')) {
             abort(403);
         }
@@ -97,11 +98,15 @@ class ZrbBankAccountEditModal extends Component
             ];
             $this->triggerDualControl(get_class($this->zrbBankAccount), $this->zrbBankAccount->id, DualControl::EDIT, 'editing ZRA bank account', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>10000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 10000]);
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact our administrator for assistance?');
         }
     }

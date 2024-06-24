@@ -16,7 +16,7 @@ use Livewire\Component;
 
 class UserRoleEditModal extends Component
 {
-    
+
     use CustomAlert, DualControlActivityTrait;
 
     public $roles = [];
@@ -28,7 +28,7 @@ class UserRoleEditModal extends Component
     {
         $this->roles = Role::all();
         $this->user = User::find(decrypt($id));
-        if (is_null($this->user)){
+        if (is_null($this->user)) {
             abort(404, 'User not found');
         }
         $this->role = $this->user->role_id;
@@ -69,19 +69,23 @@ class UserRoleEditModal extends Component
                 'email' => $this->user->email,
                 'phone' => $this->user->phone,
             ];
-            
+
             if ($this->role == $this->old_values['role_id']) {
                 $this->customAlert('error', 'You have selected the same role. Please try again with different one.');
                 return;
             }
 
-            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user role '.$this->user->fname.' '.$this->user->lname.'', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user role ' . $this->user->fname . ' ' . $this->user->lname . '', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.users.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE);
             return redirect()->route('settings.users.index');
         }

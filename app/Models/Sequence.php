@@ -10,5 +10,10 @@ class Sequence extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const TAX_CLEARANCE = 'taxClearance';
+    const TAX_CLEARANCE_YEAR = 'taxClearanceYear';
+
+    protected $fillable = ['next_id'];
+
     protected $guarded = [];
 }

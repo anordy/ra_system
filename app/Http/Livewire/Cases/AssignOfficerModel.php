@@ -37,13 +37,17 @@ class AssignOfficerModel extends Component
         $this->validate();
         try {
             LegalCase::query()
-                ->where(['id'=>$this->case_id])
-                ->update(['assigned_officer_id'=>$this->user_id]);
-            session()->flash('success','User assigned!');
+                ->where(['id' => $this->case_id])
+                ->update(['assigned_officer_id' => $this->user_id]);
+            session()->flash('success', 'User assigned!');
             redirect()->to(route('cases.show', encrypt($this->case_id)));
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

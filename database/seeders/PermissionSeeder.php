@@ -58,6 +58,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'return-lump-sum-payment-return-view', 'sys_module_id' => 5],
             ['name' => 'return-mobile-money-transfer-view', 'sys_module_id' => 5],
             ['name' => 'return-electronic-money-transaction-return-view', 'sys_module_id' => 5],
+            ['name' => 'print-return', 'sys_module_id' => 5],
+            ['name' => 'return-chartered-view', 'sys_module_id' => 5],
 
             # Withholding Agent
             ['name' => 'withholding-agents-registration', 'sys_module_id' => 6],
@@ -70,10 +72,14 @@ class PermissionSeeder extends Seeder
             ['name' => 'return-petroleum-return-view', 'sys_module_id' => 7],
 
             # Return Verifications
-            ['name' => 'verification-approval-view', 'sys_module_id' => 8],
             ['name' => 'verification-assessment-view', 'sys_module_id' => 8],
             ['name' => 'verification-approved-view', 'sys_module_id' => 8],
-            ['name' => 'verification-view', 'sys_module_id' => 8],
+            ['name' => 'verification-view-all', 'sys_module_id' => 8],
+            ['name' => 'verification-view-pemba', 'sys_module_id' => 8],
+            ['name' => 'verification-view-domestic-taxpayers', 'sys_module_id' => 8],
+            ['name' => 'verification-view-lto-taxpayers', 'sys_module_id' => 8],
+            ['name' => 'verification-view-non-tax-revenue-taxpayers', 'sys_module_id' => 8],
+
 
             # Tax Claim
             ['name' => 'tax-claim-view', 'sys_module_id' => 9],
@@ -119,6 +125,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'debt-management-excise-duty-bfo-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-excise-duty-mno-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-transports-debt-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-offence-view', 'sys_module_id' => 14],
 
             ['name' => 'mvr_initiate_registration', 'sys_module_id' => 15],
             ['name' => 'mvr_approve_registration', 'sys_module_id' => 15],
@@ -147,12 +154,16 @@ class PermissionSeeder extends Seeder
             ['name' => 'land-lease-edit', 'sys_module_id' => 16],
             ['name' => 'land-lease-delete', 'sys_module_id' => 16],
             ['name' => 'land-lease-view-own', 'sys_module_id' => 16],
+            ['name' => 'land-lease-change-status', 'sys_module_id' => 16],
 
             ['name' => 'land-lease-generate-report', 'sys_module_id' => 16],
             ['name' => 'land-lease-agent-view', 'sys_module_id' => 16],
             ['name' => 'land-lease-register-agent', 'sys_module_id' => 16],
             ['name' => 'land-lease-change-agent-status', 'sys_module_id' => 16],
             ['name' => 'land-lease-generate-control-number', 'sys_module_id' => 16],
+            ['name' => 'land-lease-approve-currency-change-application', 'sys_module_id' => 16],
+            ['name' => 'land-lease-approve-registration', 'sys_module_id' => 16],
+            ['name' => 'land-lease-notification', 'sys_module_id' => 16],
 
 
             # Manage Payments
@@ -485,7 +496,11 @@ class PermissionSeeder extends Seeder
         ];
 
         foreach ($data as $row) {
-            Permission::updateOrCreate($row);
+//            Permission::updateOrCreate($row);
+            Permission::updateOrCreate(
+                ['name' => $row['name']],
+                ['sys_module_id' => $row['sys_module_id']]
+            );
         }
     }
 }

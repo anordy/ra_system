@@ -60,6 +60,10 @@ class DebtWaiverTable extends DataTableComponent
                 }),
             Column::make('Requested On', 'created_at')
                 ->format(fn ($value, $row) => $value),
+            Column::make('Department', 'debt')
+                ->sortable()
+                ->searchable()
+                ->label(fn ($row) => $row->debt->location->taxRegion->department->name),
             Column::make('Status', 'status')
                 ->view('debts.waivers.includes.status'),
             Column::make('Action', 'id')

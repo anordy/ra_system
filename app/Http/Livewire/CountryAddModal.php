@@ -41,20 +41,24 @@ class CountryAddModal extends Component
 
         $this->validate();
         DB::beginTransaction();
-        try{
+        try {
             $country = Country::create([
                 'code' => $this->code,
                 'name' => $this->name,
                 'nationality' => $this->nationality,
-                'created_at' =>Carbon::now()
+                'created_at' => Carbon::now()
             ]);
             $this->triggerDualControl(get_class($country), $country->id, DualControl::ADD, 'adding country');
             DB::commit();
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.country.index');
-        }catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('success', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.country.index');
         }

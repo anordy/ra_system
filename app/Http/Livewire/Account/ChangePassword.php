@@ -16,7 +16,8 @@ class ChangePassword extends Component
 
     public $current_password, $new_password, $confirm_password;
 
-    protected function rules() {
+    protected function rules()
+    {
         return [
             'new_password' => [
                 'strip_tag',
@@ -56,7 +57,11 @@ class ChangePassword extends Component
             session()->flash('success', 'Your password has been changed successful');
             $this->redirect(route('account'));
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
