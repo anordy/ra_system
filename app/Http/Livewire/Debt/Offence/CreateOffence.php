@@ -29,7 +29,7 @@ class CreateOffence extends Component
     protected $rules = [
 //        'znumber' => 'required',
         'name' => 'required|strip_tag',
-        'amount' => 'required|numeric',
+        'amount' => 'required|numeric|min:1',
         'taxType' => 'required',
         'currency' => 'required',
         'mobile' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
@@ -38,7 +38,7 @@ class CreateOffence extends Component
     public function mount()
     {
         try {
-            $this->taxTypes = TaxType::select('id', 'name', 'code')->get();
+            $this->taxTypes = TaxType::select('id', 'name', 'code')->where('category','main')->get();
             $this->currencies = Currency::select('id', 'name', 'iso')->get();
         } catch (\Exception $exception) {
             Log::error('OFFENCE', ['MESSAGE' => $exception->getMessage(), 'TRACE' => $exception->getTrace()]);

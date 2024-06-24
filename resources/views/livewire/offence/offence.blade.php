@@ -1,11 +1,7 @@
 <div class="row">
     <div class="col-md-12">
-{{--        <button class="btn btn-success float-right" data-toggle="modal" data-target="#addOffenceModal">--}}
-{{--            <i class="fa fa-plus"></i>--}}
-{{--            New Offence--}}
-{{--        </button>--}}
-        <a href="{{route('debts.offence.create')}}" class="btn btn-success float-right mb-2">
-            <i class="fa fa-plus"></i>
+        <a href="{{route('debts.offence.create')}}" class="btn btn-info float-right mb-2">
+            <i class="fa fa-plus-circle"></i>
             New Offence
         </a>
     </div>
