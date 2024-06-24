@@ -42,5 +42,6 @@
         @endif
         </tbody>
     </table>
+    @include('livewire.offence.includes.models')
 
 </div>

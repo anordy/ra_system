@@ -83,9 +83,4 @@ class Installment extends Model implements Auditable
     public function files(){
         return $this->hasMany(InstallmentRequestFile::class);
     }
-
-    public function installmentLists()
-    {
-        return $this->hasMany(InstallmentList::class);
-    }
 }

@@ -29,7 +29,7 @@ class CreateOffence extends Component
     protected $rules = [
 //        'znumber' => 'required',
         'name' => 'required|strip_tag',
-        'amount' => 'required|numeric|min:1',
+        'amount' => 'required|numeric',
         'taxType' => 'required',
         'currency' => 'required',
         'mobile' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
