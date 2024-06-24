@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
 use App\Models\User;
+use App\Rules\NotInArray;
 use App\Traits\PaymentsTrait;
 use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
@@ -33,7 +34,7 @@ class TaxInvestigationApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $teamLeader;
-    public $teamMember;
+    public $teamMembers = [];
     public $periodTo;
     public $periodFrom;
     public $workingReport;
@@ -77,8 +78,6 @@ class TaxInvestigationApprovalProcessing extends Component
 
         $this->subject = $this->getSubject();
 
-        // dd($this->getEnabledTransitions());
-
         $this->exitMinutes = $this->subject->exit_minutes;
         $this->finalReport = $this->subject->final_report;
         $this->workingReport = $this->subject->working_report;
@@ -107,6 +106,7 @@ class TaxInvestigationApprovalProcessing extends Component
         }
 
         $this->initializeStaffAndRoles();
+        $this->addSelect();
     }
 
     private function getSubject()
@@ -167,6 +167,14 @@ class TaxInvestigationApprovalProcessing extends Component
         }
     }
 
+    public function addSelect() {
+        $this->teamMembers[] = ''; // Set the initial value to an empty string
+    }
+
+    public function removeSelect($index) {
+        unset($this->teamMembers[$index]);
+        $this->teamMembers = array_values($this->teamMembers); // Re-index the array
+    }
 
     /**
      * Approves the tax investigation process and performs the necessary actions based on the transition.
@@ -230,21 +238,7 @@ class TaxInvestigationApprovalProcessing extends Component
 
             DB::commit();
 
-
-            if ($this->subject->status == TaxInvestigationStatus::APPROVED) {
-            }
-
-            if ($this->subject->status == TaxInvestigationStatus::APPROVED && $this->subject->assessment()->exists()) {
-                $this->generateControlNumber();
-                $this->subject->assessment->update([
-                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                    'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                ]);
-                $assessment = $this->subject->assessment;
-                // Add ledger recording
-                $this->recordLedger(TransactionType::DEBIT, TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
-            }
-            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+            $this->flash('success', __('Approved successfully'), [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('Error: ' . $e->getMessage(), [
@@ -264,12 +258,12 @@ class TaxInvestigationApprovalProcessing extends Component
                 'descriptions' => 'required|strip_tag|string',
                 'periodFrom' => 'required|date',
                 'periodTo' => 'required|after:periodFrom',
-                'teamLeader' => ['required', new NotIn([$this->teamMember])],
-                'teamMember' => ['required', new NotIn([$this->teamLeader])],
+                'teamLeader' => ['required', new NotInArray([$this->teamMembers])],
+                'teamMembers.*' => ['required', new NotIn([$this->teamLeader])],
             ],
             [
-                'teamLeader.not_in' => 'Duplicate already exists as team member',
-                'teamMember.not_in' => 'Duplicate already exists as team leader'
+                'teamLeader.not_in_array' => 'Duplicate already exists as team member',
+                'teamMembers.*.not_in' => 'Duplicate already exists as team leader'
             ]
         );
     }
@@ -338,24 +332,33 @@ class TaxInvestigationApprovalProcessing extends Component
             $this->subject->officers()->delete();
         }
 
-        TaxInvestigationOfficer::create([
-            'investigation_id' => $this->subject->id,
-            'user_id' => $this->teamLeader,
-            'team_leader' => true,
-        ]);
+        DB::beginTransaction();
+        try {
+            TaxInvestigationOfficer::create([
+                'investigation_id' => $this->subject->id,
+                'user_id' => $this->teamLeader,
+                'team_leader' => true,
+            ]);
 
-        TaxInvestigationOfficer::create([
-            'investigation_id' => $this->subject->id,
-            'user_id' => $this->teamMember,
-        ]);
+            foreach ($this->teamMembers as $member){
+                TaxInvestigationOfficer::create([
+                    'investigation_id' => $this->subject->id,
+                    'user_id' => $member,
+                ]);
+            }
 
-        $this->subject->period_to = $this->periodTo;
-        $this->subject->period_from = $this->periodTo;
-        $this->subject->intension = $this->allegations;
-        $this->subject->scope = $this->descriptions;
-        $this->subject->save();
+            $this->subject->period_to = $this->periodTo;
+            $this->subject->period_from = $this->periodTo;
+            $this->subject->intension = $this->allegations;
+            $this->subject->scope = $this->descriptions;
+            $this->subject->save();
+            DB::commit();
+        }catch (Exception $ex){
+            DB::rollBack();
+            Log::error("ASSIGNING OFFICERS: ".$ex->getMessage());
+        }
 
-        return [intval($this->teamLeader), intval($this->teamMember)];
+        return [intval($this->teamLeader), intval($this->teamMembers)];
     }
 
     private function conductInvestigation()
@@ -396,6 +399,7 @@ class TaxInvestigationApprovalProcessing extends Component
             $workingReport = $this->workingReport->store('investigation', 'local');
         }
 
+//        todo: send email/sms notification
         $this->subject->final_report = $finalReport;
         $this->subject->working_report = $workingReport;
         $this->subject->save();
@@ -499,8 +503,23 @@ class TaxInvestigationApprovalProcessing extends Component
         $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl());
     }
 
+    public function rejectExtension($transition){
+        $this->validate([
+            'comments' => 'required|string|strip_tag',
+        ]);
+        $transition = $transition['data']['transition'];
+
+        try {
+            $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
+            $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl());
+        }catch (Exception $ex){
+            Log::error("EXTENSION REJECTED: ".$ex->getMessage());
+            $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl());
+        }
+    }
+
     protected $listeners = [
-        'approve', 'reject'
+        'approve', 'reject', 'rejectExtension'
     ];
 
     public function confirmPopUpModal($action, $transition)

@@ -94,9 +94,6 @@ class ApprovalProcessing extends Component
                 $this->isiiciiiChange($this->isiic_iii);
             }
 
-            // $this->effectiveDate = $this->subject->headquarter->effective_date ? $this->subject->headquarter->effective_date->format('Y-m-d') : null;
-            // $this->selectedTaxRegion = $this->subject->headquarter->tax_region_id;
-
             $this->isiic_iv = $this->subject->isiic_iv ?? null;
 
             $this->taxDepartment = TaxDepartment::all();
@@ -551,19 +548,10 @@ class ApprovalProcessing extends Component
             'comments' => 'required|string|strip_tag',
         ]);
 
-        // Then confirm
-        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
-            'position' => 'center',
-            'toast' => false,
-            'showConfirmButton' => true,
-            'confirmButtonText' => 'Confirm',
-            'onConfirmed' => 'rejectToTransition',
-            'showCancelButton' => true,
-            'cancelButtonText' => 'Cancel',
-            'timer' => null,
+        $this->rejectToTransition([
             'data' => [
-                'transition' => $transition['data']['transition']
-            ],
+                'transition' => $transition
+            ]
         ]);
     }
 

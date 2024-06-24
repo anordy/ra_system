@@ -58,6 +58,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'return-lump-sum-payment-return-view', 'sys_module_id' => 5],
             ['name' => 'return-mobile-money-transfer-view', 'sys_module_id' => 5],
             ['name' => 'return-electronic-money-transaction-return-view', 'sys_module_id' => 5],
+            ['name' => 'print-return', 'sys_module_id' => 5],
+            ['name' => 'return-chartered-view', 'sys_module_id' => 5],
 
             # Withholding Agent
             ['name' => 'withholding-agents-registration', 'sys_module_id' => 6],
@@ -70,10 +72,14 @@ class PermissionSeeder extends Seeder
             ['name' => 'return-petroleum-return-view', 'sys_module_id' => 7],
 
             # Return Verifications
-            ['name' => 'verification-approval-view', 'sys_module_id' => 8],
             ['name' => 'verification-assessment-view', 'sys_module_id' => 8],
             ['name' => 'verification-approved-view', 'sys_module_id' => 8],
-            ['name' => 'verification-view', 'sys_module_id' => 8],
+            ['name' => 'verification-view-all', 'sys_module_id' => 8],
+            ['name' => 'verification-view-pemba', 'sys_module_id' => 8],
+            ['name' => 'verification-view-domestic-taxpayers', 'sys_module_id' => 8],
+            ['name' => 'verification-view-lto-taxpayers', 'sys_module_id' => 8],
+            ['name' => 'verification-view-non-tax-revenue-taxpayers', 'sys_module_id' => 8],
+
 
             # Tax Claim
             ['name' => 'tax-claim-view', 'sys_module_id' => 9],

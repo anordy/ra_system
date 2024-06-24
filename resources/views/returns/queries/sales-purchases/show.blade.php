@@ -2,14 +2,6 @@
 
 @section('title','Return Queries')
 
-@section('css')
-    <style>
-        .table td, .table th {
-            border-top: none;
-        }
-
-    </style>
-@endsection
 @section('content')
     <div class="card rounded-0">
         <div class="card-header d-flex justify-content-between">
@@ -28,25 +20,27 @@
                         <tbody>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Tax Payer Name</td>
-                            <td class="my-1">{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>
+                            <td class="my-1">{{$return->business->taxpayer->first_name ?? 'N/A'}} {{$return->business->taxpayer->last_name ?? 'N/A'}}</td>
                         </tr>
 
                         <tr>
                             <td class="font-weight-bold text-uppercase">Business Name</td>
-                            <td class="my-1">{{ $return->business->name  }}</td>
+                            <td class="my-1">{{ $return->business->name ?? 'N/A' }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Business Location Name</td>
-                            <td class="my-1">{{ $return->businessLocation->name  }}</td>
+                            <td class="my-1">{{ $return->businessLocation->name ?? 'N/A' }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Tax Region</td>
-                            <td class="my-1">{{ $return->businessLocation->taxRegion->name }}</td>
+                            <td class="my-1">{{ $return->businessLocation->taxRegion->name ?? 'N/A' }}</td>
                         </tr>
-                        <tr>
-                            <td class="font-weight-bold text-uppercase">Date of Business Commencement</td>
-                            <td class="my-1">{{date('D, Y-m-d',strtotime($return->businessLocation->date_of_commencing)) }}</td>
-                        </tr>
+                        @if($return->businessLocation->date_of_commencing)
+                            <tr>
+                                <td class="font-weight-bold text-uppercase">Date of Business Commencement</td>
+                                <td class="my-1">{{date('D, Y-m-d',strtotime($return->businessLocation->date_of_commencing)) }}</td>
+                            </tr>
+                        @endif
 
                         </tbody>
                     </table>
@@ -56,20 +50,20 @@
                         <tbody>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Tax Type</td>
-                            <td class="my-1">{{$return->taxType->name }}</td>
+                            <td class="my-1">{{$return->taxType->name ?? 'N/A' }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Phone</td>
-                            <td class="my-1">{{ $return->business->mobile }}</td>
+                            <td class="my-1">{{ $return->business->mobile ?? 'N/A' }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Email</td>
-                            <td class="my-1">{{ $return->business->email }}</td>
+                            <td class="my-1">{{ $return->business->email ?? 'N/A' }}</td>
                         </tr>
 
                         <tr>
                             <td class="font-weight-bold text-uppercase">Return Month</td>
-                            <td class="my-1">{{ $return->financialMonth->name }}, {{ $return->financialYear->code }}</td>
+                            <td class="my-1">{{ $return->financialMonth->name ?? 'N/A' }}, {{ $return->financialYear->code ?? 'N/A' }}</td>
                         </tr>
 
                         <tr>

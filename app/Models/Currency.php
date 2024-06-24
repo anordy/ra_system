@@ -13,6 +13,9 @@ class Currency extends Model implements Auditable
 
     protected $fillable = ['iso', 'name', 'symbol'];
 
+    public const TZS = 'TZS';
+    public const USD = 'USD';
+
     public function zrbBankAccounts(){
         return $this->hasMany(ZrbBankAccount::class);
     }

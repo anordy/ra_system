@@ -14,7 +14,7 @@
             editing {{$code}} return configurations
         </div>
         <div class="card-body">
-            @if ($code == \App\Models\TaxType::LUMPSUM_PAYMENT || $code == 'lumpsum payment')
+            @if ($code == \App\Models\TaxType::LUMPSUM_PAYMENT)
                 <div>
                     <form action="{{ route('settings.return-config.edit.lumpSum', ['config_id' => encrypt($configs->id)]) }}" method="post">
                         @csrf

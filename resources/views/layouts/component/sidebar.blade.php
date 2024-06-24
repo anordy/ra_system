@@ -209,10 +209,13 @@
                 <a href="#returnsSubmenu" data-toggle="collapse"
                     aria-expanded="{{ request()->is("e-filling*") ? "true" : "false" }}" class="dropdown-toggle">Tax
                     Returns</a>
-                <ul class="collapse list-unstyled {{ request()->is("e-filling*") ? "show" : "" }}" id="returnsSubmenu">
-                    @can("return-hotel-levy-view")
-                        <li class="{{ request()->is("e-filling/hotel*") ? "active" : "" }}">
-                            <a href="{{ route("returns.hotel.index") }}">Hotel Levy</a>
+                <ul class="collapse list-unstyled {{ request()->is('e-filling*') ? 'show' : '' }}" id="returnsSubmenu">
+                    <li class="{{ request()->is('tax-return-cancellation*') ? 'active' : '' }}">
+                        <a href="{{ route('tax-return-cancellation.index') }}">Returns Cancellations</a>
+                    </li>
+                    @can('return-hotel-levy-view')
+                        <li class="{{ request()->is('e-filling/hotel*') ? 'active' : '' }}">
+                            <a href="{{ route('returns.hotel.index') }}">Hotel Levy</a>
                         </li>
                     @endcan
                     @can("return-hotel-levy-view")
@@ -302,22 +305,46 @@
             </li>
         @endcan
 
-        @can("return-verification")
-            <li class="{{ request()->is("tax_verifications*") ? "active" : "" }}">
+
+        @can('return-chartered-view')
+            <li class="{{ request()->is('chartered*') ? 'active' : '' }}">
+                <a href="#chartered" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Chartered Tax
+                    Returns</a>
+                <ul class="collapse list-unstyled {{ request()->is('chartered*') ? 'show' : '' }}" id="chartered">
+                    <li class="{{ request()->is('chartered/create*') ? 'active' : '' }}">
+                        <a href="{{ route('chartered.create') }}">Create Non Handler Chartered Flight</a>
+                    </li>
+                    <li class="{{ request()->is('chartered/sea*') ? 'active' : '' }}">
+                        <a href="{{ route('chartered.index.sea') }}">Chartered Sea Returns</a>
+                    </li>
+                    <li class="{{ request()->is('chartered/flight*') ? 'active' : '' }}">
+                        <a href="{{ route('chartered.index.flight') }}">Chartered Flight Returns</a>
+                    </li>
+                </ul>
+            </li>
+        @endcan
+
+        @can('return-verification')
+            <li class="{{ request()->is('tax_verifications*') ? 'active' : '' }}">
                 <a href="#tax_verifications" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     Returns Verifications
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is("tax_verifications*") ? "show" : "" }}"
-                    id="tax_verifications">
-                    <li class="{{ request()->is("tax_verifications/approvals*") ? "active" : "" }}">
-                        <a href="{{ route("tax_verifications.approvals.index") }}">Approvals</a>
+                <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}" id="tax_verifications">
+                    <li class="{{ request()->is('tax_verifications/pending*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_verifications.pending') }}">Pending Verifications</a>
+                    </li>
+                    <li class="{{ request()->is('tax_verifications/approved*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_verifications.approved') }}">Approved Verifications</a>
+                    </li>
+                    <li class="{{ request()->is('tax_verifications/unpaid*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_verifications.unpaid') }}">Unpaid Verifications</a>
                     </li>
                     <li class="{{ request()->is("tax_verifications/assessments*") ? "active" : "" }}">
                         <a href="{{ route("tax_verifications.assessments.index") }}">Assessments</a>
                     </li>
-                    <li class="{{ request()->is("tax_verifications/verified*") ? "active" : "" }}">
+                    {{-- <li class="{{ request()->is("tax_verifications/verified*") ? "active" : "" }}">
                         <a href="{{ route("tax_verifications.verified.index") }}">Approved Returns</a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
         @endcan
@@ -379,7 +406,6 @@
                 </ul>
             </li>
         @endcan
-
         @can("tax-investigation")
             <li class="{{ request()->is("tax_investigation*") ? "active" : "" }}">
                 <a href="#tax_investigation" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
@@ -849,10 +875,20 @@
                                 </li>
 
                                 <li class="{{ request()->is("payments/ega-charges*") ? "active" : "" }}">
-                                    <a href="{{ route("payments.ega-charges.index") }}">eGA Charges</a>
+                                    <a href="{{ route("payments.ega-charges.index") }}">eGAZ Charges</a>
                                 </li>
                                 <li class="{{ request()->is("payments/departmental-reports*") ? "active" : "" }}">
                                     <a href="{{ route("payments.departmental-reports.index") }}">Departmental Reports</a>
+                        </li>
+                    @endcan
+                    @can('view-bank-statements')
+                        <li class="{{ request()->is('payments/pbz/statement*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.pbz.statements') }}">PBZ Statements</a>
+                        </li>
+                    @endcan
+                    @can('view-bank-transactions')
+                        <li class="{{ request()->is('payments/pbz/transaction*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.pbz.transactions') }}">PBZ Transactions</a>
                                 </li>
                             @endcan
                         </ul>
@@ -874,31 +910,31 @@
                     </li>
                 @endcan
 
-                @can("tax-refund")
-                    <li class="{{ request()->is(["tax-refund*", "settings/mvr-generic/PortLocation"]) ? "active" : "" }}">
-                        <a href="#tax-refund" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                            Tax Refund
-                        </a>
-                        <ul class="collapse list-unstyled {{ request()->is(["tax-refund*", "settings/mvr-generic/PortLocation"]) ? "show" : "" }}"
-                            id="tax-refund">
-                            @can("port-location-view")
-                                <li class="{{ request()->is("settings/mvr-generic/PortLocation") ? "active" : "" }}">
-                                    <a href="{{ route("settings.mvr-generic.index", "PortLocation") }}">Port Locations</a>
-                                </li>
-                            @endcan
-                            @can("port-location-view")
-                                <li class="{{ request()->is("tax-refund/initiate") ? "active" : "" }}">
-                                    <a href="{{ route("tax-refund.init") }}">Initiate</a>
-                                </li>
-                            @endcan
-                            @can("port-location-view")
-                                <li class="{{ request()->is("tax-refund/index") ? "active" : "" }}">
-                                    <a href="{{ route("tax-refund.index") }}">Tax Refunds</a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </li>
-                @endcan
+        @can('tax-refund')
+            <li class="{{ request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'active' : '' }}">
+                <a href="#tax-refund" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    Tax Refund
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'show' : '' }}"
+                    id="tax-refund">
+                    @can('port-location-view')
+                        <li class="{{ request()->is('settings/mvr-generic/PortLocation') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'PortLocation') }}">Port Locations</a>
+                        </li>
+                    @endcan
+                    @can('port-location-view')
+                        <li class="{{ request()->is('tax-refund/initiate') ? 'active' : '' }}">
+                            <a href="{{ route('tax-refund.init') }}">Initiate</a>
+                        </li>
+                    @endcan
+                    @can('port-location-view')
+                        <li class="{{ request()->is('tax-refund/index') ? 'active' : '' }}">
+                            <a href="{{ route('tax-refund.index') }}">Tax Refunds</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
 
                 @can("tra-information")
                     <li class="{{ request()->is("tra*") ? "active" : "" }}">
@@ -934,52 +970,56 @@
                     </li>
                 @endcan
 
-                @can("setting")
-                    <li class="{{ request()->is("settings*") && !request()->is(["tax-refund*", "settings/mvr-generic/PortLocation"]) ? "active" : "" }}">
-                        <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
-                        <ul class="collapse list-unstyled {{ request()->is("settings*") && !request()->is(["tax-refund*", "settings/mvr-generic/PortLocation"]) ? "show" : "" }}"
-                            id="settings">
-                            @can("setting-user-view")
-                                <li class="{{ request()->is("settings/users*") ? "active" : "" }}">
-                                    <a href="{{ route("settings.users.index") }}">Users</a>
-                                </li>
-                            @endcan
-                            @can("setting-role-view")
-                                <li class="{{ request()->is("settings/roles*") ? "active" : "" }}">
-                                    <a href="{{ route("settings.roles.index") }}">Roles</a>
-                                </li>
-                            @endcan
-                            @can("setting-country-view")
-                                <li class="{{ request()->is("settings/country*") ? "active" : "" }}">
-                                    <a href="{{ route("settings.country.index") }}">Countries</a>
-                                </li>
-                            @endcan
-                            @can("setting-region-view")
-                                <li class="{{ request()->is("settings/region*") ? "active" : "" }}">
-                                    <a href="{{ route("settings.region.index") }}">Region</a>
-                                </li>
-                            @endcan
-                            @can("setting-district-view")
-                                <li class="{{ request()->is("settings/district*") ? "active" : "" }}">
-                                    <a href="{{ route("settings.district.index") }}">District</a>
-                                </li>
-                            @endcan
-                            @can("setting-ward-view")
-                                <li class="{{ request()->is("settings/ward*") ? "active" : "" }}">
-                                    <a href="{{ route("settings.ward.index") }}">Ward</a>
-                                </li>
-                            @endcan
-                            @can("setting-street-view")
-                                <li class="{{ request()->is("settings/street*") ? "active" : "" }}">
-                                    <a href="{{ route("settings.street.index") }}">Streets</a>
-                                </li>
-                            @endcan
-                            @can("setting-bank-view")
-                                <li class="{{ request()->is("settings/banks*") ? "active" : "" }}">
-                                    <a href="{{ route("settings.banks.index") }}">Banks</a>
-                                </li>
-                            @endcan
-                            @can("setting-exchange-rate-view")
+
+        @can('setting')
+            <li class="{{ request()->is('settings*') && !request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'active' : '' }}">
+                <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
+                <ul class="collapse list-unstyled {{ request()->is('settings*') && !request()->is(['tax-refund*', 'settings/mvr-generic/PortLocation']) ? 'show' : '' }}"
+                    id="settings">
+                    @can('setting-user-view')
+                        <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.users.index') }}">Users</a>
+                        </li>
+                    @endcan
+                    @can('setting-role-view')
+                        <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.roles.index') }}">Roles</a>
+                        </li>
+                    @endcan
+                    @can('setting-country-view')
+                        <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.country.index') }}">Countries</a>
+                        </li>
+                    @endcan
+                    @can('setting-region-view')
+                        <li class="{{ request()->is('settings/region*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.region.index') }}">Region</a>
+                        </li>
+                    @endcan
+                    @can('setting-district-view')
+                        <li class="{{ request()->is('settings/district*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.district.index') }}">District</a>
+                        </li>
+                    @endcan
+                    @can('setting-ward-view')
+                        <li class="{{ request()->is('settings/ward*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.ward.index') }}">Ward</a>
+                        </li>
+                    @endcan
+                    @can('setting-street-view')
+                        <li class="{{ request()->is('settings/street*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.street.index') }}">Streets</a>
+                        </li>
+                    @endcan
+                    @can('setting-bank-view')
+                        <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.banks.index') }}">Banks</a>
+                        </li>
+                        <li class="{{ request()->is('settings/bank-accounts*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.bank-accounts.index') }}">Bank Accounts</a>
+                        </li>
+                    @endcan
+                    @can("setting-exchange-rate-view")
                                 <li class="{{ request()->is("settings/exchange-rate*") ? "active" : "" }}">
                                     <a href="{{ route("settings.exchange-rate.index") }}">Exchange Rate</a>
                                 </li>

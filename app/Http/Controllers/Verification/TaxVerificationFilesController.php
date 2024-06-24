@@ -11,7 +11,6 @@ class TaxVerificationFilesController extends Controller
 {
     public function show($path)
     {
-
         if ($path) {
             try {
                 return Storage::disk('local')->response(decrypt($path));
@@ -20,7 +19,6 @@ class TaxVerificationFilesController extends Controller
                 abort(404);
             }
         }
-
         return abort(404);
     }
 }

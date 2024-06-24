@@ -26,7 +26,7 @@ class TaxInvestigationApprovalProcessingTest extends TestCase
         $component = new TaxInvestigationApprovalProcessing($investigation);
         $component->transition = ['data' => ['transition' => 'assign_officers']];
         $component->teamLeader = $teamLeader->id;
-        $component->teamMember = $teamMember->id;
+        $component->teamMembers = $teamMember->id;
         $component->periodFrom = '2023-01-01';
         $component->periodTo = '2023-12-31';
         $component->intension = 'Test Intension';
@@ -65,7 +65,7 @@ class TaxInvestigationApprovalProcessingTest extends TestCase
         $component = new TaxInvestigationApprovalProcessing($investigation);
         $component->transition = ['data' => ['transition' => 'assign_officers']];
         $component->teamLeader = $teamLeader->id;
-        $component->teamMember = $teamMember->id;
+        $component->teamMembers = $teamMember->id;
         $component->periodFrom = '2023-01-01';
         $component->periodTo = '2023-12-31';
         $component->intension = 'Test Intension';

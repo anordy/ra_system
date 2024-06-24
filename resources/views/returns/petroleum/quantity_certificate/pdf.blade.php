@@ -73,9 +73,6 @@
             border-bottom: 2px solid black;
         }
 
-
-
-
         .no-border {
             border: none;
         }
@@ -128,28 +125,28 @@
         <table class="no-border">
             <td align="left">
                 <div style="font-size: 12px">
-                    Zanzibar Revenue Authority, <br>
-                    Head Office, <br>
-                    P.O.Box 2072 <br>
-                    Tel: 255 24 2230639/233041 <br>
-                    Fax: 255 24 2233904 <br>
-                    Email: zrb@zanrevenue.org <br>
-                    Zanzibar
+                    {{ $addressInfo['institutionName'] ?? 'N/A'  }}, <br>
+                    {{ $addressInfo['operatingOffice'] ?? 'N/A'  }}, <br>
+                    {{ $addressInfo['poBox'] ?? 'N/A' }} <br>
+                    Tel: {{ $addressInfo['tel'] ?? 'N/A' }}<br>
+                    Fax: {{ $addressInfo['fax'] ?? 'N/A' }} <br>
+                    Email: {{ $addressInfo['email'] ?? 'N/A' }} <br>
+                    {{ $addressInfo['institutionLocation'] ?? 'N/A'  }}
                 </div>
             </td>
             <td align="center" class="header-title">
                 <img class="header-nembo" src="{{ public_path('/images/logo.png') }}" alt="ZRA Logo">
-                <div style="font-size: 12px">www.zrbrevenue.org</div>
+                <div style="font-size: 12px">{{ $addressInfo['institutionWebsite'] ?? 'N/A'  }}</div>
             </td>
             <td align="right">
                 <div style="text-align: left; font-size: 12px;">
-                    Zanzibar Revenue Authority, <br>
-                    Head Office, <br>
-                    P.O.Box 2072 <br>
-                    Tel: 255 24 2230639/233041 <br>
-                    Fax: 255 24 2233904 <br>
-                    Email: zrb@zanrevenue.org <br>
-                    Zanzibar
+                    {{ $addressInfo['institutionName'] ?? 'N/A'  }}, <br>
+                    {{ $addressInfo['operatingOffice'] ?? 'N/A'  }}, <br>
+                    {{ $addressInfo['poBox'] ?? 'N/A' }} <br>
+                    Tel: {{ $addressInfo['tel'] ?? 'N/A' }}<br>
+                    Fax: {{ $addressInfo['fax'] ?? 'N/A' }} <br>
+                    Email: {{ $addressInfo['email'] ?? 'N/A' }} <br>
+                    {{ $addressInfo['institutionLocation'] ?? 'N/A'  }}
                 </div>
             </td>
         </table>
@@ -173,7 +170,7 @@
     <div>
         <p>Intended Cargo discharge: {{ $product->cargo_name ?? '' }}</p>
 
-        <p>This is to certify that the quantity of <b>{{ $product->liters_at_20 }} ltrs@20<sup>o</sup>C</b> dischared at
+        <p>This is to certify that the quantity of <b>{{ $product->liters_at_20 }} ltrs@20<sup>o</sup>C</b> discharged at
             {{ $data->port }}
             ex ship {{ $data->ship }} at {{ $data->port }} for account of {{ $data->business->name ?? '' }} as
             ascertained on {{ Carbon\Carbon::create($data->ascertained)->isoFormat('DD-MMMM-YYYY') }}

@@ -275,7 +275,9 @@ class PortConfigSeeder extends Seeder
         ];
 
         foreach ($configs as $config) {
-            PortConfig::updateOrCreate($config);
+            PortConfig::updateOrCreate([
+                'code' => $config['code']
+            ],$config);
         }
     }
 }

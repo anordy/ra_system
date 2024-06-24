@@ -133,5 +133,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowMvrTransferOwnershipSeeder::class);
         $this->call(WorkflowMvrDriverLicenseSeeder::class);
         $this->call(WorkflowMvrDeRegistrationSeeder::class);
+        $this->call(CharteredConfigSeeder::class);
     }
 }

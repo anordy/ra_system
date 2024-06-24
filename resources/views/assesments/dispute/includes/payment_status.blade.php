@@ -9,7 +9,7 @@
             <i class="bi bi-clock-history mr-1"></i>
             pending
         </span>
-      
+
           @elseif($row->payment_status == \App\Enum\BillStatus::CN_GENERATING)
         <span class="badge badge-danger py-1 px-2 green-status">
             <i class="bi bi-clock-history mr-1"></i>

@@ -13,6 +13,7 @@ use App\Jobs\SendZanMalipoSMS;
 use App\Models\BusinessTaxType;
 use App\Models\BusinessType;
 use App\Models\Investigation\TaxInvestigation;
+use App\Models\Returns\Chartered\CharteredReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
@@ -700,6 +701,11 @@ trait PaymentsTrait
 
     public function generateReturnControlNumber($return)
     {
+        if ($return->return_type === CharteredReturn::class) {
+            $this->generateCharteredControlNumber($return);
+            return;
+        }
+
         $business = $return->business;
         $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->where('business_id', $return->business_id)->firstOrFail();
         $exchange_rate = $this->getExchangeRate($return->currency);
@@ -766,118 +772,12 @@ trait PaymentsTrait
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
         }
-
-
     }
 
-    public function generateAssessmentControlNumber($assessment)
-    {
-        $taxTypes = TaxType::all();
 
-        $taxType = $assessment->taxtype;
-
-        if (!$taxType->gfs_code) {
-            $taxType = TaxType::where('code', TaxType::VERIFICATION)->first();
-        }
-
-
-        try {
-            $billitems = [];
-
-            if ($assessment->principal_amount > 0) {
-                $billitems[] = [
-                    'billable_id' => $assessment->id,
-                    'billable_type' => get_class($assessment),
-                    'use_item_ref_on_pay' => 'N',
-                    'amount' => $assessment->principal_amount,
-                    'currency' => $assessment->currency,
-                    'gfs_code' => $taxType->gfs_code,
-                    'tax_type_id' => $taxType->id
-                ];
-            }
-
-            if ($assessment->interest_amount > 0) {
-                $billitems[] = [
-                    'billable_id' => $assessment->id,
-                    'billable_type' => get_class($assessment),
-                    'use_item_ref_on_pay' => 'N',
-                    'amount' => $assessment->interest_amount,
-                    'currency' => $assessment->currency,
-                    'gfs_code' => $taxType->gfs_code,
-                    'tax_type_id' => $taxTypes->where('code', 'interest')->firstOrFail()->id
-                ];
-            }
-
-            if ($assessment->penalty_amount > 0) {
-                $billitems[] = [
-                    'billable_id' => $assessment->id,
-                    'billable_type' => get_class($assessment),
-                    'use_item_ref_on_pay' => 'N',
-                    'amount' => $assessment->penalty_amount,
-                    'currency' => $assessment->currency,
-                    'gfs_code' => $taxType->gfs_code,
-                    'tax_type_id' => $taxTypes->where('code', 'penalty')->firstOrFail()->id
-                ];
-            }
-
-            $business = $assessment->business;
-
-            $payer_type = get_class($business);
-            $payer_name = $business->name ?? $business->taxpayer_name;
-            $payer_email = $business->email;
-            $payer_phone = $business->mobile;
-            $description = "{$taxType->name} Verification Assessment for {$payer_name}";
-            $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-            $currency = $assessment->currency;
-            $createdby_type = get_class(Auth::user());
-            $createdby_id = Auth::id();
-            $exchange_rate = $this->getExchangeRate($assessment->currency);
-            $payer_id = $business->id;
-            $expire_date = Carbon::now()->addDays(30)->endOfDay();
-            $billableId = $assessment->id;
-            $billableType = get_class($assessment);
-            $taxType = $taxType->id;
-
-            $zmBill = ZmCore::createBill(
-                $billableId,
-                $billableType,
-                $taxType,
-                $payer_id,
-                $payer_type,
-                $payer_name,
-                $payer_email,
-                $payer_phone,
-                $expire_date,
-                $description,
-                $payment_option,
-                $currency,
-                $exchange_rate,
-                $createdby_id,
-                $createdby_type,
-                $billitems
-            );
-            DB::commit();
-
-            if (config('app.env') != 'local') {
-                $this->generateGeneralControlNumber($zmBill);
-            } else {
-                // We are local
-                $assessment->payment_status = ReturnStatus::CN_GENERATED;
-                $assessment->save();
-
-                // Simulate successful control no generation
-                $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-                $zmBill->zan_status = 'pending';
-                $zmBill->control_number = random_int(2000070001000, 2000070009999);
-                $zmBill->save();
-                $this->customAlert('success', 'A control number for this verification has been generated successfully');
-            }
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-        }
-    }
-
+    /**
+     * @throws \Exception
+     */
     public function generatePropertyTaxControlNumber($propertyPayment)
     {
         $taxType = TaxType::where('code', TaxType::PROPERTY_TAX)->firstOrFail();
@@ -1340,7 +1240,7 @@ trait PaymentsTrait
         $payer_name = $assesment->business->name;
         $payer_email = $taxpayer->email;
         $payer_phone = $taxpayer->mobile;
-        $description = "Tax Investigation assesment payment for {$taxType->code}";
+        $description = "Tax assesment payment for {$taxType->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = $assesment->currency;
         $createdby_type = get_class(Auth::user());
@@ -1373,7 +1273,7 @@ trait PaymentsTrait
         );
         DB::commit();
 
-        if (false) {
+        if (config('app.env') != 'local') {
             (new ZanMalipoInternalService)->createBill($zmBill);
         } else {
             // We are local
@@ -1388,85 +1288,73 @@ trait PaymentsTrait
         }
     }
 
-    public function generateLeasePartialPaymentControlNo($partialPayment)
+    public function generateCharteredControlNumber($return)
     {
-        $landLease = $partialPayment->landlease;
+        $tax_type =  $return->tax_type_id;
 
-        $taxTypes = TaxType::select('id', 'code', 'gfs_code')->where('code', 'land-lease')->first();
+        $exchange_rate = $this->getExchangeRate($return->currency);
 
-        $billitems = [
-            [
-                'billable_id' => $partialPayment->id,
-                'billable_type' => get_class($partialPayment),
-                'use_item_ref_on_pay' => 'N',
-                'amount' => roundOff($partialPayment->amount, $partialPayment->currency),
-                'currency' => $partialPayment->currency,
-                'gfs_code' => $taxTypes->gfs_code,
-                'tax_type_id' => $taxTypes->id
-            ],
-        ];
+        // Generate return control no.
+        $payer_type = get_class($return->return);
+        $payer_name = $return->return->company_name;
+        $payer_email = null;
+        $payer_phone = $return->return->mobile;
 
 
-        $taxpayer = $this->getTaxPayer($landLease)->first_name . ' ' . $this->getTaxPayer($landLease)->last_name;
-
-        if ($landLease->category == 'business') {
-            $payer_name = $landLease->businessLocation->business->name;
-            $payer_type = get_class($landLease->businessLocation->business);
-        } else {
-            $payer_name = $taxpayer;
-            $payer_type = get_class($this->getTaxPayer($landLease));
-        }
-
-        $payer_email = $this->getTaxPayer($landLease)->email;
-        $payer_phone = $this->getTaxPayer($landLease)->mobile;
-        $description = "Land Lease payment";
+        $description = "Chartered Flight Return payment for {$payer_name}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-        $currency = $partialPayment->currency;
+        $currency = $return->currency;
         $createdby_type = get_class(Auth::user());
         $createdby_id = Auth::id();
-        $exchange_rate = self::getExchangeRate($partialPayment->currency);
-        $payer_id = $this->getTaxPayer($landLease)->id;
-        $expire_date = Carbon::now()->addDays(30)->toDateTimeString(); // TODO: Recheck this date
-        $billableId = $partialPayment->id;
-        $billableType = get_class($partialPayment);
+        $payer_id = $return->return->id;
+        $expire_date = $return->curr_payment_due_date;
+        $billableId = $return->id;
+        $billableType = get_class($return);
 
-        DB::beginTransaction();
+        $billItems = $this->generateReturnBillItems($return);
 
-        $zmBill = ZmCore::createBill(
-            $billableId,
-            $billableType,
-            $taxTypes->id,
-            $payer_id,
-            $payer_type,
-            $payer_name,
-            $payer_email,
-            $payer_phone,
-            $expire_date,
-            $description,
-            $payment_option,
-            $currency,
-            $exchange_rate,
-            $createdby_id,
-            $createdby_type,
-            $billitems
-        );
+        if (count($billItems) > 0) {
+            $bill = ZmCore::createBill(
+                $billableId,
+                $billableType,
+                $tax_type,
+                $payer_id,
+                $payer_type,
+                $payer_name,
+                $payer_email,
+                $payer_phone,
+                $expire_date,
+                $description,
+                $payment_option,
+                $currency,
+                $exchange_rate,
+                $createdby_id,
+                $createdby_type,
+                $billItems
+            );
 
-        DB::commit();
-        if (false) {
-            (new ZanMalipoInternalService)->createBill($zmBill);
-        } else {
-            // We are local
-            $partialPayment->payment_status = ReturnStatus::CN_GENERATED;
-            $partialPayment->save();
+            if (config('app.env') != 'local') {
+                $sendBill = (new ZanMalipoInternalService)->createBill($bill);
+            } else {
+                // We are local
+                $return->payment_status = ReturnStatus::CN_GENERATED;
+                $return->return->status = ReturnStatus::CN_GENERATED;
+                $return->return->save();
+                $return->save();
 
-            // Simulate successful control no generation
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status = 'pending';
-            $zmBill->control_number = random_int(2000070001000, 2000070009999);
-            $zmBill->save();
+                // Simulate successful control no generation
+                $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                $bill->zan_status = 'pending';
+                $bill->control_number = random_int(2000070001000, 2000070009999);
+                $bill->save();
+
+                $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
+                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+
+                dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
+            }
         }
+
+
     }
-
 }
-
-

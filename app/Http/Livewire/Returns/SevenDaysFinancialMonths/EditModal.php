@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Returns\SevenDaysFinancialMonths;
 
 use App\Models\DualControl;
-use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\SevenDaysFinancialMonth;
 use App\Traits\DualControlActivityTrait;
@@ -27,8 +26,8 @@ class EditModal extends Component
 
     public function mount($id)
     {
-        $this->years = FinancialYear::query()->orderByDesc('id')->get();
-        $this->edited_month = SevenDaysFinancialMonth::query()->findOrFail(decrypt($id));
+        $this->years = FinancialYear::query()->select('id', 'name', 'code', 'is_approved')->orderByDesc('id')->get();
+        $this->edited_month = SevenDaysFinancialMonth::findOrFail(decrypt($id), ['id', 'name', 'due_date', 'number', 'financial_year_id', 'is_approved']);
         $this->day = (int)date('m', strtotime($this->edited_month->due_date));
         $this->month_number = $this->edited_month->number;
         $this->year = $this->edited_month->financial_year_id;
@@ -43,9 +42,9 @@ class EditModal extends Component
     public function rules()
     {
         return [
-            'year' => 'required|strip_tag',
-            'month_number' => 'required|strip_tag',
-            'day' => 'required|strip_tag'
+            'year' => 'required|int',
+            'month_number' => 'required|int',
+            'day' => 'required|int'
         ];
     }
 
@@ -53,38 +52,39 @@ class EditModal extends Component
     {
         $this->validate();
 
-        $yr = FinancialYear::query()->findOrFail($this->year);
-
-        if (Carbon::create($yr['code'], $this->month_number, $this->day)->isWeekend()) {
-            $this->customAlert('error', 'The selected day is weekend. Please choose another day');
-            return;
-        }
-
-        if ($this->edited_month->is_approved == DualControl::NOT_APPROVED) {
-            $this->customAlert('error', 'The updated module has not been approved already');
-            return;
-        }
-
-        $this->month = date('F', mktime(0, 0, 0, $this->month_number));
-        $payload = [
-            'financial_year_id' => $this->year,
-            'number' => $this->month_number,
-            'name' => $this->month,
-            'due_date' => Carbon::create($yr['code'], $this->month_number, $this->day)->endOfDay()->toDateTimeString(),
-        ];
-
-        DB::beginTransaction();
         try {
+            $year = FinancialYear::query()->findOrFail($this->year, ['id', 'code']);
+
+            if (Carbon::create($year['code'], $this->month_number, $this->day)->isWeekend()) {
+                $this->customAlert('error', 'The selected day is weekend. Please choose another day');
+                return;
+            }
+
+            if ($this->edited_month->is_approved == DualControl::NOT_APPROVED) {
+                $this->customAlert('error', 'The updated module has not been approved already');
+                return;
+            }
+
+            $this->month = date('F', mktime(0, 0, 0, $this->month_number));
+            $payload = [
+                'financial_year_id' => $this->year,
+                'number' => $this->month_number,
+                'name' => $this->month,
+                'due_date' => Carbon::create($year['code'], $this->month_number, $this->day)->endOfDay()->toDateTimeString(),
+            ];
+
+
+            DB::beginTransaction();
             $this->edited_month->update($payload);
             $this->triggerDualControl(get_class($this->edited_month), $this->edited_month->id, DualControl::EDIT, 'editing seven days financial month '.$this->edited_month->name. ' '.$this->edited_month->year->code,json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer'=>8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE);
             return redirect()->route('settings.financial-months');
 
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception);
-            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer'=>2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE);
             return redirect()->route('settings.financial-months');
         }
     }

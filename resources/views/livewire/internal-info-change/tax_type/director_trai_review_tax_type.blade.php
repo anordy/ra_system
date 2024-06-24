@@ -75,6 +75,21 @@
                         </div>
                     @endif
 
+                    @if($lumpsumPayment)
+                            <div class="col-md-5 mb-3">
+                                <span class="font-weight-bold text-uppercase">Annual Estimate</span>
+                                <p class="my-1">{{ $lumpsumPayment['annual_estimate'] ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Payment Quarters</span>
+                                <p class="my-1">{{ $lumpsumPayment['payment_quarters'] ?? '' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Currency</span>
+                                <p class="my-1">{{ $lumpsumPayment['currency'] ?? 'N/A' }}</p>
+                            </div>
+                    @endif
+
                     @if ($showLumpsumOptions === true)
                         <div class="col-md-5">
                             <div class="form-group">

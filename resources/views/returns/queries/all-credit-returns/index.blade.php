@@ -32,29 +32,31 @@
                                 </thead>
                                 <tbody>
 
-                                @foreach($hotel_returns as $index=>$return)
-                                    @if($return->total_sales == 0)
-                                        <tr>
+                                @if(!empty($hotel_returns))
+                                    @foreach($hotel_returns as $index=>$return)
+                                        @if($return->total_sales == 0)
+                                            <tr>
 
-                                            <td>{{$index + 1}}</td>
-                                            <td>{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>
-                                            <td>{{$return->business->name}}</td>
-                                            <td>{{$return->businessLocation->name}}</td>
-                                            <td>{{number_format($return->total_sales,2)}}
-                                                <strong>
-                                                    {{\App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController::getCurrency($return->business_id, $return->tax_type_id)}}
-                                                </strong>
-                                            </td>
-                                            <td>
-                                                <a href="{{route('queries.all-credit-returns.show', [encrypt($return->id), encrypt($return->tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
-                                                   data-placement="right" title="View">
-                                                    <i class="bi bi-eye-fill"></i>
-                                                    View
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                @endforeach
+                                                <td>{{$index + 1}}</td>
+                                                <td>{{$return->business->taxpayer->first_name ?? 'N/A'}} {{$return->business->taxpayer->last_name ?? 'N/A'}}</td>
+                                                <td>{{$return->business->name ?? 'N/A'}}</td>
+                                                <td>{{$return->businessLocation->name ?? 'N/A'}}</td>
+                                                <td>{{number_format($return->total_sales,2)}}
+                                                    <strong>
+                                                        {{ $return->currency ?? 'N/A'  }}
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <a href="{{route('queries.all-credit-returns.show', [encrypt($return->id), encrypt($return->tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
+                                                       data-placement="right" title="View">
+                                                        <i class="bi bi-eye-fill"></i>
+                                                        View
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @endif
                                 </tbody>
                             </table>
                         </div>
@@ -76,28 +78,30 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($stamp_duty_returns as $index=>$return)
-                                    @if($return->total_sales == 0)
-                                        <tr>
-                                            <td>{{$index + 1}}</td>
-                                            <td>{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>
-                                            <td>{{$return->business->name}}</td>
-                                            <td>{{$return->businessLocation->name}}</td>
-                                            <td>{{number_format($return->total_sales,2)}}
-                                                <strong>
-                                                    {{\App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController::getCurrency($return->business_id, $return->tax_type_id)}}
-                                                </strong>
-                                            </td>
-                                            <td>
-                                                <a href="{{route('queries.all-credit-returns.show', [encrypt($return->id), encrypt($return->tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
-                                                   data-placement="right" title="View">
-                                                    <i class="bi bi-eye-fill"></i>
-                                                    View
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                @endforeach
+                                @if(!empty($stamp_duty_returns))
+                                    @foreach($stamp_duty_returns as $index=>$return)
+                                        @if($return->total_sales == 0)
+                                            <tr>
+                                                <td>{{$index + 1}}</td>
+                                                <td>{{$return->business->taxpayer->first_name ?? 'N/A'}} {{$return->business->taxpayer->last_name ?? 'N/A'}}</td>
+                                                <td>{{$return->business->name ?? 'N/A'}}</td>
+                                                <td>{{$return->businessLocation->name ?? 'N/A'}}</td>
+                                                <td>{{number_format($return->total_sales,2)}}
+                                                    <strong>
+                                                        {{ $return->currency ?? 'N/A'  }}
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <a href="{{route('queries.all-credit-returns.show', [encrypt($return->id), encrypt($return->tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
+                                                       data-placement="right" title="View">
+                                                        <i class="bi bi-eye-fill"></i>
+                                                        View
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @endif
                                 </tbody>
                             </table>
                         </div>
@@ -119,16 +123,17 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($vat_returns as $index=>$return)
+                                @if(!empty($vat_returns))
+                                    @foreach($vat_returns as $index=>$return)
                                     @if($return->total_sales == 0)
                                         <tr>
                                             <td>{{$index + 1}}</td>
-                                            <td>{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>
-                                            <td>{{$return->business->name}}</td>
-                                            <td>{{$return->businessLocation->name}}</td>
+                                            <td>{{$return->business->taxpayer->first_name ?? 'N/A'}} {{$return->business->taxpayer->last_name ?? 'N/A'}}</td>
+                                            <td>{{$return->business->name ?? 'N/A'}}</td>
+                                            <td>{{$return->businessLocation->name ?? 'N/A'}}</td>
                                             <td>{{number_format($return->total_sales,2)}}
                                                 <strong>
-                                                    {{\App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController::getCurrency($return->business_id, $return->tax_type_id)}}
+                                                    {{ $return->currency ?? 'N/A'  }}
                                                 </strong>
                                             </td>
                                             <td>
@@ -141,6 +146,7 @@
                                         </tr>
                                     @endif
                                 @endforeach
+                                @endif
                                 </tbody>
                             </table>
                         </div>

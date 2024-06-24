@@ -10,14 +10,14 @@
     </div>
     <div class="card rounded-0">
         <div class="card-header bg-white font-weight-bold text-uppercase">
-            {{ $return->taxtype->name }} Tax Returns Details for
-            {{ $return->financialMonth->name }},
-            {{ $return->financialMonth->year->code }}
+            {{ $return->taxtype->name ?? 'N/A' }} Tax Returns Details for
+            {{ $return->financialMonth->name ?? 'N/A' }},
+            {{ $return->financialMonth->year->code ?? 'N/A' }}
         </div>
         <div class="card-body">
             <h6 class="text-uppercase mt-2 ml-2"></h6>
             <div>
-                <ul  class="nav nav-tabs" id="myTab" role="tablist">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab"
                             aria-controls="home" aria-selected="true">Business Details</a>
@@ -32,21 +32,21 @@
                     </li>
 
                 </ul>
-                <div  class="tab-content" id="myTabContent">
+                <div class="tab-content" id="myTabContent">
 
                     <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
                         <div class="row m-2 pt-3">
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Tax Type</span>
-                                <p class="my-1">{{ $return->taxtype->name }}</p>
+                                <p class="my-1">{{ $return->taxtype->name ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Tax Payer Name</span>
-                                <p class="my-1">{{ $return->business->taxpayer->first_name.' '. $return->business->taxpayer->middle_name.' '.$return->business->taxpayer->last_name }}</p>
+                                <p class="my-1">{{ $return->business->taxpayer->full_name ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Business Name</span>
-                                <p class="my-1">{{ $return->business->name }}</p>
+                                <p class="my-1">{{ $return->business->name ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Business Location</span>
@@ -54,27 +54,27 @@
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">TIN No</span>
-                                <p class="my-1">{{ $return->business->tin }}</p>
+                                <p class="my-1">{{ $return->business->tin ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Mobile</span>
-                                <p class="my-1">{{ $return->business->mobile }}</p>
+                                <p class="my-1">{{ $return->business->mobile ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Email</span>
-                                <p class="my-1">{{ $return->business->email }}</p>
+                                <p class="my-1">{{ $return->business->email ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Business Type</span>
-                                <p class="my-1">{{ $return->business->business_type }}</p>
+                                <p class="my-1">{{ $return->business->business_type ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <span class="font-weight-bold text-uppercase">Filled By</span>
-                                <p class="my-1">{{ $return->taxpayer->first_name.' ' .$return->taxpayer->middle_name.' ' .$return->taxpayer->last_name}}</p>
+                                <span class="font-weight-bold text-uppercase">Filed By</span>
+                                <p class="my-1">{{ $return->taxpayer->full_name ?? 'N/A'}}</p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Return Month</span>
-                                <p class="my-1">{{$return->financialMonth->name}} {{ $return->financialYear->code }}</p>
+                                <p class="my-1">{{$return->financialMonth->name ?? 'N/A'}} {{ $return->financialYear->code ?? 'N/A' }}</p>
                             </div>
 
                             <div class="col-md-3 mb-3">
@@ -85,20 +85,20 @@
                                 <span class="font-weight-bold text-uppercase">Return Application Status</span>
                                 <p class="my-1">
                                     @if($return->application_status == \App\Enum\ReturnApplicationStatus::SUBMITTED)
-                                        <span class="badge badge-success py-1 px-2 green-status"><i
+                                        <span class="badge badge-success py-1 px-2"><i
                                                     class="bi bi-check-circle-fill mr-1"></i>
                                             Submitted
                                         </span>
 
                                     @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::ADJUSTED)
-                                        <span class="badge badge-danger py-1 px-2 green-status"><i
+                                        <span class="badge badge-danger py-1 px-2"><i
                                                     class="bi bi-check-circle-fill mr-1"></i>
                                             Adjusted
                                         </span>
                                     @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::SELF_ASSESSMENT)
-                                        <span class="badge badge-success py-1 px-2 green-status"><i
+                                        <span class="badge badge-success py-1 px-2"><i
                                                     class="bi bi-check-circle-fill mr-1"></i>
-                                            self Assessment
+                                            Self Assessment
                                         </span>
                                     @endif
                                 </p>
@@ -111,7 +111,7 @@
                     <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
                         <div class="row mt-3">
                             <div class="col-md-12">
-                                <table class="table table-bordered table-striped normal-text">
+                                <table class="table table-bordered table-responsive table-striped normal-text">
                                     <thead>
                                         <th>Item Name</th>
                                         <th>Value</th>
@@ -119,6 +119,7 @@
                                         <th>Tax</th>
                                     </thead>
                                     <tbody>
+                                    @if(!empty($return->items))
                                         @foreach ($return->items as $item)
                                             <tr>
                                                 <td>{{ $item->config->name }}</td>
@@ -128,6 +129,7 @@
                                                 <td>{{ number_format($item->vat, 2) }}</td>
                                             </tr>
                                         @endforeach
+                                    @endif
                                     </tbody>
                                 </table>
                             </div>

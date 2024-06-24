@@ -19,6 +19,8 @@ class BusinessInvestigationAddModal extends Component
 
     use CustomAlert;
 
+    public $query;
+    public $highlightIndex;
     public $name;
     public $description;
     public $business;
@@ -50,14 +52,51 @@ class BusinessInvestigationAddModal extends Component
         ];
     }
 
+
+
+    public function resetFields() {
+        $this->query = '';
+        $this->business = [];
+        $this->highlightIndex = 0;
+    }
+
+    public function incrementHighlight() {
+        if ($this->highlightIndex === count($this->business) - 1) {
+            $this->highlightIndex = 0;
+            return;
+        }
+        $this->highlightIndex++;
+    }
+
+    public function decrementHighlight() {
+        if ($this->highlightIndex === 0) {
+            $this->highlightIndex = count($this->business) - 1;
+            return;
+        }
+        $this->highlightIndex--;
+    }
+
+    public function updatedQuery() {
+        $this->business = Business::query()->select('id', 'name', 'ztn_number')
+            ->where('name', 'like', '%' . $this->query . '%')
+            ->orWhere('ztn_number', 'like', '%' . $this->query . '%')
+            ->get()
+            ->toArray();
+    }
+
     public function mount($jsonData = null)
     {
-        $this->business = Business::select('id', 'name', 'ztn_number')->get();
+        $this->resetFields();
         if (isset($jsonData)) {
             $this->business_id = $jsonData['business_id'];
             $this->businessChange($this->business_id);
             $this->location_ids[] = $jsonData['location_ids'];
         }
+    }
+
+
+    public function selectBusiness() {
+        $this->selectedBusiness = $this->contacts[$this->highlightIndex] ?? null;
     }
 
     public function businessChange($id)

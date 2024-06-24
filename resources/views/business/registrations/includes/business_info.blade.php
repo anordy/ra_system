@@ -189,10 +189,21 @@
                     <span class="font-weight-bold text-uppercase">Tax Types</span>
                     <p class="my-1">
                         @foreach ($business->taxTypes as $type)
-                            {{ $type->name }};
+                            {{ $type->name }} ({{ $type->pivot->currency ?? 'N/A' }});
                         @endforeach
                     </p>
                 </div>
+
+                @if($business->lumpsumPayment)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Lumpsum Annual Estimate</span>
+                        <p class="my-1">{{ number_format($business->lumpsumPayment->annual_estimate, 2) ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Payment Quarters</span>
+                        <p class="my-1">{{ $business->lumpsumPayment->payment_quarters ?? 'N/A' }}</p>
+                    </div>
+                @endif
 
                 @if ($business->isici)
                     <div class="col-md-4 mb-3">
@@ -688,13 +699,13 @@
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Registration No</span>
                             <p class="my-1">{{ $hotel->business_reg_no }}</p>
-                        </div> 
+                        </div>
                     @endif
                     @if ($hotel->old_business_reg_no)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Old Business Registration No</span>
                         <p class="my-1">{{ $hotel->old_business_reg_no }}</p>
-                    </div> 
+                    </div>
                 @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Hotel Location</span>
@@ -742,10 +753,10 @@
                 @foreach ($business->files as $file)
                     <div class="col-md-4">
                         <a class="file-item" target="_blank"
-                            href="{{ route('business.file', encrypt($file->id)) }}">
+                            href="{{ route("business.file", encrypt($file->id)) }}">
                             <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <div class="ml-1 font-weight-bold">
-                                {{ $file->type->name ?? 'N/A' }}
+                                {{ $file->type->name ?? "N/A" }}
                                 @if ($file->type->short_name === \App\Models\BusinessFileType::TIN)
                                     - {{ $file->taxpayer->full_name }} (<b>{{ $file->taxpayer->reference_no }}</b>)
                                 @endif
@@ -759,7 +770,7 @@
                             <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
                                 <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                 <a target="_blank"
-                                    href="{{ route('business.tin.file', encrypt($partner->taxpayer_id)) }}"
+                                    href="{{ route("business.tin.file", encrypt($partner->taxpayer_id)) }}"
                                     class="ml-1 font-weight-bold">
                                     TIN Certificate - {{ $partner->taxpayer->full_name }}
                                     (<b>{{ $partner->taxpayer->reference_no }}</b>)
@@ -800,7 +811,7 @@
                             <span class="font-weight-bold text-uppercase">Business Name</span>
                             <p class="my-1">{{ $business->name }}</p>
                         </div>
-            
+
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Status</span>
                             @if ($business->bpra_verification_status === \App\Models\BusinessStatus::PENDING)
@@ -826,7 +837,7 @@
                                 </p>
                             @endif
                         </div>
-                
+
                     </div>
                 </div>
                 <table class="table table-striped table-sm table-bordered">

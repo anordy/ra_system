@@ -135,7 +135,6 @@ class TaxAuditApprovalProcessing extends Component
         $this->auditDocuments = DB::table('tax_audit_files')->where('tax_audit_id', $this->modelId)->get();
         $this->auditDocuments = json_decode($this->auditDocuments, true);
 
-
         if ($this->checkTransition('prepare_final_report')) {
             $this->audit = TaxAudit::find($this->modelId);
 
@@ -169,7 +168,6 @@ class TaxAuditApprovalProcessing extends Component
                 $this->forwardToCG = true;
             }
         }
-
 
         if ($this->task != null) {
             $operators = json_decode($this->task->operators);

@@ -49,7 +49,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">ZTN Number</span>
-                    <p class="my-1">{{ $waiver->debt->business->ztn_number ?? 'N/A' }}</p>
+                    <p class="my-1">{{ $waiver->debt->business->ztn_number ?? "N/A" }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Name</span>

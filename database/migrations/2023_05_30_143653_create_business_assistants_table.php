@@ -16,11 +16,11 @@ class CreateBusinessAssistantsTable extends Migration
     {
         Schema::create('business_assistants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('taxpayer_id');
+            $table->unsignedBigInteger('business_id')->index();
+            $table->unsignedBigInteger('taxpayer_id')->index();
             $table->string('added_by_type');
             $table->unsignedBigInteger('added_by_id');
-            $table->enum('status', AssistantStatus::getConstants());
+            $table->enum('status', AssistantStatus::getConstants())->index();
             $table->string('agreement_attachment')->nullable();
             $table->dateTime('assigned_at');
             $table->softDeletes();
