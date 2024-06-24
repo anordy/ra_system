@@ -400,7 +400,7 @@ class ApprovalProcessing extends Component
                 }
                 
                 // If Z-Number has been verified we have business units
-                if ($this->subject->previous_zno) {
+                if ($this->subject->previous_zno && $this->subject->hasVfmsRegistration) {
                     if ($this->subject->znumber_verified_at){
                         DB::table('vfms_business_units')->where('business_id', $this->subject->id)
                             ->update(['location_id' => $location->id]);

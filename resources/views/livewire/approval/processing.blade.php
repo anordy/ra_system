@@ -8,7 +8,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    @if ($subject->previous_zno)
+                    @if ($subject->previous_zno && $subject->hasVfmsRegistration)
                         <div class="card-header font-weight-bold">
                             ZNUMBER Verification
                         </div>
