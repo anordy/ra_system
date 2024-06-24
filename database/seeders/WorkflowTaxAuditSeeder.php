@@ -234,16 +234,11 @@ class WorkflowTaxAuditSeeder extends Seeder
             ],
         ];
 
-        // Check if a record exists with the TAX_AUDIT code
-        $existingWorkflow = Workflow::where('code', 'TAX_AUDIT')->get();
-
-        if ($existingWorkflow) {
-            // Delete all found records
-            foreach ($existingWorkflow as $workflow) {
-                $workflow->delete();
-            }
-        }
-        Workflow::updateOrCreate([
+        Workflow::updateOrCreate(
+            [
+                'code' => 'TAX_AUDIT',
+            ],
+            [
             'code' => 'TAX_AUDIT',
             'summary' => 'Tax audit workflow',
             'name' => $name,
