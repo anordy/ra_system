@@ -32,10 +32,7 @@
                     <td>{{ $offence->currency }}</td>
                     <td>{{ $offence->taxTypes->name }}</td>
                     <td>
-                           <span class="badge badge-info py-1 px-2">
-                                <i class="bi bi-clock-history mr-1"></i>
-                                {{ $offence->status }}
-                            </span>
+                        @include('livewire.offence.includes.status')
                     </td>
                     <td>
                         <a href="{{ route('debts.offence.show', ['offence'=> encrypt($offence->id)]) }}" class="btn btn-outline-info btn-sm">

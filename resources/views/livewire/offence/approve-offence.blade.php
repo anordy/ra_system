@@ -18,7 +18,7 @@
             <button class="btn btn-primary rounded-0" wire:click="submit" wire:loading.attr="disable">
                 <i class="bi bi-arrow-return-right mr-2" wire:loading.remove wire:target="submit"></i>
                 <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading wire:target="submit"></i>
-                {{ __('Submt') }}
+                {{ __('Submit') }}
             </button>
         </div>
     </div>
