@@ -123,7 +123,7 @@
 
     <div class="text-center">
         <table class="no-border">
-            <td align="left" style="width: 30%">
+            <td align="left">
                 <div style="font-size: 12px">
                     {{ $addressInfo['institutionName'] ?? 'N/A'  }}, <br>
                     {{ $addressInfo['operatingOffice'] ?? 'N/A'  }}, <br>
@@ -138,7 +138,7 @@
                 <img class="header-nembo" src="{{ public_path('/images/logo.png') }}" alt="ZRA Logo">
                 <div style="font-size: 12px">{{ $addressInfo['institutionWebsite'] ?? 'N/A'  }}</div>
             </td>
-            <td align="right" style="width: 30%">
+            <td align="right">
                 <div style="text-align: left; font-size: 12px;">
                     {{ $addressInfo['institutionName'] ?? 'N/A'  }}, <br>
                     {{ $addressInfo['operatingOffice'] ?? 'N/A'  }}, <br>

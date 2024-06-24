@@ -94,12 +94,12 @@ class SevenDaysFinancialMonthsTable extends DataTableComponent
                     $value = "'".encrypt($value)."'";
                     if (Gate::allows('setting-user-edit') && $this->canDualControl) {
                         $edit = <<< HTML
-                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
                                 HTML;
                     }
                     if ($this->today == $value && approvalLevel(Auth::user()->level_id, 'Maker')) {
                         $extend = <<< HTML
-                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.extend-month-modal',$value)"><i class="fa fa-edit mr-1"></i>Extend</button>
+                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.extend-month-modal',$value)"><i class="bi bi-pencil-square mr-1"></i>Extend</button>
                 HTML;
                     }
                     return $edit . $extend;

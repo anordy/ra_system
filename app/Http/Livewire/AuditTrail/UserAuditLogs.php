@@ -61,7 +61,7 @@ class UserAuditLogs extends DataTableComponent
                     if(Gate::allows('system-audit-trail-view')) {
                         $value = "'".encrypt($value)."'";
                         return <<< HTML
-                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'audit-view-modal',$value)"><i class="fa fa-eye"></i> </button>
+                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'audit-view-modal',$value)"><i class="bi bi-eye-fill"></i> </button>
                         HTML;
                     }
                 })

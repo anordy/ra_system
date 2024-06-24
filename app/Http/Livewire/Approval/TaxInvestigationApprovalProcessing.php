@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxInvestigationStatus;
+use App\Enum\TransactionType;
 use App\Models\CaseStage;
 use App\Models\Investigation\TaxInvestigationOfficer;
 use App\Models\LegalCase;
@@ -14,6 +15,7 @@ use App\Models\User;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -28,7 +30,7 @@ use Livewire\WithFileUploads;
 
 class TaxInvestigationApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait, TaxpayerLedgerTrait;
     public $modelId;
     public $modelName;
     public $comments;
@@ -276,6 +278,10 @@ class TaxInvestigationApprovalProcessing extends Component
                     'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
                     'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
                 ]);
+                $assessment = $this->subject->assessment;
+                // Add ledger recording
+                $this->recordLedger(TransactionType::DEBIT,TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
+
             }
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

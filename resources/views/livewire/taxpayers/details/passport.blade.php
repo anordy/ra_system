@@ -30,10 +30,10 @@
                 <table class="table table-striped table-sm">
                     <label class="font-weight-bold text-uppercase">Immigration Data Verification</label>
                     <thead>
-                        <th style="width: 37%">Property</th>
-                        <th style="width: 37%">Provided Data</th>
-                        <th style="width: 18%">Immigration Data</th>
-                        <th style="width: 8%">Status</th>
+                        <th>Property</th>
+                        <th>Provided Data</th>
+                        <th>Immigration Data</th>
+                        <th>Status</th>
                     </thead>
                     <tbody>
                         <tr>

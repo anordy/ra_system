@@ -21,17 +21,15 @@ class FlightReturnsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['financial_month_id', 'business_location_id']);
+        $this->setAdditionalSelects(['financial_month_id', 'business_location_id', 'company_name', 'currency']);
     }
 
     public function builder(): Builder
     {
         $tax = TaxType::select('id')->where('code', TaxType::CHARTERED_FLIGHT)->first();
 
-        return CharteredReturn::query()
-            ->with('business', 'businessLocation')
-            ->where('chartered_returns.tax_type_id', $tax->id)
-            ->orderBy('chartered_returns.created_at', 'DESC');
+        return CharteredReturn::with('business', 'businessLocation')
+            ->where('chartered_returns.tax_type_id', $tax->id);
 
     }
 
@@ -39,25 +37,22 @@ class FlightReturnsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make(__('Control Number'))
-                ->sortable()
-                ->searchable()
-                ->label(function ($row) {
-                    return $row->tax_return->latestBill->control_number ?? 'N/A';
-                }),
             Column::make(__('Business Name'), 'business.name')
                 ->sortable()
-                ->searchable(),
-            Column::make(__('Branch / Location'))
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return $value ?? $row->company_name;
+                }),
+            Column::make(__('Branch / Location'), 'business_id')
                 ->sortable()
                 ->searchable()
                 ->label(function ($row) {
-                    return $row->businessLocation->name ?? $row->company_name;
+                    return $row->businessLocation->name ?? '';
                 }),
             Column::make(__('Total Tax'), 'total_amount_due_with_penalties')
                 ->sortable()
                 ->format(function ($value, $row) {
-                    return number_format($value, 2);
+                    return $row->currency .' '. number_format($value, 2);
                 })
                 ->searchable(),
             Column::make(__('Date'), 'created_at')

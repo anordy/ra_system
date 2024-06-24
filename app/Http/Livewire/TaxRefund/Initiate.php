@@ -108,15 +108,15 @@ class Initiate extends Component
             }
             DB::commit();
 
-            if ($taxRefund->businessLocation) {
-                // Send Notification to Taxpayer
-                event(new SendSms(SendCustomSMS::SERVICE, NULL,
-                    [
-                        'phone' => $taxRefund->businessLocation->business->mobile,
-                        'message' => "Hello {$taxRefund->businessLocation->name}, your tax refund has been approved"
-                    ]
-                ));
-            }
+           if ($taxRefund->businessLocation) {
+               // Send Notification to Taxpayer
+               event(new SendSms(SendCustomSMS::SERVICE, NULL,
+                   [
+                       'phone' => $taxRefund->businessLocation->mobile,
+                       'message' => "Tax refund received"
+                   ]
+               ));
+           }
 
 
             $this->customAlert('success', 'Refund added successfully');

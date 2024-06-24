@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BusinessLocation;
 use App\Models\MvrDeregistration;
 use App\Models\TaxAgent;
+use App\Models\TaxClearanceRequest;
 use App\Models\TaxType;
 use App\Models\WithholdingAgent;
 use App\Models\ZmBill;
@@ -48,6 +49,25 @@ class QRCodeCheckController extends Controller
             'Location'      => $location->street->name.', '. $location->district->name.', '. $location->region->name,
         ];
          
+        return view('qr-check.index', ['code' => $code]);
+    }
+
+    public function taxClearanceCertificate($clearanceId)
+    {
+        $clearanceId = base64_decode($clearanceId);
+        $taxClearanceRequestId = decrypt($clearanceId);
+        $taxClearanceRequest = TaxClearanceRequest::findOrFail($taxClearanceRequestId);
+        $location = $taxClearanceRequest->businessLocation;
+        if (!$location) {
+            return view('qr-check.error');
+        }
+
+        $code = [
+            'ZIN'           => $location->zin,
+            'Business Name' => $location->business->name,
+            'Location'      => $location->street->name.', '. $location->district->name.', '. $location->region->name,
+        ];
+
         return view('qr-check.index', ['code' => $code]);
     }
     

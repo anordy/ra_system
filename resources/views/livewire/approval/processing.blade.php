@@ -27,8 +27,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card-body mt-0 p-2 px-0">
-                                            <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist"
-                                                style="margin-bottom: 0;">
+                                            <ul class="nav nav-tabs shadow-sm mb-0" id="myTab" role="tablist">
                                                 <li class="nav-item" role="presentation">
                                                     <a class="nav-link active" id="directors-tab" data-toggle="tab"
                                                         href="#directors" role="tab" aria-controls="directors"
@@ -55,11 +54,11 @@
                                                             <label
                                                                 class="font-weight-bold text-uppercase mt-2">Directors</label>
                                                             <thead>
-                                                                <th style="width: 29%">Name</th>
-                                                                <th style="width: 16%">Phone</th>
-                                                                <th style="width: 10%">Email</th>
-                                                                <th style="width: 20%">Gender</th>
-                                                                <th style="width: 25%">Location</th>
+                                                                <th >Name</th>
+                                                                <th >Phone</th>
+                                                                <th>Email</th>
+                                                                <th>Gender</th>
+                                                                <th>Location</th>
                                                             </thead>
                                                             <tbody>
                                                                 @if (count($directors) > 0)
@@ -113,11 +112,11 @@
                                                             <label
                                                                 class="font-weight-bold text-uppercase mt-2">Shareholders</label>
                                                             <thead>
-                                                                <th style="width: 29%">Name</th>
-                                                                <th style="width: 16%">Phone</th>
-                                                                <th style="width: 10%">Email</th>
-                                                                <th style="width: 20%">Gender</th>
-                                                                <th style="width: 25%">Location</th>
+                                                                <th >Name</th>
+                                                                <th >Phone</th>
+                                                                <th>Email</th>
+                                                                <th>Gender</th>
+                                                                <th>Location</th>
                                                             </thead>
                                                             <tbody>
                                                                 @if (count($shareholders) > 0)
@@ -173,11 +172,11 @@
                                                             <label class="font-weight-bold text-uppercase mt-2">Shares &
                                                                 Distribution</label>
                                                             <thead>
-                                                                <th style="width: 30%">Ower Name</th>
-                                                                <th style="width: 14%">No Of Shares</th>
-                                                                <th style="width: 5%">Currency</th>
-                                                                <th style="width: 23%">Shares Taken</th>
-                                                                <th style="width: 23%">Shares Paid</th>
+                                                                <th>Ower Name</th>
+                                                                <th>No Of Shares</th>
+                                                                <th>Currency</th>
+                                                                <th>Shares Taken</th>
+                                                                <th>Shares Paid</th>
                                                             </thead>
                                                             <tbody>
                                                                 @if (count($shares) > 0)
@@ -236,7 +235,6 @@
             @if ($this->checkTransition('registration_officer_review'))
                 @include('livewire.approval.registration_officer_review')
             @endif
-            @include('livewire.approval.transitions')
             <div class="row mx-1">
                 <div class="col-md-12 mb-2">
                     <div class="form-group">

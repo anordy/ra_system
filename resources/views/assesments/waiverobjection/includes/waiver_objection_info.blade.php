@@ -2,7 +2,7 @@
     <livewire:approval.approval-waiver-objection-processing modelName='App\Models\WaiverObjection'
         modelId="{{ encrypt($waiverObjection->id) }}" />
 @endif
-<ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+<ul class="nav nav-tabs shadow-sm mb-0">
     <li class="nav-item" role="presentation">
         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
             aria-selected="true">Complainant</a>
@@ -161,11 +161,10 @@
         <div class="row m-2 pt-3">
             @foreach ($files as $file)
                 <div class="col-md-3">
-                    <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                        class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                    <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                         <a target="_blank" href="{{ route('assesments.waiver.files', encrypt($file['file_path'])) }}"
-                            style="font-weight: 500;" class="ml-1">
+                            class="ml-1 font-weight-bold">
                             {{ $file['file_name'] }}
                             <i class="bi bi-arrow-up-right-square ml-1"></i>
                         </a>
@@ -227,12 +226,11 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3">
-                    <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                        class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                    <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                         <a target="_blank"
                             href="{{ route('assesments.waiver.files', encrypt($waiverObjection->objection_report)) }}"
-                            style="font-weight: 500;" class="ml-1">
+                            class="ml-1 font-weight-bold">
                             Waiver Report
                             <i class="bi bi-arrow-up-right-square ml-1"></i>
                         </a>
@@ -242,12 +240,11 @@
 
                 @if ($waiverObjection->notice_report)
                     <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
                                 href="{{ route('assesments.waiver.files', encrypt($waiverObjection->notice_report)) }}"
-                                style="font-weight: 500;" class="ml-1">
+                                class="ml-1 font-weight-bold">
                                 Notice Report
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>
@@ -258,12 +255,11 @@
 
                 @if ($waiverObjection->setting_report)
                     <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
                                 href="{{ route('assesments.waiver.files', encrypt($waiverObjection->setting_report)) }}"
-                                style="font-weight: 500;" class="ml-1">
+                                class="ml-1 font-weight-bold">
                                 Setting Report
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>

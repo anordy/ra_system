@@ -1,30 +1,30 @@
 <div>
     <table class="table table-striped table-lg">
         <thead>
-            <th style="width: 30%">From Tax Type</th>
-            <th style="width: 50%">To Tax Type</th>
-            <th style="width: 20%">Status</th>
+            <th>From Tax Type</th>
+            <th>To Tax Type</th>
+            <th>Status</th>
         </thead>
         <tbody>
             <tr>
                 <td>
-                    <span style="font-size: 13px">{{ $taxchange->fromTax->name }} -
+                    <span>{{ $taxchange->fromTax->name }} -
                         {{ $taxchange->from_tax_type_currency ?? '' }}</span><br>
                 </td>
                 <td>
                     @if ($taxchange->toTax->code == 'vat')
                         {{ $taxchange->subvat ? $taxchange->subvat->name : 'SUBVAT_NOTSET_ERR' }}
                     @else
-                    <span style="font-size: 13px">{{ $taxchange->toTax->name }} -
+                    <span>{{ $taxchange->toTax->name }} -
                         {{ $taxchange->to_tax_type_currency ?? '' }}</span><br>
                     @endif
 
                 </td>
                 <td class="@if ($taxchange->from_tax_type_id != $taxchange->to_tax_type_id) table-success @endif">
                     @if ($taxchange->from_tax_type_id == $taxchange->to_tax_type_id)
-                        <span style="font-size: 13px">Unchanged</span><br>
+                        <span>Unchanged</span><br>
                     @else
-                        <span style="font-size: 13px">Changed</span><br>
+                        <span>Changed</span><br>
                     @endif
                 </td>
             </tr>
@@ -34,25 +34,25 @@
     <table class="table table-lg mt-2">
         <tbody>
             <tr>
-                <th style="width: 30%">Reason for Changing Tax Type:</th>
+                <th>Reason for Changing Tax Type:</th>
                 <td>{{ $taxchange->reason }}</td>
             </tr>
             <tr>
-                <th style="width: 30%">Status</th>
+                <th>Status</th>
                 <td>{{ $taxchange->status }}</td>
             </tr>
             @if ($taxchange->effective_date)
                 <tr>
-                    <th style="width: 30%">Effective Date</th>
+                    <th>Effective Date</th>
                     <td>{{ $taxchange->effective_date->toFormattedDateString() }}</td>
                 </tr>
             @endif
             <tr>
-                <th style="width: 30%">Request By</th>
+                <th>Request By</th>
                 <td>{{ $taxchange->taxpayer->full_name }}</td>
             </tr>
             <tr>
-                <th style="width: 30%">Request Date</th>
+                <th>Request Date</th>
                 <td>{{ $taxchange->created_at->toFormattedDateString() }}</td>
             </tr>
         </tbody>

@@ -11,11 +11,11 @@
                 @can('mvr_approve_registration_change')
                 @if($change_req->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_PENDING_APPROVAL)
                     <a href="{{route('mvr.reg-change-requests.approve',encrypt($change_req->id))}}">
-                        <button class="btn btn-info btn-sm"><i class="fa fa-check"></i>Approve</button>
+                        <button class="btn btn-info btn-sm"><i class="bi bi-check-circle-fill"></i>Approve</button>
                     </a>
                         <a href="{{route('mvr.transfer-ownership.reject',encrypt($change_req->id))}}">
                             <button class="btn btn-danger btn-sm">
-                                <i class="fa fa-times"></i> Reject
+                                <i class="bi bi-x-circle-fill"></i> Reject
                             </button>
                         </a>
                 @endif

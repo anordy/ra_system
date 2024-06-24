@@ -99,8 +99,7 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Vetting Status</span>
-                            <p class="my-1"> <span class="p-2 badge badge-warning"
-                                style="border-radius: 1rem; background: #d1dc3559; color: #474704; font-size: 100%; padding:3%">
+                            <p class="my-1"> <span class="p-2 badge badge-warning">
                                 {{ $return->vetting_status }}
                             </span></p>
                         </div>

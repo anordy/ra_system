@@ -59,7 +59,7 @@
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Assigned Officer</span>
                             <p class="my-1">{{ !empty($case->assiged_officer)? $case->assiged_officer->fullname() : 'N/A'  }}</p>
-                            <button class="btn btn-sm btn-primary mt-2"  onclick="Livewire.emit('showModal', 'cases.assign-officer-model',{{$case->id}})"><i class="fa fa-plus"></i>
+                            <button class="btn btn-sm btn-primary mt-2"  onclick="Livewire.emit('showModal', 'cases.assign-officer-model',{{$case->id}})"><i class="bi bi-plus-circle-fill"></i>
                                 {{!empty($case->assiged_officer)? 'Re-assign officer':'Assign officer'}}
                             </button>
                         </div>
@@ -78,12 +78,12 @@
                     <div class="modal-footer">
                         @if($case->assigned_officer_id == auth()->user()->id)
                             <button class="btn btn-sm btn-primary mt-2"
-                                    onclick="Livewire.emit('showModal', 'cases.add-proceeding-model',{{$case->id}})"><i class="fa fa-plus"></i>
+                                    onclick="Livewire.emit('showModal', 'cases.add-proceeding-model',{{$case->id}})"><i class="bi bi-plus-circle-fill"></i>
                                 Add Proceeding
                             </button>
 
                             <button class="btn btn-sm btn-primary mt-2"
-                                    onclick="Livewire.emit('showModal', 'cases.close-case-model',{{$case->id}})"><i class="fa fa-cancel"></i>
+                                    onclick="Livewire.emit('showModal', 'cases.close-case-model',{{$case->id}})"><i class="bi bi-x-circle-fill"></i>
                                 Close Case
                             </button>
                         @endif
@@ -129,12 +129,12 @@
                     <div class="modal-footer">
                         @if(\App\Models\CaseAppeal::query()->where(['case_id'=>$case->id])->whereNull('case_outcome_id')->exists())
                             <button class="btn btn-sm btn-primary mt-2"
-                                    onclick="Livewire.emit('showModal', 'cases.close-appeal-model',{{\App\Models\CaseAppeal::query()->where(['case_id'=>$case->id])->whereNull('case_outcome_id')->first()->id}})"><i class="fa fa-cross"></i>
+                                    onclick="Livewire.emit('showModal', 'cases.close-appeal-model',{{\App\Models\CaseAppeal::query()->where(['case_id'=>$case->id])->whereNull('case_outcome_id')->first()->id}})"><i class="bi bi-x-circle-fill"></i>
                                 Close Appeal
                             </button>
                         @else
                             <button class="btn btn-sm btn-primary mt-2"
-                                    onclick="Livewire.emit('showModal', 'cases.add-appeal-model',{{$case->id}})"><i class="fa fa-plus"></i>
+                                    onclick="Livewire.emit('showModal', 'cases.add-appeal-model',{{$case->id}})"><i class="bi bi-plus-circle-fill"></i>
                                 Add Appeal
                             </button>
                         @endif

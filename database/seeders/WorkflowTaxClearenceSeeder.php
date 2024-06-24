@@ -28,6 +28,11 @@ class WorkflowTaxClearenceSeeder extends Seeder
                 'operator_type' => 'user',
                 'operators' => [],
             ],
+            'officer' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2, 3],
+            ],
             'crdm_manager' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -47,6 +52,16 @@ class WorkflowTaxClearenceSeeder extends Seeder
         $transitions = [
             'application_submitted' => [
                 'from' => 'apply',
+                'to' => 'officer',
+                'condition' => '',
+            ],
+            'officer_reject' => [
+                'from' => 'officer',
+                'to' => 'rejected',
+                'condition' => '',
+            ],
+            'officer_review' => [
+                'from' => 'officer',
                 'to' => 'crdm_manager',
                 'condition' => '',
             ],

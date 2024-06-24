@@ -10,7 +10,7 @@
                         VAT Tax Type
                     @endif for {{$this->return['business']['name']}} business</h6>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
-                            class="fa fa-times-circle"></i></button>
+                            class="bi bi-x-circle-fill"></i></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-danger">

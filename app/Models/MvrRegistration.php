@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\Tra\ChassisNumber;
 use App\Models\Tra\Tin;
 use App\Traits\WorkflowTrait;
@@ -59,6 +60,11 @@ class MvrRegistration extends Model
     public function latestBill()
     {
         return $this->morphOne(ZmBill::class, 'billable')->latest();
+    }
+
+    public function ledger()
+    {
+        return $this->morphOne(TaxpayerLedger::class, 'source');
     }
 
     public static function getNexPlateNumber(mixed $regType, $class): mixed

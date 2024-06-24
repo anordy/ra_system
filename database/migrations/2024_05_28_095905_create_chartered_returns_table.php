@@ -2,8 +2,8 @@
 
 use App\Enum\ReturnApplicationStatus;
 use App\Enum\ReturnCategory;
-use App\Enum\ReturnStatus;
 use App\Enum\VettingStatus;
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -27,6 +27,7 @@ class CreateCharteredReturnsTable extends Migration
             $table->string('financial_month_id');
             $table->enum('currency', ['TZS', 'USD']);
             $table->string('chartered_type');
+            $table->string('mobile')->nullable();
             $table->string('manifest_path')->nullable();
             $table->unsignedBigInteger('tax_type_id');
             $table->integer('edited_count')->default(0);

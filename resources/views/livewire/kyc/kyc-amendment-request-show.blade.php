@@ -21,10 +21,10 @@
                     </div>
 
                     <thead>
-                    <th style="width: 20%">Property</th>
-                    <th style="width: 30%">Old Values</th>
-                    <th style="width: 30%">New Values</th>
-                    <th style="width: 20%">Status</th>
+                    <th>Property</th>
+                    <th>Old Values</th>
+                    <th>New Values</th>
+                    <th>Status</th>
                     </thead>
                     <tbody>
                     <tr>

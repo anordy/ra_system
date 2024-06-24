@@ -8,7 +8,7 @@
              List Of Offences
             <div class="card-tools">
                 <a href="{{route('rio.register.create')}}">
-                    <button class="btn btn-info btn-sm"><i class="fa fa-plus-circle"></i>New Offence</button>
+                    <button class="btn btn-info btn-sm"><i class="bi bi-plus-circle-fill"></i>New Offence</button>
                 </a>
             </div>
         </div>

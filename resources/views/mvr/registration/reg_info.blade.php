@@ -1,6 +1,6 @@
 <div class="card mt-3">
     <div class="card-header font-weight-bold bg-white">
-        Registration Information - {{ $reg->chassis->chassis_number  }}
+        Registration Information - {{ $reg->chassis->chassis_number ?? 'N/A'  }}
     </div>
     <div class="card-body">
         <div class="row my-2">
@@ -71,7 +71,7 @@
                 <p class="my-1">{{ $reg->register_type ?? 'N/A' }}</p>
             </div>
 
-            @if($reg->agent)
+            @if ($reg->agent)
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Is Registration For Agent?</span>
                     <p class="my-1">{{ $reg->is_agent_registration ? 'Yes' : 'No' }}</p>
@@ -112,6 +112,6 @@
     </div>
 </div>
 
-@if($reg->registrant_tin)
+@if ($reg->registrant_tin)
     @livewire('tra.tin-verification', ['tinNumber' => $reg->registrant_tin])
 @endif

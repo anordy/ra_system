@@ -19,6 +19,8 @@ use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
 use App\Http\Controllers\Returns\Chartered\CharteredController;
+use App\Http\Controllers\Returns\TaxReturnCancellationsController;
+use App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController;
 use App\Http\Controllers\TaxRefund\TaxRefundController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
 use App\Http\Controllers\Tra\TraController;
@@ -27,7 +29,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\ISIC1Controller;
@@ -81,7 +82,6 @@ use App\Http\Controllers\LandLease\LandLeaseController;
 use App\Http\Controllers\Setting\PenaltyRateController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Assesments\ObjectionController;
-use App\Http\Controllers\MVR\TRAChassisSearchController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Setting\ExchangeRateController;
@@ -137,8 +137,7 @@ use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
-use App\Http\Controllers\Verification\TaxVerificationApprovalController;
-use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
+use App\Http\Controllers\Verification\TaxVerificationsController;
 use App\Http\Controllers\InternalInfoChange\InternalInfoChangeController;
 use App\Http\Controllers\Reports\Department\DepartmentalReportController;
 use App\Http\Controllers\Returns\FinancialYears\FinancialYearsController;
@@ -161,6 +160,7 @@ Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name(
 Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
     Route::get('/withholding-agent-certificate/{id}', [QRCodeCheckController::class, 'withholdingAgentCertificate'])->name('withholding-agent.certificate');
     Route::get('/business-certificate/{locationId}/{taxTypeId}', [QRCodeCheckController::class, 'businessCertificate'])->name('business.certificate');
+    Route::get('/clearance-certificate/{clearanceId}', [QRCodeCheckController::class, 'taxClearanceCertificate'])->name('tax-clearance.certificate');
     Route::get('/taxagents-certificate/{id}', [QRCodeCheckController::class, 'taxAgentsCertificate'])->name('taxagents.certificate');
     Route::get('/invoice/{id}', [QRCodeCheckController::class, 'invoice'])->name('invoice');
     Route::get('/transfer/{billId}', [QRCodeCheckController::class, 'transfer'])->name('transfer');
@@ -474,6 +474,13 @@ Route::middleware(['2fa', 'auth'])->group(function () {
             Route::get('/edit/return/{return_id}', [CharteredController::class, 'edit'])->name('edit');
         });
 
+    // Tax returns cancellation
+    Route::name('tax-return-cancellation.')->prefix('/tax-return-cancellation')->group(function () {
+        Route::get('/', [TaxReturnCancellationsController::class, 'index'])->name('index');
+        Route::get('/view/{id}', [TaxReturnCancellationsController::class, 'show'])->name('show');
+        Route::get('/file/{id}', [TaxReturnCancellationsController::class, 'file'])->name('file');
+    });
+
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);
         Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
@@ -502,10 +509,13 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     });
 
     Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {
-        Route::resource('/approvals', TaxVerificationApprovalController::class);
         Route::resource('/assessments', TaxVerificationAssessmentController::class);
-        Route::resource('/verified', TaxVerificationVerifiedController::class);
         Route::resource('/files', TaxVerificationFilesController::class);
+        Route::get('/approved', [TaxVerificationsController::class, 'approved'])->name('approved');
+        Route::get('/pending', [TaxVerificationsController::class, 'pending'])->name('pending');
+        Route::get('/unpaid', [TaxVerificationsController::class, 'unpaid'])->name('unpaid');
+        Route::get('/show/{verification}', [TaxVerificationsController::class, 'show'])->name('show');
+        Route::get('/edit/{verification}', [TaxVerificationsController::class, 'edit'])->name('edit');
     });
 
     Route::name('tax_vettings.')->prefix('tax_vettings')->group(function () {
@@ -773,8 +783,10 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     // Finance
     Route::name('finance.')->prefix('finance')->group(function () {
-        Route::get('/taxpayer/ledger', [FinanceController::class, 'taxpayerLedgersList'])->name('taxpayer.ledgers');
-        Route::get('/taxpayer/ledger/{id}', [FinanceController::class, 'taxpayerLedger'])->name('taxpayer.ledger.details');
+        Route::get('/taxpayer/ledger', [TaxpayerLedgerController::class, 'search'])->name('taxpayer.ledger.search');
+        Route::get('/taxpayer/ledger/{businessLocationId}/tax/{taxTypeId}', [TaxpayerLedgerController::class, 'show'])->name('taxpayer.ledger.show');
+        Route::get('/taxpayer/ledger/{businessLocationId}/summary', [TaxpayerLedgerController::class, 'summary'])->name('taxpayer.ledger.summary');
+        Route::get('/taxpayer/ledger/{businessId}/summary/business', [TaxpayerLedgerController::class, 'businessSummary'])->name('taxpayer.ledger.business-summary');
     });
 
     Route::prefix('public-service')->as('public-service.')->group(function () {

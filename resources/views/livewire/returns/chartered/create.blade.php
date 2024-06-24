@@ -33,6 +33,16 @@
                         @enderror
                     </div>
                 <div class="col-md-3 form-group">
+                    <label class="font-weight-bold text-uppercase">Mobile No</label>
+                    <input type="text" maxlength="10" wire:model.defer="mobile"
+                           class="form-control @error('mobile') is-invalid @enderror">
+                    @error('mobile')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+                <div class="col-md-3 form-group">
                     <label for="zin">{{ __('Select Passengers Type') }}:</label>
                     <select wire:model="passengersType"
                             class="form-control {{ $errors->has('passengersType') ? 'is-invalid' : '' }}">

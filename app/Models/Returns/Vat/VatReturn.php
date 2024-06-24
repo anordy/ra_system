@@ -20,10 +20,12 @@ use App\Models\Returns\Vat\SubVat;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Verification\TaxVerification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class VatReturn extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
     protected $table = 'vat_returns';
     protected $guarded = [];
 
@@ -130,7 +132,7 @@ class VatReturn extends Model
     }
 
     public function tax_return(){
-        return $this->morphOne(TaxReturn::class, 'return');
+        return $this->morphOne(TaxReturn::class, 'return')->withTrashed();
     }
 
     public function specialRelief(){

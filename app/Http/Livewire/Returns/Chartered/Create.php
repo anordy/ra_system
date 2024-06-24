@@ -10,6 +10,7 @@ use App\Enum\GeneralReturnConstants;
 use App\Enum\ReturnApplicationStatus;
 use App\Enum\ReturnCategory;
 use App\Enum\VettingStatus;
+use App\Models\Currency;
 use App\Models\Returns\Chartered\CharteredReturn;
 use App\Models\Returns\Chartered\CharteredReturnConfig;
 use App\Models\Returns\Chartered\CharteredReturnItem;
@@ -20,6 +21,7 @@ use App\Models\TaxType;
 use App\Models\User;
 use App\Traits\CustomAlert;
 use App\Traits\ExchangeRateTrait;
+use App\Traits\PaymentsTrait;
 use App\Traits\PenaltyTrait;
 use App\Traits\ReturnManualValidationTrait;
 use App\Traits\TaxVerificationTrait;
@@ -35,7 +37,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class Create extends Component
 {
-    use CustomAlert, PenaltyTrait, TaxVerificationTrait, ReturnManualValidationTrait, ExchangeRateTrait, WithFileUploads, VerificationTrait;
+    use CustomAlert, PenaltyTrait, TaxVerificationTrait, ReturnManualValidationTrait, ExchangeRateTrait, WithFileUploads, VerificationTrait, PaymentsTrait;
 
     // Route parameters
     public $return_type;
@@ -57,7 +59,7 @@ class Create extends Component
     public $taxTypeCurrency;
     public $taxTypes;
     public $taxType;
-    public $total;
+    public $total, $mobile;
     public $todaysExchangeRate;
     public $manifestAttachment, $companyName, $passengersType = CharteredReturn::LOCAL;
 
@@ -92,12 +94,13 @@ class Create extends Component
     protected function rules()
     {
         $rules = [
-            'configs.*.value' => 'required|regex:/^[\d+(\.\d+)\s,]*$/'
+            'configs.*.value' => 'required|regex:/^[\d+(\.\d+)\s,]*$/',
         ];
 
         if ($this->taxType->code === TaxType::CHARTERED_FLIGHT) {
             $rules['passengersType'] = ['required'];
             $rules['companyName'] = ['required'];
+            $rules['mobile'] = ['required', 'digits_between:10,10'];
         }
 
         return $rules;
@@ -210,6 +213,12 @@ class Create extends Component
     public function updatedPassengersType()
     {
         $this->initializeConfigs();
+
+        if ($this->passengersType === CharteredReturn::LOCAL) {
+            $this->taxTypeCurrency = Currency::TZS;
+        } else if ($this->passengersType === CharteredReturn::FOREIGN) {
+            $this->taxTypeCurrency = Currency::USD;
+        }
     }
 
 
@@ -275,6 +284,7 @@ class Create extends Component
             $return = new CharteredReturn();
             $return->company_name = $this->companyName;
             $return->currency = $this->taxTypeCurrency;
+            $return->mobile = $this->mobile;
             $return->filed_by_type = User::class;
             $return->filed_by_id = auth()->user()->id;
             $return->tax_type_id = $this->taxType->id;
@@ -367,7 +377,7 @@ class Create extends Component
 
             DB::commit();
 
-            // TODO: Generate control number
+            $this->generateCharteredControlNumber($tax_return);
 
             // Sign return
             $this->sign($tax_return);

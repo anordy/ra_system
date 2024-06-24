@@ -210,6 +210,9 @@
                    aria-expanded="{{ request()->is('e-filling*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
                     Returns</a>
                 <ul class="collapse list-unstyled {{ request()->is('e-filling*') ? 'show' : '' }}" id="returnsSubmenu">
+                    <li class="{{ request()->is('tax-return-cancellation*') ? 'active' : '' }}">
+                        <a href="{{ route('tax-return-cancellation.index') }}">Returns Cancellations</a>
+                    </li>
                     @can('return-hotel-levy-view')
                         <li class="{{ request()->is('e-filling/hotel*') ? 'active' : '' }}">
                             <a href="{{ route('returns.hotel.index') }}">Hotel Levy</a>
@@ -303,7 +306,7 @@
         @endcan
 
 
-        @can('petroleum-management')
+        @can('return-chartered-view')
             <li class="{{ request()->is('chartered*') ? 'active' : '' }}">
                 <a href="#chartered" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Chartered Tax
                     Returns</a>
@@ -326,16 +329,18 @@
                 <a href="#tax_verifications" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     Returns Verifications
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}"
-                    id="tax_verifications">
-                    <li class="{{ request()->is('tax_verifications/approvals*') ? 'active' : '' }}">
-                        <a href="{{ route('tax_verifications.approvals.index') }}">Approvals</a>
+                <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}" id="tax_verifications">
+                    <li class="{{ request()->is('tax_verifications/pending*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_verifications.pending') }}">Pending Verifications</a>
+                    </li>
+                    <li class="{{ request()->is('tax_verifications/approved*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_verifications.approved') }}">Approved Verifications</a>
+                    </li>
+                    <li class="{{ request()->is('tax_verifications/unpaid*') ? 'active' : '' }}">
+                        <a href="{{ route('tax_verifications.unpaid') }}">Unpaid Verifications</a>
                     </li>
                     <li class="{{ request()->is('tax_verifications/assessments*') ? 'active' : '' }}">
                         <a href="{{ route('tax_verifications.assessments.index') }}">Assessments</a>
-                    </li>
-                    <li class="{{ request()->is('tax_verifications/verified*') ? 'active' : '' }}">
-                        <a href="{{ route('tax_verifications.verified.index') }}">Approved Returns</a>
                     </li>
                 </ul>
             </li>
@@ -601,7 +606,7 @@
                     Registration</a>
                 <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
                     @can('motor-vehicle-registration')
-                        <li class="{{ request()->is('mvr/registration') ? 'active' : '' }}">
+                        <li class="{{ request()->is('mvr/registration*') ? 'active' : '' }}">
                             <a href="{{ route('mvr.registration.index') }}">Motor Vehicle Registration</a>
                         </li>
                     @endcan
@@ -613,7 +618,7 @@
                     @endcan
 
                     @can('motor-vehicle-status-change-request')
-                        <li class="{{ request()->is('mvr/registration/status') ? 'active' : '' }}">
+                        <li class="{{ request()->is('mvr/registration/status*') ? 'active' : '' }}">
                             <a href="{{ route('mvr.registration.status.index') }}">Status Change Request</a>
                         </li>
                     @endcan
@@ -869,7 +874,7 @@
                 <ul class="collapse list-unstyled {{ request()->is('finance*') ? 'show' : '' }}" id="finance">
                     @can('view-taxpayer-ledgers')
                         <li class="{{ request()->is('finance/taxpayer/ledger*') ? 'active' : '' }}">
-                            <a href="{{ route('finance.taxpayer.ledgers') }}">Taxpayer Ledgers</a>
+                            <a href="{{ route('finance.taxpayer.ledger.search') }}">Taxpayer Ledgers</a>
                         </li>
                     @endcan
                 </ul>
@@ -1245,8 +1250,7 @@
                     <a href="{{ route('account.security-questions') }}">{{ __("Security Questions") }}</a>
                 </li> --}}
                 <li class="{{ request()->is('account/security-questions') ? 'active' : '' }}">
-                    <a href="{{ route('logout') }}"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a href="{{ route('logout') }}" class="logout-link">
                         {{ __("Log out") }}
                     </a>
                 </li>
@@ -1266,9 +1270,8 @@
         </a>
 
         <div class="pr-1">
-            <a class="text-white" href="{{ route('logout') }}"
-               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="fa fa-sign-out-alt"></i>
+            <a class="text-white logout-link" href="{{ route('logout') }}">
+                <i class="bi bi-box"></i>
             </a>
 
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

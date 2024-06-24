@@ -77,16 +77,16 @@ class PlateNumbersTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if (MvrPlateNumberStatus::STATUS_GENERATED == $row->mvr_plate_number_status) {
                         return <<< HTML
-                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToPrinted($value)"><i class="fa fa-edit"></i> Update Status</button>
+                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToPrinted($value)"><i class="bi bi-pencil-square"></i> Update Status</button>
                         HTML;
                     } elseif (MvrPlateNumberStatus::STATUS_PRINTED == $row->mvr_plate_number_status) {
                         return <<< HTML
-                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToReceived($value)"><i class="fa fa-edit"></i> Update Status</button>
+                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToReceived($value)"><i class="bi bi-pencil-square"></i> Update Status</button>
                         HTML;
                     } elseif (MvrPlateNumberStatus::STATUS_RECEIVED == $row->mvr_plate_number_status) {
                         $id = encrypt($value);
                         return <<< HTML
-                            <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.plate-number-collection-model', '$id')"><i class="fa fa-edit"></i> Update Status</button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.plate-number-collection-model',$value)"><i class="bi bi-pencil-square"></i> Update Status</button>
                         HTML;
                     }
                     return '';

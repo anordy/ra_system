@@ -11,10 +11,10 @@ ISIC 4
         <div class="card-tools">
         @can('setting-isic-level-four-add')
             <button class="btn btn-primary btn-sm" onclick="Livewire.emit('showModal', 'i-s-i-c4-add-modal')">
-                <i class="fa fa-plus-circle"></i> Add
+                <i class="bi bi-plus-circle-fill"></i> Add
             </button>
             <button class="btn btn-primary btn-sm" onclick="Livewire.emit('showModal', 'i-s-i-c4-import-modal')"><i
-                    class="fa fa-plus-circle"></i>
+                    class="bi bi-plus-circle-fill"></i>
                 Import
             </button>
         @endcan
