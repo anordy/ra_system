@@ -7,7 +7,7 @@
         body {
             padding: 16px;
             font-family: 'Times New Roman', Times, serif;
-            background-image: url("{{ public_path() }}/images/certificate/road_license.jpg");
+            background-image: url("{{ public_path() }}/images/certificate/road_license.png");
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -119,8 +119,8 @@
 
 <body>
 
-<div id="no-top">{{ strtoupper($roadLicense->id) }}</div>
-<div id="no-inner">{{ strtoupper($roadLicense->id) }}</div>
+<div id="no-top">{{ strtoupper($stickerNo) }}</div>
+<div id="no-inner">{{ strtoupper($stickerNo) }}</div>
 <div id="owner-name">{{ strtoupper($roadLicense->taxpayer->fullname() ?? 'N/A') }}</div>
 <div id="plate-number">{{ strtoupper($roadLicense->registration->plate_number ?? 'N/A') }}</div>
 <div id="color">{{ strtoupper($roadLicense->registration->chassis->color ?? 'N/A') }}</div>

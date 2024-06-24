@@ -54,8 +54,9 @@ class RoadLicenseController extends Controller
             header('Content-Type: ' . $result->getMimeType());
 
             $dataUri = $result->getDataUri();
+            $stickerNo = "Z" . $roadLicense->created_at->year . sprintf("%'.05d\n", $roadLicense->id);
 
-            $pdf = PDF::loadView('road-license.sticker', compact('roadLicense', 'dataUri'));
+            $pdf = PDF::loadView('road-license.sticker', compact('roadLicense', 'dataUri', 'stickerNo'));
             $pdf->setPaper('a4', 'portrait');
             $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
             return $pdf->stream();
