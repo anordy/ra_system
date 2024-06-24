@@ -1235,7 +1235,7 @@ trait PaymentsTrait
         $payer_name = $assesment->business->name;
         $payer_email = $taxpayer->email;
         $payer_phone = $taxpayer->mobile;
-        $description = "Tax Investigation assesment payment for {$taxType->code}";
+        $description = "Tax assesment payment for {$taxType->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = $assesment->currency;
         $createdby_type = get_class(Auth::user());
@@ -1268,7 +1268,7 @@ trait PaymentsTrait
         );
         DB::commit();
 
-        if (false) {
+        if (config('app.env') != 'local') {
             (new ZanMalipoInternalService)->createBill($zmBill);
         } else {
             // We are local
