@@ -2,29 +2,11 @@
 
 namespace App\Http\Livewire\LandLease;
 
-use App\Models\Bank;
-use App\Models\BusinessLocation;
 use App\Models\LandLeaseAgent;
-use App\Models\MvrAgent;
-use App\Models\MvrFee;
-use App\Models\MvrFeeType;
-use App\Models\MvrMotorVehicle;
-use App\Models\MvrMotorVehicleRegistration;
-use App\Models\MvrPersonalizedPlateNumberRegistration;
-use App\Models\MvrPlateNumberStatus;
-use App\Models\MvrRegistrationStatus;
-use App\Models\MvrRegistrationType;
 use App\Models\Taxpayer;
-use App\Models\ZmBill;
-use App\Services\TRA\ServiceRequest;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use App\Traits\CustomAlert;
 use Livewire\Component;
 use Illuminate\Support\Facades\Gate;
@@ -100,7 +82,7 @@ class AgentRegistration extends Component
     }
 
     public function lookup(){
-        $this->taxpayer = Taxpayer::query()->where('reference_no',$this->taxpayerRefNo)->firstOrFail();
+        $this->taxpayer = Taxpayer::query()->where('reference_no',$this->taxpayerRefNo)->first();
         $this->lookup_fired = true;
     }
 }

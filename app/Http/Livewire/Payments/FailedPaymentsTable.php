@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Payments;
 
 use App\Enum\PaymentStatus;
 use App\Models\ZmBill;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -34,8 +35,11 @@ class FailedPaymentsTable extends DataTableComponent
         if (isset($data['currency']) && $data['currency'] != 'All') {
             $filter->Where('currency', $data['currency']);
         }
+
         if (isset($data['range_start']) && isset($data['range_end'])) {
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
+        }  else {
+            $filter->whereBetween('created_at', [Carbon::now()->toDateString(), Carbon::now()->toDateString()]);
         }
 
         return $filter->whereIn('status', [PaymentStatus::FAILED])->orderBy('created_at', 'DESC');
@@ -85,6 +89,7 @@ class FailedPaymentsTable extends DataTableComponent
             ->sortable()
             ->searchable(),
             Column::make('Status', 'status'),
+            Column::make('PBZ Status', 'pbz_status')->view('payments.includes.pbz-status'),
             Column::make('Actions', 'id')
                 ->view('payments.includes.actions'),
         ];

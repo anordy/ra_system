@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Relief\Relief;
 use App\Models\Returns\TaxReturn;
-use App\Models\Verification\TaxVerification;
 use App\Models\Vfms\VfmsBusinessUnit;
 use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
@@ -19,7 +18,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class BusinessLocation extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, WorkflowTrait, \OwenIt\Auditing\Auditable;
+    use HasFactory, SoftDeletes,WorkflowTrait, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -28,8 +27,7 @@ class BusinessLocation extends Model implements Auditable
         'effective_date' => 'datetime'
     ];
 
-    public function business()
-    {
+    public function business(){
         return $this->belongsTo(Business::class);
     }
 
@@ -39,9 +37,8 @@ class BusinessLocation extends Model implements Auditable
     }
 
 
-    public function generateZin()
-    {
-        if ($this->zin) {
+    public function generateZin(){
+        if ($this->zin){
             return true;
         }
 
@@ -49,7 +46,7 @@ class BusinessLocation extends Model implements Auditable
             DB::beginTransaction();
             $s = 'Z';
 
-            switch ($this->business->category->short_name) {
+            switch ($this->business->category->short_name){
                 case BusinessCategory::SOLE:
                     $s = $s . 'S';
                     break;
@@ -66,7 +63,7 @@ class BusinessLocation extends Model implements Auditable
                     abort(404);
             }
 
-            switch ($this->region->location) {
+            switch ($this->region->location){
                 case Region::UNGUJA:
                     $s = $s . '1';
                     break;
@@ -78,7 +75,7 @@ class BusinessLocation extends Model implements Auditable
             }
 
             // Append tax region
-            if (!$this->taxRegion) {
+            if (!$this->taxRegion){
                 abort(404);
             }
 
@@ -101,54 +98,43 @@ class BusinessLocation extends Model implements Auditable
             $region->save();
             DB::commit();
             return true;
-        } catch (\Exception $e) {
+        } catch (\Exception $e){
             DB::rollBack();
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            Log::error($e);
             return false;
         }
     }
 
-    public function taxType()
-    {
+    public function taxType(){
         return $this->belongsTo(TaxType::class);
     }
 
-    public function region()
-    {
+    public function region(){
         return $this->belongsTo(Region::class);
     }
 
-    public function district()
-    {
+    public function district(){
         return $this->belongsTo(District::class);
     }
 
-    public function ward()
-    {
+    public function ward(){
         return $this->belongsTo(Ward::class);
     }
 
-    public function street()
-    {
+    public function street(){
         return $this->belongsTo(Street::class);
     }
 
-    public function taxpayer()
-    {
+    public function taxpayer(){
         return $this->belongsTo(Taxpayer::class, 'taxpayer_id');
     }
 
     public function reliefs()
     {
-        return $this->hasMany(Relief::class, 'location_id');
+        return $this->hasMany(Relief::class,'location_id');
     }
 
-    public function taxClearanceRequest()
-    {
+    public function taxClearanceRequest(){
         return $this->hasMany(TaxClearanceRequest::class);
     }
 
@@ -157,8 +143,7 @@ class BusinessLocation extends Model implements Auditable
         return $this->hasMany(LandLease::class, 'business_location_id');
     }
 
-    public function taxReturns()
-    {
+    public function taxReturns(){
         return $this->hasMany(TaxReturn::class, 'location_id');
     }
 
@@ -167,14 +152,17 @@ class BusinessLocation extends Model implements Auditable
         return $this->hasOne(BusinessHotel::class, 'location_id');
     }
 
-    public function generateVrn()
-    {
+    public function units(){
+        return $this->belongsTo(VfmsBusinessUnit::class, 'location_id');
+    }
 
+    public function generateVrn(){
+        
         try {
-
+            
             $vrn = null;
             // Append region prefix
-            switch ($this->region->location) {
+            switch ($this->region->location){
                 case Region::UNGUJA:
                     $vrn = $vrn . '07';
                     break;
@@ -187,7 +175,7 @@ class BusinessLocation extends Model implements Auditable
 
             $mainRegion = MainRegion::where('prefix', MainRegion::UNG)->firstOrFail();
 
-            if (!$this->business->taxTypes->where('code', 'excise-duty-mno')->isEmpty()) {
+            if(!$this->business->taxTypes->where('code', 'excise-duty-mno')->isEmpty()){
                 $vat_category = 3;
                 $value = $mainRegion->mno_vat + 1;
                 $attribute = 'mno_vat';
@@ -214,35 +202,30 @@ class BusinessLocation extends Model implements Auditable
 
             //Append Number 000001 - 999999
             $vrn = $vrn . str_pad($value, 5, "0", STR_PAD_LEFT);
-            $vrn = $vrn . Arr::random(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]);
+            $vrn = $vrn . Arr::random(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","R","S","T","U","V","W","X","Y","Z"]) ;
 
-
+            
             $this->business->vrn = $vrn;
             $this->business->save();
             $this->vrn = $this->business->vrn;
             $this->save();
             DB::commit();
             return true;
-        } catch (\Exception $e) {
+        } catch (\Exception $e){
             DB::rollBack();
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            Log::error($e);
             return false;
         }
     }
 
-    public function ztnGeneration()
-    {
+    public function ztnGeneration(){
 
         try {
-
+            
             $ztn_number = 'Z';
 
             // Append region prefix
-            switch ($this->region->location) {
+            switch ($this->region->location){
                 case Region::UNGUJA:
                     $ztn_number = $ztn_number . '05';
                     $mainRegion = MainRegion::where('prefix', MainRegion::UNG)->firstOrFail();
@@ -276,24 +259,19 @@ class BusinessLocation extends Model implements Auditable
             $business->save();
 
             return true;
-        } catch (\Exception $e) {
+        } catch (\Exception $e){
             DB::rollBack();
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            Log::error($e);
             return false;
         }
     }
 
-    public function generateZ()
-    {
-
-        try {
+    public function generateZ(){
+        
+        try{
             $business = $this->business;
 
-            if (!$this->taxRegion) {
+            if (!$this->taxRegion){
                 Log::error("There is no tax region");
                 abort(404);
             }
@@ -302,12 +280,12 @@ class BusinessLocation extends Model implements Auditable
 
             if ($this->business->is_business_lto) {
                 $ztnLocationNumber = 02;
-            } else {
+            } else{
                 $ztnLocationNumber = $region->prefix;
             }
+            
 
-
-            $no_of_existing_branches = $business->locations->where('status', '!=', BusinessStatus::PENDING)->count();
+            $no_of_existing_branches = $business->locations->where('status', '!=',BusinessStatus::PENDING)->count();
 
             if ($this->is_headquarter) {
                 $ztnLocationNumber = $ztnLocationNumber . 0;
@@ -317,28 +295,19 @@ class BusinessLocation extends Model implements Auditable
                 $this->ztn_location_number = $no_of_existing_branches;
                 $no_of_existing_branches += 1;
             }
-
+            
             $business->no_of_branches = $no_of_existing_branches;
             $business->save();
 
-            $this->zin = $business->ztn_number . '-' . $ztnLocationNumber;
+            $this->zin = $business->ztn_number.'-'.$ztnLocationNumber;
             $this->save();
 
             DB::commit();
             return true;
-        } catch (\Exception $e) {
+        } catch (\Exception $e){
             DB::rollBack();
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            Log::error($e);
             return false;
         }
-    }
-
-    public function taxVerifications()
-    {
-        return $this->hasMany(TaxVerification::class, 'location_id'); // Assuming a many-to-many relationship
     }
 }

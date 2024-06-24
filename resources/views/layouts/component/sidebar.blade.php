@@ -704,12 +704,22 @@
                             Lease</a>
                         <ul class="collapse list-unstyled {{ request()->is("land-lease*") ? "show" : "" }}"
                             id="landLeaseSubmenu">
-                            <li class="{{ request()->is("land-lease/list*") ? "active" : "" }}">
-                                <a href="{{ route("land-lease.list") }}">Land Lease List</a>
-                            </li>
-                            @can("land-lease-generate-report")
-                                <li class="{{ request()->is("land-lease/generate-report*") ? "active" : "" }}">
-                                    <a href="{{ route("land-lease.generate.report") }}">General Report</a>
+                    @can('land-lease-create')
+                        <li class="{{ request()->is('land-lease/register*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.register') }}">Register Land Lease</a>
+                        </li>
+                    @endcan
+                    @can('land-lease-view')
+                        <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.list') }}">Land Lease List</a>
+                        </li>
+                    @endcan
+                        <li class="{{ request()->is('land-lease/approval/list*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.approval.list') }}">Land Lease Approvals</a>
+                        </li>
+                    @can('land-lease-generate-report')
+                        <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.generate.report') }}">General Report</a>
                                 </li>
                                 <li class="{{ request()->is("land-lease/payment-report*") ? "active" : "" }}">
                                     <a href="{{ route("land-lease.payment.report") }}">Payment Report</a>
@@ -1044,9 +1054,9 @@
                                 <li class="{{ request()->is("settings/mvr-generic/MvrRegistrationType") ? "active" : "" }}">
                                     <a href="{{ route("settings.mvr-generic.index", "MvrRegistrationType") }}">Motor Vehicle
                                         Initial Plates
-                                    </a>
-                                </li>
-                            @endcan
+                                </a>
+                        </li>
+                    @endcan
                             @can("setting-mvr-fee-view")
                                 <li class="{{ request()->is("settings/mvr-generic/MvrFee") ? "active" : "" }}">
                                     <a href="{{ route("settings.mvr-generic.index", "MvrFee") }}">Motor Vehicle Fees</a>

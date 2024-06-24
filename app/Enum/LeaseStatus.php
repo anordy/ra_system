@@ -16,6 +16,10 @@ class LeaseStatus implements Status
     const IN_ADVANCE_PAYMENT = 'in_advance_payment';
     const ON_TIME_PAYMENT = 'on_time_payment';
     const LATE_PAYMENT = 'late_payment';
+    const ACTIVE = "1";
+    const INACTIVE ="2";
+    const REGISTERED ="1";
+    const NOT_REGISTERED ="0";
 
     public static function getConstants(): array
     {

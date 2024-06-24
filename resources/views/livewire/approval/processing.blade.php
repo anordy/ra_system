@@ -8,6 +8,15 @@
 
             <div class="row">
                 <div class="col-md-12">
+                    @if ($subject->previous_zno)
+                        <div class="card-header font-weight-bold">
+                            ZNUMBER Verification
+                        </div>
+                        <div class="card-body m-0 pb-0">
+                            <livewire:approval.znumber-verification :business="$subject" />
+                        </div>
+                        <hr/>
+                    @endif
                     @if ($subject->reg_no)
                         <div class="card">
                             <div class="card-header">BPRA Verification</div>
@@ -212,23 +221,21 @@
 
                         </div>
                     @endif
-
-                    @if($subject->tin)
-                        <div class="card">
-                            <div class="card-header">TIN Number Verification</div>
-                            <div class="card-body">
-                                <livewire:approval.tin-verification :business="$subject" />
-                            </div>
-                        </div>
-                    @endif
-
+{{--                    @if($subject->tin)--}}
+{{--                        <div class="card">--}}
+{{--                            <div class="card-header">TIN Number Verification</div>--}}
+{{--                            <div class="card-body">--}}
+{{--                                <livewire:approval.tin-verification :business="$subject" />--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    @endif--}}
                 </div>
 
             </div>
             @if ($this->checkTransition('registration_officer_review'))
                 @include('livewire.approval.registration_officer_review')
             @endif
-
+            @include('livewire.approval.transitions')
             <div class="row mx-1">
                 <div class="col-md-12 mb-2">
                     <div class="form-group">

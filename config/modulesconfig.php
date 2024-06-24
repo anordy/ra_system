@@ -35,7 +35,12 @@ return [
     'api_server_username' => secEnv('API_SERVER_USERNAME'),
     'api_server_password' => secEnv('API_SERVER_PASSWORD'),
 
+    //VFMS API SERVER CREDENTIALS
+    'vfms_api_server_username' => secEnv('VFMS_API_SERVER_USERNAME'),
+    'vfms_api_server_password' => secEnv('VFMS_API_SERVER_PASSWORD'),
+
     // DIP(Data Integrity Protection) Service
+
     'verification' => [
         'server_auth_url' => secEnv('VERIFICATION_SERVER_AUTH_URL'),
         'server_sign_url' => secEnv('VERIFICATION_SERVER_SIGN_URL'),

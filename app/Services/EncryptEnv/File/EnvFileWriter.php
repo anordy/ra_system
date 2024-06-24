@@ -31,7 +31,10 @@ class EnvFileWriter
         $tmpfile_path = base_path('/.env_tmp');
 
         $envfile = fopen($envfile_path, 'r');
-        $tmpfile = fopen($tmpfile_path, 'w') or exit("Command Failed: Unable to write temp file to document root!");
+        $tmpfile = fopen($tmpfile_path, 'w');
+        if (!$tmpfile) {
+            exit("Command Failed: Unable to write temp file to document root!");
+        }
 
         $envlinecnt = count(file($envfile_path));
 

@@ -137,12 +137,16 @@ class PermissionSeeder extends Seeder
             ['name' => 'land-lease-edit', 'sys_module_id' => 16],
             ['name' => 'land-lease-delete', 'sys_module_id' => 16],
             ['name' => 'land-lease-view-own', 'sys_module_id' => 16],
+            ['name' => 'land-lease-change-status', 'sys_module_id' => 16],
 
             ['name' => 'land-lease-generate-report', 'sys_module_id' => 16],
             ['name' => 'land-lease-agent-view', 'sys_module_id' => 16],
             ['name' => 'land-lease-register-agent', 'sys_module_id' => 16],
             ['name' => 'land-lease-change-agent-status', 'sys_module_id' => 16],
             ['name' => 'land-lease-generate-control-number', 'sys_module_id' => 16],
+            ['name' => 'land-lease-approve-currency-change-application', 'sys_module_id' => 16],
+            ['name' => 'land-lease-approve-registration', 'sys_module_id' => 16],
+            ['name' => 'land-lease-notification', 'sys_module_id' => 16],
 
 
             # Manage Payments
@@ -155,6 +159,9 @@ class PermissionSeeder extends Seeder
             ['name' => 'view-ega-charges', 'sys_module_id' => 17],
             ['name' => 'view-departmental-reports', 'sys_module_id' => 17],
             ['name' => 'view-recon', 'sys_module_id' => 17],
+            ['name' => 'request-bank-statements', 'sys_module_id' => 17],
+            ['name' => 'view-bank-statements', 'sys_module_id' => 17],
+            ['name' => 'view-bank-transactions', 'sys_module_id' => 17],
 
             # Setting
             ['name' => 'setting-user-view', 'sys_module_id' => 18],
@@ -446,6 +453,12 @@ class PermissionSeeder extends Seeder
             # Legal Cases
             ['name' => 'legal-cases-view', 'sys_module_id' => 30],
             ['name' => 'legal-cases-appeal', 'sys_module_id' => 30],
+
+            # Vfms Integration
+            ['name' => 'vfms-business-unit-data-linking', 'sys_module_id' => 31],
+            ['name' => 'vfms-znumber-verification', 'sys_module_id' => 31],
+            ['name' => 'vfms-associated-business-unit-edit', 'sys_module_id' => 31],
+            ['name' => 'vfms-business-unit-update', 'sys_module_id' => 31],
 
             # Property Tax
             ['name' => 'survey-solution-registration', 'sys_module_id' => 31],

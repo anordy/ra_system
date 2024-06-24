@@ -291,7 +291,6 @@
                                             <th>{{ __('Supplier ZTN /TIN Number') }}</th>
                                             <th>{{ __('VFMS Receipt Number') }}</th>
                                             <th>{{ __('VFMS Receipt Date') }}</th>
-                                            <th>{{ __('Customs Entry Number') }}</th>
                                             <th>{{ __('Value') }}</th>
                                             <th>{{ __('Vat') }}</th>
                                             <th>{{ __('Supply Type') }}</th>
@@ -302,6 +301,7 @@
                                         <tbody>
                                         @if (count($return->suppliers ?? []))
                                             @foreach ($return->suppliers as $index=> $details)
+                                                {{--                                                        {{ dd($details->supplierDetailsItems) }}--}}
                                                 @if($details['supply_type'] == 'fifteen_percent')
                                                     <tr>
                                                         <th>{{$index + 1}}</th>
@@ -310,8 +310,6 @@
                                                         <td>{{ $details['tax_invoice_number'] }}</td>
 
                                                         <td>{{ date('D, Y-m-d', strtotime($details['date_of_tax_invoice'])) }} </td>
-
-                                                        <td>{{ $details['release_number'] }}</td>
 
                                                         <td class="text-right">{{ number_format($details['value'],2,'.',',') }} </td>
 
@@ -325,6 +323,54 @@
                                                             @endif
                                                         </td>
 
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="7" class="p-2">
+                                                            <label class="font-weight-bold">Receipt Items</label>
+
+                                                            <table class="table table-bordered table-sm normal-text">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="text-right">No:</th>
+                                                                    <th>{{ __('Item Name') }}</th>
+                                                                    <th>{{ __('Price') }}</th>
+                                                                    <th>{{ __('Quantity') }}</th>
+                                                                    <th>{{ __('Total Amount') }}</th>
+                                                                    <th>{{ __('Taxable') }}</th>
+                                                                    <th>{{ __('Used') }}</th>
+
+                                                                </tr>
+                                                                </thead>
+
+                                                                <tbody>
+                                                                @if (count($details->supplierDetailsItems ?? []))
+                                                                    @foreach ($details->supplierDetailsItems as $key => $supplierDetail)
+                                                                        <tr>
+                                                                            <th class="text-right">{{ romanNumeralCount($index + 1) }}</th>
+                                                                            <td>{{ $supplierDetail['name'] }} </td>
+
+                                                                            <td class="text-right">{{ number_format($supplierDetail['price'],2,'.',',') }} </td>
+
+                                                                            <td>{{ $supplierDetail['quantity'] }}</td>
+
+                                                                            <td class="text-right">{{ number_format($supplierDetail['total_amount'],2,'.',',')  }} </td>
+
+                                                                            <td class="font-weight-bold {{ $supplierDetail['is_taxable'] ? 'text-success' : 'text-muted' }}">{{ $supplierDetail['is_taxable'] ? 'Taxable' : 'Non Taxable' ?? 'N/A' }}</td>
+
+                                                                            <td class="font-weight-bold {{ $supplierDetail['used'] ? 'text-success' : 'text-danger' }}">{{ $supplierDetail['used'] ? 'True' : 'False' ?? 'N/A' }}</td>
+
+                                                                        </tr>
+                                                                    @endforeach
+                                                                @else
+                                                                    <tr>
+                                                                        <td colspan="7" class="text-center py-3">
+                                                                            {{ __('No details for supplier for this return month') }}.
+                                                                        </td>
+                                                                    </tr>
+                                                                @endif
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
                                                     </tr>
                                                 @endif
                                             @endforeach
@@ -522,7 +568,8 @@
 
                                             <td class="text-center">{{ date('D, Y-m-d', strtotime($details['receipt_date'])) }}
 
-                                            <td class="text-center">{{ $details['amount'] }}</td>
+                                            <td class="text-center">{{ number_format($details['amount'],2,'.',',')  }} </td>
+
                                         </tr>
                                     @endforeach
                                 @else
@@ -663,7 +710,7 @@
 
                                             <td class="text-center">{{ date('D, Y-m-d', strtotime($details['receipt_date'])) }}
 
-                                            <td class="text-center">{{ $details['amount'] }}</td>
+                                            <td class="text-center">{{ number_format($details['amount'],2,'.',',')  }} </td>
                                         </tr>
                                     @endforeach
                                 @else

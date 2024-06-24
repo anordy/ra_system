@@ -22,8 +22,7 @@ class PenaltyRateAddModal extends Component
     public $financialYears;
     public $configs = [];
 
-    public function mount()
-    {
+    public function mount() {
         $existingPenaltyRateFinancialYears = PenaltyRate::distinct()->pluck('financial_year_id')->toArray();
         $this->financialYears = FinancialYear::whereNotIn('id', $existingPenaltyRateFinancialYears)->get();
         $this->configs = PenaltyRate::CONFIGURATIONS;
@@ -31,11 +30,12 @@ class PenaltyRateAddModal extends Component
 
     protected $rules = [
         'configs.*.rate' => 'required|numeric',
-        //        'financial_year_id' => 'required'
+        'financial_year_id' => 'required'
     ];
 
     protected $messages = [
         'configs.*.rate.required' => 'Rate is required.',
+        'financial_year_id.required' => 'financial year is required.',
     ];
 
     public function submit()
@@ -47,8 +47,8 @@ class PenaltyRateAddModal extends Component
         DB::beginTransaction();
         try {
             foreach ($this->configs as $config) {
-                $penalty_rate = PenaltyRate::create([
-                    'financial_year_id' => 72,
+               $penalty_rate = PenaltyRate::create([
+                    'financial_year_id' => $this->financial_year_id,
                     'code' => $config['code'],
                     'name' => $config['name'],
                     'rate' => $config['rate'],
@@ -57,14 +57,11 @@ class PenaltyRateAddModal extends Component
             }
 
             DB::commit();
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

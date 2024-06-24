@@ -269,7 +269,11 @@ class TaxVerificationApprovalProcessing extends Component
     public function generateControlNumber()
     {
         $assessment = $this->subject->assessment;
-        $taxType = $this->subject->taxType;
+        $taxType = TaxType::find($this->subject->taxReturn->tax_type_id);
+
+        if ($taxType->code == TaxType::VAT) {
+            $taxType = SubVat::findOrFail($this->subject->taxReturn->sub_vat_id);
+        }
 
         DB::beginTransaction();
 

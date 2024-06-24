@@ -21,7 +21,12 @@ class GeneralConstant implements Status
     const OWNED = 'Owned';
     const RENTED = 'Rented';
     const ALL = 'all';
+    const YES = 'yes';
+    const NO = 'no';
     const LOCATION = 'location';
+    const NOT_APPLICABLE = 'not_applicable';
+    const PAID = 'paid';
+    const REVERSED = 'reversed';
 
 
     const CHASSIS_REGISTRATION = 1;

@@ -106,6 +106,7 @@ class StreetTable extends DataTableComponent
                                 <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash-fill"></i> </button>
                             HTML;
                         }
+
                     }
                     return $edit . ' ' . $delete;
                 })

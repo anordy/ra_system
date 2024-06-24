@@ -10,6 +10,7 @@ use App\Jobs\PropertyTax\SendPropertyTaxCorrectionSMS;
 use App\Jobs\PropertyTax\SendPropertyTaxPaymentReminderApprovalSMS;
 use App\Jobs\SendCustomSMS;
 use App\Jobs\SendZanMalipoSMS;
+use App\Jobs\Vfms\ClientNotificationSMS;
 use App\Models\KYC;
 use App\Events\SendSms;
 use App\Jobs\Audit\SendNotificationLetterSmsToTaxPayer;
@@ -224,6 +225,8 @@ class SendSmsFired
             SendBranchRegisteredSMS::dispatch($event->tokenId);
         } else if ($event->service === SendZanMalipoSMS::SERVICE) {
             SendZanMalipoSMS::dispatch($event->extra['mobile_no'], $event->extra['message']);
+        }  else if ($event->service === ClientNotificationSMS::SERVICE){
+            ClientNotificationSMS::dispatch($event->tokenId);
         } else if ($event->service === SendReferenceNumberMail::SERVICE) {
             SendReferenceNumberSMS::dispatch($event->tokenId);
         } else if ($event->service === SendQuantityCertificateSMS::SERVICE) {
