@@ -42,6 +42,12 @@ class LandLeaseList extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make("S/N", 'created_at')
+                ->format(function ($value, $row) {
+                    return $row['rn'];
+                })
+                ->searchable()
+                ->sortable(),
             Column::make("DP Number", "dp_number")
                 ->searchable()
                 ->sortable(),
