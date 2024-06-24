@@ -64,7 +64,7 @@ class DebtWaiverApprovalTable extends DataTableComponent
             Column::make('Department', 'debt')
                 ->sortable()
                 ->searchable()
-                ->label(fn ($row) => $row->debt->location->taxRegion->departments->name ?? 'NA'),
+                ->label(fn ($row) => $row->debt->location->taxRegion->department->name ?? 'NA'),
             Column::make('Status', 'status')
                 ->view('debts.waivers.includes.status'),
             Column::make('Action', 'id')
