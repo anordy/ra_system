@@ -17,20 +17,51 @@
                     </div>
                 @endif
                 <div class="row">
+{{--                    <div class="col-md-12 form-group">--}}
+{{--                        <label>Select Business</label>--}}
+{{--                        <select wire:model="business_id" class="form-control @error("business_id") is-invalid @enderror"--}}
+{{--                            wire:change="businessChange($event.target.value)">--}}
+{{--                            <option value="">Select Business</option>--}}
+{{--                            @foreach ($business as $row)--}}
+{{--                                <option value="{{ $row->id }}">{{ $row->name }} ({{ $row->ztn_number }})</option>--}}
+{{--                            @endforeach--}}
+{{--                        </select>--}}
+{{--                        @error("business_id")--}}
+{{--                            <div class="invalid-feedback">--}}
+{{--                                {{ $message }}--}}
+{{--                            </div>--}}
+{{--                        @enderror--}}
+{{--                    </div>--}}
                     <div class="col-md-12 form-group">
-                        <label>Select Business</label>
-                        <select wire:model="business_id" class="form-control @error("business_id") is-invalid @enderror"
-                            wire:change="businessChange($event.target.value)">
-                            <option value="">Select Business</option>
-                            @foreach ($business as $row)
-                                <option value="{{ $row->id }}">{{ $row->name }} ({{ $row->ztn_number }})</option>
-                            @endforeach
-                        </select>
-                        @error("business_id")
-                            <div class="invalid-feedback">
-                                {{ $message }}
+                        <input
+                                wire:model.defer="selectedBusiness"
+                                type="text"
+                                class="form-input form-control"
+                                placeholder="Search Business..."
+                                wire:model="query"
+                                wire:keydown.escape="resetFields"
+                                wire:keydown.tab="resetFields"
+                                wire:keydown.arrow-up="decrementHighlight"
+                                wire:keydown.arrow-down="incrementHighlight"
+                                wire:keydown.enter="selectBusiness"
+                        />
+                        <div wire:loading class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
+                            <div class="list-item">Searching...</div>
+                        </div>
+                        @if(!empty($query))
+                            <div class="fixed top-0 bottom-0 left-0 right-0" wire:click="resetFields"></div>
+
+                            <div class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
+                                @if(!empty($business))
+                                    @foreach($business as $i => $row)
+                                        <a href="#" class="list-item {{ $highlightIndex === $i ? 'highlight' : '' }}"
+                                        >{{ $row['name'] }} ({{ $row['ztn_number'] }})</a>
+                                    @endforeach
+                                @else
+                                    <div class="list-item">No results!</div>
+                                @endif
                             </div>
-                        @enderror
+                        @endif
                     </div>
 
                     <div class="col-md-6 form-group">

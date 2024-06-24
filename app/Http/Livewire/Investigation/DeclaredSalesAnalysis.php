@@ -209,7 +209,7 @@ class DeclaredSalesAnalysis extends Component
 
         $yearData = $this->formatDataArray($yearReturnGroup);
 //
-//        $this->withoutPurchases = true;
+        $this->withoutPurchases = true;
         $this->returns = $yearData;
         $this->headersPetroleum = $headers;
     }

@@ -35,7 +35,10 @@ class ApprovalHistoryTable extends DataTableComponent
                 ->where('pinstance_id', $this->modelId)
                 ->where(function ($query){
                     $query->where('to_place', 'taxPayer_acceptance')
-                        ->orWhere('from_place', 'taxPayer_acceptance');
+                        ->orWhere('from_place', 'taxPayer_acceptance')
+                        ->orWhere('from_place', 'final_report')
+                        ->orWhere('from_place', 'final_report_review')
+                        ->orWhere('from_place', 'commissioner');
                 })
                 ->orderBy('approved_on', 'ASC');
         }

@@ -153,7 +153,7 @@ class TaxInvestigationAssessmentPaymentController extends Controller
             $createdby_id = Auth::id();
             $exchange_rate = self::getExchangeRate($assesment->currency);
             $payer_id = $taxpayer->id;
-            $expire_date = Carbon::now()->addDays(30)->toDateTimeString(); // TODO: Recheck this date
+            $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
             $billableId = $partialPayment->id;
             $billableType = get_class($partialPayment);
 

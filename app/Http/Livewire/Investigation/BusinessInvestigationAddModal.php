@@ -19,6 +19,8 @@ class BusinessInvestigationAddModal extends Component
 
     use CustomAlert;
 
+    public $query;
+    public $highlightIndex;
     public $name;
     public $description;
     public $business;
@@ -50,9 +52,47 @@ class BusinessInvestigationAddModal extends Component
         ];
     }
 
+
+
+    public function resetFields() {
+        $this->query = '';
+        $this->business = [];
+        $this->highlightIndex = 0;
+    }
+
+    public function incrementHighlight() {
+        if ($this->highlightIndex === count($this->business) - 1) {
+            $this->highlightIndex = 0;
+            return;
+        }
+        $this->highlightIndex++;
+    }
+
+    public function decrementHighlight() {
+        if ($this->highlightIndex === 0) {
+            $this->highlightIndex = count($this->business) - 1;
+            return;
+        }
+        $this->highlightIndex--;
+    }
+
+    public function updatedQuery() {
+        $this->business = Business::query()->select('id', 'name', 'ztn_number')
+            ->where('name', 'like', '%' . $this->query . '%')
+            ->orWhere('ztn_number', 'like', '%' . $this->query . '%')
+            ->get()
+            ->toArray();
+    }
+
     public function mount()
     {
-        $this->business = Business::all();
+//        dd(Business::query()->where('name', 'Timers')->first());
+        $this->resetFields();
+    }
+
+
+    public function selectBusiness() {
+        $this->selectedBusiness = $this->contacts[$this->highlightIndex] ?? null;
     }
 
     public function businessChange($id)
