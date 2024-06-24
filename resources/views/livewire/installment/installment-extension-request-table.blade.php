@@ -21,10 +21,7 @@
                     <td>{{ $extension->installment->installable->currency }}</td>
 {{--                    <td>{{ $extension }}</td>--}}
                     <td>
-                           <span class="badge badge-info py-1 px-2">
-                                <i class="bi bi-clock-history mr-1"></i>
-                                {{ $extension->status }}
-                            </span>
+                        @include('livewire.installment.includes.status')
                     </td>
                     <td>
                         <a href="{{ route('installment.extensions.show', ['id'=> encrypt($extension->id)]) }}" class="btn btn-outline-info btn-sm">
