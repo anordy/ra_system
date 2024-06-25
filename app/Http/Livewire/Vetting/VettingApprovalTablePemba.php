@@ -71,7 +71,6 @@ class VettingApprovalTablePemba extends DataTableComponent
                 $query->where('location', Region::PEMBA); //this is filter by department
             })
             ->whereHas('pinstance', function ($query) {
-                $query->where('status', '!=', 'completed');
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });
