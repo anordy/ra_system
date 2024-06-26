@@ -17,11 +17,11 @@
                             <i class="fa fa-plus-circle"></i>
                         </button>
 
-                        <button class="btn btn-info btn-sm"
+                        {{-- <button class="btn btn-info btn-sm"
                             onclick="Livewire.emit('showModal', 'investigation.business-investigation-add-modal', {{ json_encode(["business_id" => $location->business->id, "location_ids" => $location->id]) }})">
                             Foward to Investigation
                             <i class="fa fa-plus-circle"></i>
-                        </button>
+                        </button> --}}
                     </div>
                 </div>
 

@@ -500,17 +500,19 @@ class TaxAuditApprovalProcessing extends Component
 
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
-            DB::commit();
 
             if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
-                $this->subject->assessment->update([
-                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                    'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                ]);
-                $assessment = $this->subject->assessment;
-                $this->recordLedger(TransactionType::DEBIT, TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
+                foreach ($this->subject->assessments as $key => $assessment) {
+                    # code...
+                    $assessment->update([
+                        'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                        'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                    ]);
+                    $this->recordLedger(TransactionType::DEBIT, TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
+                }
             }
 
+            DB::commit();
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
             $this->customAlert('success', 'Approved successfully');
         } catch (Exception $e) {
