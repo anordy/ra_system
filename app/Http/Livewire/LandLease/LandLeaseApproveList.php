@@ -130,22 +130,9 @@ class LandLeaseApproveList extends DataTableComponent
             DB::beginTransaction();
             switch ($data->action) {
                 case 'approve':
-                    //$this->recordLedger(TransactionType::DEBIT, LandLease::class,$partialPayment->payment_id,);
                     $partialPayment->update(['status' => 'approved']);
                     $partialPayment->refresh();
-
-                    $principalAmount = $this->getLeasePayment($partialPayment->payment_id)->total_amount;
-                    $penaltyAmount = $this->getLeasePayment($partialPayment->payment_id)->penalty;
-                    $taxpayerId = $this->getLeasePayment($partialPayment->payment_id)->taxpayer_id;
-                    $currency = $this->getLeasePayment($partialPayment->payment_id)->currency;
-                    $taxtypeId = $this->getTaxtype();
-
-                    $this->recordLedger(TransactionType::DEBIT, LandLeasePayment::class, $partialPayment->payment_id,
-                        $principalAmount,
-                        0, $penaltyAmount, $principalAmount, $taxtypeId, $currency, $taxpayerId, null,
-                        null);
                     $this->generateLeasePartialPaymentControlNo($partialPayment);
-                    //update lease payment
                     DB::commit();
                     $this->customAlert('success', 'Lease payment approved successfully', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
                     break;
@@ -169,17 +156,6 @@ class LandLeaseApproveList extends DataTableComponent
     public function getTaxPayer($landLease)
     {
         return $landLease->taxpayer;
-    }
-
-    public function getLeasePayment($id)
-    {
-        return LeasePayment::select('total_amount', 'penalty', 'taxpayer_id', 'currency')->where('land_lease_id', $id)
-            ->first();
-    }
-
-    public function getTaxtype()
-    {
-        return TaxType::select('id')->where('code', 'land-lease')->first()->id;
     }
 
 }
