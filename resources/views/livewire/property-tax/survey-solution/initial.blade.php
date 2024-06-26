@@ -3,7 +3,8 @@
         <div class="card-body">
             <div class="p-3">
                 <h3>Property Tax Registration</h3>
-                <p>Please select Owner Search Type, supported searches are NIDA, ZANID, PASSPORT, TIN, ZRA NUMBER and ZRA
+                <p>Please select Owner Search Type, supported searches are NIDA, ZANID, PASSPORT, TIN, ZRA NUMBER and
+                    ZRA
                     REFERENCE NO.</p>
                 <hr/>
                 <div class="row">
@@ -13,13 +14,13 @@
                         <select class="form-control @error('identifierType') is-invalid @enderror"
                                 wire:model.defer="identifierType">
                             <option value="">{{ __('Please choose identifier Type') }}...</option>
-                            <option value="nida">NIDA</option>
-                            <option value="zanID">ZANID</option>
-                            <option value="passport">PASSPORT NUMBER</option>
-                            <option value="tin">TIN NUMBER</option>
-                            <option value="zra_number">ZRA NUMBER</option>
-                            <option value="zra_ref_no">ZRA REFERENCE NUMBER</option>
-                            {{--                            <option value="MOBILE">MOBILE NUMBER</option>--}}
+                            <option value="{{ \App\Enum\SurveySolutionType::NIDA  }}">NIDA</option>
+                            <option value="{{ \App\Enum\SurveySolutionType::ZANID  }}">ZANID</option>
+                            <option value="{{ \App\Enum\SurveySolutionType::PASSPORT  }}">PASSPORT NUMBER</option>
+                            <option value="{{ \App\Enum\SurveySolutionType::TIN  }}">TIN NUMBER</option>
+                            <option value="{{ \App\Enum\SurveySolutionType::ZRA_NUMBER  }}">ZRA NUMBER</option>
+                            <option value="{{ \App\Enum\SurveySolutionType::ZRA_REFERENCE_NO  }}">ZRA REFERENCE NUMBER</option>
+                            <option value="{{ \App\Enum\SurveySolutionType::MOBILE  }}">MOBILE NUMBER</option>
                         </select>
                         @error('identifierType')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -46,7 +47,7 @@
         </div>
     </div>
 
-    @if(is_array($properties) && $properties[0])
+    @if(is_array($properties) && isset($properties[0]))
         <div class="card text-left rounded-0">
             <div class="card-body">
                 <div class="p-3">
@@ -118,7 +119,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             @endif
-{{--                            @if(isset($properties[0]['owner']['passport']) && !is_null($properties[0]['owner']['passport']))--}}
+                            @if(isset($properties[0]['owner']['passport']))
                                 <div class="col-md-4 mb-3">
                                     <label>Nationality *</label>
                                     <select class="form-control @error('nationality') is-invalid @enderror"
@@ -137,7 +138,8 @@
                                            class="form-control @error('permitNumber') is-invalid @enderror"
                                            wire:model.defer="permitNumber">
                                     @error('permitNumber')
-                                    <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             @endif
                         </div>
@@ -285,11 +287,11 @@
                             @if(array_key_last($properties) === $index)
                                 <hr>
                                 <div class="col-md-12 text-center">
-                                    @if(!$additionalProperties)
-                                        <button class="btn btn-info rounded-0 px-3" wire:click="addProperty()">
-                                            Add Property
-                                        </button>
-                                    @endif
+{{--                                    @if(!$additionalProperties)--}}
+{{--                                        <button class="btn btn-info rounded-0 px-3" wire:click="addProperty()">--}}
+{{--                                            Add Property--}}
+{{--                                        </button>--}}
+{{--                                    @endif--}}
 
                                     @if(count($additionalProperties) <= 0)
                                         <button class="btn btn-primary rounded-0 px-3" wire:click="submit()">

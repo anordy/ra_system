@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ModifyMvrColorsTable extends Migration
+class AddCertificateNumberColumnToTaxClearanceRequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class ModifyMvrColorsTable extends Migration
      */
     public function up()
     {
-        Schema::table('mvr_colors', function (Blueprint $table) {
-            $table->unsignedBigInteger('mvr_registration_type_id');
-            $table->dropColumn('name');
-            $table->string('color');
-            $table->string('hex_value')->nullable();
+        Schema::table('tax_clearance_requests', function (Blueprint $table) {
+            $table->string('certificate_number', 9)->nullable();
         });
     }
 
@@ -28,6 +25,8 @@ class ModifyMvrColorsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('tax_clearance_requests', function (Blueprint $table) {
+            //
+        });
     }
 }

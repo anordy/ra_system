@@ -128,6 +128,7 @@ class EnrollFingerprint extends Component
 
             $password = Str::random(8);
             $data['password'] = Hash::make($password);
+            $data['zanid_verified_at'] = $data['zanid_verified_at'] ? Carbon::make($data['zanid_verified_at'])->toDateTimeString() : null;
 
             $existingTaxpayer = Taxpayer::query()
                 ->where('mobile', $data['mobile'])

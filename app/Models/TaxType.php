@@ -59,7 +59,7 @@ class TaxType extends Model implements Auditable
 
 
     protected $fillable = [
-        'name', 'gfs_code', 'is_approved', 'is_updated', 'category'
+        'name', 'gfs_code', 'is_approved', 'is_updated', 'category', 'code'
     ];
 
     public function landLeases()

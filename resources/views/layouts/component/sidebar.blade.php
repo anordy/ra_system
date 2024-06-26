@@ -845,18 +845,18 @@
             </li>
         @endcan
 
-        <li class="{{ request()->is('reports.general.initial*') ? 'active' : '' }}">
-            <a href="#generalReportsSubmenu" data-toggle="collapse"
-               aria-expanded="{{ request()->is('reports/general*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                General Reports
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('reports/general*') ? 'show' : '' }}"
-                id="generalReportsSubmenu">
-                <li class="{{ request()->is('reports/general*') ? 'active' : '' }}">
-                    <a href="{{ route('reports.general.initial') }}">All Reports</a>
-                </li>
-            </ul>
-        </li>
+{{--        <li class="{{ request()->is('reports.general.initial*') ? 'active' : '' }}">--}}
+{{--            <a href="#generalReportsSubmenu" data-toggle="collapse"--}}
+{{--               aria-expanded="{{ request()->is('reports/general*') ? 'true' : 'false' }}" class="dropdown-toggle">--}}
+{{--                General Reports--}}
+{{--            </a>--}}
+{{--            <ul class="collapse list-unstyled {{ request()->is('reports/general*') ? 'show' : '' }}"--}}
+{{--                id="generalReportsSubmenu">--}}
+{{--                <li class="{{ request()->is('reports/general*') ? 'active' : '' }}">--}}
+{{--                    <a href="{{ route('reports.general.initial') }}">All Reports</a>--}}
+{{--                </li>--}}
+{{--            </ul>--}}
+{{--        </li>--}}
 
         @can('managerial-report')
             <li class="{{ request()->is('reports*') ? 'active' : '' }}">
