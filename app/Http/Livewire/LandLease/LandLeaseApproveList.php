@@ -2,27 +2,17 @@
 
 namespace App\Http\Livewire\LandLease;
 
-use App\Enum\LeaseStatus;
-use App\Models\BusinessLocation;
+use App\Enum\TransactionType;
 use App\Models\DualControl;
 use App\Models\LandLease;
 use App\Models\LeasePayment;
 use App\Models\PartialPayment;
-use App\Models\Returns\ReturnStatus;
-use App\Models\Taxpayer;
 use App\Models\TaxType;
-use App\Models\User;
-use App\Notifications\DatabaseNotification;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\CustomAlert;
 use App\Traits\ExchangeRateTrait;
 use App\Traits\PaymentsTrait;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -36,8 +26,6 @@ class LandLeaseApproveList extends DataTableComponent
         'actionLeaseRequest',
     ];
 
-    //create builder function
-
     public function builder(): builder
     {
         return PartialPayment::with('landlease')->where('payment_type', $this->model)->orderByDesc('partial_payments.id');
@@ -50,7 +38,6 @@ class LandLeaseApproveList extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        //$this->setAdditionalSelects(['land_leases.name', 'land_leases.phone', 'taxpayer_id']);
     }
 
     public function columns(): array
@@ -85,25 +72,6 @@ class LandLeaseApproveList extends DataTableComponent
         ];
     }
 
-
-    public function getApplicantName($id)
-    {
-        $taxpayer = Taxpayer::find(decrypt($id));
-        if (is_null($taxpayer)) {
-            abort(404);
-        }
-        return $taxpayer->first_name . ' ' . $taxpayer->last_name;
-    }
-
-    public function getBusinessName($id)
-    {
-        $businessLocation = BusinessLocation::find(decrypt($id));
-        if (is_null($businessLocation)) {
-            abort(404);
-        }
-        return $businessLocation->business->name . ' | ' . $businessLocation->name;
-    }
-
     public function reject($id)
     {
         $this->customAlert('warning', 'Are you sure you want to reject this payment request?', [
@@ -133,10 +101,6 @@ class LandLeaseApproveList extends DataTableComponent
 
     public function approve($id)
     {
-//        if (!Gate::allows('land-lease-change-status')) {
-//            abort(403);
-//        }
-
         $this->customAlert('warning', 'Are you sure you want to approve this payment request?', [
             'position' => 'center',
             'toast' => false,
@@ -166,9 +130,21 @@ class LandLeaseApproveList extends DataTableComponent
             DB::beginTransaction();
             switch ($data->action) {
                 case 'approve':
+                    //$this->recordLedger(TransactionType::DEBIT, LandLease::class,$partialPayment->payment_id,);
                     $partialPayment->update(['status' => 'approved']);
                     $partialPayment->refresh();
-					$this->generateLeasePartialPaymentControlNo($partialPayment);
+
+                    $principalAmount = $this->getLeasePayment($partialPayment->payment_id)->total_amount;
+                    $penaltyAmount = $this->getLeasePayment($partialPayment->payment_id)->penalty;
+                    $taxpayerId = $this->getLeasePayment($partialPayment->payment_id)->taxpayer_id;
+                    $currency = $this->getLeasePayment($partialPayment->payment_id)->currency;
+                    $taxtypeId = $this->getTaxtype();
+
+                    $this->recordLedger(TransactionType::DEBIT, LandLeasePayment::class, $partialPayment->payment_id,
+                        $principalAmount,
+                        0, $penaltyAmount, $principalAmount, $taxtypeId, $currency, $taxpayerId, null,
+                        null);
+                    $this->generateLeasePartialPaymentControlNo($partialPayment);
                     //update lease payment
                     DB::commit();
                     $this->customAlert('success', 'Lease payment approved successfully', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
@@ -190,122 +166,20 @@ class LandLeaseApproveList extends DataTableComponent
         }
     }
 
-    public function createNotification($dpNumber)
-    {
-        $leaseOfficers = User::whereHas('role', function ($query) {
-            $query->where('name', 'Land Lease Officer');
-        })->get();
-
-        foreach ($leaseOfficers as $leaseOfficer) {
-            $leaseOfficer->notify(new DatabaseNotification(
-                $subject = 'Land Lease Edit Notification',
-                $message = "Lease with DP No $dpNumber status been changed by " . auth()->user()->fname . " " . auth()
-                        ->user()->lname,
-                $href = 'land-lease.list',
-            ));
-        }
-    }
-
-    /**
-     * @throws \DOMException
-     * @throws RandomException
-     */
-    private function generateControlNumber($partialPayment)
-    {
-        $landLease = $partialPayment->landlease;
-
-        $taxTypes = TaxType::select('id', 'code', 'gfs_code')->where('code', 'land-lease')->first();
-
-        $billitems = [
-            [
-                'billable_id' => $partialPayment->id,
-                'billable_type' => get_class($partialPayment),
-                'use_item_ref_on_pay' => 'N',
-                'amount' => roundOff($partialPayment->amount, $partialPayment->currency),
-                'currency' => $partialPayment->currency,
-                'gfs_code' => $taxTypes->gfs_code,
-                'tax_type_id' => $taxTypes->id
-            ],
-        ];
-
-        try {
-
-            $taxpayer = $this->getTaxPayer($landLease)->first_name . ' ' . $this->getTaxPayer($landLease)->last_name;
-
-            if ($landLease->category == 'business') {
-                $payer_name = $landLease->businessLocation->business->name;
-                $payer_type = get_class($landLease->businessLocation->business);
-            } else {
-                $payer_name = $taxpayer;
-                $payer_type = get_class($this->getTaxPayer($landLease));
-            }
-
-            $payer_email = $this->getTaxPayer($landLease)->email;
-            $payer_phone = $this->getTaxPayer($landLease)->mobile;
-            $description = "Land Lease payment";
-            $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
-            $currency = $partialPayment->currency;
-            $createdby_type = get_class(Auth::user());
-            $createdby_id = Auth::id();
-            $exchange_rate = self::getExchangeRate($partialPayment->currency);
-            $payer_id = $this->getTaxPayer($landLease)->id;
-            $expire_date = Carbon::now()->addDays(30)->toDateTimeString(); // TODO: Recheck this date
-            $billableId = $partialPayment->id;
-            $billableType = get_class($partialPayment);
-
-            DB::beginTransaction();
-
-            $zmBill = ZmCore::createBill(
-                $billableId,
-                $billableType,
-                $taxTypes->id,
-                $payer_id,
-                $payer_type,
-                $payer_name,
-                $payer_email,
-                $payer_phone,
-                $expire_date,
-                $description,
-                $payment_option,
-                $currency,
-                $exchange_rate,
-                $createdby_id,
-                $createdby_type,
-                $billitems
-            );
-
-            DB::commit();
-
-            if (config('app.env') != 'local') {
-                $this->generateGeneralControlNumber($zmBill);
-                $control_number = null;
-            } else {
-                // We are local
-                // Simulate successful control no generation
-                $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-                $zmBill->zan_status = 'pending';
-                $zmBill->control_number = random_int(2000070001000, 2000070009999);
-                $zmBill->save();
-
-                $control_number = $zmBill->control_number;
-            }
-
-            return $control_number;
-        } catch
-        (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            throw $e;
-        }
-    }
-
     public function getTaxPayer($landLease)
     {
         return $landLease->taxpayer;
+    }
+
+    public function getLeasePayment($id)
+    {
+        return LeasePayment::select('total_amount', 'penalty', 'taxpayer_id', 'currency')->where('land_lease_id', $id)
+            ->first();
+    }
+
+    public function getTaxtype()
+    {
+        return TaxType::select('id')->where('code', 'land-lease')->first()->id;
     }
 
 }
