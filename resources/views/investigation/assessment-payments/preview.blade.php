@@ -7,7 +7,7 @@
     $subjectType = preg_replace("/(?<!^)([A-Z])/", ' $1', $subjectType);
 @endphp
 
-@section("title", "{{ $subjectType }} Preview")
+@section("title", " $subjectType Preview")
 
 @section("content")
     @if ($partialPayment->status == App\Enum\TaxInvestigationStatus::APPROVED && $subject->assessment)
@@ -255,7 +255,7 @@
                             </div>
                         </div>
                     </div>
-                    @if ($partialPayment->taxAssessment->outstanding_amount > 0)
+                    @if ($partialPayment->payment_status != App\Enum\TaxInvestigationStatus::COMPLETE))
                         <div class="row">
                             <p class="p-3">
                                 Taxpayer wants to make a payment of
