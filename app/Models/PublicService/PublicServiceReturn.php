@@ -3,8 +3,9 @@
 namespace App\Models\PublicService;
 
 use App\Models\Business;
-use App\Models\MvrRegistration;
+use App\Models\Debts\DemandNotice;
 use App\Models\Taxpayer;
+use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,5 +38,19 @@ class PublicServiceReturn extends Model
 
     public function latestBill(){
         return $this->morphOne(ZmBill::class, 'billable')->latest();
+    }
+
+    public function demandNotices()
+    {
+        return $this->morphMany(DemandNotice::class, 'debt');
+    }
+
+    public function interests(){
+        return $this->hasMany(PublicServiceInterest::class);
+    }
+
+    public function ledger()
+    {
+        return $this->morphOne(TaxpayerLedger::class, 'source');
     }
 }

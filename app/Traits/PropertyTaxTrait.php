@@ -111,10 +111,6 @@ trait PropertyTaxTrait
             throw new \Exception('Invalid Property Type Provided');
         }
 
-        if (!$amount || $amount <= 0) {
-            throw new \Exception('Invalid Property Tax Amount');
-        }
-
         return $amount;
     }
 
@@ -181,12 +177,11 @@ trait PropertyTaxTrait
     public function generateURN($property) {
         $region = Region::where('name', 'like', '%'. $property->region_id .'%')->first();
 
-        $location = $region->location;
-
         if (!$region) {
             $region = Region::first();
-            $location = 'unguja';
         }
+
+        $location = $region->location;
 
         if ($location === 'unguja') {
             $locationCode = '01';

@@ -2,7 +2,9 @@
 
 namespace App\Models\PublicService;
 
+use App\Enum\PublicServiceMotorStatus;
 use App\Models\Business;
+use App\Models\Debts\DemandNotice;
 use App\Models\MvrRegistration;
 use App\Models\Taxpayer;
 use App\Traits\WorkflowTrait;
@@ -31,4 +33,11 @@ class PublicServiceMotor extends Model
         return $this->hasOne(PublicServicePayment::class, 'public_service_motor_id');
     }
 
+    public function returns(){
+        return $this->hasMany(PublicServiceReturn::class);
+    }
+
+    public function scopeRegistered($query){
+        return $query->where('status', PublicServiceMotorStatus::REGISTERED);
+    }
 }

@@ -65,9 +65,14 @@ class WorkflowMvrDeRegistrationSeeder extends Seeder
             ],
         ];
         $transitions = [
-            'application_submitted' => [
+            'application_submitted_to_police' => [
                 'from' => 'apply',
                 'to' => 'mvr_police_officer',
+                'condition' => '',
+            ],
+            'application_submitted_to_zra_officer' => [
+                'from' => 'apply',
+                'to' => 'mvr_registration_officer',
                 'condition' => '',
             ],
             'application_filled_incorrect' => [

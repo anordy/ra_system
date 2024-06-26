@@ -51,7 +51,7 @@ trait RegistrationReportTrait
                 break;
 
             default:
-                throw new \Exception("Invalid Business Report Type");
+                return $businessLocations;
         }
 
         if ($parameters['year'] != ReportStatus::all && $parameters['year'] != ReportStatus::range) {

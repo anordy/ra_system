@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'Public Service Temporary Closures')
+@section('title', 'Transport Service Temporary Closures')
 
 @section('content')
     <div class="card mt-3">
         <div class="card-header">
-            Public Service Temporary Closures
+            Transport Service Temporary Closures
         </div>
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">

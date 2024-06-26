@@ -46,7 +46,6 @@ trait PaymentsTrait
     public function regenerateControlNo(ZmBill $bill): bool
     {
         $this->verify($bill);
-
         DB::beginTransaction();
 
         try {
@@ -73,7 +72,7 @@ trait PaymentsTrait
                 $bill->save();
 
                 $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
-                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
 
                 event(new SendSms(SendZanMalipoSMS::SERVICE, null, [
                     'mobile_no' => ZmCore::formatPhone($bill->payer_phone_number),
@@ -85,15 +84,44 @@ trait PaymentsTrait
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-
+            Log::error($e);
             return false;
         }
     }
+
+    public function regeneratePublicServiceControlNo(ZmBill $bill): bool
+    {
+        $this->verify($bill);
+        DB::beginTransaction();
+
+        try {
+            $billable = $bill->billable;
+            if (config('app.env') != 'local') {
+                $billable->payment_status = BillStatus::CN_GENERATING;
+                $billable->save();
+                (new ZanMalipoInternalService)->createBill($bill);
+            } else {
+                $billable->payment_status = BillStatus::CN_GENERATING;
+
+                // Simulate successful control no generation
+                $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                $bill->zan_status = 'pending';
+                $bill->control_number = random_int(2000070001000, 2000070009999);
+                $billable->save();
+                $bill->save();
+            }
+            DB::commit();
+
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
+            $this->dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
+            return true;
+        } catch (\Exception$e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return false;
+        }
+    }
+
 
     /**
      * @param $return
@@ -154,7 +182,7 @@ trait PaymentsTrait
             $bill->save();
 
             $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
-            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
 
             dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
 
@@ -315,7 +343,7 @@ trait PaymentsTrait
         $billableId = $debt->id;
         $billableType = get_class($debt);
 
-        $zmBill = ZmCore::createBill(
+        $bill = ZmCore::createBill(
             $billableId,
             $billableType,
             $debt->tax_type_id,
@@ -335,7 +363,7 @@ trait PaymentsTrait
         );
 
         if (config('app.env') != 'local') {
-            $sendBill = (new ZanMalipoInternalService)->createBill($zmBill);
+            $sendBill = (new ZanMalipoInternalService)->createBill($bill);
         } else {
             // We are local
             $debt->payment_status = ReturnStatus::CN_GENERATED;
@@ -343,10 +371,10 @@ trait PaymentsTrait
             $debt->save();
 
             // Simulate successful control no generation
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status = 'pending';
-            $zmBill->control_number = random_int(2000070001000, 2000070009999);
-            $zmBill->save();
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = random_int(2000070001000, 2000070009999);
+            $bill->save();
         }
     }
 
@@ -414,7 +442,7 @@ trait PaymentsTrait
         $billableId = $debt->id;
         $billableType = get_class($debt);
 
-        $zmBill = ZmCore::createBill(
+        $bill = ZmCore::createBill(
             $billableId,
             $billableType,
             $debt->tax_type_id,
@@ -434,7 +462,7 @@ trait PaymentsTrait
         );
 
         if (config('app.env') != 'local') {
-            $sendBill = (new ZanMalipoInternalService)->createBill($zmBill);
+            $sendBill = (new ZanMalipoInternalService)->createBill($bill);
         } else {
             // We are local
             $debt->payment_status = ReturnStatus::CN_GENERATED;
@@ -442,10 +470,10 @@ trait PaymentsTrait
             $debt->save();
 
             // Simulate successful control no generation
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status = 'pending';
-            $zmBill->control_number = random_int(2000070001000, 2000070009999);
-            $zmBill->save();
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = random_int(2000070001000, 2000070009999);
+            $bill->save();
         }
     }
 
@@ -492,7 +520,7 @@ trait PaymentsTrait
         $billableId = $assessment->id;
         $billableType = get_class($assessment);
 
-        $zmBill = ZmCore::createBill(
+        $bill = ZmCore::createBill(
             $billableId,
             $billableType,
             $assessment->tax_type_id,
@@ -512,7 +540,7 @@ trait PaymentsTrait
         );
 
         if (config('app.env') != 'local') {
-            $sendBill = (new ZanMalipoInternalService)->createBill($zmBill);
+            $sendBill = (new ZanMalipoInternalService)->createBill($bill);
         } else {
             // We are local
             $assessment->payment_status = ReturnStatus::CN_GENERATED;
@@ -520,10 +548,10 @@ trait PaymentsTrait
             $assessment->save();
 
             // Simulate successful control no generation
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status = 'pending';
-            $zmBill->control_number = random_int(2000070001000, 2000070009999);
-            $zmBill->save();
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = random_int(2000070001000, 2000070009999);
+            $bill->save();
         }
     }
 
@@ -767,13 +795,121 @@ trait PaymentsTrait
                 $bill->save();
 
                 $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
-                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
 
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
         }
     }
 
+    public function generateAssessmentControlNumber($assessment)
+    {
+        $taxTypes = TaxType::all();
+
+        $taxType = $assessment->taxtype;
+
+        if (!$taxType->gfs_code) {
+            $taxType = TaxType::where('code', TaxType::VERIFICATION)->first();
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $billitems = [];
+
+            if ($assessment->principal_amount > 0) {
+                $billitems[] = [
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $assessment->principal_amount,
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
+                    'tax_type_id' => $taxType->id
+                ];
+            }
+
+            if ($assessment->interest_amount > 0) {
+                $billitems[] = [
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $assessment->interest_amount,
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
+                    'tax_type_id' => $taxTypes->where('code', 'interest')->firstOrFail()->id
+                ];
+            }
+
+            if ($assessment->penalty_amount > 0) {
+                $billitems[] = [
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $assessment->penalty_amount,
+                    'currency' => $assessment->currency,
+                    'gfs_code' => $taxType->gfs_code,
+                    'tax_type_id' => $taxTypes->where('code', 'penalty')->firstOrFail()->id
+                ];
+            }
+
+            $business = $assessment->business;
+
+            $payer_type = get_class($business);
+            $payer_name = $business->name ?? $business->taxpayer_name;
+            $payer_email = $business->email;
+            $payer_phone = $business->mobile;
+            $description = "{$taxType->name} Verification Assessment for {$payer_name}";
+            $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
+            $currency = $assessment->currency;
+            $createdby_type = get_class(Auth::user());
+            $createdby_id = Auth::id();
+            $exchange_rate = $this->getExchangeRate($assessment->currency);
+            $payer_id = $business->id;
+            $expire_date = Carbon::now()->addDays(30)->endOfDay();
+            $billableId = $assessment->id;
+            $billableType = get_class($assessment);
+            $taxType = $taxType->id;
+
+            $bill = ZmCore::createBill(
+                $billableId,
+                $billableType,
+                $taxType,
+                $payer_id,
+                $payer_type,
+                $payer_name,
+                $payer_email,
+                $payer_phone,
+                $expire_date,
+                $description,
+                $payment_option,
+                $currency,
+                $exchange_rate,
+                $createdby_id,
+                $createdby_type,
+                $billitems
+            );
+            DB::commit();
+
+            if (config('app.env') != 'local') {
+                (new ZanMalipoInternalService)->createBill($bill);
+            } else {
+                // We are local
+                $assessment->payment_status = ReturnStatus::CN_GENERATED;
+                $assessment->save();
+
+                // Simulate successful control no generation
+                $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                $bill->zan_status = 'pending';
+                $bill->control_number = random_int(2000070001000, 2000070009999);
+                $bill->save();
+                $this->customAlert('success', 'A control number for this verification has been generated successfully');
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+        }
+    }
 
     /**
      * @throws \Exception
@@ -851,7 +987,7 @@ trait PaymentsTrait
             $bill->save();
 
             $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
-            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$expireDate}.";
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
 
             if (env('APP_ENV') === 'production') {
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
@@ -888,7 +1024,7 @@ trait PaymentsTrait
         }
 
         $exchangeRate = 1;
-        $zmBill = ZmCore::createBill(
+        $bill = ZmCore::createBill(
             $mvr->id,
             get_class($mvr),
             $taxType->id,
@@ -919,15 +1055,17 @@ trait PaymentsTrait
         );
 
         if (config('app.env') != 'local') {
-            (new ZanMalipoInternalService)->createBill($zmBill);
+            (new ZanMalipoInternalService)->createBill($bill);
         } else {
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status = 'pending';
-            $zmBill->control_number = random_int(2000070001000, 2000070009999);
-            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-            $zmBill->billable->save();
-            $zmBill->save();
-            $this->flash('success', 'A control number for this verification has been generated successfully');
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = random_int(2000070001000, 2000070009999);
+            $bill->billable->payment_status = BillStatus::CN_GENERATED;
+            $bill->billable->save();
+            $bill->save();
+
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
+            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
 
@@ -945,7 +1083,7 @@ trait PaymentsTrait
         }
 
         $exchangeRate = 1;
-        $zmBill = ZmCore::createBill(
+        $bill = ZmCore::createBill(
             $transfer->id,
             get_class($transfer),
             $taxType->id,
@@ -976,15 +1114,17 @@ trait PaymentsTrait
         );
 
         if (config('app.env') != 'local') {
-            (new ZanMalipoInternalService)->createBill($zmBill);
+            (new ZanMalipoInternalService)->createBill($bill);
         } else {
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status = 'pending';
-            $zmBill->control_number = random_int(2000070001000, 2000070009999);
-            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-            $zmBill->billable->save();
-            $zmBill->save();
-            $this->flash('success', 'A control number for this verification has been generated successfully');
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = random_int(2000070001000, 2000070009999);
+            $bill->billable->payment_status = BillStatus::CN_GENERATED;
+            $bill->billable->save();
+            $bill->save();
+
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
+            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
 
@@ -992,7 +1132,7 @@ trait PaymentsTrait
      * @throws \DOMException
      * @throws \Exception
      */
-    public function generateDLicenseControlNumber($license, $fee)
+    public function generateDLicenseControlNumber($license, $fee, $classFactor = 1)
     {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
 
@@ -1002,7 +1142,7 @@ trait PaymentsTrait
         }
 
         $exchangeRate = 1;
-        $zmBill = ZmCore::createBill(
+        $bill = ZmCore::createBill(
             $license->id,
             get_class($license),
             $taxType->id,
@@ -1023,25 +1163,27 @@ trait PaymentsTrait
                     'billable_id' => $license->id,
                     'billable_type' => get_class($license),
                     'tax_type_id' => $taxType->id,
-                    'amount' => $fee->amount,
+                    'amount' => $fee->amount * $classFactor,
                     'currency' => Currencies::TZS,
                     'exchange_rate' => 1,
-                    'equivalent_amount' => $fee->amount,
+                    'equivalent_amount' => $fee->amount * $classFactor,
                     'gfs_code' => $taxType->gfs_code
                 ]
             ]
         );
 
         if (config('app.env') != 'local') {
-            (new ZanMalipoInternalService)->createBill($zmBill);
+            (new ZanMalipoInternalService)->createBill($bill);
         } else {
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status = 'pending';
-            $zmBill->control_number = random_int(2000070001000, 2000070009999);
-            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-            $zmBill->billable->save();
-            $zmBill->save();
-            $this->flash('success', 'A control number for this verification has been generated successfully');
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = random_int(2000070001000, 2000070009999);
+            $bill->billable->payment_status = BillStatus::CN_GENERATED;
+            $bill->billable->save();
+            $bill->save();
+
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
+            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
 
@@ -1058,7 +1200,7 @@ trait PaymentsTrait
         }
 
         $exchangeRate = 1;
-        $zmBill = ZmCore::createBill(
+        $bill = ZmCore::createBill(
             $mvr->id,
             get_class($mvr),
             $taxType->id,
@@ -1089,15 +1231,17 @@ trait PaymentsTrait
         );
 
         if (config('app.env') != 'local') {
-            (new ZanMalipoInternalService)->createBill($zmBill);
+            (new ZanMalipoInternalService)->createBill($bill);
         } else {
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status = 'pending';
-            $zmBill->control_number = random_int(2000070001000, 2000070009999);
-            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-            $zmBill->billable->save();
-            $zmBill->save();
-            $this->flash('success', 'A control number for this verification has been generated successfully');
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = random_int(2000070001000, 2000070009999);
+            $bill->billable->payment_status = BillStatus::CN_GENERATED;
+            $bill->billable->save();
+            $bill->save();
+
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
+            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
 
@@ -1108,13 +1252,13 @@ trait PaymentsTrait
     public function generateMvrParticularChangeControlNumber($mvr, $fee)
     {
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+        $exchangeRate = 1;
 
         if (!$mvr->ledger) {
             $this->recordDebitLedger($mvr, $fee->amount, $taxType->id);
         }
 
-        $exchangeRate = 1;
-        $zmBill = ZmCore::createBill(
+        $bill = ZmCore::createBill(
             $mvr->id,
             get_class($mvr),
             $taxType->id,
@@ -1145,15 +1289,72 @@ trait PaymentsTrait
         );
 
         if (config('app.env') != 'local') {
-            (new ZanMalipoInternalService)->createBill($zmBill);
+            (new ZanMalipoInternalService)->createBill($bill);
         } else {
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status = 'pending';
-            $zmBill->control_number = random_int(2000070001000, 2000070009999);
-            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-            $zmBill->billable->save();
-            $zmBill->save();
-            $this->flash('success', 'A control number for this verification has been generated successfully');
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = random_int(2000070001000, 2000070009999);
+            $bill->billable->payment_status = BillStatus::CN_GENERATED;
+            $bill->billable->save();
+            $bill->save();
+
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
+            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
+        }
+    }
+
+    public function generatePublicServiceControlNumber($psReturn) {
+        $taxType = TaxType::select('id', 'gfs_code')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
+        $exchangeRate = $this->getExchangeRate($psReturn->currency);
+        $startDate = Carbon::create($psReturn->start_date)->format('d M Y H:i:s');
+        $endDate = Carbon::create($psReturn->end_date)->format('d M Y H:i:s');
+
+        if (!$psReturn->ledger) {
+            $this->recordDebitLedger($psReturn, $psReturn->amount, $taxType->id);
+        }
+
+        $bill = ZmCore::createBill(
+            $psReturn->id,
+            get_class($psReturn),
+            $taxType->id,
+            $psReturn->taxpayer_id,
+            Taxpayer::class,
+            $psReturn->taxpayer->fullname,
+            $psReturn->taxpayer->email,
+            ZmCore::formatPhone($psReturn->taxpayer->mobile),
+            Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
+            "Public Service Payment for {$psReturn->motor->mvr->plate_number} from {$startDate} to {$endDate}",
+            ZmCore::PAYMENT_OPTION_EXACT,
+            $psReturn->currency,
+            $exchangeRate,
+            $psReturn->taxpayer_id,
+            Taxpayer::class,
+            [
+                [
+                    'billable_id' => $psReturn->id,
+                    'billable_type' => get_class($psReturn),
+                    'tax_type_id' => $taxType->id,
+                    'amount' => $psReturn->amount,
+                    'currency' => $psReturn->currency,
+                    'exchange_rate' => $exchangeRate,
+                    'equivalent_amount' => $psReturn->amount * $exchangeRate,
+                    'gfs_code' => $taxType->gfs_code
+                ]
+            ]
+        );
+
+        if (config('app.env') != 'local') {
+            (new ZanMalipoInternalService)->createBill($bill);
+        }else {
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = random_int(2000070001000, 2000070009999);
+            $bill->billable->payment_status = BillStatus::CN_GENERATED;
+            $bill->billable->save();
+            $bill->save();
+
+            $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
+            dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
         }
     }
 
@@ -1165,7 +1366,7 @@ trait PaymentsTrait
         $taxType = TaxType::select('id')->where('code', TaxType::VAT)->firstOrFail();
         $subVat = SubVat::select('gfs_code')->where('code', SubVatConstant::IMPORTS)->firstOrFail();
         $exchangeRate = 1;
-        $zmBill = ZmCore::createBill(
+        $bill = ZmCore::createBill(
             $taxRefund->id,
             get_class($taxRefund),
             $taxType->id,
@@ -1195,14 +1396,14 @@ trait PaymentsTrait
             ]
         );
         if (config('app.env') != 'local') {
-            (new ZanMalipoInternalService)->createBill($zmBill);
+            (new ZanMalipoInternalService)->createBill($bill);
         } else {
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status = 'pending';
-            $zmBill->control_number = random_int(2000070001000, 2000070009999);
-            $zmBill->billable->payment_status = BillStatus::CN_GENERATED;
-            $zmBill->billable->save();
-            $zmBill->save();
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = random_int(2000070001000, 2000070009999);
+            $bill->billable->payment_status = BillStatus::CN_GENERATED;
+            $bill->billable->save();
+            $bill->save();
             $this->flash('success', 'A control number for this verification has been generated successfully');
         }
     }

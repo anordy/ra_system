@@ -36,6 +36,23 @@
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="form-group col-lg-4">
+                        <div class="form-group">
+                            <label>Vehicle Class</label>
+                            <select class="form-control @error('mvrClass') is-invalid @enderror"
+                                    wire:model.defer="mvrClass">
+                                <option value="null">Select</option>
+                                @foreach ($mvrClasses as $class)
+                                    <option value="{{ $class->id }}">{{ $class->name }} - {{ $class->category  }}</option>
+                                @endforeach
+                            </select>
+                            @error('mvrClass')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
             @endif
             <div class="row m">

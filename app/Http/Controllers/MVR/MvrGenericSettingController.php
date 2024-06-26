@@ -11,15 +11,16 @@ use App\Models\DlBloodGroup;
 use App\Models\DlFee;
 use App\Models\DlLicenseClass;
 use App\Models\DlLicenseDuration;
+use App\Models\DlRestriction;
 use App\Models\GenericSettingModel;
 use App\Models\MvrBodyType;
+use App\Models\MvrClass;
 use App\Models\MvrColor;
 use App\Models\MvrDeRegistrationReason;
 use App\Models\MvrFee;
 use App\Models\MvrMake;
 use App\Models\MvrModel;
 use App\Models\MvrOwnershipTransferReason;
-use App\Models\MvrPlateNumberColor;
 use App\Models\MvrPlateSize;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
@@ -82,10 +83,12 @@ class MvrGenericSettingController extends Controller
             $permission = 'setting-case-decision-view';
         } else if ($class === CourtLevel::class) {
             $permission = 'setting-court-level-view';
-        } else if ($class === MvrPlateNumberColor::class) {
-            $permission = 'setting-mvr-color-view';
         } else if ($class === MvrRegistrationType::class) {
             $permission = 'setting-mvr-color-view';
+        } else if ($class === DlRestriction::class){
+            $permission = 'setting-dl-restriction-view';
+        } else if ($class === MvrClass::class){
+            $permission = 'setting-mvr-class-view';
         }  else if ($class === PortLocation::class) {
             $permission = 'port-location-view';
         }

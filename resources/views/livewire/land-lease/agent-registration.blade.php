@@ -14,7 +14,7 @@
 
         <div class="col-md-12">
             <button wire:click="lookup" wire:loading.attr="disabled" class="btn btn-primary">
-                <div wire:loading wire:target="submit">
+                <div wire:loading wire:target="lookup">
                     <div class="spinner-border mr-1 spinner-border-sm text-light">
                         <span class="sr-only">Loading...</span>
                     </div>

@@ -53,7 +53,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Plate Number Color</span>
-                <p class="my-1">{{ $reg->platecolor->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $reg->regtype->color->color ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Register Type</span>
@@ -83,10 +83,10 @@
     </div>
 </div>
 
- @if ($reg->approval_report)
+@if ($reg->approval_report)
     <div class="card my-4 rounded-0">
         <div class="card-header font-weight-bold bg-white">
-            Approval Report
+            Inspection Form
         </div>
         <div class="card-body">
             <div class="row">
@@ -97,12 +97,37 @@
                             <a target="_blank"
                                href="{{ route('assesments.waiver.files', encrypt($reg->approval_report)) }}"
                                class="ml-1 font-weight-bolder">
-                                Approval Report
+                                Inspection Form
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>
                         </div>
                     </div>
                 @endif
+            </div>
+        </div>
+    </div>
+@endif
+
+@if ($reg->attachments)
+    <div class="card my-4 rounded-0">
+        <div class="card-header font-weight-bold bg-white">
+            Additional Attachments
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @foreach($reg->attachments as $attachment)
+                    <div class="col-md-3">
+                        <div class="file-item p-2 mb-3 d-flex rounded-sm align-items-center">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                            <a target="_blank"
+                               href="{{ route('assesments.waiver.files', encrypt($attachment->location)) }}"
+                               class="ml-1 font-weight-bolder">
+                                {{ $attachment->name ?? 'N/A' }}
+                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>

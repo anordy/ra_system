@@ -20,23 +20,11 @@
 {{--                </div>--}}
                 <div id="tab2" class="tab-pane fade m-2 show d-none">
                     <livewire:debt.return-debts-table />
-
                 </div>
                 <div id="tab1" class="tab-pane fade m-2 show active">
                     <livewire:debt.return-overdue-debts-table />
-
                 </div>
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-    <script>
-        $(document).ready(function() {
-            $(".nav-tabs a").click(function() {
-                $(this).tab('show');
-            });
-        });
-    </script>
 @endsection

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Assesment;
+use App\Models\MvrRegistrationType;
 use App\Models\MvrRegistrationTypeCategory;
 use Illuminate\Database\Seeder;
 
@@ -15,13 +15,9 @@ class MvrRegistrationTypeCategoriesSeeder extends Seeder
      */
     public function run()
     {
-        MvrRegistrationTypeCategory::query()->updateOrcreate(['id'=>1, 'name'=>'Private']);
-        MvrRegistrationTypeCategory::query()->updateOrcreate(['id'=>2, 'name'=>'Commercial']);
-        MvrRegistrationTypeCategory::query()->updateOrcreate(['id'=>3, 'name'=>'Government']);
-        MvrRegistrationTypeCategory::query()->updateOrcreate(['id'=>4, 'name'=>'Corporate']);
-        MvrRegistrationTypeCategory::query()->updateOrcreate(['id'=>5, 'name'=>'Donor Funded Project']);
-        MvrRegistrationTypeCategory::query()->updateOrcreate(['id'=>6, 'name'=>'Diplomat']);
-        MvrRegistrationTypeCategory::query()->updateOrcreate(['id'=>7, 'name'=>'Military']);
-
+        MvrRegistrationTypeCategory::query()->updateOrcreate(['id' => 1, 'name' => MvrRegistrationTypeCategory::PRIVATE]);
+        MvrRegistrationTypeCategory::query()->updateOrcreate(['id' => 2, 'name' => MvrRegistrationTypeCategory::COMMERCIAL]);
+        MvrRegistrationTypeCategory::query()->updateOrcreate(['id' => 4, 'name' => MvrRegistrationTypeCategory::CORPORATE]);
+        MvrRegistrationTypeCategory::query()->updateOrcreate(['id' => 3, 'name' => MvrRegistrationTypeCategory::GOVERNMENT]);
     }
 }

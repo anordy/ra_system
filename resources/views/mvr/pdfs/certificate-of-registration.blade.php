@@ -27,14 +27,14 @@
         #owner-name {
             position: absolute;
             top: 190px;
-            left: -30px;
+            left: 1px;
             width: 1000px;
         }
 
         #reg-no {
             position: absolute;
             top: 380px;
-            left: -30px;
+            left: 1px;
             width: 500px;
         }
 
@@ -55,7 +55,7 @@
         #yom {
             position: absolute;
             top: 560px;
-            left: -30px;
+            left: 1px;
             width: 300px;
         }
 
@@ -116,6 +116,15 @@
         #page-break {
             page-break-before: always;
         }
+
+        #qr-code {
+            position: fixed;
+            top: 960px;
+            right: -35px;
+            border-radius: 5px;
+            height: 180px;
+            width: 180px;
+        }
     </style>
 </head>
 <body>
@@ -151,7 +160,10 @@
 <div id="color">{{strtoupper($motor_vehicle->chassis->color)}}</div>
 <div id="capacity">{{strtoupper($motor_vehicle->chassis->engine_cubic_capacity)}} cc</div>
 <div id="barcode">
-    <img src="data:image/png;base64,' . {{ DNS1D::getBarcodePNG($motor_vehicle->registration_number, 'C39+',4,100, array(1,1,1), false)  }} . '" alt="barcode"   />
+    <img src="data:image/png;base64,' . {{ DNS1D::getBarcodePNG($motor_vehicle->registration_number, 'C39+',4,100, array(1,1,1), false)  }} . '" alt="barcode" />
+</div>
+<div id="qr-code">
+    <img class="img-fluid" src="{{ $dataUri }}" alt="qr-code"/>
 </div>
 
 </body>

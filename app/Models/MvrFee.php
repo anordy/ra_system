@@ -48,6 +48,7 @@ class MvrFee extends Model implements Auditable
 		'mvr_registration_type_id',
 		'mvr_class_id',
 		'status',
+        'mvr_plate_number_type_id'
 	];
 
 	public function fee_type()
@@ -63,5 +64,9 @@ class MvrFee extends Model implements Auditable
     public function class()
     {
         return $this->belongsTo(MvrClass::class,'mvr_class_id');
+    }
+
+    public function plate_type(){
+        return $this->belongsTo(MvrPlateNumberType::class, 'mvr_plate_number_type_id');
     }
 }

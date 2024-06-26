@@ -14,6 +14,7 @@ class PublicServicePaymentCategorySeeder extends Seeder
      */
     public function run()
     {
+            PublicServicePaymentCategory::updateOrcreate(['name' => 'Company', 'turnover_tax' => 5000, 'currency' => 'TZS']);
             PublicServicePaymentCategory::updateOrcreate(['name' => 'Passengers /school and staff car', 'turnover_tax' => 300000, 'currency' => 'TZS']);
             PublicServicePaymentCategory::updateOrcreate(['name' => 'Three wheels vehicle', 'turnover_tax' => 150000, 'currency' => 'TZS']);
             PublicServicePaymentCategory::updateOrcreate(['name' => 'Private hire (1-6 passengers)', 'turnover_tax' => 375000, 'currency' => 'TZS']);

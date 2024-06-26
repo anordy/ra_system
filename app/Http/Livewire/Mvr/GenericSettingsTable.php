@@ -6,7 +6,9 @@ use App\Enum\GeneralConstant;
 use App\Models\DlFee;
 use App\Models\DlLicenseClass;
 use App\Models\DlLicenseDuration;
+use App\Models\DlRestriction;
 use App\Models\GenericSettingModel;
+use App\Models\MvrClass;
 use App\Models\MvrColor;
 use App\Models\MvrFee;
 use App\Models\MvrModel;
@@ -121,16 +123,18 @@ class GenericSettingsTable extends DataTableComponent
     {
         $model_extra_columns = [
             MvrModel::class => [
-                Column::make("Motor Vehicle Make", "make.name")->sortable()
+                Column::make("Motor Vehicle Make", "make.name")->sortable(),
             ],
             MvrColor::class => [
-                Column::make("Hex Value", "hex_value")->sortable()
+                Column::make("Color", "color")->sortable(),
+                Column::make("Registration Type", "registration_type.name")->sortable(),
             ],
             MvrFee::class => [
                 Column::make("Amount", "amount")->sortable()->format(fn($value)=>number_format($value).' TZS'),
                 Column::make("GFS Code", "gfs_code")->sortable(),
                 Column::make("Fee Category", "fee_type.type")->sortable(),
                 Column::make("Registration Type", "registration_type.name")->sortable(),
+                Column::make("Registration No. Type", "plate_type.name")->sortable(),
                 Column::make("Class", "class.name")->sortable(),
                 Column::make("Status", "status")->sortable(),
             ],
@@ -152,6 +156,15 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("Type", "type")->sortable(),
                 Column::make("Duration", "license_duration.number_of_years")->sortable(),
             ],
+            DlRestriction::class => [
+                Column::make("Code", "code")->sortable(),
+                Column::make("Description", "description")->sortable(),
+                Column::make("Symbol", "symbol")->sortable(),
+            ],
+            MvrClass::class => [
+                Column::make("Code", "code")->sortable(),
+                Column::make("Category", "category")->sortable(),
+            ],
             PortLocation::class => [
                 Column::make("Region", "region.name")->sortable(),
             ]
@@ -163,6 +176,9 @@ class GenericSettingsTable extends DataTableComponent
     private function modelHasNameColumn(){
         $models_with_no_name_columns = [
             DlLicenseDuration::class => 1,
+            DlRestriction::class => 1,
+            MvrColor::class => 1,
+            MvrFee::class => 1
         ];
 
         return empty($models_with_no_name_columns[$this->model]);

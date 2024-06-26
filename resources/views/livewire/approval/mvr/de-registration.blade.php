@@ -6,7 +6,7 @@
         <div class="card-body">
             @include('livewire.approval.transitions')
 
-            @if ($this->checkTransition('mvr_police_officer_review'))
+            @if ($this->checkTransition('mvr_police_officer_review') || $this->checkTransition('mvr_registration_officer_review'))
                 @include('livewire.approval.mvr.de-registration-police-review')
             @endif
 

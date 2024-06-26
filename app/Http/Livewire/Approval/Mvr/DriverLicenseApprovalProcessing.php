@@ -3,16 +3,15 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
-use App\Enum\Currencies;
-use App\Enum\MvrRegistrationStatus;
-use App\Enum\TransactionType;
+use App\Enum\GeneralConstant;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
+use App\Models\DlApplicationCertificate;
 use App\Models\DlApplicationStatus;
+use App\Models\DlDriversLicense;
 use App\Models\DlFee;
-use App\Models\DlLicenseApplication;
-use App\Models\MvrRegistrationParticularChange;
-use App\Models\TaxType;
+use App\Models\DlLicenseRestriction;
+use App\Models\DlRestriction;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use App\Traits\TaxpayerLedgerTrait;
@@ -31,29 +30,95 @@ class DriverLicenseApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $approvalReport;
+    public $selectedRestrictions, $restrictions;
+    public $attachments = [];
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
+        $this->selectedRestrictions = [];
+        $this->restrictions = DlRestriction::select('id', 'symbol', 'description')->get();
+        $this->attachments = [
+            [
+                'file' => '',
+            ],
+        ];
     }
+
+
+    public function addAttachment()
+    {
+        $this->attachments[] = [
+            'file' => '',
+        ];
+    }
+
+    public function removeAttachment($i)
+    {
+        unset($this->attachments[$i]);
+    }
+
+    public function updatedSelectedRestrictions($value)
+    {
+        $this->selectedRestrictions[] = (int) $value;
+        // Remove 0 and false values from the array
+        $this->selectedRestrictions = array_filter($this->selectedRestrictions, function ($item) {
+            return $item !== 0 && $item !== false;
+        });
+        $this->selectedRestrictions = array_unique($this->selectedRestrictions);
+    }
+
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
-
-        $this->validate([
-            'comments' => 'required|strip_tag',
-        ]);
-
 
         try {
             DB::beginTransaction();
 
             if ($this->checkTransition('transport_officer_review') && $transition === 'transport_officer_review') {
+                $this->validate([
+                    'comments' => 'required|strip_tag',
+                    'attachments.*.file' => 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
+                ]);
+
+                DlLicenseRestriction::where('dl_license_application_id', $this->subject->id)->delete();
+                foreach ($this->selectedRestrictions as $_id => $_value) {
+                    if (!empty($_value)) {
+                        $class = DlLicenseRestriction::query()->create([
+                            'dl_license_application_id' => $this->subject->id,
+                            'dl_restriction_id' => $_id
+                        ]);
+
+                        if (!$class) {
+                            throw new \Exception('Could not persist driving license restriction information');
+                        }
+                    }
+                }
+
                 $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
+
+                foreach ($this->attachments as $attachment) {
+                    DlApplicationCertificate::create([
+                        'location' => $attachment['file']->store('dl_files'),
+                        'dl_license_application_id' => $this->subject->id
+                    ]);
+                }
+
                 $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->save();
+            } else {
+                $this->validate([
+                    'comments' => 'required|strip_tag',
+                ]);
+
+                $lastDlLicense = DlDriversLicense::where('dl_drivers_license_owner_id', $this->subject->dl_drivers_license_owner_id)->latest()->first();
+
+                if ($this->subject->type == GeneralConstant::ADD_CLASS) {
+                    $lastDlLicense->status = GeneralConstant::ADD_CLASS;
+                    $lastDlLicense->save();
+                }
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
@@ -156,15 +221,22 @@ class DriverLicenseApprovalProcessing extends Component
     {
         try {
             // Fetch the fee
-            $fee = DlFee::query()->where('dl_license_duration_id', $this->subject->license_duration_id)
+            $fee = DlFee::query()
+                ->where('dl_license_duration_id', $this->subject->license_duration_id)
                 ->where('type', $this->subject->type)
                 ->first();
 
             if (empty ($fee)) {
-                // Fee not configured, display error and return
                 $errorMessage = "Driver License fee for this application is not configured";
                 $this->customAlert('error', $errorMessage);
                 return;
+            } else {
+                $classFactor = 1;
+                if ($this->subject->type == GeneralConstant::ADD_CLASS) {
+                    $classFactor = $this->subject->application_license_classes->count() -
+                        $this->subject->previousApplication->application_license_classes->count();
+                }
+                $this->generateDLicenseControlNumber($this->subject, $fee, $classFactor);
             }
 
             // Generate control number

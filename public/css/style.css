@@ -1028,6 +1028,24 @@ font-size: 85%"
     border: 1px solid #d1d6d8;
 }
 
+.z-9999 {
+    z-index: 9999;
+}
+
+
+#table-bulkActionsDropdown {
+    width: 150px !important;
+    background: #f2f2f2;
+}
+
+a.dropdown-item {
+    font-size: .9rem !important;
+}
+
+table.align-middle td, table.align-middle th {
+    vertical-align: middle !important;
+}
+
 .dl-photo-2 img {
     width: 250px;
     max-height: 250px;
@@ -1039,7 +1057,12 @@ font-size: 85%"
 .font-x-large {
     font-size: x-large;
 }
-.btn-cm{
 
+.btn-cm {
     margin-top: 30px;
+}
+
+.logout-link:hover {
+    background: #085b86 !important;
+    color: #0080c1 !important;
 }

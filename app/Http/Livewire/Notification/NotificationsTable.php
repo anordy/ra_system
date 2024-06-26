@@ -71,6 +71,7 @@ class NotificationsTable extends Component
             ->whereNull('read_at')
             ->latest()
             ->paginate(10);
+
         return view('livewire.notifications.notifications-table', [
             'notifications' => $notifications
         ]);

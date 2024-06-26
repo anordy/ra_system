@@ -58,7 +58,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Plate Number Color</span>
-                <p class="my-1">{{ $reg->platecolor->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $reg->regtype->color->color ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Register Type</span>
@@ -85,17 +85,12 @@
                 <p class="my-1">{{ $reg->registered_at ?? 'N/A' }}</p>
             </div>
 
-            @if($request->agreement_contract_path)
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Contract of Sales/Oath</span>
-                    <p class="my-1"><a class="btn btn-primary btn-sm" href="{{route('mvr.files',encrypt($request->agreement_contract_path))}}">Preview</a></p>
-                </div>
-            @endif
-
             @if($request->inspection_report)
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Inspection Report</span>
-                    <p class="my-1"><a class="btn btn-primary btn-sm" href="{{route('mvr.files',encrypt($request->inspection_report))}}">Preview</a></p>
+                    <p class="my-1"><a class="btn btn-primary btn-sm"
+                                       href="{{route('mvr.files',encrypt($request->inspection_report))}}">Preview</a>
+                    </p>
                 </div>
             @endif
 
@@ -106,6 +101,61 @@
                 </div>
             @endif
 
+        </div>
+
+        <div class="row my-2">
+            @if($request->agreement_contract_path)
+                <div class="col-md-3">
+                    <div class="file-item p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                        <a target="_blank"
+                           href="{{route('mvr.files',encrypt($request->agreement_contract_path))}}"
+                           class="ml-1 font-weight-bolder">
+                            Sales Agreement
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endif
+            @if($request->affidavit)
+                <div class="col-md-3">
+                    <div class="file-item p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                        <a target="_blank"
+                           href="{{route('mvr.files',encrypt($request->affidavit))}}"
+                           class="ml-1 font-weight-bolder">
+                            Affidavit
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endif
+            @if($request->original_card)
+                <div class="col-md-3">
+                    <div class="file-item p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                        <a target="_blank"
+                           href="{{route('mvr.files',encrypt($request->original_card))}}"
+                           class="ml-1 font-weight-bolder">
+                            Original Card
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endif
+            @if($request->owner_id)
+                <div class="col-md-3">
+                    <div class="file-item p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                        <a target="_blank"
+                           href="{{route('mvr.files',encrypt($request->owner_id))}}"
+                           class="ml-1 font-weight-bolder">
+                            Owner's Identification
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>

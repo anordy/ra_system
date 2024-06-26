@@ -3,14 +3,12 @@
 namespace App\Http\Livewire;
 
 use App\Models\ApprovalLevel;
-use App\Models\Role;
-use App\Models\UserApprovalLevel;
 use App\Models\User;
+use App\Models\UserApprovalLevel;
+use App\Traits\CustomAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class AssignApprovalLevelAddModal extends Component
@@ -47,28 +45,24 @@ class AssignApprovalLevelAddModal extends Component
             return;
         }
 
-        // Allow non-admin to be makers and checkers
-        // if ($this->user->role->name != 'Administrator') {
-        //     $this->customAlert('error', 'This level of approval is only allowed for Administrator role only');
-        //     return;
-        // }
         if (Auth::id() == $this->user->id){
             $this->customAlert('error', 'You can not change your own approval level.');
             return;
         }
+
         DB::beginTransaction();
         try {
-            UserApprovalLevel::updateOrCreate([
-                'user_id' => $this->user->id
-            ], [
+            UserApprovalLevel::where('user_id', $this->user->id)->delete();
+            $level = UserApprovalLevel::create([
                 'role_id' => $this->user->role_id,
                 'user_id' => $this->user->id,
                 'approval_level_id' => $this->level,
                 'created_by' => Auth::id(),
             ]);
-            $this->user->update(['level_id'=>$this->level]);
+            $userLevel = $this->user->update(['level_id'=>$this->level]);
+            if (!$level || !$userLevel) throw new \Exception('Failed to create approval level.');
             DB::commit();
-            $this->customAlert('success', 'Record saved successfully');
+            $this->customAlert('success', 'Approval level saved successfully');
             return redirect()->route('settings.users.index');
         } catch (\Throwable $exception) {
             DB::rollBack();
