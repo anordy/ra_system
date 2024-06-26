@@ -302,6 +302,16 @@ class SystemSettingsSeeder extends Seeder
                 'is_approved' => 1,
                 'options' => json_encode(['disabled' => 0, 'enabled' => 1])
             ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'System Biometric Status',
+                'code' => 'biometric-status',
+                'description' => 'Allow biometric.',
+                'value' => 0,
+                'unit' => 'options',
+                'is_approved' => 1,
+                'options' => json_encode(['disabled' => 0, 'enabled' => 1])
+            ],
 
         ];
 
