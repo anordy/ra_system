@@ -164,22 +164,22 @@ class TaxpayerLedgerController extends Controller
 
     private function getLedgerByCurrency($currency, $businessLocationId)
     {
-        $debitLedgers = TaxpayerLedger::select('source_type', 'source_id', 'business_location_id', 'tax_type_id', 'currency',
+        $debitLedgers = TaxpayerLedger::select('source_type', 'business_location_id', 'tax_type_id', 'currency',
             DB::raw('SUM(total_amount) as total_debit_amount')
         )
             ->where('business_location_id', $businessLocationId)
             ->where('transaction_type', TransactionType::DEBIT)
             ->where('currency', $currency)
-            ->groupBy('source_type', 'source_id', 'business_location_id', 'tax_type_id', 'currency')
+            ->groupBy('source_type', 'business_location_id', 'tax_type_id', 'currency')
             ->get();
 
-        $creditLedgers = TaxpayerLedger::select('source_type', 'source_id', 'business_location_id', 'tax_type_id', 'currency',
+        $creditLedgers = TaxpayerLedger::select('source_type', 'business_location_id', 'tax_type_id', 'currency',
             DB::raw('SUM(total_amount) as total_credit_amount')
         )
             ->where('business_location_id', $businessLocationId)
             ->where('transaction_type', TransactionType::CREDIT)
             ->where('currency', $currency)
-            ->groupBy('source_type', 'source_id', 'business_location_id', 'tax_type_id', 'currency')
+            ->groupBy('source_type', 'business_location_id', 'tax_type_id', 'currency')
             ->get();
 
         return [
@@ -190,22 +190,22 @@ class TaxpayerLedgerController extends Controller
 
     private function getBusinessLedgerByCurrency($currency, $businessId)
     {
-        $debitLedgers = TaxpayerLedger::select('source_type', 'source_id', 'business_id', 'tax_type_id', 'currency',
+        $debitLedgers = TaxpayerLedger::select('source_type', 'business_id', 'tax_type_id', 'currency',
             DB::raw('SUM(total_amount) as total_debit_amount')
         )
             ->where('business_id', $businessId)
             ->where('transaction_type', TransactionType::DEBIT)
             ->where('currency', $currency)
-            ->groupBy('source_type', 'source_id', 'business_id', 'tax_type_id', 'currency')
+            ->groupBy('source_type', 'business_id', 'tax_type_id', 'currency')
             ->get();
 
-        $creditLedgers = TaxpayerLedger::select('source_type', 'source_id', 'business_id', 'tax_type_id', 'currency',
+        $creditLedgers = TaxpayerLedger::select('source_type', 'business_id', 'tax_type_id', 'currency',
             DB::raw('SUM(total_amount) as total_credit_amount')
         )
             ->where('business_id', $businessId)
             ->where('transaction_type', TransactionType::CREDIT)
             ->where('currency', $currency)
-            ->groupBy('source_type', 'source_id', 'business_id', 'tax_type_id', 'currency')
+            ->groupBy('source_type', 'business_id', 'tax_type_id', 'currency')
             ->get();
 
         return [
