@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\LandLease;
 
 use App\Enum\LeaseStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Listeners\SendMailFired;
 use App\Models\BusinessLocation;
@@ -11,7 +12,9 @@ use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\LandLeaseFiles;
 use App\Models\Region;
+use App\Models\TaxType;
 use App\Models\Ward;
+use App\Traits\TaxpayerLedgerTrait;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -29,7 +32,7 @@ use Carbon\Carbon;
 
 class LandLeaseCompleteRegistration extends Component
 {
-    use CustomAlert, WithFileUploads, CheckReturnConfigurationTrait;
+    use CustomAlert, WithFileUploads, CheckReturnConfigurationTrait, TaxpayerLedgerTrait;
 
     public $isBusiness;
     public $businessZin;
@@ -158,6 +161,9 @@ class LandLeaseCompleteRegistration extends Component
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function createLeasePayment($landLease)
     {
         $commence_date = Carbon::parse($landLease->rent_commence_date);
@@ -224,11 +230,13 @@ class LandLeaseCompleteRegistration extends Component
                     'last_due_date' => $due_date,
                     'curr_due_date' => Carbon::now()->endOfMonth(),
                 ]);
+
             } else {
                 $this->customAlert('warning', __('Some data are missing, please contact ZRA support for more assistance!'));
             }
 
         }
+        $this->recordTransactionLedger($leasePayment);
     }
 
     /*
@@ -401,8 +409,25 @@ class LandLeaseCompleteRegistration extends Component
             $this->customAlert('error', __('Failed to register lease'));
         }
     }
+
     public function getLeaseFiles()
     {
         return LandLeaseFiles::select('file_path', 'name')->where('land_lease_id', $this->landLease->id)->get();
+    }
+
+    public function getTaxtype()
+    {
+        return TaxType::select('id')->where('code', 'land-lease')->first()->id;
+    }
+
+    public function recordTransactionLedger($leasePayment)
+    {
+        $penalty = $leasePayment->totalPenalties();
+        $totalAmount = $leasePayment->total_amount + $penalty;
+
+        //record to taxpayer ledger
+        $this->recordLedger(TransactionType::DEBIT, get_class($leasePayment), $leasePayment->id,
+            $leasePayment->total_amount, 0, $penalty, $totalAmount, $this->getTaxtype
+            (), "USD", $leasePayment->taxpayer_id, null, null);
     }
 }
