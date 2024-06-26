@@ -1,36 +1,39 @@
 <div class="card">
     <div class="card-body">
-        <h6 class="text-uppercase mt-2 ml-2">Filled {{ $return->taxType->name }} Return Details for
-            {{ $return->financialMonth->name }}, {{ $return->financialMonth->year->code }}</h6>
+        <h6 class="text-uppercase mt-2 ml-2">Filed {{ $return->taxType->name ?? 'N/A' }} Return Details for
+            {{ $return->financialMonth->name ?? 'N/A' }}, {{ $return->financialMonth->year->code ?? 'N/A' }}</h6>
         <hr>
         @if ($return->taxType->code == \App\Models\TaxType::HOTEL || $return->taxType->code == \App\Models\TaxType::AIRBNB)
             <div class="row">
-                @foreach ($return->items as $item)
-                    @if (in_array($item->config->col_type, ['hotel_top', 'hotel_bottom']))
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">{{ $item->config->name }}</span>
-                            <p class="my-1">{{ number_format($item->value) }}</p>
-                        </div>
-                    @endif
-                @endforeach
+                @if(!empty($return->items))
+                    @foreach ($return->items as $item)
+                        @if (in_array($item->config->col_type, ['hotel_top', 'hotel_bottom']))
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">{{ $item->config->name ?? 'N/A' }}</span>
+                                <p class="my-1">{{ number_format($item->value) }}</p>
+                            </div>
+                        @endif
+                    @endforeach
+                @endif
             </div>
         @endif
         <div class="row">
             <div class="col-md-12 mb-4">
-                <table class="table table-bordered mb-0 normal-text">
+                <table class="table table-bordered table-responsive mb-0 normal-text">
                     <thead>
-                        <tr class="table-active">
-                            <th>Supplies of goods & services / Mauzo ya bidhaa na/au huduma</th>
-                            <th>Value (Excluding Tax) / Thamani bila ya kodi</th>
-                            <th>Rate / Kiwango</th>
-                            <th>Tax Amount (Kiasi cha Kodi)</th>
-                        </tr>
+                    <tr class="table-active">
+                        <th>Supplies of goods & services / Mauzo ya bidhaa na/au huduma</th>
+                        <th>Value (Excluding Tax) / Thamani bila ya kodi</th>
+                        <th>Rate / Kiwango</th>
+                        <th>Tax Amount (Kiasi cha Kodi)</th>
+                    </tr>
                     </thead>
                     <tbody>
+                    @if(!empty($return->items))
                         @foreach ($return->items as $item)
                             @if ($item->config->heading_type == 'supplies')
                                 <tr>
-                                    <td class="return-label">{{ $item->config->name }}</td>
+                                    <td class="return-label">{{ $item->config->name ?? 'N/A' }}</td>
                                     <td class="return-label">
                                         {{ number_format($item->value, 2) }}
                                     </td>
@@ -54,16 +57,18 @@
                                 </tr>
                             @endif
                         @endforeach
+                    @endif
                     </tbody>
                     <thead>
-                        <tr class="table-active">
-                            <th>Purchases / Manunuzi</th>
-                            <th>Value of Purchases / Thamani ya Manunuzi</th>
-                            <th>Rate / Kiwango</th>
-                            <th>Tax Amount (Kiasi cha Kodi)</th>
-                        </tr>
+                    <tr class="table-active">
+                        <th>Purchases / Manunuzi</th>
+                        <th>Value of Purchases / Thamani ya Manunuzi</th>
+                        <th>Rate / Kiwango</th>
+                        <th>Tax Amount (Kiasi cha Kodi)</th>
+                    </tr>
                     </thead>
                     <tbody>
+                    @if(!empty($return->items))
                         @foreach ($return->items as $item)
                             @if ($item->config->heading_type == 'purchases')
                                 <tr>
@@ -91,15 +96,16 @@
                                 </tr>
                             @endif
                         @endforeach
+                    @endif
                     </tbody>
                     <tfoot>
-                        <tr class="bg-secondary">
-                            <th>{{ __('Total') }}</th>
-                            <th></th>
-                            <th></th>
-                            <th>{{ number_format($return->total_amount_due) }}
-                                {{ $return->currency }}</th>
-                        </tr>
+                    <tr class="bg-secondary">
+                        <th>{{ __('Total') }}</th>
+                        <th></th>
+                        <th></th>
+                        <th>{{ number_format($return->total_amount_due) }}
+                            {{ $return->currency }}</th>
+                    </tr>
                     </tfoot>
                 </table>
             </div>
@@ -127,47 +133,47 @@
                 <hr>
                 <table class="table table-bordered table-sm normal-text">
                     <thead>
-                        <tr>
-                            <th>Month</th>
-                            <th>Tax Amount</th>
-                            <th>Late Filing Amount</th>
-                            <th>Late Payment Amount</th>
-                            <th>Interest Rate</th>
-                            <th>Interest Amount</th>
-                            <th>Payable Amount</th>
-                        </tr>
+                    <tr>
+                        <th>Month</th>
+                        <th>Tax Amount</th>
+                        <th>Late Filing Amount</th>
+                        <th>Late Payment Amount</th>
+                        <th>Interest Rate</th>
+                        <th>Interest Amount</th>
+                        <th>Payable Amount</th>
+                    </tr>
                     </thead>
 
                     <tbody>
-                        @if (count($return->penalties))
-                            @foreach ($return->penalties as $penalty)
-                                <tr>
-                                    <td>{{ $penalty['financial_month_name'] }}</td>
-                                    <td>{{ number_format($penalty['tax_amount'], 2) }}
-                                        <strong>{{ $return->currency }}</strong>
-                                    </td>
-                                    <td>{{ number_format($penalty['late_filing'], 2) }}
-                                        <strong>{{ $return->currency }}</strong>
-                                    </td>
-                                    <td>{{ number_format($penalty['late_payment'], 2) }}
-                                        <strong>{{ $return->currency }}</strong>
-                                    </td>
-                                    <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
-                                    <td>{{ number_format($penalty['rate_amount'], 2) }}
-                                        <strong>{{ $return->currency }}</strong>
-                                    </td>
-                                    <td>{{ number_format($penalty['penalty_amount'], 2) }}
-                                        <strong>{{ $return->currency }}</strong>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
+                    @if (count($return->penalties))
+                        @foreach ($return->penalties as $penalty)
                             <tr>
-                                <td colspan="7" class="text-center py-3">
-                                    No penalties for this return.
+                                <td>{{ $penalty['financial_month_name'] }}</td>
+                                <td>{{ number_format($penalty['tax_amount'], 2) }}
+                                    <strong>{{ $return->currency }}</strong>
+                                </td>
+                                <td>{{ number_format($penalty['late_filing'], 2) }}
+                                    <strong>{{ $return->currency }}</strong>
+                                </td>
+                                <td>{{ number_format($penalty['late_payment'], 2) }}
+                                    <strong>{{ $return->currency }}</strong>
+                                </td>
+                                <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
+                                <td>{{ number_format($penalty['rate_amount'], 2) }}
+                                    <strong>{{ $return->currency }}</strong>
+                                </td>
+                                <td>{{ number_format($penalty['penalty_amount'], 2) }}
+                                    <strong>{{ $return->currency }}</strong>
                                 </td>
                             </tr>
-                        @endif
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="7" class="text-center py-3">
+                                No penalties for this return.
+                            </td>
+                        </tr>
+                    @endif
                     </tbody>
                 </table>
             </div>

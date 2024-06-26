@@ -20,6 +20,7 @@ class CreateBusinessConsultantsTable extends Migration
             $table->string('contract')->nullable();
             $table->softDeletes();
 	        $table->timestamps();
+            $table->index(['taxpayer_id', 'status']);
         });
     }
 

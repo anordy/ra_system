@@ -28,6 +28,7 @@ class Approve extends Component
         if (!Gate::allows('setting-dual-control-activities-view')) {
             abort(403);
         }
+
         $req = DualControl::findOrFail($this->dual_control_id);
 
         if (!empty($req)) {

@@ -23,10 +23,11 @@ use App\Models\Installment\InstallmentRequest;
 use App\Services\Verification\PayloadInterface;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TaxReturn extends Model implements PayloadInterface
 {
-    use HasFactory, WorkflowTrait;
+    use HasFactory, WorkflowTrait, SoftDeletes;
 
     protected $guarded = [];
 
@@ -37,7 +38,6 @@ class TaxReturn extends Model implements PayloadInterface
         'curr_payment_due_date' => 'datetime',
         'paid_at' => 'datetime'
     ];
-
 
     public function taxtype()
     {

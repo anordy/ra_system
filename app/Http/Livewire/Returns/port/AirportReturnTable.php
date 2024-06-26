@@ -5,7 +5,6 @@ namespace App\Http\Livewire\Returns\Port;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\TaxType;
 use App\Traits\ReturnFilterTrait;
-use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -34,7 +33,7 @@ class AirportReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $tax  = TaxType::where('code', TaxType::AIRPORT_SERVICE_SAFETY_FEE)->first();
+        $tax  = TaxType::select('id')->where('code', TaxType::AIRPORT_SERVICE_SAFETY_FEE)->first();
         if (!$tax) {
             abort(404);
         }
@@ -83,7 +82,6 @@ class AirportReturnTable extends DataTableComponent
                 return view('returns.return-payment-status', ['row' => $row]);
             })
             ->searchable(),
-            // Column::make('Status', 'id')->view('returns.port.includes.status'),
             Column::make('Action', 'id')
                 ->view('returns.port.includes.actions'),
         ];

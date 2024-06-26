@@ -1,8 +1,10 @@
 @extends("layouts.master")
+@extends("layouts.master")
 
 @section("title", "Investigation Preview")
+@section("title", "Investigation Preview")
 
-@section('content')
+@section("content")
     @if ($investigation->status == App\Enum\TaxInvestigationStatus::APPROVED && $investigation->assessment)
         <div class="row m-2 pt-3">
             <div class="col-md-12">
@@ -39,25 +41,31 @@
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">TIN</span>
                             <p class="my-1">{{ $investigation->business->tin ?? "" }}</p>
+                            <p class="my-1">{{ $investigation->business->tin ?? "" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
+                            <p class="my-1">{{ $investigation->taxInvestigationTaxTypeNames() ?? "" }}</p>
                             <p class="my-1">{{ $investigation->taxInvestigationTaxTypeNames() ?? "" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
                             <p class="my-1">{{ $investigation->business->name ?? "" }}</p>
+                            <p class="my-1">{{ $investigation->business->name ?? "" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Location</span>
+                            <p class="my-1">{{ $investigation->taxInvestigationLocationNames() ?? "Head Quarter" }}</p>
                             <p class="my-1">{{ $investigation->taxInvestigationLocationNames() ?? "Head Quarter" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Investigation From</span>
                             <p class="my-1">{{ $investigation->period_from ?? "" }}</p>
+                            <p class="my-1">{{ $investigation->period_from ?? "" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Investigation To</span>
+                            <p class="my-1">{{ $investigation->period_to ?? "" }}</p>
                             <p class="my-1">{{ $investigation->period_to ?? "" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
@@ -78,7 +86,8 @@
                         <div class="row">
                             <div class="col">Investigation Details</div>
                             <div class="col-md-2">
-                                <button class="btn btn-warning" onclick="Livewire.emit('showModal', 'investigation.edit-investigation-members-modal', '{{ encrypt($investigation) }}')">
+                                <button class="btn btn-warning"
+                                    onclick="Livewire.emit('showModal', 'investigation.edit-investigation-members-modal', '{{ encrypt($investigation) }}')">
                                     <i class="bi bi-pencil"></i> Edit members
                                 </button>
                             </div>
@@ -90,6 +99,8 @@
                                 <div class="col-md-3 mb-3">
                                     <span class="font-weight-bold text-uppercase">Team
                                         {{ $officer->team_leader ? "Leader" : "Member" }}</span>
+                                    <p class="my-1">{{ $officer->user->full_name ?? "" }}</p>
+                                    {{ $officer->team_leader ? "Leader" : "Member" }}</span>
                                     <p class="my-1">{{ $officer->user->full_name ?? "" }}</p>
                                 </div>
                             @endforeach
@@ -163,7 +174,7 @@
                 </div>
                 <div class="card-body">
                     <livewire:approval.approval-history-table modelName='{{ get_class($investigation) }}'
-                                                              modelId="{{ encrypt($investigation->id) }}" isSummary="{{ true }}" />
+                        modelId="{{ encrypt($investigation->id) }}" isSummary="{{ true }}" />
                 </div>
             </div>
 
@@ -245,7 +256,9 @@
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
                 @livewire("investigation.declared-sales-analysis", ["investigationId" => encrypt($investigation->id), "tax_type_id" => encrypt($investigation->tax_type_id), "location_id" => encrypt($investigation->location_id)])
+                @livewire("investigation.declared-sales-analysis", ["investigationId" => encrypt($investigation->id), "tax_type_id" => encrypt($investigation->tax_type_id), "location_id" => encrypt($investigation->location_id)])
             @else
+                @livewire("investigation.declared-sales-analysis-instances", ["investigationId" => encrypt($investigation->id)])
                 @livewire("investigation.declared-sales-analysis-instances", ["investigationId" => encrypt($investigation->id)])
             @endif
         </div>

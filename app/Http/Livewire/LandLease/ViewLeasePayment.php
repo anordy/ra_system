@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\LandLease;
 
+use App\Models\LandLeaseFiles;
 use App\Models\LeasePayment;
+use App\Models\PartialPayment;
 use App\Traits\PaymentsTrait;
 use App\Traits\CustomAlert;
 use Livewire\Component;
@@ -12,6 +14,8 @@ class ViewLeasePayment extends Component
     use CustomAlert, PaymentsTrait;
     public $landLease;
     public $leasePayment;
+    public $partialPayment;
+    public $previousLeaseAgreementPath;
 
     public function mount($enc_id)
     {
@@ -19,7 +23,14 @@ class ViewLeasePayment extends Component
         if(is_null($this->leasePayment)){
             abort(404);
         }
-        
+        $this->previousLeaseAgreementPath = LandLeaseFiles::select('file_path','name')
+            ->where('land_lease_id',
+                $this->leasePayment->land_lease_id)->get();
+        //check if it exists in partial payments
+        $this->pendingPartialPayment = $this->getPendingPartialPayment();
+        $this->pendingPartialPaymentStatus = $this->getPartialPaymentStatus();
+        $this->partialPayment = PartialPayment::where('payment_id', $this->leasePayment->land_lease_id)->where('payment_type',get_class($this->leasePayment->landLease))
+            ->latest()->first();
     }
 
     public function render()
@@ -27,4 +38,17 @@ class ViewLeasePayment extends Component
         return view('livewire.land-lease.view-lease-payment');
     }
 
+    public function getPendingPartialPayment()
+    {
+        return PartialPayment::where('payment_id', $this->leasePayment->land_lease_id)
+            ->where('status', "pending")
+            ->exists();
+    }
+
+    public function getPartialPaymentStatus()
+    {
+        return PartialPayment::where('payment_id', $this->leasePayment->land_lease_id)
+            ->where('payment_status', "pending")
+            ->first();
+    }
 }

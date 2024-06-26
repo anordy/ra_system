@@ -39,21 +39,19 @@ class MvrApprovedRegistrationsStatusChangeTable extends DataTableComponent
         return [
             Column::make(__("Chassis No"), "chassis.chassis_number")
                 ->searchable(),
-            Column::make(__("Plate No"), "plate_number")
+            Column::make(__("Registration No"), "plate_number")
                 ->format(function ($value, $row) {
                     return $row->plate_number ?? 'PENDING';
                 })
                 ->searchable(),
-            Column::make(__("Reg No"), "registration_number")
+            Column::make(__("Serial No"), "registration_number")
                 ->format(function ($value, $row) {
                     return $row->registration_number ?? 'N/A';
                 })
                 ->searchable(),
             Column::make(__("Reg Type"), "regtype.name")
                 ->searchable(),
-            Column::make(__("Plate No Color"), "platecolor.name")
-                ->searchable(),
-            Column::make(__("Plate No Size"), "platesize.name")
+            Column::make(__("Plate Size"), "platesize.name")
                 ->searchable(),
             Column::make(__("Registration Date"), "registered_at")
                 ->format(function ($value, $row) {

@@ -15,13 +15,6 @@
 
             <tbody>
                 @if (count($return->restaurantAttachment ?? []))
-                @php
-                    $foodSales = 0;
-                    $beverageSales = 0;
-                    $barSales = 0;
-                    $otherSales = 0;
-                    $totalRevenue = 0;
-                @endphp
                     @foreach ($return->restaurantAttachment as $index => $details)
                             <tr>
                                 <th class="text-center">{{ $details['no_of_days'] }}</th>
@@ -33,22 +26,14 @@
                                 <td class="text-right">{{ number_format($details['other_sales'], 2) }}</td>
                                 <td class="text-right">{{ number_format($details['total_revenue'], 2) }}</td>
                             </tr>
-                            @php
-                                $foodSales += $details['food_sales'];
-                                $beverageSales += $details['beverage_sales'];
-                                $barSales += $details['bar_sales'];
-                                $otherSales += $details['other_sales'];
-                                $totalRevenue += $details['total_revenue'];
-                            @endphp
                     @endforeach
                     <tr>
                         <td class="text-right"><strong>Total:</strong></td>
-                        <td class="text-right"><strong>{{ number_format($foodSales, 2) }}</strong></td>
-                        <td class="text-right"><strong>{{ number_format($beverageSales, 2) }}</strong></td>
-                        <td class="text-right"><strong>{{ number_format($barSales, 2) }}</strong></td>
-                        <td class="text-right"><strong>{{ number_format($otherSales, 2) }}</strong>
-                        </td>
-                        <td class="text-right"><strong>{{ number_format($totalRevenue, 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->restaurantAttachment->sum('food_sales'), 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->restaurantAttachment->sum('beverage_sales'), 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->restaurantAttachment->sum('bar_sales'), 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->restaurantAttachment->sum('other_sales'), 2) }}</strong></td>
+                        <td class="text-right"><strong>{{ number_format($return->restaurantAttachment->sum('total_revenue'), 2) }}</strong></td>
                     </tr>
                 @else
                     <tr>

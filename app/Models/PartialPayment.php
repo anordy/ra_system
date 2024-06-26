@@ -14,6 +14,12 @@ class PartialPayment extends Model
         return $this->belongsTo(TaxAssessment::class, 'payment_id');
     }
 
+    public function landLease()
+    {
+
+        return $this->belongsTo(LandLease::class, 'payment_id');
+    }
+
     public function bills()
     {
         return $this->morphMany(ZmBill::class, 'billable');

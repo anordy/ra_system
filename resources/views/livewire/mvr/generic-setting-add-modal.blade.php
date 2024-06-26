@@ -14,7 +14,7 @@
                         <label class="control-label">Name</label>
                         <input type="text" class="form-control" wire:model.lazy="name" id="name">
                         @error('name')
-                            <span class="text-danger">{{ $message }}</span>
+                            <small class="text-danger pt-2">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
@@ -24,49 +24,78 @@
                     <div class="row pr-3 pl-3">
                         <div class="form-group col-lg-12">
                             <label class="control-label" for="{{$f}}">{{$options['title']}}</label>
-                            <input type="{{$this->getFieldInputType($f)}}" class="form-control" wire:model.lazy="data.{{$f}}" id="{{$f}}">
+                            <input type="{{$this->getFieldInputType($f)}}" class="form-control" wire:model.lazy="data.{{$f}}" id="{{$f}}" placeholder="{{ $options['placeholder'] ?? '' }}">
                             @error("data.{$f}")
-                                <span class="text-danger">{{ $message }}</span>
+                                <small class="text-danger pt-2">{{ $message }}</small>
                             @enderror
                         </div>
                     </div>
                 @endforeach
 
-                    @foreach($relation_options as $field=>$relation)
+                @foreach($relation_options as $field=>$relation)
+                    <div class="row pr-3 pl-3">
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">{{$relation['title']}}</label>
+                            <select wire:model="relation_data.{{$field}}" class="form-control" id="{{$field}}">
+                                <option>Choose option</option>
+                                @php
+                                    if(is_string($relation['data'])) eval($relation['data'])
+                                @endphp
+                                @foreach ($relation['data'] as $option)
+                                    <option value="{{ $option['id'] }}">{{ $option['name']?? $option['type'] ?? $option[$relation['value_field']] }}</option>
+                                @endforeach
+                            </select>
+                            @error("relation_data.{$field}")
+                            <small class="text-danger pt-2">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
+                @endforeach
+                @foreach($enum_options as $field=>$enum)
+                    <div class="row pr-3 pl-3">
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">{{$enum['title']}}</label>
+                            <select wire:model="data.{{$field}}" class="form-control" id="{{$field}}">
+                                <option>Choose option</option>
+                                @foreach ($enum['data'] as $key=>$title)
+                                    <option value="{{ $key }}">{{ $title }}</option>
+                                @endforeach
+                            </select>
+                            @error("data.{$field}")
+                            <small class="text-danger pt-2">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
+                @endforeach
+
+                @if($model == \App\Models\MvrFee::class && $relation_data['mvr_registration_type_id'])
+                    @if(!in_array(\App\Models\MvrRegistrationType::find($relation_data['mvr_registration_type_id'])->name, [
+                        \App\Models\MvrRegistrationType::TYPE_CORPORATE,
+                        \App\Models\MvrRegistrationType::TYPE_GOVERNMENT_INTERNATIONAL,
+                        \App\Models\MvrRegistrationType::TYPE_GOVERNMENT_DIPLOMATIC,
+                        \App\Models\MvrRegistrationType::TYPE_GOVERNMENT_MILITARY,
+                        \App\Models\MvrRegistrationType::TYPE_GOVERNMENT_DONOR_FUNDED,
+                        \App\Models\MvrRegistrationType::TYPE_GOVERNMENT_SLS,
+                        \App\Models\MvrRegistrationType::TYPE_GOVERNMENT_SMZ,
+                    ]))
                         <div class="row pr-3 pl-3">
                             <div class="form-group col-lg-12">
-                                <label class="control-label">{{$relation['title']}}</label>
-                                <select wire:model="relation_data.{{$field}}" class="form-control" id="{{$field}}">
+                                <label class="control-label">Registration No. Type</label>
+                                <select wire:model="plateNoType" class="form-control">
                                     <option>Choose option</option>
-                                    @php
-                                        if(is_string($relation['data'])) eval($relation['data'])
-                                    @endphp
-                                    @foreach ($relation['data'] as $option)
-                                        <option value="{{ $option['id'] }}">{{ $option['name']?? $option['type'] ?? $option[$relation['value_field']] }}</option>
+                                    @foreach (\App\Models\MvrPlateNumberType::all() as $key => $type)
+                                        <option value="{{ $type->id }}">{{ $type->name }}</option>
                                     @endforeach
                                 </select>
-                                @error("relation_data.{$field}")
-                                <span class="text-danger">{{ $message }}</span>
+                                @error("plateNoType")
+                                <small class="text-danger pt-2">{{ $message }}</small>
                                 @enderror
                             </div>
                         </div>
-                    @endforeach
-                    @foreach($enum_options as $field=>$enum)
-                        <div class="row pr-3 pl-3">
-                            <div class="form-group col-lg-12">
-                                <label class="control-label">{{$enum['title']}}</label>
-                                <select wire:model="data.{{$field}}" class="form-control" id="{{$field}}">
-                                    <option>Choose option</option>
-                                    @foreach ($enum['data'] as $key=>$title)
-                                        <option value="{{ $key }}">{{ $title }}</option>
-                                    @endforeach
-                                </select>
-                                @error("data.{$field}")
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    @endforeach
+                    @endif
+                @else
+                    @php($plateNoType = null)
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

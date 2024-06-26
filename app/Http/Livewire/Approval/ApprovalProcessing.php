@@ -94,12 +94,12 @@ class ApprovalProcessing extends Component
                 $this->isiiciiiChange($this->isiic_iii);
             }
 
-            // $this->effectiveDate = $this->subject->headquarter->effective_date ? $this->subject->headquarter->effective_date->format('Y-m-d') : null;
-            // $this->selectedTaxRegion = $this->subject->headquarter->tax_region_id;
-
             $this->isiic_iv = $this->subject->isiic_iv ?? null;
 
             $this->taxDepartment = TaxDepartment::all();
+
+            $this->effectiveDate = $this->subject->headquarter->effective_date ? $this->subject->headquarter->effective_date->format('Y-m-d') : null;
+            $this->selectedTaxRegion = $this->subject->headquarter->tax_region_id;
 
             $this->vat_id = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
 
@@ -349,6 +349,11 @@ class ApprovalProcessing extends Component
                         return;
                     }
 
+                    if ($tax->code === TaxType::HOTEL && $business->business_type != BusinessType::HOTEL) {
+                        $this->customAlert('warning', 'The business must be of Hotel type in order to assign Hotel Levy Tax Type');
+                        return;
+                    }
+
                     DB::table('business_tax_type')->insert([
                         'business_id' => $business->id,
                         'tax_type_id' => $type['tax_type_id'],
@@ -403,7 +408,7 @@ class ApprovalProcessing extends Component
                 }
                 
                 // If Z-Number has been verified we have business units
-                if ($this->subject->previous_zno) {
+                if ($this->subject->previous_zno && $this->subject->hasVfmsRegistration) {
                     if ($this->subject->znumber_verified_at){
                         DB::table('vfms_business_units')->where('business_id', $this->subject->id)
                             ->update(['location_id' => $location->id]);
@@ -551,19 +556,10 @@ class ApprovalProcessing extends Component
             'comments' => 'required|string|strip_tag',
         ]);
 
-        // Then confirm
-        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
-            'position' => 'center',
-            'toast' => false,
-            'showConfirmButton' => true,
-            'confirmButtonText' => 'Confirm',
-            'onConfirmed' => 'rejectToTransition',
-            'showCancelButton' => true,
-            'cancelButtonText' => 'Cancel',
-            'timer' => null,
+        $this->rejectToTransition([
             'data' => [
-                'transition' => $transition['data']['transition']
-            ],
+                'transition' => $transition
+            ]
         ]);
     }
 

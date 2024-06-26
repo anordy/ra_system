@@ -54,7 +54,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Plate Number Color</span>
-                <p class="my-1">{{ $reg->platecolor->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $reg->regtype->color->color ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Register Type</span>

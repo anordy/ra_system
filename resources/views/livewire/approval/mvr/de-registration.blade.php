@@ -6,7 +6,7 @@
         <div class="card-body">
             @include('livewire.approval.transitions')
 
-            @if ($this->checkTransition('mvr_police_officer_review'))
+            @if ($this->checkTransition('mvr_police_officer_review') || $this->checkTransition('mvr_registration_officer_review'))
                 @include('livewire.approval.mvr.de-registration-police-review')
             @endif
 
@@ -27,7 +27,7 @@
         </div>
         @if ($this->checkTransition('mvr_police_officer_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filled
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filed
                     Incorrect
                     return to Applicant</button>
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'mvr_police_officer_review')">Approve

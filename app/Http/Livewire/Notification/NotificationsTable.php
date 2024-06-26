@@ -7,7 +7,6 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
-use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -52,11 +51,7 @@ class NotificationsTable extends Component
             $notification->read_at = now();
             $notification->save();
             DB::commit();
-            if (Route::has($data->href)){
-                return redirect()->route($data->href, !empty($data->hrefParameters) ? encrypt($data->hrefParameters) : null);
-            } else {
-                return redirect()->route('notifications');
-            }
+            return redirect()->route($data->href, !empty($data->hrefParameters) ? encrypt($data->hrefParameters) : null);
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('Error: ' . $e->getMessage(), [
@@ -76,6 +71,7 @@ class NotificationsTable extends Component
             ->whereNull('read_at')
             ->latest()
             ->paginate(10);
+
         return view('livewire.notifications.notifications-table', [
             'notifications' => $notifications
         ]);

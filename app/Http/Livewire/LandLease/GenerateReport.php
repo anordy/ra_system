@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Gate;
 class GenerateReport extends Component
 {
     use CustomAlert;
+
     //values for selects
     public $year;
     public $period;
@@ -42,7 +43,6 @@ class GenerateReport extends Component
     public $range_start;
     public $range_end;
 
-    
 
     public function mount()
     {
@@ -55,7 +55,7 @@ class GenerateReport extends Component
 
         //get options for years
         $financialYearCode = FinancialYear::first();
-        if(is_null($financialYearCode)){
+        if (is_null($financialYearCode)) {
             abort(404);
         }
         $optionStartYear = intval($financialYearCode->code);
@@ -80,7 +80,7 @@ class GenerateReport extends Component
 
         $this->taxpayers = Taxpayer::has('landLeases')->select('id', 'reference_no', 'first_name', 'middle_name', 'last_name', 'email', 'mobile')->get();
 
-        $this->emitTo('land-lease.land-lease-report-table', 'refreshTable',  $this->getParameters());
+        $this->emitTo('land-lease.land-lease-report-table', 'refreshTable', $this->getParameters());
     }
 
     public function render()
@@ -88,35 +88,41 @@ class GenerateReport extends Component
         return view('livewire.land-lease.generate-report');
     }
 
-    public function preview(){
+    public function preview()
+    {
 
-      $this->emitTo('land-lease.land-lease-report-table', 'refreshTable',  $this->getParameters());
+        $this->emitTo('land-lease.land-lease-report-table', 'refreshTable', $this->getParameters());
     }
 
     public function export()
     {
-        if(!Gate::allows('land-lease-generate-report')){
+        if (!Gate::allows('land-lease-generate-report')) {
             abort(403);
         }
         $dates = $this->getStartEndDate();
 
-        if($dates['startDate'] == null || $dates['endDate'] == null) {
+        if ($dates['startDate'] == null || $dates['endDate'] == null) {
             $exists = LandLease::exists();
             if ($this->taxpayer_id) {
-                $exists = LandLease::where('land_leases.taxpayer_id', $this->taxpayer_id)->exists();
+                $exists = LandLease::where('land_leases.taxpayer_id', $this->taxpayer_id)
+                    ->whereNotNull('land_leases.completed_at')
+                    ->exists();
             }
-            
-            if($exists){
+
+            if ($exists) {
                 $this->customAlert('success', 'Downloading file');
                 return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate'], $this->taxpayer_id), 'Land Leases All Records.xlsx');
-            }else{
+            } else {
                 $this->customAlert('error', "No data found.");
             }
         }
 
         $exists = LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->exists();
         if ($this->taxpayer_id) {
-            $exists =LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->where('land_leases.taxpayer_id', $this->taxpayer_id)->exists();
+            $exists = LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])
+                ->where('land_leases.taxpayer_id', $this->taxpayer_id)
+                ->whereNotNull('land_leases.completed_at')
+                ->exists();
         }
         if ($exists) {
             $this->customAlert('success', 'Downloading file');
@@ -128,21 +134,21 @@ class GenerateReport extends Component
 
     public function exportPdf()
     {
-        if(!Gate::allows('land-lease-generate-report')){
+        if (!Gate::allows('land-lease-generate-report')) {
             abort(403);
         }
         $dates = $this->getStartEndDate();
-        if($dates['startDate'] == null || $dates['endDate'] == null) {
+        if ($dates['startDate'] == null || $dates['endDate'] == null) {
             $exists = LandLease::exists();
             if ($this->taxpayer_id) {
                 $exists = LandLease::where('land_leases.taxpayer_id', $this->taxpayer_id)->exists();
             }
-            if($exists){
+            if ($exists) {
                 $this->customAlert('success', 'Exporting Pdf File');
                 return redirect()->route('land-lease.download.report.pdf', encrypt($this->getParameters()));
-            }else{
+            } else {
                 $this->customAlert('error', "No data found.");
-            } 
+            }
         }
 
         $exists = LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->exists();
@@ -163,8 +169,8 @@ class GenerateReport extends Component
     {
         if ($this->year == "All") {
             $this->showOptions = false;
-        }elseif ($this->year == "Custom Range") {
-                $this->showOptions = false;
+        } elseif ($this->year == "Custom Range") {
+            $this->showOptions = false;
         } else {
             $this->showOptions = true;
 
@@ -188,7 +194,7 @@ class GenerateReport extends Component
         }
 
 
-       $this->selectedDates = $this->getStartEndDate();
+        $this->selectedDates = $this->getStartEndDate();
 
 
     }
@@ -231,7 +237,7 @@ class GenerateReport extends Component
                 $this->endMonth = 12;
             }
 
-            $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01"); 
+            $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
             $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
             $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
@@ -246,17 +252,17 @@ class GenerateReport extends Component
                 $this->startMonth = 7;
                 $this->endMonth = 12;
             }
-            $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01"); 
-            $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01"); 
+            $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
+            $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
-            $end = $endDate->endOfMonth()->format('Y-m-d H:i:s'); 
+            $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
             $from = $startDate->format('Y-m-d');
             $to = $endDate->format('Y-m-d');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
 
         } else {
-            $startDate = \Carbon\Carbon::parse($this->year . "-" . "01" . "-01"); 
-            $endDate = \Carbon\Carbon::parse($this->year . "-" . "12" . "-01"); 
+            $startDate = \Carbon\Carbon::parse($this->year . "-" . "01" . "-01");
+            $endDate = \Carbon\Carbon::parse($this->year . "-" . "12" . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
             $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
             $from = $startDate->format('Y-m-d');
@@ -264,7 +270,7 @@ class GenerateReport extends Component
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         }
 
-        
+
     }
 
     public function getParameters()

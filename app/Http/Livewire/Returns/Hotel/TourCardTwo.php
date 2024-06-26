@@ -2,15 +2,22 @@
 
 namespace App\Http\Livewire\Returns\Hotel;
 
+use App\Enum\CustomMessage;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\HotelReturns\HotelReturnPenalty;
 use App\Models\TaxType;
+use App\Traits\CustomAlert;
 use App\Traits\ReturnFilterTrait;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
+/**
+ * Display total paid and unpaid amount for tax return in USD and TZS i.e. total tax amount, total late filing
+ * total late payment and total interest
+ */
 class TourCardTwo extends Component
 {
-    use ReturnFilterTrait;
+    use ReturnFilterTrait, CustomAlert;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     protected $data;
@@ -21,16 +28,21 @@ class TourCardTwo extends Component
 
     public function filterData($data)
     {
-        $this->emit('$refresh');
-        $this->data = $data;
-        self::mount();
+        try {
+            $this->emit('$refresh');
+            $this->data = $data;
+            self::mount();
+        } catch (\Exception $exception) {
+            Log::error('RETURNS-TOUR-CARD-TWO', [$exception]);
+            $this->customAlert('error', CustomMessage::ERROR);
+        }
     }
 
     public function mount()
     {
         $penaltyTable  = HotelReturnPenalty::getTableName();
         $returnTable   = HotelReturn::getTableName();
-        $taxType       = TaxType::where('code', TaxType::TOUR_OPERATOR)->first();
+        $taxType       = TaxType::select('id')->where('code', TaxType::TOUR_OPERATOR)->first();
         if (!$taxType) {
             abort(404);
         }

@@ -116,6 +116,13 @@
             left: 700px;
             width: 480px;
         }
+
+        #duplicate {
+            position: fixed;
+            top: 1090px;
+            left: -0px;
+            width: 480px;
+        }
     </style>
 </head>
 
@@ -127,18 +134,25 @@
     <div id="owner-name">{{ strtoupper($license->drivers_license_owner->fullname()) }}</div>
     <div id="sex">{{ strtoupper($license->drivers_license_owner->gender ?? 'N/A') }}</div>
     <div id="dob">{{ \Carbon\Carbon::parse($license->drivers_license_owner->dob)->format('d/m/Y') }}</div>
-    <div id="restrictions">{{ $license->license_restrictions }}</div>
+    <div id="restrictions">
+        @foreach($license->licenseRestrictions as $lR)
+            {{ $lR->restriction->symbol }} @if(!$loop->last) / @endif
+        @endforeach
+    </div>
     <div id="issue">{{ \Carbon\Carbon::parse($license->issued_date)->format('d/m/Y') }}</div>
     <div id="expiry">{{ \Carbon\Carbon::parse($license->expiry_date)->format('d/m/Y') }}</div>
     <div id="blood-group">{{ $license->drivers_license_owner->blood_group }}</div>
     <div id="class">
         @foreach ($license->drivers_license_classes as $class)
-            {{ $class->license_class->name }}/
+            {{ $class->license_class->name }} @if(!$loop->last) / @endif
         @endforeach
     </div>
 
     <div id="zin">{{ $license->drivers_license_owner->taxpayer->reference_no ?? 'N/A' }}</div>
     <div id="pin">{{ $license->license_number }}</div>
+    @if($license->status === \App\Models\DlDriversLicense::STATUS_DAMAGED_OR_LOST)
+        <div id="duplicate">DUPLICATE</div>
+    @endif
     <div id="barcode">
         <img src="data:image/png;base64,' . {{ DNS1D::getBarcodePNG($license->license_number, 'C39+',4,100, array(1,1,1), false)  }} . '" alt="barcode"   />
     </div>

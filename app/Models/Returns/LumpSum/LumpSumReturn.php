@@ -15,10 +15,11 @@ use App\Models\Verification\TaxVerification;
 use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LumpSumReturn extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     public $table         = 'lump_sum_returns';
     protected $fillable   = [];
     protected $guarded    = [];
@@ -90,6 +91,6 @@ class LumpSumReturn extends Model
     }
 
     public function tax_return(){
-        return $this->morphOne(TaxReturn::class, 'return');
+        return $this->morphOne(TaxReturn::class, 'return')->withTrashed();
     }
 }

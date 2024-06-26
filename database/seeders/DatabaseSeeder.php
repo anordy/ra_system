@@ -77,6 +77,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DlClassAdditionFeeTableSeeder::class);
         $this->call(DlClassAdditionFeeTableSeeder::class);
         $this->call(DlClassAdditionFeeTableSeeder::class);
+        $this->call(DlRestrictionsSeeder::class);
         $this->call(SequencesTableSeeder::class);
         $this->call(MainRegionSeeder::class);
         $this->call(TaxTypePrefixSeeder::class);
@@ -133,5 +134,8 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowMvrTransferOwnershipSeeder::class);
         $this->call(WorkflowMvrDriverLicenseSeeder::class);
         $this->call(WorkflowMvrDeRegistrationSeeder::class);
+        $this->call(WorkflowMvrRoadLicenseSeeder::class);
+        $this->call(WorkflowMvrTemporaryTransportSeeder::class);
+        $this->call(CharteredConfigSeeder::class);
     }
 }

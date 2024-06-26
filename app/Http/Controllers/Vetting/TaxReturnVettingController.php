@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vetting;
 
 use App\Models\Returns\BFO\BfoReturn;
+use App\Models\Returns\Chartered\CharteredReturn;
 use App\Models\Returns\TaxReturn;
 use App\Http\Controllers\Controller;
 use App\Models\Returns\EmTransactionReturn;
@@ -60,7 +61,10 @@ class TaxReturnVettingController extends Controller
 
         $return = $tax_return->return;
 
-        $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
+        if ($return->penalties ?? []) {
+            $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
+        }
+
         $return_ = null;
         $tax_return_ = null;
         $returnHistories = $tax_return->editReturnHistories;
@@ -102,7 +106,10 @@ class TaxReturnVettingController extends Controller
         } elseif ($return instanceof EmTransactionReturn) {
             $viewRender = 'returns.excise-duty.em-transaction.details';
 
-        } else {
+        } elseif ($return instanceof CharteredReturn) {
+            $viewRender = 'returns.chartered.details';
+
+        }  else {
             abort(404);
         }
 

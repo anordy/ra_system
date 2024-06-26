@@ -16,7 +16,7 @@ class DeRegistrationReasonsStatusSeeder extends Seeder
     public function run()
     {
         foreach (MvrDeRegistrationReasonStatus::getConstants() as $reason) {
-            MvrDeRegistrationReason::create(['name' => $reason]);
+            MvrDeRegistrationReason::updateOrCreate(['name' => $reason]);
         }
     }
 }

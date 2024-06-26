@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Offence\Offence;
 use App\Models\Returns\Vat\VatReturn;
 use App\Traits\DailyPaymentTrait;
 use Carbon\Carbon;
@@ -50,17 +51,25 @@ class TaxType extends Model implements Auditable
     public const GOVERNMENT_FEE = 'government-fee';
     public const DEBTS = 'debts';
     public const AIRBNB = 'hotel-airbnb';
-
     public const PROPERTY_TAX = 'property-tax';
+
+    public const CHARTERED_SEA = 'chartered-sea';
+
+    public const CHARTERED_FLIGHT = 'chartered-flight';
 
 
     protected $fillable = [
-        'name', 'gfs_code', 'is_approved', 'is_updated'
+        'name', 'gfs_code', 'is_approved', 'is_updated', 'category', 'code'
     ];
 
     public function landLeases()
     {
         return $this->hasMany(LandLease::class, 'taxpayer_id');
+    }
+
+    public function offences()
+    {
+        return $this->hasMany(Offence::class, 'tax_type');
     }
 
     public function vatReturn()

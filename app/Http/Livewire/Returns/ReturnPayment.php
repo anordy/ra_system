@@ -2,13 +2,14 @@
 
 namespace App\Http\Livewire\Returns;
 
+use App\Enum\CustomMessage;
 use App\Services\ZanMalipo\GepgResponse;
-use Exception;
-use Livewire\Component;
 use App\Traits\CustomAlert;
-use App\Traits\PenaltyTrait;
 use App\Traits\PaymentsTrait;
+use App\Traits\PenaltyTrait;
+use Exception;
 use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 
 class ReturnPayment extends Component
 {
@@ -31,12 +32,18 @@ class ReturnPayment extends Component
 
     public function regenerate()
     {
-        $response = $this->regenerateControlNo($this->return->bill);
-        if ($response) {
-            session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
-            return redirect(request()->header('Referer'));
+        try {
+            $response = $this->regenerateControlNo($this->return->bill);
+            if ($response) {
+                session()->flash('success', CustomMessage::RECEIVE_PAYMENT_SHORTLY);
+                return redirect(request()->header('Referer'));
+            }
+            $this->customAlert('error', CustomMessage::FAILED_TO_GENERATE_CONTROL_NUMBER);
+
+        } catch (Exception $exception) {
+            Log::error('RETURNS-RETURN-PAYMENT-REGENERATE', [$exception]);
+            $this->customAlert('error', CustomMessage::FAILED_TO_GENERATE_CONTROL_NUMBER);
         }
-        $this->customAlert('error', 'Control number could not be generated, please try again later.');
     }
 
     /**
@@ -46,21 +53,22 @@ class ReturnPayment extends Component
     {
         try {
             $this->generateReturnControlNumber($this->return);
-            $this->customAlert('success', 'Your request was submitted, you will receive your payment information shortly.');
+            $this->customAlert('success', CustomMessage::RECEIVE_PAYMENT_SHORTLY);
             return redirect(request()->header('Referer'));
-        } catch (Exception $e) {
-            $this->customAlert('error', 'Bill could not be generated, please try again later.');
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+        } catch (Exception $exception) {
+            $this->customAlert('error', CustomMessage::FAILED_TO_GENERATE_CONTROL_NUMBER);
+            Log::error('RETURNS-RETURN-PAYMENT-GENERATE-BILL', [$exception]);
         }
     }
 
     public function getGepgStatus($code)
     {
-        return $this->getResponseCodeStatus($code)['message'];
+        try {
+            return $this->getResponseCodeStatus($code)['message'];
+        } catch (Exception $exception) {
+            Log::error('RETURNS-RETURN-PAYMENT-GET-GEPG-STATUS', [$exception]);
+            $this->customAlert('error', 'Failed to get GEPG status');
+        }
     }
 
     public function render()

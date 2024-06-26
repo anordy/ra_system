@@ -162,7 +162,7 @@
         </tr>
         <tr>
             <td>COLOR:</td>
-            <td>{{strtoupper($deregistration->registration->chassis->color->name ?? 'N/A')}}</td>
+            <td>{{strtoupper($deregistration->registration->chassis->regtype->color->color ?? 'N/A')}}</td>
         </tr>
         <tr>
             <td>MANUFACTURE DATE:</td>
@@ -189,7 +189,7 @@
             <td>{{strtoupper($deregistration->registration->chassis->imported_from ?? 'N/A')}}</td>
         </tr>
         <tr>
-            <td>PREVIOUS REG NO:</td>
+            <td>PREVIOUS Serial No:</td>
             <td>N/A</td>
         </tr>
     </table>

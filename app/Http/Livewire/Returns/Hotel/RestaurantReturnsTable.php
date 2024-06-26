@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Returns\Hotel;
 
-use App\Traits\WithSearch;
 use Carbon\Carbon;
 use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,7 +36,7 @@ class RestaurantReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $tax         = TaxType::where('code', TaxType::RESTAURANT)->first();
+        $tax         = TaxType::select('id')->where('code', TaxType::RESTAURANT)->first();
         if (!$tax) {
             abort(404);
         }

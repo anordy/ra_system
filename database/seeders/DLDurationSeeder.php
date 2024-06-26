@@ -14,7 +14,16 @@ class DLDurationSeeder extends Seeder
      */
     public function run()
     {
-        DlLicenseDuration::updateOrCreate(['number_of_years' => 3, 'description' => 'Three Years']);
-        DlLicenseDuration::updateOrCreate(['number_of_years' => 5, 'description' => 'Three Years']);
+        $durations = [
+            ['number_of_years' => 2, 'description' => 'Two Years'],
+            ['number_of_years' => 3, 'description' => 'Three Years'],
+            ['number_of_years' => 5, 'description' => 'Five Years'],
+        ];
+
+        foreach ($durations as $duration) {
+            DlLicenseDuration::updateOrCreate([
+                'number_of_years' => $duration['number_of_years']
+            ], $duration);
+        }
     }
 }

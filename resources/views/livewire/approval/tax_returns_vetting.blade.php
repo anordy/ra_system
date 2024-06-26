@@ -23,7 +23,7 @@
     </div>
     @if ($this->checkTransition('return_vetting_officer_review'))
         <div class="modal-footer p-2 m-0">
-            <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filled Incorrect
+            <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filed Incorrect
                 return to Applicant</button>
             <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve','return_vetting_officer_recommend')" wire:loading.attr="disabled">
                 <div wire:loading wire:target="approve('return_vetting_officer_recommend')">

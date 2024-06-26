@@ -30,10 +30,6 @@ class MvrRegistrationStatusChange extends Model
         return $this->hasOne(MvrAgent::class, 'taxpayer_id', 'taxpayer_id');
     }
 
-    public function platecolor(){
-        return $this->belongsTo(MvrPlateNumberColor::class, 'plate_number_color_id');
-    }
-
     public function regtype(){
         return $this->belongsTo(MvrRegistrationType::class, 'mvr_registration_type_id');
     }
@@ -49,6 +45,10 @@ class MvrRegistrationStatusChange extends Model
     public function latestBill()
     {
         return $this->morphOne(ZmBill::class, 'billable')->latest();
+    }
+
+    public function attachments() {
+        return $this->hasMany(MvrRegistrationStatusChangeFile::class, 'mvr_status_change_id');
     }
 
     public static function getNexPlateNumber(mixed $regType, $class): mixed
@@ -70,7 +70,7 @@ class MvrRegistrationStatusChange extends Model
                 $plate_number = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
                 $plate_number = preg_replace('/SLS(.+)(.)$/', 'SMZ' . $plate_number . '$2', $last_reg->plate_number);
             }
-        }elseif ($regType->name == MvrRegistrationType::TYPE_GOVERNMENT){
+        }elseif ($regType->name == MvrRegistrationType::TYPE_GOVERNMENT_SLS){
             if (empty($last_reg)) {
                 $number = str_pad( '1', 4, '0', STR_PAD_LEFT);
                 $plate_number = 'SMZ' . $number.$class->name;

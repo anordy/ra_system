@@ -77,7 +77,11 @@ class WorkflowTaxClearenceSeeder extends Seeder
             ],
         ];
 
-        Workflow::updateOrCreate([
+        Workflow::updateOrCreate(
+            [
+                'code' => 'TAX_CLEARENCE',
+            ],
+            [
             'code' => 'TAX_CLEARENCE',
             'summary' => 'Tax Clearence Workflow',
             'name' => $name,

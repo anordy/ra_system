@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\ExchangeRate;
+use App\Models\InterestRate;
 use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\User;
@@ -239,9 +241,8 @@ function getHotelStarByBusinessId($business_id)
     return $hotel_star;
 }
 
-function getTaxTypeName($taxTypeId)
-{
-    return \App\Models\TaxType::select('name')->findOrFail($taxTypeId)->name;
+function getTaxTypeName($taxTypeId) {
+    return \App\Models\TaxType::select('name')->find($taxTypeId)->name ?? '';
 }
 
 function getSubVatName($subVatId)
@@ -249,21 +250,10 @@ function getSubVatName($subVatId)
     return \App\Models\Returns\Vat\SubVat::select('name')->find($subVatId)->name ?? '';
 }
 
-function formatEnum($string)
-{
-    $string = str_replace('_', ' ', $string);
-    return ucwords($string);
-}
 
-function getSourceName($model)
-{
-    if ($model == \App\Models\Returns\TaxReturn::class) {
-        return 'Return';
-    } else if ($model == \App\Models\TaxRefund\TaxRefund::class) {
-        return 'Tax Refund';
-    } else {
-        return 'N/A';
-    }
+function formatEnum($string) {
+    $string = str_replace( '_', ' ', $string);
+    return ucwords($string);
 }
 
 function romanNumeralCount($number)
@@ -301,4 +291,37 @@ function romanNumeralCount($number)
     }
 
     return $result;
+}
+
+function exchangeRate()
+{
+    $exchangeRate = ExchangeRate::where('currency', 'USD')
+        ->whereRaw("TO_CHAR(exchange_date, 'mm') = TO_CHAR(SYSDATE, 'mm') AND TO_CHAR(exchange_date, 'yyyy') = TO_CHAR(SYSDATE, 'yyyy')")
+        ->firstOrFail();
+    return $exchangeRate;
+}
+
+function interestRate()
+{
+    $interestRate = InterestRate::where('year', Carbon::now()->year)->firstOrFail();
+    return number_format($interestRate->rate, 4);
+
+}
+
+function getSourceName($model) {
+    if ($model == \App\Models\Returns\TaxReturn::class) {
+        return 'Return';
+    } else if ($model == \App\Models\TaxRefund\TaxRefund::class) {
+        return 'Tax Refund';
+    }  else if ($model == \App\Models\TaxAssessments\TaxAssessment::class) {
+        return 'Assessment';
+    }  else if ($model == App\Models\PublicService\PublicServiceReturn::class) {
+        return 'Public Service';
+    }  else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
+        return 'Public Service';
+    }  else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
+        return 'Public Service';
+    } else {
+        return 'N/A';
+    }
 }

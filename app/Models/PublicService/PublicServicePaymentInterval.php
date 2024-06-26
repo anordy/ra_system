@@ -12,4 +12,6 @@ class PublicServicePaymentInterval extends Model
     protected $table = 'public_service_payments_interval';
 
     protected $guarded = [];
+
+    public const ANNUAL = 12;
 }

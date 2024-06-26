@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\ApplicationStatus;
+use App\Enum\BillStatus;
 use App\Enum\InstallmentRequestStatus;
 use App\Enum\InstallmentStatus;
 use App\Enum\PaymentMethod;
@@ -14,9 +15,11 @@ use App\Jobs\Installment\SendInstallmentApprovedSMS;
 use App\Jobs\Installment\SendInstallmentRejectedMail;
 use App\Jobs\Installment\SendInstallmentRejectedSMS;
 use App\Models\Installment\Installment;
+use App\Models\InterestRate;
 use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\PenaltyTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -27,7 +30,7 @@ use Livewire\WithFileUploads;
 
 class InstallmentRequestApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait, PenaltyTrait;
 
     public $modelId;
     public $modelName;
@@ -96,6 +99,13 @@ class InstallmentRequestApprovalProcessing extends Component
                     CancelBill::dispatch($installable->bill, 'Debt shifted to installments')->delay($now->addSeconds(10));
                 }
 
+                //                calculate interest total then divide the money for new installment
+
+                $interestRate = InterestRate::where('year', Carbon::now()->year)->firstOrFail()->rate;
+                $newInterest = $this->calculateInterest($installable->outstanding_amount, $interestRate, $this->subject->installment_count);
+
+                $newFigure = $newInterest + $installable->outstanding_amount;
+
                 // Create installment record
                 $installment = Installment::create([
                     'installable_type' => $this->subject->installable_type,
@@ -107,12 +117,20 @@ class InstallmentRequestApprovalProcessing extends Component
                     'installment_from' => $this->subject->installment_from,
                     'installment_to' => $this->subject->installment_to,
                     'installment_count' => $this->subject->installment_count,
-                    'amount' => roundOff($installable->outstanding_amount, $installable->currency),
+                    'amount' => $newFigure,
                     'currency' => $installable->currency,
                     'status' => InstallmentStatus::ACTIVE
                 ]);
 
                 $this->subject->save();
+
+
+                // Create the installment list based on installment count
+                $installmentListCreated = $this->createInstallmentList($installment, $this->subject->installment_count,$newFigure);
+
+                if (!$installmentListCreated) {
+                    throw new Exception('Failed to create installment list.');
+                }
 
                 // Dispatch notification via email and mobile phone
                 event(new SendSms(SendInstallmentApprovedSMS::SERVICE, $installment));
@@ -132,6 +150,33 @@ class InstallmentRequestApprovalProcessing extends Component
             ]);
             $this->customAlert('error', 'Something went wrong, please contact support for assistance.');
             return;
+        }
+    }
+
+    // Function to create installment list based on installment count
+    private function createInstallmentList($installment, $installmentCount, $newFigure)
+    {
+        $installmentAmount = $newFigure / $installmentCount;
+        $installmentStartDate = Carbon::make($installment->installment_from);
+
+        try {
+            for ($i = 0; $i < $installmentCount; $i++) {
+                $dueDate = $installmentStartDate->copy()->addDays(30 * $i);
+
+                DB::table('installment_lists')->insert([
+                    'installment_id' => $installment->id,
+                    'amount' => $installmentAmount,
+                    'currency' => $installment->currency,
+                    'due_date' => $dueDate,
+                    'status' => BillStatus::SUBMITTED,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+            return true;
+        } catch (Exception $e) {
+            Log::error('INSTALLMENT-LIST',['MESSAGE'=>$e->getMessage(),'TRACE'=>$e->getTrace()]  );
+            return false;
         }
     }
 

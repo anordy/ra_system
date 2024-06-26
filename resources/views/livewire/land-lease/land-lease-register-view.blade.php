@@ -1,0 +1,65 @@
+<div class="card">
+    <div class="card-body">
+        <div>
+            <div class="card-header text-uppercase font-weight-bold bg-white">
+                {{ __('Lease Document Verification') }}
+            </div>
+
+            <div class="row mt-3">
+                @foreach($previousLeaseAgreementPath as $file)
+                    <div class="col-4">
+                        <a class="file-item" target="_blank"
+                           href="{{ route('land-lease.get.lease.document', ['path' => encrypt($file->file_path)]) }}">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <div style="font-weight: 500;" class="ml-1">
+                                {{ $file->name }}
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+            <div class="row mt-3">
+                <div class="col-8">
+                    <label> <b>{{ __('Comments (Optional)') }}</b></label>
+                    <textarea class="form-control" rows="4" placeholder="comments (optional)"
+                              name="comments" wire:model.lazy="comments"></textarea>
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" wire:model.lazy="confirmed"
+                               id="confirmationCheck"
+                               required>
+                        <label class="form-check-label text-danger" for="confirmationCheck">
+                            {{ __('I confirm that I have reviewed the document and chose to approve/reject this request
+                            .') }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-12 d-flex justify-content-start">
+                <button class="btn btn-warning ml-1" @if(!$confirmed) disabled @endif
+                wire:click="submit('approved')"
+                        wire:loading.attr="disabled" wire:target="submit('approved')">
+                    {{ __('Approve Lease') }}
+                    <i class="bi bi-chevron-right ml-1" wire:loading.remove wire:target="submit('approved')"></i>
+                    <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
+                       wire:target="submit('approved')"></i>
+                </button>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12 d-flex justify-content-start mt-3">
+                <button class="btn btn-danger ml-1" @if(!$confirmed) disabled @endif
+                wire:click="submit('rejected')"
+                        wire:loading.attr="disabled" wire:target="submit('rejected')">
+                    {{ __('Reject Lease') }}
+                    <i class="bi bi-chevron-right ml-1" wire:loading.remove wire:target="submit('rejected')"></i>
+                    <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
+                       wire:target="submit('rejected')"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

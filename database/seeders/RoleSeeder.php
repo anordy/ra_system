@@ -27,6 +27,7 @@ class RoleSeeder extends Seeder
             ['name' => 'Audit Manager', 'is_approved' => 1],
             ['name' => 'Debt Manager', 'is_approved' => 1],
             ['name' => 'CRDM', 'is_approved' => 1],
+            ['name' => 'Land Lease Officer', 'is_approved' => 1],
         ];
 
         foreach ($data as $row) {

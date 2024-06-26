@@ -2,6 +2,8 @@
 
 namespace App\Mail\DemandNotice;
 
+use App\Models\PublicService\PublicServiceMotor;
+use App\Models\PublicService\PublicServiceReturn;
 use PDF;
 use Exception;
 use Carbon\Carbon;
@@ -74,6 +76,15 @@ class DebtDemandNotice extends Mailable
 
                 $email = $this->markdown('emails.demand-notice.demand-notice')->subject("ZRA Demand Notice for Debt - " . strtoupper($this->payload['debt']->business->name));
                 $email->attachData($pdf->output(), "{$this->payload['debt']->business->name}_demand_notice.pdf");
+                return $email;
+            } else if (get_class($debt) === PublicServiceReturn::class) {
+//                $pdf = PDF::loadView('debts.demand-notice.assessment-demand-notice', compact('debt', 'now', 'paid_within_days'));
+
+//                $pdf->setPaper('a4', 'portrait');
+//                $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+                $email = $this->markdown('emails.demand-notice.demand-notice')->subject("ZRA Demand Notice for Debt - " . strtoupper($this->payload['debt']->business->name));
+//                $email->attachData($pdf->output(), "{$this->payload['debt']->business->name}_demand_notice.pdf");
                 return $email;
             }
         } catch (Exception $e) {

@@ -25,11 +25,16 @@ use OwenIt\Auditing\Contracts\Auditable;
  */
 class MvrColor extends Model implements Auditable
 {
-	use SoftDeletes, \OwenIt\Auditing\Auditable;
+	use \OwenIt\Auditing\Auditable;
 	protected $table = 'mvr_colors';
 
 	protected $fillable = [
-		'name',
+		'color',
+        'mvr_registration_type_id',
 		'hex_value'
 	];
+
+    public function registration_type(){
+        return $this->belongsTo(MvrRegistrationType::class, 'mvr_registration_type_id', 'id');
+    }
 }

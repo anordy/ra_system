@@ -7,6 +7,7 @@ use App\Rules\AlphaGenericRule;
 use App\Rules\AlphaSpaceRule;
 use App\Rules\ArrayNumberRule;
 use App\Rules\NidaRule;
+use App\Rules\ThousandSeparator;
 use App\Rules\ValidPdfContent;
 use App\Rules\ValidPhoneNo;
 use Livewire\Livewire;
@@ -45,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         Livewire::component('modals', Modals::class);
         Validator::extend(StripTag::handle(), StripTag::class);
+        Validator::extend(ThousandSeparator::handle(), ThousandSeparator::class);
         Validator::extend(NidaRule::handle(), NidaRule::class);
         Validator::extend(ValidPhoneNo::handle(), ValidPhoneNo::class);
         Validator::extend(AlphaSpaceRule::handle(), AlphaSpaceRule::class);

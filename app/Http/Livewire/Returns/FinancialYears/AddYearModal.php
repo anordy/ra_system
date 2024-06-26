@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\FinancialYears;
 
+use App\Enum\GeneralConstant;
 use App\Models\DualControl;
 use App\Models\FinancialYear;
 use App\Traits\DualControlActivityTrait;
@@ -33,9 +34,10 @@ class AddYearModal extends Component
         if (!Gate::allows('setting-financial-year-add')) {
             abort(403);
         }
-        $validate = $this->validate([
-                'name' => 'required',
-                'year' => 'required',
+
+        $this->validate([
+                'name' => 'required|alpha',
+                'year' => 'required|numeric',
             ]
         );
 
@@ -44,7 +46,7 @@ class AddYearModal extends Component
             $payload = [
                 'name' => $this->name,
                 'code' => $this->year,
-                'active' => 1,
+                'active' => GeneralConstant::ONE_INT,
             ];
             $year = FinancialYear::query()->updateOrCreate($payload);
             $this->triggerDualControl(get_class($year), $year->id, DualControl::ADD, 'adding financial year');

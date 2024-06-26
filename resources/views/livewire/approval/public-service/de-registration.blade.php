@@ -1,7 +1,7 @@
 @if (count($this->getEnabledTransitions()) > 1)
     <div class="card shadow-sm mb-2 bg-white border-0 shadow-none">
         <div class="card-header font-weight-bold">
-            Public Service De-registration Approval
+            Transport Service De-registration Approval
         </div>
         <div class="card-body">
             @include('livewire.approval.transitions')
@@ -26,7 +26,7 @@
         @if ($this->checkTransition('public_service_registration_officer_review'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger"
-                        wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filled
+                        wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filed
                     Incorrect
                     return to Applicant
                 </button>

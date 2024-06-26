@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\GeneralConstant;
 use App\Enum\TransactionType;
 use App\Traits\TaxpayerLedgerTrait;
 use Exception;
@@ -129,6 +130,48 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->return->save();
                 $this->return->return->save();
 
+
+                // Check if return is VAT and approve im4 & im9
+                if ($this->return->return_type === VatReturn::class) {
+                    $refundItems  = $this->return->return->standardPurchases ?? [];
+                    $supplierItems  = $this->return->return->suppliers ?? [];
+                    $exitedGoods  = $this->return->return->importPurchases ?? [];
+
+                    if (count($exitedGoods ?? []) > 0) {
+                        foreach ($exitedGoods as $exitedGood) {
+                            $exitedGood->status = GeneralConstant::ONE_INT;
+                            $exitedGood->save();
+
+                            if (!$exitedGood) throw new Exception('Failed to Save Exited Good');
+                        }
+                    }
+
+                    if (count($refundItems) > 0) {
+                        foreach ($refundItems as $refundItem) {
+                            $refundItem->status = GeneralConstant::ONE_INT;
+                            $refundItem->save();
+                            if (!$refundItem) throw new Exception('Failed to Save Refund Item');
+                        }
+                    }
+
+                    if (count($supplierItems) > 0) {
+                        foreach ($supplierItems as $supplierItem) {
+                            $items = $supplierItem->supplierDetailsItems ?? [];
+
+                            if (count($items) > 0) {
+                                foreach ($items as $item) {
+                                    $item->used = true;
+                                    $item->save();
+
+                                    if (!$item) throw new Exception('Failed to Save Supplier Item');
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+
                 // Record ledger transaction
                 $this->recordLedger(TransactionType::DEBIT, TaxReturn::class, $tax_return->id, $tax_return->principal, $tax_return->interest, $tax_return->penalty, $tax_return->total_amount, $tax_return->tax_type_id, $tax_return->currency, $tax_return->filed_by_id, $tax_return->location_id, $tax_return->financial_month_id);
 
@@ -136,6 +179,8 @@ class TaxReturnsVettingApprovalProcessing extends Component
 
                 // Trigger verification
                 $this->triggerTaxVerifications($this->return, auth()->user());
+
+                DB::commit();
 
                 if ($tax_return->return_type != PortReturn::class) {
                     $this->generateReturnControlNumber($tax_return);
@@ -165,11 +210,10 @@ class TaxReturnsVettingApprovalProcessing extends Component
                         }
                     }
                 }
-                //saving credit brought forward(claim)
 
+                //saving credit brought forward(claim)
                 if ($this->return->return->credit_brought_forward > 0) {
-                    $this->claim_data = VatReturn::query()->selectRaw('payment_status, tax_credits.amount, payment_method, installments_count,
-        tax_credits.id as credit_id, tax_claims.old_return_id, tax_claims.old_return_type, tax_claims.currency')
+                    $this->claim_data = VatReturn::query()->selectRaw('payment_status, tax_credits.amount, payment_method, installments_count, tax_credits.id as credit_id, tax_claims.old_return_id, tax_claims.old_return_type, tax_claims.currency')
                         ->leftJoin('tax_claims', 'tax_claims.old_return_id', '=', 'vat_returns.id')
                         ->leftJoin('tax_credits', 'tax_credits.claim_id', '=', 'tax_claims.id')
                         ->where('vat_returns.claim_status', '=', TaxClaimStatus::CLAIM)
@@ -220,6 +264,47 @@ class TaxReturnsVettingApprovalProcessing extends Component
 
                 $this->return->vetting_status = VettingStatus::VETTED;
                 $this->return->return->vetting_status = VettingStatus::VETTED;
+
+                // Check if return is VAT and approve im4 & im9
+                if ($this->return->return_type === VatReturn::class) {
+                    $exitedGoods  = $this->return->return->importPurchases ?? [];
+                    $refundItems  = $this->return->return->standardPurchases ?? [];
+                    $supplierItems  = $this->return->return->suppliers ?? [];
+
+                    if (count($exitedGoods) > 0) {
+                        foreach ($exitedGoods as $exitedGood) {
+                            $exitedGood->status = GeneralConstant::ONE_INT;
+                            $exitedGood->save();
+
+                            if (!$exitedGood) throw new Exception('Failed to Save Exited Good');
+                        }
+                    }
+
+                    if (count($refundItems) > 0) {
+                        foreach ($refundItems as $refundItem) {
+                            $refundItem->status = GeneralConstant::ONE_INT;
+                            $refundItem->save();
+                            if (!$refundItem) throw new Exception('Failed to Save Refund Item');
+                        }
+                    }
+
+                    if (count($supplierItems) > 0) {
+                        foreach ($supplierItems as $supplierItem) {
+                            $items = $supplierItem->supplierDetailsItems ?? [];
+
+                            if (count($items) > 0) {
+                                foreach ($items as $item) {
+                                    $item->used = true;
+                                    $item->save();
+
+                                    if (!$item) throw new Exception('Failed to Save Supplier Item');
+                                }
+                            }
+                        }
+                    }
+
+                }
+
                 $this->return->save();
                 $this->return->return->save();
 
@@ -421,7 +506,6 @@ class TaxReturnsVettingApprovalProcessing extends Component
         }
 
         if ($this->checkTransition('return_vetting_manager_reject')) {
-
             try {
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
                 $this->flash('success', 'Application returned to officer', [], redirect()->back()->getTargetUrl());

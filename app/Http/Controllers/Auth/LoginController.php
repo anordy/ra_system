@@ -85,39 +85,25 @@ class LoginController extends Controller
                 ]);
             }
 
-            // if (!$this->verify($user)) {
-            //     Auth::logout();
-            //     $request->session()->flush();
-            //     throw ValidationException::withMessages([
-            //         $this->username() =>  "Your account could not be verified, please contact system administrator.",
-            //     ]);
-            // }
+             if (!$this->verify($user)) {
+                 Auth::logout();
+                 $request->session()->flush();
+                 throw ValidationException::withMessages([
+                     $this->username() =>  "Your account could not be verified, please contact system administrator.",
+                 ]);
+             }
 
-            // if ($user->is_approved == 0) {
-            //     Auth::logout();
-            //     $request->session()->flush();
-            //     throw ValidationException::withMessages([
-            //         $this->username() =>  "Your account has not been approved, please contact system administrator.",
-            //     ]);
-            // }
+             if ($user->is_approved == 0) {
+                 Auth::logout();
+                 $request->session()->flush();
+                 throw ValidationException::withMessages([
+                     $this->username() =>  "Your account has not been approved, please contact system administrator.",
+                 ]);
+             }
 
             $this->clearLoginAttempts($request);
             $user = auth()->user();
 
-            // Check if alternative to otp is enabled.
-            $setting = SystemSetting::where('code', SystemSetting::ENABLE_OTP_ALTERNATIVE)->first();
-            $answersConfigured = $user->userAnswers()->count() >= 3;
-
-            if ($setting && $setting->value && $answersConfigured){
-                // redirect to security questions page.
-                session()->flash('success', 'Please select and provide answers to your security questions to access your account.');
-                return redirect()->route('2fa.security-questions');
-            }
-
-            if ($setting && $setting->value && !$answersConfigured){
-                // OTP Alternative enabled but user has not configured answers, redirect to otp with alternative message
-                session()->flash('error', 'Security questions not configured.');
-            }
 
             $token = $user->otp;
 

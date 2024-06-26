@@ -16,9 +16,19 @@ class MvrPlateNumberColorsTableSeeder extends Seeder
      */
     public function run()
     {
-        MvrColor::query()->updateOrcreate(['name' => 'White','hex_value'=>'#ffffff']);
-        MvrColor::query()->updateOrcreate(['name' => 'Red','hex_value'=>'#ff0000']);
-        MvrColor::query()->updateOrcreate(['name' => 'Blue','hex_value'=>'#0000ff']);
-        MvrColor::query()->updateOrcreate(['name' => 'Silver','hex_value'=>'#cccccc']);
+        $colors = [
+            [
+                'mvr_registration_type_id' => 1,
+                'color' => 'White/Black'
+            ],
+            [
+                'mvr_registration_type_id' => 2,
+                'color' => 'White/Black'
+            ]
+        ];
+
+        foreach ($colors as $color) {
+            MvrColor::query()->updateOrcreate($color);
+        }
     }
 }
