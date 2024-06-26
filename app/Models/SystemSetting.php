@@ -47,6 +47,7 @@ class SystemSetting extends Model implements Auditable
     const INSTITUTION_WEBSITE = 'institution-website';
 
     const OVERRIDE_VFMS_LINK = 'override-vfms-link';
+    const BIOMETRIC_STATUS = 'biometric-status';
 
 
     protected $guarded = [];
