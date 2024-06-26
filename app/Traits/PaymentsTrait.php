@@ -1555,8 +1555,6 @@ trait PaymentsTrait
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
         }
-
-
     }
 
     public function generateLeasePartialPaymentControlNo($partialPayment)
