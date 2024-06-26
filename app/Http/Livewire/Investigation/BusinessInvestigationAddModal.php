@@ -78,8 +78,8 @@ class BusinessInvestigationAddModal extends Component
 
     public function updatedQuery() {
         $this->business = Business::query()->select('id', 'name', 'ztn_number')
-            ->where('name', 'like', '%' . $this->query . '%')
-            ->orWhere('ztn_number', 'like', '%' . $this->query . '%')
+            ->whereRaw('LOWER(name) LIKE ?', [ '%' . strtolower($this->query) . '%'])
+            ->orWhereRaw('LOWER(ztn_number) LIKE ?', [ '%' . strtolower($this->query) . '%'])
             ->get()
             ->toArray();
     }
