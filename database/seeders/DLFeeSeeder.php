@@ -15,7 +15,7 @@ class DLFeeSeeder extends Seeder
      */
     public function run()
     {
-        $types = ['FRESH', 'RENEW', 'DUPLICATE', 'ADD_CLASS'];
+        $types = ['FRESH', 'RENEW', 'DUPLICATE', 'CLASS'];
         $durations = [2 => 35000, 3 => 450000, 5 => 60000];
 
         foreach ($types as $type){
