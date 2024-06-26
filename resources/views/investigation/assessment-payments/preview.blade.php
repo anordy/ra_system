@@ -1,15 +1,15 @@
 @extends("layouts.master")
 
-@section("title", "Investigation Preview")
+@php
+    $subjectType = get_class($subject);
+    $subjectType = explode("\\", $subjectType);
+    $subjectType = end($subjectType);
+    $subjectType = preg_replace("/(?<!^)([A-Z])/", ' $1', $subjectType);
+@endphp
+
+@section("title", "{{ $subjectType }} Preview")
 
 @section("content")
-    @php
-        $subjectType = get_class($subject);
-        $subjectType = explode("\\", $subjectType);
-        $subjectType = end($subjectType);
-        $subjectType = preg_replace("/(?<!^)([A-Z])/", ' $1', $subjectType);
-    @endphp
-
     @if ($partialPayment->status == App\Enum\TaxInvestigationStatus::APPROVED && $subject->assessment)
         <div class="row m-2 pt-3">
             <div class="col-md-12">
@@ -255,10 +255,10 @@
                             </div>
                         </div>
                     </div>
-                    @if ($partialPayment->taxAssessment->outstanding_amount >= 0)
+                    @if ($partialPayment->taxAssessment->outstanding_amount > 0)
                         <div class="row">
                             <p class="p-3">
-                                Tax payer wants to make a payment of
+                                Taxpayer wants to make a payment of
                                 <span class="font-weight-bold text-uppercase">{{ number_format($partialPayment->amount, 2) }}</span>
                                 which is equal to
                                 <span class="font-weight-bold text-uppercase">
