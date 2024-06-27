@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\DebtWaiverCategory;
+use App\Enum\TransactionType;
+use App\Models\Returns\TaxReturn;
 use App\Traits\VerificationTrait;
 use Exception;
 use Carbon\Carbon;
@@ -186,6 +188,21 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                 $notification_payload = [
                     'debt' => $this->debt,
                 ];
+
+                // Insert ledger credit for waiver
+                $this->recordLedger(
+                    TransactionType::CREDIT,
+                    TaxReturn::class,
+                    $this->debt->id,
+                    $this->total,
+                    0,
+                    0,
+                    $this->total,
+                    $this->debt->tax_type_id,
+                    $this->debt->currency,
+                    $this->debt->business->taxpayer_id,
+                    $this->debt->location_id,
+                );
 
                 DB::commit();
 
