@@ -88,4 +88,15 @@ class Installment extends Model implements Auditable
     {
         return $this->hasMany(InstallmentList::class);
     }
+
+    public function getNextdateOfPayment(){
+        // Retrieve the next unpaid installment from the installment list
+        $nextInstallment = $this->installmentLists()
+            ->where('status', BillStatus::SUBMITTED)
+            ->orderBy('due_date', 'asc')
+            ->first();
+
+        // Return the due date of the next unpaid installment or null if none are found
+        return $nextInstallment ? $nextInstallment->due_date : null;
+    }
 }

@@ -70,7 +70,7 @@ class UpdateInstallmentState extends Command
                 'status' => ReturnStatus::PAID_BY_DEBT
             ]);
 
-        } elseif($installment->getNextPaymentDate() && $installment->getNextPaymentDate()->lessThan(Carbon::today())) {
+        } elseif($installment->getNextdateOfPayment() && Carbon::parse($installment->getNextdateOfPayment())->lessThan(Carbon::today())) {
             $installment->update([
                 'status' => InstallmentStatus::CANCELLED,
                 'cancellation_reason' => "Installment was skipped, cancelled by system."
@@ -79,10 +79,9 @@ class UpdateInstallmentState extends Command
             $installment->installable->update([
                 'application_status' => ApplicationStatus::NORMAL,
                 'payment_method' => PaymentMethod::FULL,
-                'curr_payment_due_date' => $installment->getNextPaymentDate()
+                'curr_payment_due_date' => $installment->getNextdateOfPayment()
             ]);
         }
-
         Log::channel('dailyJobs')->info($itemsCount);
     }
 }
