@@ -117,7 +117,8 @@ class InstallmentRequestApprovalProcessing extends Component
                     'installment_from' => $this->subject->installment_from,
                     'installment_to' => $this->subject->installment_to,
                     'installment_count' => $this->subject->installment_count,
-                    'amount' => $newFigure,
+//                    'amount' => $newFigure,
+                    'amount' => $installable->outstanding_amount,
                     'currency' => $installable->currency,
                     'status' => InstallmentStatus::ACTIVE
                 ]);
@@ -126,7 +127,7 @@ class InstallmentRequestApprovalProcessing extends Component
 
 
                 // Create the installment list based on installment count
-                $installmentListCreated = $this->createInstallmentList($installment, $this->subject->installment_count,$newFigure);
+                $installmentListCreated = $this->createInstallmentList($installment, $this->subject->installment_count,$installable->outstanding_amount);
 
                 if (!$installmentListCreated) {
                     throw new Exception('Failed to create installment list.');

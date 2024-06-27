@@ -1,27 +1,23 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-    <meta charset="utf-8">
-    <title>500 Error Page</title>
+@extends("layouts.master")
+
+@section("title", "500 error")
+
+@section("content")
     <link rel="stylesheet" href="{{asset('css/error.css')}}">
-</head>
-<body>
-<div id="error-page">
-    <div class="content">
-        <h2 class="header" data-text="500">
-            500
-        </h2>
-        <h4 data-text="Opps! Page not found">
-            Opps! Internal Server Error
-        </h4>
-        <p>
-            Sorry, Something went wrong, please contact the administrator for help, Please report a problem to admin.
-        </p>
-        <div class="btns">
-            <a href="/dashboard">Home</a>
-            <a href="{{url()->previous()}}">Back</a>
+    <div class="text-center">
+        <div class="content">
+            <h2 class="header" data-text="500">
+                500
+            </h2>
+            <h3 data-text="Opps! Page not found">
+                Opps! Internal Server Error
+            </h3>
+            <p>
+                Sorry, Something went wrong, please contact the administrator for help, Please report a problem to admin.
+            </p>
+            <div class="btns">
+                <a href="{{url()->previous()}}">Back</a>
+            </div>
         </div>
     </div>
-</div>
-</body>
-</html>
+@endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\GeneralConstant;
+use App\Enum\TaxAuditStatus;
 use App\Enum\TaxInvestigationStatus;
 use App\Models\BusinessTaxType;
 use App\Enum\TransactionType;
@@ -167,11 +168,13 @@ class TaxInvestigationApprovalProcessing extends Component
         }
     }
 
-    public function addSelect() {
+    public function addSelect()
+    {
         $this->teamMembers[] = ''; // Set the initial value to an empty string
     }
 
-    public function removeSelect($index) {
+    public function removeSelect($index)
+    {
         unset($this->teamMembers[$index]);
         $this->teamMembers = array_values($this->teamMembers); // Re-index the array
     }
@@ -235,6 +238,17 @@ class TaxInvestigationApprovalProcessing extends Component
 
             // $this->registerWorkflow($this->modelName, $this->modelId);
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
+
+            if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
+                foreach ($this->subject->assessments as $key => $assessment) {
+                    # code...
+                    $assessment->update([
+                        'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                        'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                    ]);
+                    $this->recordLedger(TransactionType::DEBIT, TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
+                }
+            }
 
             DB::commit();
 
@@ -340,7 +354,7 @@ class TaxInvestigationApprovalProcessing extends Component
                 'team_leader' => true,
             ]);
 
-            foreach ($this->teamMembers as $member){
+            foreach ($this->teamMembers as $member) {
                 TaxInvestigationOfficer::create([
                     'investigation_id' => $this->subject->id,
                     'user_id' => $member,
@@ -353,9 +367,9 @@ class TaxInvestigationApprovalProcessing extends Component
             $this->subject->scope = $this->descriptions;
             $this->subject->save();
             DB::commit();
-        }catch (Exception $ex){
+        } catch (Exception $ex) {
             DB::rollBack();
-            Log::error("ASSIGNING OFFICERS: ".$ex->getMessage());
+            Log::error("ASSIGNING OFFICERS: " . $ex->getMessage());
         }
 
         return [intval($this->teamLeader), intval($this->teamMembers)];
@@ -399,7 +413,7 @@ class TaxInvestigationApprovalProcessing extends Component
             $workingReport = $this->workingReport->store('investigation', 'local');
         }
 
-//        todo: send email/sms notification
+        //        todo: send email/sms notification
         $this->subject->final_report = $finalReport;
         $this->subject->working_report = $workingReport;
         $this->subject->save();
@@ -503,7 +517,8 @@ class TaxInvestigationApprovalProcessing extends Component
         $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl());
     }
 
-    public function rejectExtension($transition){
+    public function rejectExtension($transition)
+    {
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
@@ -512,8 +527,8 @@ class TaxInvestigationApprovalProcessing extends Component
         try {
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
             $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl());
-        }catch (Exception $ex){
-            Log::error("EXTENSION REJECTED: ".$ex->getMessage());
+        } catch (Exception $ex) {
+            Log::error("EXTENSION REJECTED: " . $ex->getMessage());
             $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl());
         }
     }

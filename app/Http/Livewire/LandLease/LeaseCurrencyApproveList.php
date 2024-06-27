@@ -3,12 +3,14 @@
 namespace App\Http\Livewire\LandLease;
 
 use App\Enum\LeaseStatus;
+use App\Enum\TransactionType;
 use App\Models\DualControl;
 use App\Models\LandLease;
 use App\Models\LeaseCurrencyChangeApplication;
 use App\Models\LeasePayment;
 use App\Models\PartialPayment;
 use App\Models\Taxpayer;
+use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\TaxType;
 use App\Models\ZmBill;
 use App\Services\ZanMalipo\ZmCore;
@@ -173,19 +175,25 @@ class LeaseCurrencyApproveList extends DataTableComponent
                     }
 
                     $leasePayment = $this->updateLeasePayment($leaseCurrencyChange->land_lease_id, $leaseCurrencyChange->to_currency);
-
-                    if ($leasePayment) {
-                        $leasePayment->landLease->payment_amount = $leasePayment->total_amount;
-                        $leasePayment->landLease->save();
-                        DB::commit();
-                        $this->customAlert('success', 'Lease currency change has been approved successfully', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+                    if ($this->updateTaxpayerLedger($leasePayment)){
+                        if ($leasePayment) {
+                            $leasePayment->landLease->payment_amount = $leasePayment->total_amount;
+                            $leasePayment->landLease->save();
+                            DB::commit();
+                            $this->customAlert('success', 'Lease currency change has been approved successfully', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+                        } else {
+                            DB::rollBack();
+                            $this->customAlert('error', 'Something went wrong', ['onConfirmed' => 'confirmed', 'timer' =>
+                                2000]);
+                        }
                         return;
-                    } else {
+                    }else{
                         DB::rollBack();
                         $this->customAlert('error', 'Something went wrong', ['onConfirmed' => 'confirmed', 'timer' =>
                             2000]);
-                        return;
                     }
+
+                    return;
                     break;
                 case self::REJECT:
                     $comment = $value['value'] ?? null;
@@ -200,7 +208,7 @@ class LeaseCurrencyApproveList extends DataTableComponent
 
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error("LEASE-CURRENCY-CHANGE-APPLICATION-EXCEPTION: " . json_encode($exception));
+            Log::error("LEASE-CURRENCY-CHANGE-APPLICATION-EXCEPTION: " . json_encode($exception->getMessage()));
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
@@ -217,6 +225,7 @@ class LeaseCurrencyApproveList extends DataTableComponent
         if ($leasePayment) {
             $leasePayment->total_amount = $this->convertToTsh($leasePayment->total_amount);
             $leasePayment->outstanding_amount = $this->convertToTsh($leasePayment->outstanding_amount);
+            $leasePayment->penalty = $this->convertToTsh($leasePayment->penalty);
             $leasePayment->total_amount_with_penalties = $this->convertToTsh($leasePayment->total_amount_with_penalties);
             $leasePayment->currency = $currency;
             $leasePayment->save();
@@ -354,5 +363,25 @@ class LeaseCurrencyApproveList extends DataTableComponent
     {
         $rate = $this->getExchangeRate('USD');
         return $amount * $rate;
+    }
+
+    public function updateTaxpayerLedger($leasePayment): bool
+    {
+        $taxpayerLedger = TaxpayerLedger::where('source_id', $leasePayment->id)
+            ->where( "source_type", get_class($leasePayment))
+            ->where('transaction_type', TransactionType::DEBIT)
+            ->first();
+
+        if ($taxpayerLedger) {
+
+            $taxpayerLedger->currency = $leasePayment->currency;
+            $taxpayerLedger->principal_amount = $this->convertToTsh($taxpayerLedger->principal_amount);
+            $taxpayerLedger->penalty_amount = $this->convertToTsh($taxpayerLedger->penalty_amount);
+            $taxpayerLedger->total_amount = $this->convertToTsh($taxpayerLedger->total_amount);
+            $taxpayerLedger->save();
+            return true;
+        }
+
+        return false;
     }
 }

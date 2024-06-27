@@ -78,8 +78,8 @@ class BusinessInvestigationAddModal extends Component
 
     public function updatedQuery() {
         $this->business = Business::query()->select('id', 'name', 'ztn_number')
-            ->where('name', 'like', '%' . $this->query . '%')
-            ->orWhere('ztn_number', 'like', '%' . $this->query . '%')
+            ->whereRaw('LOWER(name) LIKE ?', [ '%' . strtolower($this->query) . '%'])
+            ->orWhereRaw('LOWER(ztn_number) LIKE ?', [ '%' . strtolower($this->query) . '%'])
             ->get()
             ->toArray();
     }
@@ -94,9 +94,15 @@ class BusinessInvestigationAddModal extends Component
         }
     }
 
-
-    public function selectBusiness() {
-        $this->selectedBusiness = $this->contacts[$this->highlightIndex] ?? null;
+    public function selectBusiness($index) {
+        $this->selectedBusiness = $this->business[$index] ?? null;
+        if ($this->selectedBusiness) {
+            $this->business_id = $this->selectedBusiness['id'];
+            $this->query = $this->selectedBusiness['name'].' ('.$this->selectedBusiness['ztn_number'] . ')';
+            $this->businessChange($this->business_id);
+        }
+        $this->business = [];
+        $this->highlightIndex = 0;
     }
 
     public function businessChange($id)

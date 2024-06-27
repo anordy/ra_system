@@ -19,7 +19,6 @@
                 <div class="row">
                     <div class="col-md-12 form-group">
                         <input
-                                wire:model.defer="selectedBusiness"
                                 type="text"
                                 class="form-input form-control"
                                 placeholder="Search Business..."
@@ -28,7 +27,7 @@
                                 wire:keydown.tab="resetFields"
                                 wire:keydown.arrow-up="decrementHighlight"
                                 wire:keydown.arrow-down="incrementHighlight"
-                                wire:keydown.enter="selectBusiness"
+                                wire:keydown.enter="selectBusiness({{ $highlightIndex }})"
                         />
                         <div wire:loading class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
                             <div class="list-item">Searching...</div>
@@ -39,11 +38,13 @@
                             <div class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
                                 @if(!empty($business))
                                     @foreach($business as $i => $row)
-                                        <a href="#" class="list-item {{ $highlightIndex === $i ? 'highlight' : '' }}"
+                                        <a href="#" wire:click.prevent="selectBusiness({{ $i }})" class="list-item {{ $highlightIndex === $i ? 'highlight-dropdown' : '' }}"
                                         >{{ $row['name'] }} ({{ $row['ztn_number'] }})</a>
                                     @endforeach
                                 @else
-                                    <div class="list-item">No results!</div>
+                                    @if(!$business_id)
+                                        <div class="list-item">No results!</div>
+                                    @endif
                                 @endif
                             </div>
                         @endif

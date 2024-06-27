@@ -2,9 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\SysModule;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class Check2FA
@@ -32,6 +35,19 @@ class Check2FA
             return redirect()->route('login')->withErrors('Suspicious Login Attempt');
         }
 
+        $modules = collect(Session::get('user_modules', []));
+        $modules->map(function ($module) {
+            Gate::define($module->code, function ($user) use ($module) {
+                return $user->hasModuleTo($module);
+            });
+        });
+
+        $permissions = collect(Session::get('user_permissions', []));
+        $permissions->map(function ($permission) {
+            Gate::define($permission->name, function ($user) use ($permission) {
+                return $user->hasPermissionTo($permission);
+            });
+        });
         return $next($request);
     }
 }

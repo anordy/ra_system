@@ -48,6 +48,11 @@ class TaxInvestigation extends Model implements Auditable
         return $this->morphOne(TaxAssessment::class, 'assessment');
     }
 
+    public function assessments()
+    {
+        return $this->morphMany(TaxAssessment::class, 'assessment');
+    }
+
     public function officers()
     {
         return $this->hasMany(TaxInvestigationOfficer::class, 'investigation_id', 'id');

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\Check2FA;
 use App\Rules\AlphaNumSpaceRule;
 use App\Rules\AlphaGenericRule;
 use App\Rules\AlphaSpaceRule;
@@ -72,5 +73,9 @@ class AppServiceProvider extends ServiceProvider
                 $app['Illuminate\Support\Str']
             );
         });
+
+        Livewire::addPersistentMiddleware([
+            Check2FA::class
+        ]);
     }
 }
