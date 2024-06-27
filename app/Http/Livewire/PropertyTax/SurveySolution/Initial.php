@@ -361,7 +361,7 @@ class Initial extends Component
         $this->properties = [];
 
         if ($this->identifierType === SurveySolutionType::MOBILE) {
-            if(preg_match('/^(06|07)\d{8}$/', $this->identifierNumber) || !ctype_digit($this->identifierNumber)) {
+            if(!preg_match('/^(06|07)\d{8}$/', $this->identifierNumber) && !ctype_digit($this->identifierNumber)) {
                 $this->customAlert('warning', 'Invalid mobile number provided');
                 return;
             }

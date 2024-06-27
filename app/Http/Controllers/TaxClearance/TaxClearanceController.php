@@ -45,7 +45,7 @@ class TaxClearanceController extends Controller
     use VerificationTrait;
 
     public function generateCertNo(){
-//        fetch all approved certs
+        // fetch all approved certs
         $certs = TaxClearanceRequest::query()->select('id', 'certificate_number', 'status')->where('status', TaxClearanceStatus::APPROVED)->get();
 
         $year = date('Y');
@@ -122,12 +122,12 @@ class TaxClearanceController extends Controller
 
         $businessLocationId = $taxClearance->business_location_id;
 
-        $tzsLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::TZS, $businessLocationId);
-        $usdLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::USD, $businessLocationId);
+        $tzsLedgers = (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->getLedgerByCurrency(Currencies::TZS, $businessLocationId);
+        $usdLedgers = (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->getLedgerByCurrency(Currencies::USD, $businessLocationId);
 
         $ledgers = [
-            'TZS' => TaxpayerLedgerController::joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
-            'USD' => TaxpayerLedgerController::joinLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
+            'TZS' => (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
+            'USD' => (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->joinLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
         ];
 
         $tzsCreditSum = $tzsLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;
@@ -169,12 +169,12 @@ class TaxClearanceController extends Controller
         }
         $businessLocationId = $taxClearance->business_location_id;
 
-        $tzsLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::TZS, $businessLocationId);
-        $usdLedgers = TaxpayerLedgerController::getLedgerByCurrency(Currencies::USD, $businessLocationId);
+        $tzsLedgers = (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->getLedgerByCurrency(Currencies::TZS, $businessLocationId);
+        $usdLedgers = (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->getLedgerByCurrency(Currencies::USD, $businessLocationId);
 
         $ledgers = [
-            'TZS' => TaxpayerLedgerController::joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
-            'USD' => TaxpayerLedgerController::joinLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
+            'TZS' => (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
+            'USD' => (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->joinLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
         ];
 
         $tzsCreditSum = $tzsLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;

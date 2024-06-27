@@ -1,4 +1,29 @@
 <div class="col-md-12">
+    @if(count($currentTaxTypes) > 0)
+        <div class="card rounded-0 shadow-none border">
+            @include('layouts.component.messages')
+            <div class="card-header bg-white font-weight-bold">Old Tax Type Configurations</div>
+            <div class="card-body">
+                @foreach ($currentTaxTypes as $key => $value)
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Tax Type</label>
+                                <input type="text" disabled class="form-control" value="{{ getTaxTypeName($value['tax_type_id'])  }}"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Currency</label>
+                                <input type="text" disabled class="form-control" value="{{ $value['currency']  }}"/>
+                            </div>
+                        </div>
+
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
     <div class="card rounded-0 shadow-none border">
         <div class="card-header bg-white font-weight-bold">Tax Type Configurations</div>
         <div class="card-body">
