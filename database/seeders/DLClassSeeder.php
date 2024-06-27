@@ -14,10 +14,54 @@ class DLClassSeeder extends Seeder
      */
     public function run()
     {
-        $classes = ['A', 'A1', 'A2', 'A3', 'B', 'C', 'C1', 'C2', 'C3', 'D', 'E', 'F', 'G', 'H'];
-
+        $classes = [
+            [
+                'name' => 'A',
+                'description' => 'Motorcycle'
+            ],
+            [
+                'name' => 'B',
+                'description' => 'Private Car > 7 seats'
+            ],
+            [
+                'name' => 'B1',
+                'description' => 'Private Car <= 7 seats'
+            ],
+            [
+                'name' => 'C',
+                'description' => 'Goods Vehicle > 3.5 Tons'
+            ],
+            [
+                'name' => 'C1',
+                'description' => 'Goods Vehicle <= 3.5 Tons'
+            ],
+            [
+                'name' => 'D',
+                'description' => 'Public Vehicle > 7 seats'
+            ],
+            [
+                'name' => 'D1',
+                'description' => 'Public Vehicle <= 7 seats'
+            ],
+            [
+                'name' => 'E',
+                'description' => 'Tractors'
+            ],
+            [
+                'name' => 'G',
+                'description' => 'General (All Vehicles)'
+            ],
+            [
+                'name' => 'M',
+                'description' => 'Moped'
+            ],
+            [
+                'name' => 'N',
+                'description' => 'None'
+            ]
+        ];
         foreach ($classes as $cl){
-            DlLicenseClass::updateOrCreate(['name' => $cl]);
+            DlLicenseClass::updateOrCreate($cl);
         }
     }
 }

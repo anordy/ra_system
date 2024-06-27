@@ -18,7 +18,7 @@
             Sorry, Something went wrong, please contact the administrator for help, Please report a problem to admin.
         </p>
         <div class="btns">
-            <a href="{{route('home')}}">Home</a>
+            <a href="/dashboard">Home</a>
             <a href="{{url()->previous()}}">Back</a>
         </div>
     </div>

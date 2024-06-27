@@ -128,7 +128,6 @@
     </style>
 </head>
 <body>
-
 <div id="owner-name">
     @if($motor_vehicle->agent)
         @if($motor_vehicle->is_agent_registration)
@@ -165,7 +164,6 @@
 <div id="qr-code">
     <img class="img-fluid" src="{{ $dataUri }}" alt="qr-code"/>
 </div>
-
 </body>
 <body class="page-two" style="page-break-before: always">
 </body>
