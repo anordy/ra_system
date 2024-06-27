@@ -3,7 +3,14 @@
 namespace App\Services\Api;
 
 use App\Models\BillingStatus;
+use App\Models\DlLicenseApplication;
+use App\Models\MvrDeregistration;
+use App\Models\MvrOwnershipTransfer;
+use App\Models\MvrRegistration;
+use App\Models\MvrRegistrationParticularChange;
+use App\Models\MvrRegistrationStatusChange;
 use App\Models\PropertyTax\PropertyPayment;
+use App\Models\PublicService\PublicServiceReturn;
 use App\Models\RenewTaxAgentRequest;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
@@ -29,7 +36,18 @@ class ZanMalipoInternalService
 
         if ($access_token == null) {
             $billable = $bill->billable;
-            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
+            if (
+                $bill->billable_type == TaxAssessment::class
+                || $bill->billable_type == TaxReturn::class
+                || $bill->billable_type == PropertyPayment::class
+                || $bill->billable_type == MvrOwnershipTransfer::class
+                || $bill->billable_type == MvrDeregistration::class
+                || $bill->billable_type == MvrRegistration::class
+                || $bill->billable_type == MvrRegistrationStatusChange::class
+                || $bill->billable_type == DlLicenseApplication::class
+                || $bill->billable_type == PublicServiceReturn::class
+                || $bill->billable_type == MvrRegistrationParticularChange::class
+            ) {
                 $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
                 if ($bill->billable_type == TaxReturn::class && $billable->return) {
                     $billable->return->status = ReturnStatus::CN_GENERATION_FAILED;
@@ -92,7 +110,18 @@ class ZanMalipoInternalService
             Log::info('-------END CONTROL NUMBER GENERATION REQUEST--------');
 
             if ($res['data']['status_code'] === 7101) {
-                if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
+                if (
+                    $bill->billable_type == TaxAssessment::class
+                    || $bill->billable_type == TaxReturn::class
+                    || $bill->billable_type == PropertyPayment::class
+                    || $bill->billable_type == MvrOwnershipTransfer::class
+                    || $bill->billable_type == MvrDeregistration::class
+                    || $bill->billable_type == MvrRegistration::class
+                    || $bill->billable_type == MvrRegistrationStatusChange::class
+                    || $bill->billable_type == DlLicenseApplication::class
+                    || $bill->billable_type == PublicServiceReturn::class
+                    || $bill->billable_type == MvrRegistrationParticularChange::class
+                ) {
                     $billable->payment_status = ReturnStatus::CN_GENERATING;
                 } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
                     $billable->status = TaxAgentStatus::VERIFIED;
@@ -101,7 +130,18 @@ class ZanMalipoInternalService
                     $billable->status = ReturnStatus::CN_GENERATING;
                 }
             } else {
-                if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class || $bill->billable_type == PropertyPayment::class) {
+                if (
+                    $bill->billable_type == TaxAssessment::class
+                    || $bill->billable_type == TaxReturn::class
+                    || $bill->billable_type == PropertyPayment::class
+                    || $bill->billable_type == MvrOwnershipTransfer::class
+                    || $bill->billable_type == MvrDeregistration::class
+                    || $bill->billable_type == MvrRegistration::class
+                    || $bill->billable_type == MvrRegistrationStatusChange::class
+                    || $bill->billable_type == DlLicenseApplication::class
+                    || $bill->billable_type == PublicServiceReturn::class
+                    || $bill->billable_type == MvrRegistrationParticularChange::class
+                ) {
                     $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
                 } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
                     $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;

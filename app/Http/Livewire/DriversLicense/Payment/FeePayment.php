@@ -37,7 +37,7 @@ class FeePayment extends Component
     }
 
     public function regenerate(){
-        $response = $this->regenerateControlNo($this->license->get_latest_bill);
+        $response = $this->regenerateControlNo($this->license->latestBill);
         if ($response){
             session()->flash('success', CustomMessage::RECEIVE_PAYMENT_SHORTLY);
             return redirect(request()->header('Referer'));

@@ -10,6 +10,7 @@ use App\Models\DlApplicationCertificate;
 use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
 use App\Models\DlFee;
+use App\Models\DlLicenseApplication;
 use App\Models\DlLicenseRestriction;
 use App\Models\DlRestriction;
 use App\Traits\CustomAlert;
@@ -97,8 +98,6 @@ class DriverLicenseApprovalProcessing extends Component
                     }
                 }
 
-                $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
-
                 foreach ($this->attachments as $attachment) {
                     DlApplicationCertificate::create([
                         'location' => $attachment['file']->store('dl_files'),
@@ -106,18 +105,17 @@ class DriverLicenseApprovalProcessing extends Component
                     ]);
                 }
 
+                $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->save();
-            } else {
-                $this->validate([
-                    'comments' => 'required|strip_tag',
-                ]);
 
-                $lastDlLicense = DlDriversLicense::where('dl_drivers_license_owner_id', $this->subject->dl_drivers_license_owner_id)->latest()->first();
+                if ($this->subject->type == DlApplicationStatus::ADD_CLASS){
+                    $lastDlLicense = DlDriversLicense::where('dl_drivers_license_owner_id', $this->subject->dl_drivers_license_owner_id)->latest()->first();
 
-                if ($this->subject->type == GeneralConstant::ADD_CLASS) {
-                    $lastDlLicense->status = GeneralConstant::ADD_CLASS;
-                    $lastDlLicense->save();
+                    if ($this->subject->type == GeneralConstant::ADD_CLASS) {
+                        $lastDlLicense->status = GeneralConstant::ADD_CLASS;
+                        $lastDlLicense->save();
+                    }
                 }
             }
 
@@ -238,9 +236,6 @@ class DriverLicenseApprovalProcessing extends Component
                 }
                 $this->generateDLicenseControlNumber($this->subject, $fee, $classFactor);
             }
-
-            // Generate control number
-            $this->generateDLicenseControlNumber($this->subject, $fee);
         } catch (Exception $e) {
 
             Log::error('Error generating control number: ' . $e->getMessage(), [

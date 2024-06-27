@@ -1,5 +1,4 @@
 <div class="px-3">
-
     @if (!empty($license->get_latest_bill()))
         <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
             <div class="col-md-4">

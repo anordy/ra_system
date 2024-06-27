@@ -107,6 +107,11 @@ class DlLicenseApplication extends Model implements Auditable
         return $bill_item->bill ??  null;
     }
 
+    public function latestBill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable')->latest();
+    }
+
     public function licenseRestrictions()
     {
         return $this->hasMany(DlLicenseRestriction::class,'dl_license_application_id');

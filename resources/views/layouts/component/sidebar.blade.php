@@ -753,61 +753,6 @@
             </li>
         @endcan
 
-        {{-- TODO: Add permissions --}}
-        <li class="{{ request()->is("public-service*") ? "active" : "" }}">
-            <a href="#publicServiceSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is("public-service*") ? "true" : "false" }}" class="dropdown-toggle">Public
-                Service</a>
-            <ul class="collapse list-unstyled {{ request()->is("public-service*") ? "show" : "" }}"
-                id="publicServiceSubmenu">
-                <li class="{{ request()->is("public-service/registrations*") ? "active" : "" }}">
-                    <a href="{{ route("public-service.registrations.index") }}">Registrations</a>
-                </li>
-                <li class="{{ request()->is("public-service/temporary-closures*") ? "active" : "" }}">
-                    <a href="{{ route("public-service.temporary-closures") }}">Temporary Closures</a>
-                </li>
-                <li class="{{ request()->is("public-service/de-registrations*") ? "active" : "" }}">
-                    <a href="{{ route("public-service.de-registrations") }}">De-registrations</a>
-                </li>
-                <li class="{{ request()->is("public-service/payments*") ? "active" : "" }}">
-                    <a href="{{ route("public-service.payments.index") }}">Returns Payments</a>
-                </li>
-                <li class="{{ request()->is("public-service/reports*") ? "active" : "" }}">
-                    <a href="{{ route("public-service.report.index") }}">Reports</a>
-                </li>
-            </ul>
-        </li>
-
-        @can("driver-licences-view")
-                <li class="{{ request()->is("drivers-license*") || request()->is("rio*") ? "active" : "" }}">
-                    <a href="#dlSubmenu" data-toggle="collapse"
-                        aria-expanded="{{ request()->is("drivers-license*") || request()->is("rio*") ? "true" : "false" }}"
-                        class="dropdown-toggle">Driver's Licenses</a>
-                    <ul class="collapse list-unstyled {{ request()->is("drivers-license*") || request()->is("rio*") ? "show" : "" }}"
-                        id="dlSubmenu">
-                        @can("driver-licences-application")
-                            <li
-                                class="{{ request()->is("drivers-license/applications*") ? "active" : "" }}">
-                                <a href="{{ route("drivers-license.applications") }}">Driver's License Applications</a>
-                            </li>
-                        @endcan
-
-                        @can("driver-licences-view")
-                            <li class="{{ request()->is("drivers-license/license*") ? "active" : "" }}">
-                                <a href="{{ route("drivers-license.licenses") }}">Driver's Licenses</a>
-                            </li>
-                        @endcan
-
-                        @can("driver-licences-road-inspection")
-                            <li class="{{ request()->is("rio*") ? "active" : "" }}">
-                                <a href="{{ route("rio.register") }}">Road Inspection Offences</a>
-                            </li>
-                        @endcan
-
-                    </ul>
-                </li>
-            @endif
-
         @can("land-lease-management")
                     <li class="{{ request()->is("land-lease*") ? "active" : "" }}">
                         <a href="#landLeaseSubmenu" data-toggle="collapse"

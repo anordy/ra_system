@@ -210,7 +210,12 @@
 <div id="class-information">
     @foreach($license->drivers_license_classes as $class)
         <div>
-            {{ $class->license_class->name }} {{ $class->license_class->description }}
+            <div style="width: 150px; display: inline-block;">
+                {{ $class->license_class->name }}
+            </div>
+            <div style="display: inline-block;">
+                {{ $class->license_class->description }}
+            </div>
         </div>
     @endforeach
 </div>
