@@ -32,7 +32,7 @@ trait TaxpayerLedgerTrait
      * @return void
      * @throws \Exception
      */
-    public function recordLedger($transactionType, $sourceType, $sourceId, $principalAmount, $interestAmount, $penaltyAmount, $totalAmount, $taxTypeId, $currency, $taxPayerId, $locationId = null, $financialMonthId = null)
+    public function recordLedger($transactionType, $sourceType, $sourceId, $principalAmount, $interestAmount, $penaltyAmount, $totalAmount, $taxTypeId, $currency, $taxPayerId, $locationId = null, $financialMonthId = null, $description = null)
     {
         try {
             if (!in_array($transactionType, TransactionType::getConstants())) {
@@ -81,7 +81,8 @@ trait TaxpayerLedgerTrait
                 'principal_amount' => $principalAmount,
                 'interest_amount' => $interestAmount,
                 'penalty_amount' => $penaltyAmount,
-                'total_amount' => $totalAmount
+                'total_amount' => $totalAmount,
+                'description' => $description
             ]);
 
             if (!$ledger) throw new \Exception('Failed to save ledger transaction');
