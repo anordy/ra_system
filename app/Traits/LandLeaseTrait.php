@@ -26,7 +26,8 @@ trait LandLeaseTrait
         return $paymentFinancialMonth->due_date;
     }
 
-    public function createLeasePayment($landLease, $paymentFinancialMonth){
+    public function createLeasePayment($landLease, $paymentFinancialMonth)
+    {
         try {
 
             $financialYear = FinancialYear::where('code', $paymentFinancialMonth->due_date->year)->firstOrFail('id');
@@ -36,8 +37,8 @@ trait LandLeaseTrait
             $leasePayment = LeasePayment::create([
                 'land_lease_id' => $landLease['id'],
                 'taxpayer_id' => $landLease['taxpayer_id'],
-                'financial_month_id' =>$paymentFinancialMonth->id,
-                'financial_year_id' =>$financialYear->id,
+                'financial_month_id' => $paymentFinancialMonth->id,
+                'financial_year_id' => $financialYear->id,
                 'total_amount' => $landLease['payment_amount'],
                 'total_amount_with_penalties' => $landLease['payment_amount'],
                 'outstanding_amount' => $landLease['payment_amount'],
@@ -52,8 +53,9 @@ trait LandLeaseTrait
                 ->firstOrFail();
 
             $penaltyIteration = 0;
-            if ($currentFinancialMonth->due_date->year >= Carbon::parse($paymentFinancialMonth->due_date)->year) {
-                $penaltyIteration = Carbon::now() <= $currentFinancialMonth->due_date ?  $currentFinancialMonth->due_date->startOfMonth()->diffInMonths($paymentFinancialMonth->due_date) : $currentFinancialMonth->due_date->diffInMonths($paymentFinancialMonth->due_date);
+
+            if ($currentFinancialMonth->due_date->year > Carbon::parse($paymentFinancialMonth->due_date)->year) {
+                $penaltyIteration = Carbon::now() <= $currentFinancialMonth->due_date ? $currentFinancialMonth->due_date->startOfMonth()->diffInMonths($paymentFinancialMonth->due_date) : $currentFinancialMonth->due_date->diffInMonths($paymentFinancialMonth->due_date);
             }
 
             if ($penaltyIteration > 0) {
@@ -85,11 +87,13 @@ trait LandLeaseTrait
             return true;
 
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() .' , ------Start-----'. $th .' , '. '------End----- Action by: '. Auth::user());
+            Log::error($th->getMessage() . ' , ------Start-----' . $th . ' , ' . '------End----- Action by: ' . Auth::user());
             return false;
         }
     }
-    private function calculateLeasePenalties($leasePayment, $paymentFinancialMonth, $penaltyIteration) {
+
+    private function calculateLeasePenalties($leasePayment, $paymentFinancialMonth, $penaltyIteration)
+    {
         $currentFinancialYearId = FinancialYear::where('code', Carbon::now()->year)->firstOrFail()->id;
         $penaltyRate = PenaltyRate::where('financial_year_id', $currentFinancialYearId)->where('code', 'LeasePenaltyRate')->firstOrFail()->rate;
 
@@ -114,7 +118,9 @@ trait LandLeaseTrait
 
         return $principalAmount + $penaltyAmountAccumulated;
     }
-    public function getFirstLastDateOfMonth($due_date, $i) {
+
+    public function getFirstLastDateOfMonth($due_date, $i)
+    {
         $currentMonth = $due_date->addMonths($i);
         $start_date = clone $currentMonth->startOfMonth();
         $end_date = clone $currentMonth->endOfMonth();
