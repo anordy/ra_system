@@ -42,8 +42,8 @@ class ExchangeRateAddModal extends Component
         }
 
         $this->validate();
-        try{
-           $exchange_rate = ExchangeRate::create([
+        try {
+            $exchange_rate = ExchangeRate::create([
                 'currency' => $this->currency,
                 'mean' => $this->mean,
                 'spot_buying' => $this->spot_buying,
@@ -52,8 +52,12 @@ class ExchangeRateAddModal extends Component
             ]);
             $this->triggerDualControl(get_class($exchange_rate), $exchange_rate->id, DualControl::ADD, 'adding exchange rate');
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
-        }catch(Exception $e){
-            Log::error($e);
+        } catch (Exception $e) {
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }

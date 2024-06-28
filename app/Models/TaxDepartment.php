@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class TaxDepartment extends Model
 {
     use HasFactory;
+
+    public  function taxRegion()
+    {
+        return $this->hasMany(TaxRegion::class, 'department_id');
+    }
 }

@@ -44,22 +44,26 @@ class AddProceedingModel extends Component
             DB::beginTransaction();
             CaseProceeding::query()->create(
                 [
-                    'case_id'=>$this->case_id,
-                    'date'=>$this->date,
-                    'comment'=>$this->comment,
-                    'case_stage_id'=>$this->stage_id,
-                    'case_decision_id'=>$this->decision_id,
+                    'case_id' => $this->case_id,
+                    'date' => $this->date,
+                    'comment' => $this->comment,
+                    'case_stage_id' => $this->stage_id,
+                    'case_decision_id' => $this->decision_id,
                 ]
             );
 
             LegalCase::query()
-                ->where(['id'=>$this->case_id])
-                ->update(['case_stage_id'=>$this->stage_id]);
+                ->where(['id' => $this->case_id])
+                ->update(['case_stage_id' => $this->stage_id]);
             DB::commit();
             redirect()->to(route('cases.show', encrypt($this->case_id)));
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

@@ -1,6 +1,6 @@
 <div class="card mt-3">
     <div class="card-header font-weight-bold bg-white">
-        Registration Information - {{ $reg->chassis->chassis_number  }}
+        Registration Information - {{ $reg->chassis->chassis_number ?? 'N/A'  }}
     </div>
     <div class="card-body">
         <div class="row my-2">
@@ -16,6 +16,7 @@
                         <span class="badge badge-success py-1 px-2">
                 <i class="bi bi-check-circle-fill mr-1"></i>
                 {{ __('Registered') }}
+                        </span>
                 @elseif($reg->status === \App\Enum\MvrRegistrationStatus::STATUS_RETIRED)
                         <span class="badge badge-danger py-1 px-2">
                 <i class="bi bi-check-circle-fill mr-1"></i>
@@ -43,16 +44,26 @@
                 <p class="my-1">{{ $reg->registration_number ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Plate Number</span>
-                <p class="my-1">{{ $reg->plate_number ?? 'N/A' }}</p>
+                <span class="font-weight-bold text-uppercase">Registered On</span>
+                <p class="my-1">{{ $reg->registered_at ?? 'N/A' }}</p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Registration Class</span>
+                <p class="my-1">{{ $reg->class->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Registration Type</span>
                 <p class="my-1">{{ $reg->regtype->name ?? 'N/A' }}</p>
             </div>
+            @if($reg->plate_type)
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Registration No. Type</span>
+                    <p class="my-1">{{ $reg->plate_type->name ?? 'N/A' }}</p>
+                </div>
+            @endif
             <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Registration Class</span>
-                <p class="my-1">{{ $reg->class->name ?? 'N/A' }}</p>
+                <span class="font-weight-bold text-uppercase">Plate Number</span>
+                <p class="my-1">{{ $reg->plate_number ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Plate Number Size</span>
@@ -60,18 +71,14 @@
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Plate Number Color</span>
-                <p class="my-1">{{ $reg->platecolor->name ?? 'N/A' }}</p>
-            </div>
-            <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Registered On</span>
-                <p class="my-1">{{ $reg->registered_at ?? 'N/A' }}</p>
+                <p class="my-1">{{ $reg->regtype->color ? ($reg->regtype->color->color ?? 'N/A') : 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Register Type</span>
                 <p class="my-1">{{ $reg->register_type ?? 'N/A' }}</p>
             </div>
 
-            @if($reg->agent)
+            @if ($reg->agent)
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Is Registration For Agent?</span>
                     <p class="my-1">{{ $reg->is_agent_registration ? 'Yes' : 'No' }}</p>
@@ -108,10 +115,23 @@
                 </div>
             @endif
 
+            @if($reg->authorization_letter)
+                <div class="col-md-3 pr-0">
+                    <div class="p-2 mb-0 d-flex rounded-sm align-items-center file-item">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                        <a target="_blank"
+                           href="{{ route('mvr.files', encrypt($reg->authorization_letter)) }}"
+                           class="ml-1">
+                            {{ __('Authorization Letter') }}
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>
 
-@if($reg->registrant_tin)
+@if ($reg->registrant_tin)
     @livewire('tra.tin-verification', ['tinNumber' => $reg->registrant_tin])
 @endif

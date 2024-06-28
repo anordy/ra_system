@@ -3,6 +3,9 @@
 namespace App\Http\Livewire\Audit;
 
 use App\Enum\TaxAuditStatus;
+use App\Events\SendMail;
+use App\Events\SendSms;
+use App\Models\Region;
 use App\Models\TaxAudit\TaxAudit;
 use App\Traits\WithSearch;
 use App\Traits\WorkflowProcesssingTrait;
@@ -10,22 +13,42 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxAuditInitiateTable extends DataTableComponent
 {
-
+    public $taxRegion;
+    public $orderBy;
 
     use CustomAlert, WorkflowProcesssingTrait;
 
     public $model = TaxAudit::class;
 
+    public function mount($taxRegion)
+    {
+        // if (!Gate::allows('tax-returns-vetting-view')) {
+        //     abort(403);
+        // }
+
+        $this->taxRegion = $taxRegion;
+    }
+
+
     public function builder(): Builder
     {
         return TaxAudit::query()
             ->with('business', 'location', 'taxType', 'createdBy')
-            ->where('tax_audits.status', TaxAuditStatus::DRAFT);
+            ->where('tax_audits.status', TaxAuditStatus::DRAFT)
+            ->where('tax_audits.forwarded_to_investigation', false)
+            ->whereHas('location.taxRegion', function ($query) {
+                if ($this->taxRegion == Region::LTD) {
+                    $query->whereIn('location', [Region::LTD, Region::UNGUJA]); //this is filter by department
+                } else {
+                    $query->where('location', $this->taxRegion); //this is filter by department
+                }
+            });
     }
 
     public function configure(): void
@@ -76,9 +99,11 @@ class TaxAuditInitiateTable extends DataTableComponent
                 ->format(function ($value) {
                     $url = route('tax_auditing.approvals.show', encrypt($value));
                     return <<<HTML
-                           <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-check"></i> Initiate Approval</button>
-                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> Delete</button>
-                           <a href="{$url}" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="right" title="View"> View More </a>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="bi bi-check-circle-fill"></i> Initiate Approval</button>
+                            <a href="{$url}" class="btn btn-outline-info btn-sm" title="View"><i class="fa fa-eye"></i> View More </a>
+                            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash-fill"></i> Delete</button>
+                        </div>
                     HTML;
                 })
                 ->html(true),
@@ -114,6 +139,11 @@ class TaxAuditInitiateTable extends DataTableComponent
             $this->doTransition('start', []);
             $audit->status = TaxAuditStatus::PENDING;
             $audit->save();
+
+            $taxpayer = $audit->business->taxpayer;
+            event(new SendMail('audit-notification-to-taxpayer', $taxpayer));
+            event(new SendSms('audit-notification-to-taxpayer', $taxpayer));
+
             $this->flash('success', 'Approval initiated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
@@ -147,7 +177,7 @@ class TaxAuditInitiateTable extends DataTableComponent
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->customAlert('warning', 'Something whent wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

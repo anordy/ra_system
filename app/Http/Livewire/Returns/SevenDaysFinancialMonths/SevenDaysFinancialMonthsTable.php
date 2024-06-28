@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\SevenDaysFinancialMonths;
 
+use App\Enum\GeneralConstant;
 use App\Models\FinancialYear;
 use App\Models\SevenDaysFinancialMonth;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class SevenDaysFinancialMonthsTable extends DataTableComponent
 {
-    public $today;
+    public $today, $canDualControl;
 
     public function configure(): void
     {
@@ -28,13 +29,14 @@ class SevenDaysFinancialMonthsTable extends DataTableComponent
 
     public function builder(): Builder
     {
+        $this->canDualControl = approvalLevel(Auth::user()->level_id, 'Maker');
         $day = date('Y-m-d');
         $day = date('F', strtotime($day));
-        $year = FinancialYear::query()->where('code', date('Y'))->first();
+        $year = FinancialYear::query()->select('id')->where('code', date('Y'))->first();
         if (is_null($year)){
             abort(404, 'Financial year not found');
         }
-        $today = SevenDaysFinancialMonth::query()->where('financial_year_id', $year->id)->where('name', $day)->first();
+        $today = SevenDaysFinancialMonth::query()->select('id')->where('financial_year_id', $year->id)->where('name', $day)->first();
         if (is_null($today)){
             abort(404, 'Financial year not found');
         }
@@ -56,31 +58,31 @@ class SevenDaysFinancialMonthsTable extends DataTableComponent
                 ->sortable()->searchable(),
             Column::make('Approval Status', 'is_approved')
                 ->format(function ($value, $row) {
-                    if ($value == 0) {
+                    if ($value == GeneralConstant::ZERO_INT) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                            <span class="badge badge-warning p-2" >Not Approved</span>
                         HTML;
-                    } elseif ($value == 1) {
+                    } elseif ($value == GeneralConstant::ONE_INT) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                            <span class="badge badge-success p-2" >Approved</span>
                         HTML;
                     }
-                    elseif ($value == 2) {
+                    elseif ($value == GeneralConstant::TWO_INT) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                            <span  class="badge badge-danger p-2" >Rejected</span>
                         HTML;
                     }
 
                 })->html(),
             Column::make('Edit Status', 'is_updated')
                 ->format(function ($value, $row) {
-                    if ($value == 0) {
+                    if ($value == GeneralConstant::ZERO_INT) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                            <span  class="badge badge-warning p-2" >Not Updated</span>
                         HTML;
-                    } elseif ($value == 1) {
+                    } elseif ($value == GeneralConstant::ONE_INT) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                            <span  class="badge badge-success p-2" >Updated</span>
                         HTML;
                     }
                 })
@@ -90,14 +92,14 @@ class SevenDaysFinancialMonthsTable extends DataTableComponent
                     $edit = '';
                     $extend = '';
                     $value = "'".encrypt($value)."'";
-                    if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
+                    if (Gate::allows('setting-user-edit') && $this->canDualControl) {
                         $edit = <<< HTML
-                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
                                 HTML;
                     }
                     if ($this->today == $value && approvalLevel(Auth::user()->level_id, 'Maker')) {
                         $extend = <<< HTML
-                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.extend-month-modal',$value)"><i class="fa fa-edit mr-1"></i>Extend</button>
+                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.extend-month-modal',$value)"><i class="bi bi-pencil-square mr-1"></i>Extend</button>
                 HTML;
                     }
                     return $edit . $extend;

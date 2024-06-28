@@ -9,6 +9,7 @@ class ReturnCategory implements Status
     const NORMAL = 'normal';
     const DEBT = 'debt';
     const OVERDUE = 'overdue';
+    const LATE = 'late';
 
     static function getConstants(): array
     {

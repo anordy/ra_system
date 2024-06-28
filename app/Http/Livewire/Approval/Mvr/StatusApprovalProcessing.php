@@ -3,14 +3,20 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistrationStatusChangeFile;
+use App\Models\MvrRegistrationStatusChange;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -20,19 +26,27 @@ use Livewire\WithFileUploads;
 
 class StatusApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait,WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait,WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
     public $comments;
     public $approvalReport;
+    public $attachments = [];
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId   = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
+        $this->attachments = [
+            [
+                'name' => '',
+                'file' => '',
+            ],
+        ];
     }
+
     public function approve($transition) {
         $transition = $transition['data']['transition'];
 
@@ -40,20 +54,43 @@ class StatusApprovalProcessing extends Component
             'comments' => 'required|strip_tag',
         ]);
 
+        if ($this->checkTransition('mvr_zartsa_review')) {
+            $this->validate(
+                [
+                    'approvalReport' => $this->subject->approval_report ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
+                    'attachments.*.name' => count($this->subject->attachments) > 0 ? 'nullable' : 'required|strip_tag',
+                    'attachments.*.file' => count($this->subject->attachments) > 0 ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
+                ],
+                [
+                    'approvalReport.required' => 'Please upload Inspection report document'
+                ]
+            );
+        }
+
         try {
             DB::beginTransaction();
             if ($this->checkTransition('mvr_zartsa_review')) {
 
-                $this->validate(
-                    [
-                        'approvalReport' => 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
-                    ]
-                );
+                foreach ($this->attachments as $attachment) {
+                    if ($attachment['file'] && $attachment['name']) {
+                        $documentPath = $attachment['file']->store("/mvr_status_change");
 
-                $approvalReport = "";
-                if ($this->approvalReport) {
-                    $approvalReport = $this->approvalReport->store('mvrZartsaReport', 'local');
+                        $file = MvrRegistrationStatusChangeFile::create([
+                            'mvr_status_change_id' => $this->subject->id,
+                            'location' => $documentPath,
+                            'name' => $attachment['name'],
+                        ]);
+
+                        if (!$file) throw new Exception('Failed to save mvr status change file');
+
+                    }
                 }
+
+                $approvalReport = $this->approvalReport;
+                if ($this->subject->approval_report != $this->approvalReport && $this->approvalReport) {
+                        $approvalReport = $this->approvalReport->store('mvrZartsaReport', 'local');
+                }
+
                 $this->subject->approval_report = $approvalReport;
                 $this->subject->save();
             }
@@ -61,6 +98,7 @@ class StatusApprovalProcessing extends Component
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
                 $this->subject->save();
             }
@@ -86,7 +124,21 @@ class StatusApprovalProcessing extends Component
         // Generate Control Number after MVR SC Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
-                $this->generateControlNumber();
+                $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
+
+                $fee = MvrFee::query()->where([
+                    'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
+                    'mvr_fee_type_id' => $feeType->id,
+                    'mvr_class_id' => $this->subject->mvr_class_id,
+                    'mvr_plate_number_type_id' => $this->subject->mvr_plate_number_type_id
+                ])->first();
+
+                if (empty($fee)) {
+                    $this->customAlert('error', "Registration fee for selected status change type is not configured");
+                    return;
+                }
+
+                $this->generateControlNumber($fee);
             } catch (Exception $exception) {
                 $this->customAlert('error', 'Failed to generate control number, please try again');
             }
@@ -132,6 +184,19 @@ class StatusApprovalProcessing extends Component
         'approve', 'reject'
     ];
 
+    public function addAttachment()
+    {
+        $this->attachments[] = [
+            'name' => '',
+            'file' => '',
+        ];
+    }
+
+    public function removeAttachment($i)
+    {
+        unset($this->attachments[$i]);
+    }
+
     public function confirmPopUpModal($action, $transition)
     {
         $this->customAlert('warning', 'Are you sure you want to complete this action?', [
@@ -150,31 +215,12 @@ class StatusApprovalProcessing extends Component
         ]);
     }
 
-    public function generateControlNumber() {
+    public function generateControlNumber($fee) {
         try {
-            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
-
-            $fee = MvrFee::query()->where([
-                'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
-                'mvr_fee_type_id' => $feeType->id,
-                'mvr_class_id' => $this->subject->mvr_class_id
-            ])->first();
-
-            if (empty($fee)) {
-                $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                return;
-            }
-
             DB::beginTransaction();
 
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-            $this->subject->save();
-
-            $this->generateMvrStatusChangeConntrolNumber($this->subject, $fee);
-
+            $this->generateMvrControlNumber($this->subject, $fee);
             DB::commit();
-
             $this->flash('success', 'Approved Successful', [], redirect()->back()->getTargetUrl());
         } catch (Exception $exception) {
             DB::rollBack();

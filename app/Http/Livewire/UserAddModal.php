@@ -2,16 +2,15 @@
 
 namespace App\Http\Livewire;
 
-use App\Jobs\User\SendRegistrationEmail;
-use App\Jobs\User\SendRegistrationSMS;
-use App\Models\ApprovalLevel;
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Models\ApprovalLevel;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserApprovalLevel;
 use App\Notifications\DatabaseNotification;
+use App\Traits\CustomAlert;
 use App\Traits\DualControlActivityTrait;
 use App\Traits\VerificationTrait;
 use Exception;
@@ -21,7 +20,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class UserAddModal extends Component
@@ -48,16 +46,17 @@ class UserAddModal extends Component
 
     public function mount()
     {
-        $this->roles = Role::where('is_approved',1)->get();
+        $this->roles = Role::where('is_approved', 1)->get();
         $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
         $this->adminCheck = Role::where('name', Role::ADMINISTRATOR)->value('id');
     }
 
-    public function updated($property){
-        if ($property == 'role'){
-            if ($this->role == $this->adminCheck){
+    public function updated($property)
+    {
+        if ($property == 'role') {
+            if ($this->role == $this->adminCheck) {
                 $this->accessLevel = true;
-            } else{
+            } else {
                 $this->accessLevel = false;
                 $this->level_id = null;
             }
@@ -82,7 +81,8 @@ class UserAddModal extends Component
         'lname' => 'last name',
     ];
 
-    public function messages(){
+    public function messages()
+    {
         return [
             'override_otp.required' => 'Please specify if users can OTP and use security questions by default.'
         ];
@@ -119,14 +119,13 @@ class UserAddModal extends Component
             ]);
 
             UserApprovalLevel::create([
-               'role_id' => $this->role,
-               'user_id' => $user->id,
-               'approval_level_id' => $this->level_id,
-               'created_by' => Auth::user()->id
+                'role_id' => $this->role,
+                'user_id' => $user->id,
+                'approval_level_id' => $this->level_id,
+                'created_by' => Auth::user()->id
             ]);
 
-
-            $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding new user '.$this->fname.' '.$this->lname.'');
+            $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding new user ' . $this->fname . ' ' . $this->lname . '');
 
             $admins = User::whereHas('role', function ($query) {
                 $query->where('name', 'Administrator');
@@ -151,7 +150,11 @@ class UserAddModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

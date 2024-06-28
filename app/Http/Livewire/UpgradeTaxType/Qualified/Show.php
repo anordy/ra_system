@@ -76,7 +76,6 @@ class Show extends Component
             $this->sub_vat_id = $this->taxTypeChange->to_sub_vat_id;
             $this->comments = $this->taxTypeChange->reason;
         }
-
     }
 
     public function approve($transition)
@@ -153,7 +152,6 @@ class Show extends Component
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
-
         }
 
         if ($this->checkTransition('registration_manager_review')) {
@@ -173,9 +171,7 @@ class Show extends Component
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
-
         }
-
     }
 
     protected $rules = [
@@ -199,7 +195,11 @@ class Show extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comment]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','View Public Service Payment')
+@section('title','View Transport Service Payment')
 
 @section('content')
 
@@ -8,7 +8,7 @@
 
     <div class="card">
         <div class="card-header text-uppercase font-weight-bold bg-white">
-            {{ __('View Public Service Payment') }}
+            {{ __('View Transport Service Payment') }}
         </div>
 
         <div class="card-body">

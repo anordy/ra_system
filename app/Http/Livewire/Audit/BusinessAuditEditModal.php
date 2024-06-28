@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Audit;
 
+use App\Enum\TaxAuditStatus;
 use App\Models\Business;
 use App\Models\TaxAudit\TaxAudit;
 use Exception;
@@ -45,26 +46,33 @@ class BusinessAuditEditModal extends Component
 
     public function mount()
     {
-        $this->business = Business::all();
+        $this->business = Business::select('id', 'name')->get();
     }
 
     public function businessChange($id)
     {
-        if ($this->business_id) {
-            $this->selectedBusiness = Business::with('locations')->findOrFail($id);
-            $this->taxTypes         = $this->selectedBusiness->taxTypes;
-            $this->locations        = $this->selectedBusiness->locations;
-        } else {
-            $this->reset('taxTypes', 'locations');
+        try {
+            if ($this->business_id) {
+                $this->selectedBusiness = Business::with('locations')->findOrFail($id);
+                $this->taxTypes         = $this->selectedBusiness->taxTypes;
+                $this->locations        = $this->selectedBusiness->locations;
+            } else {
+                $this->reset('taxTypes', 'locations');
+            }
+        } catch (Exception $e) {
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            $this->customAlert('error', 'Something went wrong while fetching the business details');
         }
     }
-
-
     public function submit()
     {
         $this->validate();
         try {
-            TaxAudit::create([
+            $taxAudit = TaxAudit::create([
                 'business_id' => $this->business_id,
                 'location_id' => $this->location_id,
                 'tax_type_id' => $this->tax_type_id,
@@ -74,11 +82,20 @@ class BusinessAuditEditModal extends Component
                 'period_to' => $this->period_to,
                 'created_by_id' => auth()->user()->id,
                 'created_by_type' => get_class(auth()->user()),
-                'status' => 'pending'
+                'status' => TaxAuditStatus::PENDING
             ]);
-            $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
+
+            if ($taxAudit) {
+                $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
+            } else {
+                $this->customAlert('error', 'Failed to create tax audit record');
+            }
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

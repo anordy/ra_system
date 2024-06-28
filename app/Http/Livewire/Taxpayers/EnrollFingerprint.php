@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Taxpayers;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Biometric;
+use App\Models\SystemSetting;
 use App\Models\Taxpayer;
 use App\Traits\CustomAlert;
 use App\Traits\VerificationTrait;
@@ -100,11 +101,20 @@ class EnrollFingerprint extends Component
             return;
         }
 
-        $biometrics = Biometric::where('reference_no', $kyc->id)
-                ->get();
+        $biometricStatus = SystemSetting::where('code', SystemSetting::BIOMETRIC_STATUS)->first();
 
-        if (count($biometrics) != 4) {
-            $this->customAlert('error', 'Enroll four fingers');
+        if ($biometricStatus) {
+            if ($biometricStatus->value) {
+                $biometrics = Biometric::where('reference_no', $kyc->id)
+                    ->get();
+
+                if (count($biometrics) != 4) {
+                    $this->customAlert('error', 'Enroll four fingers');
+                    return;
+                }
+            }
+        } else {
+            $this->customAlert('error', 'Please ensure biometric status has been configured in the system');
             return;
         }
 
@@ -118,6 +128,16 @@ class EnrollFingerprint extends Component
             return;
         }
 
+        $checkMobile = Taxpayer::query()
+            ->where('mobile', $kyc->mobile)
+            ->whereNotNull('biometric_verified_at')
+            ->exists();
+
+        if ($checkMobile) {
+            $this->customAlert("error", "User mobile no. already exists in a verified account.");
+            return;
+        }
+
         DB::beginTransaction();
 
         try {
@@ -128,6 +148,7 @@ class EnrollFingerprint extends Component
 
             $password = Str::random(8);
             $data['password'] = Hash::make($password);
+            $data['zanid_verified_at'] = $data['zanid_verified_at'] ? Carbon::make($data['zanid_verified_at'])->toDateTimeString() : null;
 
             $existingTaxpayer = Taxpayer::query()
                 ->where('mobile', $data['mobile'])
@@ -140,7 +161,7 @@ class EnrollFingerprint extends Component
                     session()->flash("error", "Couldn't verify user.");
                     throw new \Exception("Couldn't verify user");
                 }
-                $kyc->delete();
+                $kyc->forceDelete();
                 DB::commit();
 
                 // Update Biometrics
@@ -151,7 +172,6 @@ class EnrollFingerprint extends Component
                     ]);
 
                 $this->sign($existingTaxpayer);
-
             } else {
                 $taxpayer = Taxpayer::create([
                     'id_type' => $data['id_type'],
@@ -183,6 +203,7 @@ class EnrollFingerprint extends Component
 
                 $taxpayer->generateReferenceNo();
 
+
                 Biometric::query()
                     ->where('reference_no', $kyc->id)
                     ->update([
@@ -191,7 +212,7 @@ class EnrollFingerprint extends Component
 
                 // todo: this should before sending the email/Sms
                 if ($taxpayer) {
-                    $kyc->delete();
+                    $kyc->forceDelete();
                 } else {
                     session()->flash("error", "Couldn't verify user.");
                     throw new \Exception("Couldn't verify user");

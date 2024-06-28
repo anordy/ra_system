@@ -69,7 +69,8 @@ class TaxClaimApprovalProcessing extends Component
         }
     }
 
-    public function updated($propertyName){
+    public function updated($propertyName)
+    {
         if ($propertyName == 'paymentType') {
             $this->installmentCount = 1;
         }
@@ -77,15 +78,14 @@ class TaxClaimApprovalProcessing extends Component
 
     public function calcMoney()
     {
-       if ($this->installmentCount > 0) {
+        if ($this->installmentCount > 0) {
             try {
                 return $this->subject->amount / (int)$this->installmentCount;
             } catch (Exception $exception) {
-                Log::error($exception .', '. Auth::user());
+                Log::error($exception . ', ' . Auth::user());
                 return $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
-       }
-        
+        }
     }
 
     public function approve($transition)
@@ -98,7 +98,7 @@ class TaxClaimApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
-        
+
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [
@@ -151,7 +151,11 @@ class TaxClaimApprovalProcessing extends Component
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
@@ -159,7 +163,7 @@ class TaxClaimApprovalProcessing extends Component
         if ($this->checkTransition('method_of_payment')) {
             $this->validate([
                 'paymentType' => 'required',
-                'installmentCount' => 'required_if:paymentType,installment|exclude_if:paymentType,full|exclude_if:paymentType,cash|numeric|max:12'
+                'installmentCount' => 'required_if:paymentType,installment|exclude_if:paymentType,full|exclude_if:paymentType,cash|numeric|min:1|max:12'
             ]);
 
             TaxCredit::create([
@@ -187,14 +191,14 @@ class TaxClaimApprovalProcessing extends Component
             $credit->save();
 
             $claim = TaxClaim::query()->findOrFail($this->subject->id);
-            if(is_null($claim)){
+            if (is_null($claim)) {
                 abort(404);
             }
             $taxpayer = $claim->taxpayer;
-            
+
             $taxpayer->notify(new DatabaseNotification(
                 $subject = 'TAX CLAIM APPROVAL',
-                $message = 'Your tax claim for the return month of '.$claim->financialMonth->name.' '.$claim->financialMonth->year->code.' has been successfully approved',
+                $message = 'Your tax claim for the return month of ' . $claim->financialMonth->name . ' ' . $claim->financialMonth->year->code . ' has been successfully approved',
                 $href = 'claims.show',
                 $hrefText = 'View',
                 $hrefParameters = $this->subject->id,
@@ -203,14 +207,14 @@ class TaxClaimApprovalProcessing extends Component
             $emailPayload = [
                 'email' => $taxpayer->email,
                 'taxpayerName' => $taxpayer->first_name,
-                'message' => 'Your tax claim for the return month of '.$claim->financialMonth->name.' '.$claim->financialMonth->year->code.' has been successfully approved'
+                'message' => 'Your tax claim for the return month of ' . $claim->financialMonth->name . ' ' . $claim->financialMonth->year->code . ' has been successfully approved'
             ];
 
             event(new SendMail('tax-claim-feedback', $emailPayload));
 
             $smsPayload = [
                 'phone' => $taxpayer->phone,
-                'message' => 'Hello '.$taxpayer->first_name.', Your tax claim for the return month of '.$claim->financialMonth->name.' '.$claim->financialMonth->year->code.' has been successfully approved'
+                'message' => 'Hello ' . $taxpayer->first_name . ', Your tax claim for the return month of ' . $claim->financialMonth->name . ' ' . $claim->financialMonth->year->code . ' has been successfully approved'
             ];
 
             event(new SendSms('tax-claim-feedback', $smsPayload));
@@ -219,7 +223,11 @@ class TaxClaimApprovalProcessing extends Component
         try {
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact support for assistance.');
             return;
         }
@@ -245,12 +253,16 @@ class TaxClaimApprovalProcessing extends Component
         try {
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             return;
         }
 
         $claim = TaxClaim::query()->findOrFail($this->subject->id);
-        if(is_null($claim)){
+        if (is_null($claim)) {
             abort(404);
         }
         $taxpayer = $claim->taxpayer;
@@ -258,14 +270,14 @@ class TaxClaimApprovalProcessing extends Component
         $emailPayload = [
             'email' => $taxpayer->email,
             'taxpayerName' => $taxpayer->first_name,
-            'message' => 'Your tax claim for the return month of '.$claim->financialMonth->name.' '.$claim->financialMonth->year->code.' has been rejected.'
+            'message' => 'Your tax claim for the return month of ' . $claim->financialMonth->name . ' ' . $claim->financialMonth->year->code . ' has been rejected.'
         ];
 
         event(new SendMail('tax-claim-feedback', $emailPayload));
 
         $smsPayload = [
             'phone' => $taxpayer->phone,
-            'message' => 'Hello '.$taxpayer->first_name.', Your tax claim for the return month of '.$claim->financialMonth->name.' '.$claim->financialMonth->year->code.' has been rejected.'
+            'message' => 'Hello ' . $taxpayer->first_name . ', Your tax claim for the return month of ' . $claim->financialMonth->name . ' ' . $claim->financialMonth->year->code . ' has been rejected.'
         ];
 
         event(new SendSms('tax-claim-feedback', $smsPayload));

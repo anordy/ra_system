@@ -6,7 +6,7 @@
 
     <div class="card p-0 m-0">
         <div class="card-body mt-0 p-2">
-            <ul class="nav nav-tabs shadow-sm" id="waiverContent" role="tablist" style="margin-bottom: 0;">
+            <ul class="nav nav-tabs shadow-sm mb-0" id="waiverContent" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="taxclearance-info-tab" data-toggle="tab" href="#taxclearance-info"
                         role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearence Information </a>

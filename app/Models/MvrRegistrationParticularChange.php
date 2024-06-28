@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\Tra\ChassisNumber;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,7 +31,7 @@ class MvrRegistrationParticularChange extends Model
     }
 
     public function platecolor(){
-        return $this->belongsTo(MvrPlateNumberColor::class, 'plate_number_color_id');
+        return $this->belongsTo(MvrColor::class, 'plate_number_color_id');
     }
 
     public function regtype(){
@@ -54,6 +55,11 @@ class MvrRegistrationParticularChange extends Model
         return $this->hasOne(ChassisNumberChange::class, 'particular_change_id');
     }
 
+    public function ledger()
+    {
+        return $this->morphOne(TaxpayerLedger::class, 'source');
+    }
+
     public static function getNexPlateNumber(mixed $regType, $class): mixed
     {
         $last_reg = MvrRegistrationParticularChange::query()
@@ -73,7 +79,7 @@ class MvrRegistrationParticularChange extends Model
                 $plate_number = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
                 $plate_number = preg_replace('/SLS(.+)(.)$/', 'SMZ' . $plate_number . '$2', $last_reg->plate_number);
             }
-        }elseif ($regType->name == MvrRegistrationType::TYPE_GOVERNMENT){
+        }elseif ($regType->name == MvrRegistrationType::TYPE_GOVERNMENT_SLS){
             if (empty($last_reg)) {
                 $number = str_pad( '1', 4, '0', STR_PAD_LEFT);
                 $plate_number = 'SMZ' . $number.$class->name;

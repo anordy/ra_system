@@ -4,18 +4,12 @@ namespace App\Http\Livewire\Returns\SevenDaysFinancialMonths;
 
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
-use App\Models\SevenDaysFinancialMonth;
-use App\Models\TaPaymentConfiguration;
-use App\Models\TaPaymentConfigurationHistory;
+use App\Traits\CustomAlert;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
-use App\Traits\CustomAlert;
 use Livewire\Component;
-use App\TaxAgentFee;
 
 class ExtendMonthModal extends Component
 {
@@ -25,10 +19,10 @@ class ExtendMonthModal extends Component
 
     public function mount($value)
     {
-        $this->years = FinancialYear::query()->where('active', 0)->orderByDesc('code')->get();
+        $this->years = FinancialYear::query()->select('id', 'name', 'code', 'is_approved', 'active')->where('active', 0)->orderByDesc('code')->get();
         $this->value = decrypt($value);
         $this->month = FinancialMonth::query()->select('id', 'financial_year_id', 'due_date', 'number')->where('id', $this->value)->first();
-        if (is_null($this->month)){
+        if (is_null($this->month)) {
             abort(404);
         }
         $this->number = $this->month->number;
@@ -43,9 +37,10 @@ class ExtendMonthModal extends Component
         if (!Gate::allows('setting-financial-month-extend')) {
             abort(403);
         }
-        $validate = $this->validate([
-            'year' => 'required',
-            'number' => 'required',
+
+        $this->validate([
+            'year' => 'required|int',
+            'number' => 'required|int',
             'due_date' => 'required|date'
         ],
             [
@@ -53,8 +48,8 @@ class ExtendMonthModal extends Component
             ]
         );
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $payload =
                 [
                     'financial_year_id' => $this->year,

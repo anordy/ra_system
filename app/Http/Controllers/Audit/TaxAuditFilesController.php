@@ -16,10 +16,9 @@ class TaxAuditFilesController extends Controller
                 return Storage::disk('local')->response(decrypt($path));
             } catch (Exception $e) {
                 report($e);
-                abort(404);
+                session()->flash('warning', 'The selected File was not found. Please contact your administrator');
+                return;
             }
         }
-
-        return abort(404);
     }
 }

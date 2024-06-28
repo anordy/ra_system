@@ -5,7 +5,7 @@
     <div class="row d-flex justify-content-center align-items-center pt-5">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header bg-success text-center"><i class="fa fa-check-circle" aria-hidden="true"></i> Document Is Valid</div>
+                <div class="card-header bg-success text-center"><i class="bi bi-check-circle-fill-circle" aria-hidden="true"></i> Document Is Valid</div>
 
                 <div class="card-body">
                     <div class="py-3"> </div>
@@ -59,7 +59,7 @@
       <div class="col-md-8">
         <div class="card">
           <div class="card-header bg-success text-center">
-            <i class="fa fa-check-circle" aria-hidden="true"></i> Document Is Valid
+            <i class="bi bi-check-circle-fill-circle" aria-hidden="true"></i> Document Is Valid
           </div>
           <div class="card-body">
             <div class="table-responsive">

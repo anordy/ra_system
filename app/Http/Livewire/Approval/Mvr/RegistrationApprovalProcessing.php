@@ -3,15 +3,22 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
+use App\Models\MvrClass;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrInspectionReport;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistrationType;
+use App\Models\MvrRegistration;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -22,12 +29,13 @@ use Livewire\WithFileUploads;
 
 class RegistrationApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
     public $comments;
     public $mileage, $inspectionReport, $inspectionDate, $inspection;
+    public $mvrClasses, $mvrClass;
 
     public function mount($modelName, $modelId)
     {
@@ -43,27 +51,36 @@ class RegistrationApprovalProcessing extends Component
             $this->mileage = $this->inspection->inspection_mileage;
             $this->inspectionReport = $this->inspection->report_path;
         }
+
+        $this->mvrClasses = MvrClass::all();
+        $this->mvrClass = $this->subject->class->id;
     }
 
     public function approve($transition)
     {
-        $transition = $transition['data']['transition'];
+        if (!$this->subject->regtype->color){
+            $this->customAlert('error', 'Please set Plate no. color for this registration type.');
+            return;
+        }
 
-        $this->validate([
-            'comments' => 'required|strip_tag',
-        ]);
+        $transition = $transition['data']['transition'];
 
         if ($this->checkTransition('zbs_officer_review')) {
             $this->validate([
                 'inspectionDate' => 'required|date',
                 'inspectionReport' => [$this->inspectionReport === ($this->inspection->report_path ?? null) ? 'required' : 'nullable', 'max:1024', 'valid_pdf'],
                 'mileage' => 'required|numeric',
+                'comments' => 'required|strip_tag',
+                'mvrClass' => 'required|numeric',
+            ]);
+        } else {
+            $this->validate([
+                'comments' => 'required|strip_tag',
             ]);
         }
 
         try {
             DB::beginTransaction();
-
             if ($this->checkTransition('zbs_officer_review')) {
 
                 if ($this->inspectionReport === ($this->inspection->report_path ?? null)) {
@@ -72,15 +89,17 @@ class RegistrationApprovalProcessing extends Component
                     $inspectionReport = $this->inspectionReport->store('inspection_reports');
                 }
 
-
                 $report = MvrInspectionReport::updateOrCreate([
                     'mvr_registration_id' => $this->subject->id
-                ],[
+                ], [
                     'inspection_date' => $this->inspectionDate,
                     'report_path' => $inspectionReport,
                     'inspection_mileage' => $this->mileage,
-                    'mvr_registration_id' => $this->subject->id
+                    'mvr_registration_id' => $this->subject->id,
                 ]);
+
+                $this->subject->mvr_class_id = $this->mvrClass;
+                $this->subject->save();
 
                 if (!$report) {
                     throw new Exception("Could not persist MVR Inspection report into the database.");
@@ -89,11 +108,17 @@ class RegistrationApprovalProcessing extends Component
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
                 $this->subject->save();
 
                 $regType = $this->subject->regtype;
 
+                if (in_array($regType->name, [
+                    MvrRegistrationType::TYPE_GOVERNMENT_SMZ,
+                    MvrRegistrationType::TYPE_GOVERNMENT_SLS,
+                    MvrRegistrationType::TYPE_PRIVATE,
+                ]))
                 if (!$regType->initial_plate_number) {
                     $this->customAlert('warning', 'Please make sure initial plate number for this registration type has been created');
                     return;
@@ -118,7 +143,7 @@ class RegistrationApprovalProcessing extends Component
             return;
         }
 
-        // Generate Control Number after MVR RM Approval
+        // Generate Ledger DB and Control Number after MVR RM Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
                 $this->generateControlNumber();
@@ -181,7 +206,6 @@ class RegistrationApprovalProcessing extends Component
             'data' => [
                 'transition' => $transition
             ],
-
         ]);
     }
 
@@ -189,11 +213,11 @@ class RegistrationApprovalProcessing extends Component
     {
         try {
             $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
-
             $fee = MvrFee::query()->where([
                 'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
                 'mvr_fee_type_id' => $feeType->id,
-                'mvr_class_id' => $this->subject->mvr_class_id
+                'mvr_class_id' => $this->subject->mvr_class_id,
+                'mvr_plate_number_type_id' => $this->subject->mvr_plate_number_type_id
             ])->first();
 
             if (empty($fee)) {
@@ -201,17 +225,10 @@ class RegistrationApprovalProcessing extends Component
                 return;
             }
 
+
             DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-            $this->subject->save();
-
-            //Generate control number
             $this->generateMvrControlNumber($this->subject, $fee);
-
             DB::commit();
-
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $exception) {
             DB::rollBack();

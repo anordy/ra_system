@@ -45,7 +45,8 @@ class UserEditModal extends Component
         ];
     }
 
-    public function messages(){
+    public function messages()
+    {
         return [
             'override_otp.required' => 'Please specify if users can OTP and use security questions by default.'
         ];
@@ -60,7 +61,7 @@ class UserEditModal extends Component
     {
         $this->roles = Role::all();
         $user = User::find(decrypt($id));
-        if(is_null($user)){
+        if (is_null($user)) {
             abort(404);
         }
         $this->user = $user;
@@ -114,13 +115,17 @@ class UserEditModal extends Component
             // Sign User
             $this->sign($this->user);
 
-            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user '.$this->user->fullname().'', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user ' . $this->user->fullname() . '', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->customAlert('success', DualControl::SUCCESS_MESSAGE );
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE);
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE);
         }
     }

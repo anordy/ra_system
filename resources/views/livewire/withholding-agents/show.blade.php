@@ -100,8 +100,8 @@
                         <div class="col-md-3">
                                 <a class="file-item" target="_blank"
                                    href="{{ route('withholdingAgents.file', [encrypt($withholding_agent->id), 'approval_letter']) }}">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                    <div style="font-weight: 500;" class="ml-1">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                    <div class="ml-1 font-weight-bold">
                                         {{ __('Approval Letter') }}
                                     </div>
                                 </a>

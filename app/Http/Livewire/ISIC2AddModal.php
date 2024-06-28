@@ -30,7 +30,8 @@ class ISIC2AddModal extends Component
         ];
     }
 
-    public function mount(){
+    public function mount()
+    {
         $this->isic1s = ISIC1::all();
     }
 
@@ -42,15 +43,19 @@ class ISIC2AddModal extends Component
         }
 
         $this->validate();
-        try{
+        try {
             ISIC2::create([
                 'code' => $this->code,
                 'description' => $this->description,
                 'isic1_id' => $this->isic1_id,
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
-        }catch(Exception $e){
-            Log::error($e);
+        } catch (Exception $e) {
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }

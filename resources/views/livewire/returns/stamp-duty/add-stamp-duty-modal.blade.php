@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <h5 class="modal-title text-uppercase">Add Stamp Duty Service</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
-                            class="fa fa-times-circle"></i></button>
+                            class="bi bi-x-circle-fill"></i></button>
             </div>
             <div class="modal-body">
                 <div class="row pr-3 pl-3">
@@ -12,9 +12,11 @@
                         <label class="control-label">Financial Year</label>
                         <select wire:model="financial_year" class="form-control">
                             <option></option>
-                            @foreach($financialYears as $year)
-                                <option value="fixed">{{ $year->name }}</option>
-                            @endforeach
+                            @if(!empty($financialYears))
+                                @foreach($financialYears as $year)
+                                    <option value="fixed">{{ $year->name ?? 'N/A' }}</option>
+                                @endforeach
+                            @endif
                         </select>
                         @error('description')
                         <span class="text-danger">{{ $message }}</span>

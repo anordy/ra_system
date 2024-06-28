@@ -3,21 +3,15 @@
 @section('title', 'View Port Returns')
 
 @section('content')
-    <div>
-        {{-- <a wire:click="back()" href="{{ route('returns.filing') }}" class="btn btn-info px-3 mb-2" type="button">
-            <i class="bi bi-arrow-return-left mr-2"></i>
-            Back
-        </a> --}}
-    </div>
     <div class="card">
         <div class="card-header bg-white font-weight-bold text-uppercase">
-            {{ $return->taxtype->name }} Returns Details for
-            {{ $return->financialMonth->name }},
-            {{ $return->financialMonth->year->code }}
+            {{ $return->taxtype->name ?? 'N/A' }} Returns Details for
+            {{ $return->financialMonth->name ?? 'N/A' }},
+            {{ $return->financialMonth->year->code ?? 'N/A' }}
         </div>
         <div class="card-body">
             <div>
-                <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab"
                             aria-controls="home" aria-selected="true">Business Details</a>
@@ -27,21 +21,21 @@
                             aria-controls="profile" aria-selected="false">Return Items</a>
                     </li>
                 </ul>
-                <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
+                <div class="tab-content" id="myTabContent">
 
                     <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
                         <div class="row m-2 pt-3">
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Tax Type</span>
-                                <p class="my-1">{{ $return->taxtype->name }}</p>
+                                <p class="my-1">{{ $return->taxtype->name ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Filled By</span>
+                                <span class="font-weight-bold text-uppercase">Filed By</span>
                                 <p class="my-1">{{ $return->taxpayer->full_name ?? '' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Financial Year</span>
-                                <p class="my-1">{{ $return->financialYear->name }}</p>
+                                <p class="my-1">{{ $return->financialYear->name ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Business Name</span>
@@ -70,8 +64,6 @@
                             </div>
                         </div>
 
-                        {{-- @endif --}}
-
                     </div>
 
                     <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
@@ -80,14 +72,15 @@
                                 <p class="text-uppercase font-weight-bold">Return Items</p>
                             </div>
                             <div class="col-md-12">
-                                <table class="table table-bordered table-striped normal-text">
+                                <table class="table table-bordered table-responsive table-striped normal-text">
                                     <thead>
-                                        <th style="width: 30%">Item Name</th>
-                                        <th style="width: 20%">Value</th>
-                                        <th style="width: 10%">Rate</th>
-                                        <th style="width: 20%">Tax</th>
+                                        <th>Item Name</th>
+                                        <th>Value</th>
+                                        <th>Rate</th>
+                                        <th>Tax</th>
                                     </thead>
                                     <tbody>
+                                    @if(!empty($return->configReturns))
                                         @foreach ($return->configReturns as $item)
                                             <tr>
                                                 <td>{{ $item->config->name }}</td>
@@ -110,6 +103,7 @@
                                                 <td>{{ number_format($item->vat, 2) }}</td>
                                             </tr>
                                         @endforeach
+                                    @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -117,14 +111,17 @@
                     </div>
                 </div>
             </div>
-            <div class="row mt-3">
-                <div class="col-md-12 d-flex justify-content-end">
-                    <a href="{{ route('returns.print', encrypt($return->tax_return->id)) }}" target="_blank" class="btn btn-info">
-                        <i class="bi bi-printer-fill mr-2"></i>
-                        Print Return
-                    </a>
+            @if(!empty($return->tax_return->id))
+                <div class="row mt-3">
+                    <div class="col-md-12 d-flex justify-content-end">
+                        <a href="{{ route('returns.print', encrypt($return->tax_return->id)) }}" target="_blank" class="btn btn-info">
+                            <i class="bi bi-printer-fill mr-2"></i>
+                            Print Return
+                        </a>
+                    </div>
                 </div>
-            </div>
+            @endif
+
         </div>
     </div>
 

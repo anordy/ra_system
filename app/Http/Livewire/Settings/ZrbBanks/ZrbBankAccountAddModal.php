@@ -47,14 +47,15 @@ class ZrbBankAccountAddModal extends Component
         'currency.required' => 'currency is required.',
     ];
 
-    public function mount(){
+    public function mount()
+    {
         $this->currencies = Currency::select('id', 'iso')->get();
         $this->banks = Bank::select('id', 'name')->get();
     }
 
     public function submit()
     {
-        
+
         if (!Gate::allows('zrb-bank-account-add')) {
             abort(403);
         }
@@ -73,14 +74,18 @@ class ZrbBankAccountAddModal extends Component
                 'currency_iso' => $currency->iso,
                 'created_at' => Carbon::now()
             ]);
-            
+
             $this->triggerDualControl(get_class($zrbBankAccount), $zrbBankAccount->id, DualControl::ADD, 'adding ZRA bank account');
             DB::commit();
             $this->customAlert('success', 'Record added successfully');
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact our administrator for assistance?');
         }
     }

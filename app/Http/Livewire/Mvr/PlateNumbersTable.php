@@ -10,19 +10,17 @@ use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationStatusChange;
 use App\Traits\CustomAlert;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
+use Livewire\Component;
 
-class PlateNumbersTable extends DataTableComponent
+class PlateNumbersTable extends Component
 {
     use CustomAlert;
 
     public $plate_number_status;
+    public $selectedItems = [];
 
     protected $listeners = [
         'confirmUpdate'
@@ -33,66 +31,90 @@ class PlateNumbersTable extends DataTableComponent
         $this->plate_number_status = $plate_number_status;
     }
 
-    public function builder(): Builder
-    {
-        return MvrRegistration::query()
-            ->where(['mvr_plate_number_status' => $this->plate_number_status])
-            ->orderBy('mvr_registrations.created_at', 'ASC');
+
+    public function printed($mvrId){
+        try {
+            DB::beginTransaction();
+            $this->updatePrinted($mvrId);
+            DB::commit();
+            return redirect()->route('mvr.plate-numbers')->with('success', 'Plate number have been updated as printed.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('PLATE-NUMBERS-TABLE-CONFIRM-UPDATE', [$e]);
+            $this->customAlert(GeneralConstant::WARNING, 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+        }
     }
 
+    public function printedBulk(){
+        try {
+            $selectedIds = array_keys($this->selectedItems, true);
+            DB::beginTransaction();
+            foreach ($selectedIds as $selectedId) {
+                $this->updatePrinted($selectedId);
+            }
+            DB::commit();
+            return redirect()->route('mvr.plate-numbers')->with('success', 'Plate numbers have been updated as printed.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('PLATE-NUMBERS-TABLE-CONFIRM-UPDATE', [$e]);
+            $this->customAlert(GeneralConstant::WARNING, 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+        }
+    }
 
-    public function configure(): void
-    {
-        $this->setPrimaryKey('id');
-
-        $this->setTableWrapperAttributes([
-            'default' => true,
-            'class' => 'table-bordered table-sm',
+    public function updatePrinted($mvrId){
+        $mvr = MvrRegistration::findOrFail($mvrId);
+        $mvr->update([
+            'mvr_plate_number_status' => MvrPlateNumberStatus::STATUS_PRINTED
         ]);
 
-        $this->setAdditionalSelects(['mvr_plate_number_status']);
+        $mvrStatusChange = MvrRegistrationStatusChange::where('registration_number', $mvr->registration_number)->first();
+        if ($mvrStatusChange) {
+            $mvrStatusChange->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_PRINTED;
+            $mvrStatusChange->status = MvrRegistrationStatus::STATUS_REGISTERED;
+            $mvrStatusChange->save();
+        }
+
+        event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $mvr->taxpayer->mobile, 'message' => "
+                Hello {$mvr->taxpayer->fullname}, your plate number for motor vehicle registration for chassis number {$mvr->chassis->chassis_number} has been printed. You may visit ZRA offices after 3 days for collection of plate number"]));
     }
 
-    public function columns(): array
-    {
-        return [
-            Column::make(__("Chassis No"), "chassis.chassis_number")
-                ->searchable(),
-            Column::make(__("Plate No"), "plate_number")
-                ->format(function ($value, $row) {
-                    return $row->plate_number ?? 'PENDING';
-                })
-                ->searchable(),
-            Column::make(__("Reg Type"), "regtype.name")
-                ->searchable(),
-            Column::make(__("Plate No Color"), "platecolor.name")
-                ->searchable(),
-            Column::make(__("Plate No Size"), "platesize.name")
-                ->searchable(),
-            Column::make(__("Registration Date"), "registered_at")
-                ->format(function ($value, $row) {
-                    return Carbon::create($row->registered_at)->format('d M Y') ?? 'N/A';
-                }),
-            Column::make('Action', 'id')
-                ->format(function ($value, $row) {
-                    if (MvrPlateNumberStatus::STATUS_GENERATED == $row->mvr_plate_number_status) {
-                        return <<< HTML
-                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToPrinted($value)"><i class="fa fa-edit"></i> Update Status</button>
-                        HTML;
-                    } elseif (MvrPlateNumberStatus::STATUS_PRINTED == $row->mvr_plate_number_status) {
-                        return <<< HTML
-                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToReceived($value)"><i class="fa fa-edit"></i> Update Status</button>
-                        HTML;
-                    } elseif (MvrPlateNumberStatus::STATUS_RECEIVED == $row->mvr_plate_number_status) {
-                        $id = encrypt($value);
-                        return <<< HTML
-                            <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.plate-number-collection-model', '$id')"><i class="fa fa-edit"></i> Update Status</button>
-                        HTML;
-                    }
-                    return '';
-                })
-                ->html()
-        ];
+    public function received($mvrId){
+        try {
+            $this->updateReceived($mvrId);
+            return redirect()->route('mvr.plate-numbers')->with('success', 'Plate number have been updated as received.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('PLATE-NUMBERS-TABLE-CONFIRM-UPDATE', [$e]);
+            $this->customAlert(GeneralConstant::WARNING, 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+        }
+    }
+
+    public function receivedBulk(){
+        try{
+            $selectedIds = array_keys($this->selectedItems, true);
+            foreach ($selectedIds as $selectedId) {
+                $this->updateReceived($selectedId);
+            }
+            return redirect()->route('mvr.plate-numbers')->with('success', 'Plate numbers have been updated as received.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('PLATE-NUMBERS-TABLE-CONFIRM-UPDATE', [$e]);
+            $this->customAlert(GeneralConstant::WARNING, 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+        }
+    }
+
+    public function updateReceived($mvrId){
+        $mvr = MvrRegistration::findOrFail($mvrId);
+        $mvr->update([
+            'mvr_plate_number_status' => MvrPlateNumberStatus::STATUS_RECEIVED
+        ]);
+
+        $mvrStatusChange = MvrRegistrationStatusChange::where('registration_number', $mvr->registration_number)->first();
+        if ($mvrStatusChange) {
+            $mvrStatusChange->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_RECEIVED;
+            $mvrStatusChange->status = MvrRegistrationStatus::STATUS_REGISTERED;
+            $mvrStatusChange->save();
+        }
     }
 
     public function updateToPrinted($id)
@@ -129,7 +151,6 @@ class PlateNumbersTable extends DataTableComponent
                 'id' => $id,
                 'status' => MvrPlateNumberStatus::STATUS_RECEIVED
             ],
-
         ]);
     }
 
@@ -152,35 +173,15 @@ class PlateNumbersTable extends DataTableComponent
         ]);
     }
 
-    public function confirmUpdate($value)
-    {
-        try {
-            $data = (object) $value['data'];
-            $mvr = MvrRegistration::query()->find($data->id);
+    public function render(){
+        $plateNumbers = MvrRegistration::query()
+            ->where('mvr_plate_number_status', $this->plate_number_status)
+            ->orderBy('mvr_registrations.created_at', 'ASC')
+            ->latest()
+            ->paginate(15);
 
-            DB::beginTransaction();
-            $mvr->update([
-                'mvr_plate_number_status' => $data->status
-            ]);
-
-
-            $mvrStatusChange = MvrRegistrationStatusChange::where('registration_number',$mvr->registration_number)->first();
-            if ($mvrStatusChange) {
-                $mvrStatusChange->mvr_plate_number_status = $data->status;
-                $mvrStatusChange->status = MvrRegistrationStatus::STATUS_REGISTERED;
-                $mvrStatusChange->save();
-            }
-
-            if ($data->status === MvrPlateNumberStatus::STATUS_PRINTED) {
-                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $mvr->taxpayer->mobile, 'message' => "
-                Hello {$mvr->taxpayer->fullname}, your plate number for motor vehicle registration for chassis number {$mvr->chassis->chassis_number} has been printed. You may visit ZRA offices after 3 days for collection of plate number"]));
-            }
-            DB::commit();
-            $this->flash(GeneralConstant::SUCCESS, 'Plate Number Status updated', [], redirect()->back()->getTargetUrl());
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error('PLATE-NUMBERS-TABLE-CONFIRM-UPDATE', [$e]);
-            $this->customAlert(GeneralConstant::WARNING, 'Something went wrong, please contact the administrator for help', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
-        }
+        return view('livewire.mvr.plate-number-table', [
+            'plateNumbers' => $plateNumbers
+        ]);
     }
 }

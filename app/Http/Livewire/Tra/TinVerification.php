@@ -36,9 +36,12 @@ class TinVerification extends Component
                 $this->customAlert('error', 'Something went wrong');
                 return;
             }
-
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }

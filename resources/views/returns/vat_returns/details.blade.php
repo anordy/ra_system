@@ -3,7 +3,7 @@
         <h6 class="text-uppercase mt-2 ml-2">Filled Return Details For {{ $return->taxtype->name }}</h6>
         <hr>
         <div>
-            <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
+            <ul  class="nav nav-tabs" id="myTab" role="tablist">
 
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="academic-tab" data-toggle="tab" href="#academic" role="tab"
@@ -55,14 +55,14 @@
                        aria-selected="false">Exempt Supplies</a>
                 </li>
             </ul>
-            <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
+            <div  class="tab-content" id="myTabContent">
 
                 <div class="tab-pane p-2 show active" id="academic" role="tabpanel" aria-labelledby="academic-tab">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
 
-                                <div class="pb-2" style="width: 160px">
+                                <div class="pb-2 w-160">
                                     <label>{{ __('Exemption Method Used') }}</label>
                                     <input readonly class="form-control" type="text"
                                            value="{{ $return->method_used ?? 'No Method Used' }}">
@@ -72,10 +72,10 @@
 
                             <table class="table table-bordered ">
                                 <thead>
-                                <th style="width: 40%">Item Name</th>
-                                <th style="width: 20%">Value</th>
-                                <th style="width: 20%">Rate</th>
-                                <th class="text-right" style="width: 20%">VAT</th>
+                                <th>Item Name</th>
+                                <th>Value</th>
+                                <th>Rate</th>
+                                <th class="text-right">VAT</th>
                                 </thead>
                                 <tbody>
                                 @foreach ($return->items as $item)
@@ -266,9 +266,8 @@
                                     <div class="col-md-3">
                                         <a class="file-item" target="_blank"
                                            href="{{ route('returns.vat-return.withheld-file', [encrypt($file->id), 'withheld']) }}">
-                                            <i class="bi bi-file-earmark-pdf-fill px-2"
-                                               style="font-size: x-large"></i>
-                                            <div style="font-weight: 500;" class="ml-1">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                            <div class="ml-1 font-weight-bold">
                                                 View Attachment
                                             </div>
                                         </a>
@@ -292,6 +291,7 @@
                                             <th>{{ __('Supplier ZTN /TIN Number') }}</th>
                                             <th>{{ __('VFMS Receipt Number') }}</th>
                                             <th>{{ __('VFMS Receipt Date') }}</th>
+                                            <th>{{ __('Customs Entry Number') }}</th>
                                             <th>{{ __('Value') }}</th>
                                             <th>{{ __('Vat') }}</th>
                                             <th>{{ __('Supply Type') }}</th>
@@ -302,7 +302,6 @@
                                         <tbody>
                                         @if (count($return->suppliers ?? []))
                                             @foreach ($return->suppliers as $index=> $details)
-                                                {{--                                                        {{ dd($details->supplierDetailsItems) }}--}}
                                                 @if($details['supply_type'] == 'fifteen_percent')
                                                     <tr>
                                                         <th>{{$index + 1}}</th>
@@ -311,6 +310,8 @@
                                                         <td>{{ $details['tax_invoice_number'] }}</td>
 
                                                         <td>{{ date('D, Y-m-d', strtotime($details['date_of_tax_invoice'])) }} </td>
+
+                                                        <td>{{ $details['release_number'] }}</td>
 
                                                         <td class="text-right">{{ number_format($details['value'],2,'.',',') }} </td>
 
@@ -324,54 +325,6 @@
                                                             @endif
                                                         </td>
 
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="7" class="p-2">
-                                                            <label class="font-weight-bold">Receipt Items</label>
-
-                                                            <table class="table table-bordered table-sm normal-text">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th class="text-right">No:</th>
-                                                                    <th>{{ __('Item Name') }}</th>
-                                                                    <th>{{ __('Price') }}</th>
-                                                                    <th>{{ __('Quantity') }}</th>
-                                                                    <th>{{ __('Total Amount') }}</th>
-                                                                    <th>{{ __('Taxable') }}</th>
-                                                                    <th>{{ __('Used') }}</th>
-
-                                                                </tr>
-                                                                </thead>
-
-                                                                <tbody>
-                                                                @if (count($details->supplierDetailsItems ?? []))
-                                                                    @foreach ($details->supplierDetailsItems as $key => $supplierDetail)
-                                                                        <tr>
-                                                                            <th class="text-right">{{ romanNumeralCount($index + 1) }}</th>
-                                                                            <td>{{ $supplierDetail['name'] }} </td>
-
-                                                                            <td class="text-right">{{ number_format($supplierDetail['price'],2,'.',',') }} </td>
-
-                                                                            <td>{{ $supplierDetail['quantity'] }}</td>
-
-                                                                            <td class="text-right">{{ number_format($supplierDetail['total_amount'],2,'.',',')  }} </td>
-
-                                                                            <td class="font-weight-bold {{ $supplierDetail['is_taxable'] ? 'text-success' : 'text-muted' }}">{{ $supplierDetail['is_taxable'] ? 'Taxable' : 'Non Taxable' ?? 'N/A' }}</td>
-
-                                                                            <td class="font-weight-bold {{ $supplierDetail['used'] ? 'text-success' : 'text-danger' }}">{{ $supplierDetail['used'] ? 'True' : 'False' ?? 'N/A' }}</td>
-
-                                                                        </tr>
-                                                                    @endforeach
-                                                                @else
-                                                                    <tr>
-                                                                        <td colspan="7" class="text-center py-3">
-                                                                            {{ __('No details for supplier for this return month') }}.
-                                                                        </td>
-                                                                    </tr>
-                                                                @endif
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
                                                     </tr>
                                                 @endif
                                             @endforeach
@@ -569,8 +522,7 @@
 
                                             <td class="text-center">{{ date('D, Y-m-d', strtotime($details['receipt_date'])) }}
 
-                                            <td class="text-center">{{ number_format($details['amount'],2,'.',',')  }} </td>
-
+                                            <td class="text-center">{{ $details['amount'] }}</td>
                                         </tr>
                                     @endforeach
                                 @else
@@ -635,7 +587,9 @@
                     </div>
                 </div>
                 <div class="tab-pane p-2" id="payment-summary" role="tabpanel" aria-labelledby="payment-summary-tab">
-                    <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
+                    @if($return->tax_return->latestBill)
+                        <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
+                    @endif
                 </div>
 
                 <div class="tab-pane p-2" id="withheld" role="tabpanel" aria-labelledby="withheld-tab">
@@ -711,7 +665,7 @@
 
                                             <td class="text-center">{{ date('D, Y-m-d', strtotime($details['receipt_date'])) }}
 
-                                            <td class="text-center">{{ number_format($details['amount'],2,'.',',')  }} </td>
+                                            <td class="text-center">{{ $details['amount'] }}</td>
                                         </tr>
                                     @endforeach
                                 @else

@@ -77,8 +77,8 @@ class TaxInvestigationInitiateTable extends DataTableComponent
                 ->format(function ($value) {
                     $url = route('tax_investigation.approvals.show', encrypt($value));
                     return <<<HTML
-                           <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-arrow-right"></i> Initiate Approval</button>
-                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> Delete </button>
+                           <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="bi bi-arrow-right"></i> Initiate Approval</button>
+                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash-fill"></i> Delete </button>
                            <a href="{$url}" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="right" title="View"> View More </a>
                     HTML;
                 })
@@ -111,7 +111,7 @@ class TaxInvestigationInitiateTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $investigation = TaxInvestigation::find($data->id);
-            if(is_null($investigation)){
+            if (is_null($investigation)) {
                 abort(404);
             }
             $this->registerWorkflow(get_class($investigation), $investigation->id);
@@ -121,13 +121,13 @@ class TaxInvestigationInitiateTable extends DataTableComponent
             $this->flash('success', 'Approval initiated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->customAlert('warning', 'Something whent wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
     public function delete($id)
     {
-        $this->customAlert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', __('Are you sure you want to delete ?'), [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -148,7 +148,7 @@ class TaxInvestigationInitiateTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $investigation = TaxInvestigation::find($data->id);
-            if(is_null($investigation)){
+            if (is_null($investigation)) {
                 abort(404);
             }
             $investigation->delete();

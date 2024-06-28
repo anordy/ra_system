@@ -61,7 +61,7 @@
             </div>
             <div class="col-md-4 form-group">
                 <label for="registration_type" class="d-flex justify-content-between'">
-                    Public Service Status
+                    Transport Service Status
                 </label>
                 <select wire:model="publicServiceStatus" class="form-control {{ $errors->has('publicServiceStatus') ? 'is-invalid' : '' }}">
                     <option>Choose Registration Type</option>
@@ -200,7 +200,7 @@
                     </label>
                     <select name="quater" id="Quarter" wire:model="quater"
                         class="form-control {{ $errors->has('quater') ? 'is-invalid' : '' }}">
-                        <option value="">Select Quater</option>
+                        <option value="">Select Quarter</option>
                         @if ($year && $period)
                             @foreach ($optionQuarters as $optionQuarter)
                                 <option value={{ $optionQuarter }}>

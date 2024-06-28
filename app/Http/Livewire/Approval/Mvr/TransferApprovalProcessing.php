@@ -3,13 +3,19 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\CustomMessage;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
-use App\Models\MvrTransferFee;
+use App\Models\MvrFee;
+use App\Models\MvrFeeType;
+use App\Models\MvrOwnershipTransfer;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -19,12 +25,13 @@ use Livewire\WithFileUploads;
 
 class TransferApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
     public $comments;
     public $approvalReport, $agreementContract, $vehicleInspectionReport;
+    public $affidavit, $ownerId, $originalCard;
 
     public function mount($modelName, $modelId)
     {
@@ -47,15 +54,43 @@ class TransferApprovalProcessing extends Component
 
                 $this->validate(
                     [
-                        'agreementContract' => 'nullable|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
+                        'agreementContract' => $this->subject->agreement_contract ? 'nullable' : 'required|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
+                        'affidavit' => $this->subject->affidavit ? 'nullable' :  'required|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
+                        'originalCard' => $this->subject->original_card ? 'nullable' :  'required|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
+                        'ownerId' => $this->subject->owner_id ? 'nullable' :  'required|mimes:pdf|max:3072|max_file_name_length:100|valid_pdf',
+                    ],
+                    [
+                        'agreementContract.required' => 'Sales document is required',
+                        'affidavit.required' => 'Affidavit document is required',
+                        'originalCard.required' => 'Original card document is required',
+                        'ownerId.required' => 'Owner identification file is required',
                     ]
                 );
 
-                $agreementContract = "";
-                if ($this->agreementContract) {
+                $agreementContract = $this->agreementContract;
+                if ($this->subject->agreement_contract_path != $this->agreementContract && $this->agreementContract) {
                     $agreementContract = $this->agreementContract->store('mvrZartsaReport', 'local');
                 }
+
+                $affidavit = $this->affidavit;
+                if ( $this->subject->affidavit != $this->affidavit && $this->affidavit) {
+                    $affidavit = $this->affidavit->store('mvrZartsaReport', 'local');
+                }
+
+                $ownerId = $this->ownerId;
+                if ($this->subject->owner_id != $this->ownerId && $this->ownerId) {
+                    $ownerId = $this->ownerId->store('mvrZartsaReport', 'local');
+                }
+
+                $originalCard = $this->originalCard;
+                if ($this->subject->original_card != $this->originalCard && $this->originalCard) {
+                    $originalCard = $this->originalCard->store('mvrZartsaReport', 'local');
+                }
+
                 $this->subject->agreement_contract_path = $agreementContract;
+                $this->subject->affidavit = $affidavit;
+                $this->subject->original_card = $originalCard;
+                $this->subject->owner_id = $ownerId;
                 $this->subject->save();
             }
 
@@ -76,6 +111,7 @@ class TransferApprovalProcessing extends Component
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->save();
             }
 
@@ -100,7 +136,22 @@ class TransferApprovalProcessing extends Component
         // Generate Control Number after MVR SC Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
-                $this->generateControlNumber();
+                $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TRANSFER_OWNERSHIP]);
+
+                $fee = MvrFee::query()->where([
+                    'mvr_registration_type_id' => $this->subject->motor_vehicle->mvr_registration_type_id,
+                    'mvr_fee_type_id' => $feeType->id,
+                    'mvr_class_id' => $this->subject->motor_vehicle->mvr_class_id,
+                    'mvr_plate_number_type_id' => $this->subject->motor_vehicle->mvr_plate_number_type_id
+                ])->first();
+
+                if (empty($fee)) {
+                    $this->customAlert('error', "Ownership Transfer fee is not configured.");
+                    Log::error($fee);
+                    return;
+                }
+
+                $this->generateControlNumber($fee);
             } catch (Exception $exception) {
                 $this->customAlert('error', 'Failed to generate control number, please try again');
                 $this->flash('error', CustomMessage::ERROR, [], redirect()->back()->getTargetUrl());
@@ -166,28 +217,12 @@ class TransferApprovalProcessing extends Component
         ]);
     }
 
-    public function generateControlNumber()
+    public function generateControlNumber($fee)
     {
         try {
-            // todo: update implementation
-            $fee = MvrTransferFee::query()->where([
-                'mvr_transfer_category_id' => $this->subject->mvr_transfer_category_id,
-            ])->first();
-
-            if (empty($fee)) {
-                $this->customAlert('error', "Ownership Transfer fee is not configured");
-                Log::error($fee);
-                return;
-            }
             DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-            $this->subject->save();
-            $this->generateMvrControlNumber($this->subject->motor_vehicle, $fee);
-
+            $this->generateMvrTransferOwnershipControlNumber($this->subject->motor_vehicle, $fee);
             DB::commit();
-
         } catch (Exception $exception) {
             DB::rollBack();
             Log::error('MVR-TRANSFER-APPROVAL-CN-GENERATION', [$exception]);
@@ -197,7 +232,7 @@ class TransferApprovalProcessing extends Component
 
     public function render()
     {
-        return view('livewire.approval.mvr.status');
+        return view('livewire.approval.mvr.transfer');
     }
 }
 

@@ -64,15 +64,15 @@ class RegionTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Approved</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                            <span class="badge badge-success p-2 rounded-0" >Approved</span>
                         HTML;
                     } elseif ($value == 2) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                            <span class="badge badge-danger p-2 rounded-0" >Rejected</span>
                         HTML;
                     }
                 })
@@ -81,15 +81,15 @@ class RegionTable extends DataTableComponent
                 ->format(function ($value) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Updated</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                            <span class="badge badge-success p-2 rounded-0" >Updated</span>
                         HTML;
                     } elseif ($value == 2) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge danger p-2" >Rejected</span>
+                            <span class="badge badge-success p-2 rounded-0" >Rejected</span>
                         HTML;
                     }
                 })
@@ -103,7 +103,7 @@ class RegionTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-region-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML
-                                <button class="btn btn-info btn-sm mr-1" onclick="Livewire.emit('showModal', 'region-edit-modal',$value)"><i class="bi bi-pencil-fill mr-1"></i> Edit</button>
+                                <button class="btn btn-info btn-sm mr-1" id="showDataTableModal" data-modal-name="region-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-fill mr-1"></i> Edit</button>
                             HTML;
                         }
 

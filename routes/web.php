@@ -11,7 +11,64 @@
 |
  */
 
+use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\AllPdfController;
+use App\Http\Controllers\Assesments\DisputeController;
+use App\Http\Controllers\Assesments\ObjectionController;
+use App\Http\Controllers\Assesments\WaiverController;
+use App\Http\Controllers\Assesments\WaiverObjectionController;
+use App\Http\Controllers\Audit\TaxAuditApprovalController;
+use App\Http\Controllers\Audit\TaxAuditAssessmentController;
+use App\Http\Controllers\Audit\TaxAuditFilesController;
+use App\Http\Controllers\Audit\TaxAuditVerifiedController;
+use App\Http\Controllers\AuditController;
+use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BankAccountsController;
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\Business\BranchController;
+use App\Http\Controllers\Business\BusinessController;
+use App\Http\Controllers\Business\BusinessFileController;
+use App\Http\Controllers\Business\BusinessUpdateFileController;
+use App\Http\Controllers\Business\RegistrationController;
+use App\Http\Controllers\BusinessCategoryController;
+use App\Http\Controllers\Captcha\CaptchaController;
+use App\Http\Controllers\Cases\CasesController;
+use App\Http\Controllers\Claims\ClaimFilesController;
+use App\Http\Controllers\Claims\ClaimsController;
+use App\Http\Controllers\Claims\CreditsController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Debt\AssessmentDebtController;
+use App\Http\Controllers\Debt\DebtRollbackController;
+use App\Http\Controllers\Debt\ReturnDebtController;
+use App\Http\Controllers\Debt\TransportServicesDebtController;
+use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
+use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\Extension\ExtensionController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Installment\InstallmentController;
+use App\Http\Controllers\Installment\InstallmentRequestController;
+use App\Http\Controllers\InternalInfoChange\InternalInfoChangeController;
+use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
+use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
+use App\Http\Controllers\Investigation\TaxInvestigationAssessmentPaymentController;
+use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
+use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
+use App\Http\Controllers\ISIC1Controller;
+use App\Http\Controllers\ISIC2Controller;
+use App\Http\Controllers\ISIC3Controller;
+use App\Http\Controllers\ISIC4Controller;
+use App\Http\Controllers\KYC\KycAmendmentRequestController;
+use App\Http\Controllers\LandLease\LandLeaseController;
+use App\Http\Controllers\MVR\AgentsController;
+use App\Http\Controllers\MVR\DeRegistrationController;
+use App\Http\Controllers\MVR\MotorVehicleRegistrationController;
+use App\Http\Controllers\MVR\MvrGenericSettingController;
+use App\Http\Controllers\MVR\OwnershipTransferController;
+use App\Http\Controllers\MVR\RegistrationChangeController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Payments\PaymentsController;
 use App\Http\Controllers\Payments\PBZController;
 use App\Http\Controllers\PropertyTax\CondominiumController;
 use App\Http\Controllers\PropertyTax\PropertyTaxController;
@@ -19,136 +76,84 @@ use App\Http\Controllers\PropertyTax\SurveySolutionController;
 use App\Http\Controllers\PublicService\DeRegistrationsController;
 use App\Http\Controllers\PublicService\PublicServiceController;
 use App\Http\Controllers\PublicService\TemporaryClosuresController;
-use App\Http\Controllers\Reports\GeneralReportsController;
-use App\Http\Controllers\Reports\TaxPayer\TaxPayerReportController;
-use App\Http\Controllers\Tra\TraController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BankController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\WardController;
-use App\Http\Controllers\AuditController;
-use App\Http\Controllers\ISIC1Controller;
-use App\Http\Controllers\ISIC2Controller;
-use App\Http\Controllers\ISIC3Controller;
-use App\Http\Controllers\ISIC4Controller;
-use App\Http\Controllers\AllPdfController;
-use App\Http\Controllers\RegionController;
-use App\Http\Controllers\StreetController;
-use App\Http\Controllers\CountryController;
-use App\Http\Controllers\TaxTypeController;
-use App\Http\Controllers\DistrictController;
-use App\Http\Controllers\WorkflowController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MVR\AgentsController;
-use App\Http\Controllers\Cases\CasesController;
 use App\Http\Controllers\QRCodeCheckController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\VerificationController;
-use App\Http\Controllers\Claims\ClaimsController;
-use App\Http\Controllers\Returns\PrintController;
-use App\Http\Controllers\TwoFactorAuthController;
-use App\Http\Controllers\Claims\CreditsController;
-use App\Http\Controllers\EducationLevelController;
-use App\Http\Controllers\Returns\ReturnController;
-use App\Http\Controllers\TransactionFeeController;
-use App\Http\Controllers\Account\AccountController;
-use App\Http\Controllers\Business\BranchController;
-use App\Http\Controllers\Captcha\CaptchaController;
-use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\QRCodeGeneratorController;
-use App\Http\Controllers\Returns\SettingController;
-use App\Http\Controllers\Setting\ApiUserController;
-use App\Http\Controllers\BusinessCategoryController;
-use App\Http\Controllers\Finances\FinanceController;
-use App\Http\Controllers\WithholdingAgentController;
-use App\Http\Controllers\Assesments\WaiverController;
-use App\Http\Controllers\Business\BusinessController;
-use App\Http\Controllers\Claims\ClaimFilesController;
-use App\Http\Controllers\Debt\DebtRollbackController;
-use App\Http\Controllers\Payments\PaymentsController;
-use App\Http\Controllers\Setting\TaxRegionController;
-use App\Http\Controllers\Assesments\DisputeController;
-use App\Http\Controllers\MVR\DeRegistrationController;
-use App\Http\Controllers\TaxAgents\TaxAgentController;
-use App\Http\Controllers\Audit\TaxAuditFilesController;
-use App\Http\Controllers\Auth\ChangePasswordController;
-use App\Http\Controllers\Debt\AssessmentDebtController;
-use App\Http\Controllers\Extension\ExtensionController;
-use App\Http\Controllers\LandLease\LandLeaseController;
-use App\Http\Controllers\Setting\PenaltyRateController;
-use App\Http\Controllers\Taxpayers\TaxpayersController;
-use App\Http\Controllers\Assesments\ObjectionController;
-use App\Http\Controllers\MVR\TRAChassisSearchController;
+use App\Http\Controllers\RegionController;
+use App\Http\Controllers\Relief\ReliefApplicationsController;
+use App\Http\Controllers\Relief\ReliefGenerateReportController;
+use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
+use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Relief\ReliefSponsorController;
+use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
+use App\Http\Controllers\Reports\Business\BusinessRegReportController;
+use App\Http\Controllers\Reports\Claims\ClaimReportController;
+use App\Http\Controllers\Reports\Debts\DebtReportController;
+use App\Http\Controllers\Reports\Department\DepartmentalReportController;
+use App\Http\Controllers\Reports\Dispute\DisputeReportController;
+use App\Http\Controllers\Reports\GeneralReportsController;
+use App\Http\Controllers\Reports\Payments\PaymentReportController;
+use App\Http\Controllers\Reports\Returns\ReturnReportController;
+use App\Http\Controllers\Reports\TaxPayer\TaxPayerReportController;
+use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
+use App\Http\Controllers\Returns\Chartered\CharteredController;
+use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
+use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
+use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
+use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
+use App\Http\Controllers\Returns\FinancialYears\FinancialYearsController;
+use App\Http\Controllers\Returns\Hotel\HotelReturnController;
+use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
+use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
+use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
+use App\Http\Controllers\Returns\Port\PortReturnController;
+use App\Http\Controllers\Returns\PrintController;
+use App\Http\Controllers\Returns\Queries\AllCreditReturnsController;
+use App\Http\Controllers\Returns\Queries\SalesPurchasesController;
+use App\Http\Controllers\Returns\ReturnController;
+use App\Http\Controllers\Returns\SettingController;
+use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
+use App\Http\Controllers\Returns\TaxReturnCancellationsController;
+use App\Http\Controllers\Returns\Vat\VatReturnController;
+use App\Http\Controllers\RoadInspectionOffence\RegisterController;
+use App\Http\Controllers\RoadLicense\RoadLicenseController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Setting\ApiUserController;
+use App\Http\Controllers\Setting\ApprovalLevelController;
+use App\Http\Controllers\Setting\DualControlActivityController;
 use App\Http\Controllers\Setting\ExchangeRateController;
 use App\Http\Controllers\Setting\InterestRateController;
-use App\Http\Controllers\Business\BusinessFileController;
-use App\Http\Controllers\Business\RegistrationController;
-use App\Http\Controllers\MVR\MvrGenericSettingController;
-use App\Http\Controllers\MVR\OwnershipTransferController;
-use App\Http\Controllers\Returns\Vat\VatReturnController;
-use App\Http\Controllers\Setting\ApprovalLevelController;
-use App\Http\Controllers\Audit\TaxAuditApprovalController;
-use App\Http\Controllers\Audit\TaxAuditVerifiedController;
-use App\Http\Controllers\MVR\RegistrationChangeController;
+use App\Http\Controllers\Setting\PenaltyRateController;
 use App\Http\Controllers\Setting\SystemSettingsController;
+use App\Http\Controllers\Setting\TaxRegionController;
 use App\Http\Controllers\Setting\ZrbBankAccountController;
+use App\Http\Controllers\StreetController;
+use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
-use App\Http\Controllers\Installment\InstallmentController;
-use App\Http\Controllers\KYC\KycAmendmentRequestController;
-use App\Http\Controllers\Returns\Port\PortReturnController;
-use App\Http\Controllers\Taxpayers\RegistrationsController;
-use App\Http\Controllers\Audit\TaxAuditAssessmentController;
-use App\Http\Controllers\Relief\ReliefMinistriestController;
-use App\Http\Controllers\Reports\Debts\DebtReportController;
-use App\Http\Controllers\Vetting\TaxReturnVettingController;
-use App\Http\Controllers\Relief\ReliefApplicationsController;
-use App\Http\Controllers\Relief\ReliefRegistrationController;
-use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\TaxClearance\TaxClearanceController;
-use App\Http\Controllers\Assesments\WaiverObjectionController;
-use App\Http\Controllers\Reports\Claims\ClaimReportController;
+use App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController;
 use App\Http\Controllers\Taxpayers\AmendmentRequestController;
-use App\Http\Controllers\Business\BusinessUpdateFileController;
-use App\Http\Controllers\Relief\ReliefGenerateReportController;
-use App\Http\Controllers\Setting\DualControlActivityController;
-use App\Http\Controllers\MVR\MotorVehicleRegistrationController;
-use App\Http\Controllers\Reports\Returns\ReturnReportController;
-use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
-use App\Http\Controllers\Reports\Dispute\DisputeReportController;
-use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
-use App\Http\Controllers\Installment\InstallmentRequestController;
-use App\Http\Controllers\Reports\Payments\PaymentReportController;
-use App\Http\Controllers\Returns\Queries\SalesPurchasesController;
-use App\Http\Controllers\RoadInspectionOffence\RegisterController;
-use App\Http\Controllers\UpgradeTaxType\UpgradedTaxTypeController;
+use App\Http\Controllers\Taxpayers\RegistrationsController;
+use App\Http\Controllers\Taxpayers\TaxpayersController;
+use App\Http\Controllers\TaxRefund\TaxRefundController;
+use App\Http\Controllers\TaxTypeController;
+use App\Http\Controllers\Tra\TraController;
+use App\Http\Controllers\TransactionFeeController;
+use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\UpgradeTaxType\QualifiedTaxTypeController;
-use App\Http\Controllers\Returns\Queries\AllCreditReturnsController;
-use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
-use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
-use App\Http\Controllers\Verification\TaxVerificationFilesController;
-use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
-use App\Http\Controllers\Reports\Business\BusinessRegReportController;
-use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
-use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
-use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
-use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
+use App\Http\Controllers\UpgradeTaxType\UpgradedTaxTypeController;
 use App\Http\Controllers\Verification\TaxVerificationApprovalController;
-use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
-use App\Http\Controllers\InternalInfoChange\InternalInfoChangeController;
-use App\Http\Controllers\Reports\Department\DepartmentalReportController;
-use App\Http\Controllers\Returns\FinancialYears\FinancialYearsController;
-use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
-use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
-use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
-use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
-use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
-use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
+use App\Http\Controllers\Verification\TaxVerificationFilesController;
+use App\Http\Controllers\Verification\TaxVerificationsController;
+use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
+use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\Vetting\TaxReturnVettingController;
+use App\Http\Controllers\WardController;
+use App\Http\Controllers\WithholdingAgentController;
+use App\Http\Controllers\WorkflowController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false]);
 
@@ -165,6 +170,9 @@ Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
     Route::get('/invoice/{id}', [QRCodeCheckController::class, 'invoice'])->name('invoice');
     Route::get('/transfer/{billId}', [QRCodeCheckController::class, 'transfer'])->name('transfer');
     Route::get('/mvr/de-registration/{id}', [QRCodeCheckController::class, 'mvrDeregistrationCertificate'])->name('mvr.de-registration');
+    Route::get('/mvr/registration/{id}', [QRCodeCheckController::class, 'mvrRegistrationCertificate'])->name('mvr.registration');
+    Route::get('/mvr/temporary-transport/{id}', [QRCodeCheckController::class, 'mvrTemporaryTransport'])->name('mvr.temporary-transport');
+    Route::get('/road-license/{roadLicenseId}', [QRCodeCheckController::class, 'roadLicenseSticker'])->name('road-license.sticker');
 });
 
 Route::middleware('auth')->group(function () {
@@ -174,17 +182,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/kill', [TwoFactorAuthController::class, 'kill'])->name('session.kill');
 
     // OTP using Security Qns
-    //Route::get('2fa/security-questions', [TwoFactorAuthController::class, 'securityQuestions'])->name('2fa.security-questions');
+    Route::get('2fa/security-questions', [TwoFactorAuthController::class, 'securityQuestions'])->name('2fa.security-questions');
 
     Route::get('password/change', [ChangePasswordController::class, 'index'])->name('password.change');
     Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.store');
 });
 
-// Route::middleware(['2fa', 'auth'])->group(function (){
-//     Route::get('/account/login-security-questions', [AccountController::class, 'preSecurityQuestions'])->name('account.pre-security-questions');
-// });
+ Route::middleware(['2fa', 'auth'])->group(function (){
+     Route::get('/account/login-security-questions', [AccountController::class, 'preSecurityQuestions'])->name('account.pre-security-questions');
+ });
 
-Route::middleware(['2fa', 'auth'])->group(function () {
+Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
 
@@ -250,7 +258,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor|MvrRegistrationType|Parameter|Report');
+                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor|MvrRegistrationType|PortLocation|Parameter|Report');
         });
         Route::name('return-config.')->prefix('return-config')->group(function () {
             Route::get('/', [ReturnController::class, 'taxTypes'])->name('index');
@@ -263,13 +271,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
         Route::get('/tax-consultant-duration', [TaxAgentController::class, 'duration'])->name('tax-consultant-duration');
 
-        Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
         Route::resource('/transaction-fees', TransactionFeeController::class);
 
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
 
         Route::get('/api-users', [ApiUserController::class, 'index'])->name('api-users.index');
-
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
@@ -281,6 +287,12 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     });
     Route::name('verification.')->prefix('verification')->group(function () {
         Route::get('tin/{business}', [VerificationController::class, 'tin'])->name('tin');
+    });
+
+    Route::name('tax-refund.')->prefix('tax-refund')->group(function () {
+        Route::get('tax-refund/index', [TaxRefundController::class, 'index'])->name('index');
+        Route::get('tax-refund/initiate', [TaxRefundController::class, 'init'])->name('init');
+        Route::get('tax-refund/view/{id}', [TaxRefundController::class, 'show'])->name('show');
     });
 
     Route::prefix('system')->name('system.')->group(function () {
@@ -409,7 +421,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         // seaport
         Route::get('/seaport/index', [PortReturnController::class, 'seaport'])->name('seaport.index');
         Route::get('/port/show/{return_id}', [PortReturnController::class, 'show'])->name('port.show');
-        Route::get('/port/edit/{return_id}', [PortReturnController::class, 'edit'])->name('port.edit');
 
         Route::name('stamp-duty.')->group(function () {
             Route::get('/stamp-duty', [StampDutyReturnController::class, 'index'])->name('index');
@@ -457,6 +468,25 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
         // Print Returns
         Route::get('/print/{tax_return_id}', [PrintController::class, 'print'])->name('print');
+
+    });
+
+    //Chartered Return
+    Route::name('chartered.')
+        ->prefix('/chartered')
+        ->group(function () {
+            Route::get('/create', [CharteredController::class, 'create'])->name('create');
+            Route::get('/index/sea', [CharteredController::class, 'indexSea'])->name('index.sea');
+            Route::get('/index/flight', [CharteredController::class, 'indexFlight'])->name('index.flight');
+            Route::get('/view/return/{return_id}', [CharteredController::class, 'show'])->name('show');
+            Route::get('/edit/return/{return_id}', [CharteredController::class, 'edit'])->name('edit');
+        });
+
+    // Tax returns cancellation
+    Route::name('tax-return-cancellation.')->prefix('/tax-return-cancellation')->group(function () {
+        Route::get('/', [TaxReturnCancellationsController::class, 'index'])->name('index');
+        Route::get('/view/{id}', [TaxReturnCancellationsController::class, 'show'])->name('show');
+        Route::get('/file/{id}', [TaxReturnCancellationsController::class, 'file'])->name('file');
     });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
@@ -487,10 +517,13 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     });
 
     Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {
-        Route::resource('/approvals', TaxVerificationApprovalController::class);
         Route::resource('/assessments', TaxVerificationAssessmentController::class);
-        Route::resource('/verified', TaxVerificationVerifiedController::class);
         Route::resource('/files', TaxVerificationFilesController::class);
+        Route::get('/approved', [TaxVerificationsController::class, 'approved'])->name('approved');
+        Route::get('/pending', [TaxVerificationsController::class, 'pending'])->name('pending');
+        Route::get('/unpaid', [TaxVerificationsController::class, 'unpaid'])->name('unpaid');
+        Route::get('/show/{verification}', [TaxVerificationsController::class, 'show'])->name('show');
+        Route::get('/edit/{verification}', [TaxVerificationsController::class, 'edit'])->name('edit');
     });
 
     Route::name('tax_vettings.')->prefix('tax_vettings')->group(function () {
@@ -499,10 +532,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/on-correction', [TaxReturnVettingController::class, 'onCorrection'])->name('on.correction');
         Route::get('/vetted', [TaxReturnVettingController::class, 'vetted'])->name('vetted');
         Route::get('/view/{return_id}', [TaxReturnVettingController::class, 'show'])->name('show');
-
     });
 
     Route::name('tax_auditing.')->prefix('tax_auditing')->group(function () {
+        Route::get('/businesses', [TaxAuditApprovalController::class, 'business'])->name('businesses');
+        Route::get('/business/show/{id}', [TaxAuditApprovalController::class, 'showBusiness'])->name('business.show');
         Route::resource('/approvals', TaxAuditApprovalController::class);
         Route::resource('/assessments', TaxAuditAssessmentController::class);
         Route::resource('/verified', TaxAuditVerifiedController::class);
@@ -558,7 +592,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
         Route::get('/public-service/report/payment/{parameters}', [\App\Http\Controllers\Reports\PublicService\PublicServiceReportController::class, 'exportPaymentReportPdf'])->name('public-service.payment.pdf');
         Route::get('/public-service/report/registration/{parameters}', [\App\Http\Controllers\Reports\PublicService\PublicServiceReportController::class, 'exportRegistrationReportPdf'])->name('public-service.registration.pdf');
-
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -591,6 +624,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
             Route::get('show/{debtId}', [InstallmentRequestController::class, 'show'])->name('show');
             Route::get('edit/{debtId}', [InstallmentRequestController::class, 'edit'])->name('edit');
             Route::get('file/{file}', [InstallmentRequestController::class, 'file'])->name('file');
+
+        });
+        Route::prefix('/extension')->name('extensions.')->group(function (){
+            Route::get('/', [\App\Http\Controllers\Installment\InstallmentExtensionController::class, 'index'])->name('index');
+            Route::get('/show/{id}', [\App\Http\Controllers\Installment\InstallmentExtensionController::class, 'show'])->name('show');
         });
     });
 
@@ -613,15 +651,25 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/assessment/waiver/show/{assessment_id}', [AssessmentDebtController::class, 'showWaiver'])->name('assessment.waiver.show');
         Route::get('/assessments/waiver/show/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('assessments.waivers.approval');
 
+        // Transport Services Debts
+        Route::get('/transport-services', [TransportServicesDebtController::class, 'index'])->name('transports.index');
+        Route::get('/transport-services/{transport}', [TransportServicesDebtController::class, 'show'])->name('transports.show');
+
         // Debt rollbacks
         Route::get('/rollbacks/return/{tax_return_id}', [DebtRollbackController::class, 'return'])->name('rollback.return');
         Route::get('/rollbacks/assessment/{assessment_id}', [DebtRollbackController::class, 'assessment'])->name('rollback.assessment');
 
+        // Offence
+        Route::get('/offence',[\App\Http\Controllers\Debt\OffenceController::class,'index'])->name('offence.index');
+        Route::get('/offence/create',[\App\Http\Controllers\Debt\OffenceController::class,'create'])->name('offence.create');
+        Route::get('/offence/show/{offence}',[\App\Http\Controllers\Debt\OffenceController::class,'show'])->name('offence.show');
     });
 
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
         Route::resource('/approvals', TaxInvestigationApprovalController::class);
         Route::resource('/assessments', TaxInvestigationAssessmentController::class);
+        Route::resource('/payments', TaxInvestigationAssessmentPaymentController::class);
+        Route::post('/approve-reject/{paymentId}', [TaxInvestigationAssessmentPaymentController::class, 'approveReject'])->name('approve-reject');
         Route::resource('/verified', TaxInvestigationVerifiedController::class);
         Route::resource('/files', TaxInvestigationFilesController::class);
     });
@@ -632,7 +680,14 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::get('agent-trainings-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentTrainingFile'])->name('agent.trainings-file');
 
     Route::name('land-lease.')->prefix('land-lease')->group(function () {
+        Route::get('/register', [LandLeaseController::class, 'register'])->name('register');
+        Route::get('/assign-taxpayer/{id}', [LandLeaseController::class, 'assignTaxpayer'])->name('assign.taxpayer');
+        Route::get('/edit/{id}', [LandLeaseController::class, 'edit'])->name('edit');
+        Route::get('/registration/view/{id}', [LandLeaseController::class, 'registrationView'])->name('registration.view');
+        Route::get('/taxpayer/view/{id}', [LandLeaseController::class, 'taxpayerView'])->name('taxpayer.view');
         Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
+        Route::get('/complete/registration/{id}', [LandLeaseController::class, 'completeRegistrationView'])->name('complete.registration');
+        Route::get('/approval/list', [LandLeaseController::class, 'indexApprovalList'])->name('approval.list');
         Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
         Route::get('/view/lease/payment/{id}', [LandLeaseController::class, 'viewLeasePayment'])->name('view.lease.payment');
         Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
@@ -709,6 +764,10 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/registration/particular/show/{id}', [\App\Http\Controllers\MVR\RegistrationParticularChangeController::class, 'show'])->name('registration.particular.show');
         Route::get('/registration/particular/correct/{id}', [\App\Http\Controllers\MVR\RegistrationParticularChangeController::class, 'update'])->name('registration.particular.update');
 
+        Route::get('/temporary-transports', [\App\Http\Controllers\MVR\TemporaryTransportsController::class, 'index'])->name('temporary-transports.index');
+        Route::get('/temporary-transports/letter/{temporaryTransport}', [\App\Http\Controllers\MVR\TemporaryTransportsController::class, 'getTransportLetter'])->name('temporary-transports.letter');
+        Route::get('/temporary-transports/show/{temporaryTransport}', [\App\Http\Controllers\MVR\TemporaryTransportsController::class, 'show'])->name('temporary-transports.show');
+
         Route::get('/plate-numbers', [MotorVehicleRegistrationController::class, 'plateNumbers'])->name('plate-numbers');
         Route::get('/change-status', [MotorVehicleRegistrationController::class, 'index'])->name('change-status');
         Route::get('/view/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('show');
@@ -720,6 +779,12 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/agent', [AgentsController::class, 'index'])->name('agent');
         Route::get('/agent/create', [AgentsController::class, 'create'])->name('agent.create');
         Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
+    });
+
+    Route::name('road-license.')->prefix('road-license')->group(function () {
+        Route::get('/show/{id}', [RoadLicenseController::class, 'show'])->name('show');
+        Route::get('/index', [RoadLicenseController::class, 'index'])->name('index');
+        Route::get('/sticker/{id}', [RoadLicenseController::class, 'sticker'])->name('sticker');
     });
 
     Route::prefix('drivers-license')->as('drivers-license.')->group(function () {
@@ -764,8 +829,10 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
     // Finance
     Route::name('finance.')->prefix('finance')->group(function () {
-        Route::get('/taxpayer/ledger', [FinanceController::class, 'taxpayerLedgersList'])->name('taxpayer.ledgers');
-        Route::get('/taxpayer/ledger/{id}', [FinanceController::class, 'taxpayerLedger'])->name('taxpayer.ledger.details');
+        Route::get('/taxpayer/ledger', [TaxpayerLedgerController::class, 'search'])->name('taxpayer.ledger.search');
+        Route::get('/taxpayer/ledger/{businessLocationId}/tax/{taxTypeId}', [TaxpayerLedgerController::class, 'show'])->name('taxpayer.ledger.show');
+        Route::get('/taxpayer/ledger/{businessLocationId}/summary', [TaxpayerLedgerController::class, 'summary'])->name('taxpayer.ledger.summary');
+        Route::get('/taxpayer/ledger/{businessId}/summary/business', [TaxpayerLedgerController::class, 'businessSummary'])->name('taxpayer.ledger.business-summary');
     });
 
     Route::prefix('public-service')->as('public-service.')->group(function () {

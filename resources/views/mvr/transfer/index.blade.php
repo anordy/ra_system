@@ -1,12 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Owner Transfer Requests')
+@section('title', 'Ownership Transfer Requests')
 
 @section('content')
     <div class="card mt-3">
-        <div class="card-header">
-            Requests
-        </div>
+        <div class="card-header">OwnerShip Transfer Requests</div>
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -18,7 +16,6 @@
                        aria-controls="profile" aria-selected="false">Pending Approval</a>
                 </li>
             </ul>
-
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane p-2 show active" id="to-print" role="tabpanel" aria-labelledby="to-print-tab">
                     <livewire:mvr.ownership-transfer-requests-table :status="null"/>
@@ -27,7 +24,6 @@
                     <livewire:mvr.ownership-transfer-requests-table :status="App\Models\MvrRequestStatus::STATUS_RC_INITIATED"/>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

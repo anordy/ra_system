@@ -10,7 +10,6 @@ use App\Models\ReportType;
 use App\Services\JasperReport\ReportService;
 use App\Traits\CustomAlert;
 use Illuminate\Support\Facades\Log;
-use Jaspersoft\Exception\RESTRequestException;
 use Livewire\Component;
 
 class Initial extends Component
@@ -111,8 +110,6 @@ class Initial extends Component
         try {
             $filePath = (new ReportService())->getReport($this->report, $this->format, $formattedParameters);
             return response()->download($filePath)->deleteFileAfterSend(true);
-        } catch (RESTRequestException $requestException) {
-            $this->customAlert('error', $requestException->statusCode .': '. $requestException->getMessage());
         } catch (\Exception $e) {
             Log::error($e);
             $this->customAlert('error', CustomMessage::error());

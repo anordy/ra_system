@@ -10,14 +10,16 @@ use Illuminate\Support\Facades\Log;
 
 class TaxpayersController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         if (!Gate::allows('taxpayer_view')) {
             abort(403);
         }
         return view('taxpayers.index');
     }
 
-    public function show($taxPayerId){
+    public function show($taxPayerId)
+    {
         if (!Gate::allows('taxpayer_view')) {
             abort(403);
         }
@@ -26,7 +28,11 @@ class TaxpayersController extends Controller
             $taxPayer = Taxpayer::with('region:id,name', 'district:id,name', 'ward:id,name', 'street:id,name')->findOrFail(decrypt($taxPayerId));
             return view('taxpayers.show', compact('taxPayer'));
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             session()->flash('error', 'Something went wrong, please contact the administrator for help');
             return redirect()->back();
         }

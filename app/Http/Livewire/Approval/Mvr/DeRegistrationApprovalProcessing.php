@@ -3,14 +3,19 @@
 namespace App\Http\Livewire\Approval\Mvr;
 
 use App\Enum\BillStatus;
+use App\Enum\Currencies;
 use App\Enum\MvrDeRegistrationReasonStatus;
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
+use App\Models\MvrDeregistration;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
+use App\Models\TaxType;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -21,13 +26,14 @@ use Livewire\WithFileUploads;
 
 class DeRegistrationApprovalProcessing extends Component
 {
-    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads;
+    use CustomAlert, WorkflowProcesssingTrait, PaymentsTrait, WithFileUploads, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
     public $comments;
     public $deregistration;
     public $reasonsForLost, $clearanceEvidence, $zicEvidence;
+    public $description;
 
     public function mount($modelName, $modelId)
     {
@@ -39,6 +45,7 @@ class DeRegistrationApprovalProcessing extends Component
         $this->clearanceEvidence = $this->subject->clearance_evidence;
         $this->zicEvidence = $this->subject->zic_evidence;
         $this->reasonsForLost = $this->subject->police_evidence;
+        $this->description = $this->subject->description;
     }
 
     public function approve($transition)
@@ -49,20 +56,23 @@ class DeRegistrationApprovalProcessing extends Component
             'comments' => 'required|strip_tag',
             'reasonsForLost' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::LOST ? 'required|strip_tag' : 'nullable',
             'clearanceEvidence' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::OUT_OF_ZANZIBAR ? ($this->clearanceEvidence === $this->subject->clearance_evidence ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf') : 'nullable',
-            'zicEvidence' => $this->subject->reason->name === MvrDeRegistrationReasonStatus::SERVIER_ACCIDENT ? ($this->zicEvidence === $this->subject->zic_evidence ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf') : 'nullable'
-        ]);
+            'description' => ($this->subject->reason->name === MvrDeRegistrationReasonStatus::SCRAPPED) ? ('required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf') : 'nullable'
+        ],
+            [
+                'description.required' => 'Please enter reasons for de-registration'
+            ]
+        );
 
         try {
             DB::beginTransaction();
 
             if ($this->checkTransition('mvr_police_officer_review')) {
-
                 // Update file/attachment based on type of de-registration reason
                 if ($this->subject->reason->name === MvrDeRegistrationReasonStatus::LOST) {
-
                     $this->subject->police_evidence = $this->reasonsForLost;
                     $this->subject->clearance_evidence = null;
                     $this->subject->zic_evidence = null;
+                    $this->subject->description = $this->reasonsForLost;
 
                 } else if ($this->subject->reason->name === MvrDeRegistrationReasonStatus::OUT_OF_ZANZIBAR) {
                     $clearanceEvidence = $this->clearanceEvidence;
@@ -74,35 +84,33 @@ class DeRegistrationApprovalProcessing extends Component
                     $this->subject->clearance_evidence = $clearanceEvidence;
                     $this->subject->police_evidence = null;
                     $this->subject->zic_evidence = null;
+                    $this->subject->description = $this->description;
+                }  else {
+                    $this->subject->description = $this->reasonsForLost;
+                }
+            }
 
-                } else if ($this->subject->reason->name === MvrDeRegistrationReasonStatus::SERVIER_ACCIDENT) {
 
-                    $zicEvidence = $this->zicEvidence;
-
-                    if ($this->zicEvidence != $this->subject->zic_evidence) {
-                        $zicEvidence = $this->zicEvidence->store('mvr_deregistration', 'local');
-                    }
-
-                    $this->subject->zic_evidence = $zicEvidence;
+            if ($this->checkTransition('mvr_zra_officer_review')) {
+                if ($this->subject->reason->name === MvrDeRegistrationReasonStatus::SCRAPPED || $this->subject->reason->name === MvrDeRegistrationReasonStatus::NOT_UNDER_OBLIGATION) {
+                    $this->subject->description = $this->description;
+                    $this->subject->zic_evidence = null;
                     $this->subject->clearance_evidence = null;
                     $this->subject->police_evidence = null;
-
                 } else {
                     $this->customAlert('warning', 'Invalid Reason Provided');
                     return;
                 }
-
             }
-
 
             if ($this->checkTransition('zbs_officer_review') && $transition === 'zbs_officer_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                $this->subject->payment_status = BillStatus::CN_GENERATING;
+                $this->subject->save();
             }
 
             $this->subject->save();
-
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-
             DB::commit();
 
             if ($this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'zbs_officer_review') {
@@ -114,11 +122,11 @@ class DeRegistrationApprovalProcessing extends Component
         } catch (\Exception $exception) {
             DB::rollBack();
 
-            if (isset($zicEvidence) && $zicEvidence && Storage::exists($zicEvidence)){
+            if (isset($zicEvidence) && $zicEvidence && Storage::exists($zicEvidence)) {
                 Storage::delete($zicEvidence);
             }
 
-            if (isset($clearanceEvidence) && $clearanceEvidence && Storage::exists($clearanceEvidence)){
+            if (isset($clearanceEvidence) && $clearanceEvidence && Storage::exists($clearanceEvidence)) {
                 Storage::delete($clearanceEvidence);
             }
 
@@ -130,13 +138,26 @@ class DeRegistrationApprovalProcessing extends Component
         // Generate Control Number after MVR DR Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'zbs_officer_review') {
             try {
-                $this->generateControlNumber();
+                $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
+
+                $fee = MvrFee::query()->where([
+                    'mvr_registration_type_id' => $this->subject->registration->mvr_registration_type_id,
+                    'mvr_fee_type_id' => $feeType->id,
+                    'mvr_class_id' => $this->subject->registration->mvr_class_id,
+                    'mvr_plate_number_type_id' => $this->subject->registration->mvr_plate_number_type_id
+                ])->first();
+
+                if (empty($fee)) {
+                    $this->customAlert('error', "De-registration fee for selected de-registration type is not configured");
+                    return;
+                }
+
+                $this->generateControlNumber($fee);
             } catch (Exception $exception) {
                 Log::error('DE-REGISTRATION-APPROVE-CN-GEN', [$exception]);
                 $this->flash('error', 'Failed to generate control number, please try again', [], redirect()->back()->getTargetUrl());
             }
         }
-
     }
 
     public function reject($transition)
@@ -195,30 +216,11 @@ class DeRegistrationApprovalProcessing extends Component
         ]);
     }
 
-    public function generateControlNumber()
+    public function generateControlNumber($fee)
     {
         try {
-            $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
-
-            $fee = MvrFee::query()->where([
-                'mvr_registration_type_id' => $this->subject->registration->mvr_registration_type_id,
-                'mvr_fee_type_id' => $feeType->id,
-                'mvr_class_id' => $this->subject->registration->mvr_class_id
-            ])->first();
-
-            if (empty($fee)) {
-                $this->customAlert('error', "Registration fee for selected registration type is not configured");
-                return;
-            }
-
             DB::beginTransaction();
-
-            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-            $this->subject->payment_status = BillStatus::CN_GENERATING;
-            $this->subject->save();
-
-            $this->generateMvrControlNumber($this->subject, $fee);
-
+            $this->generateMvrDeregistrationControlNumber($this->subject, $fee);
             DB::commit();
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());

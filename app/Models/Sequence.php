@@ -10,5 +10,14 @@ class Sequence extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const TAX_CLEARANCE = 'taxClearance';
+    const TAX_CLEARANCE_YEAR = 'taxClearanceYear';
+    const PLATE_ALPHABET ='plateAlphabet';
+    const PLATE_NUMBER ='plateNumber';
+    const SMZ_PLATE_NUMBER ='smzPlateNumber';
+    const SLS_PLATE_NUMBER ='slsPlateNumber';
+
+    protected $fillable = ['next_id', 'next_sequence'];
+
     protected $guarded = [];
 }

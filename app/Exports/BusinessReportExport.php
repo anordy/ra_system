@@ -56,9 +56,16 @@ class BusinessReportExport implements FromView, WithEvents, ShouldAutoSize
         ];
     }
 
+
     public function view(): View
     {
-        $records = $this->businesses->get();
+        $records = collect();
+
+        $this->businesses->chunk(500, function ($chunk) use ($records) {
+            $records->push($chunk);
+        });
+
         return view('exports.business.excel.business', compact('records'));
     }
+
 }

@@ -57,7 +57,7 @@ trait RollbackReturnPenaltyTrait
 
             DB::beginTransaction();
             try {
-                if (!$this->verify($tax_return)){
+                if (!$this->verify($tax_return)) {
                     throw new Exception('Verification failed for tax return, please contact system admin.');
                 }
 
@@ -123,7 +123,11 @@ trait RollbackReturnPenaltyTrait
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 throw new Exception('Something went wrong');
             }
         } else {
@@ -204,7 +208,11 @@ trait RollbackReturnPenaltyTrait
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 throw new Exception('Something went wrong');
             }
         } else {

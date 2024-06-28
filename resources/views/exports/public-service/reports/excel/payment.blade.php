@@ -4,7 +4,7 @@
     <tr>
         <th style="text-align:center;" colspan="15">
             <strong>ZANZIBAR Revenue Authority</strong><br>
-            <strong>Report of {{ $parameters['payment_type']  }} Public Service Payments </strong><br>
+            <strong>Report of {{ $parameters['payment_type']  }} Transport Service Payments </strong><br>
             @if($parameters['range_start'] && $parameters['range_end'])
                 <strong>From {{ date("M, d Y", strtotime($parameters['range_start'])) }} To {{ date("M, d Y",
                     strtotime($parameters['range_end'])) }} </strong><br>

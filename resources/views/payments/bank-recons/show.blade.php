@@ -88,7 +88,7 @@
                     </div>
                 </div>
             @else
-                <div class="text-center text-muted d-flex justify-content-center align-items-center" style="min-height: 50px;">
+                <div class="text-center text-muted d-flex justify-content-center align-items-center min-height-50">
                     Bill Details Not Found.
                 </div>
             @endif

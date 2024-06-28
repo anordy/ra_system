@@ -35,9 +35,9 @@ class Zanid extends Component
 
     public function validateZanID()
     {
-         $this->is_verified_triggered = true;
-         $zanid_controller = new ZanIDController;
-         $this->zanid_data = $zanid_controller->getZanIDData($this->kyc->zanid_no);
+        $this->is_verified_triggered = true;
+        $zanid_controller = new ZanIDController;
+        $this->zanid_data = $zanid_controller->getZanIDData($this->kyc->zanid_no);
     }
 
     public function compareProperties($kyc_property, $zanid_property)
@@ -97,10 +97,13 @@ class Zanid extends Component
             $this->customAlert('success', 'Taxpayer details have been approved!');
             return redirect()->route('taxpayers.enroll-fingerprint', [encrypt($this->kyc->id)]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
         }
-
     }
 
     /**
@@ -124,7 +127,11 @@ class Zanid extends Component
                 return redirect()->route('taxpayers.registrations.index');
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
             }
         } else {
@@ -132,7 +139,8 @@ class Zanid extends Component
         }
     }
 
-    public function convertStringToCamelCase($string) {
+    public function convertStringToCamelCase($string)
+    {
         return ucfirst(strtolower($string));
     }
 

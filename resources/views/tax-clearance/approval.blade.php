@@ -6,7 +6,7 @@
 
     <div class="card p-0 m-0">
         <div class="card-body mt-0 p-2">
-            <ul class="nav nav-tabs shadow-sm" id="waiverContent" role="tablist" style="margin-bottom: 0;">
+            <ul class="nav nav-tabs shadow-sm mb-0" id="waiverContent" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="taxclearance-info-tab" data-toggle="tab" href="#taxclearance-info"
                         role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearence Information </a>
@@ -30,26 +30,22 @@
                             <span class="font-weight-bold text-uppercase">Tax Clearence Status</span>
                             <p class="my-1">
                                 @if ($taxClearance->status === 'approved')
-                                    <span class="badge badge-success py-1 px-2"
-                                        style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                    <span class="badge badge-success py-1 px-2 green-status">
                                         <i class="bi bi-check-circle-fill mr-1"></i>
                                         Approved
                                     </span>
                                 @elseif($taxClearance->status === 'requested')
-                                    <span class="badge badge-success py-1 px-2"
-                                        style="border-radius: 1rem; background: #b56509; color: #fbe577; font-size: 85%">
+                                    <span class="badge badge-success py-1 px-2 pending-status">
                                         <i class="bi bi-hourglass-bottom"></i>
                                         Requested
                                     </span>
                                 @elseif($taxClearance->status === 'rejected')
-                                    <span class="badge badge-success py-1 px-2"
-                                        style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
+                                    <span class="badge badge-success py-1 px-2 danger-status">
                                         <i class="bi bi-x-circle mr-1"></i>
                                         Rejected
                                     </span>
                                 @else
-                                    <span class="badge badge-danger py-1 px-2"
-                                        style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
+                                    <span class="badge badge-danger py-1 px-2 pending-status">
                                         <i class="bi bi-x-circle-fill mr-1"></i>
                                         Waiting Approval
                                     </span>

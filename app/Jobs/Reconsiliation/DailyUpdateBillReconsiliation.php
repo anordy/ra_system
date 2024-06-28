@@ -44,14 +44,15 @@ class DailyUpdateBillReconsiliation implements ShouldQueue
         $this->checkReconsiliation($this->reconsiliation_id);
     }
 
-    public function checkReconsiliation($reconsiliation_id){
+    public function checkReconsiliation($reconsiliation_id)
+    {
         Log::info('Job triggered');
         $reconsiliation = ZmRecon::find($reconsiliation_id);
 
         if ($reconsiliation) {
             $billCtrNums = $reconsiliation->reconTransIDs();
 
-            $bills = ZmBill::whereIn('control_number', $billCtrNums)->whereIn('status', [ BillStatus::PENDING, BillStatus::FAILED ])->get();
+            $bills = ZmBill::whereIn('control_number', $billCtrNums)->whereIn('status', [BillStatus::PENDING, BillStatus::FAILED])->get();
             if ($bills) {
                 try {
                     DB::beginTransaction();
@@ -73,7 +74,7 @@ class DailyUpdateBillReconsiliation implements ShouldQueue
                             'payer_phone_number' => $reconTrans['DptCellNum'],
                             'payer_email' => $reconTrans['DptEmailAddr'],
                             'payer_name' => $reconTrans['DptName'],
-                            'psp_receipt_number' =>'RST' . random_int(10000, 90000),
+                            'psp_receipt_number' => 'RST' . random_int(10000, 90000),
                             'psp_name' => $reconTrans['PspName'],
                             'ctr_acc_num' => $reconTrans['CtrAccNum'],
                             'created_by_recon' => true,
@@ -101,16 +102,17 @@ class DailyUpdateBillReconsiliation implements ShouldQueue
                     }
                     DB::commit();
 
-                        Log::info('Successfully => Reconsiliation: Update Bills which didnt receive payment callback');
-                    } catch (\Exception $e) {
-                        DB::rollBack();
-                        Log::info('Failed => Reconsiliation: Update paid bills which didnt receive payment callback');
-                        Log::error($e);
-                    }
-
+                    Log::info('Successfully => Reconsiliation: Update Bills which didnt receive payment callback');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    Log::info('Failed => Reconsiliation: Update paid bills which didnt receive payment callback');
+                    Log::error('Error: ' . $e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+                }
             }
-
         }
-
     }
 }

@@ -2,113 +2,149 @@
 
 namespace App\Traits;
 
+use App\Enum\GeneralConstant;
+use App\Enum\ReportStatus;
 use App\Models\Returns\ReturnStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 trait ReturnFilterTrait
 {
     //filter data according to user criteria
     public function dataFilter($filter, $data, $returnTable)
     {
-        if ($data == []) {
-            $filter->whereMonth($returnTable . '.created_at', '=', date('m'));
-            $filter->whereYear($returnTable . '.created_at', '=', date('Y'));
+        try {
+            if ($data == []) {
+                $filter->whereMonth($returnTable . '.created_at', '=', date('m'));
+                $filter->whereYear($returnTable . '.created_at', '=', date('Y'));
+            }
+            if (isset($data['type']) && $data['type'] != ReportStatus::all) {
+                $filter->Where('return_category', $data['type']);
+            }
+            if (isset($data['year']) && $data['year'] != ReportStatus::All && $data['year'] != ReportStatus::CUSTOM_RANGE) {
+                $filter->whereYear($returnTable . '.created_at', '=', $data['year']);
+            }
+            if (isset($data['month']) && $data['month'] != ReportStatus::all && $data['year'] != ReportStatus::CUSTOM_RANGE) {
+                $filter->whereMonth($returnTable . '.created_at', '=', $data['month']);
+            }
+            if (isset($data['from']) && isset($data['to']) && $data['year'] == ReportStatus::CUSTOM_RANGE) {
+                $from = Carbon::create($data['from'])->startOfDay();
+                $to = Carbon::create($data['to'])->endOfDay();
+                $filter->whereBetween($returnTable . '.created_at', [$from, $to]);
+            }
+
+            return $filter;
+        } catch (\Exception $exception) {
+            Log::error('TRAITS-RETURN-FILTER-TRAIT-DATA-FILTER', [$exception]);
+            throw $exception;
         }
-        if (isset($data['type']) && $data['type'] != 'all') {
-            $filter->Where('return_category', $data['type']);
-        }
-        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
-            $filter->whereYear($returnTable . '.created_at', '=', $data['year']);
-        }
-        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
-            $filter->whereMonth($returnTable . '.created_at', '=', $data['month']);
-        }
-        if (isset($data['year']) && $data['year'] == 'Custom Range') {
-            $from = Carbon::create($data['from'])->startOfDay();
-            $to   = Carbon::create($data['to'])->endOfDay();
-            $filter->whereBetween($returnTable . '.created_at', [$from, $to]);
-        }
-        
-        return $filter;
+
     }
 
     public function getSummaryData($model)
     {
-        $m1 = clone $model;
-        $m2 = clone $model;
-        $m3 = clone $model;
-        $m4 = clone $model;
-        $m5 = clone $model;
-        $m6 = clone $model;
+        try {
+            $vars = $model->select(
+                DB::raw('COUNT(*) as totalSubmittedReturns'),
+                DB::raw('SUM(CASE WHEN created_at > filing_due_date THEN 1 ELSE 0 END) as totalLateFiledReturns'),
+                DB::raw('SUM(CASE WHEN created_at <= filing_due_date THEN 1 ELSE 0 END) as totalInTimeFiledReturns'),
+                DB::raw('SUM(CASE WHEN paid_at IS NOT NULL THEN 1 ELSE 0 END) as totalPaidReturns'),
+                DB::raw('SUM(CASE WHEN paid_at IS NULL THEN 1 ELSE 0 END) as totalUnpaidReturns'),
+                DB::raw('SUM(CASE WHEN paid_at > payment_due_date THEN 1 ELSE 0 END) as totalLatePaidReturns')
+            )
+                ->first();
 
-        //All Filings
-        $vars['totalSubmittedReturns'] = $m1->count();
+            // If any of the counts return NULL, replace them with zero
+            $vars['totalSubmittedReturns'] = $vars['totalsubmittedreturns'] ?? GeneralConstant::ZERO_INT;
+            $vars['totalLateFiledReturns'] = $vars['totallatefiledreturns'] ?? GeneralConstant::ZERO_INT;
+            $vars['totalInTimeFiledReturns'] = $vars['totalintimefiledreturns'] ?? GeneralConstant::ZERO_INT;
+            $vars['totalPaidReturns'] = $vars['totalpaidreturns'] ?? GeneralConstant::ZERO_INT;
+            $vars['totalUnpaidReturns'] = $vars['totalunpaidreturns'] ?? GeneralConstant::ZERO_INT;
+            $vars['totalLatePaidReturns'] = $vars['totallatepaidreturns'] ?? GeneralConstant::ZERO_INT;
 
-        //late filings
-        $vars['totalLateFiledReturns'] = $m2->whereColumn('created_at', '>', 'filing_due_date')->count();
 
-        //In-Time filings
-        $vars['totalInTimeFiledReturns'] = $m3->whereColumn('created_at', '<=', 'filing_due_date')->count();
+            return $vars;
+        } catch (\Exception $exception) {
+            Log::error('TRAITS-RETURN-FILTER-TRAIT-GET-SUMMARY-DATA', [$exception]);
+            throw $exception;
+        }
 
-        //All paid returns
-        $vars['totalPaidReturns'] = $m4->whereNotNull('paid_at')->count();
-
-        //total unpaid returns
-        $vars['totalUnpaidReturns'] = $m5->whereNull('paid_at')->count();
-
-        //total late paid returns
-        $vars['totalLatePaidReturns'] = $m6->whereColumn('paid_at', '>', 'payment_due_date')->count();
-
-        return $vars;
     }
 
     //paid Returns
     public function paidReturns($returnClass, $returnTableName, $penaltyTableName)
     {
-        $returnClass1   = clone $returnClass;
-        $returnClass2   = clone $returnClass;
-        $penaltyData    = $returnClass1->where("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
-        ->select(
-            DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totallatefiling'),
-            DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totallatepayment'),
-            DB::raw('SUM(' . $penaltyTableName . '.rate_amount) as totalrate'),
-        )
-        ->groupBy('return_id')
-        ->get();
+        try {
+            $allowedCharacters = '/^[a-zA-Z0-9_]+$/';
+            if (!preg_match($allowedCharacters, $penaltyTableName) || !preg_match($allowedCharacters, $returnTableName)) {
+                throw new \Exception('Invalid penalty table name or return table name format');
+            }
 
-        $totalTaxAmount = $returnClass2->where($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->sum("{$returnTableName}.total_amount_due");
+            // Return both USD and TZS
+            $returnClass1 = clone $returnClass;
+            $returnClass2 = $returnClass1;
+            $penaltyData = $returnClass1->where("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])
+                ->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+                ->select(
+                    DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totallatefiling'),
+                    DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totallatepayment'),
+                    DB::raw('SUM(' . $penaltyTableName . '.rate_amount) as totalrate'),
+                )
+                ->groupBy('return_id')
+                ->get();
 
-        return  [
-            'totalTaxAmount'   => $totalTaxAmount,
-            'totalLateFiling'  => $penaltyData->sum('totallatefiling'),
-            'totalLatePayment' => $penaltyData->sum('totallatepayment'),
-            'totalRate'        => $penaltyData->sum('totalrate'),
-        ];
+            $totalTaxAmount = $returnClass2->where($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])
+                ->sum("{$returnTableName}.total_amount_due");
+
+            // Return for USD and TZS
+
+            return [
+                'totalTaxAmount' => $totalTaxAmount ?? GeneralConstant::ZERO_INT,
+                'totalLateFiling' => $penaltyData->sum('totallatefiling') ?? GeneralConstant::ZERO_INT,
+                'totalLatePayment' => $penaltyData->sum('totallatepayment') ?? GeneralConstant::ZERO_INT,
+                'totalRate' => $penaltyData->sum('totalrate') ?? GeneralConstant::ZERO_INT,
+            ];
+        } catch (\Exception $exception) {
+            Log::error('TRAITS-RETURN-FILTER-TRAIT-PAID-RETURNS', [$exception]);
+            throw $exception;
+        }
+
     }
 
     //unpaid Returns
     public function unPaidReturns($returnClass, $returnTableName, $penaltyTableName)
     {
-        $returnClass1   = clone $returnClass;
-        $returnClass2   = clone $returnClass;
+        try {
+            $allowedCharacters = '/^[a-zA-Z0-9_]+$/';
+            if (!preg_match($allowedCharacters, $penaltyTableName) || !preg_match($allowedCharacters, $returnTableName)) {
+                throw new \Exception('Invalid penalty table name or return table name');
+            }
 
-        $penaltyData = $returnClass1->whereNotIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
-        ->select(
-            DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totallatefiling'),
-            DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totallatepayment'),
-            DB::raw('SUM(' . $penaltyTableName . '.rate_amount) as totalrate'),
-        )
-        ->groupBy('return_id')
-        ->get();
+            $returnClass1 = clone $returnClass;
+            $returnClass2 = clone $returnClass;
 
-        $totalTaxAmount = $returnClass2->whereNotIn($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->sum("{$returnTableName}.total_amount_due");
+            $penaltyData = $returnClass1->whereNotIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+                ->select(
+                    DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totallatefiling'),
+                    DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totallatepayment'),
+                    DB::raw('SUM(' . $penaltyTableName . '.rate_amount) as totalrate'),
+                )
+                ->groupBy("{$returnTableName}.currency")
+                ->get();
 
-        return  [
-            'totalTaxAmount'   => $totalTaxAmount,
-            'totalLateFiling'  => $penaltyData->sum('totallatefiling'),
-            'totalLatePayment' => $penaltyData->sum('totallatepayment'),
-            'totalRate'        => $penaltyData->sum('totalrate'),
-        ];
+            $totalTaxAmount = $returnClass2->whereNotIn($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->sum("{$returnTableName}.total_amount_due");
+
+            return [
+                'totalTaxAmount' => $totalTaxAmount ?? GeneralConstant::ZERO_INT,
+                'totalLateFiling' => $penaltyData->sum('totallatefiling') ?? GeneralConstant::ZERO_INT,
+                'totalLatePayment' => $penaltyData->sum('totallatepayment') ?? GeneralConstant::ZERO_INT,
+                'totalRate' => $penaltyData->sum('totalrate') ?? GeneralConstant::ZERO_INT,
+            ];
+        } catch (\Exception $exception) {
+            Log::error('TRAITS-RETURN-FILTER-TRAIT-UNPAID-RETURNS', [$exception]);
+            throw $exception;
+        }
+
     }
 }

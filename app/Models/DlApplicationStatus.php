@@ -27,6 +27,7 @@ class DlApplicationStatus extends Model
     const STATUS_COMPLETED = 'Completed';
     const RENEW = 'RENEW';
     const ACTIVE = 'ACTIVE';
+    const ADD_CLASS = 'CLASS';
     protected $table = 'dl_application_status';
     const STATUS_PENDING_APPROVAL = 'Pending Approval';
     const STATUS_INITIATED = 'Initiated';

@@ -71,7 +71,7 @@ class DailyDebtPenaltyInterest extends Command
             (MONTHS_BETWEEN(CURRENT_DATE, CAST(filing_due_date as date))) as periods, 
             (MONTHS_BETWEEN(CAST(curr_payment_due_date as date), CURRENT_DATE)) as penatableMonths
         ')
-            ->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
+//            ->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
             ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0") // This determines if the payment due date has reached
             ->where('vetting_status', VettingStatus::VETTED)
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE]) // Get all non paid returns
@@ -80,21 +80,25 @@ class DailyDebtPenaltyInterest extends Command
         if ($tax_returns) {
 
             foreach ($tax_returns as $tax_return) {
-                    DB::beginTransaction();
-                    try {
-                        // Generate penalty
-                        PenaltyForDebt::generateReturnsPenalty($tax_return);
-                        DB::commit();
-                        // Cancel previous latest bill if exists
-                        if ($tax_return->latestBill) {
-                            CancelBill::dispatch($tax_return->latestBill, 'Debt Penalty Increment');
-                        }
-                        $tax_return = TaxReturn::findOrFail($tax_return->id);
-                        GenerateControlNo::dispatch($tax_return);
-                    } catch (Exception $e) {
-                        DB::rollBack();
-                        Log::error($e);
+                DB::beginTransaction();
+                try {
+                    // Generate penalty
+                    PenaltyForDebt::generateReturnsPenalty($tax_return);
+                    DB::commit();
+                    // Cancel previous latest bill if exists
+                    if ($tax_return->latestBill) {
+                        CancelBill::dispatch($tax_return->latestBill, 'Debt Penalty Increment');
                     }
+                    $tax_return = TaxReturn::findOrFail($tax_return->id);
+                    GenerateControlNo::dispatch($tax_return);
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    Log::error('Error: ' . $e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+                }
             }
         }
     }
@@ -134,7 +138,11 @@ class DailyDebtPenaltyInterest extends Command
                     GenerateAssessmentDebtControlNo::dispatch($tax_assessment);
                 } catch (Exception $e) {
                     DB::rollBack();
-                    Log::error($e);
+                    Log::error('Error: ' . $e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
                 }
             }
         }

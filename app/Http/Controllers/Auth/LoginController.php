@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Events\SendMail;
 use App\Http\Controllers\Controller;
 use App\Models\DualControl;
+use App\Models\Permission;
+use App\Models\SysModule;
 use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\UserOtp;
@@ -14,7 +16,10 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -80,39 +85,25 @@ class LoginController extends Controller
                 ]);
             }
 
-            // if (!$this->verify($user)) {
-            //     Auth::logout();
-            //     $request->session()->flush();
-            //     throw ValidationException::withMessages([
-            //         $this->username() =>  "Your account could not be verified, please contact system administrator.",
-            //     ]);
-            // }
+             if (!$this->verify($user)) {
+                 Auth::logout();
+                 $request->session()->flush();
+                 throw ValidationException::withMessages([
+                     $this->username() =>  "Your account could not be verified, please contact system administrator.",
+                 ]);
+             }
 
-            // if ($user->is_approved == 0) {
-            //     Auth::logout();
-            //     $request->session()->flush();
-            //     throw ValidationException::withMessages([
-            //         $this->username() =>  "Your account has not been approved, please contact system administrator.",
-            //     ]);
-            // }
+             if ($user->is_approved == 0) {
+                 Auth::logout();
+                 $request->session()->flush();
+                 throw ValidationException::withMessages([
+                     $this->username() =>  "Your account has not been approved, please contact system administrator.",
+                 ]);
+             }
 
             $this->clearLoginAttempts($request);
             $user = auth()->user();
 
-            // Check if alternative to otp is enabled.
-            $setting = SystemSetting::where('code', SystemSetting::ENABLE_OTP_ALTERNATIVE)->first();
-            $answersConfigured = $user->userAnswers()->count() >= 3;
-
-            if ($setting && $setting->value && $answersConfigured){
-                // redirect to security questions page.
-                session()->flash('success', 'Please select and provide answers to your security questions to access your account.');
-                return redirect()->route('2fa.security-questions');
-            }
-
-            if ($setting && $setting->value && !$answersConfigured){
-                // OTP Alternative enabled but user has not configured answers, redirect to otp with alternative message
-                session()->flash('error', 'Security questions not configured.');
-            }
 
             $token = $user->otp;
 
@@ -130,6 +121,19 @@ class LoginController extends Controller
                 $token->code = Hash::make($code);
                 $token->updated_at = Carbon::now()->toDateTimeString();
                 $token->save();
+            }
+
+//            fetch permissions
+            if(Schema::hasTable('permissions') && Schema::hasTable('sys_modules')){
+                $role_permissions = DB::table('roles_permissions')->where('role_id', $user->role_id)->pluck('permission_id');
+                $permissions = Permission::query()->whereIn('id', $role_permissions)->get();
+                $modules = SysModule::query()->whereHas('permissions', function ($query) use ($role_permissions){
+                    $query->whereIn('id', $role_permissions);
+                })->distinct()->get();
+
+                // Store permissions in session
+                Session::put('user_permissions', $permissions);
+                Session::put('user_modules', $modules);
             }
 
             $token->sendCode($code);

@@ -44,17 +44,21 @@ class CloseAppealModel extends Component
         try {
             DB::beginTransaction();
             CaseAppeal::query()
-                ->where(['id'=>$this->appeal_id])
+                ->where(['id' => $this->appeal_id])
                 ->update([
-                    'case_outcome_id'=>$this->outcome_id,
-                    'outcome_details'=>$this->comment,
-                    'date_closed'=>$this->date,
+                    'case_outcome_id' => $this->outcome_id,
+                    'outcome_details' => $this->comment,
+                    'date_closed' => $this->date,
                 ]);
             DB::commit();
-            redirect()->to(route('cases.show', encrypt( CaseAppeal::query()->find($this->appeal_id)->case_id)));
+            redirect()->to(route('cases.show', encrypt(CaseAppeal::query()->find($this->appeal_id)->case_id)));
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

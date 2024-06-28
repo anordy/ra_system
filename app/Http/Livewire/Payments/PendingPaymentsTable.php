@@ -9,6 +9,8 @@ use App\Traits\CustomAlert;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
+
 
 class PendingPaymentsTable extends DataTableComponent
 {
@@ -37,8 +39,6 @@ class PendingPaymentsTable extends DataTableComponent
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
-        }  else {
-            $filter->whereBetween('created_at', [Carbon::now()->toDateString(), Carbon::now()->toDateString()]);
         }
 
 

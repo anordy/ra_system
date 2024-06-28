@@ -1,5 +1,5 @@
 <div class="mt-4 mx-4">
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    <ul class="nav nav-tabs shadow-sm mb-0">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Waiver Details</a>
@@ -49,7 +49,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">ZTN Number</span>
-                    <p class="my-1">{{ $waiver->debt->business->ztn_number ?? 'N/A' }}</p>
+                    <p class="my-1">{{ $waiver->debt->business->ztn_number ?? "N/A" }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Name</span>
@@ -97,6 +97,11 @@
                     <span class="font-weight-bold text-uppercase">Place of Business</span>
                     <p class="my-1">{{ $waiver->debt->business->place_of_business }}</p>
                 </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Department</span>
+                    <p class="my-1">{{ $waiver->debt->location->taxRegion->department->name ?? 'N/A' }}</p>
+                </div>
+
             </div>
 
             @if ($waiver)
@@ -106,10 +111,10 @@
                     <label class="text-left font-weight-bold text-uppercase">Waiver Breakdown</label>
                 </div>
                 <thead>
-                    <th style="width: 20%"></th>
-                    <th class="text-uppercase" style="width: 30%">Pre-waived Figure (Debt Figure)</th>
-                    <th class="text-uppercase" style="width: 30%">Waived Percentage</th>
-                    <th class="text-uppercase" style="width: 30%">Post-waived Figure</th>
+                    <th class="w-20"></th>
+                    <th class="text-uppercase w-30">Pre-waived Figure (Debt Figure)</th>
+                    <th class="text-uppercase w-30">Waived Percentage</th>
+                    <th class="text-uppercase w-30">Post-waived Figure</th>
                 </thead>
                 <tbody>
                     <tr>
@@ -164,12 +169,11 @@
 
                 @foreach ($files as $file)
                     <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                             <a target="_blank"
                                 href="{{ route('debts.return.file', encrypt($file->id)) }}"
-                                style="font-weight: 500;" class="ml-1">
+                                class="ml-1 font-weight-bold">
                                 {{ $file['file_name'] }}
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>

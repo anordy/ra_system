@@ -14,14 +14,15 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class TaxAgent extends Model implements Auditable
 {
-    use Notifiable, HasFactory, WorkflowTrait , \OwenIt\Auditing\Auditable, SoftDeletes;
+    use Notifiable, HasFactory, WorkflowTrait, \OwenIt\Auditing\Auditable, SoftDeletes;
 
     protected $table = 'tax_agents';
 
     protected $guarded = [];
 
-    public function generateReferenceNo(){
-        if ($this->reference_no){
+    public function generateReferenceNo()
+    {
+        if ($this->reference_no) {
             return true;
         }
 
@@ -29,7 +30,7 @@ class TaxAgent extends Model implements Auditable
             DB::beginTransaction();
             $s = 'ZC';
 
-            switch ($this->region->location){
+            switch ($this->region->location) {
                 case 'unguja':
                     $s = $s . 'U';
                     break;
@@ -54,13 +55,18 @@ class TaxAgent extends Model implements Auditable
             $index->save();
 
             DB::commit();
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
-    public function academics() {
+    public function academics()
+    {
         return $this->hasMany('App\Models\TaxAgentAcademicQualification');
     }
     public function professionals()
@@ -84,34 +90,39 @@ class TaxAgent extends Model implements Auditable
     }
 
     // Scopes
-    public function scopeApproved($query){
+    public function scopeApproved($query)
+    {
         return $query->where('status', TaxAgentStatus::APPROVED);
     }
 
-    public function scopePending($query){
+    public function scopePending($query)
+    {
         return $query->where('status', TaxAgentStatus::PENDING);
     }
 
-    public function bills(){
+    public function bills()
+    {
         return $this->morphMany(ZmBill::class, 'billable');
     }
 
-    public function getBillAttribute(){
+    public function getBillAttribute()
+    {
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
 
 
     public function region()
     {
-        return $this->belongsTo(Region::class,'region_id');
+        return $this->belongsTo(Region::class, 'region_id');
     }
 
     public function district()
     {
-        return $this->belongsTo(District::class,'district_id');
+        return $this->belongsTo(District::class, 'district_id');
     }
 
-    public function taxpayer(){
+    public function taxpayer()
+    {
         return $this->belongsTo(Taxpayer::class, 'taxpayer_id');
     }
 }

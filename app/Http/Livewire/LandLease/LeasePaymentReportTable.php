@@ -44,18 +44,21 @@ class LeasePaymentReportTable extends DataTableComponent
                 $months = $this->getMonthList($dates);
                 $years = $this->getYearList($dates);
                 $model = LeasePayment::query()
-                ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
-                ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
-                ->whereIn("land_leases.{$this->date_type}", $months)
-                ->whereIn("financial_years.code", $years);
+                    ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
+                    ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+                    ->whereIn("land_leases.{$this->date_type}", $months)
+                    ->whereNotNull('land_leases.completed_by')
+                    ->whereIn("financial_years.code", $years);
             } elseif ($this->date_type == 'payment_year') {
                 $years = $this->getYearList($dates);
                 $model = LeasePayment::query()
-                ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
-                ->whereIn("financial_years.code", $years);
+                    ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+                    ->whereIn("financial_years.code", $years)
+                    ->whereNotNull('land_leases.completed_by');
 
-            }else {
-                $model = LeasePayment::query()->whereBetween("lease_payments.{$this->date_type}", [$dates['startDate'], $dates['endDate']]);
+            } else {
+                $model = LeasePayment::query()->whereBetween("lease_payments.{$this->date_type}", [$dates['startDate'], $dates['endDate']])
+                    ->whereNotNull('land_leases.completed_by');
             }
         }
 
@@ -66,7 +69,6 @@ class LeasePaymentReportTable extends DataTableComponent
         if ($taxpayer_id) {
             $model = clone $model->where('lease_payments.taxpayer_id', $taxpayer_id);
         }
-
         return $model->with('landLease', 'financialYear')->orderBy('lease_payments.created_at', 'asc');
     }
 
@@ -100,24 +102,7 @@ class LeasePaymentReportTable extends DataTableComponent
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make('Name', 'id')
-                ->format(function ($value, $row) {
-                    $column = 'landlease.id';
-                    $landLease = LandLease::select('category', 'business_location_id', 'taxpayer_id', 'name')->find($row[$column]);
-                    if(is_null($landLease)){
-                        return 'N/A';
-                    }
-                    if ($landLease->category == 'business') {
-                        return $this->getBusinessName($landLease->business_location_id);
-                    } else {
-                        if ($landLease->is_registered == 1) {
-                            return $this->getApplicantName($landLease->taxpayer_id);
-                        } else {
-                            return $landLease->name;
-                        }
-                    }
-                })
-                ->sortable(),
+
             Column::make('Payment Year', 'financialyear.code')
                 ->format(function ($value, $row) {
                     $column = 'financialyear.code';
@@ -159,44 +144,48 @@ class LeasePaymentReportTable extends DataTableComponent
                     return number_format($row['outstanding_amount'], 2);
                 })
                 ->sortable(),
-            Column::make('Contact Person', 'landlease.created_at')
-                ->format(
-                    function ($value, $row) {
-                        $landLease = LandLease::select('is_registered', 'taxpayer_id', 'name')->find($row['landlease.id']);
-                        if(is_null($landLease)){
-                            return 'N/A';
-                        }
-                        if ($landLease->is_registered == 1) {
-                            $taxpayer = Taxpayer::select('first_name', 'last_name')->find($landLease->taxpayer_id);
-                            if(is_null($taxpayer)){
-                                abort(404);
-                            }
-                            return $taxpayer->first_name .' '. $taxpayer->last_name;
-                        } else {
-                            return $landLease->name;
-                        }
-                    }
-                )
-                ->searchable()
-                ->sortable(),
-            Column::make('Phone Number', 'landLease.updated_at')
-                ->format(
-                    function ($value, $row) {
-                        $landLease = LandLease::select('is_registered', 'taxpayer_id', 'phone')->find($row['landlease.id']);
-                        if ($landLease->is_registered == 1) {
-                            $taxpayer = Taxpayer::select('mobile')->find($landLease->taxpayer_id);
-                            if (is_null($taxpayer)){
-                                return 'N/A';
-                            }
-                            return $taxpayer->mobile;
-                        } else {
-                            return $landLease->phone;
-                        }
-                    }
-                )
-                ->searchable()
-                ->sortable(),
-            Column::make('Actions', 'landlease.id')->view('land-lease.includes.actions'),
+//            Column::make('Contact Person', 'landlease.created_at')
+//                ->format(
+//                    function ($value, $row) {
+//                        $landLease = LandLease::select('is_registered', 'taxpayer_id', 'name')->find
+//                        ($row['landlease.id']);
+//                        if (is_null($landLease)) {
+//                            return 'N/A';
+//                        }
+//                        if ($landLease->is_registered == 1) {
+//                            $taxpayer = Taxpayer::select('first_name', 'last_name')->find($landLease->taxpayer_id);
+//                            if (is_null($taxpayer)) {
+//                                abort(404);
+//                            }
+//                            return $taxpayer->first_name . ' ' . $taxpayer->last_name;
+//                        } else {
+//                            return $landLease->name;
+//                        }
+//                    }
+//                )
+//                ->searchable()
+//                ->sortable(),
+//            Column::make('Phone Number', 'landLease.completed_at')
+//                ->format(
+//                    function ($value, $row) {
+//
+//                        $landLease = LandLease::select('is_registered', 'taxpayer_id', 'phone','completed_at')
+//                            ->whereNotNull('landlease.completed_at')->where('id',$row['landlease.id'])->first();
+//                        dd($landLease);
+//                        if ($landLease->is_registered == 1) {
+//                            $taxpayer = Taxpayer::select('mobile')->find($landLease->taxpayer_id);
+//                            if (is_null($taxpayer)) {
+//                                return 'N/A';
+//                            }
+//                            return $taxpayer->mobile;
+//                        } else {
+//                            return $landLease->phone;
+//                        }
+//                    }
+//                )
+//                ->searchable()
+//                ->sortable(),
+            //Column::make('Actions', 'landlease.id')->view('land-lease.includes.actions'),
         ];
     }
 
@@ -210,7 +199,7 @@ class LeasePaymentReportTable extends DataTableComponent
     public function getBusinessName($id)
     {
         $businessLocation = BusinessLocation::find($id);
-        if (is_null($businessLocation)){
+        if (is_null($businessLocation)) {
             return 'N/A';
         }
         return $businessLocation->business->name . ' | ' . $businessLocation->name;
@@ -219,7 +208,7 @@ class LeasePaymentReportTable extends DataTableComponent
     public function getApplicantNo($id)
     {
         $taxpayer = Taxpayer::find($id);
-        if (is_null($taxpayer)){
+        if (is_null($taxpayer)) {
             return 'N/A';
         }
         return $taxpayer->reference_no;
@@ -228,7 +217,7 @@ class LeasePaymentReportTable extends DataTableComponent
     public function getBusinessZin($id)
     {
         $businessLocation = BusinessLocation::find($id);
-        if (is_null($businessLocation)){
+        if (is_null($businessLocation)) {
             return 'N/A';
         }
         return $businessLocation->zin;

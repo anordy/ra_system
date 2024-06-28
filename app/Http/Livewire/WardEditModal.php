@@ -37,7 +37,7 @@ class WardEditModal extends Component
     {
         $this->regions = Region::select('id', 'name')->get();
         $this->ward = Ward::find($id);
-        if(is_null($this->ward)){
+        if (is_null($this->ward)) {
             abort(404);
         }
         $this->name = $this->ward->name;
@@ -55,7 +55,6 @@ class WardEditModal extends Component
         if ($propertyName === 'region_id') {
             $this->districts = District::where('region_id', $this->region_id)->select('id', 'name')->get();
         }
-
     }
 
 
@@ -76,13 +75,17 @@ class WardEditModal extends Component
                 'name' => $this->name,
                 'district_id' => $this->district_id,
             ];
-            $this->triggerDualControl(get_class($this->ward), $this->ward->id, DualControl::EDIT, 'editing ward '.$this->ward->name.'', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->ward), $this->ward->id, DualControl::EDIT, 'editing ward ' . $this->ward->name . '', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.ward.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.ward.index');
         }

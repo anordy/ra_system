@@ -3,8 +3,6 @@
 @section('title', 'Hotel Tax Returns')
 
 @section('content')
-    {{-- @livewire('returns.return-summary', ['vars' => $vars])
-    @livewire('returns.return-card-report', ['paidData' => $paidData, 'unpaidData' => $unpaidData]) --}}
     <livewire:returns.hotel.hotel-card-one />
     <livewire:returns.hotel.hotel-card-two />
 

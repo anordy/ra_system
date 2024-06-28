@@ -25,3 +25,4 @@ public/cert/*.pfx
 storage/debugbar/
 config/debugbar.php
 public/vendor/livewire/livewire.js
+/storage/logs

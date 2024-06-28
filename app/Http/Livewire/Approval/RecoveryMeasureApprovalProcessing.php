@@ -60,8 +60,8 @@ class RecoveryMeasureApprovalProcessing extends Component
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
-        
-        $this->validate(['recovery_measures' => 'required','comments' => 'required|string|strip_tag',]);
+
+        $this->validate(['recovery_measures' => 'required', 'comments' => 'required|string|strip_tag',]);
         DB::beginTransaction();
         try {
 
@@ -128,7 +128,11 @@ class RecoveryMeasureApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -149,7 +153,11 @@ class RecoveryMeasureApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

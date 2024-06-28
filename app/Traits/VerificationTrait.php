@@ -18,6 +18,10 @@ trait VerificationTrait
 
     public function verify(PayloadInterface $object): bool
     {
+        if (config('app.env') == 'local') {
+            return true;
+        }
+        
         $stringData = "";
 
         foreach ($object::getPayloadColumns() as $column) {
@@ -68,6 +72,10 @@ trait VerificationTrait
 
     public function sign(PayloadInterface $object): bool
     {
+        if (config('app.env') == 'local') {
+            return true;
+        }
+
         $stringData = "";
 
         foreach ($object::getPayloadColumns() as $column) {

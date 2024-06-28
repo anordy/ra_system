@@ -48,6 +48,8 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['is_approved' => 1, 'name' => 'eGovernment Fee', 'code' => TaxType::GOVERNMENT_FEE, 'category' => 'other']);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '113101030005', 'name' => 'Hotel Airbnb', 'code' => TaxType::AIRBNB]);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '0', 'name' => 'Property Tax', 'code' => TaxType::PROPERTY_TAX]);
+        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '142203270234', 'name' => 'Chartered Sea', 'code' => TaxType::CHARTERED_SEA]);
+        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '142203270232', 'name' => 'Chartered Flight', 'code' => TaxType::CHARTERED_FLIGHT]);
 
     }
 }

@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-body">
-        <h6 class="text-uppercase mt-2 ml-2">Filled Return Details for {{ $return->financialMonth->name }},
+        <h6 class="text-uppercase mt-2 ml-2">Filed Return Details for {{ $return->financialMonth->name }},
             {{ $return->financialMonth->year->code }}</h6>
         <hr>
         <div class="row">
@@ -8,10 +8,10 @@
                 <div class="col-md-12">
                     <table class="table table-bordered table-sm">
                         <thead>
-                            <th style="width: 30%">Item Name(TZS)</th>
-                            <th style="width: 20%">Value</th>
-                            <th style="width: 10%">Rate</th>
-                            <th style="width: 20%">VAT</th>
+                            <th>Item Name(TZS)</th>
+                            <th>Value</th>
+                            <th>Rate</th>
+                            <th>VAT</th>
                         </thead>
                         <tbody>
                             @foreach ($return->configReturns as $item)
@@ -45,10 +45,10 @@
             <div class="col-md-12">
                 <table class="table table-bordered table-striped normal-text">
                     <thead>
-                        <th style="width: 30%">{{ __('Item Name') }}</th>
-                        <th style="width: 20%">{{ __('Value') }}</th>
-                        <th style="width: 10%">{{ __('Rate') }}</th>
-                        <th style="width: 20%">{{ __('Tax') }}</th>
+                        <th>{{ __('Item Name') }}</th>
+                        <th>{{ __('Value') }}</th>
+                        <th>{{ __('Rate') }}</th>
+                        <th>{{ __('Tax') }}</th>
                     </thead>
                     <tbody>
                         @foreach ($return_->configReturns as $item)
@@ -198,6 +198,21 @@
                     </tbody>
                 </table>
             </div>
+
+                @if ($return->attachment_path)
+                    <div class="col-md-4">
+                        <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
+                             class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                            <a target="_blank"
+                               href="{{ route('tax_investigation.files.show', encrypt($return->attachment_path)) }}"
+                               class="ml-1 font-weight-bold">
+                                Attachment
+                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endif
         </div>
     </div>
 </div>

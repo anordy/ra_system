@@ -37,7 +37,7 @@
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Month</span>
                             <p class="my-1">
-                                <span style="text-transform: capitalize">{{$return->return_month}}</span>
+                                <span class="text-uppercase">{{$return->return_month}}</span>
                             </p>
                         </div>
 
@@ -46,7 +46,7 @@
             </div>
 
             <div class="card">
-                <div class="card-header"><h6> {{$return->taxtype->name}} Return for the month of <span style="text-transform: capitalize">{{$return->return_month}}</span></h6></div>
+                <div class="card-header"><h6> {{$return->taxtype->name}} Return for the month of <span class="text-uppercase">{{$return->return_month}}</span></h6></div>
                 <div class="card-body">
                     <div>
                         <table class="table table-bordered">

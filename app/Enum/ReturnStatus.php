@@ -11,6 +11,10 @@ class ReturnStatus implements Status
     const SUBMITTED = 'submitted';
     const DRAFT = 'draft';
 
+    const PENDING = 'pending';
+    const APPROVED = 'approved';
+    const REJECTED = 'rejected';
+
 
     static function getConstants(): array
     {

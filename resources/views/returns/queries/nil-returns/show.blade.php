@@ -2,14 +2,6 @@
 
 @section('title','Return Queries')
 
-@section('css')
-    <style>
-        .table td, .table th {
-            border-top: none;
-        }
-
-    </style>
-@endsection
 @section('content')
     <div class="card rounded-0">
         <div class="card-header d-flex justify-content-between">
@@ -28,20 +20,20 @@
                         <tbody>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Tax Payer Name</td>
-                            <td class="my-1">{{$non_filer->business->taxpayer->first_name}} {{$non_filer->business->taxpayer->last_name}}</td>
+                            <td class="my-1">{{$non_filer->business->taxpayer->first_name ?? 'N/A'}} {{$non_filer->business->taxpayer->last_name ?? 'N/A'}}</td>
                         </tr>
 
                         <tr>
                             <td class="font-weight-bold text-uppercase">Business Name</td>
-                            <td class="my-1">{{ $non_filer->business->name  }}</td>
+                            <td class="my-1">{{ $non_filer->business->name ?? 'N/A'  }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Business Location Name</td>
-                            <td class="my-1">{{ $non_filer->businessLocation->name  }}</td>
+                            <td class="my-1">{{ $non_filer->businessLocation->name ?? 'N/A' }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Tax Region</td>
-                            <td class="my-1">{{ $non_filer->businessLocation->taxRegion->name }}</td>
+                            <td class="my-1">{{ $non_filer->businessLocation->taxRegion->name ?? 'N/A' }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Date of Business Commencement</td>
@@ -56,15 +48,15 @@
                         <tbody>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Tax Type</td>
-                            <td class="my-1">{{$non_filer->taxType->name }}</td>
+                            <td class="my-1">{{$non_filer->taxType->name ?? 'N/A' }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Phone</td>
-                            <td class="my-1">{{ $non_filer->business->mobile }}</td>
+                            <td class="my-1">{{ $non_filer->business->mobile ?? 'N/A' }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Email</td>
-                            <td class="my-1">{{ $non_filer->business->email }}</td>
+                            <td class="my-1">{{ $non_filer->business->email ?? 'N/A' }}</td>
                         </tr>
                         </tbody>
                     </table>

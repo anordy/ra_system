@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <h6 class="modal-title text-uppercase align-items-center">Reject Business Registration</h6>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
-                            class="fa fa-times-circle"></i></button>
+                            class="bi bi-x-circle-fill"></i></button>
             </div>
             <div class="modal-body">
                 <div class="row pr-3 pl-3">
@@ -39,7 +39,7 @@
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                    </div>Filled Incorrect Return for Correction</button>
+                    </div>Filed Incorrect Return for Correction</button>
             </div>
         </div>
     </div>

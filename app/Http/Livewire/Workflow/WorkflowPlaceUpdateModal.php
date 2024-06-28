@@ -29,7 +29,7 @@ class WorkflowPlaceUpdateModal extends Component
     public function mount($workflow, $placeName)
     {
         $this->workflow = Workflow::find($workflow);
-        if (is_null($this->workflow)){
+        if (is_null($this->workflow)) {
             abort(404, 'Workflow not found');
         }
         $places = json_decode($this->workflow->places, true);
@@ -79,10 +79,14 @@ class WorkflowPlaceUpdateModal extends Component
         try {
             $this->workflow->places = json_encode($workflowPlaces);
             $this->workflow->save();
-            dispatch( new WorkflowUpdateActors($this->workflow->id, $this->name));
+            dispatch(new WorkflowUpdateActors($this->workflow->id, $this->name));
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

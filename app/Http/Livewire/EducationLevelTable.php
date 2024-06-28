@@ -29,7 +29,7 @@ class EducationLevelTable extends DataTableComponent
             'class' => 'table-bordered table-sm',
         ]);
 
-        $this->setTdAttributes(function(Column $column, $row, $columnIndex, $rowIndex) {
+        $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
             if ($column->isField('id')) {
                 return [
                     'style' => 'width: 20%;',
@@ -38,8 +38,6 @@ class EducationLevelTable extends DataTableComponent
 
             return [];
         });
-
-
     }
 
     protected $listeners = [
@@ -59,52 +57,50 @@ class EducationLevelTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Approved</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                            <span class="badge badge-success p-2 rounded-0" >Approved</span>
                         HTML;
-                    }
-                    elseif ($value == 2) {
+                    } elseif ($value == 2) {
                         return <<< HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                            <span class="badge badge-danger p-2 rounded-0" >Rejected</span>
                         HTML;
                     }
-
                 })->html(),
             Column::make('Edit Status', 'is_updated')
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Updated</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                            <span class="badge badge-success p-2 rounded-0" >Updated</span>
                         HTML;
                     } elseif ($value == 2) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge danger p-2" >Rejected</span>
+                            <span class="badge badge-success p-2 rounded-0" >Rejected</span>
                         HTML;
                     }
                 })
                 ->html(),
             Column::make('Action', 'id')
-                ->format(function ($value){
-                    $value = "'".encrypt($value)."'";
+                ->format(function ($value) {
+                    $value = "'" . encrypt($value) . "'";
                     $edit = '';
                     $delete = '';
 
                     if (Gate::allows('setting-education-level-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                         $edit = <<< HTML
-                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'education-level-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                            <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="education-level-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
                         HTML;
                     }
 
                     if (Gate::allows('setting-education-level-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                         $delete = <<< HTML
-                            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash-fill"></i> </button>
                         HTML;
                     }
 
@@ -144,17 +140,21 @@ class EducationLevelTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $education = EducationLevel::find($data->id);
-            if(is_null($education)){
+            if (is_null($education)) {
                 abort(404);
             }
             $this->triggerDualControl(get_class($education), $education->id, DualControl::DELETE, 'deleting education level');
             DB::commit();
-            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
             return redirect()->route('settings.education-level.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
-            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
             return redirect()->route('settings.education-level.index');
         }
     }

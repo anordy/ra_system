@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <h5 class="modal-title text-uppercase">Update Place</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
-                        class="fa fa-times-circle"></i></button>
+                        class="bi bi-x-circle-fill"></i></button>
             </div>
             <div class="modal-body">
                 <div class="row pr-3 pl-3">
@@ -28,7 +28,7 @@
                     @if ($operator_type == 'user')
                         <div class="form-group col-lg-6">
                             <label class="">Users </label>
-                            <select class="form-control" wire:model.defer="user_id" multiple style="min-height: 250px;">
+                            <select class="form-control min-height-250" wire:model.defer="user_id" multiple >
                                 <option value="" disabled selected>Choose option</option>
                                 @foreach ($users as $row)
                                     <option value="{{ $row->id }}">{{ $row->full_name }}</option>
@@ -42,7 +42,7 @@
                     @if ($operator_type == 'role')
                         <div class="form-group col-lg-6">
                             <label class="">Roles </label>
-                            <select class="form-control" wire:model.defer="role_id" multiple style="min-height: 250px;">
+                            <select class="form-control" wire:model.defer="role_id" multiple >
                                 <option value="" disabled selected>Choose option</option>
                                 @foreach ($roles as $row)
                                     <option value="{{ $row->id }}">{{ $row->name }}</option>

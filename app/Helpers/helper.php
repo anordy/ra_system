@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\ExchangeRate;
+use App\Models\InterestRate;
 use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\User;
@@ -11,6 +13,47 @@ use App\Models\UserApprovalLevel;
 use Illuminate\Support\Facades\Auth;
 use App\Models\BusinessTaxTypeChange;
 use Illuminate\Support\Facades\DB;
+
+class TaxType
+{
+    const VAT = 'vat';
+    const HOTEL = 'hotel-levy';
+    const RESTAURANT = 'restaurant-levy';
+    const TOUR_OPERATOR = 'tour-operator-levy';
+    const LAND_LEASE = 'land-lease';
+    const PUBLIC_SERVICE = 'public-service';
+    const EXCISE_DUTY_MNO = 'excise-duty-mno';
+    const EXCISE_DUTY_BFO = 'excise-duty-bfo';
+    const PETROLEUM = 'petroleum-levy';
+    const AIRPORT_SERVICE_SAFETY_FEE = 'airport-service-safety-fee';
+    const AIRPORT_SERVICE_CHARGE = 'airport-service-charge';
+    const AIRPORT_SAFETY_FEE = 'airport-safety-fee';
+    const SEAPORT_SERVICE_TRANSPORT_CHARGE = 'seaport-service-transport-charge';
+    const SEAPORT_SERVICE_CHARGE = 'seaport-service-charge';
+    const SEAPORT_TRANSPORT_CHARGE = 'seaport-transport-charge';
+    const TAX_CONSULTANT = 'tax-consultant';
+    const STAMP_DUTY = 'stamp-duty';
+    const LUMPSUM_PAYMENT = 'lumpsum-payment';
+    const ELECTRONIC_MONEY_TRANSACTION = 'electronic-money-transaction';
+    const MOBILE_MONEY_TRANSFER = 'mobile-money-transfer';
+    const PENALTY = 'penalty';
+    const INTEREST = 'interest';
+    const INFRASTRUCTURE = 'infrastructure';
+    const RDF = 'road-development-fund';
+    const ROAD_LICENSE_FEE = 'road-license-fee';
+    const AUDIT = 'audit';
+    const VERIFICATION = 'verification';
+    const DISPUTES = 'disputes';
+    const WAIVER = 'waiver';
+    const OBJECTION = 'objection';
+    const WAIVER_OBJECTION = 'waiver-and-objection';
+    const INVESTIGATION = 'investigation';
+    const GOVERNMENT_FEE = 'government-fee';
+    const DEBTS = 'debts';
+    const AIRBNB = 'hotel-airbnb';
+
+    const PROPERTY_TAX = 'property-tax';
+}
 
 function getOperators($owner, $operator_type, $actors)
 {
@@ -145,12 +188,13 @@ function getWard($id)
     }
 }
 
-function getFormattedTinNo($getter){
-    if ($getter instanceof \App\Models\BusinessLocation){
+function getFormattedTinNo($getter)
+{
+    if ($getter instanceof \App\Models\BusinessLocation) {
         return implode("-", str_split($getter->business->tin, 3));
     }
 
-    if ($getter instanceof \App\Models\Business){
+    if ($getter instanceof \App\Models\Business) {
         return implode("-", str_split($getter->tin, 3));
     }
 
@@ -188,25 +232,24 @@ function roundOff($amount, $currency)
     return $roundedAmount;
 }
 
-// Helper function to convert integer to Roman numeral count
-
-
 function getHotelStarByBusinessId($business_id)
 {
     $hotel_star = DB::table('business_hotels as b')
-        ->leftJoin('hotel_stars as h','b.hotel_star_id','=','h.id')
-        ->where('b.business_id','=',$business_id)
-        ->select('h.infrastructure_charged','no_of_stars')->first();
+        ->leftJoin('hotel_stars as h', 'b.hotel_star_id', '=', 'h.id')
+        ->where('b.business_id', '=', $business_id)
+        ->select('h.infrastructure_charged', 'no_of_stars')->first();
     return $hotel_star;
 }
 
 function getTaxTypeName($taxTypeId) {
-    return \App\Models\TaxType::select('name')->findOrFail($taxTypeId)->name;
+    return \App\Models\TaxType::select('name')->find($taxTypeId)->name ?? '';
 }
 
-function getSubVatName($subVatId) {
+function getSubVatName($subVatId)
+{
     return \App\Models\Returns\Vat\SubVat::select('name')->find($subVatId)->name ?? '';
 }
+
 
 function formatEnum($string) {
     $string = str_replace( '_', ' ', $string);
@@ -248,4 +291,37 @@ function romanNumeralCount($number)
     }
 
     return $result;
+}
+
+function exchangeRate()
+{
+    $exchangeRate = ExchangeRate::where('currency', 'USD')
+        ->whereRaw("TO_CHAR(exchange_date, 'mm') = TO_CHAR(SYSDATE, 'mm') AND TO_CHAR(exchange_date, 'yyyy') = TO_CHAR(SYSDATE, 'yyyy')")
+        ->firstOrFail();
+    return $exchangeRate;
+}
+
+function interestRate()
+{
+    $interestRate = InterestRate::where('year', Carbon::now()->year)->firstOrFail();
+    return number_format($interestRate->rate, 4);
+
+}
+
+function getSourceName($model) {
+    if ($model == \App\Models\Returns\TaxReturn::class) {
+        return 'Return';
+    } else if ($model == \App\Models\TaxRefund\TaxRefund::class) {
+        return 'Tax Refund';
+    }  else if ($model == \App\Models\TaxAssessments\TaxAssessment::class) {
+        return 'Assessment';
+    }  else if ($model == App\Models\PublicService\PublicServiceReturn::class) {
+        return 'Public Service';
+    }  else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
+        return 'Public Service';
+    }  else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
+        return 'Public Service';
+    } else {
+        return 'N/A';
+    }
 }

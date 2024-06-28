@@ -72,11 +72,11 @@ class ChassisNumbersTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Synced</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Synced</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Synced</span>
+                            <span class="badge badge-success p-2 rounded-0" >Synced</span>
                         HTML;
                     }
                 })
@@ -85,11 +85,11 @@ class ChassisNumbersTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Synced</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Not Synced</span>
                         HTML;
                     } elseif ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Synced</span>
+                            <span class="badge badge-success p-2 rounded-0" >Synced</span>
                         HTML;
                     }
                 })
@@ -98,11 +98,11 @@ class ChassisNumbersTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == 1) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-info p-2" >Registration</span>
+                            <span class="badge badge-info p-2 rounded-0">Registration</span>
                         HTML;
                     } elseif ($value == 2) {
                         return <<<HTML
-                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Deregistration</span>
+                            <span class="badge badge-warning p-2 rounded-0" >Deregistration</span>
                         HTML;
                     }
                 })

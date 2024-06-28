@@ -1,13 +1,12 @@
 @extends('layouts.master')
 
-@section('title', 'Public Service Registrations')
+@section('title', 'Transport Service Registrations')
 
 @section('content')
     <div class="card mt-3">
         <div class="card-header">
-            Public Service Registrations
+            Transport Service Registrations
         </div>
-
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -28,7 +27,6 @@
                     @livewire('public-service.registration.registration-table', ['status' => \App\Enum\PublicServiceMotorStatus::PENDING])
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

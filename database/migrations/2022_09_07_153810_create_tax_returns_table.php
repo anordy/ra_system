@@ -22,8 +22,8 @@ class CreateTaxReturnsTable extends Migration
     {
         Schema::create('tax_returns', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('business_id')->index();
+            $table->unsignedBigInteger('location_id')->index();
 
             $table->unsignedBigInteger('return_id');
             $table->string('return_type');
@@ -31,8 +31,8 @@ class CreateTaxReturnsTable extends Migration
             $table->unsignedBigInteger('filed_by_id');
             $table->string('filed_by_type');
 
-            $table->unsignedBigInteger('tax_type_id');
-            $table->unsignedBigInteger('financial_month_id');
+            $table->unsignedBigInteger('tax_type_id')->index();
+            $table->unsignedBigInteger('financial_month_id')->index();
 
             $table->enum('currency', ['TZS', 'USD']);
 

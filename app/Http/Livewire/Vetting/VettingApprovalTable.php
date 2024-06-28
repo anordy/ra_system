@@ -2,26 +2,24 @@
 
 namespace App\Http\Livewire\Vetting;
 
-use App\Models\Region;
-use Carbon\Carbon;
-use App\Models\TaxType;
 use App\Enum\VettingStatus;
-use App\Models\Returns\TaxReturn;
-use App\Traits\ReturnFilterTrait;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Database\Eloquent\Builder;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
-use Rappasoft\LaravelLivewireTables\Views\Column;
+use App\Models\Returns\TaxReturn;
+use App\Traits\VettingFilterTrait;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VettingApprovalTable extends DataTableComponent
 {
-    use  ReturnFilterTrait;
+    use VettingFilterTrait;
 
-    protected $model     = TaxReturn::class;
-
+    protected $model = TaxReturn::class;
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
+    public $data = [];
     public $vettingStatus, $orderBy;
 
     public function mount($vettingStatus)
@@ -39,78 +37,63 @@ class VettingApprovalTable extends DataTableComponent
         }
     }
 
-    public function filters(): array
+    public function filterData($data)
     {
-        return [
-            SelectFilter::make('Tax Region')
-                ->options([
-                    'all'    => 'All',
-                    'Headquarter' => 'Head Quarter',
-                    'Mjini'  => 'Mjini',
-                    'Kaskazini Unguja'  => 'Kaskazini Unguja',
-                    'Kusini Unguja'  => 'Kusini Unguja',
-                    'Kaskazini Pemba'  => 'Kaskazini Pemba',
-                    'Kusini Pemba'  => 'Kusini Pemba',
-                ])
-                ->filter(function(Builder $builder, string $value) {
-                    if ($value != 'all') {
-                        $builder->whereHas('location.taxRegion', function($query) use($value) {
-                            $query->where('name', $value);
-                        });
-                    }
-                }),
-        ];
+        $this->data = $data;
+        $this->emit('$refresh');
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setFilterLayoutSlideDown();
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class'   => 'table-bordered table-sm',
+            'class' => 'table-bordered table-sm',
         ]);
-        
     }
+
 
     public function builder(): Builder
     {
-        return TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
-            ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
-            ->whereNotIn('code', [
-                TaxType::AIRPORT_SERVICE_CHARGE,
-                TaxType::SEAPORT_TRANSPORT_CHARGE,
-                TaxType::AIRPORT_SAFETY_FEE,
-                TaxType::SEAPORT_SERVICE_CHARGE,
-                TaxType::ROAD_LICENSE_FEE,
-                TaxType::INFRASTRUCTURE, 
-                TaxType::RDF
-            ])
-            ->where('parent',0)
-            ->where('is_business_lto',false) 
-            ->where('vetting_status', $this->vettingStatus)
-            ->whereHas('location.taxRegion', function ($query) {
-                $query->where('location', Region::DTD); //this is filter by department
-            })
-            ->whereHas('pinstance', function ($query) {
-                $query->where('status', '!=', 'completed');
-                $query->whereHas('actors', function ($query) {
-                    $query->where('user_id', auth()->id());
-                });
-            })
-            ->orderBy('created_at', $this->orderBy);
+        if ($this->vettingStatus === VettingStatus::SUBMITTED || $this->vettingStatus === VettingStatus::CORRECTED) {
+            $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
+                ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
+                ->where('parent', 0)
+                ->whereHas('pinstance', function ($query) {
+                    $query->where('status', '!=', 'completed');
+                    $query->whereHas('actors', function ($query) {
+                        $query->where('user_id', auth()->id());
+                    });
+                })
+                ->where('vetting_status', $this->vettingStatus);
+        } else {
+            $query = TaxReturn::with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion')
+                ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
+                ->where('parent', 0)
+                ->where('vetting_status', $this->vettingStatus);
+        }
+
+        // Apply filters
+        $returnTable = TaxReturn::getTableName();
+        $query = $this->dataFilter($query, $this->data, $returnTable);
+        $query->orderBy('created_at', $this->orderBy);
+        return $query;
     }
+
 
     public function columns(): array
     {
         return [
             Column::make('Taxpayer Name', 'business.taxpayer_name')
-            ->format(function ($value, $row) {
-                return $value ?? 'N/A';
-            })
-            ->sortable()->searchable(),
+                ->format(function ($value, $row) {
+                    return $value ?? 'N/A';
+                })
+                ->sortable()->searchable(),
             Column::make('Business Name', 'business.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Old ZRA No', 'business.previous_zno')
                 ->sortable()
                 ->searchable(),
             Column::make('Branch', 'location.name')

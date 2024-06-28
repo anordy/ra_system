@@ -2,11 +2,16 @@
 
 namespace App\Http\Livewire\LandLease;
 
+use App\Enum\LeaseStatus;
 use App\Models\LandLease;
+use App\Models\LandLeaseFiles;
+use App\Models\LeasePayment;
 use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use Carbon\Carbon;
+use DateInterval;
+use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,18 +24,49 @@ use Illuminate\Support\Facades\Gate;
 class LandLeaseView extends Component
 {
     use CustomAlert, PaymentsTrait;
+
     public $landLease;
     public $taxType;
     public $leasePayment;
+    public $unpaidLease;
+    public $advancePaymentStatus;
+    public const ADVANCE_PAYMENT_MAX_YEARS = 3;
 
     //mount function
+    public $leaseDocuments;
+    /**
+     * @var string
+     */
+    public $dueDate;
+    public $leaseLastPaid;
+
     public function mount($enc_id)
     {
+
         $this->landLease = LandLease::find(decrypt($enc_id));
-        if(is_null($this->landLease)){
+        if (is_null($this->landLease)) {
             abort(404);
         }
+        $this->leaseDocuments = $this->leaseDocuments($this->landLease->id);
+        $statuses = [
+            LeaseStatus::IN_ADVANCE_PAYMENT,
+            LeaseStatus::LATE_PAYMENT,
+            LeaseStatus::ON_TIME_PAYMENT,
+            LeaseStatus::COMPLETE
+        ];
+
         $this->taxType = TaxType::where('code', TaxType::LAND_LEASE)->first();
+        $this->unpaidLease = LeasePayment::where('land_lease_id', $this->landLease->id)->whereNotIn('status', $statuses)->exists();
+
+        //check for advance payment > 3 years
+        if ($this->landLease->rent_commence_date > now()->addYears(self::ADVANCE_PAYMENT_MAX_YEARS)) {
+            $this->advancePaymentStatus = true;
+        } else {
+            $this->advancePaymentStatus = false;
+        }
+
+        $this->dueDate = $this->getDueDate();
+        //$this->leaseLastPaid = $this->getLastLeasePayment();
     }
 
     public function render()
@@ -41,7 +77,7 @@ class LandLeaseView extends Component
     public function controlNumber()
     {
 
-        if(!Gate::allows('land-lease-generate-control-number')){
+        if (!Gate::allows('land-lease-generate-control-number')) {
             abort(403);
         }
 
@@ -127,20 +163,42 @@ class LandLeaseView extends Component
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
         }
     }
 
-    public function regenerate(){
-        if(!Gate::allows('land-lease-generate-control-number')){
+    public function regenerate()
+    {
+        if (!Gate::allows('land-lease-generate-control-number')) {
             abort(403);
         }
         $response = $this->regenerateControlNo($this->return->bill);
-        if ($response){
+        if ($response) {
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             return redirect()->back()->getTargetUrl();
         }
         $this->customAlert('error', 'Control number could not be generated, please try again later.');
+    }
+
+    public function getDueDate(): string
+    {
+        $rentCommenceDate = new DateTime($this->landLease->rent_commence_date);
+        return $rentCommenceDate->add(new DateInterval('P' . (int)$this->landLease->valid_period_term . 'Y'))
+            ->format('d F Y');
+    }
+
+//    public function getLastLeasePayment()
+//    {
+//        return LeasePayment::where('land_lease_id', $this->landLease->id)->orderBy('id', 'desc')->first()->paid_at;
+//    }
+
+    public function leaseDocuments($id)
+    {
+        return LandLeaseFiles::select('name','file_path')->where('land_lease_id', $id)->get();
     }
 }

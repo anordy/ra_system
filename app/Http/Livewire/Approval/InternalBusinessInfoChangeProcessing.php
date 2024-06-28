@@ -4,31 +4,30 @@ namespace App\Http\Livewire\Approval;
 
 use App\Enum\InternalInfoChangeStatus;
 use App\Enum\InternalInfoType;
-use App\Models\Business;
 use App\Models\BusinessHotel;
 use App\Models\BusinessLocation;
 use App\Models\BusinessType;
 use App\Models\Currency;
 use App\Models\HotelStar;
-use App\Models\InternalBusinessUpdate;
 use App\Models\ISIC1;
 use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
+use App\Models\LumpSumPayment;
 use App\Models\Returns\LumpSum\LumpSumConfig;
 use App\Models\Returns\Vat\SubVat;
+use App\Models\TaxDepartment;
 use App\Models\Taxpayer;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
-use Exception;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
 use App\Traits\CustomAlert;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 
 class InternalBusinessInfoChangeProcessing extends Component
 {
@@ -43,7 +42,7 @@ class InternalBusinessInfoChangeProcessing extends Component
 
     public $currentEffectiveDate, $newEffectiveDate;
 
-    public $selectedTaxTypes = [], $taxTypes = [], $lumpsumPayment;
+    public $selectedTaxTypes = [], $taxTypes = [], $lumpsumPayment = [], $currentTaxTypes = [];
     public $subVatOptions = [];
     public $showLumpsumOptions = false;
     public $vat_id;
@@ -54,14 +53,15 @@ class InternalBusinessInfoChangeProcessing extends Component
     public $currentTaxRegion, $newTaxRegion, $currentTaxRegionId;
     public $current_isiic_i, $current_isiic_ii, $current_isiic_iii, $current_isiic_iv;
     public $isiic_i, $isiic_ii, $isiic_iii, $isiic_iv;
-    public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList  = [];
+    public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList = [];
     public $newOwnerZno;
     public $defaultSubVatOptions = [];
+    public $taxDepartment = [], $selectedDepartment, $currentDepartmentId;
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId   = decrypt($modelId);
+        $this->modelId = decrypt($modelId);
         $this->info = $modelName::findOrFail($this->modelId);
 
         $this->registerWorkflow($modelName, $this->modelId);
@@ -80,9 +80,10 @@ class InternalBusinessInfoChangeProcessing extends Component
         }
 
         if ($this->infoType === InternalInfoType::TAX_TYPE) {
-            $this->taxTypes  = TaxType::main()->get();
+            $this->taxTypes = TaxType::main()->get();
             $this->vat_id = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
             $this->selectedTaxTypes = json_decode($this->info->new_values, TRUE)['selectedTaxTypes'];
+            $this->currentTaxTypes = json_decode($this->info->old_values, TRUE);
             $this->lumpsumPayment = json_decode($this->info->new_values, TRUE)['lumpsumPayment'] ?? null;
         }
 
@@ -105,11 +106,14 @@ class InternalBusinessInfoChangeProcessing extends Component
         }
 
         if ($this->infoType === InternalInfoType::TAX_REGION) {
-            $this->taxRegions = TaxRegion::select('id', 'name')->get();
             $this->currentTaxRegion = json_decode($this->info->old_values, TRUE);
             $this->newTaxRegion = json_decode($this->info->new_values, TRUE);
             $this->currentTaxRegionId = $this->currentTaxRegion['tax_region_id'];
             $this->taxRegionId = $this->newTaxRegion['tax_region_id'];
+            $this->selectedDepartment = TaxRegion::findOrFail($this->taxRegionId, ['department_id'])->department_id;
+            $this->currentDepartmentId = $this->selectedDepartment;
+            $this->taxDepartment = TaxDepartment::select('id', 'name')->get();
+            $this->taxRegions = TaxRegion::select('id', 'name')->where('department_id', $this->selectedDepartment)->get();
         }
 
         if ($this->infoType === InternalInfoType::BUSINESS_OWNERSHIP) {
@@ -143,7 +147,6 @@ class InternalBusinessInfoChangeProcessing extends Component
             $this->current_isiic_ii = $currentData['isiic_ii'];
             $this->current_isiic_iii = $currentData['isiic_iii'];
             $this->current_isiic_iv = $currentData['isiic_iv'];
-
         }
     }
 
@@ -153,75 +156,108 @@ class InternalBusinessInfoChangeProcessing extends Component
         $transition = $transition['data']['transition'];
 
         $this->validate([
-            'comments' => 'required|string|strip_tag',
+            'comments' => 'required|alpha_gen|strip_tag',
         ]);
+
+        if ($this->checkTransition('registration_manager_review')) {
+            $this->validate([
+                'newHotelStar' => 'required_if:infoType,hotel_stars|nullable|numeric',
+                'newEffectiveDate' => 'required_if:infoType,effective_date|nullable|date',
+                'ltoStatus' => 'required_if:infoType,lto|nullable|boolean',
+                'electricStatus' => 'required_if:infoType,electric|nullable|boolean',
+                'taxRegionId' => 'required_if:infoType,tax_region|nullable|numeric',
+                'selectedDepartment' => 'required_if:infoType,tax_region|nullable|numeric',
+                'businessCurrencyId' => 'required_if:infoType,currency|nullable|numeric',
+                'isiic_i' => 'required_if:infoType,isic|nullable|numeric|exists:isic1s,id',
+                'isiic_ii' => 'required_if:infoType,isic|nullable|numeric|exists:isic2s,id',
+                'isiic_iii' => 'required_if:infoType,isic|nullable|numeric|exists:isic3s,id',
+                'isiic_iv' => 'required_if:infoType,isic|nullable|numeric|exists:isic4s,id',
+            ]);
+
+            if ($this->infoType === InternalInfoType::TAX_TYPE) {
+                if ($this->showLumpsumOptions == true) {
+                    $this->validate(
+                        [
+                            'selectedTaxTypes.*.annual_estimate' => 'required|integer',
+                            'selectedTaxTypes.*.quarters' => 'required|integer|between:1,12',
+                        ],
+                        [
+                            'selectedTaxTypes.*.annual_estimate.required' => 'Annual estimation is required',
+                            'selectedTaxTypes.*.annual_estimate.integer' => 'Please enter the valid Annual Estimate',
+                            'selectedTaxTypes.*.quarters.required' => 'Please enter the valid payment Quaters',
+                            'selectedTaxTypes.*.quarters.between' => 'Please enter Quaters between 1 to 12',
+                        ]
+                    );
+                } else {
+                    $this->validate([
+                        'selectedTaxTypes' => 'required',
+                        'selectedTaxTypes.*.currency' => 'required',
+                        'selectedTaxTypes.*.tax_type_id' => 'required|distinct'
+                    ], [
+                        'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
+                        'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is required',
+                        'selectedTaxTypes.*.currency.required' => 'Currency is required',
+                    ]);
+                }
+            }
+        }
 
         try {
             DB::beginTransaction();
 
             if ($this->checkTransition('registration_manager_review')) {
-               $this->validate([
-                   'newHotelStar' => 'required_if:infoType,hotel_stars',
-                   'newEffectiveDate' => 'required_if:infoType,effective_date',
-                   'ltoStatus' => 'required_if:informationType,lto',
-                   'electricStatus' => 'required_if:informationType,electric',
-                   'taxRegionId' => 'required_if:informationType,tax_region',
-                   'businessCurrencyId' => 'required_if:informationType,currency',
-                   'isiic_i' => 'required_if:informationType,isic|numeric|exists:isic1s,id',
-                   'isiic_ii' => 'required_if:informationType,isic|numeric|exists:isic2s,id',
-                   'isiic_iii' => 'required_if:informationType,isic|numeric|exists:isic3s,id',
-                   'isiic_iv' => 'required_if:informationType,isic|numeric|exists:isic4s,id',
-               ]);
 
-               if ($this->infoType === InternalInfoType::EFFECTIVE_DATE) {
-                   $this->info->update(['new_values' => json_encode(['effective_date' => $this->newEffectiveDate])]);
-               }
+                if ($this->infoType === InternalInfoType::EFFECTIVE_DATE) {
+                    $this->info->update(['new_values' => json_encode(['effective_date' => $this->newEffectiveDate])]);
+                }
 
                 $lumpsumPayment = [];
 
-               if ($this->infoType === InternalInfoType::TAX_TYPE) {
-                   if ($this->showLumpsumOptions == true) {
-                       $currency = Arr::pluck($this->selectedTaxTypes, 'currency');
-                       $annualEstimate = Arr::pluck($this->selectedTaxTypes, 'annual_estimate');
-                       $quarters = Arr::pluck($this->selectedTaxTypes, 'quarters');
+                if ($this->infoType === InternalInfoType::TAX_TYPE) {
+                    if ($this->showLumpsumOptions == true) {
+                        $currency = Arr::pluck($this->selectedTaxTypes, 'currency');
+                        $annualEstimate = Arr::pluck($this->selectedTaxTypes, 'annual_estimate');
+                        $quarters = Arr::pluck($this->selectedTaxTypes, 'quarters');
 
-                       $this->validate(
-                           [
-                               'selectedTaxTypes.*.annual_estimate' => 'required|integer',
-                               'selectedTaxTypes.*.quarters' => 'required|integer|between:1,12',
-                           ],
-                           [
-                               'selectedTaxTypes.*.annual_estimate.required' => 'Annual estimation is required',
-                               'selectedTaxTypes.*.annual_estimate.integer' => 'Please enter the valid Annual Estimate',
-                               'selectedTaxTypes.*.quarters.required' => 'Please enter the valid payment Quaters',
-                               'selectedTaxTypes.*.quarters.between' => 'Please enter Quaters between 1 to 12',
-                           ]
-                       );
+                        // Save after final approval
+                        $lumpsumPayment = [
+                            'filed_by_id' => auth()->user()->id,
+                            'business_id' => $this->info->business_id,
+                            'business_location_id' => $this->info->location_id,
+                            'annual_estimate' => $annualEstimate[0],
+                            'payment_quarters' => $quarters[0],
+                            'currency' => $currency[0],
+                        ];
+                    }
 
-                       // Save after final approval
-                       $lumpsumPayment = [
-                           'filed_by_id' => auth()->user()->id,
-                           'business_id' => $this->info->business_id,
-                           'business_location_id' => $this->info->location_id,
-                           'annual_estimate' => $annualEstimate[0],
-                           'payment_quarters' => $quarters[0],
-                           'currency' => $currency[0],
-                       ];
-                   }
+                    // Check if SubVat is selected and If business is not hotel don't assign hotel levy
+                    foreach ($this->selectedTaxTypes as $type) {
+                        $tax = TaxType::findOrFail($type['tax_type_id'], ['code']);
 
-                   $newTaxes = [
-                       'selectedTaxTypes' => $this->selectedTaxTypes,
-                       'lumpsumPayment' => $lumpsumPayment
-                   ];
+                        if ($tax->code === TaxType::VAT && empty($type['sub_vat_id'])) {
+                            $this->customAlert('warning', 'Please assign VAT Category Type when VAT Tax Type is selected');
+                            return;
+                        }
 
-                   $this->info->update([
-                       'new_values' => json_encode($newTaxes),
-                   ]);
-               }
+                        if ($tax->code === TaxType::HOTEL && $this->info->business->business_type != BusinessType::HOTEL) {
+                            $this->customAlert('warning', 'The business must be of Hotel type in order to assign Hotel Levy Tax Type');
+                            return;
+                        }
+                    }
 
-               if ($this->infoType === InternalInfoType::ELECTRIC) {
-                   $this->info->update(['new_values' => $this->electricStatus]);
-               }
+                    $newTaxes = [
+                        'selectedTaxTypes' => $this->selectedTaxTypes,
+                        'lumpsumPayment' => $lumpsumPayment
+                    ];
+
+                    $this->info->update([
+                        'new_values' => json_encode($newTaxes),
+                    ]);
+                }
+
+                if ($this->infoType === InternalInfoType::ELECTRIC) {
+                    $this->info->update(['new_values' => $this->electricStatus]);
+                }
 
                 if ($this->infoType === InternalInfoType::LTO) {
                     $this->info->update(['new_values' => $this->ltoStatus]);
@@ -251,43 +287,54 @@ class InternalBusinessInfoChangeProcessing extends Component
                 }
             }
 
-            if ($this->checkTransition('director_of_trai_review')) {
-                
+            if ($this->checkTransition('cdt_review')) {
+
                 // Update Hotel Star Rating
                 if ($this->subject->type === InternalInfoType::HOTEL_STARS) {
-                    $businessHotel = BusinessHotel::where('location_id', $this->subject->location_id)->firstOrFail();
+                    $businessHotel = BusinessHotel::select('id', 'hotel_star_id')->where('location_id', $this->subject->location_id)->firstOrFail();
                     $businessHotel->update(['hotel_star_id' => json_decode($this->subject->new_values)->id]);
                 }
 
                 // Update Effective Date
                 if ($this->subject->type === InternalInfoType::EFFECTIVE_DATE) {
-                    BusinessLocation::findOrFail($this->info->location_id)->update(['effective_date' => $this->newEffectiveDate]);
+                    BusinessLocation::findOrFail($this->info->location_id, ['id', 'effective_date'])->update(['effective_date' => $this->newEffectiveDate]);
                 }
 
                 // Update Tax Types
                 if ($this->subject->type === InternalInfoType::TAX_TYPE) {
                     $this->info->business->taxTypes()->detach();
 
-                    if ($this->showLumpsumOptions == true) {
-                        DB::table('lump_sum_payments')->insert([
-                            'filed_by_id' => auth()->user()->id,
-                            'business_id' => $this->info->business_id,
-                            'business_location_id' => $this->info->location_id,
-                            'annual_estimate' => $this->lumpsumPayment['annualEstimate'][0],
-                            'payment_quarters' => $this->lumpsumPayment['quarters'][0],
-                            'currency' => $this->lumpsumPayment['currency'][0],
-                        ]);
-                    }
 
                     foreach ($this->selectedTaxTypes as $type) {
-                        DB::table('business_tax_type')->insert([
-                            'business_id' => $this->info->business_id,
-                            'tax_type_id' => $type['tax_type_id'],
-                            'sub_vat_id' => $type['sub_vat_id'] ?? null,
-                            'currency' => $type['currency'],
-                            'created_at' => Carbon::now(),
-                            'status' => 'current-used'
-                        ]);
+                        $taxType = TaxType::findOrFail($type['tax_type_id'], ['id', 'code']);
+                        if ($taxType->code != TaxType::LUMPSUM_PAYMENT) {
+                            DB::table('business_tax_type')->insert([
+                                'business_id' => $this->info->business_id,
+                                'tax_type_id' => $type['tax_type_id'],
+                                'sub_vat_id' => $type['sub_vat_id'] ?? null,
+                                'currency' => $type['currency'],
+                                'created_at' => Carbon::now(),
+                                'status' => 'current-used'
+                            ]);
+                        } else {
+                            DB::table('business_tax_type')->insert([
+                                'business_id' => $this->info->business_id,
+                                'tax_type_id' => $type['tax_type_id'],
+                                'sub_vat_id' => $type['sub_vat_id'] ?? null,
+                                'currency' => $type['currency'],
+                                'created_at' => Carbon::now(),
+                                'status' => 'current-used'
+                            ]);
+                            LumpSumPayment::where('business_location_id', $this->info->location_id)->delete();
+                            LumpSumPayment::create([
+                                'filed_by_id' => auth()->user()->id,
+                                'business_id' => $this->info->business_id,
+                                'business_location_id' => $this->info->location_id,
+                                'annual_estimate' => $type['annual_estimate'],
+                                'payment_quarters' => $type['quarters'],
+                                'currency' => $type['currency'],
+                            ]);
+                        }
                     }
                 }
 
@@ -357,7 +404,11 @@ class InternalBusinessInfoChangeProcessing extends Component
             $this->flash('success', 'Application Approved Successful', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -376,7 +427,11 @@ class InternalBusinessInfoChangeProcessing extends Component
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
                 $this->flash('success', 'Application sent for correction', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
@@ -384,26 +439,35 @@ class InternalBusinessInfoChangeProcessing extends Component
 
     public function isiiciChange($value)
     {
-        $this->isiiciiList  = ISIC2::where('isic1_id', $value)->get();
-        $this->isiic_ii     = null;
-        $this->isiic_iii    = null;
-        $this->isiic_iv     = null;
+        $this->isiiciiList = ISIC2::where('isic1_id', $value)->get();
+        $this->isiic_ii = null;
+        $this->isiic_iii = null;
+        $this->isiic_iv = null;
         $this->isiiciiiList = [];
-        $this->isiicivList  = [];
+        $this->isiicivList = [];
     }
 
     public function isiiciiChange($value)
     {
         $this->isiiciiiList = ISIC3::where('isic2_id', $value)->get();
-        $this->isiic_iii    = null;
-        $this->isiic_iv     = null;
-        $this->isiicivList  = [];
+        $this->isiic_iii = null;
+        $this->isiic_iv = null;
+        $this->isiicivList = [];
     }
 
     public function isiiciiiChange($value)
     {
         $this->isiicivList = ISIC4::where('isic3_id', $value)->get();
-        $this->isiic_iv    = null;
+        $this->isiic_iv = null;
+    }
+
+    public function selectedDepartment($value)
+    {
+        if (!is_null((int)$value)) {
+            $this->taxRegions = TaxRegion::where('department_id', $value)->get();
+        } else {
+            $this->taxRegions = [];
+        }
     }
 
 
@@ -436,7 +500,7 @@ class InternalBusinessInfoChangeProcessing extends Component
 
         if (end($property) === 'tax_type_id') {
             // Pluck id
-            $this->Ids  = Arr::pluck($this->selectedTaxTypes, 'tax_type_id');
+            $this->Ids = Arr::pluck($this->selectedTaxTypes, 'tax_type_id');
 
             // Get lumpsum ID
             $lumpSumId = TaxType::query()->select('id')->where('code', TaxType::LUMPSUM_PAYMENT)->firstOrFail()->id;
@@ -457,22 +521,21 @@ class InternalBusinessInfoChangeProcessing extends Component
             // compare if plucked ID are the same as Lumpsum id
             if (in_array($lumpSumId, $this->Ids)) {
                 $this->showLumpsumOptions = true;
-                $this->selectedTaxTypes   = [];
+                $this->selectedTaxTypes = [];
                 $this->selectedTaxTypes[] = [
-                    'tax_type_id'     => $lumpSumId,
-                    'currency'        => '',
+                    'tax_type_id' => $lumpSumId,
+                    'currency' => '',
                     'annual_estimate' => '',
-                    'quarters'        => 4,
+                    'quarters' => 4,
                 ];
 
                 $this->annualSales = LumpSumConfig::select('id', 'min_sales_per_year', 'max_sales_per_year', 'payments_per_year', 'payments_per_installment')->get()->toArray();
-
             } else {
                 $this->showLumpsumOptions = false;
             }
 
             if (in_array($vatId, $this->Ids)) {
-                $this->subVatOptions  = SubVat::select('id', 'name')->where('is_approved', 1)->get();
+                $this->subVatOptions = SubVat::select('id', 'name')->where('is_approved', 1)->get();
                 $this->defaultSubVatOptions = $this->subVatOptions;
             }
         }
@@ -482,9 +545,9 @@ class InternalBusinessInfoChangeProcessing extends Component
     {
         $this->selectedTaxTypes[] = [
             'tax_type_id' => '',
-            'currency'    => '',
-            'sub_vat_id'  => '',
-            'sub_vat_name'  => '',
+            'currency' => '',
+            'sub_vat_id' => '',
+            'sub_vat_name' => '',
             'show_hide_options' => true
         ];
     }
@@ -494,24 +557,27 @@ class InternalBusinessInfoChangeProcessing extends Component
         unset($this->selectedTaxTypes[$index]);
     }
 
-    public function checkArrayKey($array, $column, $value, $givenKey) {
+    public function checkArrayKey($array, $column, $value, $givenKey)
+    {
         $keys = array_keys(array_column($array, $column), $value);
         $checkedKey = (count($keys) > 0) ? $keys[0] : false;
         return $checkedKey == $givenKey;
     }
 
-    public function subCategorySearchUpdate($key, $value){
+    public function subCategorySearchUpdate($key, $value)
+    {
         $this->selectedTaxTypes[$key]['show_hide_options'] = true;
-        if (strlen($value) >= 3){
-            $this->subVatOptions  = SubVat::select('id', 'name')->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$value}%"])->get();
-        } else{
-            $this->subVatOptions  = $this->defaultSubVatOptions;
+        if (strlen($value) >= 3) {
+            $this->subVatOptions = SubVat::select('id', 'name')->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$value}%"])->get();
+        } else {
+            $this->subVatOptions = $this->defaultSubVatOptions;
         }
     }
 
-    public function selectSubVat($key, $subVat){
+    public function selectSubVat($key, $subVat)
+    {
         $sameKey = $this->checkArrayKey($this->selectedTaxTypes, 'sub_vat_id', $subVat['id'], $key);
-        if (in_array($subVat['id'], array_column($this->selectedTaxTypes, 'sub_vat_id')) && !$sameKey){
+        if (in_array($subVat['id'], array_column($this->selectedTaxTypes, 'sub_vat_id')) && !$sameKey) {
             $this->alert('warning', 'Sub Vat is already selected');
             return;
         }

@@ -24,12 +24,12 @@ class TaxVerificationAssessmentController extends Controller
         }
         $tableName = 'verification.verification-assessment-table';
 
-        return view('verification.assessment.index', compact('tableName'));
+        return view('verifications.assessments.index', compact('tableName'));
     }
 
     public function show($id)
     {
-        if (!Gate::allows('verification-view')) {
+        if (!Gate::allows('verification-view-all')) {
             abort(403);
         }
         $verification = TaxVerification::with('assessment', 'officers')->findOrFail(decrypt($id));
@@ -70,7 +70,7 @@ class TaxVerificationAssessmentController extends Controller
         } elseif ($return instanceof PortReturn) {
             $viewRender = 'returns.port.details';
 
-            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+            return view('verifications.show', compact('return', 'verification', 'viewRender'));
         }
     }
 }

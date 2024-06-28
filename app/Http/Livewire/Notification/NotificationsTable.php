@@ -7,7 +7,6 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
-use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -26,7 +25,6 @@ class NotificationsTable extends Component
             ->where('notifiable_id', auth()->id())
             ->whereNull('read_at')
             ->increment('seen');
-
     }
 
     public function toggleSelectAll()
@@ -44,7 +42,7 @@ class NotificationsTable extends Component
     public function read($notification)
     {
         $notification = Notification::find($notification['id']);
-        if(is_null($notification)){
+        if (is_null($notification)) {
             abort(404);
         }
         $data = $notification->data;
@@ -53,14 +51,14 @@ class NotificationsTable extends Component
             $notification->read_at = now();
             $notification->save();
             DB::commit();
-            if (Route::has($data->href)){
-                return redirect()->route($data->href, !empty($data->hrefParameters) ? encrypt($data->hrefParameters) : null);
-            } else {
-                return redirect()->route('notifications');
-            }
+            return redirect()->route($data->href, !empty($data->hrefParameters) ? encrypt($data->hrefParameters) : null);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -73,6 +71,7 @@ class NotificationsTable extends Component
             ->whereNull('read_at')
             ->latest()
             ->paginate(10);
+
         return view('livewire.notifications.notifications-table', [
             'notifications' => $notifications
         ]);

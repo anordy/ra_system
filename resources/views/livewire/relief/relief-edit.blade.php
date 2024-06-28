@@ -123,12 +123,12 @@
                 <table class="table table-border table-striped">
                     <thead>
                         <tr>
-                            <th scope="col" style="text-align:center">SN</th>
-                            <th scope="col" style="text-align:center">Item Name *</th>
-                            <th scope="col" style="text-align:center">Quantity *</th>
-                            <th scope="col" style="text-align:center">Unit Cost*</th>
-                            <th scope="col" style="text-align:center">Unit Name</th>
-                            <th scope="col" style="text-align:center">Amount</th>
+                            <th scope="col" class="text-center">SN</th>
+                            <th scope="col" class="text-center">Item Name *</th>
+                            <th scope="col" class="text-center">Quantity *</th>
+                            <th scope="col" class="text-center">Unit Cost*</th>
+                            <th scope="col" class="text-center">Unit Name</th>
+                            <th scope="col" class="text-center">Amount</th>
                         </tr>
                     </thead>
                     @foreach ($items as $i => $item)
@@ -190,7 +190,7 @@
                                     {{ number_format($item['amount']) }}
                                 @endif
                             </td>
-                            <td style="min-width: 100%">
+                            <td class="min-width-100">
                                 @if (count($items) > 1)
                                     <div class="text-right mt-2">
                                         <button class="btn btn-danger btn-sm"
@@ -299,16 +299,16 @@
                                     <div class="col-11 g-0">
                                         <a class="file-item" target="_blank"
                                             href="{{ route('reliefs.get.attachment', ['path' => encrypt($reliefAttachment['file_path'])]) }}">
-                                            <i class="bi bi-file-earmark-pdf-fill px-2"
-                                                style="font-size: x-large"></i>
-                                            <div style="font-weight: 500;" class="ml-1">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"
+                                                ></i>
+                                            <div class="ml-1 font-weight-bold">
                                                 {{ $reliefAttachment['file_name'] }}
                                             </div>
                                         </a>
 
                                     </div>
-                                    <div class="col-1 g-0 ">
-                                        <a style="background-color: #fc2020; color:#f5eded; "
+                                    <div class="col-1 g-0">
+                                        <a class="bg-danger"
                                             wire:click="removePreviousAttachment({{ $reliefAttachment['id'] }})"
                                             wire:loading.attr="disabled">
                                             <i class="bi bi-x-lg mr-1"></i>
@@ -380,7 +380,7 @@
                                 </div>
                             </td>
 
-                            <td style="min-width: 100%">
+                            <td class="min-width-100">
                                 @if (count($attachments) > 1)
                                     <div class="text-right mt-2">
                                         <button class="btn btn-danger btn-sm"

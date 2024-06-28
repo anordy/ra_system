@@ -10,7 +10,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class LandLease extends Model implements Auditable
 {
     use HasFactory, \OwenIt\Auditing\Auditable;
-
+    protected $guarded = [];
     public function region()
     {
         return $this->belongsTo(Region::class, 'region_id');
@@ -40,6 +40,14 @@ class LandLease extends Model implements Auditable
     {
         return $this->belongsTo(Taxpayer::class, 'created_by');
     }
+    public function completedBy()
+    {
+        return $this->belongsTo(User::class, 'completed_by');
+    }
+  public function editedBy()
+    {
+        return $this->belongsTo(User::class, 'edited_by');
+    }
 
     public function zmBills()
     {
@@ -63,5 +71,14 @@ class LandLease extends Model implements Auditable
 
     public function leasePayments(){
         return $this->hasMany(LeasePayment::class);
+    }
+
+    public function partialPayments()
+    {
+        return $this->hasMany(PartialPayment::class);
+    }
+    public function leaseCurrencyApplication()
+    {
+        return $this->hasMany(LeaseCurrencyChangeApplication::class);
     }
 }

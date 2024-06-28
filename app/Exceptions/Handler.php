@@ -58,6 +58,12 @@ class Handler extends ExceptionHandler
             abort(500, CustomMessage::ERROR);
         }
 
+        if ($exception instanceof \DivisionByZeroError) {
+            Log::error('DIVISION-BY-ZERO-ERROR', [$exception]);
+            session()->flash('error', __('Possible Division By Zero Detected'));
+            return back();
+        }
+
         return parent::render($request, $exception);
     }
 }

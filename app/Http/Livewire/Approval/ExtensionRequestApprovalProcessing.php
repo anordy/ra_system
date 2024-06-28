@@ -53,9 +53,10 @@ class ExtensionRequestApprovalProcessing extends Component
                 'extendTo' => [
                     'required',
                     'date',
-                    'after:'. $this->subject->extensible->curr_payment_due_date,
-                    'before:'. Carbon::make($this->subject->extensible->curr_payment_due_date)->addYear()->toDateTimeString()
-            ]]);
+                    'after:' . $this->subject->extensible->curr_payment_due_date,
+                    'before:' . Carbon::make($this->subject->extensible->curr_payment_due_date)->addYear()->toDateTimeString()
+                ]
+            ]);
         }
 
         DB::beginTransaction();
@@ -75,7 +76,7 @@ class ExtensionRequestApprovalProcessing extends Component
                 ]);
 
                 // If extended date is greater than current bill expiration date.
-                if ($this->subject->extend_to->greaterThan($extensible->bill->expire_date)){
+                if ($this->subject->extend_to->greaterThan($extensible->bill->expire_date)) {
                     $now = Carbon::now();
                     UpdateBill::dispatch($extensible->bill, $this->subject->extend_to)->delay($now->addSeconds(2));
                 }
@@ -92,7 +93,11 @@ class ExtensionRequestApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
@@ -120,7 +125,11 @@ class ExtensionRequestApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }

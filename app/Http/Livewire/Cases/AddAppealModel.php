@@ -47,18 +47,22 @@ class AddAppealModel extends Component
             DB::beginTransaction();
             CaseAppeal::query()->create(
                 [
-                    'case_id'=>$this->case_id,
-                    'date_opened'=>$this->date,
-                    'appeal_number'=>$this->appeal_number,
-                    'appeal_details'=>$this->comment,
-                    'court_level_id'=>$this->court_level_id,
+                    'case_id' => $this->case_id,
+                    'date_opened' => $this->date,
+                    'appeal_number' => $this->appeal_number,
+                    'appeal_details' => $this->comment,
+                    'court_level_id' => $this->court_level_id,
                 ]
             );
             DB::commit();
             redirect()->to(route('cases.show', encrypt($this->case_id)));
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

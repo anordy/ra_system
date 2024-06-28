@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body">
         <div class="row mt-2">
-            <div class="col-md-6 text-uppercase">Filled Return Details</div>
+            <div class="col-md-6 text-uppercase">Filed Return Details</div>
             <div class="col-md-6 d-flex justify-content-end">
                 <div>
                     <span class="font-weight-bold text-uppercase">Rejected At</span>
@@ -16,10 +16,10 @@
             <div class="col-md-12">
                 <table class="table table-bordered table-sm">
                     <thead>
-                    <th style="width: 30%">Item Name</th>
-                    <th style="width: 20%">Value</th>
-                    <th style="width: 10%">Rate</th>
-                    <th style="width: 20%">VAT</th>
+                    <th>Item Name</th>
+                    <th>Value</th>
+                    <th>Rate</th>
+                    <th>VAT</th>
                     </thead>
                     <tbody>
                     @foreach (json_decode($history->return_items) as $item)
@@ -34,10 +34,10 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th style="width: 20%"></th>
-                        <th style="width: 30%"></th>
-                        <th style="width: 25%"></th>
-                        <th style="width: 25%">{{ number_format(json_decode($history->return_info)->total_amount, 2) }}</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>{{ number_format(json_decode($history->return_info)->total_amount, 2) }}</th>
                     </tr>
 
                     </tfoot>
@@ -45,45 +45,52 @@
 
             </div>
 
-            <div class="col-md-12">
-                <h6 class="text-uppercase mt-2 ml-2">Penalties</h6>
-                <hr>
-                <table class="table table-bordered table-sm normal-text">
-                    <thead>
-                    <tr>
-                        <th>Month</th>
-                        <th>Tax Amount</th>
-                        <th>Late Filing Amount</th>
-                        <th>Late Payment Amount</th>
-                        <th>Interest Rate</th>
-                        <th>Interest Amount</th>
-                        <th>Payable Amount</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    @if(count(json_decode($history->penalties)))
-                        @foreach (json_decode($history->penalties) as $penalty)
-                            <tr>
-                                <td>{{ $penalty->financial_month_name }}</td>
-                                <td>{{ number_format($penalty->tax_amount, 2) }} <strong>{{ $return->currency}}</strong></td>
-                                <td>{{ number_format($penalty->late_filing, 2) }} <strong>{{ $return->currency}}</strong></td>
-                                <td>{{ number_format($penalty->late_payment, 2) }} <strong>{{ $return->currency}}</strong></td>
-                                <td>{{ number_format($penalty->rate_percentage, 4) }}</td>
-                                <td>{{ number_format($penalty->rate_amount, 2) }} <strong>{{ $return->currency}}</strong></td>
-                                <td>{{ number_format($penalty->penalty_amount, 2)}} <strong>{{ $return->currency}}</strong></td>
-                            </tr>
-                        @endforeach
-                    @else
+            @if($history->penalties != 'null')
+                <div class="col-md-12">
+                    <h6 class="text-uppercase mt-2 ml-2">Penalties</h6>
+                    <hr>
+                    <table class="table table-bordered table-sm normal-text">
+                        <thead>
                         <tr>
-                            <td colspan="7" class="text-center py-3">
-                                No penalties for this return.
-                            </td>
+                            <th>Month</th>
+                            <th>Tax Amount</th>
+                            <th>Late Filing Amount</th>
+                            <th>Late Payment Amount</th>
+                            <th>Interest Rate</th>
+                            <th>Interest Amount</th>
+                            <th>Payable Amount</th>
                         </tr>
-                    @endif
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+
+                        <tbody>
+                        @if(count(json_decode($history->penalties)))
+                            @foreach (json_decode($history->penalties) as $penalty)
+                                <tr>
+                                    <td>{{ $penalty->financial_month_name }}</td>
+                                    <td>{{ number_format($penalty->tax_amount, 2) }}
+                                        <strong>{{ $return->currency}}</strong></td>
+                                    <td>{{ number_format($penalty->late_filing, 2) }}
+                                        <strong>{{ $return->currency}}</strong></td>
+                                    <td>{{ number_format($penalty->late_payment, 2) }}
+                                        <strong>{{ $return->currency}}</strong></td>
+                                    <td>{{ number_format($penalty->rate_percentage, 4) }}</td>
+                                    <td>{{ number_format($penalty->rate_amount, 2) }}
+                                        <strong>{{ $return->currency}}</strong></td>
+                                    <td>{{ number_format($penalty->penalty_amount, 2)}}
+                                        <strong>{{ $return->currency}}</strong></td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="7" class="text-center py-3">
+                                    No penalties for this return.
+                                </td>
+                            </tr>
+                        @endif
+                        </tbody>
+                    </table>
+                </div>
+            @endif
         </div>
     </div>
 </div>

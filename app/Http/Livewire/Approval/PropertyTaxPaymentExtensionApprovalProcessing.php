@@ -48,8 +48,8 @@ class PropertyTaxPaymentExtensionApprovalProcessing extends Component
 
         $requestedBy = Taxpayer::find($this->paymentExtension->requested_by_id);
         $name = 'N/A';
-        if ($requestedBy){
-            $name = $requestedBy->first_name .' '. $requestedBy->middle_name .' '. $requestedBy->last_name;
+        if ($requestedBy) {
+            $name = $requestedBy->first_name . ' ' . $requestedBy->middle_name . ' ' . $requestedBy->last_name;
             $this->email = $requestedBy->email;
             $this->mobile = $requestedBy->mobile;
         }
@@ -87,10 +87,13 @@ class PropertyTaxPaymentExtensionApprovalProcessing extends Component
                 $propertyPayment->save();
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
                 DB::commit();
-
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
@@ -98,11 +101,11 @@ class PropertyTaxPaymentExtensionApprovalProcessing extends Component
                 $this->updateBill($propertyPayment->latestBill, $this->new_payment_due_date);
                 $this->customAlert('success', 'Approved successfully');
                 //Send Sms & email
-                if ($this->email){
+                if ($this->email) {
                     $this->emailPayload['message'] = $this->approvedText;
                     $test = event(new SendMail(SendPropertyTaxExtensionApprovalMail::SERVICE, $this->emailPayload));
                 }
-                if ($this->mobile){
+                if ($this->mobile) {
                     $this->smsPayload['message'] = $this->approvedText;
                     $test = event(new SendSms(SendPaymentExtensionApprovalSMS::SERVICE, $this->smsPayload));
                 }
@@ -114,14 +117,19 @@ class PropertyTaxPaymentExtensionApprovalProcessing extends Component
                         ->back()
                         ->getTargetUrl(),
                 );
-            }catch (\Exception $e){
-                Log::error($e);
+            } catch (\Exception $e) {
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
             }
             $this->updateRequest(false);
         }
     }
 
-    public function updateRequest($response){
+    public function updateRequest($response)
+    {
         $extension = PaymentExtension::find($this->paymentExtension->id);
         $extension->bill_updated = $response;
         $extension->save();
@@ -148,19 +156,23 @@ class PropertyTaxPaymentExtensionApprovalProcessing extends Component
                 DB::commit();
                 $this->customAlert('success', 'Approval Rejected successfully');
                 //Send Sms & email
-                if ($this->email){
+                if ($this->email) {
                     $this->emailPayload['message'] = $this->rejectedText;
                     $test = event(new SendMail(SendPropertyTaxExtensionApprovalMail::SERVICE, $this->emailPayload));
                 }
 
-                if ($this->mobile){
+                if ($this->mobile) {
                     $this->smsPayload['message'] = $this->rejectedText;
                     $test = event(new SendSms(SendPaymentExtensionApprovalSMS::SERVICE, $this->smsPayload));
                 }
                 $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl(),);
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }

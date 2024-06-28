@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,5 +28,10 @@ class MvrDeregistration extends Model
     public function latestBill()
     {
         return $this->morphOne(ZmBill::class, 'billable')->latest();
+    }
+
+    public function ledger()
+    {
+        return $this->morphOne(TaxpayerLedger::class, 'source');
     }
 }

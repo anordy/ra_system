@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.4|^8.0",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-intl": "*",
@@ -26,7 +26,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3",
-        "league/flysystem-sftp": "~1.0",
+        "league/flysystem-sftp": "^1.1",
         "livewire/livewire": "2.10.7",
         "maatwebsite/excel": "^3.1",
         "milon/barcode": "^11.0",

@@ -20,7 +20,7 @@ class WorkflowTaxAuditSeeder extends Seeder
             'type'      => 'multiple_state',
             'property'  => ['marking']
         ];
-        $initial_marking = 'apply';
+        $initial_marking = 'initial';
         $supports =  ['App\Models\TaxAudit\TaxAudit'];
         $places = [
             'initial' => [
@@ -33,10 +33,25 @@ class WorkflowTaxAuditSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
+            'send_notification_letter' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
+            'taxpayer_uploads_documents' => [
+                'owner' => 'taxpayer',
+                'operator_type' => 'role',
+                'operators' => []
+            ],
+            'audit_date_extension_dc_review' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
             'conduct_audit' => [
                 'owner' => 'staff',
                 'operator_type' => 'user',
-                'operators' => []
+                'operators' => [1, 2]
             ],
             'preliminary_report' => [
                 'owner' => 'staff',
@@ -48,25 +63,35 @@ class WorkflowTaxAuditSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
-            'correct_preliminary_report' => [
+            'taxpayer_accept_preliminary_report' => [
+                'owner' => 'taxpayer',
+                'operator_type' => 'role',
+                'operators' => []
+            ],
+            'prepare_final_report' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
-            'prepare_final_report' => [
+            'taxpayer_respond_preliminary_report_DC' => [
                 'owner' => 'staff',
-                'operator_type' => 'user',
-                'operators' => []
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
+            'taxpayer_respond_preliminary_report_MN' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
+            'taxpayer_respond_preliminary_report_TL' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
             ],
             'final_report' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2]
-            ],
-            'correct_final_report' => [
-                'owner' => 'staff',
-                'operator_type' => 'user',
-                'operators' => [],
             ],
             'final_report_review' => [
                 'owner' => 'staff',
@@ -84,6 +109,8 @@ class WorkflowTaxAuditSeeder extends Seeder
                 'operators' => []
             ],
         ];
+
+
         $transitions = [
             'start' => [
                 'from' => 'initial',
@@ -92,6 +119,26 @@ class WorkflowTaxAuditSeeder extends Seeder
             ],
             'assign_officers' => [
                 'from' => 'assign_officers',
+                'to'   => 'send_notification_letter',
+                'condition' => '',
+            ],
+            'send_notification_letter' => [
+                'from' => 'send_notification_letter',
+                'to'   => 'taxpayer_uploads_documents',
+                'condition' => '',
+            ],
+            'taxpayer_uploads_documents' => [
+                'from' => 'taxpayer_uploads_documents',
+                'to'   => 'conduct_audit',
+                'condition' => '',
+            ],
+            'taxpayer_request_audit_date_extension' => [
+                'from' => 'taxpayer_uploads_documents',
+                'to'   => 'audit_date_extension_dc_review',
+                'condition' => '',
+            ],
+            'audit_date_extension_dc_review' => [
+                'from' => 'audit_date_extension_dc_review',
                 'to'   => 'conduct_audit',
                 'condition' => '',
             ],
@@ -112,6 +159,11 @@ class WorkflowTaxAuditSeeder extends Seeder
             ],
             'preliminary_report_review' => [
                 'from' => 'preliminary_report_review',
+                'to'   => 'taxpayer_accept_preliminary_report',
+                'condition' => '',
+            ],
+            'foward_to_final_report_preparation' => [
+                'from' => 'preliminary_report_review',
                 'to'   => 'prepare_final_report',
                 'condition' => '',
             ],
@@ -120,12 +172,32 @@ class WorkflowTaxAuditSeeder extends Seeder
                 'to'   => 'preliminary_report',
                 'condition' => '',
             ],
-            'prepare_final_report' => [
+            'taxpayer_accept_preliminary_report' => [
+                'from' => 'taxpayer_accept_preliminary_report',
+                'to'   => 'prepare_final_report',
+                'condition' => '',
+            ],
+            'taxpayer_respond_preliminary_report_DC' => [
+                'from' => 'taxpayer_accept_preliminary_report',
+                'to'   => 'taxpayer_respond_preliminary_report_DC',
+                'condition' => '',
+            ],
+            'taxpayer_respond_preliminary_report_MN' => [
+                'from' => 'taxpayer_respond_preliminary_report_DC',
+                'to'   => 'taxpayer_respond_preliminary_report_MN',
+                'condition' => '',
+            ],
+            'taxpayer_respond_preliminary_report_TL' => [
+                'from' => 'taxpayer_respond_preliminary_report_MN',
+                'to'   => 'conduct_audit',
+                'condition' => '',
+            ],
+            'prepare_final_report' => [ //Audit Team
                 'from' => 'prepare_final_report',
                 'to'   => 'final_report',
                 'condition' => '',
             ],
-            'final_report' => [
+            'final_report' => [ //Audit Manager Review
                 'from' => 'final_report',
                 'to'   => 'final_report_review',
                 'condition' => '',
@@ -135,7 +207,12 @@ class WorkflowTaxAuditSeeder extends Seeder
                 'to'   => 'prepare_final_report',
                 'condition' => '',
             ],
-            'final_report_review' => [
+            'final_report_review' => [ //Department commissioner Review
+                'from' => 'final_report_review',
+                'to'   => 'completed',
+                'condition' => '',
+            ],
+            'foward_to_commissioner' => [ //Department commissioner Review
                 'from' => 'final_report_review',
                 'to'   => 'commissioner',
                 'condition' => '',
@@ -157,7 +234,11 @@ class WorkflowTaxAuditSeeder extends Seeder
             ],
         ];
 
-        Workflow::updateOrCreate([
+        Workflow::updateOrCreate(
+            [
+                'code' => 'TAX_AUDIT',
+            ],
+            [
             'code' => 'TAX_AUDIT',
             'summary' => 'Tax audit workflow',
             'name' => $name,

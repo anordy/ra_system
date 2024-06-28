@@ -125,7 +125,7 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         }
         try {
             $data = (object) $value['data'];
-            $responsible_person = WaResponsiblePerson::select('id','status')->findOrFail(decrypt($data->id));
+            $responsible_person = WaResponsiblePerson::select('id', 'status')->findOrFail(decrypt($data->id));
             if ($responsible_person->status == 'active') {
                 $responsible_person->status = WaResponsiblePerson::INACTIVE;
             } else if ($responsible_person->status == 'inactive') {
@@ -134,7 +134,11 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
             $responsible_person->save();
             $this->flash('success', 'Status updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('warning', 'Something whent wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }

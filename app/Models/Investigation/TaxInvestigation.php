@@ -4,6 +4,7 @@ namespace App\Models\Investigation;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\FinancialYear;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
 use App\Traits\WorkflowTrait;
@@ -47,6 +48,11 @@ class TaxInvestigation extends Model implements Auditable
         return $this->morphOne(TaxAssessment::class, 'assessment');
     }
 
+    public function assessments()
+    {
+        return $this->morphMany(TaxAssessment::class, 'assessment');
+    }
+
     public function officers()
     {
         return $this->hasMany(TaxInvestigationOfficer::class, 'investigation_id', 'id');
@@ -81,5 +87,35 @@ class TaxInvestigation extends Model implements Auditable
     public function taxInvestigationTaxTypeNames()
     {
         return $this->taxTypes->map(fn ($type) => $type->name)->implode(',', 'name');
+    }
+
+    public function InvestigationTaxType()
+    {
+        return $this->taxTypes->map(function ($type) {
+            return [
+                'id' => $type->id,
+                'name' => $type->name
+            ];
+        });
+    }
+
+    public static function generateNewCaseNumber()
+    {
+        //get the current financial year
+        $currentFinancialYear = FinancialYear::where('code', '=', date('Y'))->select('name')->first()->name;
+
+        // Get the last case number for the current financial year
+        $lastInvestigation = self::where('case_number', 'like', "TI-{$currentFinancialYear}-%")
+            ->orderBy('case_number', 'desc')
+            ->first();
+
+        if ($lastInvestigation) {
+            $lastCaseNumber = (int) substr($lastInvestigation->case_number, -2);
+            $newCaseNumber = str_pad($lastCaseNumber + 1, 2, '0', STR_PAD_LEFT);
+        } else {
+            $newCaseNumber = '01';
+        }
+
+        return "TI-{$currentFinancialYear}-{$newCaseNumber}";
     }
 }

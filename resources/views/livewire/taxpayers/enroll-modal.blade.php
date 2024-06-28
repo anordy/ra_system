@@ -7,7 +7,7 @@
             <div class="modal-header">
                 <h5 class="modal-title text-uppercase">Enroll Finger</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
-                        class="fa fa-times-circle"></i></button>
+                        class="bi bi-x-circle-fill"></i></button>
             </div>
             <div class="modal-body">
                 <div class="row p-2">
@@ -50,7 +50,7 @@
 
                             <tr>
                                 <td align="center" class="p-2">
-                                    <input type="text" id="state" value="" readonly style="width: 50%"
+                                    <input type="text" id="state" value="" readonly
                                         class="form-control text-center" />
                                 </td>
                             </tr>

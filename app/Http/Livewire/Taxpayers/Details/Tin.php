@@ -53,7 +53,11 @@ class Tin extends Component
             }
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
@@ -116,10 +120,13 @@ class Tin extends Component
             $this->customAlert('success', 'Taxpayer details have been approved!');
             return redirect()->route('taxpayers.enroll-fingerprint', [encrypt($this->kyc->id)]);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
         }
-
     }
 
     /**
@@ -143,13 +150,16 @@ class Tin extends Component
                 return redirect()->route('taxpayers.registrations.index');
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
             }
         } else {
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
         }
-
     }
 
     public function convertStringToCamelCase($string)

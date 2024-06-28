@@ -77,7 +77,7 @@ class ZmFeeHelper
         $bill_amount = 0;
         foreach ($billItems as $item) {
             if (!isset($item['amount']) || !isset($item['gfs_code'])) {
-                throw new \Exception('Bill item must contain item_amount and gfs_code');
+                throw new \Exception('Bill item must contain amount and gfs_code');
             }
             if ($item['currency'] != 'TZS') {
                 $currency = 'USD';

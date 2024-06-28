@@ -29,6 +29,10 @@ class Installment extends Model implements Auditable
         return $this->hasMany(InstallmentItem::class);
     }
 
+    public function extensions(){
+        return $this->hasMany(InstallmentExtensionRequest::class);
+    }
+
     public function request(){
         return $this->belongsTo(InstallmentRequest::class, 'installment_request_id');
     }
@@ -78,5 +82,21 @@ class Installment extends Model implements Auditable
 
     public function files(){
         return $this->hasMany(InstallmentRequestFile::class);
+    }
+
+    public function installmentLists()
+    {
+        return $this->hasMany(InstallmentList::class);
+    }
+
+    public function getNextdateOfPayment(){
+        // Retrieve the next unpaid installment from the installment list
+        $nextInstallment = $this->installmentLists()
+            ->where('status', BillStatus::SUBMITTED)
+            ->orderBy('due_date', 'asc')
+            ->first();
+
+        // Return the due date of the next unpaid installment or null if none are found
+        return $nextInstallment ? $nextInstallment->due_date : null;
     }
 }

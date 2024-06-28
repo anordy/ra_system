@@ -9,13 +9,13 @@ use App\Models\Returns\TaxReturnHistory as ReturnsTaxReturnHistory;
 trait TaxReturnHistory
 {
 
-    public function saveHistory($tax_return) 
+    public function saveHistory($tax_return)
     {
         try {
             $history = ReturnsTaxReturnHistory::where('tax_return_id', $tax_return->id)->latest()->first();
-            
+
             $version = 1;
-            
+
             if ($history) {
                 $version = $history->version + 1;
             }
@@ -27,14 +27,13 @@ trait TaxReturnHistory
                 'return_items' => json_encode($tax_return->return->items),
                 'version' => $version
             ]);
-            
-
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             throw new Exception("Something Went Wrong");
         }
-      
     }
-
-
 }

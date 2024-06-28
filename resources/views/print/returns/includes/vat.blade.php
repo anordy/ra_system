@@ -9,10 +9,10 @@
 </table>
 <table class="tbl-bordered tbl-p-6" style="width: 100%; margin-top: 10px;">
     <thead>
-    <th style="width: 30%">Item Name</th>
-    <th style="width: 20%">Value ({{ $return->currency }})</th>
-    <th style="width: 10%">Rate</th>
-    <th style="width: 20%">Tax ({{ $return->currency  }})</th>
+    <th>Item Name</th>
+    <th>Value ({{ $return->currency }})</th>
+    <th>Rate</th>
+    <th>Tax ({{ $return->currency  }})</th>
     </thead>
     <tbody>
     @foreach ($return->items as $item)
@@ -50,12 +50,8 @@
                         <td>{{ $item->config->name }}</td>
                         <td class="text-right">{{ number_format($item->value, 2) }}
                             <strong>(Electricity Units)</strong></td>
-                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate }}
-                            @if($item->config->rate_type =='percentage')
-                                %
-                            @else
-                                {{$item->config->currency}}
-                            @endif
+                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
+                        <td>
                         </td>
                         <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
                             <strong>{{$return->currency}}</strong></td>
@@ -67,10 +63,7 @@
                     <td>{{ $item->config->name }}</td>
                     <td class="text-right">{{ number_format($item->value, 2) }}
                         <strong>  {{ $item->config->currency}}</strong></td>
-                    <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
-                        @if($item->config->rate_type =='percentage')
-                            %
-                        @endif
+                    <td> {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
                     </td>
                     <td class="text-right">{{ number_format($item->vat,2) }}
                         <strong>{{$return->currency}}</strong></td>
@@ -178,10 +171,10 @@
     </tbody>
     <tfoot>
     <tr class="bg-secondary">
-        <th style="width: 20%">Total</th>
-        <th style="width: 30%"></th>
-        <th style="width: 25%"></th>
-        <th style="width: 25%">
+        <th>Total</th>
+        <th></th>
+        <th></th>
+        <th>
             {{ number_format($return->total_amount_due_with_penalties, 2) }}
             <strong>{{$return->currency}}</strong></th>
     </tr>

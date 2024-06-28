@@ -19,8 +19,8 @@ class ZbsVerification extends Component
     {
         $this->chassisNumber = $chassisNumber;
         $this->zbsData = [
-            'cor_number' => random_int(1000000,9999999),
-            'mileage' => random_int(50000,130000),
+            'cor_number' => random_int(1000000, 9999999),
+            'mileage' => random_int(50000, 130000),
             'inspection_date' => Carbon::today()
         ];
     }
@@ -40,9 +40,12 @@ class ZbsVerification extends Component
                 $this->customAlert('error', 'Something went wrong');
                 return;
             }
-
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }

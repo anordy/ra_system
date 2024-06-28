@@ -65,7 +65,7 @@ class PlateNumberCollectionModel extends Component
             ]);
 
             DB::commit();
-            return redirect()->to(route('mvr.plate-numbers'));
+            return redirect()->to(route('mvr.plate-numbers'))->with('success', 'Plate number have been updated as collected.');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('PLATE-NUMBER-COLLECTION-MODEL', [$e]);

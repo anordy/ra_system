@@ -23,7 +23,8 @@ class RequestRecon extends Component
         'submit'
     ];
 
-    protected function rules(){
+    protected function rules()
+    {
         return [
             'recon_type' => 'required|strip_tag',
             'transaction_date' => [
@@ -32,8 +33,8 @@ class RequestRecon extends Component
                 function ($attribute, $value, $fail) {
                     $yesterday = Carbon::now()->subDay();
                     $transaction_date = Carbon::parse($value);
-                   $diff_date = $transaction_date->diffInDays($yesterday);
-                    if($diff_date  >= 7) {
+                    $diff_date = $transaction_date->diffInDays($yesterday);
+                    if ($diff_date  >= 7) {
                         $fail('You cant request reconciliation for this date');
                     }
                 }
@@ -46,7 +47,8 @@ class RequestRecon extends Component
         $this->today = Carbon::today()->format('Y-m-d');
     }
 
-    public function triggerAction() {
+    public function triggerAction()
+    {
         $this->validate();
 
         if (!Gate::allows('manage-payments-edit')) {
@@ -80,9 +82,9 @@ class RequestRecon extends Component
                 'TnxDt' => $this->transaction_date,
                 'ReconcOpt' => $this->recon_type
             ]);
-            
+
             $enquireRecon = (new ZanMalipoInternalService)->requestRecon($recon->id);
-            
+
             // If response returns error rollback recon request
             if (array_key_exists('error', $enquireRecon)) {
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
@@ -90,7 +92,11 @@ class RequestRecon extends Component
             }
             return redirect()->route('payments.recons', encrypt($recon->id));
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

@@ -9,7 +9,7 @@
             <div class="card-tools">
                 <button class="btn btn-info btn-sm"
                 onclick="Livewire.emit('showModal', 'relief.relief-project-add-modal')"><i
-                    class="fa fa-plus-circle"></i>
+                    class="bi bi-plus-circle-fill"></i>
                 Add</button>
             </div>
         </div>

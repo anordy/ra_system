@@ -9,10 +9,10 @@
 </table>
 <table class="tbl-bordered tbl-p-6" style="width: 100%; margin-top: 10px;">
     <thead>
-    <th style="width: 30%">Item Name</th>
-    <th style="width: 20%">Value ({{ $return->currency }})</th>
-    <th style="width: 10%">Rate</th>
-    <th style="width: 20%">Tax ({{ $return->currency  }})</th>
+    <th>Item Name</th>
+    <th>Value ({{ $return->currency }})</th>
+    <th>Rate</th>
+    <th>Tax ({{ $return->currency  }})</th>
     </thead>
     <tbody>
     @foreach ($return->configReturns as $item)
@@ -26,7 +26,7 @@
                     @if($item->config->rate_usd)
                         {{ $item->config->rate_usd }} USD
                     @else
-                        {{ $item->config->rate }}
+                        {{ $item->config->rate == 0 ? 1 : $item->config->rate }} {{ $item->config->currency ?? 'N/A' }}
                     @endif
                 @endif
             </td>
@@ -36,10 +36,10 @@
     </tbody>
     <tfoot>
     <tr class="bg-secondary">
-        <th style="width: 20%">Total</th>
-        <th style="width: 30%"></th>
-        <th style="width: 25%"></th>
-        <th style="width: 25%">{{ number_format($return->total_amount_due, 2) }}</th>
+        <th>Total</th>
+        <th></th>
+        <th></th>
+        <th>{{ number_format($return->total_amount_due, 2) }}</th>
     </tr>
     </tfoot>
 </table>

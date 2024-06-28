@@ -126,6 +126,8 @@ class ReportStatus implements Status
     const both = 'both';
     const date_range = 'date_range';
 
+    const CUSTOM_RANGE = 'Custom Range';
+
     const PAYMENT_VAT_TYPES = [
 
         ['All-VAT-Returns', 'Hotel-VAT-Returns', 'Electricity-VAT-Returns', 'Local-VAT-Returns']

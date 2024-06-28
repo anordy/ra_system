@@ -45,7 +45,7 @@ class OwnershipTransferAssignPlateNumber extends Component
             return;
         }
 
-        try{
+        try {
             DB::beginTransaction();
             $ownershipTransfer->old_plate_number = $mvrReg->plate_number;
             $ownershipTransfer->save();
@@ -56,10 +56,13 @@ class OwnershipTransferAssignPlateNumber extends Component
             DB::commit();
 
             $this->flash('success', 'Plate number successfully assigned', [], redirect()->back()->getTargetUrl());
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -68,5 +71,4 @@ class OwnershipTransferAssignPlateNumber extends Component
     {
         return view('livewire.mvr.ownership-transfer-assign-plate-number');
     }
-
 }

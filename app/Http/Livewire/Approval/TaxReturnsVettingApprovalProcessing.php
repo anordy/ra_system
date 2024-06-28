@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\GeneralConstant;
+use App\Enum\TransactionType;
+use App\Traits\TaxpayerLedgerTrait;
 use Exception;
 use App\Models\Role;
 use App\Models\User;
@@ -33,7 +36,7 @@ use App\Models\Returns\Port\PortReturn;
 
 class TaxReturnsVettingApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, TaxVerificationTrait, TaxReturnHistory, TaxClaimsTrait, VatReturnTrait;
+    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, TaxVerificationTrait, TaxReturnHistory, TaxClaimsTrait, VatReturnTrait, TaxpayerLedgerTrait;
 
     public $modelId;
     public $modelName;
@@ -51,7 +54,8 @@ class TaxReturnsVettingApprovalProcessing extends Component
         $this->registerWorkflow($modelName, $this->modelId);
     }
 
-    public function previewPenalties($tax_return_id) {
+    public function previewPenalties($tax_return_id)
+    {
         $tax_return = TaxReturn::selectRaw('
                 tax_returns.*, 
                 (MONTHS_BETWEEN(CURRENT_DATE, CAST(filing_due_date as date))) as periods, 
@@ -67,10 +71,13 @@ class TaxReturnsVettingApprovalProcessing extends Component
         try {
             return PenaltyForDebt::getPostVettingPenalties($tax_return, $penaltyIterationsToBeAdded);
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error('Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             throw new Exception('Failed to preview penalties');
         }
-
     }
 
 
@@ -94,8 +101,8 @@ class TaxReturnsVettingApprovalProcessing extends Component
         }
 
         if ($this->checkTransition('return_vetting_officer_review') && $transition === 'return_vetting_officer_review') {
-            DB::beginTransaction();
             try {
+                DB::beginTransaction();
 
                 // Generate Penalties Additional Penalties
                 if ($this->return->return_type != PortReturn::class) {
@@ -103,7 +110,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 } else {
                     $tax_return = $this->previewPenalties($this->return->id);
 
-                    $child_return = TaxReturn::where('return_type', PortReturn::class)->where('parent',$tax_return->id)->first();
+                    $child_return = TaxReturn::where('return_type', PortReturn::class)->where('parent', $tax_return->id)->first();
 
                     if ($child_return) {
                         $tax_return_ = $this->previewPenalties($child_return->id);
@@ -112,6 +119,9 @@ class TaxReturnsVettingApprovalProcessing extends Component
                         $tax_return_->return->vetting_status = VettingStatus::VETTED;
                         $tax_return_->save();
                         $tax_return_->return->save();
+
+                        // Record ledger transaction
+                        $this->recordLedger(TransactionType::DEBIT, TaxReturn::class, $tax_return_->id, $tax_return_->principal, $tax_return_->interest, $tax_return_->penalty, $tax_return_->total_amount, $tax_return_->tax_type_id, $tax_return_->currency, $tax_return_->filed_by_id, $tax_return_->location_id, $tax_return_->financial_month_id);
                     }
                 }
 
@@ -120,12 +130,57 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->return->save();
                 $this->return->return->save();
 
+
+                // Check if return is VAT and approve im4 & im9
+                if ($this->return->return_type === VatReturn::class) {
+                    $refundItems  = $this->return->return->standardPurchases ?? [];
+                    $supplierItems  = $this->return->return->suppliers ?? [];
+                    $exitedGoods  = $this->return->return->importPurchases ?? [];
+
+                    if (count($exitedGoods ?? []) > 0) {
+                        foreach ($exitedGoods as $exitedGood) {
+                            $exitedGood->status = GeneralConstant::ONE_INT;
+                            $exitedGood->save();
+
+                            if (!$exitedGood) throw new Exception('Failed to Save Exited Good');
+                        }
+                    }
+
+                    if (count($refundItems) > 0) {
+                        foreach ($refundItems as $refundItem) {
+                            $refundItem->status = GeneralConstant::ONE_INT;
+                            $refundItem->save();
+                            if (!$refundItem) throw new Exception('Failed to Save Refund Item');
+                        }
+                    }
+
+                    if (count($supplierItems) > 0) {
+                        foreach ($supplierItems as $supplierItem) {
+                            $items = $supplierItem->supplierDetailsItems ?? [];
+
+                            if (count($items) > 0) {
+                                foreach ($items as $item) {
+                                    $item->used = true;
+                                    $item->save();
+
+                                    if (!$item) throw new Exception('Failed to Save Supplier Item');
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+
+                // Record ledger transaction
+                $this->recordLedger(TransactionType::DEBIT, TaxReturn::class, $tax_return->id, $tax_return->principal, $tax_return->interest, $tax_return->penalty, $tax_return->total_amount, $tax_return->tax_type_id, $tax_return->currency, $tax_return->filed_by_id, $tax_return->location_id, $tax_return->financial_month_id);
+
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
-                DB::commit();
-
                 // Trigger verification
-                $this->triggerTaxVerifications($this->return->return, auth()->user());
+                $this->triggerTaxVerifications($this->return, auth()->user());
+
+                DB::commit();
 
                 if ($tax_return->return_type != PortReturn::class) {
                     $this->generateReturnControlNumber($tax_return);
@@ -155,11 +210,10 @@ class TaxReturnsVettingApprovalProcessing extends Component
                         }
                     }
                 }
-                //saving credit brought forward(claim)
 
+                //saving credit brought forward(claim)
                 if ($this->return->return->credit_brought_forward > 0) {
-                    $this->claim_data = VatReturn::query()->selectRaw('payment_status, tax_credits.amount, payment_method, installments_count,
-        tax_credits.id as credit_id, tax_claims.old_return_id, tax_claims.old_return_type, tax_claims.currency')
+                    $this->claim_data = VatReturn::query()->selectRaw('payment_status, tax_credits.amount, payment_method, installments_count, tax_credits.id as credit_id, tax_claims.old_return_id, tax_claims.old_return_type, tax_claims.currency')
                         ->leftJoin('tax_claims', 'tax_claims.old_return_id', '=', 'vat_returns.id')
                         ->leftJoin('tax_credits', 'tax_credits.claim_id', '=', 'tax_claims.id')
                         ->where('vat_returns.claim_status', '=', TaxClaimStatus::CLAIM)
@@ -193,7 +247,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 } else {
                     $tax_return = $this->previewPenalties($this->return->id);
 
-                    $child_return = TaxReturn::where('return_type', PortReturn::class)->where('parent',$tax_return->id)->first();
+                    $child_return = TaxReturn::where('return_type', PortReturn::class)->where('parent', $tax_return->id)->first();
 
                     if ($child_return) {
                         $tax_return_ = $this->previewPenalties($child_return->id);
@@ -202,19 +256,65 @@ class TaxReturnsVettingApprovalProcessing extends Component
                         $tax_return_->return->vetting_status = VettingStatus::VETTED;
                         $tax_return_->save();
                         $tax_return_->return->save();
-                    }
 
+                        // Record ledger transaction
+                        $this->recordLedger(TransactionType::DEBIT, TaxReturn::class, $tax_return_->id, $tax_return_->principal, $tax_return_->interest, $tax_return_->penalty, $tax_return_->total_amount, $tax_return_->tax_type_id, $tax_return_->currency, $tax_return_->filed_by_id, $tax_return_->location_id, $tax_return_->financial_month_id);
+                    }
                 }
 
                 $this->return->vetting_status = VettingStatus::VETTED;
                 $this->return->return->vetting_status = VettingStatus::VETTED;
+
+                // Check if return is VAT and approve im4 & im9
+                if ($this->return->return_type === VatReturn::class) {
+                    $exitedGoods  = $this->return->return->importPurchases ?? [];
+                    $refundItems  = $this->return->return->standardPurchases ?? [];
+                    $supplierItems  = $this->return->return->suppliers ?? [];
+
+                    if (count($exitedGoods) > 0) {
+                        foreach ($exitedGoods as $exitedGood) {
+                            $exitedGood->status = GeneralConstant::ONE_INT;
+                            $exitedGood->save();
+
+                            if (!$exitedGood) throw new Exception('Failed to Save Exited Good');
+                        }
+                    }
+
+                    if (count($refundItems) > 0) {
+                        foreach ($refundItems as $refundItem) {
+                            $refundItem->status = GeneralConstant::ONE_INT;
+                            $refundItem->save();
+                            if (!$refundItem) throw new Exception('Failed to Save Refund Item');
+                        }
+                    }
+
+                    if (count($supplierItems) > 0) {
+                        foreach ($supplierItems as $supplierItem) {
+                            $items = $supplierItem->supplierDetailsItems ?? [];
+
+                            if (count($items) > 0) {
+                                foreach ($items as $item) {
+                                    $item->used = true;
+                                    $item->save();
+
+                                    if (!$item) throw new Exception('Failed to Save Supplier Item');
+                                }
+                            }
+                        }
+                    }
+
+                }
+
                 $this->return->save();
                 $this->return->return->save();
 
-                DB::commit();
+                // Record ledger transaction
+                $this->recordLedger(TransactionType::DEBIT, TaxReturn::class, $tax_return->id, $tax_return->principal, $tax_return->interest, $tax_return->penalty, $tax_return->total_amount, $tax_return->tax_type_id, $tax_return->currency, $tax_return->filed_by_id, $tax_return->location_id, $tax_return->financial_month_id);
 
                 // Trigger verification
-                $this->triggerTaxVerifications($this->return->return, auth()->user());
+                $this->triggerTaxVerifications($this->return, auth()->user());
+
+                DB::commit();
 
                 if ($tax_return->return_type != PortReturn::class) {
                     $this->generateReturnControlNumber($tax_return);
@@ -266,7 +366,104 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
+            }
+        }
+
+        if ($this->checkTransition('return_vetting_manager_review') && $transition === 'return_vetting_manager_review') {
+            DB::beginTransaction();
+            try {
+                $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+
+                // Generate Penalties Additional Penalties
+                if ($this->return->return_type != PortReturn::class) {
+                    $tax_return = $this->previewPenalties($this->return->id);
+                } else {
+                    $tax_return = $this->previewPenalties($this->return->id);
+
+                    $child_return = TaxReturn::where('return_type', PortReturn::class)->where('parent', $tax_return->id)->first();
+
+                    if ($child_return) {
+                        $tax_return_ = $this->previewPenalties($child_return->id);
+
+                        $tax_return_->vetting_status = VettingStatus::VETTED;
+                        $tax_return_->return->vetting_status = VettingStatus::VETTED;
+                        $tax_return_->save();
+                        $tax_return_->return->save();
+                    }
+                }
+
+                $this->return->vetting_status = VettingStatus::VETTED;
+                $this->return->return->vetting_status = VettingStatus::VETTED;
+                $this->return->save();
+                $this->return->return->save();
+
+                // Trigger verification
+                $this->triggerTaxVerifications($this->return->return, auth()->user());
+
+                DB::commit();
+
+                if ($tax_return->return_type != PortReturn::class) {
+                    $this->generateReturnControlNumber($tax_return);
+                } else {
+                    $this->generateReturnControlNumber($tax_return);
+                    $this->generateReturnControlNumber($tax_return_);
+                }
+
+                //triggering claim
+                if ($this->return->return_type == VatReturn::class) {
+                    if ($this->return->return->claim_status == 'claim') {
+
+                        $claim = $this->triggerClaim(abs($this->return->return->total_amount_due), $this->return->return->currency, $this->return->return);
+
+                        $taxpayer = Taxpayer::query()->where('id', $this->return->return->filed_by_id)->first();
+                        $taxpayer = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+                        $role = Role::query()->where('name', 'Administrator')->first();
+                        $admins = User::query()->where('role_id', $role->id)->get();
+                        foreach ($admins as $admin) {
+                            $admin->notify(new DatabaseNotification(
+                                $subject = 'TAX CLAIMING',
+                                $message = 'You have a new request for tax claim from ' . $taxpayer . '',
+                                $href = 'claims.show',
+                                $hrefText = 'View',
+                                $hrefParameters = $claim->id,
+                            ));
+                        }
+                    }
+                }
+                //saving credit brought forward(claim)
+
+                if ($this->return->return->credit_brought_forward > 0) {
+                    $this->claim_data = VatReturn::query()->selectRaw('payment_status, tax_credits.amount, payment_method, installments_count,
+        tax_credits.id as credit_id, tax_claims.old_return_id, tax_claims.old_return_type, tax_claims.currency')
+                        ->leftJoin('tax_claims', 'tax_claims.old_return_id', '=', 'vat_returns.id')
+                        ->leftJoin('tax_credits', 'tax_credits.claim_id', '=', 'tax_claims.id')
+                        ->where('vat_returns.claim_status', '=', TaxClaimStatus::CLAIM)
+                        ->where('vat_returns.business_location_id', $this->return->return->business_location_id)
+                        ->where('tax_claims.status', 'approved')
+                        ->where('tax_credits.payment_status', '!=', 'paid')
+                        ->orderBy('tax_credits.id')->limit(1)
+                        ->first();
+                    $this->savingClaimPayment($this->return->return->credit_brought_forward);
+                }
+
+                event(new SendSms(SendVettedReturnSMS::SERVICE, $this->return));
+                event(new SendMail(SendVettedReturnMail::SERVICE, $this->return));
+
+                $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
@@ -299,23 +496,29 @@ class TaxReturnsVettingApprovalProcessing extends Component
                 $this->flash('success', 'Application sent for correction', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
 
         if ($this->checkTransition('return_vetting_manager_reject')) {
-
             try {
                 $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
                 $this->flash('success', 'Application returned to officer', [], redirect()->back()->getTargetUrl());
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e);
+                Log::error('Error: ' . $e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
-
     }
 
 

@@ -11,15 +11,16 @@ use App\Models\DlBloodGroup;
 use App\Models\DlFee;
 use App\Models\DlLicenseClass;
 use App\Models\DlLicenseDuration;
+use App\Models\DlRestriction;
 use App\Models\GenericSettingModel;
 use App\Models\MvrBodyType;
+use App\Models\MvrClass;
 use App\Models\MvrColor;
 use App\Models\MvrDeRegistrationReason;
 use App\Models\MvrFee;
 use App\Models\MvrMake;
 use App\Models\MvrModel;
 use App\Models\MvrOwnershipTransferReason;
-use App\Models\MvrPlateNumberColor;
 use App\Models\MvrPlateSize;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
@@ -27,6 +28,7 @@ use App\Models\MvrTransferFee;
 use App\Models\MvrTransmissionType;
 use App\Models\Parameter;
 use App\Models\Report;
+use App\Models\TaxRefund\PortLocation;
 use Illuminate\Support\Facades\Gate;
 
 class MvrGenericSettingController extends Controller
@@ -34,7 +36,13 @@ class MvrGenericSettingController extends Controller
 
     public function index($model)
     {
-        $class = 'App\Models\\' . $model;
+
+        if ($model === 'PortLocation') {
+            $class = PortLocation::class;
+        } else {
+            $class = 'App\Models\\' . $model;
+        }
+
         abort_if(!class_exists($class), 404);
 
         $permission = '';
@@ -77,14 +85,18 @@ class MvrGenericSettingController extends Controller
             $permission = 'setting-case-decision-view';
         } else if ($class === CourtLevel::class) {
             $permission = 'setting-court-level-view';
-        } else if ($class === MvrPlateNumberColor::class) {
-            $permission = 'setting-mvr-color-view';
         } else if ($class === MvrRegistrationType::class) {
             $permission = 'setting-mvr-color-view';
         } else if ($class === Parameter::class) {
             $permission = 'setting-mvr-plate-size-view';
         } else if ($class === Report::class) {
             $permission = 'setting-mvr-plate-size-view';
+        } else if ($class === DlRestriction::class){
+            $permission = 'setting-dl-restriction-view';
+        } else if ($class === MvrClass::class){
+            $permission = 'setting-mvr-class-view';
+        }  else if ($class === PortLocation::class) {
+            $permission = 'port-location-view';
         }
 
 

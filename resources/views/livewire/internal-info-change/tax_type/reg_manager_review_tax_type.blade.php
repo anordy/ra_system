@@ -1,6 +1,32 @@
 <div class="col-md-12">
+    @if(count($currentTaxTypes) > 0)
+        <div class="card rounded-0 shadow-none border">
+            @include('layouts.component.messages')
+            <div class="card-header bg-white font-weight-bold">Old Tax Type Configurations</div>
+            <div class="card-body">
+                @foreach ($currentTaxTypes as $key => $value)
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Tax Type</label>
+                                <input type="text" disabled class="form-control" value="{{ getTaxTypeName($value['tax_type_id'])  }}"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Currency</label>
+                                <input type="text" disabled class="form-control" value="{{ $value['currency']  }}"/>
+                            </div>
+                        </div>
+
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
     <div class="card rounded-0 shadow-none border">
-        <div class="card-header bg-white font-weight-bold">Tax Type Configurations</div>
+        <div class="card-header bg-white font-weight-bold">New Tax Type Configurations</div>
         <div class="card-body">
             @foreach ($selectedTaxTypes as $key => $value)
                 <div class="row">
@@ -12,7 +38,8 @@
                                     wire:model="selectedTaxTypes.{{ $key }}.tax_type_id">
                                 <option value="" selected disabled>--Select---</option>
                                 @foreach ($taxTypes as $type)
-                                    <option value="{{ $type->id }}" @if ($type->id === $selectedTaxTypes[$key]['tax_type_id']) disabled @endif>{{ $type->name }}</option>
+                                    <option value="{{ $type->id }}"
+                                            @if ($type->id === $selectedTaxTypes[$key]['tax_type_id']) disabled @endif>{{ $type->name }}</option>
                                 @endforeach
                             </select>
                             @error("selectedTaxTypes.{$key}.tax_type_id")
@@ -42,14 +69,16 @@
                                 <label class="form-label">VAT Category Type</label>
                                 <div class="position-relative">
                                     <input type="hidden" wire:model="selectedTaxTypes.{{ $key }}.sub_vat_id">
-                                    <input type="text" class="form-control" placeholder="Search..." wire:model="selectedTaxTypes.{{ $key }}.sub_vat_name" wire:keyup="subCategorySearchUpdate({{$key}}, $event.target.value)">
+                                    <input type="text" class="form-control" placeholder="Search..."
+                                           wire:model="selectedTaxTypes.{{ $key }}.sub_vat_name"
+                                           wire:keyup="subCategorySearchUpdate({{$key}}, $event.target.value)">
                                     @if($selectedTaxTypes[$key]['show_hide_options'])
-                                        <div class="position-absolute" style="z-index: 1" wire:loading wire:target="subCategorySearchUpdate">
+                                        <div class="position-absolute z-index-1" wire:loading wire:target="subCategorySearchUpdate">
                                             Loading....
                                         </div>
                                         <div wire:loading.remove>
                                             @if($subVatOptions)
-                                                <div class="position-absolute border-bottom rounded" style="overflow: hidden;z-index: 1;">
+                                                <div class="position-absolute border-bottom rounded sub-vat-items">
                                                     <ul class="customized-dropdown-menu pb-2">
                                                         @foreach($subVatOptions as $sub)
                                                             <li wire:click="selectSubVat({{$key}}, {{$sub}})">
@@ -75,6 +104,21 @@
                         </div>
                     @endif
 
+                    @if(count($lumpsumPayment ?? []))
+                        <div class="col-md-5 mb-3">
+                            <span class="font-weight-bold text-uppercase">Annual Estimate</span>
+                            <p class="my-1">{{ $lumpsumPayment['annual_estimate'] ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Payment Quarters</span>
+                            <p class="my-1">{{ $lumpsumPayment['payment_quarters'] ?? '' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Currency</span>
+                            <p class="my-1">{{ $lumpsumPayment['currency'] ?? 'N/A' }}</p>
+                        </div>
+                    @endif
+
                     @if ($showLumpsumOptions === true)
                         <div class="col-md-5">
                             <div class="form-group">
@@ -84,7 +128,8 @@
                                         wire:model="selectedTaxTypes.{{ $key }}.annual_estimate">
                                     <option value="" selected disabled>--Select---</option>
                                     @foreach($annualSales as $annualSale)
-                                        <option value="{{$annualSale['payments_per_year']}}"> {{number_format($annualSale['min_sales_per_year'],2)}} - {{ number_format($annualSale['max_sales_per_year'],2)}} </option>
+                                        <option value="{{$annualSale['payments_per_year']}}"> {{number_format($annualSale['min_sales_per_year'],2)}}
+                                            - {{ number_format($annualSale['max_sales_per_year'],2)}} </option>
                                     @endforeach
                                 </select>
                                 @error("selectedTaxTypes.{$key}.annual_estimate")
@@ -96,13 +141,17 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="form-label">Payment per year </label>
-                                    <input type="text" value="{{number_format((int)$selectedTaxType['annual_estimate'] )}}" class="form-control" disabled>
+                                    <input type="text"
+                                           value="{{number_format((int)$selectedTaxType['annual_estimate'] )}}"
+                                           class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="form-label">Payment per three months </label>
-                                    <input type="text" value="{{number_format((int)$selectedTaxType['annual_estimate']/4)}}" class="form-control" disabled>
+                                    <input type="text"
+                                           value="{{number_format((int)$selectedTaxType['annual_estimate']/4)}}"
+                                           class="form-control" disabled>
                                 </div>
                             </div>
                         @endforeach
