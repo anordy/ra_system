@@ -66,6 +66,18 @@
                             </div>
                         </div>
                     @endforeach
+
+                    @if(isset($check_options[$this->model]))
+                        @foreach($check_options[$this->model] as $key => $option)
+                            <div>
+                                <label>{{ $option['name'] }}
+                                    <input type="checkbox" value="{{ $option['id'] }}" wire:model="data.checkboxes.{{ $option['id'] }}">
+                                </label>
+                                @error('data.checkboxes' . $option['id']) <span>{{ $message }}</span> @enderror
+                            </div>
+                        @endforeach
+                    @endif
+                    
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

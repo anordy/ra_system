@@ -52,8 +52,10 @@ class Initial extends Component
             $this->report = Report::query()
                 ->select('code', 'name', 'has_parameter', 'id', 'report_url')
                 ->where('code', $this->report_code)
+//                ->where('code', $this->report_code)
+                ->where('report_type_id', $this->report_type_id)
                 ->first();
-
+//dd($this->report ,$this->report_code,$property ,$this);
             $this->parameters = ReportParameter::query()
                 ->join('parameters p', 'p.id', '=', 'report_parameters.parameter_id')
                 ->where('report_id', $this->report->id)

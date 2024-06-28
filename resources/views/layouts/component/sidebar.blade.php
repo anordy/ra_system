@@ -1176,10 +1176,10 @@
                     @endcan
 {{--                    @can('setting-report-parameter-view')--}}
                         <li class="{{ request()->is('settings/mvr-generic/Parameter') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'ReportParameter') }}">Report Parameters</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'Parameter') }}">Report Parameters</a>
                         </li>
                         <li class="{{ request()->is('settings/mvr-generic/Report') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'Report') }}">Report Parameters</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'Report') }}">Report Types</a>
                         </li>
 {{--                    @endcan--}}
                     @can('setting-api-user-view')

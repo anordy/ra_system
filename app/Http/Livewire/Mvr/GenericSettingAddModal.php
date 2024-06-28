@@ -17,6 +17,7 @@ use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
 use App\Models\Parameter;
 use App\Models\Report;
+use App\Models\ReportParameter;
 use App\Models\ReportType;
 use App\Traits\CustomAlert;
 use Exception;
@@ -44,7 +45,7 @@ class GenericSettingAddModal extends Component
         ],
         DlFee::class=>[['title'=>'License Duration','field'=>'dl_license_duration_id', 'class'=>DlLicenseDuration::class,'value_field'=>'number_of_years']],
         Report::class => [
-            ['title'=>'Report Type','class'=>ReportType::class,'field'=>'report_type_id'],
+            ['title'=>'Report Module','class'=>ReportType::class,'field'=>'report_type_id'],
         ]
     ];
 
@@ -54,6 +55,16 @@ class GenericSettingAddModal extends Component
         ],
         Parameter::class => [
             ['title' => 'Input Type', 'field' => 'input_type', 'options' => ['date' => 'Date', 'text' => 'Text', 'select' => 'Select']]
+        ],
+        // Report::class=>[
+        //     ['title'=>'Has Parameter','field'=>'has_parameter','options'=>['1'=>'Yes', '0'=>'No']],
+        // ]
+    ];
+
+    private array $checkboxs = [
+        Report::class=>[
+            // ['title'=>'Checkbox Options','field'=>'checkbox_options', 'options'=>['option1'=>'Option 1', 'option2'=>'Option 2', 'option3'=>'Option 3']],
+            ['title' => 'Parameters', 'class' => Parameter::class, 'field' => 'parameter'],
         ]
     ];
 
@@ -98,6 +109,8 @@ class GenericSettingAddModal extends Component
     public $relation_options = [];
     public $field_options = [];
     public $enum_options = [];
+    public $check_options = [];
+
     /**
      * @var array|string|string[]|null
      */
@@ -123,6 +136,7 @@ class GenericSettingAddModal extends Component
         $this->prepareRelations();
         $this->prepareData();
         $this->prepareEnums();
+        $this->prepareCheckbox();
     }
 
     protected function rules()
@@ -136,8 +150,9 @@ class GenericSettingAddModal extends Component
             return !$exist;
         });
 
+        $rules = [];
         if ($this->hasNameColumn()) {
-            $rules = ['name' => 'required|string|gs_unique'];
+            $rules['name'] = 'required|string|gs_unique';
         }
 
         if (!empty($this->relations[$this->model])){
@@ -163,8 +178,9 @@ class GenericSettingAddModal extends Component
     {
         $this->validate();
         try{
+            $data = [];
             if ($this->hasNameColumn()) {
-                $data = ['name' => $this->name];
+                $data['name'] = $this->name;
             }
 
             if (!empty($this->relations[$this->model])){
@@ -186,11 +202,28 @@ class GenericSettingAddModal extends Component
             }
 
             if (empty($this->instance)){
-                $this->model::query()->create($data);
+                $setting = $this->model::query()->create($data);
                 $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
             }else{
+                $setting = $this->instance;
                 $this->instance->update($data);
                 $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
+            }
+
+
+            if (!empty($this->check_options[$this->model])) {
+                foreach ($this->data['checkboxes'] as $checkbox) {
+                    //$data[$checkbox['field']] = $this->data[$checkbox['field']];
+                    $test[] = $checkbox;
+
+                    if($checkbox){
+                        ReportParameter::create([
+                            'report_id' => $setting->id,
+                            'parameter_id' => $checkbox
+                        ]);
+                    }
+                }
+
             }
 
         }catch(Exception $e){
@@ -233,7 +266,28 @@ class GenericSettingAddModal extends Component
         }
     }
 
-    private function hasNameColumn(){
+    private function prepareCheckbox()
+    {
+        if (empty($this->checkboxs[$this->model])) return;
+        // foreach ($this->checkboxs[$this->model] as $checkbox) {
+        //     $this->check_options[$checkbox['field']] = ['data'=>$checkbox['options'], 'title'=>$checkbox['title']];
+        //     $this->data[$checkbox['field']] = $this->instance[$checkbox['field']] ?? [];
+        // }
+
+        foreach ($this->checkboxs[$this->model] as $checkbox) {
+            //$this->check_options[$checkbox['field']] = ['data'=>$checkbox['dy_data'] ?? $checkbox['class']::query()->get(), 'title'=>$checkbox['title']];
+            //$this->data[$checkbox['field']] = $this->instance[$checkbox['field']] ?? null;
+            //if (isset($checkbox['value_field'])) {
+            //    $this->relation_options[$checkbox['field']]['value_field'] = $checkbox['value_field'];
+            //}
+
+            // options
+            $this->check_options[$this->model] =  $checkbox['class']::query()->get();
+        }
+    }
+
+    private function hasNameColumn()
+    {
         return empty($this->no_name_column[$this->model]);
     }
 
