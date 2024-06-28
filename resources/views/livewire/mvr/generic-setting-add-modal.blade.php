@@ -104,6 +104,7 @@
                                 @enderror
                             </div>
                         </div>
+                        @endif
                 
                 @else
                     @php($plateNoType = null)
