@@ -68,6 +68,18 @@
                     </div>
                 @endforeach
 
+                @if(isset($check_options[$this->model]))
+                    @foreach($check_options[$this->model] as $key => $option)
+                        <div>
+                            <input type="checkbox" value="{{ $option['id'] }}" wire:model="data.checkboxes.{{ $option['id'] }}">
+                            <label>
+                                {{ $option['name'] }}                                    
+                            </label>
+                            @error('data.checkboxes' . $option['id']) <span>{{ $message }}</span> @enderror
+                        </div>
+                    @endforeach
+                @endif
+
                 @if($model == \App\Models\MvrFee::class && $relation_data['mvr_registration_type_id'])
                     @if(!in_array(\App\Models\MvrRegistrationType::find($relation_data['mvr_registration_type_id'])->name, [
                         \App\Models\MvrRegistrationType::TYPE_CORPORATE,
@@ -92,7 +104,7 @@
                                 @enderror
                             </div>
                         </div>
-                    @endif
+                
                 @else
                     @php($plateNoType = null)
                 @endif

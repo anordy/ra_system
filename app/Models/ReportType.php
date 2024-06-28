@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Report;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Parameter extends Model
+class ReportType extends Model
 {
     use HasFactory;
 }

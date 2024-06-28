@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Reports\Report;
-use App\Models\Reports\ReportType;
-use App\Models\ZrbBankAccount;
+use App\Enum\GeneralReportType;
+use App\Models\ReportType;
 use Illuminate\Database\Seeder;
 
 class ReportTypesSeeder extends Seeder
@@ -16,6 +15,7 @@ class ReportTypesSeeder extends Seeder
      */
     public function run()
     {
+//        TODO: Add all modules Mang'erere
         $types = [
             ['name' => 'TAX PAYER REGISTRATION'],
             ['name' => 'RETURNS'],

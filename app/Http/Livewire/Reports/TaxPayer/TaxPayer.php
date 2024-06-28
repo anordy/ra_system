@@ -4,14 +4,14 @@ namespace App\Http\Livewire\Reports\TaxPayer;
 
 use App\Enum\ReportFormats;
 use App\Enum\TaxPayerReportCodes;
-use App\Models\Reports\Report;
-use App\Models\Reports\ReportType;
+use App\Models\Report;
+use App\Models\ReportType;
 use App\ReportHelpers\TaxPayerReport;
 use App\Traits\CustomAlert;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class TaxPayer extends Component
 {

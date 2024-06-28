@@ -258,7 +258,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlRestriction|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrRegistrationType|PortLocation');
+                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize|MvrPlateNumberColor|MvrRegistrationType|PortLocation|Parameter|Report');
         });
         Route::name('return-config.')->prefix('return-config')->group(function () {
             Route::get('/', [ReturnController::class, 'taxTypes'])->name('index');
