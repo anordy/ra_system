@@ -51,7 +51,6 @@ class Initial extends Component
         if ($property === 'report_code') {
             $this->report = Report::query()
                 ->select('code', 'name', 'has_parameter', 'id', 'report_url')
-                ->where('code', $this->report_code)
 //                ->where('code', $this->report_code)
                 ->where('report_type_id', $this->report_type_id)
                 ->first();
