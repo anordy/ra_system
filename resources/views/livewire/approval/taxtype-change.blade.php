@@ -12,13 +12,12 @@
                         {{ $taxchange->from_tax_type_currency ?? '' }}</span><br>
                 </td>
                 <td>
-                    @if ($taxchange->toTax->code == 'vat')
+                    @if ($taxchange->toTax && $taxchange->toTax->code == 'vat')
                         {{ $taxchange->subvat ? $taxchange->subvat->name : 'SUBVAT_NOTSET_ERR' }}
                     @else
-                    <span>{{ $taxchange->toTax->name }} -
+                    <span>{{ $taxchange->toTax && $taxchange->toTax->name }} -
                         {{ $taxchange->to_tax_type_currency ?? '' }}</span><br>
                     @endif
-
                 </td>
                 <td class="@if ($taxchange->from_tax_type_id != $taxchange->to_tax_type_id) table-success @endif">
                     @if ($taxchange->from_tax_type_id == $taxchange->to_tax_type_id)
@@ -62,7 +61,6 @@
     @if ($this->checkTransition('registration_manager_review'))
         <h6>Tax Type Change Configuration</h6>
         <hr>
-
         <div class="row mt-2 mb-4">
             <div class="col-6">
                 <div class="form-group">
@@ -125,9 +123,7 @@
                     @enderror
                 </div>
             </div>
-
         </div>
-
     @endif
 
     @include('livewire.approval.transitions')
