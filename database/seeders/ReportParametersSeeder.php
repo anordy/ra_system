@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Report\ReportParameter;
+use App\Models\District;
+use App\Models\Region;
+use App\Models\ReportParameter;
 use Illuminate\Database\Seeder;
 
 class ReportParametersSeeder extends Seeder

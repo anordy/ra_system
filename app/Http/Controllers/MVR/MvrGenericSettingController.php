@@ -26,6 +26,8 @@ use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
 use App\Models\MvrTransmissionType;
+use App\Models\Parameter;
+use App\Models\Report;
 use App\Models\TaxRefund\PortLocation;
 use Illuminate\Support\Facades\Gate;
 
@@ -85,6 +87,10 @@ class MvrGenericSettingController extends Controller
             $permission = 'setting-court-level-view';
         } else if ($class === MvrRegistrationType::class) {
             $permission = 'setting-mvr-color-view';
+        } else if ($class === Parameter::class) {
+            $permission = 'setting-mvr-plate-size-view';
+        } else if ($class === Report::class) {
+            $permission = 'setting-mvr-plate-size-view';
         } else if ($class === DlRestriction::class){
             $permission = 'setting-dl-restriction-view';
         } else if ($class === MvrClass::class){
@@ -92,6 +98,7 @@ class MvrGenericSettingController extends Controller
         }  else if ($class === PortLocation::class) {
             $permission = 'port-location-view';
         }
+
 
         if (!Gate::allows($permission)) {
             abort(403);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\LandLease;
 
+use App\Enum\GeneralConstant;
 use App\Enum\LeaseStatus;
 use App\Enum\TransactionType;
 use App\Events\SendSms;
@@ -109,7 +110,6 @@ class LandLeaseCompleteRegistration extends Component
             'ward' => 'required',
             'area' => 'required|thousand_separator',
             'usedFor' => 'required|strip_tag',
-            //'leaseAgreement' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
             'customPeriod' => 'nullable|numeric|min:33|max:99',
             'rentCommenceDate' => 'required|strip_tag',
         ];
@@ -167,85 +167,88 @@ class LandLeaseCompleteRegistration extends Component
     public function createLeasePayment($landLease)
     {
         $commence_date = Carbon::parse($landLease->rent_commence_date);
-        $currentYear = $commence_date->year;
-        $commenceMonthNumber = $commence_date->month;
-        $paymentMonthNumber = Carbon::parse('1 ' . $landLease->payment_month)->month;
+        $currentYear = Carbon::now()->year;
+        $commenceYear = $commence_date->year;
 
-        if ($commenceMonthNumber > $paymentMonthNumber) {
-            $date = clone $commence_date->addYear();
-            $currentYear = $date->year;
-        }
+        // Loop through each year from the commence year to the current year
+        for ($year = $commenceYear; $year <= $currentYear; $year++) {
 
-        $financialYear = FinancialYear::where('code', $currentYear)->firstOrFail('id');
+            $financialYear = FinancialYear::where('code', $year)->firstOrFail('id');
 
-        if ($financialYear) {
-            $paymentFinancialMonth = FinancialMonth::select('id', 'name', 'due_date')
-                ->where('financial_year_id', $financialYear->id)
-                ->where('name', $landLease->payment_month)
-                ->firstOrFail();
-        } else {
-            Log::error("Create Land Lease Payment: {$currentYear} PENALTY RATES DOES NOT EXIST");
-            $this->customAlert('warning', __('Some data are missing, please contact ZRA support for more assistance!'));
-        }
-
-        $due_date = Carbon::parse($paymentFinancialMonth->due_date)->endOfMonth();
-
-        $leasePayment = LeasePayment::create([
-            'land_lease_id' => $landLease->id,
-            'taxpayer_id' => $landLease->taxpayer_id,
-            'financial_month_id' => $paymentFinancialMonth->id,
-            'financial_year_id' => $financialYear->id,
-            'total_amount' => $landLease->payment_amount,
-            'total_amount_with_penalties' => $landLease->payment_amount,
-            'outstanding_amount' => $landLease->payment_amount,
-            'status' => LeaseStatus::PENDING,
-            'due_date' => $due_date,
-        ]);
-
-        $penaltyIteration = Carbon::now()->month - Carbon::parse($paymentFinancialMonth->due_date)->month;
-
-        if ($due_date > Carbon::now()) {
-            $penaltyIteration = 0;
-        }
-
-        if ($penaltyIteration > 0) {
-            $leasePenaltiesResponse = $this->calculateLeasePenalties($leasePayment, $paymentFinancialMonth, $penaltyIteration);
-
-            if ($leasePenaltiesResponse[0]) {
-                $updateLeasePayment = LeasePayment::find($leasePayment->id);
-                $updateLeasePayment->penalty = $leasePayment->totalPenalties();
-                $updateLeasePayment->total_amount_with_penalties = $leasePenaltiesResponse[1];
-                $updateLeasePayment->outstanding_amount = $leasePenaltiesResponse[1];
-                $updateLeasePayment->status = LeaseStatus::DEBT;
-                $updateLeasePayment->save();
-
-                LandLeaseDebt::create([
-                    'lease_payment_id' => $leasePayment->id,
-                    'business_location_id' => $leasePayment->landLease->business_location_id,
-                    'original_total_amount' => $leasePayment->total_amount,
-                    'penalty' => $updateLeasePayment->penalty,
-                    'total_amount' => $updateLeasePayment->total_amount_with_penalties,
-                    'outstanding_amount' => $updateLeasePayment->outstanding_amount,
-                    'status' => LeaseStatus::PENDING,
-                    'last_due_date' => $due_date,
-                    'curr_due_date' => Carbon::now()->endOfMonth(),
-                ]);
-
+            // used with Approach 1
+            if ($financialYear) {
+                $paymentFinancialMonth = FinancialMonth::select('id', 'name', 'due_date')
+                    ->where('financial_year_id', $financialYear->id)
+                    ->where('name', $landLease->payment_month)
+                    ->firstOrFail();
             } else {
+                Log::error("Create Land Lease Payment: {$year} PENALTY RATES DOES NOT EXIST");
                 $this->customAlert('warning', __('Some data are missing, please contact ZRA support for more assistance!'));
+                continue; // Skip to the next year
             }
 
+            // from commence date, end of month.
+            $originalDueDate = Carbon::parse($landLease->rent_commence_date)->setYear($year)->endOfMonth();
+
+            if ($originalDueDate->greaterThan(Carbon::now())){
+                return;
+            }
+
+            $penaltiesIterations = Carbon::now()->diffInMonths($originalDueDate);
+
+            $due_date = Carbon::parse($paymentFinancialMonth->due_date)->endOfMonth();
+
+            $leasePayment = LeasePayment::create([
+                'land_lease_id' => $landLease->id,
+                'taxpayer_id' => $landLease->taxpayer_id,
+                'financial_month_id' => $paymentFinancialMonth->id,
+                'financial_year_id' => $financialYear->id,
+                'total_amount' => $landLease->payment_amount,
+                'total_amount_with_penalties' => $landLease->payment_amount,
+                'outstanding_amount' => $landLease->payment_amount,
+                'status' => LeaseStatus::PENDING,
+                'due_date' => $due_date,
+            ]);
+
+            if ($penaltiesIterations > 0) {
+                $leasePenaltiesResponse = $this->calculateLeasePenalties($leasePayment, $paymentFinancialMonth,
+                    $penaltiesIterations, $currentYear);
+
+                if ($leasePenaltiesResponse[0]) {
+                    $updateLeasePayment = LeasePayment::find($leasePayment->id);
+                    $updateLeasePayment->penalty = $leasePayment->totalPenalties();
+                    $updateLeasePayment->total_amount_with_penalties = $leasePenaltiesResponse[1];
+                    $updateLeasePayment->outstanding_amount = $leasePenaltiesResponse[1];
+                    $updateLeasePayment->status = LeaseStatus::DEBT;
+                    $updateLeasePayment->save();
+
+                    LandLeaseDebt::create([
+                        'lease_payment_id' => $leasePayment->id,
+                        'business_location_id' => $leasePayment->landLease->business_location_id,
+                        'original_total_amount' => $leasePayment->total_amount,
+                        'penalty' => $updateLeasePayment->penalty,
+                        'total_amount' => $updateLeasePayment->total_amount_with_penalties,
+                        'outstanding_amount' => $updateLeasePayment->outstanding_amount,
+                        'status' => LeaseStatus::PENDING,
+                        'last_due_date' => $due_date,
+                        'curr_due_date' => Carbon::now()->endOfMonth(),
+                    ]);
+
+                } else {
+                    $this->customAlert('warning', __('Some data are missing, please contact ZRA support for more assistance!'));
+                }
+
+            }
+            $this->recordTransactionLedger($leasePayment);
         }
-        $this->recordTransactionLedger($leasePayment);
     }
 
     /*
      * Penalty on each month should be 10% of only principal and not compounded but accumulated
      * Penalty to be calculated for active lease only
      */
-    private function calculateLeasePenalties($leasePayment, $paymentFinancialMonth, $penaltyIteration)
+    private function calculateLeasePenalties($leasePayment, $paymentFinancialMonth, $penaltyIteration, $currentYear)
     {
-        $currentYear = Carbon::now()->year;
         $currentFinancialYear = FinancialYear::select('id')
             ->where('code', $currentYear)
             ->first();
@@ -253,7 +256,14 @@ class LandLeaseCompleteRegistration extends Component
         if ($currentFinancialYear) {
             $penaltyRate = PenaltyRate::where('financial_year_id', $currentFinancialYear->id)
                 ->where('code', 'LeasePenaltyRate')
-                ->firstOrFail()->rate;
+                ->first();
+
+            if (!$penaltyRate) {
+                $this->customAlert(GeneralConstant::ERROR, "Land lease penalty rate for year $currentYear is not configured.");
+                return;
+            }
+
+            $penaltyRate = $penaltyRate->rate;
 
             $wholeTotalAmount = $leasePayment->total_amount;
             $penaltyAmountAccumulated = 0;

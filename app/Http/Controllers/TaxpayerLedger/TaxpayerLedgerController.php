@@ -162,7 +162,7 @@ class TaxpayerLedgerController extends Controller
 
     }
 
-    private function getLedgerByCurrency($currency, $businessLocationId)
+    public function getLedgerByCurrency($currency, $businessLocationId)
     {
         $debitLedgers = TaxpayerLedger::select('source_type', 'business_location_id', 'tax_type_id', 'currency',
             DB::raw('SUM(total_amount) as total_debit_amount')
@@ -188,7 +188,7 @@ class TaxpayerLedgerController extends Controller
         ];
     }
 
-    private function getBusinessLedgerByCurrency($currency, $businessId)
+    public function getBusinessLedgerByCurrency($currency, $businessId)
     {
         $debitLedgers = TaxpayerLedger::select('source_type', 'business_id', 'tax_type_id', 'currency',
             DB::raw('SUM(total_amount) as total_debit_amount')
@@ -214,7 +214,7 @@ class TaxpayerLedgerController extends Controller
         ];
     }
 
-    private function joinLedgers($debitLedgers, $creditLedgers)
+    public function joinLedgers($debitLedgers, $creditLedgers)
     {
         $joinedLedgers = collect();
 

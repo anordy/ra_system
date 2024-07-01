@@ -16,6 +16,10 @@ use App\Models\MvrModel;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrTransferCategory;
 use App\Models\MvrTransferFee;
+use App\Models\Parameter;
+use App\Models\Report;
+use App\Models\ReportParameter;
+use App\Models\ReportType;
 use App\Models\Region;
 use App\Models\TaxRefund\PortLocation;
 use App\Models\TaxType;
@@ -43,16 +47,24 @@ class GenericSettingAddModal extends Component
             ],
             ['title' => 'Fee Type/Category', 'class' => MvrFeeType::class, 'field' => 'mvr_fee_type_id'],
         ],
-        MvrColor::class => [
-            ['title' => 'Motor vehicle Registration Type', 'class' => MvrRegistrationType::class, 'field' => 'mvr_registration_type_id'],
-        ],
-        DlFee::class => [['title' => 'License Duration', 'field' => 'dl_license_duration_id', 'class' => DlLicenseDuration::class, 'value_field' => 'number_of_years']],
-        PortLocation::class => [['title' => 'Region', 'field' => 'region_id', 'class' => Region::class, 'value_field' => 'region_id']],
+        DlFee::class=>[['title'=>'License Duration','field'=>'dl_license_duration_id', 'class'=>DlLicenseDuration::class,'value_field'=>'number_of_years']],
+        Report::class => [
+            ['title'=>'Report Module','class'=>ReportType::class,'field'=>'report_type_id'],
+        ]
     ];
 
     private array $enums = [
-        DlFee::class => [
-            ['title' => 'Type', 'field' => 'type', 'options' => ['FRESH' => 'Fresh Applicant', 'RENEW' => 'License Renewal', 'DUPLICATE' => 'License Copy', 'CLASS' => 'Add New Class']]
+        DlFee::class=>[
+            ['title'=>'Type','field'=>'type','options'=>['FRESH'=>'Fresh Applicant','RENEW'=>'License Renewal','DUPLICATE'=>'License Copy']]
+        ],
+        Parameter::class => [
+            ['title' => 'Input Type', 'field' => 'input_type', 'options' => ['date' => 'Date', 'text' => 'Text', 'select' => 'Select']]
+        ],
+    ];
+
+    private array $checkboxs = [
+        Report::class=>[
+            ['title' => 'Parameters', 'class' => Parameter::class, 'field' => 'parameter'],
         ]
     ];
 
@@ -69,7 +81,15 @@ class GenericSettingAddModal extends Component
         DlLicenseClass::class => [['title' => 'Description', 'field' => 'description']],
         MvrRegistrationType::class => [['title' => 'Initial Plate Number', 'field' => 'initial_plate_number']],
         MvrColor::class => [['title' => 'Color', 'field' => 'color', 'placeholder' => 'e.g. White/Black']],
-        MvrClass::class => [['title' => 'Code', 'field' => 'code'], ['title' => 'Category', 'field' => 'category']]
+        MvrClass::class => [['title' => 'Code', 'field' => 'code'], ['title' => 'Category', 'field' => 'category']],
+        Parameter::class => [
+            ['title'=>'Code','field'=>'code'],
+            ['title'=>'Model','field'=>'model_name'],
+            ['title'=>'Description','field'=>'description'],
+        ],
+        Report::class => [
+            ['title'=>'URL','field'=>'report_url'],
+        ]
     ];
 
     private $no_name_column = [
@@ -108,6 +128,8 @@ class GenericSettingAddModal extends Component
     public $relation_options = [];
     public $field_options = [];
     public $enum_options = [];
+    public $check_options = [];
+
     /**
      * @var array|string|string[]|null
      */
@@ -137,6 +159,7 @@ class GenericSettingAddModal extends Component
         $this->prepareRelations();
         $this->prepareData();
         $this->prepareEnums();
+        $this->prepareCheckbox();
     }
 
     protected function messages()
@@ -168,8 +191,9 @@ class GenericSettingAddModal extends Component
             return !$exist;
         });
 
+        $rules = [];
         if ($this->hasNameColumn()) {
-            $rules = ['name' => 'required|string|gs_unique'];
+            $rules['name'] = 'required|string|gs_unique';
         }
 
         if (!empty($this->relations[$this->model])) {
@@ -197,10 +221,10 @@ class GenericSettingAddModal extends Component
     public function submit()
     {
         $this->validate();
-
-        try {
+        try{
+            $data = [];
             if ($this->hasNameColumn()) {
-                $data = ['name' => $this->name];
+                $data['name'] = $this->name;
             }
 
             if (!empty($this->relations[$this->model])) {
@@ -226,15 +250,32 @@ class GenericSettingAddModal extends Component
                 $data['gfs_code'] = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first()->gfs_code;
             }
 
-            if (empty($this->instance)) {
-                $this->model::query()->create($data);
+            if (empty($this->instance)){
+                $setting = $this->model::query()->create($data);
                 $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
-            } else {
+            }else{
+                $setting = $this->instance;
                 $this->instance->update($data);
                 $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
             }
 
-        } catch (Exception $e) {
+
+            if (!empty($this->check_options[$this->model])) {
+                foreach ($this->data['checkboxes'] as $checkbox) {
+                    //$data[$checkbox['field']] = $this->data[$checkbox['field']];
+                    $test[] = $checkbox;
+
+                    if($checkbox){
+                        ReportParameter::create([
+                            'report_id' => $setting->id,
+                            'parameter_id' => $checkbox
+                        ]);
+                    }
+                }
+
+            }
+
+        }catch(Exception $e){
             Log::error('GENERIC-SETTING-ADD-MODAL', [$e]);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
@@ -271,6 +312,26 @@ class GenericSettingAddModal extends Component
         if (empty($this->enums[$this->model])) return;
         foreach ($this->enums[$this->model] as $enums) {
             $this->enum_options[$enums['field']] = ['data' => $enums['options'], 'title' => $enums['title']];
+        }
+    }
+
+    private function prepareCheckbox()
+    {
+        if (empty($this->checkboxs[$this->model])) return;
+        // foreach ($this->checkboxs[$this->model] as $checkbox) {
+        //     $this->check_options[$checkbox['field']] = ['data'=>$checkbox['options'], 'title'=>$checkbox['title']];
+        //     $this->data[$checkbox['field']] = $this->instance[$checkbox['field']] ?? [];
+        // }
+
+        foreach ($this->checkboxs[$this->model] as $checkbox) {
+            //$this->check_options[$checkbox['field']] = ['data'=>$checkbox['dy_data'] ?? $checkbox['class']::query()->get(), 'title'=>$checkbox['title']];
+            //$this->data[$checkbox['field']] = $this->instance[$checkbox['field']] ?? null;
+            //if (isset($checkbox['value_field'])) {
+            //    $this->relation_options[$checkbox['field']]['value_field'] = $checkbox['value_field'];
+            //}
+
+            // options
+            $this->check_options[$this->model] =  $checkbox['class']::query()->get();
         }
     }
 

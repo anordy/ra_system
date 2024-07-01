@@ -97,7 +97,7 @@ class LoadTaxpayerLedger extends Command
                             'financial_month_id' => $payment->bill->billable->financial_month_id ?? null,
                             'transaction_type' => TransactionType::CREDIT,
                             'business_id' => $payment->bill->billable->business_id ?? null,
-                            'business_location_id' => $payment->bill->billable->business_location_id ?? null,
+                            'business_location_id' => $payment->bill->billable->location_id ?? null,
                             'currency' => $payment->currency,
                             'transaction_date' => Carbon::create($payment->created_at),
                             'principal_amount' => 0,

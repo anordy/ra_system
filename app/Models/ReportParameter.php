@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Models\Reports;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ReportType extends Model
+class ReportParameter extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
 }

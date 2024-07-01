@@ -790,18 +790,18 @@
             </li>
         @endcan
 
-{{--        <li class="{{ request()->is('reports.general.initial*') ? 'active' : '' }}">--}}
-{{--            <a href="#generalReportsSubmenu" data-toggle="collapse"--}}
-{{--               aria-expanded="{{ request()->is('reports/general*') ? 'true' : 'false' }}" class="dropdown-toggle">--}}
-{{--                General Reports--}}
-{{--            </a>--}}
-{{--            <ul class="collapse list-unstyled {{ request()->is('reports/general*') ? 'show' : '' }}"--}}
-{{--                id="generalReportsSubmenu">--}}
-{{--                <li class="{{ request()->is('reports/general*') ? 'active' : '' }}">--}}
-{{--                    <a href="{{ route('reports.general.initial') }}">All Reports</a>--}}
-{{--                </li>--}}
-{{--            </ul>--}}
-{{--        </li>--}}
+        <li class="{{ request()->is('reports.general.initial*') ? 'active' : '' }}">
+            <a href="#generalReportsSubmenu" data-toggle="collapse"
+               aria-expanded="{{ request()->is('reports/general*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                General Reports
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('reports/general*') ? 'show' : '' }}"
+                id="generalReportsSubmenu">
+                <li class="{{ request()->is('reports/general*') ? 'active' : '' }}">
+                    <a href="{{ route('reports.general.initial') }}">All Reports</a>
+                </li>
+            </ul>
+        </li>
 
         @can('managerial-report')
             <li class="{{ request()->is('reports*') ? 'active' : '' }}">
@@ -1283,12 +1283,20 @@
                             <a href="{{ route("settings.zrb-bank-accounts.index") }}">ZRA Bank Accounts</a>
                         </li>
                     @endcan
-
-                    @can("setting-api-user-view")
-                        <li class="{{ request()->is("settings/api-users*") ? "active" : "" }}">
-                            <a href="{{ route("settings.api-users.index") }}">API User</a>
+{{--                    @can('setting-report-parameter-view')--}}
+                        <li class="{{ request()->is('settings/mvr-generic/Parameter') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'Parameter') }}">Report Parameters</a>
+                        </li>
+                        <li class="{{ request()->is('settings/mvr-generic/Report') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'Report') }}">Report Types</a>
+                        </li>
+{{--                    @endcan--}}
+                    @can('setting-api-user-view')
+                        <li class="{{ request()->is('settings/api-users*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.api-users.index') }}">API User</a>
                         </li>
                     @endcan
+
                 </ul>
             </li>
         @endcan

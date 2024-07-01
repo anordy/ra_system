@@ -3,10 +3,10 @@
 namespace App\Http\Livewire\Reports\General;
 
 use App\Enum\CustomMessage;
-use App\Models\Report\Parameter;
-use App\Models\Report\ReportParameter;
-use App\Models\Reports\Report;
-use App\Models\Reports\ReportType;
+use App\Models\Parameter;
+use App\Models\Report;
+use App\Models\ReportParameter;
+use App\Models\ReportType;
 use App\Services\JasperReport\ReportService;
 use App\Traits\CustomAlert;
 use Illuminate\Support\Facades\Log;
@@ -50,9 +50,10 @@ class Initial extends Component
         if ($property === 'report_code') {
             $this->report = Report::query()
                 ->select('code', 'name', 'has_parameter', 'id', 'report_url')
-                ->where('code', $this->report_code)
+//                ->where('code', $this->report_code)
+                ->where('report_type_id', $this->report_type_id)
                 ->first();
-
+//dd($this->report ,$this->report_code,$property ,$this);
             $this->parameters = ReportParameter::query()
                 ->join('parameters p', 'p.id', '=', 'report_parameters.parameter_id')
                 ->where('report_id', $this->report->id)
@@ -103,9 +104,7 @@ class Initial extends Component
         $formattedParameters = [];
 
         foreach ($this->parameters as $parameter) {
-            $formattedParameters[] = [
-                $parameter['code'] => $parameter['value'] ?? null
-            ];
+            $formattedParameters[$parameter['code']] = $parameter['value'] ?? null;
         }
 
         try {

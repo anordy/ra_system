@@ -47,6 +47,7 @@ trait TaxpayerLedgerTrait
                 throw new \Exception('Invalid Amount provided');
             }
 
+            $hasClaim = false;
             if ($sourceType === TaxReturn::class) {
                 $hasClaim = TaxReturn::findOrFail($sourceId, ['has_claim'])->has_claim;
 
@@ -55,7 +56,7 @@ trait TaxpayerLedgerTrait
                 }
             }
 
-            if ($totalAmount != array_sum([$interestAmount, $penaltyAmount, $principalAmount])){
+            if (!$hasClaim && $totalAmount != array_sum([$interestAmount, $penaltyAmount, $principalAmount])){
                 throw new \Exception('Invalid Amount provided');
             }
 
@@ -106,16 +107,15 @@ trait TaxpayerLedgerTrait
                 ->where('source_id', $sourceId)
                 ->first();
 
-            if (!$ledger) {
-                throw new \Exception('Transaction ledger not found');
+            if ($ledger) {
+                $ledger->interest_amount = $interestAmount;
+                $ledger->penalty_amount = $penaltyAmount;
+                $ledger->total_amount = $totalAmount;
+                $ledger->transaction_date = Carbon::now();
+
+                if (!$ledger->save()) throw new \Exception('Failed to Save Ledger');
             }
 
-            $ledger->interest_amount = $interestAmount;
-            $ledger->penalty_amount = $interestAmount;
-            $ledger->total_amount = $interestAmount;
-            $ledger->transaction_date = Carbon::now();
-
-            if (!$ledger->save()) throw new \Exception('Failed to Save Ledger');
 
         } catch (\Exception $exception) {
             Log::error('TRAITS-TAXPAYER-LEDGER-TRAIT-RECORD-LEDGER-DEBT', [$exception]);

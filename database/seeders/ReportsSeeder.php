@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Reports\Report;
-use App\Models\ZrbBankAccount;
+use App\Enum\GeneralReportType;
+use App\Models\Report;
+use App\Models\ReportType;
 use Illuminate\Database\Seeder;
 
 class ReportsSeeder extends Seeder
