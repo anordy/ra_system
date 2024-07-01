@@ -49,6 +49,9 @@ class GeneralConstant implements Status
     const ADD_CLASS = 'CLASS';
     const VERIFIED = 'verified';
 
+    const INPUT_TYPE_DATE = 'date';
+    const INPUT_TYPE_SELECT = 'select';
+
 
     public static function getConstants(): array
     {
