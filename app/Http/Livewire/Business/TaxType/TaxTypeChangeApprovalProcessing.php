@@ -53,12 +53,12 @@ class TaxTypeChangeApprovalProcessing extends Component
             $this->taxTypes   = TaxType::select('id', 'name')->where('category', 'main')->get();
             $this->today = Carbon::today()->addDay()->format('Y-m-d');
 
-            if ($this->taxchange->toTax->code == TaxType::VAT) {
+            if ($this->taxchange->toTax && $this->taxchange->toTax->code == TaxType::VAT) {
                 $this->subVatOptions = SubVat::all();
                 $this->showSubVatOptions = true;
             }
         } catch (Exception $exception) {
-            Log::error('TAX-TYPE-CHANGE-APPROVAL', [$exception->getMessage()]);
+            Log::error('TAX-TYPE-CHANGE-APPROVAL-MOUNT', [$exception]);
             abort(500, 'Something went wrong, please contact your system administrator for support.');
         }
         

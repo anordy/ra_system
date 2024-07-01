@@ -55,15 +55,15 @@ class TaxTypeTable extends DataTableComponent
             Column::make("From Tax Type", "from_tax_type_id")
                 ->sortable()
                 ->format(function ($value, $row) {
-                    return $row->fromTax->name;
+                    return $row->fromTax ? $row->fromTax->name : 'N/A';
                 }),
             Column::make("To Tax Type", "to_tax_type_id")
                 ->searchable()
                 ->format(function ($value, $row) {
-                    if ($row->toTax->code == 'vat') {
-                        return $row->subvat ? $row->subvat->name : 'VAT - Missing Sub Vat';
+                    if ($row->toTax && $row->toTax->code == 'vat') {
+                        return $row->subvat ? $row->subvat->name : 'SUBVAT_NOTSET_ERR';
                     } else {
-                        return $row->toTax->name;
+                        return $row->toTax ? $row->toTax->name : 'N/A';
                     }
                 }),
             Column::make("Date of Request", "created_at")
