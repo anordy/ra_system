@@ -39,6 +39,7 @@ class VerificationsTable extends DataTableComponent
     public function builder(): Builder
     {
         $query = TaxVerification::query()
+            ->with(['taxReturn'])
             ->where('tax_verifications.status', $this->status);
 
         if ($this->status === TaxVerificationStatus::PENDING && !$this->vetted){
@@ -57,9 +58,7 @@ class VerificationsTable extends DataTableComponent
         }
 
         $table = TaxVerification::getTableName();
-        $query = $this->dataFilter($query, $this->data, $table);
-
-        return $query;
+        return $this->dataFilter($query, $this->data, $table);
     }
 
     public function configure(): void
@@ -69,11 +68,22 @@ class VerificationsTable extends DataTableComponent
             'default' => true,
             'class'   => 'table-bordered table-sm',
         ]);
+        $this->setAdditionalSelects(['tax_return_type', 'tax_return_id']);
     }
 
     public function columns(): array
     {
         return [
+            Column::make('Control Number', 'business.reg_no')
+                ->sortable()
+                ->searchable()
+                ->label(function ($row, $value) {
+                    if (isset($row->taxReturn->tax_return->latestBill->control_number)) {
+                        return $row->taxReturn->tax_return->latestBill->control_number;
+                    } else {
+                        return 'N/A';
+                    }
+                }),
             Column::make('Z_Number', 'location.zin')
                 ->sortable()
                 ->searchable(),
