@@ -40,7 +40,7 @@ class LTOVerificationsTable extends DataTableComponent
     {
         $query = TaxVerification::query()
             ->whereHas('location.taxRegion', function ($query) {
-                $query->where('location', Region::LTD);
+                $query->whereIn('location', [Region::LTD, Region::UNGUJA]);
             })
             ->where('tax_verifications.status', $this->status);
 
