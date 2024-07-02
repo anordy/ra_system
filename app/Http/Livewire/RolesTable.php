@@ -54,7 +54,7 @@ class RolesTable extends DataTableComponent
                     $value = "'".encrypt($row->id)."'";
                     if (Gate::allows('setting-role-assign-permission')) {
                         return  <<< HTML
-                            <button class="btn btn-success btn-sm" id="showDataTableModal" data-modal-name="role-assign-permission-modal" data-modal-value="$value"><i class="fas fa-cog"></i>Configure Permission </button>
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal', $value)"><i class="fas fa-cog"></i>Configure Permission </button>
                         HTML;
                     }
                 })->html(true),
@@ -101,7 +101,7 @@ class RolesTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-role-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit =  <<< HTML
-                                    <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="role-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
                                 HTML;
                         }
                         if (Gate::allows('setting-role-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {

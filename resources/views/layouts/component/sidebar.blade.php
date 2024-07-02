@@ -376,18 +376,26 @@
                 <a href="{{ route("tax_investigation.payments.index") }}">Assessments Payments</a>
             </li>
         @endcan
-
-        @can("tax-auditing")
-            <li class="{{ request()->is("tax_auditing*") ? "active" : "" }}">
+        @can('itu')
+            <li class="{{ request()->is("tax_auditing/business*") ? "active" : "" }}">
+                <a href="#itu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    ITU
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is("tax_auditing/business*") ? "show" : "" }}" id="itu">
+                    @can("itu-view-business-with-risk")
+                        <li class="{{ request()->is("tax_auditing/business*") ? "active" : "" }}">
+                            <a href="{{ route("tax_auditing.businesses") }}">Businesses with Risk</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+        @canany('tax-auditing')
+            <li class="{{ request()->is("tax_auditing*") && !request()->is('tax_auditing/business*') ? "active" : "" }}">
                 <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     Tax Auditing
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is("tax_auditing*") ? "show" : "" }}" id="tax_auditing">
-                    @can("tax-auditing-approved-view")
-                        <li class="{{ request()->is("tax_auditing/businesses*") ? "active" : "" }}">
-                            <a href="{{ route("tax_auditing.businesses") }}">Businesses</a>
-                        </li>
-                    @endcan
+                <ul class="collapse list-unstyled {{ request()->is("tax_auditing*") && !request()->is('tax_auditing/business*') ? "show" : "" }}" id="tax_auditing">
                     @can("tax-auditing-approved-view")
                         <li class="{{ request()->is("tax_auditing/approvals*") ? "active" : "" }}">
                             <a href="{{ route("tax_auditing.approvals.index") }}">Approvals</a>

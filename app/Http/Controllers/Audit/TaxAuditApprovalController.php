@@ -23,7 +23,7 @@ class TaxAuditApprovalController extends Controller
     }
     public function business()
     {
-        if (!Gate::allows('tax-auditing-approval-view')) {
+        if (!Gate::allows('itu-view-business-with-risk')) {
             abort(403);
         }
 
@@ -32,7 +32,7 @@ class TaxAuditApprovalController extends Controller
     }
     public function showBusiness($id)
     {
-        if (!Gate::allows('tax-auditing-approval-view')) {
+        if (!Gate::allows('itu-view-business-with-risk')) {
             abort(403);
         }
 

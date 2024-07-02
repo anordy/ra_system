@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Audit;
 
+use App\Enum\TaxAuditStatus;
+use App\Models\Region;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxAudit\TaxAuditLocation;
 use App\Models\TaxAudit\TaxAuditTaxType;
@@ -44,22 +46,24 @@ class TaxAuditApprovalTable extends DataTableComponent
      */
     public function builder(): Builder
     {
-        $data = WorkflowTask::with('pinstance', 'pinstance.location', 'pinstance.business', 'user')
-            ->where('pinstance_type', TaxAudit::class)
-            ->where('status', '!=', WorkflowTask::COMPLETED)
-            ->whereHasMorph(
-                'pinstance',
-                [TaxAudit::class],
-                function ($query) {
-                    $query->where('forwarded_to_investigation', false);
+        $query = TaxAudit::query()
+            ->with('business', 'location', 'taxType', 'createdBy', 'pinstance')
+            ->where('tax_audits.forwarded_to_investigation', false)
+            ->whereHas('pinstance', function ($query) {
+                $query->where('status', '!=', 'completed');
+                $query->whereHas('actors', function ($query) {
+                    $query->where('user_id', auth()->id());
+                });
+            })
+            ->whereHas('location.taxRegion', function ($query) {
+                if ($this->taxRegion == Region::LTD) {
+                    $query->whereIn('location', [Region::LTD, Region::UNGUJA]); //this is filter by department
+                } else {
+                    $query->where('location', $this->taxRegion); //this is filter by department
                 }
-            )
-            ->where('owner', WorkflowTask::STAFF)
-            ->whereHas('actors', function ($query) {
-                $query->where('user_id', auth()->id());
             });
 
-        return $data;
+        return $query;
     }
 
     /**
@@ -67,61 +71,35 @@ class TaxAuditApprovalTable extends DataTableComponent
      */
     public function configure(): void
     {
-        // Set the primary key for the table.
         $this->setPrimaryKey('id');
+        // $this->setAdditionalSelects('pinstance_type', 'user_type');
 
-        // Set additional selects for the table.
-        $this->setAdditionalSelects('pinstance_type', 'user_type');
-
-        // Set the table wrapper attributes.
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-
-        // Set attributes for table header columns.
-        $this->setThAttributes(function (Column $column) {
-            // Check if the column title is 'Tax Types'.
-            if ($column->getTitle() == 'Tax Types') {
-                // Return the style attribute for the column with a width of 20%.
-                return [
-                    'style' => 'width: 20%;',
-                ];
-            }
-            // Return an empty array if the column title is not 'Tax Types'.
-            return [];
-        });
     }
 
     public function columns(): array
     {
         return [
-            Column::make('user_type', 'user_id')->hideIf(true),
-            Column::make('ZTN No')
-                ->label(fn ($row) => $row->pinstance->business->ztn_number ?? ''),
-            Column::make('TIN')
-                ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
-            Column::make('Business Name')
-                ->label(fn ($row) => $row->pinstance->business->name ?? ''),
-            Column::make('Business Location')
-                ->label(fn ($row) => $row->pinstance->taxAuditLocationNames()),
-            Column::make('Tax Types')
-                ->label(fn ($row) => $row->pinstance->taxAuditTaxTypeNames()),
-            Column::make('Period From', 'pinstance.period_from')
-                ->label(fn ($row) => $row->pinstance->period_from ?? ''),
-            Column::make('Period To', 'pinstance.period_to')
-                ->label(fn ($row) => $row->pinstance->period_to ?? ''),
-            Column::make('Filled By', 'pinstance.created_by_id')
-                ->label(function ($row) {
-                    $user = $row->pinstance->createdBy;
-                    return $user->full_name ?? '';
-                }),
-            Column::make('Filled On', 'created_at')
-                ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
-            Column::make('Action', 'pinstance_id')
+            Column::make('ZTN No', 'business.ztn_number'),
+            Column::make('TIN', 'business.tin'),
+            Column::make('Business Name', 'business.name'),
+            Column::make('Location', 'location_id')->format(function ($value, $row){
+                return $row->taxAuditLocationNames();
+            }),
+            Column::make('Tax Types', 'tax_type_id')->format(function ($value, $row){
+                return $row->taxAuditTaxTypeNames();
+            }),
+            Column::make('Period From', 'period_from')->format(function ($value, $row){
+                return $row->period_from ? $row->period_from->toFormattedDateString() : 'N/A';
+            }),
+            Column::make('Period To', 'period_to')->format(function ($value, $row){
+                return $row->period_to ? $row->period_to->toFormattedDateString() : 'N/A';
+            }),
+            Column::make('Action', 'id')
                 ->view('audit.approval.action')
-                ->html(true),
-
         ];
     }
 }
