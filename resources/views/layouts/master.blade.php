@@ -5,17 +5,21 @@
     @include('layouts.component.header')
 </head>
 <body>
-    <div class="wrapper">
+<div class="wrapper">
+    @if(auth()->check())
         @include('layouts.component.sidebar')
-        <div id="content">
-           @include('layouts.component.top-nav')
-            <div class="container-fluid">
-                @include('layouts.component.messages')
-                @include('layouts.component.back-nav')
-                @yield('content')
-            </div>
+    @endif
+    <div id="content">
+        @if(auth()->check())
+            @include('layouts.component.top-nav')
+        @endif
+        <div class="container-fluid">
+            @include('layouts.component.messages')
+            @include('layouts.component.back-nav')
+            @yield('content')
         </div>
     </div>
-    @include('layouts.component.footer')
+</div>
+@include('layouts.component.footer')
 </body>
 </html>
