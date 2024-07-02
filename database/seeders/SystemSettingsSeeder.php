@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\SystemSetting;
 use App\Models\SystemSettingCategory;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class SystemSettingsSeeder extends Seeder
@@ -57,6 +58,12 @@ class SystemSettingsSeeder extends Seeder
                 'name' => 'Property Tax Amount',
                 'code' => 'property-tax-amount',
                 'description' => 'All settings related to property tax bill amounts.',
+                'is_approved' => 1
+            ],
+            [
+                'name' => 'Other',
+                'code' => 'other',
+                'description' => 'Miscellaneous settings.',
                 'is_approved' => 1
             ],
         ];
@@ -312,7 +319,16 @@ class SystemSettingsSeeder extends Seeder
                 'is_approved' => 1,
                 'options' => json_encode(['disabled' => 0, 'enabled' => 1])
             ],
-
+            [
+                'system_setting_category_id' => SystemSettingCategory::where('code', SystemSettingCategory::OTHER)->firstOrFail()->id,
+                'name' => 'Last Configurations Check',
+                'code' => SystemSetting::LAST_CONFIGURATIONS_CHECK,
+                'description' => 'Last configurations check.',
+                'value' => Carbon::now()->toDateTimeString(),
+                'unit' => 'date',
+                'is_approved' => 1,
+                'options' => json_encode(['disabled' => 0, 'enabled' => 1])
+            ],
         ];
 
         foreach ($system_settings as $system_setting) {

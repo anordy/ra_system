@@ -198,7 +198,7 @@ class TaxAuditApprovalProcessing extends Component
                 [
                     'periodFrom' => 'required|date',
                     'periodTo' => 'required|date|after:periodFrom',
-                    'auditingDate' => 'required|date|after:today',
+                    'auditingDate' => 'required|date|after:' . Carbon::now()->addDays(14)->toDateString(),
                     'intension' => 'required|strip_tag',
                     'scope' => 'required|strip_tag',
                     'teamLeader' => ['required',  new NotIn([$this->teamMember])],

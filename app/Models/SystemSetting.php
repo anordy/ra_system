@@ -48,6 +48,7 @@ class SystemSetting extends Model implements Auditable
 
     const OVERRIDE_VFMS_LINK = 'override-vfms-link';
     const BIOMETRIC_STATUS = 'biometric-status';
+    const LAST_CONFIGURATIONS_CHECK = 'last-configurations-check';
 
 
     protected $guarded = [];

@@ -18,6 +18,7 @@ class SystemSettingCategory extends Model implements Auditable
     public const LOGIN_SETTINGS = 'login-settings';
     public const CERTIFICATE_SETTINGS = 'certificate-settings';
     public const FILING_DEADLINE = 'filing-deadline';
+    public const OTHER = 'other';
 
     public function system_settings(){
         return $this->hasMany(SystemSetting::class);
