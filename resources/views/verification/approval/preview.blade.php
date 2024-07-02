@@ -4,6 +4,12 @@
 
 @section('content')
 
+    @if(isset($verification->taxReturn->tax_return->latestBill))
+        <div class="mx-1">
+            <livewire:returns.return-payment :return="$verification->taxReturn->tax_return" />
+        </div>
+    @endif
+
     @if ($verification->status == App\Enum\TaxVerificationStatus::APPROVED)
         <div class="row m-2 pt-3">
             <div class="col-md-12">
@@ -158,6 +164,9 @@
                     </div>
                 </div>
             @endif
+
+            <livewire:approval.tax-verification-approval-processing modelName='{{ get_class($verification) }}'
+                                                                    modelId="{{ encrypt($verification->id) }}" />
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if (view()->exists($viewRender))

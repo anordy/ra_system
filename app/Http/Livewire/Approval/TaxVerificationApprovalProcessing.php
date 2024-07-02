@@ -88,7 +88,7 @@ class TaxVerificationApprovalProcessing extends Component
 
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
 
-            $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
+            $this->staffs = User::get();
         }
     }
 
