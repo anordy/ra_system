@@ -47,17 +47,12 @@ trait TaxpayerLedgerTrait
                 throw new \Exception('Invalid Amount provided');
             }
 
-            $hasClaim = false;
             if ($sourceType === TaxReturn::class) {
                 $hasClaim = TaxReturn::findOrFail($sourceId, ['has_claim'])->has_claim;
 
                 if ($hasClaim) {
                     $principalAmount = 0;
                 }
-            }
-
-            if (!$hasClaim && $totalAmount != array_sum([$interestAmount, $penaltyAmount, $principalAmount])){
-                throw new \Exception('Invalid Amount provided');
             }
 
             if ($locationId) {

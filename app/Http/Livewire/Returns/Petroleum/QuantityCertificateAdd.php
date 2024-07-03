@@ -41,7 +41,7 @@ class QuantityCertificateAdd extends Component
             'voyage_no' => 'nullable|alpha_gen',
             'ascertained' => 'required|date|after_or_equal:today',
             'location' => [
-                'required', 'numeric',
+                'required', 'alpha_gen',
                 'exists:business_locations,zin'
             ],
             'products.*.config_id' => 'required|numeric',
