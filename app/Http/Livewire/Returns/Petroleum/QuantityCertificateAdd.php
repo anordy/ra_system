@@ -115,7 +115,7 @@ class QuantityCertificateAdd extends Component
             $location = BusinessLocation::firstWhere('zin', $this->location);
 
             if ($this->quantity_certificate_attachment) {
-                $attachment_location = $this->quantity_certificate_attachment->store('/quantity-certificates', 'local-admin');
+                $attachment_location = $this->quantity_certificate_attachment->store('/quantity-certificates', 'local');
             }
 
             $certificate = QuantityCertificate::create([

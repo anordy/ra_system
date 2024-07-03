@@ -42,7 +42,7 @@
                 @can('tax-returns-vetting-view-domestic-taxpayers')
                     <div id="domestic-tax-payers" class="tab-pane fade p-2">
                         <div class="p-2">
-                            @livewire('vetting.vetting-filter', ['tablename' => 'vetting.vetting-approval-table']) <br>
+                            @livewire('vetting.vetting-filter', ['tablename' => 'vetting.vetting-approval-table-dtd']) <br>
                             <livewire:vetting.vetting-approval-table-dtd vettingStatus="{{ $vettingStatus }}"/>
                         </div>
                     </div>

@@ -48,7 +48,7 @@ class PortReturnController extends Controller
 
     public function show($return_id)
     {
-        if (!Gate::allows('return-port-return-view')) {
+        if (!Gate::allows('return-seaport-return-view ')) {
             abort(403);
         }
 

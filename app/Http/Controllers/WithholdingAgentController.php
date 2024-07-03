@@ -96,7 +96,7 @@ class WithholdingAgentController extends Controller
         $withholding_agent = WithholdingAgent::find(decrypt($agentId));
         
         if ($type == 'approval_letter') {
-            return Storage::disk('local-admin')->response($withholding_agent->approval_letter);
+            return Storage::disk('local')->response($withholding_agent->approval_letter);
         }
 
         return abort(404);

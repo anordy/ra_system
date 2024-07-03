@@ -93,7 +93,7 @@ class TaxReturnCancellationsController extends Controller
     {
         if ($path) {
             try {
-                return Storage::disk('local-admin')->response(decrypt($path));
+                return Storage::disk('local')->response(decrypt($path));
             } catch (\Exception $e) {
                 report($e);
                 abort(404);

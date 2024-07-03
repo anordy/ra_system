@@ -102,7 +102,7 @@ class QuantityCertificateController extends Controller
             $file = QuantityCertificate::findOrFail(decrypt($certificateId), ['quantity_certificate_attachment']);
 
             if ($file) {
-                return Storage::disk('local-admin')->response($file->quantity_certificate_attachment);
+                return Storage::disk('local')->response($file->quantity_certificate_attachment);
             }
 
             return abort(404);

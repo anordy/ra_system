@@ -64,7 +64,7 @@ class RegisterLandLease extends Component
             foreach ($this->files as $fileData) {
                 $file = $fileData['file'];
                 // Store the file and get the file path
-                $filePath = $file->store('/lease_agreement_documents', 'local-admin');
+                $filePath = $file->store('/lease_agreement_documents', 'local');
 
                 // Insert file details into the database
                 DB::table('land_lease_files')->insert([

@@ -34,7 +34,7 @@ class QuantityCertificateEdit extends Component
     protected function rules()
     {
         return [
-            'ship' => 'required|strip_tag|alpha_gen',
+            'ship' => 'required|strip_tag',
             'port' => 'required|strip_tag|alpha_gen',
             'voyage_no' => 'nullable|strip_tag|alpha_num',
             'ascertained' => 'required|date',
@@ -116,7 +116,7 @@ class QuantityCertificateEdit extends Component
         }
         try {
             if ($this->quantity_certificate_attachment) {
-                $attachment_location = $this->quantity_certificate_attachment->store('/quantity-certificates', 'local-admin');
+                $attachment_location = $this->quantity_certificate_attachment->store('/quantity-certificates', 'local');
                 $this->certificate->quantity_certificate_attachment = $attachment_location;
                 $this->certificate->save();
             }

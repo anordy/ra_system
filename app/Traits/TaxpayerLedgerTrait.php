@@ -43,7 +43,7 @@ trait TaxpayerLedgerTrait
                 throw new \Exception('Invalid Currency Provided');
             }
 
-            if ($interestAmount < 0 || $penaltyAmount < 0 || $totalAmount < 0) {
+            if ($interestAmount < 0 && $penaltyAmount < 0 && $totalAmount < 0) {
                 throw new \Exception('Invalid Amount provided');
             }
 
