@@ -138,12 +138,14 @@ class BusinessAuditAddModal extends Component
             return;
         }
 
+        if (!isset($this->location_ids[0]) || !isset($this->tax_type_ids[0])) throw new Exception('Please provide at least one location or tax type');
+
         DB::beginTransaction();
         try {
             $taxAudit = TaxAudit::create([
                 'business_id' => $this->business_id,
-                'location_id' => count($this->location_ids) <= 1 ? $this->location_ids[0] : 0,
-                'tax_type_id' => count($this->tax_type_ids) <= 1 ? $this->tax_type_ids[0] : 0,
+                'location_id' => $this->location_ids[0],
+                'tax_type_id' => $this->tax_type_ids[0],
                 'intension' => $this->intension,
                 'scope' => $this->scope,
                 'period_from' => $this->period_from,
