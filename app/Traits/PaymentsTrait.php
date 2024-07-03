@@ -6,6 +6,7 @@ use App\Enum\BillStatus;
 use App\Enum\Currencies;
 use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
+use App\Enum\PropertyOwnershipTypeStatus;
 use App\Enum\SubVatConstant;
 use App\Enum\TransactionType;
 use App\Events\SendSms;
@@ -937,7 +938,17 @@ trait PaymentsTrait
         $exchange_rate = $this->getExchangeRate($propertyPayment->currency->iso);
         $payer_type = get_class($property->taxpayer);
         $payer_id = $property->taxpayer->id;
-        $payer_name = $property->responsible->first_name . ' ' . $property->responsible->last_name;
+
+        if ($property->ownership->name === PropertyOwnershipTypeStatus::GOVERNMENT || $property->ownership->name === PropertyOwnershipTypeStatus::RELIGIOUS) {
+            $payer_name = $property->institution_name;
+        } else {
+            if ($property->responsible) {
+                $payer_name = $property->responsible->first_name . ' ' . $property->responsible->last_name;
+            } else {
+                $payer_name = $property->taxpayer->fullname;
+            }
+        }
+
         $payer_email = $property->taxpayer->email;
         $payer_phone = $property->taxpayer->mobile;
         $description = "Property Tax Payment for {$property->urn} - {$propertyPayment->year->code}";
