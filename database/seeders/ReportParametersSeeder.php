@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Enum\GeneralReportType;
 use App\Models\District;
+use App\Models\Parameter;
 use App\Models\Region;
 use App\Models\ReportParameter;
 use Illuminate\Database\Seeder;
@@ -16,31 +18,20 @@ class ReportParametersSeeder extends Seeder
      */
     public function run()
     {
-        $parameters = [
-            [
-                'name' => 'Start Date',
-                'code' => 'start_date',
-                'input_type' => 'date',
-                'model_name' => '',
-                'display_name' => '',
-            ],
-            [
-                'name' => 'End Date',
-                'code' => 'end_date',
-                'input_type' => 'date',
-                'model_name' => '',
-                'display_name' => '',
-            ]
+        $reportParameters = [
+          [
+              'report_name' => GeneralReportType::RETURNS
+          ]
         ];
 
-        foreach ($parameters as $parameter) {
-            ReportParameter::updateOrCreate(
-                [
-                    'code' => $parameter['code']
-                ],
-                $parameter
-            );
-        }
+//        foreach ($parameters as $parameter) {
+//            ReportParameter::updateOrCreate(
+//                [
+//                    'code' => $parameter['code']
+//                ],
+//                $parameter
+//            );
+//        }
 
     }
 }
