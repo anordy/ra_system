@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Audit;
 
 use App\Enum\TaxAuditStatus;
 use App\Models\Business;
+use App\Models\BusinessStatus;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxAudit\TaxAuditLocation;
 use App\Models\TaxAudit\TaxAuditTaxType;
@@ -11,6 +12,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class BusinessAuditAddModal extends Component
@@ -22,8 +24,8 @@ class BusinessAuditAddModal extends Component
     public $description;
     public $business;
     public $business_id;
-    public $location_ids;
-    public $tax_type_ids;
+    public $location_ids = [];
+    public $tax_type_ids = [];
     public $intension;
     public $scope;
     public $period_from;
@@ -32,32 +34,38 @@ class BusinessAuditAddModal extends Component
     public $locations = [];
     public $taxTypes = [];
     public $search = '';
+    public $ituDepartment = false;
 
 
     protected function rules()
     {
         return [
             'business_id' => 'required|numeric|exists:businesses,id',
-            'location_ids' => 'required',
-            'location_ids.*' => 'required|numeric',
-            'tax_type_ids' => 'required',
-            'tax_type_ids.*' => 'required|numeric',
-            'intension' => 'required|strip_tag',
-            'scope' => 'required|strip_tag',
-            'period_from' => 'required|date',
-            'period_to' => 'required|date|after:period_from',
+            'location_ids' => [Rule::requiredIf(!$this->ituDepartment)],
+            'location_ids.*' => [Rule::requiredIf(!$this->ituDepartment), 'numeric', 'exists:business_locations,id'],
+            'tax_type_ids' => [Rule::requiredIf(!$this->ituDepartment)],
+            'tax_type_ids.*' => [Rule::requiredIf(!$this->ituDepartment), 'numeric', 'exists:tax_types,id'],
+            'intension' => [Rule::requiredIf(!$this->ituDepartment), 'strip_tag'],
+            'scope' => [Rule::requiredIf(!$this->ituDepartment), 'strip_tag'],
+            'period_from' => [Rule::requiredIf(!$this->ituDepartment), 'strip_tag'],
+            'period_to' => [Rule::requiredIf(!$this->ituDepartment), 'strip_tag'],
         ];
     }
 
-    public function mount($jsonData = null)
+    public function mount($jsonData = null, $ituDepartment = false)
     {
-        $this->business = Business::select('id', 'name', 'reg_no')->get();
+        $this->business = Business::query()
+            ->whereNotIn('status', [BusinessStatus::PENDING, BusinessStatus::DRAFT, BusinessStatus::REJECTED])
+            ->select('id', 'name', 'reg_no', 'status')
+            ->get();
 
-        if (isset($jsonData)) {
+        if (isset($jsonData) && $jsonData != null) {
             $this->business_id = $jsonData['business_id'];
             $this->businessChange($this->business_id);
             $this->location_ids[] = $jsonData['location_ids'];
         }
+
+        $this->ituDepartment = $ituDepartment;
     }
 
     public function businessChange($id)
@@ -105,6 +113,12 @@ class BusinessAuditAddModal extends Component
     public function submit()
     {
         $this->validate();
+
+        if ($this->ituDepartment){
+            $business = Business::with('locations', 'taxTypes')->find($this->business_id);
+            $this->location_ids = $business->locations->pluck('id')->toArray();
+            $this->tax_type_ids = $business->taxTypes->pluck('id')->toArray();
+        }
 
         $location_ids = $this->location_ids;
         $tax_type_ids = $this->tax_type_ids;

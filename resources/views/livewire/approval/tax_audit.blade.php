@@ -73,7 +73,7 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label for="intension">Intension</label>
-                            <textarea class="form-control" wire:model.defer="intension" id="intension" rows="3"></textarea>
+                            <textarea class="form-control @error("intension") is-invalid @enderror" wire:model.defer="intension" id="intension" rows="3"></textarea>
                             @error("intension")
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -84,7 +84,7 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label for="periodTo">Scope</label>
-                            <textarea class="form-control" wire:model.defer="scope" id="scope" rows="3"></textarea>
+                            <textarea class="form-control @error("scope") is-invalid @enderror" wire:model.defer="scope" id="scope" rows="3"></textarea>
                             @error("scope")
                                 <div class="invalid-feedback">
                                     {{ $message }}

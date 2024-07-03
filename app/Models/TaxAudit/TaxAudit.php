@@ -18,6 +18,11 @@ class TaxAudit extends Model implements Auditable
 
     protected $guarded = [];
 
+    protected $casts = [
+        'period_from' => 'datetime',
+        'period_to' => 'datetime',
+    ];
+
     public function taxType()
     {
         return $this->belongsTo(TaxType::class);

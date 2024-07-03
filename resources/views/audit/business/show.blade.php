@@ -11,12 +11,13 @@
                 <span>Business Details:</span>
                 <div class="container d-flex justify-content-between">
                     <div class="card-tools">
-                        <button class="btn btn-info btn-sm"
-                            onclick="Livewire.emit('showModal', 'audit.business-audit-add-modal', {{ json_encode(["business_id" => $location->business->id, "location_ids" => $location->id]) }})">
-                            Add To Audit
-                            <i class="fa fa-plus-circle"></i>
-                        </button>
-
+                        @can('itu-add-business-to-audit')
+                            <button class="btn btn-info btn-sm"
+                                    onclick="Livewire.emit('showModal', 'audit.business-audit-add-modal', {{ json_encode(["business_id" => $location->business->id, "location_ids" => $location->id]) }}, true)">
+                                Add To Audit
+                                <i class="fa fa-plus-circle"></i>
+                            </button>
+                        @endcan
                         {{-- <button class="btn btn-info btn-sm"
                             onclick="Livewire.emit('showModal', 'investigation.business-investigation-add-modal', {{ json_encode(["business_id" => $location->business->id, "location_ids" => $location->id]) }})">
                             Foward to Investigation
@@ -73,7 +74,7 @@
                                 aria-controls="collapse{{ $key }}" style="color: #0080c1">
                                 <div class="card-header" id="heading{{ $key }}">
                                     <h5 class="mb-0">
-                                        {{ $taxReturn->taxType->name }} , {{ $taxReturn->financialMonth->name ?? "" }}
+                                        {{ $taxReturn->financialMonth->name ?? "" }}
                                         {{ $taxReturn->financialYear->name ?? "" }} <i class="px-3 bi bi-chevron-down"></i>
                                     </h5>
                                 </div>
