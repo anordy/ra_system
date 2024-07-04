@@ -28,19 +28,22 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
     public function builder(): Builder
     {
 
-        $query = TaxAudit::query()
-            ->with('business', 'location', 'taxType', 'createdBy', 'pinstance')
-            ->where('tax_audits.forwarded_to_investigation', false)
-            ->whereHas('pinstance', function ($query) {
-                $query->where('status', '!=', 'completed');
-            })
-            ->whereHas('location.taxRegion', function ($query) {
-                if ($this->taxRegion == Region::LTD) {
-                    $query->whereIn('location', [Region::LTD, Region::UNGUJA]);
-                } else {
-                    $query->where('location', $this->taxRegion);
-                }
-            });
+        $query = WorkflowTask::with('pinstance', 'pinstance.location', 'pinstance.business', 'user')
+            ->where('pinstance_type', TaxAudit::class)
+            ->where('status', '!=', WorkflowTask::COMPLETED)
+            ->whereHasMorph(
+                'pinstance',
+                [TaxAudit::class],
+                function ($query) {
+                    $query->where('forwarded_to_investigation', false)
+                        ->whereHas('location.taxRegion', function ($query) {
+                            if ($this->taxRegion == Region::LTD) {
+                                $query->whereIn('location', [Region::LTD, Region::UNGUJA]);
+                            } else {
+                                $query->where('location', $this->taxRegion);
+                            }
+                        });
+                });
 
         return $query;
     }
@@ -50,6 +53,8 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects('pinstance_type', 'user_type');
+
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -59,30 +64,33 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('ZTN No', 'business.ztn_number'),
-            Column::make('TIN', 'business.tin'),
-            Column::make('Business Name', 'business.name'),
-            Column::make('Location', 'location_id')->format(function ($value, $row){
-                return $row->taxAuditLocationNames();
-            }),
-            Column::make('Tax Types', 'tax_type_id')->format(function ($value, $row){
-                return $row->taxAuditTaxTypeNames();
-            }),
-            Column::make('Period From', 'period_from')->format(function ($value, $row){
-                return $row->period_from ? $row->period_from->toFormattedDateString() : 'N/A';
-            }),
-            Column::make('Period To', 'period_to')->format(function ($value, $row){
-                return $row->period_to ? $row->period_to->toFormattedDateString() : 'N/A';
-            }),
-            Column::make('Filled On', 'created_at')
-                ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
-            Column::make('From State', 'pinstance.from_place')
+            Column::make('user_type', 'user_id')->hideIf(true),
+            Column::make('ZTN No')
+                ->label(fn ($row) => $row->pinstance->business->ztn_number ?? ''),
+            Column::make('TIN', 'pinstance.business.tin')
+                ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
+            Column::make('Business Name', 'pinstance.business.name')
+                ->label(fn ($row) => $row->pinstance->business->name ?? ''),
+            Column::make('Business Location')
+                ->label(fn ($row) => $row->pinstance->taxAuditLocationNames()),
+            Column::make('Tax Types')
+                ->label(fn ($row) => $row->pinstance->taxAuditTaxTypeNames()),
+            Column::make('Period From', 'pinstance.period_from')
+                ->label(fn ($row) => $row->pinstance->period_from ?? ''),
+            Column::make('Period To', 'pinstance.period_to')
+                ->label(fn ($row) => $row->pinstance->period_to ?? ''),
+            Column::make('Filled By', 'pinstance.created_by_id')
+                ->label(function ($row) {
+                    $user = $row->pinstance->createdBy;
+                    return $user->full_name ?? '';
+                }),
+            Column::make('From State', 'from_place')
                 ->format(fn ($value) => strtoupper($value))
                 ->sortable()->searchable(),
-            Column::make('Current State', 'pinstance.to_place')
+            Column::make('Current State', 'to_place')
                 ->format(fn ($value) => strtoupper($value))
                 ->sortable()->searchable(),
-            Column::make('Action', 'pinstance.id')
+            Column::make('Action', 'pinstance_id')
                 ->view('audit.approval.approval-progress')
         ];
     }
