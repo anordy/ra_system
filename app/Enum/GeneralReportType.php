@@ -13,6 +13,9 @@ class GeneralReportType implements Status
     const MVR = 'MOTOR VEHICLE REGISTRATION';
     const LAND_LEASE = 'LAND LEASE';
     const TAXPAYER = 'TAX PAYER';
+    const BUSINESS = 'BUSINESS';
+    const PROPERTY_TAX = 'PROPERTY TAX';
+    const RESEARCH_REPORT = 'RESEARCH REPORT';
 
     static function getConstants(): array
     {

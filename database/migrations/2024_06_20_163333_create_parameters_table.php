@@ -16,10 +16,10 @@ class CreateParametersTable extends Migration
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
             $table->string('name', 20);
-            $table->string('code', 20);
+            $table->string('code', 50);
             $table->string('description', 20)->nullable();
             $table->string('input_type', 20);
-            $table->string('model_name', 40)->nullable();
+            $table->string('model_name', 255)->nullable();
             $table->string('display_name', 20)->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->timestamps();

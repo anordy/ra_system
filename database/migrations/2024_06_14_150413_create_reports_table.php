@@ -15,10 +15,10 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 60);
+            $table->string('name', 150);
             $table->boolean('has_parameter');
             $table->bigInteger('report_type_id');
-            $table->string('code', 20);
+            $table->string('code', 255);
             $table->string('report_url', 100);
             $table->timestamps();
         });

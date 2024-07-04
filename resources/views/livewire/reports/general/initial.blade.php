@@ -71,11 +71,19 @@
                         <select wire:model="parameters.{{$i}}.value"
                                 class="form-control">
                             <option value="">--choose option---</option>
-                                                        @foreach ($parameter['model_name']::get()->toArray() as $row)
-                                                            <option value={{ $row['id'] }}>
-                                                                {{ $row[$parameter['display_name']] ?? 'N/A' }}
-                                                            </option>
-                                                        @endforeach
+                            @if(str_starts_with($parameter['model_name'], 'SELECT'))
+                                @foreach (json_decode(json_encode(\Illuminate\Support\Facades\DB::select($parameter['model_name'])), TRUE) as $row)
+                                    <option value="{{ $row['id'] }}">
+                                        {{ $row[$parameter['display_name']] ?? 'N/A' }}
+                                    </option>
+                                @endforeach
+                            @else
+                                @foreach ($parameter['model_name']::get()->toArray() as $row)
+                                    <option value="{{ $row['id'] }}">
+                                        {{ $row[$parameter['display_name']] ?? 'N/A' }}
+                                    </option>
+                                @endforeach
+                            @endif
                         </select>
                         @error('parameters.'.$i.'.code')
                         <div class="invalid-feedback">

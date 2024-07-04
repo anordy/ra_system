@@ -15,14 +15,8 @@ class ReportTypesSeeder extends Seeder
      */
     public function run()
     {
-//        TODO: Add all modules Mang'erere
-        $types = [
-            ['name' => 'TAX PAYER REGISTRATION'],
-            ['name' => 'RETURNS'],
-        ];
-
-        foreach ($types as $type) {
-            ReportType::updateOrCreate($type);
+        foreach (GeneralReportType::getConstants() as $type) {
+            ReportType::updateOrCreate(['name' => $type]);
         }
     }
 }
