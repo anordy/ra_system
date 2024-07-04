@@ -22,5 +22,7 @@ class Parameter extends Model
     public const DEPARTMENT = 'department';
 
     public const REGION_NAME = 'region_name';
+    public const CODE = 'code';
+    public const PAYMENT_STATUS = 'payment_status';
 
 }

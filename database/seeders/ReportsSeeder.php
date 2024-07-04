@@ -64,10 +64,17 @@ class ReportsSeeder extends Seeder
                         'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
                     ],
                     [
-                        'name' => 'Property Tax Tax Payments',
+                        'name' => 'Property Tax Paid Payments',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::PROPERTY_TAX,
-                        'report_url' => '/reports/ZRA/PropertyTax/property_tax_payments',
+                        'report_url' => '/reports/ZRA/PropertyTax/property_tax_paid_payments',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE, Parameter::REGION_NAME]
+                    ],
+                    [
+                        'name' => 'Property Tax Unpaid Payments',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::PROPERTY_TAX,
+                        'report_url' => '/reports/ZRA/PropertyTax/property_tax_unpaid_payments',
                         'parameters' => [Parameter::START_DATE, Parameter::END_DATE, Parameter::REGION_NAME]
                     ],
                 ]
@@ -82,8 +89,167 @@ class ReportsSeeder extends Seeder
                         'report_url' => '/reports/ZRA/Business/business_without_z_number',
                         'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
                     ],
+                    [
+                        'name' => 'Renting Premises Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::BUSINESS,
+                        'report_url' => '/reports/ZRA/TaxPayer/renting_premises_report',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'Taxpayer for the Past Twelve Months',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::BUSINESS,
+                        'report_url' => '/reports/ZRA/TaxPayer/tax_payer_for_the_past_twelve_months_report',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
                 ]
-            ]
+            ],
+            [
+                'report_type' => GeneralReportType::RETURNS,
+                'reports' => [
+                    [
+                        'name' => 'Hotel Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RETURNS,
+                        'report_url' => '/reports/ZRA/TaxPayer/hotel_reports',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'Expected Returns',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RETURNS,
+                        'report_url' => '/reports/ZRA/Returns/expected_returns_report',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                ]
+            ],
+            [
+                'report_type' => GeneralReportType::DEBT,
+                'reports' => [
+                    [
+                        'name' => 'Offence Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::DEBT,
+                        'report_url' => '/reports/ZRA/Debt/offence_report',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE, Parameter::DEPARTMENT]
+                    ],
+                    [
+                        'name' => 'Tax Clearance',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::DEBT,
+                        'report_url' => '/reports/ZRA/Debt/clearance_report',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'Debt Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::DEBT,
+                        'report_url' => '/reports/ZRA/Debt/debt_report',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                ]
+            ],
+            [
+                'report_type' => GeneralReportType::LAND_LEASE,
+                'reports' => [
+                    [
+                        'name' => 'Land Lease Regional Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::LAND_LEASE,
+                        'report_url' => '/reports/ZRA/land_lease/land_lease_regional_report',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'Land Lease Registration Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::LAND_LEASE,
+                        'report_url' => '/reports/ZRA/land_lease/land_lease_registration_report',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                ]
+            ],
+            [
+                'report_type' => GeneralReportType::MVR,
+                'reports' => [
+                    [
+                        'name' => 'De Registered Vehicles',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::MVR,
+                        'report_url' => '/reports/ZRA/mvr/_de_registered_vehicles',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'General New Vehicle Imported',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::MVR,
+                        'report_url' => '/reports/ZRA/mvr/general_new_vehicle_imported',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'Paid Registered Vehicles',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::MVR,
+                        'report_url' => '/reports/ZRA/mvr/_paid_registered_vehicles',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'Plate Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::MVR,
+                        'report_url' => '/reports/ZRA/mvr/plate_reports',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'Sales Of Plates And Stickers Update And Deregistered',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::MVR,
+                        'report_url' => '/reports/ZRA/mvr/sales_of_plates_and_stickers_update_and_deregistered',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'Total Cards Printed',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::MVR,
+                        'report_url' => '/reports/ZRA/mvr/total_cards_printed',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'Transferred Vehicle Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::MVR,
+                        'report_url' => '/reports/ZRA/mvr/_transferred_vehicle_report',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                ]
+            ],
+            [
+                'report_type' => GeneralReportType::RESEARCH_REPORT,
+                'reports' => [
+                    [
+                        'name' => 'Collection By Department',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RESEARCH_REPORT,
+                        'report_url' => '/reports/ZRA/Research/collection_by_department',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'Collection By District',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RESEARCH_REPORT,
+                        'report_url' => '/reports/ZRA/Research/collection_by_district',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+                    [
+                        'name' => 'Collection By Region',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RESEARCH_REPORT,
+                        'report_url' => '/reports/ZRA/Research/collection_by_region',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                    ],
+
+                ]
+            ],
         ];
 
 

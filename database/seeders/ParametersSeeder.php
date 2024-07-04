@@ -6,6 +6,7 @@ use App\Models\District;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Parameter;
+use App\Models\PaymentStatus;
 use App\Models\Region;
 use App\Models\TaxDepartment;
 use App\Models\TaxRegion;
@@ -89,7 +90,21 @@ class ParametersSeeder extends Seeder
                 'name' => 'Region Name',
                 'code' => Parameter::REGION_NAME,
                 'input_type' => 'select',
-                'model_name' => Region::class,
+                'model_name' => 'SELECT DISTINCT REGION_ID AS NAME, REGION_ID AS ID FROM PROPERTIES',
+                'display_name' => 'name',
+            ],
+            [
+                'name' => 'Code',
+                'code' => Parameter::CODE,
+                'input_type' => 'input',
+                'model_name' => '',
+                'display_name' => '',
+            ],
+            [
+                'name' => 'Payment Status',
+                'code' => Parameter::PAYMENT_STATUS,
+                'input_type' => 'select',
+                'model_name' => PaymentStatus::class,
                 'display_name' => 'name',
             ]
         ];
