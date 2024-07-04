@@ -307,10 +307,10 @@ class TaxAuditApprovalProcessing extends Component
             if ($this->checkTransition('assign_officers')) {
 
                 $this->subject->auditing_date = $this->auditingDate;
-                $this->periodFrom = $this->subject->period_from;
-                $this->periodTo = $this->subject->period_to;
-                $this->intension = $this->subject->intension;
-                $this->scope = $this->subject->scope;
+                $this->subject->period_from = $this->periodFrom;
+                $this->subject->period_to = $this->periodTo;
+                $this->subject->intension = $this->intension;
+                $this->subject->scope = $this->scope;
                 $this->subject->save();
 
                 $officers = $this->subject->officers()->exists();
@@ -331,8 +331,6 @@ class TaxAuditApprovalProcessing extends Component
                     'user_id' => $this->teamMember,
                 ]);
 
-
-                $operators = [intval($this->teamLeader), intval($this->teamMember)];
             }
 
             if ($this->checkTransition('send_notification_letter')) {

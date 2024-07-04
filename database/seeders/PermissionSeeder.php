@@ -86,6 +86,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'tax-credit-view', 'sys_module_id' => 9],
 
             # Auditing
+            ['name' => 'tax-auditing-add-to-audit', 'sys_module_id' => 10],
             ['name' => 'tax-auditing-approval-view', 'sys_module_id' => 10],
             ['name' => 'tax-auditing-assessment-view', 'sys_module_id' => 10],
             ['name' => 'tax-auditing-approved-view', 'sys_module_id' => 10],
