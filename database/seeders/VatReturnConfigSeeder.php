@@ -406,7 +406,7 @@ class VatReturnConfigSeeder extends Seeder
             VatReturnConfig::query()->updateOrCreate(['code' => $config['code']], $config);
         }
 
-        App\Models\Returns\Vat\VatReturnConfig::create(
+        VatReturnConfig::create(
             [
                 'financial_year_id' => 1,
                 'order' => 4,
