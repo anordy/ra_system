@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enum\DlFeeType;
 use App\Models\DlFee;
 use App\Models\DlLicenseDuration;
 use Illuminate\Database\Seeder;
@@ -15,10 +16,9 @@ class DLFeeSeeder extends Seeder
      */
     public function run()
     {
-        $types = ['FRESH', 'RENEW', 'DUPLICATE', 'CLASS'];
         $durations = [2 => 35000, 3 => 450000, 5 => 60000];
 
-        foreach ($types as $type){
+        foreach (DlFeeType::getConstants() as $type){
             foreach (DlLicenseDuration::all() as $duration) {
                 DlFee::updateOrCreate([
                     'name' => $type,
