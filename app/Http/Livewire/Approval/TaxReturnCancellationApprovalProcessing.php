@@ -40,9 +40,11 @@ class TaxReturnCancellationApprovalProcessing extends Component
             'comments' => 'required|string|strip_tag',
         ]);
 
-        if ($this->subject->taxReturn->payment_status === BillStatus::COMPLETE) {
-            $this->customAlert('warning', 'Cancellation cannot be approved when the return is in paid state');
-            return;
+        if (isset($this->subject->tax_return->latestBill)) {
+            if ($this->subject->taxReturn->payment_status === BillStatus::COMPLETE) {
+                $this->customAlert('warning', 'Cancellation cannot be approved when the return is in paid state');
+                return;
+            }
         }
 
         try {
@@ -53,7 +55,7 @@ class TaxReturnCancellationApprovalProcessing extends Component
                 $this->subject->approved_on = Carbon::now();
 
                 // Cancel existing bill
-                if ($this->subject->taxReturn->latestBill) {
+                if (isset($this->subject->tax_return->latestBill)) {
                     $currentBill = $this->subject->taxReturn->latestBill;
                     CancelBill::dispatch($currentBill, 'Return Cancellation');
                 }
