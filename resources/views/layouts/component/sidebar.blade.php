@@ -798,6 +798,7 @@
             </li>
         @endcan
 
+        @can('managerial-report')
         <li class="{{ request()->is('reports.general.initial*') ? 'active' : '' }}">
             <a href="#generalReportsSubmenu" data-toggle="collapse"
                aria-expanded="{{ request()->is('reports/general*') ? 'true' : 'false' }}" class="dropdown-toggle">
@@ -810,6 +811,7 @@
                 </li>
             </ul>
         </li>
+        @endcan
 
         @can('managerial-report')
             <li class="{{ request()->is('reports*') ? 'active' : '' }}">
