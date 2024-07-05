@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Audit;
 
 use App\Http\Controllers\Controller;
 use App\Models\BusinessLocation;
+use App\Models\SystemSetting;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use PDF;
 
 class TaxAuditApprovalController extends Controller
 {
@@ -90,5 +92,23 @@ class TaxAuditApprovalController extends Controller
             session()->flash('warning', 'The selected audit was not found. Please contact your administrator');
             return back();
         }
+    }
+
+    public function getNotice($id)
+    {
+        $audit = TaxAudit::findOrFail(decrypt($id));
+
+        $totalInterest = $audit->assessments->sum('interest_amount') ?? 0;
+        $totalPenalty = $audit->assessments->sum('penalty_amount') ?? 0;
+        $totalAmount = $audit->assessments->sum('total_amount') ?? 0;
+
+        $signaturePath = SystemSetting::certificatePath();
+        $commissionerFullName = SystemSetting::commissinerFullName();
+
+        $pdf = PDF::loadView('audit.assessment.notice', compact('audit', 'signaturePath', 'commissionerFullName', 'totalInterest', 'totalPenalty', 'totalAmount'));
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
+
+        return $pdf->stream();
     }
 }
