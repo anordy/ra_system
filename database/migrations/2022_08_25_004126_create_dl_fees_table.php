@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\DlFeeType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ class CreateDlFeesTable extends Migration
             $table->id();
             $table->string('name');
             $table->decimal('amount',15);
-            $table->enum('type',['FRESH','DUPLICATE', 'RENEW']);
+            $table->enum('type', DlFeeType::getConstants());
             $table->string('gfs_code')->default(116101);
             $table->integer('duration')->nullable();
             $table->timestamps();

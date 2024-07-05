@@ -214,13 +214,13 @@ class TaxAuditApprovalProcessing extends Component
         if ($this->checkTransition('send_notification_letter')) {
             $this->validate(
                 [
-                    'notificationLetter' => 'required|max:1024',
+                    'notificationLetter' => 'required|max:3072',
                 ]
             );
 
             if ($this->notificationLetter != $this->subject->notification_letter) {
                 $this->validate([
-                    'notificationLetter' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
+                    'notificationLetter' => 'required|mimes:pdf,xlsx,xls|max:3072|max_file_name_length:100'
                 ]);
             }
         }
@@ -228,26 +228,26 @@ class TaxAuditApprovalProcessing extends Component
         if ($this->checkTransition('conduct_audit')) {
             $this->validate(
                 [
-                    'preliminaryReport' => 'required|max:1024',
-                    'workingReport' => 'required|max:1024',
-                    'entryMeeting' => 'required|max:1024',
+                    'preliminaryReport' => 'required|max:3072',
+                    'workingReport' => 'required|max:3072',
+                    'entryMeeting' => 'required|max:3072',
                 ]
             );
 
             if ($this->preliminaryReport != $this->subject->preliminary_report) {
                 $this->validate([
-                    'preliminaryReport' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
+                    'preliminaryReport' => 'required|mimes:pdf,xlsx,xls|max:3072|max_file_name_length:100'
                 ]);
             }
 
             if ($this->workingReport != $this->subject->working_report) {
                 $this->validate([
-                    'workingReport' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
+                    'workingReport' => 'required|mimes:pdf,xlsx,xls|max:3072|max_file_name_length:100'
                 ]);
             }
             if ($this->entryMeeting != $this->subject->entry_minutes) {
                 $this->validate([
-                    'entryMeeting' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
+                    'entryMeeting' => 'required|mimes:pdf,xlsx,xls|max:3072|max_file_name_length:100'
                 ]);
             }
         }
@@ -269,7 +269,7 @@ class TaxAuditApprovalProcessing extends Component
 
         if ($this->checkTransition('prepare_final_report')) {
             $this->validate([
-                'finalReport' => 'required|max:1024',
+                'finalReport' => 'required|max:3072',
                 'exitMinutes' => 'required',
                 'hasAssessment' => ['required', 'boolean'],
             ]);
@@ -279,9 +279,9 @@ class TaxAuditApprovalProcessing extends Component
             $validationRules = [];
             foreach ($taxTypes as $taxType) {
                 $taxTypeKey = str_replace(' ', '_', $taxType);
-                $validationRules["principalAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
-                $validationRules["interestAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
-                $validationRules["penaltyAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
+                $validationRules["principalAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'];
+                $validationRules["interestAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'];
+                $validationRules["penaltyAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'];
             }
 
             $this->validate($validationRules);
@@ -289,13 +289,13 @@ class TaxAuditApprovalProcessing extends Component
 
             if ($this->exitMinutes != $this->subject->exit_minutes) {
                 $this->validate([
-                    'exitMinutes' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
+                    'exitMinutes' => 'required|mimes:pdf,xlsx,xls|max:3072|max_file_name_length:100'
                 ]);
             }
 
             if ($this->finalReport != $this->subject->final_report) {
                 $this->validate([
-                    'finalReport' => 'required|mimes:pdf,xlsx,xls|max:1024|max_file_name_length:100'
+                    'finalReport' => 'required|mimes:pdf,xlsx,xls|max:3072|max_file_name_length:100'
                 ]);
             }
         };
@@ -307,10 +307,10 @@ class TaxAuditApprovalProcessing extends Component
             if ($this->checkTransition('assign_officers')) {
 
                 $this->subject->auditing_date = $this->auditingDate;
-                $this->periodFrom = $this->subject->period_from;
-                $this->periodTo = $this->subject->period_to;
-                $this->intension = $this->subject->intension;
-                $this->scope = $this->subject->scope;
+                $this->subject->period_from = $this->periodFrom;
+                $this->subject->period_to = $this->periodTo;
+                $this->subject->intension = $this->intension;
+                $this->subject->scope = $this->scope;
                 $this->subject->save();
 
                 $officers = $this->subject->officers()->exists();
@@ -331,8 +331,6 @@ class TaxAuditApprovalProcessing extends Component
                     'user_id' => $this->teamMember,
                 ]);
 
-
-                $operators = [intval($this->teamLeader), intval($this->teamMember)];
             }
 
             if ($this->checkTransition('send_notification_letter')) {
@@ -346,10 +344,10 @@ class TaxAuditApprovalProcessing extends Component
                 $this->subject->notification_letter_date = now();
                 $this->subject->save();
 
-                //Send Email Notification to taxpayer 
+                //Send Email Notification to taxpayer
                 event(new SendMail('notification-letter-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
 
-                //Send SMS Notification to taxpayer 
+                //Send SMS Notification to taxpayer
                 event(new SendSms('notification-letter-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
             }
 
@@ -419,6 +417,10 @@ class TaxAuditApprovalProcessing extends Component
 
                         $totalAmount = $penaltyAmount + $interestAmount + $principalAmount;
 
+                        $businessTaxType = BusinessTaxType::query()
+                            ->where('tax_type_id', $taxTypeId)
+                            ->where('business_id', $this->subject->business_id)
+                            ->firstOrFail();
 
                         if ($assessment) {
                             $this->subject->assessment()->where('tax_type_id', $taxTypeId)->update([
@@ -430,7 +432,8 @@ class TaxAuditApprovalProcessing extends Component
                                 'original_principal_amount' => $principalAmount,
                                 'original_interest_amount' => $interestAmount,
                                 'original_penalty_amount' => $penaltyAmount,
-                                'original_total_amount' => $totalAmount
+                                'original_total_amount' => $totalAmount,
+                                'currency' => $businessTaxType->currency,
                             ]);
                         } else {
                             TaxAssessment::create([
@@ -447,7 +450,8 @@ class TaxAuditApprovalProcessing extends Component
                                 'original_principal_amount' => $principalAmount,
                                 'original_interest_amount' => $interestAmount,
                                 'original_penalty_amount' => $penaltyAmount,
-                                'original_total_amount' => $totalAmount
+                                'original_total_amount' => $totalAmount,
+                                'currency' => $businessTaxType->currency,
                             ]);
                         }
                     }
@@ -503,7 +507,6 @@ class TaxAuditApprovalProcessing extends Component
 
             if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
                 foreach ($this->subject->assessments as $key => $assessment) {
-                    # code...
                     $assessment->update([
                         'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
                         'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
@@ -598,3 +601,4 @@ class TaxAuditApprovalProcessing extends Component
         return view('livewire.approval.tax_audit');
     }
 }
+

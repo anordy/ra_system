@@ -8,7 +8,7 @@
         <div class="card-header text-uppercase font-weight-bold bg-white">
             Tax Audit Approvals
             <div class="card-tools">
-                @can('itu-add-business-to-audit')
+                @can('tax-auditing-add-to-audit')
                     <button class="btn btn-primary btn-sm" onclick="Livewire.emit('showModal', 'audit.business-audit-add-modal')">
                         <i class="bi bi-plus-circle-fill mr-1"></i>
                         Add To Audit

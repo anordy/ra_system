@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BusinessLocation;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
@@ -55,7 +56,9 @@ class TaxAuditApprovalController extends Controller
             $taxAssessments = TaxAssessment::where('assessment_id', $audit->id)
                 ->where('assessment_type', get_class($audit))->get();
 
-            return view('audit.approval.approval', compact('audit', 'taxAssessments'));
+            $auditDocuments = DB::table('tax_audit_files')->where('tax_audit_id', $audit->id)->get();
+
+            return view('audit.approval.approval', compact('audit', 'taxAssessments', 'auditDocuments'));
         } catch (\Exception $e) {
             report($e);
             Log::error('Error: ' . $e->getMessage(), [

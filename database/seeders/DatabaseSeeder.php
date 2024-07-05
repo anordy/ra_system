@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use RiskIndicatorsSeeder;
 
 class DatabaseSeeder extends Seeder
 {

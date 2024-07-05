@@ -132,28 +132,6 @@
                 </div>
             @endif
 
-            @if ($auditDocuments)
-                <div class="pl-3 pr-3 card">
-                    <p class="card-header ">Taxpayer Uploaded Audit Documents</p>
-                    <div class="row pt-3">
-                        @foreach ($auditDocuments as $document)
-                            <div class="col-md-3">
-                                <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                    class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                    <a target="_blank"
-                                        href="{{ route("tax_auditing.files.show", encrypt($document["path"])) }}"
-                                        style="font-weight: 500;" class="ml-1">
-                                        {{ $document["name"] }}
-                                        <i class="bi bi-arrow-up-right-square ml-1"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-
             @if ($this->subject->preliminary_extension_attachment)
                 <div class="pt-3">
                     <p class="p-2">
@@ -320,7 +298,7 @@
                     <div class="row px-3">
                         <div class="form-group col-lg-4">
                             <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Principal Amount</label>
-                            <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control"
+                            <input type="text" class="form-control"
                                 wire:model.defer="principalAmounts.{{ $taxTypeKey }}">
                             @error("principalAmounts.{$taxTypeKey}")
                                 <span class="text-danger">{{ $message }}</span>
@@ -328,7 +306,7 @@
                         </div>
                         <div class="form-group col-lg-4">
                             <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Interest Amount</label>
-                            <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control"
+                            <input type="text" class="form-control"
                                 wire:model.defer="interestAmounts.{{ $taxTypeKey }}">
                             @error("interestAmounts.{$taxTypeKey}")
                                 <span class="text-danger">{{ $message }}</span>
@@ -336,7 +314,7 @@
                         </div>
                         <div class="form-group col-lg-4">
                             <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Penalty Amount</label>
-                            <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control"
+                            <input type="text" class="form-control"
                                 wire:model.defer="penaltyAmounts.{{ $taxTypeKey }}">
                             @error("penaltyAmounts.{$taxTypeKey}")
                                 <span class="text-danger">{{ $message }}</span>
