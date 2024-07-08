@@ -53,12 +53,35 @@ class VettingApprovalTablePemba extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setFilterLayoutSlideDown();
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+    }
 
+    public function filters(): array
+    {
+        return [
+            SelectFilter::make('Tax Region')
+                ->options([
+                    'all' => 'All',
+                    'kaskazini-pemba' => 'Kaskazini Pemba',
+                    'kusini-pemba' => 'Kusini Pemba'
+                ])
+                ->filter(function (Builder $builder, string $value) {
+                    if ($value != 'all') {
+                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
+                            $query->where('code', $value);
+                        });
+                    } else {
+                        $builder->whereHas('location.taxRegion', function ($query) {
+                            $query->whereIn('code', ['kaskazini-pemba', 'kusini-pemba']);
+                        });
+                    }
+                }),
+        ];
     }
 
     public function builder(): Builder

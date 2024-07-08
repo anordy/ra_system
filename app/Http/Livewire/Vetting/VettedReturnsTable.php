@@ -53,10 +53,45 @@ class VettedReturnsTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
+        $this->setFilterLayoutSlideDown();
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+    }
+
+    public function filters(): array
+    {
+        return [
+            SelectFilter::make('Tax Region')
+                ->options([
+                    'all' => 'All',
+                    'headquarter' => 'Head Quarter',
+                    'mjini' => 'Mjini',
+                    'magharib' => 'Kaskazini Unguja',
+                    'kaskazini-unguja' => 'Kaskazini Unguja',
+                    'kusini-unguja' => 'Kusini Unguja',
+                    'kusini-pemba' => 'Kusini Pemba',
+                    'kaskazini-pemba' => 'Kaskazini Pemba',
+                    'NTRD' => 'NTRD',
+                    'LTD' => 'LTD',
+                ])
+                ->filter(function (Builder $builder, string $value) {
+                    if ($value === 'LTD') {
+                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
+                            $query->whereIn('code', ['company', 'special-sector', 'hotel']);
+                        });
+                    } else if ($value === 'NTRD') {
+                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
+                            $query->whereIn('code', ['ntrd']);
+                        });
+                    }  else if ($value != 'all') {
+                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
+                            $query->where('code', $value);
+                        });
+                    }
+                })
+        ];
     }
 
 
