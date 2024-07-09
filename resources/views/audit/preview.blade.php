@@ -71,6 +71,20 @@
                             <span class="font-weight-bold text-uppercase">Intension</span>
                             <p class="my-1">{{ $audit->intension ?? "" }}</p>
                         </div>
+                        @if ($audit->status == App\Enum\TaxAuditStatus::APPROVED)
+                            <div class="col-md-3">
+                                <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
+                                     class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                    <a target="_blank"
+                                       href="{{ route("tax_auditing.notice", encrypt($audit->id)) }}"
+                                       style="font-weight: 500;" class="ml-1">
+                                        {{ __("Get Notice of Assessment") }}
+                                        <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
