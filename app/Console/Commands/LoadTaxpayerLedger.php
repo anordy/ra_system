@@ -3,9 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Enum\TransactionType;
+use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxpayerLedger\TaxpayerLedger;
-use App\Models\Returns\TaxReturn;
 use App\Models\ZmPayment;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -47,7 +47,7 @@ class LoadTaxpayerLedger extends Command
             $this->line('Recording tax returns ledgers');
 
             // TAX RETURNS
-            TaxReturn::chunk(100, function($taxReturns) {
+            TaxReturn::chunk(100, function ($taxReturns) {
                 foreach ($taxReturns as $return) {
                     $ledger = TaxpayerLedger::updateOrCreate(
                         [
@@ -80,7 +80,7 @@ class LoadTaxpayerLedger extends Command
             $this->line('Recording payments ledgers');
 
             // PAYMENTS
-            ZmPayment::chunk(100, function($payments) {
+            ZmPayment::chunk(100, function ($payments) {
                 foreach ($payments as $payment) {
                     $ledger = TaxpayerLedger::updateOrCreate(
                         [
@@ -112,7 +112,7 @@ class LoadTaxpayerLedger extends Command
             });
 
             // TAX ASSESSMENTS
-            TaxAssessment::chunk(100, function($assessments) {
+            TaxAssessment::chunk(100, function ($assessments) {
                 foreach ($assessments as $assessment) {
                     $ledger = TaxpayerLedger::updateOrCreate(
                         [
@@ -141,6 +141,22 @@ class LoadTaxpayerLedger extends Command
                     if (!$ledger) throw new \Exception('Failed to save ledger');
                 }
             });
+
+            // Update outstanding amounts
+            TaxpayerLedger::where('transaction_type', TransactionType::DEBIT)->chunk(100, function ($ledgers) {
+                foreach ($ledgers as $ledger) {
+                    // Collect all the credits and save to debit as paid amount to get outstanding amount
+                    $credits = TaxpayerLedger::select('id', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'source_type', 'source_id', 'tax_type_id', 'financial_month_id', 'transaction_type', 'business_id', 'business_location_id', 'currency', 'taxpayer_id')
+                        ->where('source_type', $ledger->source_type)
+                        ->where('source_id', $ledger->source_id)
+                        ->where('transaction_type', TransactionType::CREDIT)
+                        ->get();
+
+                    $ledger->outstanding_amount = abs($ledger->total_amount - $credits->sum('total_amount'));
+                    $ledger->save();
+                }
+            });
+
 
             $this->info('Completed recording tax returns ledger');
         } catch (\Exception $exception) {

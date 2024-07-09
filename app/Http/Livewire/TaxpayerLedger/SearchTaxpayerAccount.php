@@ -48,7 +48,7 @@ class SearchTaxpayerAccount extends Component
 
     public function search()
     {
-//        $this->validate();
+        $this->validate();
         $this->getAccounts();
     }
 
