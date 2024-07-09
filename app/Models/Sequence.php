@@ -16,8 +16,7 @@ class Sequence extends Model
     const PLATE_NUMBER ='plateNumber';
     const SMZ_PLATE_NUMBER ='smzPlateNumber';
     const SLS_PLATE_NUMBER ='slsPlateNumber';
-
-    protected $fillable = ['next_id', 'next_sequence'];
+    const DEBIT_NUMBER ='debitNumber';
 
     protected $guarded = [];
 }

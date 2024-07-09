@@ -7,6 +7,7 @@ use App\Enum\Currencies;
 use App\Enum\TransactionType;
 use App\Models\BusinessLocation;
 use App\Models\Returns\TaxReturn;
+use App\Models\Sequence;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxpayerLedger\TaxpayerLedger;
 use Carbon\Carbon;
@@ -78,7 +79,8 @@ trait TaxpayerLedgerTrait
                 'interest_amount' => $interestAmount,
                 'penalty_amount' => $penaltyAmount,
                 'total_amount' => $totalAmount,
-                'description' => $description
+                'description' => $description,
+                'debit_no' => $transactionType === TransactionType::DEBIT ? $this->generateDebitNumber() : null
             ]);
 
             if (!$ledger) throw new \Exception('Failed to save ledger transaction');
@@ -141,5 +143,30 @@ trait TaxpayerLedgerTrait
             Currencies::TZS,
             $taxpayerId ?? $service->taxpayer_id
         );
+    }
+
+    public function generateDebitNumber() {
+        try {
+            $sequence = Sequence::where('name', Sequence::DEBIT_NUMBER)->first();
+
+            if (!$sequence) {
+                $sequence = Sequence::create([
+                   'name' => Sequence::DEBIT_NUMBER,
+                   'prefix' => 'TDN',
+                   'next_id' => 1
+                ]);
+            }
+
+            $currentSequence = now()->format('y') . str_pad($sequence->next_id, 5, "0", STR_PAD_LEFT);
+
+            $sequence->next_id = $sequence->next_id + 1;
+            $sequence->save();
+
+            return $currentSequence;
+
+        } catch (\Exception $exception) {
+            Log::error('TRAITS-TAXPAYER-LEDGER-TRAIT-GENERATE-DEBIT-NUMBER', [$exception]);
+            throw $exception;
+        }
     }
 }

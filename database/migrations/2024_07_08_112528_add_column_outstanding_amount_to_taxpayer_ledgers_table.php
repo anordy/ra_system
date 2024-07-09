@@ -15,6 +15,7 @@ class AddColumnOutstandingAmountToTaxpayerLedgersTable extends Migration
     {
         Schema::table('taxpayer_ledgers', function (Blueprint $table) {
             $table->decimal('outstanding_amount',  20, 2)->nullable();
+            $table->string('debit_no',  10)->nullable();
         });
     }
 

@@ -37,14 +37,14 @@ class TaxpayerLedgerController extends Controller
 
             $taxTypeId = decrypt($taxTypeId);
 
-            $tzsLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
+            $tzsLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at', 'debit_no')
                 ->where('business_location_id', $businessLocationId)
                 ->where('currency', Currencies::TZS)
                 ->orderBy('source_type', 'ASC')
                 ->orderBy('source_id', 'ASC')
                 ->orderBy('financial_month_id', 'ASC');
 
-            $usdLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
+            $usdLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at', 'debit_no')
                 ->where('business_location_id', $businessLocationId)
                 ->where('currency', Currencies::USD)
                 ->orderBy('source_type', 'ASC')
