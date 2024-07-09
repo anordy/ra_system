@@ -317,10 +317,10 @@ function getSourceName($model) {
         return 'Assessment';
     }  else if ($model == App\Models\PublicService\PublicServiceReturn::class) {
         return 'Public Service';
-    }  else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
-        return 'Public Service';
-    }  else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
-        return 'Public Service';
+    }  else if ($model == \App\Models\Investigation\TaxInvestigation::class) {
+        return 'Tax Investigation';
+    }  else if ($model == \App\Models\TaxAudit\TaxAudit::class) {
+        return 'Tax Audit';
     } else {
         return 'N/A';
     }
