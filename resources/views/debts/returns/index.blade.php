@@ -16,15 +16,19 @@
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade m-2 show active">
+                    @livewire('debt.debt-filter', ['tablename' => 'debt.return-overdue-debts-table']) <br>
                     <livewire:debt.return-overdue-debts-table department="{{ \App\Models\Region::LTD  }}" />
                 </div>
                 <div id="tab2" class="tab-pane fade m-2 show">
+                    @livewire('debt.debt-filter', ['tablename' => 'debt.return-overdue-debts-table']) <br>
                     <livewire:debt.return-overdue-debts-table department="{{ \App\Models\Region::DTD  }}" />
                 </div>
                 <div id="tab3" class="tab-pane fade m-2 show">
+                    @livewire('debt.debt-filter', ['tablename' => 'debt.return-overdue-debts-table']) <br>
                     <livewire:debt.return-overdue-debts-table department="{{ \App\Models\Region::NTRD  }}" />
                 </div>
                 <div id="tab4" class="tab-pane fade m-2 show">
+                    @livewire('debt.debt-filter', ['tablename' => 'debt.return-overdue-debts-table']) <br>
                     <livewire:debt.return-overdue-debts-table department="{{ \App\Models\Region::PEMBA  }}" />
                 </div>
             </div>
