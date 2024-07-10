@@ -97,7 +97,6 @@ class VettingApprovalTable extends DataTableComponent
                 ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
                 ->where('parent', 0)
                 ->whereHas('pinstance', function ($query) {
-                    $query->where('status', '!=', 'completed');
                     $query->whereHas('actors', function ($query) {
                         $query->where('user_id', auth()->id());
                     });

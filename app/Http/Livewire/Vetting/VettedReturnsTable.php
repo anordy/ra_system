@@ -79,7 +79,7 @@ class VettedReturnsTable extends DataTableComponent
                 ->filter(function (Builder $builder, string $value) {
                     if ($value === 'LTD') {
                         $builder->whereHas('location.taxRegion', function ($query) use ($value) {
-                            $query->whereIn('code', ['company', 'special-sector', 'hotel']);
+                            $query->whereIn('code', ['company', 'special-sector', 'hotel', 'unguja']);
                         });
                     } else if ($value === 'NTRD') {
                         $builder->whereHas('location.taxRegion', function ($query) use ($value) {

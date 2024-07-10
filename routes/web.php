@@ -542,6 +542,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::resource('/assessments', TaxAuditAssessmentController::class);
         Route::resource('/verified', TaxAuditVerifiedController::class);
         Route::resource('/files', TaxVerificationFilesController::class);
+        Route::get('/approvals/{id}/notice', [TaxAuditApprovalController::class, 'getNotice'])->name('notice');
     });
 
     Route::resource('/files', TaxAuditFilesController::class);
