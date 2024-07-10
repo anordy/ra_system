@@ -84,7 +84,7 @@ class UsersTable extends DataTableComponent
                     if (Gate::allows('setting-role-assign-permission')) {
                         $value = "'".encrypt($row->id)."'";
                         return  <<< HTML
-                            <button class="btn btn-success btn-sm" id="showDataTableModal" data-modal-name="assign-approval-level-add-modal" data-modal-value="$value"><i class="fas fa-cog mr-2"></i>Add Level</button>
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'assign-approval-level-add-modal', $value)"><i class="fas fa-cog mr-2"></i>Add Level</button>
                         HTML;
                     }
                 })->html(true),
@@ -131,14 +131,14 @@ class UsersTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker') ) {
                             $edit = <<< HTML
-                                        <button class="btn btn-info btn-sm" id="showDataTableModal" data-modal-name="user-edit-modal" data-modal-value="$value"><i class="bi bi-pencil-square"></i> </button>
+                                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal', $value)"><i class="bi bi-pencil-square"></i> </button>
                                     HTML;
                         }
                     }
 
                     if (Gate::allows('setting-user-change-password')) {
                         $changePwd = <<< HTML
-                                    <button class="btn btn-warning btn-sm" id="showDataTableModal" data-modal-name="user-change-password-modal" data-modal-value="$value"><i class="bi bi-key-fill"></i> </button>
+                                    <button class="btn btn-warning btn-sm" onclick="Livewire.emit('showModal', 'user-change-password-modal',$value)"><i class="bi bi-key-fill"></i> </button>
                                 HTML;
                     }
 
@@ -167,7 +167,7 @@ class UsersTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-change-role')) {
                             return <<< HTML
-                                        <button class="btn btn-success btn-sm" id="showDataTableModal" data-modal-name="user-role-edit-modal" data-modal-value="$value"><i class="bi bi-person"></i> </button>
+                                        <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal', $value)"><i class="bi bi-person"></i> </button>
                                     HTML;
                         }
                     }

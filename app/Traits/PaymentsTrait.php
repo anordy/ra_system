@@ -944,6 +944,9 @@ trait PaymentsTrait
         } else {
             if ($property->responsible) {
                 $payer_name = $property->responsible->first_name . ' ' . $property->responsible->last_name;
+                if (!trim($payer_name)) {
+                    $payer_name = $property->taxpayer->fullname;
+                }
             } else {
                 $payer_name = $property->taxpayer->fullname;
             }

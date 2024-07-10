@@ -88,11 +88,11 @@
                                                                           class="badge badge-success p-2">Paid</span>
                                                                 @else
                                                                     <span
-                                                                          class="badge badge-danger p-2">Not Paid</span>
+                                                                          class="badge badge-danger px-2 py-1">Not Paid</span>
                                                                 @endif
                                                             @else
                                                                 <span
-                                                                      class="badge badge-danger p-2">Not Paid</span>
+                                                                      class="badge badge-danger px-2 py-1">Not Paid</span>
                                                             @endif
                                                         </p>
                                                     </div>
