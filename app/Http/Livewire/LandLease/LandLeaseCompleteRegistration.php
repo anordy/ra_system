@@ -179,7 +179,7 @@ class LandLeaseCompleteRegistration extends Component
             if ($financialYear) {
                 $paymentFinancialMonth = FinancialMonth::select('id', 'name', 'due_date')
                     ->where('financial_year_id', $financialYear->id)
-                    ->where('name', $landLease->payment_month)
+                    ->where('name', $commence_date->monthName)
                     ->firstOrFail();
             } else {
                 Log::error("Create Land Lease Payment: {$year} PENALTY RATES DOES NOT EXIST");
@@ -194,7 +194,7 @@ class LandLeaseCompleteRegistration extends Component
                 return;
             }
 
-            $penaltiesIterations = Carbon::now()->diffInMonths($originalDueDate);
+            $penaltiesIterations = ceil(Carbon::now()->floatDiffInMonths($originalDueDate));
 
             $due_date = Carbon::parse($paymentFinancialMonth->due_date)->endOfMonth();
 

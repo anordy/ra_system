@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\TaxClearance;
 
 use App\Enum\TaxClearanceStatus;
+use App\Models\Region;
 use App\Models\TaxClearanceRequest;
 use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,17 +17,32 @@ class TaxClearanceRequestTable extends DataTableComponent
     public $requested = false;
     public $rejected = false;
     public $approved = false;
+    public $department, $locations = [];
 
-    public function mount($status)
+    public function mount($status, $department)
     {
         if (!Gate::allows('tax-clearance-view')) {
             abort(403);
         }
 
+        $this->department = $department;
+
         if ($status == TaxClearanceStatus::APPROVED) {
             $this->approved = true;
         } elseif ($status == TaxClearanceStatus::REJECTED) {
             $this->rejected = true;
+        }
+
+        if ($department === Region::DTD) {
+            $this->locations = [Region::DTD];
+        } else if ($department === Region::LTD) {
+            $this->locations = [Region::LTD, Region::UNGUJA];
+        } else if ($department === Region::PEMBA) {
+            $this->locations = [Region::PEMBA];
+        } else if ($department === Region::NTRD) {
+            $this->locations = [Region::NTRD];
+        } else {
+            $this->locations = [Region::DTD, Region::LTD, Region::PEMBA, Region::NTRD];
         }
     }
 
@@ -45,6 +61,9 @@ class TaxClearanceRequestTable extends DataTableComponent
             return TaxClearanceRequest::where('tax_clearance_requests.status', TaxClearanceStatus::REQUESTED)
                 ->with('business:name')
                 ->with('businessLocation:name')
+                ->whereHas('businessLocation.taxRegion', function ($query) {
+                    $query->whereIn('location', $this->locations);
+                })
                 ->orderBy('tax_clearance_requests.created_at', 'desc');
         }
 
@@ -52,6 +71,9 @@ class TaxClearanceRequestTable extends DataTableComponent
             return TaxClearanceRequest::where('tax_clearance_requests.status', TaxClearanceStatus::APPROVED)
                 ->with('business:name')
                 ->with('businessLocation:name')
+                ->whereHas('businessLocation.taxRegion', function ($query) {
+                    $query->whereIn('location', $this->locations);
+                })
                 ->orderBy('tax_clearance_requests.created_at', 'desc');
         }
 
@@ -59,8 +81,19 @@ class TaxClearanceRequestTable extends DataTableComponent
             return TaxClearanceRequest::where('tax_clearance_requests.status', TaxClearanceStatus::REJECTED)
                 ->with('business:name')
                 ->with('businessLocation:name')
+                ->whereHas('businessLocation.taxRegion', function ($query) {
+                    $query->whereIn('location', $this->locations);
+                })
                 ->orderBy('tax_clearance_requests.created_at', 'desc');
         }
+
+        return TaxClearanceRequest::where('tax_clearance_requests.status', TaxClearanceStatus::APPROVED)
+            ->with('business:name')
+            ->with('businessLocation:name')
+            ->whereHas('businessLocation.taxRegion', function ($query) {
+                $query->whereIn('location', $this->locations);
+            })
+            ->orderBy('tax_clearance_requests.created_at', 'desc');
     }
 
     public function columns(): array

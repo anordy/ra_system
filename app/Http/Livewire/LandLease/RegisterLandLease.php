@@ -33,7 +33,7 @@ class RegisterLandLease extends Component
     public function rules()
     {
         return [
-            'files.*.file' => 'required|mimes:pdf|max:1024|max_file_name_length:100',
+            'files.*.file' => 'required|mimes:pdf|max:3072|max_file_name_length:100',
             'files.*.name' => 'required|string|strip_tag|max:255',
         ];
     }
