@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\TaxpayerLedger;
 
+use App\Models\Region;
 use App\Models\TaxpayerLedger\TaxpayerLedgerPayment;
 use App\Models\WithholdingAgent;
 use App\Traits\CustomAlert;
@@ -16,11 +17,24 @@ class ControlNumbersTable extends DataTableComponent
 {
     use CustomAlert;
 
-    public $status, $department;
+    public $status, $department, $locations = [];
 
     public function mount($status, $department) {
         $this->status = $status;
         $this->department = $department;
+
+
+        if ($department === Region::DTD) {
+            $this->locations = [Region::DTD];
+        } else if ($department === Region::LTD) {
+            $this->locations = [Region::LTD, Region::UNGUJA];
+        } else if ($department === Region::PEMBA) {
+            $this->locations = [Region::PEMBA];
+        } else if ($department === Region::NTRD) {
+            $this->locations = [Region::NTRD];
+        } else {
+            $this->locations = [Region::DTD, Region::LTD, Region::PEMBA, Region::NTRD];
+        }
     }
 
     public function configure(): void
@@ -35,6 +49,10 @@ class ControlNumbersTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxpayerLedgerPayment::query()
+            ->where('taxpayer_ledger_payments.status', $this->status)
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->whereIn('location', $this->locations);
+            })
             ->orderBy('taxpayer_ledger_payments.created_at', 'ASC');
     }
 

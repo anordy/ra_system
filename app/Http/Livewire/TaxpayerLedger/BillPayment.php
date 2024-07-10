@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\TaxpayerLedger;
 
+use App\Enum\CustomMessage;
 use App\Services\ZanMalipo\GepgResponse;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
@@ -39,19 +40,19 @@ class BillPayment extends Component
     public function regenerate(){
         $response = $this->regenerateControlNo($this->payment->latestBill);
         if ($response){
-            session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
+            session()->flash('success', CustomMessage::RECEIVE_PAYMENT_SHORTLY);
             return redirect(request()->header('Referer'));
         }
-        $this->customAlert('error', 'Control number could not be generated, please try again later.');
+        $this->customAlert('error', CustomMessage::FAILED_TO_GENERATE_CONTROL_NUMBER);
     }
 
     public function generateBill(){
         try {
-//            $this->generateLedgerControlNumber($this->payment);
-            $this->customAlert('success', 'Your request was submitted, you will receive your payment information shortly.');
+            $this->generateLedgerControlNumber($this->payment);
+            $this->customAlert('success', CustomMessage::RECEIVE_PAYMENT_SHORTLY);
             return redirect(request()->header('Referer'));
         } catch (\Exception $e) {
-            $this->customAlert('error', 'Control number could not be generated, please try again later.');
+            $this->customAlert('error', CustomMessage::FAILED_TO_GENERATE_CONTROL_NUMBER);
             Log::error($e);
         }
     }

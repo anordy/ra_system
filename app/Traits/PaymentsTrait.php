@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Enum\BillStatus;
 use App\Enum\Currencies;
+use App\Enum\GeneralConstant;
 use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
 use App\Enum\PropertyOwnershipTypeStatus;
@@ -13,6 +14,7 @@ use App\Events\SendSms;
 use App\Jobs\SendZanMalipoSMS;
 use App\Models\BusinessTaxType;
 use App\Models\BusinessType;
+use App\Models\Currency;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\Returns\Chartered\CharteredReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
@@ -23,7 +25,6 @@ use App\Models\TaxAudit\TaxAudit;
 use App\Models\Taxpayer;
 use App\Models\TaxRefund\TaxRefund;
 use App\Models\TaxType;
-use App\Models\TransactionFee;
 use App\Models\Verification\TaxVerification;
 use App\Models\ZmBill;
 use App\Models\ZmBillChange;
@@ -1317,7 +1318,8 @@ trait PaymentsTrait
         }
     }
 
-    public function generatePublicServiceControlNumber($psReturn) {
+    public function generatePublicServiceControlNumber($psReturn)
+    {
         $taxType = TaxType::select('id', 'gfs_code')->where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
         $exchangeRate = $this->getExchangeRate($psReturn->currency);
         $startDate = Carbon::create($psReturn->start_date)->format('d M Y H:i:s');
@@ -1359,7 +1361,7 @@ trait PaymentsTrait
 
         if (config('app.env') != 'local') {
             (new ZanMalipoInternalService)->createBill($bill);
-        }else {
+        } else {
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $bill->zan_status = 'pending';
             $bill->control_number = random_int(2000070001000, 2000070009999);
@@ -1505,7 +1507,7 @@ trait PaymentsTrait
 
     public function generateCharteredControlNumber($return)
     {
-        $tax_type =  $return->tax_type_id;
+        $tax_type = $return->tax_type_id;
 
         $exchange_rate = $this->getExchangeRate($return->currency);
 
@@ -1649,4 +1651,90 @@ trait PaymentsTrait
             $zmBill->save();
         }
     }
+
+    public function generateLedgerControlNumber($ledgerPayment)
+    {
+        try {
+            $items = $ledgerPayment->items ?? [];
+
+            $billItems = [];
+            foreach ($items as $item) {
+                $ledger = $item->ledger;
+                $exchangeRate = $this->getExchangeRate($item->currency);
+
+
+                if ($ledger->taxtype->code != TaxType::AIRPORT_SERVICE_SAFETY_FEE &&
+                    $ledger->taxtype->code != TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE &&
+                    $ledger->taxtype->code != TaxType::VAT) {
+                    $taxType = TaxType::findOrFail($ledger->tax_type_id);
+                } else {
+                    if ($ledger->taxtype->code === TaxType::AIRPORT_SERVICE_SAFETY_FEE) {
+                        $taxType = TaxType::where('code', TaxType::AIRPORT_SERVICE_CHARGE)->firstOrFail();
+                    } else if ($ledger->taxtype->code === TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE) {
+                        $taxType = TaxType::where('code', TaxType::SEAPORT_SERVICE_CHARGE)->firstOrFail();
+                    }  else if ($ledger->taxtype->code === TaxType::VAT) {
+                        $businessTaxType = BusinessTaxType::select('sub_vat_id')
+                            ->where('business_id', $ledger->business_id)
+                            ->where('tax_type_id', $ledger->taxtype->id)
+                            ->firstOrFail();
+                        $taxType = SubVat::findOrFail($businessTaxType->sub_vat_id);
+                    } else {
+                        throw new \Exception('Invalid PORT return tax type');
+                    }
+                }
+
+
+                $billItems[] =
+                    [
+                        'billable_id' => $ledger->source_id,
+                        'billable_type' => $ledger->source_type,
+                        'tax_type_id' => $ledger->tax_type_id,
+                        'amount' => $item->amount,
+                        'currency' => $item->currency,
+                        'exchange_rate' => $exchangeRate,
+                        'equivalent_amount' => $item->amount * $exchangeRate,
+                        'gfs_code' => $taxType->gfs_code
+                    ];
+            }
+
+
+            $exchangeRate = $this->getExchangeRate(Currency::TZS);
+            $zmBill = ZmCore::createBill(
+                $ledgerPayment->id,
+                get_class($ledgerPayment),
+                0,
+                $ledgerPayment->taxpayer_id,
+                Taxpayer::class,
+                $ledgerPayment->taxpayer->fullname,
+                $ledgerPayment->taxpayer->email,
+                ZmCore::formatPhone($ledgerPayment->taxpayer->mobile),
+                Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
+                "Control number for Multiple Debits",
+                ZmCore::PAYMENT_OPTION_EXACT,
+                $ledgerPayment->currency,
+                $exchangeRate,
+                auth()->user()->id,
+                get_class(auth()->user()),
+                $billItems
+            );
+            if (config('app.env') != 'local') {
+                $response = ZmCore::sendBill($zmBill->id);
+                if ($response->status === ZmResponse::SUCCESS) {
+                    session()->flash('success', 'A control number request was sent successful.');
+                } else {
+                    session()->flash('error', 'Control number generation failed, try again later');
+                }
+            } else {
+                $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                $zmBill->zan_status = GeneralConstant::PENDING;
+                $zmBill->control_number = random_int(2000070001000, 2000070009999);
+                $zmBill->save();
+                $this->flash('success', 'A control number for this transaction has been generated successfully');
+            }
+        } catch (\Exception $exception) {
+            Log::error('TRAITS-PAYMENTS-GENERATE-LEDGER-CONTROL-NUMBER', [$exception]);
+            throw $exception;
+        }
+    }
+
 }

@@ -20,6 +20,7 @@ class CreateTaxpayerLedgerPaymentsTable extends Migration
             $table->decimal('total_amount', 20, 2);
             $table->unsignedBigInteger('taxpayer_id');
             $table->unsignedBigInteger('staff_id')->nullable();
+            $table->unsignedBigInteger('location_id')->nullable();
             $table->string('status', 15)->default('pending');
             $table->string('marking', 255)->nullable();
             $table->integer('is_partial')->default(0);

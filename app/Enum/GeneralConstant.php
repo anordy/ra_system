@@ -51,6 +51,7 @@ class GeneralConstant implements Status
 
     const INPUT_TYPE_DATE = 'date';
     const INPUT_TYPE_SELECT = 'select';
+    const PENDING = 'pending';
 
 
     public static function getConstants(): array
