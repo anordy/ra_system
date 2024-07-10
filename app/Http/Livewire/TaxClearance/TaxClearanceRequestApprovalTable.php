@@ -5,6 +5,7 @@ namespace App\Http\Livewire\TaxClearance;
 use App\Enum\TaxClearanceStatus;
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\Region;
 use App\Models\TaxClearanceRequest;
 use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,10 +17,26 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class TaxClearanceRequestApprovalTable extends DataTableComponent
 {
 
-    public function mount()
+    public $department, $locations = [];
+
+    public function mount($department)
     {
         if (!Gate::allows('tax-clearance-view')) {
             abort(403);
+        }
+
+        $this->department = $department;
+
+        if ($department === Region::DTD) {
+            $this->locations = [Region::DTD];
+        } else if ($department === Region::LTD) {
+            $this->locations = [Region::LTD, Region::UNGUJA];
+        } else if ($department === Region::PEMBA) {
+            $this->locations = [Region::PEMBA];
+        } else if ($department === Region::NTRD) {
+            $this->locations = [Region::NTRD];
+        } else {
+            $this->locations = [Region::DTD, Region::LTD, Region::PEMBA, Region::NTRD];
         }
     }
 
@@ -36,7 +53,10 @@ class TaxClearanceRequestApprovalTable extends DataTableComponent
     {
         return TaxClearanceRequest::where('tax_clearance_requests.status', TaxClearanceStatus::REQUESTED)
             ->with('business:name')
-            ->with('businessLocation:name');
+            ->with('businessLocation:name')
+            ->whereHas('businessLocation.taxRegion', function ($query) {
+                $query->whereIn('location', $this->locations);
+            });
     }
 
     public function columns(): array
