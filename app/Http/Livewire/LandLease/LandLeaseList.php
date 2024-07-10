@@ -26,7 +26,7 @@ class LandLeaseList extends DataTableComponent
     //create builder function
     public function builder(): builder
     {
-        return LandLease::whereNotNull('completed_at')->orderByDesc('id');
+        return LandLease::whereNotNull('completed_at')->orderByDesc('created_at');
     }
 
     public function configure(): void

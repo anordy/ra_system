@@ -4,7 +4,7 @@
         {{$extension->status }}
     </span>
 @elseif ($extension->status  == 'rejected')
-    <span class="badge badge-danger p-2 bg-opacity-25" style="opacity: 75%">
+    <span class="badge badge-danger px-2 py-1 bg-opacity-25" style="opacity: 75%">
         <i class="bi bi-trash mr-1 "></i>
         {{$extension->status }}
     </span>
