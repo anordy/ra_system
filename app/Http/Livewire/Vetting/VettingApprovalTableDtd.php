@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class VettingApprovalTableDtd extends DataTableComponent
 {
@@ -50,11 +51,37 @@ class VettingApprovalTableDtd extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setFilterLayoutSlideDown();
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+    }
+
+    public function filters(): array
+    {
+        return [
+            SelectFilter::make('Tax Region')
+                ->options([
+                    'all' => 'All',
+                    'mjini' => 'Mjini',
+                    'magharib' => 'Magharib',
+                    'kaskazini-unguja' => 'Kaskazini Unguja',
+                    'kusini-unguja' => 'Kusini Unguja',
+                ])
+                ->filter(function (Builder $builder, string $value) {
+                    if ($value != 'all') {
+                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
+                            $query->where('code', $value);
+                        });
+                    } else {
+                        $builder->whereHas('location.taxRegion', function ($query) {
+                            $query->whereIn('code', ['mjini', 'magharib', 'kaskazini-unguja', 'kusini-unguja']);
+                        });
+                    }
+                }),
+        ];
     }
 
 

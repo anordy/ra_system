@@ -72,7 +72,6 @@ class VettingApprovalTableNtl extends DataTableComponent
             })
             ->where('vetting_status', $this->vettingStatus)
             ->whereHas('pinstance', function ($query) {
-                $query->where('status', '!=', WorkflowTask::COMPLETED);
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });

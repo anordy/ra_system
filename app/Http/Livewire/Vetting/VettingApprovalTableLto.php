@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class VettingApprovalTableLto extends DataTableComponent
 {
@@ -71,7 +70,6 @@ class VettingApprovalTableLto extends DataTableComponent
             })
             ->where('vetting_status', $this->vettingStatus)
             ->whereHas('pinstance', function ($query) {
-                $query->where('status', '!=', WorkflowTask::COMPLETED);
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });

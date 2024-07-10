@@ -189,7 +189,11 @@
                     <span class="font-weight-bold text-uppercase">Tax Types</span>
                     <p class="my-1">
                         @foreach ($business->taxTypes as $type)
-                            {{ $type->name }} ({{ $type->pivot->currency ?? 'N/A' }});
+                            @if($type->pivot->sub_vat_id)
+                                {{ \App\Models\Returns\Vat\SubVat::find($type->pivot->sub_vat_id, ['name'])->name ?? 'N/A' }} ({{ $type->pivot->currency ?? 'N/A' }});
+                            @else
+                                {{ $type->name }} ({{ $type->pivot->currency ?? 'N/A' }});
+                            @endif
                         @endforeach
                     </p>
                 </div>

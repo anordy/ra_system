@@ -3,7 +3,7 @@
         <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
             <div class="col-md-3">
             <span class="font-weight-bold text-uppercase">
-                @if ($assessment->payment_status === \App\Models\Returns\ReturnStatus::COMPLETE)
+                @if ($bill->status === 'paid')
                     {{ __("Total Tax Paid") }}
                 @else
                     {{ __("Total Tax Payable") }}
@@ -19,9 +19,7 @@
                     </p>
                 </div>
             @endif
-            @if (
-                $assessment->payment_status === \App\Models\Returns\ReturnStatus::CN_GENERATED ||
-                    $assessment->payment_status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
+            @if ($bill->status === 'pending')
                 @if (
                     $bill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::SUCCESS ||
                         $bill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::ZM_DUPLICATE_BILL_INFO)
@@ -42,13 +40,13 @@
                             </a>
                         </p>
                         <button class="btn btn-secondary btn-sm py-1 w-75 font-weight-bold"
-                                onclick="Livewire.emit('showModal', 'transfer-form.transfer-form-generator', '{{ $bill->currency }}', '{{ $bill->id }}')">
+                                onclick="Livewire.emit('showModal', 'transfer-form.transfer-form-generator', '{{ $bill->currency }}', '{{ encrypt($bill->id) }}')">
                             <i class="bi bi-file-earmark-text"></i>
                             {{ __("Get Transfer Form") }}
                         </button>
                     </div>
                 @endif
-            @elseif($assessment->payment_status === \App\Models\Returns\ReturnStatus::COMPLETE)
+            @elseif($bill->status === 'paid')
                 <div class="col-md-3">
                     <span class="font-weight-bold text-uppercase">Payment Status</span>
                     <p class="my-1 text-success font-weight-bold">
@@ -73,7 +71,7 @@
                         {{ __("Pending") }}
                     </p>
                 </div>
-            @elseif($assessment->payment_status === \App\Models\Returns\ReturnStatus::CN_GENERATION_FAILED || (!$bill->zan_trx_sts_code && !$bill->control_number))
+            @elseif((!$bill->zan_trx_sts_code && !$bill->control_number))
                 <div class="col-md-3">
                     <span class="font-weight-bold text-uppercase">Control No. Generation Failed</span>
                     <p class="my-1 text-danger">

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class VettingApprovalTable extends DataTableComponent
 {
@@ -46,6 +47,8 @@ class VettingApprovalTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setFilterLayoutSlideDown();
+        $this->setFilterLayoutPopover();
         $this->setAdditionalSelects(['location_id', 'tax_type_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
@@ -53,6 +56,39 @@ class VettingApprovalTable extends DataTableComponent
         ]);
     }
 
+    public function filters(): array
+    {
+        return [
+            SelectFilter::make('Tax Region')
+                ->options([
+                    'all' => 'All',
+                    'headquarter' => 'Head Quarter',
+                    'mjini' => 'Mjini',
+                    'magharib' => 'Magharib',
+                    'kaskazini-unguja' => 'Kaskazini Unguja',
+                    'kusini-unguja' => 'Kusini Unguja',
+                    'kusini-pemba' => 'Kusini Pemba',
+                    'kaskazini-pemba' => 'Kaskazini Pemba',
+                    'NTRD' => 'NTRD',
+                    'LTD' => 'LTD',
+                ])
+                ->filter(function (Builder $builder, string $value) {
+                    if ($value === 'LTD') {
+                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
+                            $query->whereIn('code', ['company', 'special-sector', 'hotel']);
+                        });
+                    } else if ($value === 'NTRD') {
+                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
+                            $query->whereIn('code', ['ntrd']);
+                        });
+                    }  else if ($value != 'all') {
+                        $builder->whereHas('location.taxRegion', function ($query) use ($value) {
+                            $query->where('code', $value);
+                        });
+                    }
+                })
+        ];
+    }
 
     public function builder(): Builder
     {
@@ -61,7 +97,6 @@ class VettingApprovalTable extends DataTableComponent
                 ->whereNotIn('return_type', [PetroleumReturn::class, LumpSumReturn::class])
                 ->where('parent', 0)
                 ->whereHas('pinstance', function ($query) {
-                    $query->where('status', '!=', 'completed');
                     $query->whereHas('actors', function ($query) {
                         $query->where('user_id', auth()->id());
                     });

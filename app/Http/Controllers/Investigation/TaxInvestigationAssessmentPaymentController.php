@@ -26,7 +26,7 @@ class TaxInvestigationAssessmentPaymentController extends Controller
 
     public function show($id)
     {
-        if (!Gate::allows('tax-investigation-view')) {
+        if (!Gate::allows('tax-investigation-assessment-view')) {
             abort(403);
         }
         try {
@@ -76,10 +76,10 @@ class TaxInvestigationAssessmentPaymentController extends Controller
                 $partialPayment->comments = $request->comments;
                 $partialPayment->save();
 
+                DB::commit();
 
                 // Generate control number
                 $this->generatePartialPaymentControlNo($partialPayment);
-                DB::commit();
                 return redirect()->back()->with('success', 'Assessment approved and control number generated.');
             } else {
                 // Perform rejection logic
