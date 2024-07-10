@@ -835,6 +835,8 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/taxpayer/ledger/{businessLocationId}/tax/{taxTypeId}', [TaxpayerLedgerController::class, 'show'])->name('taxpayer.ledger.show');
         Route::get('/taxpayer/ledger/{businessLocationId}/summary', [TaxpayerLedgerController::class, 'summary'])->name('taxpayer.ledger.summary');
         Route::get('/taxpayer/ledger/{businessId}/summary/business', [TaxpayerLedgerController::class, 'businessSummary'])->name('taxpayer.ledger.business-summary');
+        Route::get('/control-numbers', [TaxpayerLedgerController::class, 'controlNumbers'])->name('taxpayer.ledger.control-numbers');
+        Route::get('/view-payment/{id}', [TaxpayerLedgerController::class, 'showPayment'])->name('taxpayer.ledger.payment.show');
     });
 
     Route::prefix('public-service')->as('public-service.')->group(function () {

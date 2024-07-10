@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\TaxpayerLedger\TaxpayerLedger;
+use App\Models\TaxpayerLedger\TaxpayerLedgerPayment;
 use App\Models\TaxType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -17,6 +18,18 @@ use Illuminate\Support\Facades\Log;
 
 class TaxpayerLedgerController extends Controller
 {
+
+    public function controlNumbers()
+    {
+        return view('taxpayer-ledger.control-numbers');
+    }
+
+    public function showPayment($id)
+    {
+        $payment = TaxpayerLedgerPayment::with(['items'])->findOrFail(decrypt($id));
+        return view('taxpayer-ledger.view-payment', compact('payment'));
+    }
+
 
     public function search()
     {
