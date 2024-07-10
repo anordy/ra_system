@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\Debt;
 
+use App\Enum\BillStatus;
 use App\Enum\ReturnCategory;
 use App\Models\Returns\TaxReturn;
-use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
@@ -19,7 +19,8 @@ class ReturnOverdueDebtsTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxReturn::query()
-            ->where('return_category', ReturnCategory::OVERDUE);
+            ->whereIn('return_category', [ReturnCategory::OVERDUE, ReturnCategory::DEBT])
+            ->where('payment_status', '!=', BillStatus::COMPLETE);
     }
 
     public function configure(): void
