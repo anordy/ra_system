@@ -3,6 +3,7 @@
 namespace App\Models\Offence;
 
 use App\Models\TaxType;
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,5 +27,10 @@ class Offence extends Model
     public function taxTypes()
     {
         return $this->belongsTo(TaxType::class, 'tax_type');
+    }
+
+    public function latestBill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 }
