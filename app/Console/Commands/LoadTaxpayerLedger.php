@@ -15,6 +15,7 @@ class LoadTaxpayerLedger extends Command
 {
 
     use TaxpayerLedgerTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -84,36 +85,42 @@ class LoadTaxpayerLedger extends Command
             $this->line('Recording payments ledgers');
 
             // PAYMENTS
-//            ZmPayment::chunk(100, function ($payments) {
-//                foreach ($payments as $payment) {
-//                    $ledger = TaxpayerLedger::updateOrCreate(
-//                        [
-//                            'source_type' => $payment->bill->billable_type,
-//                            'source_id' => $payment->bill->billable_id,
-//                            'zm_payment_id' => $payment->id
-//                        ],
-//                        [
-//                            'source_type' => $payment->bill->billable_type,
-//                            'source_id' => $payment->bill->billable_id,
-//                            'zm_payment_id' => $payment->id,
-//                            'tax_type_id' => $payment->bill->tax_type_id,
-//                            'taxpayer_id' => $payment->bill->payer_id,
-//                            'financial_month_id' => $payment->bill->billable->financial_month_id ?? null,
-//                            'transaction_type' => TransactionType::CREDIT,
-//                            'business_id' => $payment->bill->billable->business_id ?? null,
-//                            'business_location_id' => $payment->bill->billable->location_id ?? null,
-//                            'currency' => $payment->currency,
-//                            'transaction_date' => Carbon::create($payment->created_at),
-//                            'principal_amount' => 0,
-//                            'interest_amount' => 0,
-//                            'penalty_amount' => 0,
-//                            'total_amount' => $payment->bill->paid_amount
-//                        ]
-//                    );
-//
-//                    if (!$ledger) throw new \Exception('Failed to save ledger');
-//                }
-//            });
+            ZmPayment::chunk(100, function ($payments) {
+                foreach ($payments as $payment) {
+
+                    if ($payment->bill) {
+
+                        $ledger = TaxpayerLedger::updateOrCreate(
+                            [
+                                'source_type' => $payment->bill->billable_type,
+                                'source_id' => $payment->bill->billable_id,
+                                'zm_payment_id' => $payment->id
+                            ],
+                            [
+                                'source_type' => $payment->bill->billable_type,
+                                'source_id' => $payment->bill->billable_id,
+                                'zm_payment_id' => $payment->id,
+                                'tax_type_id' => $payment->bill->tax_type_id,
+                                'taxpayer_id' => $payment->bill->payer_id,
+                                'financial_month_id' => $payment->bill->billable->financial_month_id ?? null,
+                                'transaction_type' => TransactionType::CREDIT,
+                                'business_id' => $payment->bill->billable->business_id ?? null,
+                                'business_location_id' => $payment->bill->billable->location_id ?? null,
+                                'currency' => $payment->currency,
+                                'transaction_date' => Carbon::create($payment->created_at),
+                                'principal_amount' => 0,
+                                'interest_amount' => 0,
+                                'penalty_amount' => 0,
+                                'total_amount' => $payment->bill->paid_amount
+                            ]
+                        );
+
+                        if (!$ledger) throw new \Exception('Failed to save ledger');
+
+                    }
+
+                }
+            });
 
             // TAX ASSESSMENTS
             TaxAssessment::chunk(100, function ($assessments) {

@@ -66,8 +66,17 @@ class ControlNumbersTable extends DataTableComponent
                 })
                 ->searchable(),
             Column::make('Debit Numbers', 'ledger_ids')
-                ->sortable()
-                ->searchable(),
+                ->format(function($value, $row) {
+                    return $row->debit_numbers ?? 'N/A';
+                }),
+            Column::make('Location', 'location_id')
+                ->format(function($value, $row) {
+                    return $row->location->name ?? 'N/A';
+                }),
+            Column::make('ZTN Number', 'marking')
+                ->format(function($value, $row) {
+                    return $row->location->zin ?? 'N/A';
+                }),
             Column::make('Currency', 'currency')
                 ->sortable()
                 ->searchable(),

@@ -43,5 +43,19 @@ class TaxpayerLedgerPayment extends Model
         return null;
     }
 
+    public function getDebitNumbersAttribute() {
+        $ids = json_decode($this->ledger_ids);
+        $debits = '';
+        if (isset($ids)) {
+            foreach ($ids as $id) {
+                $ledger = TaxpayerLedger::find($id, ['debit_no']);
+                if ($ledger) {
+                    $debits .= $ledger->debit_no . ', ';
+                }
+            }
+        }
+        return $debits;
+    }
+
 
 }

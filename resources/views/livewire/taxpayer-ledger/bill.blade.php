@@ -18,7 +18,7 @@
                 </p>
             </div>
         @endif
-        @if ($bill->status === 'pending')
+        @if ($bill->control_number && $bill->status != 'paid')
             @if (
                 $bill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::SUCCESS ||
                     $bill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::ZM_DUPLICATE_BILL_INFO)
@@ -62,15 +62,25 @@
                     </a>
                 </p>
             </div>
-        @elseif($bill->status === 'pending')
-            <div class="col-md-3" wire:poll.visible="refresh">
-                <span class="font-weight-bold text-uppercase text-info">Control No.</span>
-                <p class="my-1 text-info">
-                    <i class="bi bi-clock-history mr-2"></i>
-                    {{ __("Pending") }}
+        @elseif($bill->zan_status === 'failed' || $bill->status === 'failed')
+            <div class="col-md-3">
+                <span class="font-weight-bold text-uppercase">Control No. Generation Failed</span>
+                <p class="my-1 text-danger">
+                    {{ __("Generation Failed") }}
                 </p>
             </div>
-        @elseif((!$bill->zan_trx_sts_code && !$bill->control_number))
+            <div class="col-md-3">
+                <p class="my-1">
+                    <button target="_blank" wire:click="regenerate"
+                            class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                        <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
+                           wire:target="regenerate"></i>
+                        <i class="bi bi-arrow-repeat mr-2" wire:loading.remove wire:target="regenerate"></i>
+                        {{ __("Regenerate Control No") }}
+                    </button>
+                </p>
+            </div>
+        @elseif((!$bill->control_number))
             <div class="col-md-3">
                 <span class="font-weight-bold text-uppercase">Control No. Generation Failed</span>
                 <p class="my-1 text-danger">
