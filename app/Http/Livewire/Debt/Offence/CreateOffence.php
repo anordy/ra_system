@@ -96,7 +96,7 @@ class CreateOffence extends Component
             $billItems = [
                 [
                     'Name' => $offence->name,
-                    'gfs_code' => TaxType::where('code', TaxType::INVESTIGATION)->firstOrFail()->gfs_code,
+                    'gfs_code' => TaxType::findOrFail($offence->tax_type)->gfs_code,
                     'amount' => $offence->amount,
                     'currency' => $offence->currency,
                     'tax_type_id'=> $offence->tax_type

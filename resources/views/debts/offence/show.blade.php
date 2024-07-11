@@ -4,47 +4,9 @@
 
 @section('content')
 
-    <div class="container-fluid">
-        <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
-                    <div class="col-md-3">
-                        <span class="font-weight-bold text-uppercase">Payment Due Date</span>
-                        <p class="my-1">{{ $bill->created_at->addMonth(1)->format('d-m-Y') }}</p>
-                    </div>
-                    <div class="col-md-2">
-                        <span class="font-weight-bold text-uppercase">Amount</span>
-                        <p class="my-1">{{$bill->amount}}</p>
-                    </div>
-                    <div class="col-md-2">
-                        <span class="font-weight-bold text-uppercase">Control No</span>
-                        <p class="my-1">{{$bill->control_number}}</p>
-                    </div>
-                    <div class="col-md-3">
-                        <span class="font-weight-bold text-uppercase">Status</span>
-                        <p>
-                            <span class="font-weight-bold {{$bill->status != \App\Models\Offence\Offence::PAID ? 'text-info' : 'text-success'}}">
-                                <i class="bi bi-check-circle-fill mr-1"></i>
-                                {{$bill->status}}
-                            </span>
-                        </p>
-                    </div>
-                    <div class="col-md-2 d-flex justify-content-end">
-                        <span class="font-weight-bold text-uppercase"> </span>
-                        <p class="my-1">
-                            @if($bill->status != \App\Models\Offence\Offence::PAID)
-                                <a target="_blank" href="{{ route('bill.invoice', encrypt($bill->id)) }}"
-                                   class="btn btn-primary btn-sm pl-3 pr-3 font-weight-bold">
-                                    <i class="bi bi-download mr-3"></i><u>Download Bill</u>
-                                </a>
-                            @else
-                                <a target="_blank" href="{{ route('bill.receipt', encrypt($bill->id)) }}"
-                                   class="btn btn-primary btn-sm pl-3 pr-3 font-weight-bold">
-                                    <i class="bi bi-download mr-3"></i><u>Download Receipt</u>
-                                </a>
-                            @endif
-                        </p>
-                    </div>
-
-
+    <div class="row m-2 pt-3">
+        <div class="col-md-12">
+            <livewire:debt.offence.bill-payment :payment="$offence"/>
         </div>
     </div>
 

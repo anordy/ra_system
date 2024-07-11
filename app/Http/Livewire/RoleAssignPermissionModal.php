@@ -3,20 +3,23 @@
 namespace App\Http\Livewire;
 
 use App\Models\Audit;
-use Exception;
-use App\Models\Role;
-use Livewire\Component;
-use App\Models\SysModule;
 use App\Models\Permission;
+use App\Models\Role;
+use App\Models\SysModule;
 use App\Traits\AuditTrait;
+use App\Traits\CustomAlert;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\Session;
+use Livewire\Component;
 
 class RoleAssignPermissionModal extends Component
 {
 
     use CustomAlert, AuditTrait;
+
     public $modules;
     public $role;
     public $permissions;
@@ -46,6 +49,18 @@ class RoleAssignPermissionModal extends Component
             } else {
                 $this->role->permissions()->detach();
             }
+
+            // Re-load session permissions
+            $role_permissions = DB::table('roles_permissions')->where('role_id', $this->role->id)->pluck('permission_id');
+            $permissions = Permission::query()->whereIn('id', $role_permissions)->get();
+            $modules = SysModule::query()->whereHas('permissions', function ($query) use ($role_permissions) {
+                $query->whereIn('id', $role_permissions);
+            })->distinct()->get();
+
+            // Store permissions in session
+            Session::put('user_permissions', $permissions);
+            Session::put('user_modules', $modules);
+
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error('Error: ' . $e->getMessage(), [
