@@ -308,6 +308,12 @@ class InternalBusinessInfoChangeProcessing extends Component
                     foreach ($this->selectedTaxTypes as $type) {
                         $taxType = TaxType::findOrFail($type['tax_type_id'], ['id', 'code']);
                         if ($taxType->code != TaxType::LUMPSUM_PAYMENT) {
+                            // Add vrn number if business doesn't have vrn
+                            if ($taxType->code === TaxType::VAT) {
+                                if (!$this->info->location->vrn) {
+                                    $this->info->location->generateVrn();
+                                }
+                            }
                             DB::table('business_tax_type')->insert([
                                 'business_id' => $this->info->business_id,
                                 'tax_type_id' => $type['tax_type_id'],

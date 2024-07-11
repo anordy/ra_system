@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Business\TaxType;
 
 use App\Enum\CustomMessage;
+use App\Models\BusinessLocation;
 use Exception;
 use Carbon\Carbon;
 use App\Events\SendSms;
@@ -107,6 +108,21 @@ class TaxTypeChangeApprovalProcessing extends Component
                 $this->subject->effective_date = $this->effective_date;
                 $this->subject->to_sub_vat_id = $this->sub_vat_id;
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
+
+                $taxType = TaxType::findOrFail($this->to_tax_type_id, ['code']);
+
+                if ($taxType->code === TaxType::VAT) {
+                    $locations = BusinessLocation::where('business_id', $this->taxchange->business_id)->get();
+
+                    if (count($locations) > 0) {
+                        foreach ($locations as $location) {
+                            if (!$location->vrn) {
+                                $location->generateVrn();
+                            }
+                        }
+                    }
+
+                }
 
                 DB::commit();
 
