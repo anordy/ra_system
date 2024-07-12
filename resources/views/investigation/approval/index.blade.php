@@ -6,13 +6,16 @@
     <div class="card">
         <div class="card-header text-uppercase font-weight-bold bg-white">
             Investigations Approvals
-            <div class="card-tools">
-                <button class="btn btn-info btn-sm"
-                    onclick="Livewire.emit('showModal', 'investigation.business-investigation-add-modal')">
-                    <i class="bi bi-plus-circle-fill"></i>
-                    Add to Investigation
-                </button>
-            </div>
+
+            @can('tax-investigation-create-case')
+                <div class="card-tools">
+                    <button class="btn btn-info btn-sm"
+                        onclick="Livewire.emit('showModal', 'investigation.business-investigation-add-modal')">
+                        <i class="bi bi-plus-circle-fill"></i>
+                        Add to Investigation
+                    </button>
+                </div>
+            @endcan
         </div>
         <div class="card-body">
             @livewire('approval.approval-count-card', ['modelName' => 'TaxInvestigation'])
