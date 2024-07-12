@@ -41,7 +41,7 @@
                 <label class="d-flex justify-content-between'">
                     <span>End Date</span>
                 </label>
-                <input type="date" min="{{ date('Y-m-d', strtotime($range_start))}}" max="{{ now()->format('Y-m-d') }}" class="form-control" wire:model="range_end">
+                <input type="date" max="{{ now()->format('Y-m-d') }}" class="form-control" wire:model="range_end">
                 @error('range_end')
                     <div class="invalid-feedback">
                         {{ $message }}
