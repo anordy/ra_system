@@ -52,7 +52,6 @@ class EditInvestigationMembersModal extends Component
             $roles = Role::query()->whereIn('id', $operators)->get()->pluck('id')->toArray();
             $this->subRoles = Role::query()->whereIn('report_to', $roles)->get();
             $this->staffs = User::query()->whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
-            $this->staffs = User::all();
         }
     }
 
@@ -108,7 +107,8 @@ class EditInvestigationMembersModal extends Component
             }
             $this->subject->save();
             DB::commit();
-            $operators = [intval($this->teamLeader), intval($this->teamMembers)];
+            $operators = array_merge(array($this->teamLeader), $this->teamMembers);
+            $operators = array_map('intval', $operators);
             dispatch(new WorkflowUpdateActorsForTask($this->subject->pinstance, $operators));
             $this->flash('success', 'Team members updated', [], redirect()->back()->getTargetUrl());
         }catch (Exception $ex){

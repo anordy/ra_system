@@ -2,6 +2,8 @@
 
 namespace App\Jobs\Workflow;
 
+use App\Models\TaxAudit\TaxAudit;
+use App\Models\Taxpayer;
 use App\Models\User;
 use App\Models\Workflow;
 use App\Models\WorkflowTask;
@@ -71,6 +73,10 @@ class WorkflowUpdateActors implements ShouldQueue
 
             foreach ($tasks as $task) {
                 $operators_collection = array();
+
+                if ($place['operator_type'] == 'user' && $task->pinstance_type == TaxAudit::class) {
+                    $operators = $task->pinstance->officers->pluck('user_id')->toArray();
+                }
 
                 foreach ($operators as $operator) {
                     $operators_collection[] = new WorkflowTaskOperator([

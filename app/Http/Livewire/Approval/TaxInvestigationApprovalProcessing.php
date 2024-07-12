@@ -163,18 +163,14 @@ class TaxInvestigationApprovalProcessing extends Component
             $roles = Role::whereIn('id', $operators)->get()->pluck('id')->toArray();
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
-            // TODO: Remove on production
-            $this->staffs = User::get();
         }
     }
 
-    public function addSelect()
-    {
+    public function addSelect() {
         $this->teamMembers[] = ''; // Set the initial value to an empty string
     }
 
-    public function removeSelect($index)
-    {
+    public function removeSelect($index) {
         unset($this->teamMembers[$index]);
         $this->teamMembers = array_values($this->teamMembers); // Re-index the array
     }
@@ -268,8 +264,8 @@ class TaxInvestigationApprovalProcessing extends Component
     {
         $this->validate(
             [
-                'allegations' => 'required|strip_tag|string',
-                'descriptions' => 'required|strip_tag|string',
+                'allegations' => 'required|string',
+                'descriptions' => 'required|string',
                 'periodFrom' => 'required|date',
                 'periodTo' => 'required|after:periodFrom',
                 'teamLeader' => ['required', new NotInArray([$this->teamMembers])],
@@ -354,7 +350,7 @@ class TaxInvestigationApprovalProcessing extends Component
                 'team_leader' => true,
             ]);
 
-            foreach ($this->teamMembers as $member) {
+            foreach ($this->teamMembers as $member){
                 TaxInvestigationOfficer::create([
                     'investigation_id' => $this->subject->id,
                     'user_id' => $member,
@@ -367,12 +363,14 @@ class TaxInvestigationApprovalProcessing extends Component
             $this->subject->scope = $this->descriptions;
             $this->subject->save();
             DB::commit();
-        } catch (Exception $ex) {
+        }catch (Exception $ex){
             DB::rollBack();
-            Log::error("ASSIGNING OFFICERS: " . $ex->getMessage());
+            Log::error("ASSIGNING OFFICERS: ".$ex->getMessage());
         }
 
-        return [intval($this->teamLeader), intval($this->teamMembers)];
+
+        $operators = array_merge(array($this->teamLeader), $this->teamMembers);
+        return array_map('intval', $operators);
     }
 
     private function conductInvestigation()
@@ -413,7 +411,7 @@ class TaxInvestigationApprovalProcessing extends Component
             $workingReport = $this->workingReport->store('investigation', 'local');
         }
 
-        //        todo: send email/sms notification
+//        todo: send email/sms notification
         $this->subject->final_report = $finalReport;
         $this->subject->working_report = $workingReport;
         $this->subject->save();
@@ -517,8 +515,7 @@ class TaxInvestigationApprovalProcessing extends Component
         $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl());
     }
 
-    public function rejectExtension($transition)
-    {
+    public function rejectExtension($transition){
         $this->validate([
             'comments' => 'required|string|strip_tag',
         ]);
@@ -527,8 +524,8 @@ class TaxInvestigationApprovalProcessing extends Component
         try {
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
             $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl());
-        } catch (Exception $ex) {
-            Log::error("EXTENSION REJECTED: " . $ex->getMessage());
+        }catch (Exception $ex){
+            Log::error("EXTENSION REJECTED: ".$ex->getMessage());
             $this->flash('success', __('Rejected successfully'), [], redirect()->back()->getTargetUrl());
         }
     }

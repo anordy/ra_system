@@ -190,6 +190,10 @@
                             <p class="my-1">{{ date('d/m/Y', strtotime($landLease->commence_date)) }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Commence Date</span>
+                            <p class="my-1">{{ \Carbon\Carbon::parse($landLease->rent_commence_date)->toFormattedDateString() }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Payment Month</span>
                             <p class="my-1">{{ $landLease->payment_month }}</p>
                         </div>
@@ -202,7 +206,7 @@
                             <p class="my-1">{{ $landLease->valid_period_term }} Year(s)</p>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <span class="font-weight-bold text-uppercase">{{ __('Due Date') }}</span>
+                            <span class="font-weight-bold text-uppercase">{{ __('Expire Date') }}</span>
                             <p class="my-1">{{ $dueDate }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
@@ -211,7 +215,7 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">{{ __('Area') }}</span>
-                            <p class="my-1">{{ number_format($landLease->area) }}</p>
+                            <p class="my-1">{{ number_format($landLease->area, 2) }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Lease Status</span>
@@ -304,7 +308,7 @@
                                         </p>
                                     </div>
                                     <div class="col-md-3">
-                                        <span class="font-weight-bold text-uppercase">{{ __('Due Date') }}</span>
+                                        <span class="font-weight-bold text-uppercase">{{ __('Expire Date') }}</span>
                                         <p class="my-1">
                                             {{ $dueDate }}
                                         </p>

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Business;
 
 use App\Models\BusinessLocation;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class LocationReturnsSummary extends Component

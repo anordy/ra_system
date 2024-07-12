@@ -674,6 +674,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::post('/approve-reject/{paymentId}', [TaxInvestigationAssessmentPaymentController::class, 'approveReject'])->name('approve-reject');
         Route::resource('/verified', TaxInvestigationVerifiedController::class);
         Route::resource('/files', TaxInvestigationFilesController::class);
+        Route::get('/assessments/{id}/notice', [TaxInvestigationAssessmentController::class, 'getNotice'])->name('assessments.notice');
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');

@@ -14,22 +14,36 @@ class SequencesTableSeeder extends Seeder
      */
     public function run()
     {
-        Sequence::create([
-            'name' => 'taxpayerReferenceNo',
-            'prefix' => 'TRN',
-            'next_id' => 1,
-        ]);
-        Sequence::create([
-            'name' => 'vatRegistrationNo',
-            'prefix' => 'VRN',
-            'next_id' => 1,
-        ]);
-        Sequence::create([
-            'name' => 'consultantReferenceNo',
-            'prefix' => 'CRN',
-            'next_id' => 1,
-        ]);
+        $sequences = [
+            [
+                'name' => 'taxpayerReferenceNo',
+                'prefix' => 'TRN',
+                'next_id' => 1,
+            ],
+            [
+                'name' => 'vatRegistrationNo',
+                'prefix' => 'VRN',
+                'next_id' => 1,
+            ],
+            [
+                'name' => 'consultantReferenceNo',
+                'prefix' => 'CRN',
+                'next_id' => 1,
+            ],
+            [
+                'name' => Sequence::ASSESSMENT_NUMBER,
+                'prefix' => 'ASN',
+                'next_id' => 1,
+                'next_sequence' => '01/000',
+            ],
+            // You can add more sequences here as needed
+        ];
 
-        // Maybe add more for land lease, withholding agent, etc etc 🤷‍
+        foreach ($sequences as $sequence) {
+            Sequence::firstOrCreate(
+                ['name' => $sequence['name']],  // The attribute to check for existence
+                $sequence  // All attributes to set if creating a new record
+            );
+        }
     }
 }

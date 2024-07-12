@@ -19,6 +19,7 @@ use App\Models\TaxAudit\TaxAuditOfficer;
 use App\Models\TaxType;
 use App\Models\User;
 use App\Notifications\DatabaseNotification;
+use App\Services\SequenceGenerator\AuditAssessment;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\ExchangeRateTrait;
@@ -175,12 +176,8 @@ class TaxAuditApprovalProcessing extends Component
                 $operators = [];
             }
             $roles = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
-
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
-
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
-            // TODO: Remove on production
-            $this->staffs = User::get();
         }
     }
 
@@ -455,9 +452,15 @@ class TaxAuditApprovalProcessing extends Component
                             ]);
                         }
                     }
+
+                    $this->subject->assessment_number = (new AuditAssessment())->generateSequence($this->subject->location->taxRegion->location);
+                    $this->subject->save();
+
                 } else {
                     if ($assessment) {
                         $this->subject->assessment()->delete();
+                        $this->subject->assessment_number = null;
+                        $this->subject->save();
                     }
                 }
 

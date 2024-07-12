@@ -22,8 +22,7 @@ class TaxInvestigationApprovalProgressTable extends DataTableComponent
     {
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', TaxInvestigation::class)
-            ->where('status', '!=', WorkflowTask::COMPLETED)
-            ->where('owner', WorkflowTask::STAFF);
+            ->where('status', '!=', WorkflowTask::COMPLETED);
     }
 
     public function configure(): void
