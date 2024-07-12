@@ -45,8 +45,8 @@ class BusinessInvestigationAddModal extends Component
             'location_ids.*' => 'required|numeric',
             'tax_type_ids' => 'required',
             'tax_type_ids.*' => 'required|numeric',
-            'allegations' => 'required|strip_tag|string',
-            'descriptions' => 'required|strip_tag|string',
+            'allegations' => 'required|string',
+            'descriptions' => 'required|string',
             'period_from' => 'required|date|after:businesses,created_at',
             'period_to' => 'required|date|after:period_from',
         ];

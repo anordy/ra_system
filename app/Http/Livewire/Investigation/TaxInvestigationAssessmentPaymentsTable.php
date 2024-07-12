@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Investigation;
 
+use App\Models\Investigation\TaxInvestigation;
 use App\Models\PartialPayment;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -14,7 +15,9 @@ class TaxInvestigationAssessmentPaymentsTable extends DataTableComponent
     {
         return PartialPayment::query()
             ->with('taxAssessment.business')
-            ->has('taxAssessment');
+            ->whereHas('taxAssessment', function ($query) {
+               $query->where('assessment_type', TaxInvestigation::class);
+            });
     }
 
     public function configure(): void
