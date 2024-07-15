@@ -706,7 +706,8 @@
         @can('mvr')
             <li class="{{ request()->is('public-service*') ? 'active' : '' }}">
                 <a href="#publicServiceSubmenu" data-toggle="collapse"
-                   aria-expanded="{{ request()->is('public-service*') ? 'true' : 'false' }}" class="dropdown-toggle">Transport Services</a>
+                   aria-expanded="{{ request()->is('public-service*') ? 'true' : 'false' }}" class="dropdown-toggle">Transport
+                    Services</a>
                 <ul class="collapse list-unstyled {{ request()->is('public-service*') ? 'show' : '' }}"
                     id="publicServiceSubmenu">
                     <li class="{{ request()->is('public-service/registrations*') ? 'active' : '' }}">
@@ -976,6 +977,12 @@
                         <li class="{{ request()->is('taxpayer-ledger') ? 'active' : '' }}">
                             <a href="{{ route('finance.taxpayer.ledger.control-numbers') }}"
                                class="dropdown-toggle">Tax Payments</a>
+                        </li>
+                    @endcan
+                    @can("view-cash-book")
+                        <li class="{{ request()->is('cashbook') ? 'active' : '' }}">
+                            <a href="{{ route('finance.cashbook.index') }}"
+                               class="dropdown-toggle">Cashbook</a>
                         </li>
                     @endcan
 

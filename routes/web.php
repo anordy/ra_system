@@ -46,6 +46,7 @@ use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\Extension\ExtensionController;
+use App\Http\Controllers\Finances\CashBookController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Installment\InstallmentController;
 use App\Http\Controllers\Installment\InstallmentRequestController;
@@ -837,6 +838,11 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/taxpayer/ledger/{businessId}/summary/business', [TaxpayerLedgerController::class, 'businessSummary'])->name('taxpayer.ledger.business-summary');
         Route::get('/control-numbers', [TaxpayerLedgerController::class, 'controlNumbers'])->name('taxpayer.ledger.control-numbers');
         Route::get('/view-payment/{id}', [TaxpayerLedgerController::class, 'showPayment'])->name('taxpayer.ledger.payment.show');
+
+        Route::prefix('cashbook')->as('cashbook.')->group(function () {
+            Route::get('/', [CashBookController::class, 'index'])->name('index');
+            Route::get('/show/{accountNum}', [CashBookController::class, 'show'])->name('show');
+        });
     });
 
     Route::prefix('public-service')->as('public-service.')->group(function () {

@@ -438,6 +438,7 @@ class PermissionSeeder extends Seeder
 
             # Manage Finances
             ['name' => 'view-taxpayer-ledgers', 'sys_module_id' => 24],
+            ['name' => 'view-cash-book', 'sys_module_id' => 24],
 
             # Driver's Licence
             ['name' => 'driver-licences-view', 'sys_module_id' => 25],
