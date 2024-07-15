@@ -336,9 +336,6 @@
                     <li class="{{ request()->is('tax_verifications/approved*') ? 'active' : '' }}">
                         <a href="{{ route('tax_verifications.approved') }}">Approved Verifications</a>
                     </li>
-                    <li class="{{ request()->is('tax_verifications/unpaid*') ? 'active' : '' }}">
-                        <a href="{{ route('tax_verifications.unpaid') }}">Unpaid Verifications</a>
-                    </li>
                     <li class="{{ request()->is("tax_verifications/assessments*") ? "active" : "" }}">
                         <a href="{{ route("tax_verifications.assessments.index") }}">Assessments</a>
                     </li>

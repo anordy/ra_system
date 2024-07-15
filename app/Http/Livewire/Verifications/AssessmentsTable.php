@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\Verifications;
 
+use App\Enum\TaxVerificationStatus;
+use App\Enum\VettingStatus;
+use App\Models\Region;
 use App\Models\Verification\TaxVerification;
 use App\Models\WorkflowTask;
 use App\Traits\CustomAlert;
@@ -20,11 +23,23 @@ class AssessmentsTable extends DataTableComponent
     public $data = [];
 
     public $model = WorkflowTask::class;
-    public $status, $vetted;
+    public $status, $department, $locations;
 
-    public function mount($status, $vetted = false){
+    public function mount($status, $department){
         $this->status = $status;
-        $this->vetted = $vetted;
+        $this->department = $department;
+
+        if ($department === Region::DTD) {
+            $this->locations = [Region::DTD];
+        } else if ($department === Region::LTD) {
+            $this->locations = [Region::LTD, Region::UNGUJA];
+        } else if ($department === Region::PEMBA) {
+            $this->locations = [Region::PEMBA];
+        } else if ($department === Region::NTRD) {
+            $this->locations = [Region::NTRD];
+        } else {
+            $this->locations = [Region::DTD, Region::LTD, Region::PEMBA, Region::NTRD, Region::UNGUJA];
+        }
     }
 
     public function filterData($data)
@@ -37,6 +52,9 @@ class AssessmentsTable extends DataTableComponent
     {
         $query = TaxVerification::query()
             ->whereHas('assessment')
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->whereIn('location', $this->locations);
+            })
             ->where('tax_verifications.status', $this->status);
 
         $table = TaxVerification::getTableName();
