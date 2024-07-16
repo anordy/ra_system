@@ -6,14 +6,14 @@
 
     @if(isset($verification->taxReturn->tax_return->latestBill))
         <div class="mx-1">
-            <livewire:returns.return-payment :return="$verification->taxReturn->tax_return" />
+            <livewire:returns.return-payment :return="$verification->taxReturn->tax_return"/>
         </div>
     @endif
 
     @if ($verification->status == App\Enum\TaxVerificationStatus::APPROVED)
         <div class="row m-2 pt-3">
             <div class="col-md-12">
-                <livewire:assesments.tax-assessment-payment :assessment="$verification->assessment" />
+                <livewire:assesments.tax-assessment-payment :assessment="$verification->assessment"/>
             </div>
         </div>
     @endif
@@ -21,15 +21,15 @@
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                aria-selected="true">Verification Report</a>
+               aria-selected="true">Verification Report</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-                aria-selected="false">Return Information</a>
+               aria-selected="false">Return Information</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
-                aria-selected="false">Approval Details</a>
+               aria-selected="false">Approval Details</a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -82,16 +82,15 @@
                         @endif
 
                         @if ($riskIndicators)
-                        <div class="col-md-12 mb-3">
-                            <span class="font-weight-bold text-uppercase text-danger">Risk Indicators on this return</span>
-                            @foreach ($riskIndicators as $riskIndicator)
-                            <ul>
-                                <li><p class="my-1">{{ $riskIndicator->risk_indicator }}</p></li>
-                            </ul>    
-                            @endforeach
-                        </div>
+                            <div class="col-md-12 mb-3">
+                                <span class="font-weight-bold text-uppercase text-danger">Risk Indicators on this return</span>
+                                @foreach ($riskIndicators as $riskIndicator)
+                                    <ul>
+                                        <li><p class="my-1">{{ $riskIndicator->risk_indicator }}</p></li>
+                                    </ul>
+                                @endforeach
+                            </div>
                         @endif
-
 
 
                     </div>
@@ -117,9 +116,23 @@
                                 <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
                                     <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                     <a target="_blank"
-                                        href="{{ route('tax_verifications.files.show', encrypt($verification->assessment_report)) }}"
-                                        class="ml-1 font-weight-bold">
+                                       href="{{ route('tax_verifications.files.show', encrypt($verification->assessment_report)) }}"
+                                       class="ml-1 font-weight-bold">
                                         Verification Report
+                                        <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if ($verification->notification_letter)
+                            <div class="col-md-3">
+                                <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                    <a target="_blank"
+                                       href="{{ route('tax_verifications.files.show', encrypt($verification->notification_letter)) }}"
+                                       class="ml-1 font-weight-bold">
+                                        Taxpayer Notification Letter
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
                                 </div>
@@ -159,11 +172,11 @@
                             @if ($verification->assessment->report_path)
                                 <div class="col-md-4">
                                     <div
-                                        class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                                            class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
                                         <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                         <a target="_blank"
-                                            href="{{ route('tax_verifications.files.show', encrypt($verification->assessment->report_path)) }}"
-                                            class="ml-1 font-weight-bold">
+                                           href="{{ route('tax_verifications.files.show', encrypt($verification->assessment->report_path)) }}"
+                                           class="ml-1 font-weight-bold">
                                             Verification Report
                                             <i class="bi bi-arrow-up-right-square ml-1"></i>
                                         </a>
@@ -176,7 +189,7 @@
             @endif
 
             <livewire:approval.tax-verification-approval-processing modelName='{{ get_class($verification) }}'
-                                                                    modelId="{{ encrypt($verification->id) }}" />
+                                                                    modelId="{{ encrypt($verification->id) }}"/>
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if (view()->exists($viewRender))
@@ -198,7 +211,7 @@
             <div class="card">
                 <div class="card-body">
                     <livewire:approval.approval-history-table modelName='{{ get_class($verification) }}'
-                        modelId="{{ encrypt($verification->id) }}" />
+                                                              modelId="{{ encrypt($verification->id) }}" />
 
                 </div>
             </div>

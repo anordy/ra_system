@@ -15,6 +15,7 @@ class AddColumnReasonToTaxVerificationsTable extends Migration
     {
         Schema::table('tax_verifications', function (Blueprint $table) {
             $table->string('initiation_reason', 2000)->nullable();
+            $table->string('notification_letter', 255)->nullable();
         });
     }
 

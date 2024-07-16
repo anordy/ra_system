@@ -55,7 +55,7 @@ class TaxVerificationApprovalProcessing extends Component
     public $subRoles = [];
 
     public $task;
-
+    public $notificationLetter;
 
 
     public function mount($modelName, $modelId)
@@ -93,7 +93,6 @@ class TaxVerificationApprovalProcessing extends Component
             $this->staffs = User::get();
         }
     }
-
 
 
     public function approve($transition)
@@ -134,6 +133,12 @@ class TaxVerificationApprovalProcessing extends Component
             );
         }
 
+        if ($this->checkTransition('send_notification_to_taxpayer')) {
+            $this->validate([
+                'notificationLetter' => 'required|mimes:pdf,csv|max:3076|max_file_name_length:100'
+            ]);
+        }
+
 
         DB::beginTransaction();
         try {
@@ -161,6 +166,12 @@ class TaxVerificationApprovalProcessing extends Component
 
                 // TODO: Format Send Notification to Taxpayer message
                 // event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->return->taxpayer->mobile, 'message' => "Hello {$this->subject->return->taxpayer->fullname}, Your return has been selected for verification"]));
+            }
+
+            if ($this->checkTransition('send_notification_to_taxpayer')) {
+                $notificationLetter = $this->notificationLetter->store('verifications', 'local');
+                $this->subject->notification_letter = $notificationLetter;
+                $this->subject->save();
             }
 
             if ($this->checkTransition('conduct_verification')) {
@@ -217,7 +228,8 @@ class TaxVerificationApprovalProcessing extends Component
                 $this->subject->save();
 
                 if ($this->assessmentReport != $this->subject->assessment_report) {
-                    event(new SendMail('send-assessment-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
+                    // TODO: Send this on commissioner approval
+                    // event(new SendMail('send-assessment-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
                 }
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
