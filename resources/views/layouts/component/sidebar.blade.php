@@ -339,9 +339,9 @@
                     <li class="{{ request()->is("tax_verifications/assessments*") ? "active" : "" }}">
                         <a href="{{ route("tax_verifications.assessments.index") }}">Assessments</a>
                     </li>
-                    {{-- <li class="{{ request()->is("tax_verifications/verified*") ? "active" : "" }}">
-                        <a href="{{ route("tax_verifications.verified.index") }}">Approved Returns</a>
-                    </li> --}}
+                    <li class="{{ request()->is("tax_verifications/initiate*") ? "active" : "" }}">
+                        <a href="{{ route("tax_verifications.initiate") }}">Initiate Verification</a>
+                    </li>
                 </ul>
             </li>
         @endcan

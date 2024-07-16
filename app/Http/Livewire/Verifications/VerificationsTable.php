@@ -59,19 +59,20 @@ class VerificationsTable extends DataTableComponent
             })
             ->where('tax_verifications.status', $this->status);
 
-        if ($this->status === TaxVerificationStatus::PENDING && !$this->vetted){
-            $query->whereHas('pinstance', function ($query) {
-                $query->whereHas('actors', function ($query) {
-                    $query->where('user_id', auth()->id());
-                });
-            });
-        }
-
-        if ($this->vetted){
-            $query->whereHas('taxReturn', function (Builder $builder) {
-                $builder->where('vetting_status', VettingStatus::VETTED);
-            });
-        }
+        // TODO: Uncomment out this
+//        if ($this->status === TaxVerificationStatus::PENDING && !$this->vetted){
+//            $query->whereHas('pinstance', function ($query) {
+//                $query->whereHas('actors', function ($query) {
+//                    $query->where('user_id', auth()->id());
+//                });
+//            });
+//        }
+//
+//        if ($this->vetted){
+//            $query->whereHas('taxReturn', function (Builder $builder) {
+//                $builder->where('vetting_status', VettingStatus::VETTED);
+//            });
+//        }
 
         $table = TaxVerification::getTableName();
         $query = $this->dataFilter($query, $this->data, $table);

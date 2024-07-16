@@ -74,6 +74,13 @@
                             <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
                         </div>
 
+                        @if($verification->initiation_reason)
+                            <div class="col-md-12 mb-3">
+                                <span class="font-weight-bold text-danger text-uppercase">Initiation Reason</span>
+                                <p class="my-1">{{ $verification->initiation_reason }}</p>
+                            </div>
+                        @endif
+
                         @if ($riskIndicators)
                         <div class="col-md-12 mb-3">
                             <span class="font-weight-bold text-uppercase text-danger">Risk Indicators on this return</span>
@@ -84,6 +91,9 @@
                             @endforeach
                         </div>
                         @endif
+
+
+
                     </div>
                 </div>
             </div>

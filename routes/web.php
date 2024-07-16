@@ -523,6 +523,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/approved', [TaxVerificationsController::class, 'approved'])->name('approved');
         Route::get('/pending', [TaxVerificationsController::class, 'pending'])->name('pending');
         Route::get('/unpaid', [TaxVerificationsController::class, 'unpaid'])->name('unpaid');
+        Route::get('/initiate', [TaxVerificationsController::class, 'initiate'])->name('initiate');
         Route::get('/show/{verification}', [TaxVerificationsController::class, 'show'])->name('show');
         Route::get('/edit/{verification}', [TaxVerificationsController::class, 'edit'])->name('edit');
     });

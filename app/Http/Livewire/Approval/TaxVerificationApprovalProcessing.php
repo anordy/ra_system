@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\TransactionType;
+use App\Events\SendSms;
+use App\Jobs\SendCustomSMS;
 use App\Traits\TaxpayerLedgerTrait;
 use Exception;
 use Carbon\Carbon;
@@ -132,89 +134,92 @@ class TaxVerificationApprovalProcessing extends Component
             );
         }
 
-        // TODO: Add this into transaction
-        $operators = [];
-        if ($this->checkTransition('assign_officers')) {
 
-            $officers = $this->subject->officers()->exists();
-
-            if ($officers) {
-                $this->subject->officers()->delete();
-            }
-
-            TaxVerificationOfficer::create([
-                'verification_id' => $this->subject->id,
-                'user_id' => $this->teamLeader,
-                'team_leader' => true,
-            ]);
-
-            TaxVerificationOfficer::create([
-                'verification_id' => $this->subject->id,
-                'user_id' => $this->teamMember,
-            ]);
-
-            $operators = [intval($this->teamLeader), intval($this->teamMember)];
-        }
-
-        if ($this->checkTransition('conduct_verification')) {
-            $assessment = $this->subject->assessment()->exists();
-
-            $this->principalAmount = roundOff($this->principalAmount, $this->subject->taxReturn->currency);
-            $this->interestAmount = roundOff($this->interestAmount, $this->subject->taxReturn->currency);
-            $this->penaltyAmount = roundOff($this->penaltyAmount, $this->subject->taxReturn->currency);
-            if ($this->hasAssessment == "1") {
-                if ($assessment) {
-                    $this->subject->assessment()->update([
-                        'principal_amount' => $this->principalAmount,
-                        'interest_amount' => $this->interestAmount,
-                        'penalty_amount' => $this->penaltyAmount,
-                        'total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
-                        'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
-                        'original_principal_amount' => $this->principalAmount,
-                        'original_interest_amount' => $this->interestAmount,
-                        'original_penalty_amount' => $this->penaltyAmount,
-                        'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
-                    ]);
-                } else {
-
-                    TaxAssessment::create([
-                        'location_id' => $this->subject->location_id,
-                        'business_id' => $this->subject->business_id,
-                        'tax_type_id' => $this->taxType->id,
-                        'assessment_id' => $this->subject->id,
-                        'assessment_type' => get_class($this->subject),
-                        'principal_amount' => $this->principalAmount,
-                        'interest_amount' => $this->interestAmount,
-                        'penalty_amount' => $this->penaltyAmount,
-                        'outstanding_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
-                        'total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
-                        'original_principal_amount' => $this->principalAmount,
-                        'original_interest_amount' => $this->interestAmount,
-                        'original_penalty_amount' => $this->penaltyAmount,
-                        'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
-                        'currency' => $this->subject->taxReturn->currency
-                    ]);
-                }
-            } else {
-                if ($assessment) {
-                    $this->subject->assessment()->delete();
-                }
-            }
-
-            $assessmentReport = $this->assessmentReport;
-            if ($this->assessmentReport != $this->subject->assessment_report) {
-                $assessmentReport = $this->assessmentReport->store('verification', 'local');
-            }
-
-            $this->subject->assessment_report = $assessmentReport;
-            $this->subject->save();
-
-            if ($this->assessmentReport != $this->subject->assessment_report) {
-                event(new SendMail('send-assessment-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
-            }
-        }
         DB::beginTransaction();
         try {
+            $operators = [];
+            if ($this->checkTransition('assign_officers')) {
+
+                $officers = $this->subject->officers()->exists();
+
+                if ($officers) {
+                    $this->subject->officers()->delete();
+                }
+
+                TaxVerificationOfficer::create([
+                    'verification_id' => $this->subject->id,
+                    'user_id' => $this->teamLeader,
+                    'team_leader' => true,
+                ]);
+
+                TaxVerificationOfficer::create([
+                    'verification_id' => $this->subject->id,
+                    'user_id' => $this->teamMember,
+                ]);
+
+                $operators = [intval($this->teamLeader), intval($this->teamMember)];
+
+                // TODO: Format Send Notification to Taxpayer message
+                // event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->return->taxpayer->mobile, 'message' => "Hello {$this->subject->return->taxpayer->fullname}, Your return has been selected for verification"]));
+            }
+
+            if ($this->checkTransition('conduct_verification')) {
+                $assessment = $this->subject->assessment()->exists();
+
+                $this->principalAmount = roundOff($this->principalAmount, $this->subject->taxReturn->currency);
+                $this->interestAmount = roundOff($this->interestAmount, $this->subject->taxReturn->currency);
+                $this->penaltyAmount = roundOff($this->penaltyAmount, $this->subject->taxReturn->currency);
+                if ($this->hasAssessment == "1") {
+                    if ($assessment) {
+                        $this->subject->assessment()->update([
+                            'principal_amount' => $this->principalAmount,
+                            'interest_amount' => $this->interestAmount,
+                            'penalty_amount' => $this->penaltyAmount,
+                            'total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
+                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
+                            'original_principal_amount' => $this->principalAmount,
+                            'original_interest_amount' => $this->interestAmount,
+                            'original_penalty_amount' => $this->penaltyAmount,
+                            'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
+                        ]);
+                    } else {
+
+                        TaxAssessment::create([
+                            'location_id' => $this->subject->location_id,
+                            'business_id' => $this->subject->business_id,
+                            'tax_type_id' => $this->taxType->id,
+                            'assessment_id' => $this->subject->id,
+                            'assessment_type' => get_class($this->subject),
+                            'principal_amount' => $this->principalAmount,
+                            'interest_amount' => $this->interestAmount,
+                            'penalty_amount' => $this->penaltyAmount,
+                            'outstanding_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
+                            'total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
+                            'original_principal_amount' => $this->principalAmount,
+                            'original_interest_amount' => $this->interestAmount,
+                            'original_penalty_amount' => $this->penaltyAmount,
+                            'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
+                            'currency' => $this->subject->taxReturn->currency
+                        ]);
+                    }
+                } else {
+                    if ($assessment) {
+                        $this->subject->assessment()->delete();
+                    }
+                }
+
+                $assessmentReport = $this->assessmentReport;
+                if ($this->assessmentReport != $this->subject->assessment_report) {
+                    $assessmentReport = $this->assessmentReport->store('verification', 'local');
+                }
+
+                $this->subject->assessment_report = $assessmentReport;
+                $this->subject->save();
+
+                if ($this->assessmentReport != $this->subject->assessment_report) {
+                    event(new SendMail('send-assessment-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
+                }
+            }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
             DB::commit();
             if ($this->subject->status == TaxVerificationStatus::APPROVED && $this->subject->assessment()->exists()) {
