@@ -50,17 +50,6 @@ class RoleAssignPermissionModal extends Component
                 $this->role->permissions()->detach();
             }
 
-            // Re-load session permissions
-            $role_permissions = DB::table('roles_permissions')->where('role_id', $this->role->id)->pluck('permission_id');
-            $permissions = Permission::query()->whereIn('id', $role_permissions)->get();
-            $modules = SysModule::query()->whereHas('permissions', function ($query) use ($role_permissions) {
-                $query->whereIn('id', $role_permissions);
-            })->distinct()->get();
-
-            // Store permissions in session
-            Session::put('user_permissions', $permissions);
-            Session::put('user_modules', $modules);
-
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error('Error: ' . $e->getMessage(), [

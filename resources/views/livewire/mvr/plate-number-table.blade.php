@@ -61,7 +61,7 @@
             @endforeach
         @else
             <tr>
-                <td colspan="5" class="text-center">There are no new notifications for you at the moment</td>
+                <td colspan="5" class="text-center">There are no plate numbers for processing at the moment.</td>
             </tr>
         @endif
         </tbody>

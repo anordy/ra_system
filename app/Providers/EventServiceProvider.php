@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Events\SendMail;
 use App\Events\SendSms;
-use App\Events\SendWithholdingAgentRegistrationEmail;
 use App\Listeners\SendMailFired;
 use App\Listeners\SendSmsFired;
 use Illuminate\Auth\Events\Registered;
@@ -27,10 +26,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         SendSms::class => [
             SendSmsFired::class,
-        ],
-        SendWithholdingAgentRegistrationEmail::class => [
-            SendMailFired::class
-        ],
+        ]
     ];
 
     protected $subscribe = [

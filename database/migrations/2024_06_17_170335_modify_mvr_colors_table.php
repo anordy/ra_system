@@ -17,7 +17,7 @@ class ModifyMvrColorsTable extends Migration
             $table->unsignedBigInteger('mvr_registration_type_id');
             $table->dropColumn('name');
             $table->string('color');
-            $table->string('hex_value')->nullable();
+            $table->string('hex_value')->nullable()->change();
         });
     }
 

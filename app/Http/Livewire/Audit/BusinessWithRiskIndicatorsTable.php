@@ -49,7 +49,7 @@ class BusinessWithRiskIndicatorsTable extends DataTableComponent
             Column::make('Region', 'region.name')->sortable()->searchable(),
             Column::make('District', 'district.name')->sortable()->searchable(),
             Column::make('Ward', 'ward.name')->sortable()->searchable(),
-            Column::make('Filled On', 'created_at')
+            Column::make('Registered On', 'created_at')
             ->format(fn ($value) => Carbon::create($value)->toDateString())->sortable()->searchable(),
             Column::make('Action', 'id')
                 ->view('audit.business.action')

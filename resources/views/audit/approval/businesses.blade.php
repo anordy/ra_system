@@ -16,7 +16,8 @@
             </div>
         </div>
         <div class="card-body">
-            @livewire('audit.business-with-risk-indicators-table')
+            @livewire('audit.business-with-risk-table')
+{{--            @livewire('audit.business-with-risk-indicators-table')--}}
         </div>
     </div>
 @endsection

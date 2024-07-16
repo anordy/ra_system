@@ -3,6 +3,8 @@
 namespace App\Traits;
 
 use App\Enum\AlertConfig;
+use App\Enum\GeneralConstant;
+use App\Models\MvrPlateNumberStatus;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 trait CustomAlert
@@ -20,5 +22,19 @@ trait CustomAlert
         }
 
         $this->alert($type, $message, $options);
+    }
+
+    public function customConfirm($message, $callback, $data){
+        $this->customAlert(GeneralConstant::QUESTION, $message, [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Yes',
+            'onConfirmed' => $callback,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'No, Cancel',
+            'timer' => null,
+            'data' => $data,
+        ]);
     }
 }
