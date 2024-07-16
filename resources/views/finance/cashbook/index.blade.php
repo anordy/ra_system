@@ -10,11 +10,11 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mx-1">
         @foreach($accounts as $account)
-            <div class="col-md-4 card w-25 mx-2">
+            <div class="col-md-3 card mx-1">
                 <div class="card-body">
-                    <h5 class="card-title">{{ $account->psp_name ?? 'N/A' }} - {{ $account->currency ?? 'N/A'  }}</h5>
+                    <h5 class="card-title">{{ $account->psp_name ?? 'N/A' }} Cashbook - {{ $account->currency ?? 'N/A'  }}</h5>
                     <p class="card-text">Account Number: {{ $account->ctr_acc_num ?? 'N/A'  }}</p>
                     <a href="{{ route('finance.cashbook.show', ['accountNum' => encrypt($account->ctr_acc_num)])  }}" class="btn btn-primary">View</a>
                 </div>
