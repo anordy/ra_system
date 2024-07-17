@@ -138,10 +138,67 @@
                                 </div>
                             </div>
                         @endif
+
+                        @if ($verification->final_report)
+                            <div class="col-md-3">
+                                <div
+                                        class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                    <a target="_blank"
+                                       href="{{ route('tax_verifications.files.show', encrypt($verification->final_report)) }}"
+                                       class="ml-1 font-weight-bold">
+                                        Final Report
+                                        <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+
+                            @if ($verification->notice_of_discussion)
+                                <div class="col-md-3">
+                                    <div
+                                            class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                        <a target="_blank"
+                                           href="{{ route('tax_verifications.files.show', encrypt($verification->notice_of_discussion)) }}"
+                                           class="ml-1 font-weight-bold">
+                                            Notice of Discussion
+                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+
                     </div>
 
                 </div>
             </div>
+
+            @if($verification->files)
+                <div class="card">
+                    <div class="card-header text-uppercase font-weight-bold bg-white">
+                        Responded Documents
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach($verification->files as $file)
+                                <div class="col-md-3">
+                                    <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                        <a target="_blank"
+                                           href="{{ route('tax_verifications.files.show', encrypt($file->file)) }}"
+                                           class="ml-1 font-weight-bold">
+                                            {{ strtoupper($file->name ?? 'N/A')  }}
+                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
 
             @if ($verification->assessment)
                 <div class="card">
@@ -211,7 +268,7 @@
             <div class="card">
                 <div class="card-body">
                     <livewire:approval.approval-history-table modelName='{{ get_class($verification) }}'
-                                                              modelId="{{ encrypt($verification->id) }}" />
+                                                              modelId="{{ encrypt($verification->id) }}"/>
 
                 </div>
             </div>

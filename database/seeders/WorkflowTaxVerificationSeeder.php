@@ -83,7 +83,17 @@ class WorkflowTaxVerificationSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
+            'manager_exit_discussion_review' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
             'commissioner_final_report_review' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1, 2]
+            ],
+            'commissioner_exit_discussion_review' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2]
@@ -152,7 +162,27 @@ class WorkflowTaxVerificationSeeder extends Seeder
             ],
             'exit_discussion' => [
                 'from' => 'officer_prepare_notice_of_discussion',
-                'to' => 'manager_final_report_review',
+                'to' => 'manager_exit_discussion_review',
+                'condition' => '',
+            ],
+            'exit_discussion_correct' => [
+                'from' => 'manager_exit_discussion_review',
+                'to' => 'officer_prepare_notice_of_discussion',
+                'condition' => '',
+            ],
+            'commissioner_exit_discussion_review' => [
+                'from' => 'manager_exit_discussion_review',
+                'to' => 'commissioner_exit_discussion_review',
+                'condition' => '',
+            ],
+            'commissioner_exit_discussion_reject' => [
+                'from' => 'commissioner_exit_discussion_review',
+                'to' => 'manager_exit_discussion_review',
+                'condition' => '',
+            ],
+            'commissioner_exit_discussion_approve' => [
+                'from' => 'commissioner_exit_discussion_review',
+                'to' => 'completed',
                 'condition' => '',
             ],
             'manager_final_report_review' => [
@@ -173,11 +203,6 @@ class WorkflowTaxVerificationSeeder extends Seeder
             'commissioner_final_report_reject' => [
                 'from' => 'commissioner_final_report_review',
                 'to' => 'manager_final_report_review',
-                'condition' => '',
-            ],
-            'completed' => [
-                'from' => 'commissioner_final_report_review',
-                'to' => 'completed',
                 'condition' => '',
             ],
         ];

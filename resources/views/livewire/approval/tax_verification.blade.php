@@ -121,6 +121,38 @@
                     </div>
                 </div>
             @endif
+            @if($this->checkTransition('officer_prepare_final_report'))
+                <div class="row p-0">
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Final Report *</label>
+                        <input type="file" class="form-control  @error('finalReport') is-invalid @enderror"
+                               wire:model.lazy="finalReport">
+                        @error('finalReport')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            @endif
+            @if($this->checkTransition('exit_discussion'))
+                <div class="row p-0">
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Final Report *</label>
+                        <input type="file" class="form-control  @error('finalReport') is-invalid @enderror"
+                               wire:model.lazy="finalReport">
+                        @error('finalReport')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Notice of Discussion *</label>
+                        <input type="file" class="form-control  @error('noticeDiscussion') is-invalid @enderror"
+                               wire:model.lazy="noticeDiscussion">
+                        @error('noticeDiscussion')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            @endif
             <div class="row p-0">
                 <div class="col-md-12 mb-3">
                     <div class="form-group">
@@ -185,6 +217,48 @@
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'officer_prepare_final_report')">
                     Approve & Forward
+                </button>
+            </div>
+        @elseif ($this->checkTransition('exit_discussion'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'exit_discussion')">
+                    Approve & Forward
+                </button>
+            </div>
+        @elseif ($this->checkTransition('manager_final_report_review'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'manager_final_report_reject')">
+                    Reject & Return Back
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'manager_final_report_review')">
+                    Approve & Forward
+                </button>
+            </div>
+        @elseif ($this->checkTransition('exit_discussion_correct'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'exit_discussion_correct')">
+                    Reject & Return Back
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commissioner_exit_discussion_review')">
+                    Approve & Forward
+                </button>
+            </div>
+        @elseif ($this->checkTransition('commissioner_final_report_review'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commissioner_final_report_reject')">
+                    Reject & Return Back
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commissioner_final_report_review')">
+                    Approve & Complete
+                </button>
+            </div>
+        @elseif ($this->checkTransition('commissioner_exit_discussion_approve'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commissioner_exit_discussion_reject')">
+                    Reject & Return Back
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commissioner_exit_discussion_approve')">
+                    Approve & Complete
                 </button>
             </div>
         @endif

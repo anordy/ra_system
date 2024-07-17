@@ -55,7 +55,7 @@ class TaxVerificationApprovalProcessing extends Component
     public $subRoles = [];
 
     public $task;
-    public $notificationLetter;
+    public $notificationLetter, $finalReport, $noticeDiscussion, $files = [];
 
 
     public function mount($modelName, $modelId)
@@ -70,6 +70,10 @@ class TaxVerificationApprovalProcessing extends Component
 
         $this->task = $this->subject->pinstancesActive;
         $this->assessmentReport = $this->subject->assessment_report;
+        $this->notificationLetter = $this->subject->notification_letter;
+        $this->finalReport = $this->subject->final_report;
+        $this->noticeDiscussion = $this->subject->notice_of_discussion;
+        $this->files = $this->subject->files;
 
         $assessment = $this->subject->assessment;
         if ($assessment) {
@@ -87,9 +91,7 @@ class TaxVerificationApprovalProcessing extends Component
                 $operators = [];
             }
             $roles = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
-
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
-
             $this->staffs = User::get();
         }
     }
@@ -133,9 +135,22 @@ class TaxVerificationApprovalProcessing extends Component
             );
         }
 
-        if ($this->checkTransition('send_notification_to_taxpayer')) {
+        if ($this->checkTransition('send_notification_to_taxpayer') && $this->notificationLetter) {
             $this->validate([
                 'notificationLetter' => 'required|mimes:pdf,csv|max:3076|max_file_name_length:100'
+            ]);
+        }
+
+        if ($this->checkTransition('officer_prepare_final_report') && !$this->finalReport) {
+            $this->validate([
+                'finalReport' => 'required|mimes:pdf,csv|max:3076|max_file_name_length:100'
+            ]);
+        }
+
+        if ($this->checkTransition('exit_discussion') && (!$this->noticeDiscussion || !$this->finalReport)) {
+            $this->validate([
+                'finalReport' => 'required|mimes:pdf,csv|max:3076|max_file_name_length:100',
+                'noticeDiscussion' => 'required|mimes:pdf,csv|max:3076|max_file_name_length:100',
             ]);
         }
 
@@ -232,16 +247,43 @@ class TaxVerificationApprovalProcessing extends Component
                     // event(new SendMail('send-assessment-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
                 }
             }
+
+            if ($this->checkTransition('officer_prepare_final_report')) {
+                if ($this->finalReport != $this->subject->final_report) {
+                    $finalReport = $this->finalReport->store('verifications', 'local');
+                    $this->subject->final_report = $finalReport;
+                    $this->subject->save();
+                }
+            }
+
+            if ($this->checkTransition('exit_discussion')) {
+                if ($this->finalReport != $this->subject->final_report) {
+                    $finalReport = $this->finalReport->store('verifications', 'local');
+                    $this->subject->final_report = $finalReport;
+                }
+
+                if ($this->noticeDiscussion != $this->subject->notice_of_discussion) {
+                    $noticeDiscussion = $this->noticeDiscussion->store('verifications', 'local');
+                    $this->subject->notice_of_discussion = $noticeDiscussion;
+                }
+
+                $this->subject->save();
+            }
+
+            if ($this->checkTransition('commissioner_final_report_review') || $this->checkTransition('commissioner_exit_discussion_approve')) {
+                $this->subject->status = TaxVerificationStatus::APPROVED;
+                $this->subject->assessment->payment_due_date = Carbon::now()->addDays(30)->endOfDay();
+                $this->subject->assessment->curr_payment_due_date = Carbon::now()->addDays(30)->endOfDay();
+                $assessment = $this->subject->assessment;
+                $this->recordLedger(TransactionType::DEBIT,TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
+                $this->subject->save();
+                $this->subject->assessment->save();
+            }
+
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
             DB::commit();
             if ($this->subject->status == TaxVerificationStatus::APPROVED && $this->subject->assessment()->exists()) {
                 $this->generateControlNumber();
-                $this->subject->assessment->update([
-                    'payment_due_date' => Carbon::now()->addDays(30)->endOfDay(),
-                    'curr_payment_due_date' => Carbon::now()->addDays(30)->endOfDay(),
-                ]);
-                $assessment = $this->subject->assessment;
-                $this->recordLedger(TransactionType::DEBIT,TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
