@@ -6,7 +6,6 @@ use ReflectionClass;
 
 class GeneralReportType implements Status
 {
-    const TAXPAYER_REGISTRATION = 'TAX PAYER REGISTRATION';
     const RETURNS = 'RETURNS';
     const INFRASTRUCTURE = 'INFRASTRUCTURE';
     const DEBT = 'DEBT MANAGEMENT';

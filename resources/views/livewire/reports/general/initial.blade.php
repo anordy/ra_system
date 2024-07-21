@@ -9,9 +9,10 @@
             <select name="report_type_id" id="report_type_id" wire:model="report_type_id"
                     class="form-control {{ $errors->has('report_type_id') ? 'is-invalid' : '' }}">
                 <option value="">--choose report type---</option>
-
                 @foreach ($report_types as $row)
-                    <option value={{ $row->id }}>{{ $row->name }}</option>
+                    @can($row->permission)
+                        <option value={{ $row->id }}>{{ $row->name }}</option>
+                    @endcan
                 @endforeach
             </select>
             @error('report_type_id')

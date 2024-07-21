@@ -30,7 +30,7 @@ class Initial extends Component
     public function mount()
     {
         $this->report_types = ReportType::query()
-            ->select('id', 'name')
+            ->select('id', 'name', 'permission')
             ->orderBy('name', 'ASC')
             ->get();
 

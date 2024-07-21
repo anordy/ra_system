@@ -69,8 +69,8 @@ class RoleAssignPermissionModal extends Component
             abort(404);
         }
         $this->selectedPermissions = $this->role->permissions->pluck('id')->toArray();
-        $this->modules = SysModule::all();
-        $this->permissions = Permission::all();
+        $this->modules = SysModule::query()->select('name', 'id')->orderBy('id', 'ASC')->get();
+        $this->permissions = Permission::query()->select('name', 'id', 'sys_module_id')->get();
     }
 
     public function render()
