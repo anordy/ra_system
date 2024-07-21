@@ -16,6 +16,11 @@ class GeneralReportType implements Status
     const BUSINESS = 'BUSINESS';
     const PROPERTY_TAX = 'PROPERTY TAX';
     const RESEARCH_REPORT = 'RESEARCH REPORT';
+    const TAX_CLAIMS = 'TAX CLAIMS';
+    const RELIEF = 'RELIEF';
+    const COMPLIANCE = 'COMPLIANCE';
+    const TAX_AUDIT = 'TAX AUDIT';
+    const TAX_INVESTIGATION = 'TAX INVESTIGATION';
 
     static function getConstants(): array
     {

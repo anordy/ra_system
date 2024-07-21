@@ -20,6 +20,7 @@ class ReportsSeeder extends Seeder
     {
 
         $reports = [
+            // Infrastructure
             [
                 'report_type' => GeneralReportType::INFRASTRUCTURE,
                 'reports' => [
@@ -28,31 +29,32 @@ class ReportsSeeder extends Seeder
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::INFRASTRUCTURE,
                         'report_url' => '/reports/ZRA/Infrastructure/infrastructure',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'VAT Number of Bed Nights',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::INFRASTRUCTURE,
                         'report_url' => '/reports/ZRA/Infrastructure/vat_bed_nights',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Hotel Number of Bed Nights',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::INFRASTRUCTURE,
                         'report_url' => '/reports/ZRA/Infrastructure/hotel_bed_nights',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Petroleum',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::INFRASTRUCTURE,
                         'report_url' => '/reports/ZRA/Infrastructure/petroleum',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                 ]
             ],
+            // Property Tax
             [
                 'report_type' => GeneralReportType::PROPERTY_TAX,
                 'reports' => [
@@ -61,24 +63,25 @@ class ReportsSeeder extends Seeder
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::PROPERTY_TAX,
                         'report_url' => '/reports/ZRA/PropertyTax/property_tax_taxpayers',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Property Tax Paid Payments',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::PROPERTY_TAX,
                         'report_url' => '/reports/ZRA/PropertyTax/property_tax_paid_payments',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE, Parameter::REGION_NAME]
+                        'parameters' => [Parameter::DYNAMIC_DATE, Parameter::REGION_NAME]
                     ],
                     [
                         'name' => 'Property Tax Unpaid Payments',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::PROPERTY_TAX,
                         'report_url' => '/reports/ZRA/PropertyTax/property_tax_unpaid_payments',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE, Parameter::REGION_NAME]
+                        'parameters' => [Parameter::DYNAMIC_DATE, Parameter::REGION_NAME]
                     ],
                 ]
             ],
+            // Business
             [
                 'report_type' => GeneralReportType::BUSINESS,
                 'reports' => [
@@ -87,14 +90,21 @@ class ReportsSeeder extends Seeder
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::BUSINESS,
                         'report_url' => '/reports/ZRA/Business/business_without_z_number',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'Registrations',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::BUSINESS,
+                        'report_url' => '/reports/ZRA/Business/business_registrations',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Renting Premises Report',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::BUSINESS,
                         'report_url' => '/reports/ZRA/TaxPayer/renting_premises_report',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Taxpayer for the Past Twelve Months',
@@ -105,6 +115,7 @@ class ReportsSeeder extends Seeder
                     ],
                 ]
             ],
+            // Returns
             [
                 'report_type' => GeneralReportType::RETURNS,
                 'reports' => [
@@ -122,8 +133,23 @@ class ReportsSeeder extends Seeder
                         'report_url' => '/reports/ZRA/Returns/expected_returns_report',
                         'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
                     ],
+                    [
+                        'name' => 'Returns By ZTN Number',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RETURNS,
+                        'report_url' => '/reports/ZRA/Returns/returns_by_ztn_number',
+                        'parameters' => [Parameter::ZTN_NUMBER]
+                    ],
+                    [
+                        'name' => 'Non Filers On Financial Month',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RETURNS,
+                        'report_url' => '/reports/ZRA/Returns/non_filer_returns_report',
+                        'parameters' => [Parameter::FINANCIAL_MONTH]
+                    ],
                 ]
             ],
+            // Debt
             [
                 'report_type' => GeneralReportType::DEBT,
                 'reports' => [
@@ -132,24 +158,25 @@ class ReportsSeeder extends Seeder
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::DEBT,
                         'report_url' => '/reports/ZRA/Debt/offence_report',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE, Parameter::DEPARTMENT]
+                        'parameters' => [Parameter::DYNAMIC_DATE, Parameter::DEPARTMENT]
                     ],
                     [
                         'name' => 'Tax Clearance',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::DEBT,
                         'report_url' => '/reports/ZRA/Debt/clearance_report',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Debt Report',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::DEBT,
                         'report_url' => '/reports/ZRA/Debt/debt_report',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                 ]
             ],
+            // Land Lease
             [
                 'report_type' => GeneralReportType::LAND_LEASE,
                 'reports' => [
@@ -169,6 +196,7 @@ class ReportsSeeder extends Seeder
                     ],
                 ]
             ],
+            // MVR
             [
                 'report_type' => GeneralReportType::MVR,
                 'reports' => [
@@ -177,52 +205,67 @@ class ReportsSeeder extends Seeder
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::MVR,
                         'report_url' => '/reports/ZRA/mvr/_de_registered_vehicles',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'General New Vehicle Imported',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::MVR,
                         'report_url' => '/reports/ZRA/mvr/general_new_vehicle_imported',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Paid Registered Vehicles',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::MVR,
                         'report_url' => '/reports/ZRA/mvr/_paid_registered_vehicles',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Plate Report',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::MVR,
                         'report_url' => '/reports/ZRA/mvr/plate_reports',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Sales Of Plates And Stickers Update And Deregistered',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::MVR,
                         'report_url' => '/reports/ZRA/mvr/sales_of_plates_and_stickers_update_and_deregistered',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Total Cards Printed',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::MVR,
                         'report_url' => '/reports/ZRA/mvr/total_cards_printed',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Transferred Vehicle Report',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::MVR,
                         'report_url' => '/reports/ZRA/mvr/_transferred_vehicle_report',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'Total Number of Driving License By Duration (Years)',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::MVR,
+                        'report_url' => '/reports/ZRA/mvr/total_no_of_dl_by_duration',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'Temporary Registered Vehicles to Mainland',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::MVR,
+                        'report_url' => '/reports/ZRA/mvr/mvr_temporary_registrations_to_mainland',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                 ]
             ],
+            // Research
             [
                 'report_type' => GeneralReportType::RESEARCH_REPORT,
                 'reports' => [
@@ -231,23 +274,164 @@ class ReportsSeeder extends Seeder
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::RESEARCH_REPORT,
                         'report_url' => '/reports/ZRA/Research/collection_by_department',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Collection By District',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::RESEARCH_REPORT,
                         'report_url' => '/reports/ZRA/Research/collection_by_district',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
                     [
                         'name' => 'Collection By Region',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::RESEARCH_REPORT,
                         'report_url' => '/reports/ZRA/Research/collection_by_region',
-                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ],
-
+                    [
+                        'name' => 'Audited Cases',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RESEARCH_REPORT,
+                        'report_url' => '/reports/ZRA/Research/audited_cases_general',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'Imported Petroleum Products',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RESEARCH_REPORT,
+                        'report_url' => '/reports/ZRA/Research/imported_petroleum_product',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'Source Distribution by Department',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RESEARCH_REPORT,
+                        'report_url' => '/reports/ZRA/Research/monthly_distribution_source_by_department',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'All Source Distributions',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RESEARCH_REPORT,
+                        'report_url' => '/reports/ZRA/Research/monthly_distribution_source_general',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'All Source Distributions',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RESEARCH_REPORT,
+                        'report_url' => '/reports/ZRA/Research/number_of_taxpayers_in_departments_by_source',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'Penalized Taxpayers',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RESEARCH_REPORT,
+                        'report_url' => '/reports/ZRA/Research/penalized_taxpayers',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'Returns Submitted/Corrected',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RESEARCH_REPORT,
+                        'report_url' => '/reports/ZRA/Research/returns_submitted_corrected_correction',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                ]
+            ],
+            // Compliance
+            [
+                'report_type' => GeneralReportType::COMPLIANCE,
+                'reports' => [
+                    [
+                        'name' => 'All Audits, Investigation & Verifications by ZTN Number',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::COMPLIANCE,
+                        'report_url' => '/reports/ZRA/Compliance/compliance_by_ztn_number',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE, Parameter::ZTN_NUMBER]
+                    ],
+                    [
+                        'name' => 'Unpaid Audits, Investigation & Verifications by ZTN Number',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::COMPLIANCE,
+                        'report_url' => '/reports/ZRA/Compliance/compliance_by_ztn_number_debt',
+                        'parameters' => [Parameter::START_DATE, Parameter::END_DATE, Parameter::ZTN_NUMBER]
+                    ],
+                ]
+            ],
+            // Tax Claims
+            [
+                'report_type' => GeneralReportType::TAX_CLAIMS,
+                'reports' => [
+                    [
+                        'name' => 'All Tax Claim Reports',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::TAX_CLAIMS,
+                        'report_url' => '/reports/ZRA/TaxClaims/tax_claims_report_general',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'All Tax Claims by ZTN Number',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::TAX_CLAIMS,
+                        'report_url' => '/reports/ZRA/TaxClaims/tax_claims_report_by_taxpayer',
+                        'parameters' => [Parameter::DYNAMIC_DATE, Parameter::ZTN_NUMBER]
+                    ],
+                ]
+            ],
+            // Relief
+            [
+                'report_type' => GeneralReportType::RELIEF,
+                'reports' => [
+                    [
+                        'name' => 'Taxpayer Relief Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RELIEF,
+                        'report_url' => '/reports/ZRA/Relief/taxpayer_relief_report',
+                        'parameters' => [Parameter::DYNAMIC_DATE, Parameter::ZTN_LOCATION_NUMBER, Parameter::RATE, Parameter::PROJECT_ID]
+                    ],
+                    [
+                        'name' => 'Ceiling Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RELIEF,
+                        'report_url' => '/reports/ZRA/Relief/ceiling_report',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'Relief Items',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RELIEF,
+                        'report_url' => '/reports/ZRA/Relief/relief_items',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                ]
+            ],
+            // Tax audit
+            [
+                'report_type' => GeneralReportType::TAX_AUDIT,
+                'reports' => [
+                    [
+                        'name' => 'Audited Cases',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::TAX_AUDIT,
+                        'report_url' => '/reports/ZRA/Research/audited_cases_general',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ]
+                ]
+            ],
+            // Tax Investigation
+            [
+                'report_type' => GeneralReportType::TAX_INVESTIGATION,
+                'reports' => [
+                    [
+                        'name' => 'Investigation Cases',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::TAX_INVESTIGATION,
+                        'report_url' => '/reports/ZRA/TaxInvestigation/investigation_cases_conducted',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ]
                 ]
             ],
         ];

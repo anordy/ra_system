@@ -24,5 +24,10 @@ class Parameter extends Model
     public const REGION_NAME = 'region_name';
     public const CODE = 'code';
     public const PAYMENT_STATUS = 'payment_status';
+    public const DYNAMIC_DATE = 'dynamic_date';
+    public const ZTN_NUMBER = 'ztn_number';
+    public const ZTN_LOCATION_NUMBER = 'zin';
+    public const RATE = 'rate';
+    public const PROJECT_ID = 'project_id';
 
 }

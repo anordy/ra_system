@@ -3,12 +3,15 @@
 namespace App\Http\Livewire\Reports\General;
 
 use App\Enum\CustomMessage;
+use App\Enum\ReportStatus;
+use App\Models\FinancialYear;
 use App\Models\Parameter;
 use App\Models\Report;
 use App\Models\ReportParameter;
 use App\Models\ReportType;
 use App\Services\JasperReport\ReportService;
 use App\Traits\CustomAlert;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Jaspersoft\Exception\RESTRequestException;
 use Livewire\Component;
@@ -22,11 +25,21 @@ class Initial extends Component
     public $reports = [];
     public $report_code, $start_date, $format, $end_date;
     public $fileName, $report, $parameters = [];
+    public $years = [], $months = [], $year = ReportStatus::all, $month = ReportStatus::all, $duration = ReportStatus::Year;
 
     public function mount()
     {
         $this->report_types = ReportType::query()
             ->select('id', 'name')->get();
+
+        $this->years = FinancialYear::query()
+            ->select('code')
+            ->where('code', '>=', 2022)
+            ->where('code', '<=', now()->year)
+            ->pluck('code')
+            ->toArray();
+
+        $this->months = ReportStatus::MONTHS_DESC;
 
         if ($this->report_type_id) {
             $this->reports = Report::query()
@@ -90,6 +103,10 @@ class Initial extends Component
             'format' => 'required',
             'parameters.*.code' => 'nullable',
             'parameters.*.value' => 'nullable',
+            'year' => 'nullable',
+            'duration' => 'nullable',
+            'start_date' => 'nullable',
+            'end_date' => 'nullable'
         ];
     }
 
@@ -102,10 +119,33 @@ class Initial extends Component
 
     public function submit()
     {
+
         $formattedParameters = [];
 
         foreach ($this->parameters as $parameter) {
             $formattedParameters[$parameter['code']] = $parameter['value'] ?? null;
+        }
+
+        if ($this->duration === ReportStatus::range) {
+            $formattedParameters['start_date'] = $this->start_date;
+            $formattedParameters['end_date'] = $this->end_date;
+        } else if ($this->duration === ReportStatus::Year) {
+            if ($this->year === ReportStatus::all) {
+                // Take all the years
+                $formattedParameters['start_date'] = Carbon::create(2022)->startOfYear()->format('Y-m-d');
+                $formattedParameters['end_date'] = Carbon::now()->format('Y-m-d');
+            } else {
+                // Format months
+                if ($this->month === ReportStatus::all) {
+                    // Take all months
+                    $formattedParameters['start_date'] = Carbon::create($this->year)->startOfYear()->format('Y-m-d');
+                    $formattedParameters['end_date'] = Carbon::create($this->year)->endOfYear()->format('Y-m-d');
+                } else {
+                    // Take specific month
+                    $formattedParameters['start_date'] = Carbon::create($this->year, $this->month)->startOfMonth()->format('Y-m-d');
+                    $formattedParameters['end_date'] = Carbon::create($this->year, $this->month)->endOfMonth()->format('Y-m-d');
+                }
+            }
         }
 
         try {

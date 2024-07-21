@@ -8,6 +8,7 @@ use App\Models\FinancialYear;
 use App\Models\Parameter;
 use App\Models\PaymentStatus;
 use App\Models\Region;
+use App\Models\Relief\ReliefProject;
 use App\Models\TaxDepartment;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
@@ -106,7 +107,42 @@ class ParametersSeeder extends Seeder
                 'input_type' => 'select',
                 'model_name' => PaymentStatus::class,
                 'display_name' => 'name',
-            ]
+            ],
+            [
+                'name' => 'Dynamic Date',
+                'code' => Parameter::DYNAMIC_DATE,
+                'input_type' => 'dynamic',
+                'model_name' => null,
+                'display_name' => null,
+            ],
+            [
+                'name' => 'Project',
+                'code' => Parameter::PROJECT_ID,
+                'input_type' => 'select',
+                'model_name' => ReliefProject::class,
+                'display_name' => 'name',
+            ],
+            [
+                'name' => 'Rate',
+                'code' => Parameter::RATE,
+                'input_type' => 'text',
+                'model_name' => null,
+                'display_name' => null,
+            ],
+            [
+                'name' => 'ZTN Number',
+                'code' => Parameter::ZTN_NUMBER,
+                'input_type' => 'text',
+                'model_name' => null,
+                'display_name' => null,
+            ],
+            [
+                'name' => 'ZTN Location Number',
+                'code' => Parameter::ZTN_LOCATION_NUMBER,
+                'input_type' => 'text',
+                'model_name' => null,
+                'display_name' => null,
+            ],
         ];
 
         foreach ($parameters as $parameter) {
