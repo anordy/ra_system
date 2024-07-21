@@ -30,7 +30,9 @@ class Initial extends Component
     public function mount()
     {
         $this->report_types = ReportType::query()
-            ->select('id', 'name')->get();
+            ->select('id', 'name')
+            ->orderBy('name', 'ASC')
+            ->get();
 
         $this->years = FinancialYear::query()
             ->select('code')
@@ -45,6 +47,7 @@ class Initial extends Component
             $this->reports = Report::query()
                 ->select('code', 'name', 'has_parameter')
                 ->where('report_type_id', $this->report_type_id)
+                ->orderBy('name', 'ASC')
                 ->get();
         }
     }
@@ -58,6 +61,7 @@ class Initial extends Component
             $this->reports = Report::query()
                 ->select('code', 'name', 'has_parameter', 'id', 'report_url')
                 ->where('report_type_id', $this->report_type_id)
+                ->orderBy('name', 'ASC')
                 ->get();
         }
 
