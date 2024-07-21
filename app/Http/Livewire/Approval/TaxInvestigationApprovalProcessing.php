@@ -160,7 +160,8 @@ class TaxInvestigationApprovalProcessing extends Component
     {
         if ($this->task != null) {
             $operators = json_decode($this->task->operators, true) ?: [];
-            $roles = Role::whereIn('id', $operators)->get()->pluck('id')->toArray();
+            $users = User::whereIn('id', $operators)->get()->pluck('role_id')->toArray();
+            $roles = Role::whereIn('id', $users)->get()->pluck('id')->toArray();
             $this->subRoles = Role::whereIn('report_to', $roles)->get();
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
         }

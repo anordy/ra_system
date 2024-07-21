@@ -1,4 +1,4 @@
-@if($row->tax_return->Penalties == '0' && $row->tax_return->is_nill)
+@if($row->tax_return->penalties == '0' && $row->tax_return->is_nill)
     <span class="badge badge-warning py-1 px-2 green-status">
         <i class="bi bi bi-check-circle-fill mr-1"></i>
         {{ __('NILL RETURN') }}
