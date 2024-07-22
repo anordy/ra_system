@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tax Clearance Certificate - {{ $location->business->name }}</title>
+    <title>Tax Clearance Certificate - {{ $location->business->name ?? 'N/A' }}</title>
     <style>
         body {
             background-image: url("{{ public_path()}}/images/certificate/tax_clearance.jpg");
@@ -98,16 +98,16 @@
         <span class="embed vrn-no">{{ $location->business->vrn ?? 'N/A' }}</span>
 
         <span class="embed approved_on">
-                {{\Carbon\Carbon::create($taxClearanceRequest->approved_on)->format('d-M-Y')}}
+                {{$taxClearanceRequest->approved_on ? \Carbon\Carbon::create($taxClearanceRequest->approved_on)->format('d-M-Y') : 'N/A'}}
         </span>
         <span class="embed expired_on">
-                {{\Carbon\Carbon::create($taxClearanceRequest->expire_on)->format('d-M-Y')}}
+                {{$taxClearanceRequest->expire_on ? \Carbon\Carbon::create($taxClearanceRequest->expire_on)->format('d-M-Y') : 'N/A'}}
         </span>
         <span class="commissioner-signature">
             <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
         </span>
         <span class="commissioner-name">
-            {{$commissinerFullName}}
+            {{$commissinerFullName ?? 'N/A'}}
         </span>
         <div class="qr-code">
             <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">

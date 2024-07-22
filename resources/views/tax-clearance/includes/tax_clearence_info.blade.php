@@ -1,5 +1,5 @@
 <div class="pt-3">
-    @if($ledgers['TZS'])
+    @if(isset($ledgers['TZS']))
         <div class="card rounded-0">
             <div class="card-header bg-white font-weight-bold text-uppercase">
                 TZS Summary of Accounts
@@ -20,17 +20,17 @@
                         <tr>
                             <td>{{ $key+1  }}</td>
                             <td class="px-2">{{ $ledger->tax_type_name ?? 'N/A' }}</td>
-                            <td class="px-2">{{ number_format($ledger->total_debit_amount, 2) ?? 'N/A'}}</td>
-                            <td class="px-2">{{ number_format($ledger->total_credit_amount, 2) ?? 'N/A' }}</td>
-                            <td class="px-2">{{ number_format($ledger->total_credit_amount - $ledger->total_debit_amount, 2) }}</td>
+                            <td class="px-2">{{ number_format($ledger->total_debit_amount ?? 0, 2) ?? 'N/A'}}</td>
+                            <td class="px-2">{{ number_format($ledger->total_credit_amount ?? 0, 2) ?? 'N/A' }}</td>
+                            <td class="px-2">{{ number_format(($ledger->total_credit_amount ?? 0) - ($ledger->total_debit_amount ?? 0), 2) }}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <td class="px-2"></td>
                         <td class="px-2">@if(count($ledgers['TZS']) <= 0) N/A @endif</td>
-                        <td class="px-2 font-weight-bold">{{ number_format($summations['TZS']['debit'], 2) }}</td>
-                        <td class="px-2 font-weight-bold">{{ number_format($summations['TZS']['credit'], 2)   }}</td>
-                        <td class="px-2 font-weight-bold">{{ number_format($summations['TZS']['credit'] - $summations['TZS']['debit'], 2)   }}</td>
+                        <td class="px-2 font-weight-bold">{{ isset($summations['TZS']['debit']) ?  number_format($summations['TZS']['debit'], 2) : 0 }}</td>
+                        <td class="px-2 font-weight-bold">{{ isset($summations['TZS']['credit']) ? number_format($summations['TZS']['credit'], 2) : 0   }}</td>
+                        <td class="px-2 font-weight-bold">{{ number_format(($summations['TZS']['credit'] ?? 0) - ($summations['TZS']['debit'] ?? 0), 2)   }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -38,7 +38,7 @@
             </div>
         </div>
     @endif
-    @if($ledgers['USD'])
+    @if(isset($ledgers['USD']))
         <div class="card rounded-0">
             <div class="card-header bg-white font-weight-bold text-uppercase">
                 USD Summary of Accounts
@@ -59,17 +59,17 @@
                         <tr>
                             <td>{{ $key+1  }}</td>
                             <td class="px-2">{{ $ledger->tax_type_name ?? 'N/A' }}</td>
-                            <td class="px-2">{{ number_format($ledger->total_debit_amount, 2) ?? 'N/A'}}</td>
-                            <td class="px-2">{{ number_format($ledger->total_credit_amount, 2) ?? 'N/A' }}</td>
-                            <td class="px-2">{{ number_format($ledger->total_credit_amount - $ledger->total_debit_amount, 2) ?? 'N/A'  }}</td>
+                            <td class="px-2">{{ number_format($ledger->total_debit_amount ?? 0, 2) ?? 'N/A'}}</td>
+                            <td class="px-2">{{ number_format($ledger->total_credit_amount ?? 0, 2) ?? 'N/A' }}</td>
+                            <td class="px-2">{{ number_format(($ledger->total_credit_amount ?? 0) - ($ledger->total_debit_amount ?? 0), 2) ?? 'N/A'  }}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <td class="px-2"></td>
                         <td class="px-2">N/A</td>
-                        <td class="px-2 font-weight-bold">{{ number_format($summations['USD']['debit'], 2) }}</td>
-                        <td class="px-2 font-weight-bold">{{ number_format($summations['USD']['credit'], 2)   }}</td>
-                        <td class="px-2 font-weight-bold">{{ number_format($summations['USD']['credit'] - $summations['USD']['debit'], 2)   }}</td>
+                        <td class="px-2 font-weight-bold">{{ number_format($summations['USD']['debit'] ?? 0, 2) }}</td>
+                        <td class="px-2 font-weight-bold">{{ number_format($summations['USD']['credit'] ?? 0, 2)   }}</td>
+                        <td class="px-2 font-weight-bold">{{ number_format(($summations['USD']['credit'] ?? 0) - ($summations['USD']['debit'] ?? 0), 2)   }}</td>
                     </tr>
                     </tbody>
                 </table>

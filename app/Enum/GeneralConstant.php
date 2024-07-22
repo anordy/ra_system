@@ -52,6 +52,12 @@ class GeneralConstant implements Status
     const INPUT_TYPE_DATE = 'date';
     const INPUT_TYPE_SELECT = 'select';
 
+    const COMPLETE = 'Complete';
+    const FAILED = 'Failed';
+    const STAFF = 'staff';
+    const ROLE = 'role';
+    const USER = 'user';
+
 
     public static function getConstants(): array
     {

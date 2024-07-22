@@ -3,14 +3,10 @@
 namespace App\Http\Livewire\TaxClearance;
 
 use App\Enum\TaxClearanceStatus;
-use App\Models\Business;
-use App\Models\BusinessLocation;
 use App\Models\Region;
 use App\Models\TaxClearanceRequest;
-use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -36,7 +32,7 @@ class TaxClearanceRequestApprovalTable extends DataTableComponent
         } else if ($department === Region::NTRD) {
             $this->locations = [Region::NTRD];
         } else {
-            $this->locations = [Region::DTD, Region::LTD, Region::PEMBA, Region::NTRD];
+            $this->locations = [Region::DTD, Region::LTD, Region::PEMBA, Region::NTRD, Region::UNGUJA];
         }
     }
 

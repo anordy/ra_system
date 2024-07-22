@@ -5,7 +5,6 @@ namespace App\Http\Livewire\TaxClearance;
 use App\Enum\TaxClearanceStatus;
 use App\Models\Region;
 use App\Models\TaxClearanceRequest;
-use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -31,6 +30,8 @@ class TaxClearanceRequestTable extends DataTableComponent
             $this->approved = true;
         } elseif ($status == TaxClearanceStatus::REJECTED) {
             $this->rejected = true;
+        } else {
+            $this->approved = true;
         }
 
         if ($department === Region::DTD) {
@@ -42,7 +43,7 @@ class TaxClearanceRequestTable extends DataTableComponent
         } else if ($department === Region::NTRD) {
             $this->locations = [Region::NTRD];
         } else {
-            $this->locations = [Region::DTD, Region::LTD, Region::PEMBA, Region::NTRD];
+            $this->locations = [Region::DTD, Region::LTD, Region::PEMBA, Region::NTRD, Region::UNGUJA];
         }
     }
 
