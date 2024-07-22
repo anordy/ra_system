@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\WithholdingAgents;
 
+use App\Enum\CustomMessage;
 use Exception;
 use Carbon\Carbon;
 use App\Models\WaResponsiblePerson;
@@ -99,22 +100,32 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         if (!Gate::allows('withholding-agents-registration')) {
             abort(403);
         }
-        $responsible_person = WaResponsiblePerson::select('status')->findOrFail(decrypt($id));
-        $status = $responsible_person->status == WaResponsiblePerson::ACTIVE ? 'Deactivate' : 'Activate';
-        $this->customAlert('warning', "Are you sure you want to {$status} ?", [
-            'position' => 'center',
-            'toast' => false,
-            'showConfirmButton' => true,
-            'confirmButtonText' => $status,
-            'onConfirmed' => 'confirmed',
-            'showCancelButton' => true,
-            'cancelButtonText' => 'Cancel',
-            'timer' => null,
-            'data' => [
-                'id' => $id
-            ],
 
-        ]);
+        try {
+            $responsible_person = WaResponsiblePerson::select('status')->findOrFail(decrypt($id));
+            $status = $responsible_person->status == WaResponsiblePerson::ACTIVE ? 'Deactivate' : 'Activate';
+            $this->customAlert('warning', "Are you sure you want to {$status} ?", [
+                'position' => 'center',
+                'toast' => false,
+                'showConfirmButton' => true,
+                'confirmButtonText' => $status,
+                'onConfirmed' => 'confirmed',
+                'showCancelButton' => true,
+                'cancelButtonText' => 'Cancel',
+                'timer' => null,
+                'data' => [
+                    'id' => $id
+                ],
+            ]);
+        } catch (Exception $exception) {
+            Log::error('Error: ' . $exception->getMessage(), [
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            $this->customAlert('warning', CustomMessage::ERROR);
+        }
+
     }
 
 

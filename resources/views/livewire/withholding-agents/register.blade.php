@@ -230,14 +230,9 @@
                             <select wire:model.lazy="title"
                                 class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}">
                                 <option></option>
-                                <option value="Mr">Mr</option>
-                                <option value="Mrs">Mrs</option>
-                                <option value="Sir">Sir</option>
-                                <option value="Madam">Madam</option>
-                                <option value="Dr">Dr</option>
-                                <option value="Prof">Prof</option>
-                                <option value="Hon">Hon</option>
-                                <option value="Other">Other</option>
+                                @foreach($titles as $title)
+                                    <option value="{{ $title->name }}">{{ $title->name }}</option>
+                                @endforeach
                             </select>
                             @error('title')
                                 <div class="invalid-feedback">

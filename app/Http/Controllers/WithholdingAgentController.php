@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Enum\CustomMessage;
+use App\Enum\GeneralConstant;
 use App\Models\SystemSetting;
 use App\Models\WithholdingAgent;
 use Endroid\QrCode\Builder\Builder;
@@ -10,6 +12,7 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use PDF;
 
@@ -55,51 +58,65 @@ class WithholdingAgentController extends Controller
     }
 
     public function certificate($id){
-        $id = decrypt($id);
-        $whagent = WithholdingAgent::findOrFail($id);
+        try {
+            $id = decrypt($id);
 
-        $url = env('TAXPAYER_URL') . route('qrcode-check.withholding-agent.certificate',  base64_encode(strval($id)), 0);
+            $whagent = WithholdingAgent::with(['latestResponsiblePerson'])
+                ->findOrFail($id, ['id', 'institution_name', 'institution_place', 'wa_number']);
 
-        $result = Builder::create()
-            ->writer(new PngWriter())
-            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
-            ->data($url)
-            ->encoding(new Encoding('UTF-8'))
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-            ->size(207)
-            ->margin(0)
-            ->logoPath(public_path('/images/logo.png'))
-            ->logoResizeToHeight(36)
-            ->logoResizeToWidth(36)
-            ->labelText('')
-            ->labelAlignment(new LabelAlignmentCenter())
-            ->build();
+            $url = env('TAXPAYER_URL') . route('qrcode-check.withholding-agent.certificate',  base64_encode(strval($id)), 0);
 
-        header('Content-Type: ' . $result->getMimeType());
+            $result = Builder::create()
+                ->writer(new PngWriter())
+                ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
+                ->data($url)
+                ->encoding(new Encoding(GeneralConstant::UTF_8))
+                ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                ->size(GeneralConstant::QR_CODE_SIZE)
+                ->margin(GeneralConstant::ZERO_INT)
+                ->logoPath(public_path('/images/logo.png'))
+                ->logoResizeToHeight(GeneralConstant::QR_CODE_LOGO_SIZE)
+                ->logoResizeToWidth(GeneralConstant::QR_CODE_LOGO_SIZE)
+                ->labelText('')
+                ->labelAlignment(new LabelAlignmentCenter())
+                ->build();
 
-        $dataUri = $result->getDataUri();
+            header('Content-Type: ' . $result->getMimeType());
 
-        $signaturePath = SystemSetting::certificatePath();
-        $commissinerFullName = SystemSetting::commissinerFullName();
+            $dataUri = $result->getDataUri();
 
-        $pdf = PDF::loadView('withholding-agent.certificate', compact('whagent', 'dataUri', 'signaturePath', 'commissinerFullName'));
-        $pdf->setPaper('a4', 'portrait');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
+            $signaturePath = SystemSetting::certificatePath();
+            $commissinerFullName = SystemSetting::commissinerFullName();
 
-        return $pdf->stream();
+            $pdf = PDF::loadView('withholding-agent.certificate', compact('whagent', 'dataUri', 'signaturePath', 'commissinerFullName'));
+            $pdf->setPaper('a4', 'portrait');
+            $pdf->setOption(['dpi' => GeneralConstant::DPI, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
+
+            return $pdf->stream();
+        } catch (\Exception $exception) {
+            Log::error('WITHHOLDING-AGENT-CONTROLLER-CERTIFICATE', [$exception]);
+            session()->flash('error', CustomMessage::error());
+            return back();
+        }
   
     }
 
     public function getWithholdingAgentFile($agentId, $type)
     {
+        try {
+            $withholding_agent = WithholdingAgent::find(decrypt($agentId));
 
-        $withholding_agent = WithholdingAgent::find(decrypt($agentId));
-        
-        if ($type == 'approval_letter') {
-            return Storage::disk('local')->response($withholding_agent->approval_letter);
+            if ($type == GeneralConstant::APPROVAL_LETTER) {
+                return Storage::disk('local')->response($withholding_agent->approval_letter);
+            }
+
+            return abort(404);
+        } catch (\Exception $exception) {
+            Log::error('WITHHOLDING-AGENT-CONTROLLER-GET-WITHHOLDING-AGENT-FILE', [$exception]);
+            session()->flash('error', CustomMessage::error());
+            return back();
         }
 
-        return abort(404);
     }
 
 }

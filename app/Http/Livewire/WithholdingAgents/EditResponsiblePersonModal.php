@@ -4,6 +4,7 @@ namespace App\Http\Livewire\WithholdingAgents;
 
 use App\Models\Taxpayer;
 use App\Models\WaResponsiblePerson;
+use App\Models\WithholdingAgentResponsibleTitle;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -18,24 +19,24 @@ class EditResponsiblePersonModal extends Component
     public $responsible_person_id;
     public $title;
     public $position;
-    public $responsible_persons = [];
-    public $wa_responsible_person_id;
+    public $responsible_persons = [], $titles = [];
     public $wa_responsible_person;
 
     protected function rules()
     {
         return [
-            'responsible_person_id' => 'required|strip_tag',
+            'responsible_person_id' => 'required|strip_tag|alpha_gen',
         ];
     }
 
     public function mount($id)
     {
-        $this->wa_responsible_person = WaResponsiblePerson::findOrFail(decrypt($id)); // todo: encrypt id
+        $this->wa_responsible_person = WaResponsiblePerson::findOrFail(decrypt($id), ['id', 'title', 'position', 'responsible_person_id']);
         $this->title = $this->wa_responsible_person->title;
         $this->position = $this->wa_responsible_person->position;
         $this->responsible_person_id = $this->wa_responsible_person->responsible_person_id;
         $this->responsible_persons = Taxpayer::select('id', 'first_name', 'middle_name', 'last_name')->get();
+        $this->titles = WithholdingAgentResponsibleTitle::select('id', 'name')->get();
     }
 
     public function submit()
