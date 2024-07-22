@@ -16,6 +16,10 @@ class AddColumnPermissionOnReportTypeTable extends Migration
         Schema::table('report_types', function (Blueprint $table) {
             $table->string('permission')->nullable();
         });
+
+        Schema::table('parameters', function (Blueprint $table) {
+            $table->string('model_name', 700)->nullable()->change();
+        });
     }
 
     /**

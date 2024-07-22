@@ -8,6 +8,7 @@ use App\Models\Report;
 use App\Models\ReportParameter;
 use App\Models\ReportType;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ReportsSeeder extends Seeder
 {
@@ -147,6 +148,34 @@ class ReportsSeeder extends Seeder
                         'report_url' => '/reports/ZRA/Returns/non_filer_returns_report',
                         'parameters' => [Parameter::FINANCIAL_MONTH]
                     ],
+                    [
+                        'name' => 'Importation Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RETURNS,
+                        'report_url' => '/reports/ZRA/Returns/importation_reports',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'All Filed Tax Returns',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RETURNS,
+                        'report_url' => '/reports/ZRA/Returns/filed_tax_returns',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'Filed Tax Returns By Department or Tax Region',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::RETURNS,
+                        'report_url' => '/reports/ZRA/Returns/filed_tax_returns_by_department_region',
+                        'parameters' => [Parameter::DYNAMIC_DATE, Parameter::DEPARTMENT, Parameter::TAX_REGION_NAME]
+                    ],
+//                    [
+//                        'name' => 'Non Filers based on Financial Month',
+//                        'has_parameter' => 1,
+//                        'report_type_name' => GeneralReportType::RETURNS,
+//                        'report_url' => '/reports/ZRA/Returns/non_filers_per_financial_month',
+//                        'parameters' => [Parameter::FINANCIAL_YEAR, Parameter::FINANCIAL_MONTH]
+//                    ],
                 ]
             ],
             // Debt
@@ -431,10 +460,43 @@ class ReportsSeeder extends Seeder
                         'report_type_name' => GeneralReportType::TAX_INVESTIGATION,
                         'report_url' => '/reports/ZRA/TaxInvestigation/investigation_cases_conducted',
                         'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'Taxpayer Withholding Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::TAX_INVESTIGATION,
+                        'report_url' => '/reports/ZRA/Research/taxpayer_withholding_report',
+                        'parameters' => [Parameter::DYNAMIC_DATE, Parameter::ZTN_NUMBER]
+                    ]
+                ]
+            ],
+            // Disputes
+            [
+                'report_type' => GeneralReportType::DISPUTE,
+                'reports' => [
+                    [
+                        'name' => 'Approved Disputes',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::DISPUTE,
+                        'report_url' => '/reports/ZRA/Dispute/all_approved_disputes',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
+                    ],
+                    [
+                        'name' => 'Pending Disputes',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::DISPUTE,
+                        'report_url' => '/reports/ZRA/Dispute/all_pending_disputes',
+                        'parameters' => [Parameter::DYNAMIC_DATE]
                     ]
                 ]
             ],
         ];
+
+        $this->call(ReportTypesSeeder::class);
+        $this->call(ParametersSeeder::class);
+
+        DB::table('report_parameters')->truncate();
+        DB::table('reports')->truncate();
 
 
         foreach ($reports as $i => $report) {

@@ -10,9 +10,9 @@
                     class="form-control {{ $errors->has('report_type_id') ? 'is-invalid' : '' }}">
                 <option value="">--choose report type---</option>
                 @foreach ($report_types as $row)
-                    @can($row->permission)
+{{--                    @can($row->permission)--}}
                         <option value={{ $row->id }}>{{ $row->name }}</option>
-                    @endcan
+{{--                    @endcan--}}
                 @endforeach
             </select>
             @error('report_type_id')

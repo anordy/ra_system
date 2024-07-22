@@ -15,6 +15,7 @@ class Parameter extends Model
     public const END_DATE = 'end_date';
     public const FINANCIAL_YEAR = 'financial_year';
     public const FINANCIAL_MONTH = 'f_month';
+
     public const TAX_TYPE = 'tax_type';
     public const REGION = 'region';
     public const DISTRICT = 'district';
@@ -29,5 +30,7 @@ class Parameter extends Model
     public const ZTN_LOCATION_NUMBER = 'zin';
     public const RATE = 'rate';
     public const PROJECT_ID = 'project_id';
+    public const DEPARTMENT_NAME = 'department_name';
+    public const TAX_REGION_NAME = 'tax_region_name';
 
 }

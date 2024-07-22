@@ -143,6 +143,20 @@ class ParametersSeeder extends Seeder
                 'model_name' => null,
                 'display_name' => null,
             ],
+            [
+                'name' => 'Department Name',
+                'code' => Parameter::DEPARTMENT_NAME,
+                'input_type' => 'select',
+                'model_name' => 'SELECT DISTINCT LOCATION AS NAME, ID AS ID FROM TAX_REGIONS',
+                'display_name' => 'name',
+            ],
+            [
+                'name' => 'Tax Region Name',
+                'code' => Parameter::TAX_REGION_NAME,
+                'input_type' => 'select',
+                'model_name' => 'SELECT DISTINCT NAME, ID FROM TAX_REGIONS WHERE LOCATION = \'DTD\'',
+                'display_name' => 'name',
+            ],
         ];
 
         foreach ($parameters as $parameter) {
