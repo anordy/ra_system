@@ -71,10 +71,9 @@ class DailyDebtPenaltyInterest extends Command
             (MONTHS_BETWEEN(CURRENT_DATE, CAST(filing_due_date as date))) as periods, 
             (MONTHS_BETWEEN(CAST(curr_payment_due_date as date), CURRENT_DATE)) as penatableMonths
         ')
-//            ->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
             ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0") // This determines if the payment due date has reached
             ->where('vetting_status', VettingStatus::VETTED)
-            ->whereNotIn('payment_status', [ReturnStatus::COMPLETE]) // Get all non paid returns
+            ->whereNotIn('payment_status', [ReturnStatus::COMPLETE, ReturnStatus::NILL]) // Get all non paid returns
             ->get();
 
         if ($tax_returns) {
@@ -84,6 +83,7 @@ class DailyDebtPenaltyInterest extends Command
                 try {
                     // Generate penalty
                     PenaltyForDebt::generateReturnsPenalty($tax_return);
+
                     DB::commit();
                     // Cancel previous latest bill if exists
                     if ($tax_return->latestBill) {
