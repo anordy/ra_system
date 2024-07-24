@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\SendCustomMail;
 use App\Jobs\Vfms\ClientNotificationMail;
 use App\Jobs\Account\SendReferenceNumberMail;
 use App\Jobs\PropertyTax\SendPropertyTaxApprovalMail;
@@ -42,7 +43,6 @@ use App\Jobs\SendWithholdingAgentRegistrationEmail;
 use App\Jobs\Business\Branch\SendBranchApprovedMail;
 use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalMail;
 use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedMail;
-use App\Jobs\Taxpayer\TaxpayerAmendmentNotification;
 use App\Jobs\Installment\SendInstallmentApprovedMail;
 use App\Jobs\Installment\SendInstallmentRejectedMail;
 use App\Jobs\Verification\SendFailedVerificationMail;
@@ -255,6 +255,8 @@ class SendMailFired
             SendPropertyTaxCorrectionMail::dispatch($event->tokenId);
         } else if ($event->service === SendPropertyTaxExtensionApprovalMail::SERVICE) {
             SendPropertyTaxExtensionApprovalMail::dispatch($event->tokenId);
+        } else if ($event->service === SendCustomMail::SERVICE) {
+            SendCustomMail::dispatch($event->tokenId, $event->extra);
         }
     }
 }

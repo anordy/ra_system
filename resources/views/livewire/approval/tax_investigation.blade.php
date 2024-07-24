@@ -145,7 +145,7 @@
                     </div>
                     @if ($hasAssessment)
                         @foreach ($principalAmounts as $taxTypeKey => $principalAmount)
-                            <div class="row px-3">
+                            <div class="col-lg-12 mt-3 row px-3">
                                 <div class="form-group col-lg-4">
                                     <label class="control-label">{{ str_replace("_", " ", $taxTypeKey) }} Principal Amount
                                         ({{ $currencies[$taxTypeKey] }})</label>

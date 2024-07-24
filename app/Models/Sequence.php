@@ -17,6 +17,7 @@ class Sequence extends Model
     const SMZ_PLATE_NUMBER ='smzPlateNumber';
     const SLS_PLATE_NUMBER ='slsPlateNumber';
     const DEBIT_NUMBER ='debitNumber';
+    const ASSESSMENT_NUMBER = 'assessmentNumber';
 
     protected $guarded = [];
 }

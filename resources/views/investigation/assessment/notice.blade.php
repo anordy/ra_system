@@ -111,7 +111,7 @@
                             <span>TIN NO.</span>
                         </td>
                         @for ($i = 0; $i <= 8; $i++)
-                            <td>{{ $audit->business->tin[$i] ?? "" }}</td>
+                            <td>{{ $investigation->business->tin[$i] ?? "" }}</td>
                         @endfor
                     </tr>
                     <tr>
@@ -119,7 +119,7 @@
                             <span>DATE.</span>
                         </td>
                         @for ($i = 0; $i <= 7; $i++)
-                            <td>{{ \Carbon\Carbon::create($audit->approved_on)->format("dmY")[$i] ?? "" }}</td>
+                            <td>{{ \Carbon\Carbon::create($investigation->approved_on)->format("dmY")[$i] ?? "" }}</td>
                         @endfor
                     </tr>
 
@@ -132,7 +132,7 @@
                             <span>ZRA NO.</span>
                         </td>
                         @for ($i = 0; $i <= 10; $i++)
-                            <td>{{ $audit->business->ztn_number[$i] ?? "" }}</td>
+                            <td>{{ $investigation->business->ztn_number[$i] ?? "" }}</td>
                         @endfor
                     </tr>
                     <tr>
@@ -140,14 +140,14 @@
                             <span>VRN NO.</span>
                         </td>
                         @for ($i = 0; $i <= 10; $i++)
-                            <td>{{ $audit->business->vrn[$i] ?? "" }}</td>
+                            <td>{{ $investigation->business->vrn[$i] ?? "" }}</td>
                         @endfor
                     </tr>
                     <tr>
                         <td>
                             <span>ASS NO.</span>
                         </td>
-                        <td colspan="11">{{ $audit->assessment_number ?? 'N/A' }}</td>
+                        <td colspan="11">{{ $investigation->case_number ? $investigation->case_number . '-01' : 'N/A' }}</td>
                     </tr>
 
                 </table>
@@ -158,7 +158,7 @@
                 <table width="90%" class="table-bordered">
                     <tr>
                         <td colspan="10">
-                            <span><strong>TO:</strong> {{ $audit->business->name ?? "N/A" }}</span>
+                            <span><strong>TO:</strong> {{ $investigation->business->name ?? "N/A" }}</span>
                         </td>
                     </tr>
                 </table>
@@ -170,7 +170,7 @@
                             <span class="bold">ISSUING OFFICE:</span>
                         </td>
                         <td>
-                            <span> {{ $audit->business->headquarter->taxRegion->department->name ?? "N/A" }}</span>
+                            <span> {{ $investigation->business->headquarter->taxRegion->department->name ?? "N/A" }}</span>
                         </td>
                     </tr>
                 </table>
@@ -180,7 +180,7 @@
 
     <p>
         An examination of your records and accounts has revealed discrepancies between Tax Liability Declared by you on
-        your @foreach ($audit->assessments as $assessment)
+        your @foreach ($investigation->assessments as $assessment)
             {{ $assessment->taxtype->name }} return,
         @endforeach and the Actual Liability deemed to be due on the
         evidence available.
@@ -200,11 +200,11 @@
             <td>AMOUNT PAYABLE IN USD/TZS</td>
         </tr>
 
-        @foreach ($audit->assessments as $i => $assessment)
+        @foreach ($investigation->assessments as $i => $assessment)
             <tr>
                 @if ($i === 0)
-                    <td rowspan="{{ $audit->assessments->count() }}">{{ \Carbon\Carbon::create($audit->period_from)->format("Y") }}
-                        - {{ Carbon\Carbon::create($audit->period_to)->format("Y") }}</td>
+                    <td rowspan="{{ $investigation->assessments->count() }}">{{ \Carbon\Carbon::create($investigation->period_from)->format("Y") }}
+                        - {{ Carbon\Carbon::create($investigation->period_to)->format("Y") }}</td>
                 @endif
                 <td>Principal {{ $assessment->taxtype->name }} Due</td>
                 <td>{{ $assessment->currency == \App\Models\Currency::TZS ? "TZS" : "USD" }}

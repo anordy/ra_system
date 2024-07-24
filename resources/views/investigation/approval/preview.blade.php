@@ -1,7 +1,5 @@
 @extends("layouts.master")
-@extends("layouts.master")
 
-@section("title", "Investigation Preview")
 @section("title", "Investigation Preview")
 
 @section("content")
@@ -30,7 +28,7 @@
         <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card mt-2">
                 <div class="card-header text-uppercase font-weight-bold bg-white">
-                    TAXPAYER INFORMATIONS
+                    INVESTIGATION DETAILS
                 </div>
                 <div class="card-body">
                     <div class="row m-2">
@@ -41,31 +39,25 @@
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">TIN</span>
                             <p class="my-1">{{ $investigation->business->tin ?? "" }}</p>
-                            <p class="my-1">{{ $investigation->business->tin ?? "" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
-                            <p class="my-1">{{ $investigation->taxInvestigationTaxTypeNames() ?? "" }}</p>
                             <p class="my-1">{{ $investigation->taxInvestigationTaxTypeNames() ?? "" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
                             <p class="my-1">{{ $investigation->business->name ?? "" }}</p>
-                            <p class="my-1">{{ $investigation->business->name ?? "" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Location</span>
-                            <p class="my-1">{{ $investigation->taxInvestigationLocationNames() ?? "Head Quarter" }}</p>
                             <p class="my-1">{{ $investigation->taxInvestigationLocationNames() ?? "Head Quarter" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Investigation From</span>
                             <p class="my-1">{{ $investigation->period_from ?? "" }}</p>
-                            <p class="my-1">{{ $investigation->period_from ?? "" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Investigation To</span>
-                            <p class="my-1">{{ $investigation->period_to ?? "" }}</p>
                             <p class="my-1">{{ $investigation->period_to ?? "" }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
@@ -97,10 +89,7 @@
                         <div class="row">
                             @foreach ($investigation->officers as $officer)
                                 <div class="col-md-3 mb-3">
-                                    <span class="font-weight-bold text-uppercase">Team
-                                        {{ $officer->team_leader ? "Leader" : "Member" }}</span>
-                                    <p class="my-1">{{ $officer->user->full_name ?? "" }}</p>
-                                    {{ $officer->team_leader ? "Leader" : "Member" }}</span>
+                                    <span class="font-weight-bold text-uppercase">Team{{ $officer->team_leader ? "Leader" : "Member" }}</span>
                                     <p class="my-1">{{ $officer->user->full_name ?? "" }}</p>
                                 </div>
                             @endforeach
@@ -182,6 +171,12 @@
                 <div class="card">
                     <div class="card-header text-uppercase font-weight-bold bg-white">
                         Assessment Details
+                        <div class="card-tools">
+                            <a class="btn btn-primary" target="_blank" href="{{ route('tax_investigation.assessments.notice', encrypt($investigation->id)) }}">
+                                <i class="bi bi-file-earmark-pdf-fill mr-1"></i>
+                                Get Notice of Assessment
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         @php

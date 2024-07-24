@@ -18,7 +18,7 @@
                 @endif
                 <div class="row px-3">
                     <div class="col-lg-6 form-group">
-                        <label for="exampleFormControlTextarea1">Team Leader</label>
+                        <label class="font-weight-bold">Team Leader</label>
                         <select class="form-control @error("teamLeader") is-invalid @enderror" wire:model="teamLeader">
                             @foreach ($staffs as $row)
                                 <option value="{{ $row->id }}" @if($row->id == $teamLeader) selected @endif>{{ $row->full_name }}</option>
@@ -31,9 +31,9 @@
                         @enderror
                     </div>
                     <div class="col-lg-6 form-group">
-                        <label for="exampleFormControlTextarea1">Team Member</label>
+                        <label class="font-weight-bold">Team Member</label>
                         @foreach($teamMembers as $key => $teamMember)
-                            <div class="row mt-2">
+                            <div class="row">
                                 <div class="col">
                                     <select class="form-control @error("teamMembers.{{ $key }}") is-invalid @enderror" wire:model="teamMembers.{{ $key }}">
                                         <option value='' disabled selected>Select</option>

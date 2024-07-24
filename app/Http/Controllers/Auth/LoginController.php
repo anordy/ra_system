@@ -123,7 +123,7 @@ class LoginController extends Controller
                 $token->save();
             }
 
-//            fetch permissions
+            // Fetch permissions
             if(Schema::hasTable('permissions') && Schema::hasTable('sys_modules')){
                 $role_permissions = DB::table('roles_permissions')->where('role_id', $user->role_id)->pluck('permission_id');
                 $permissions = Permission::query()->whereIn('id', $role_permissions)->get();
@@ -137,7 +137,6 @@ class LoginController extends Controller
             }
 
             $token->sendCode($code);
-
             return redirect()->route('twoFactorAuth.index');
         } else {
             $this->incrementLoginAttempts($user, $request);

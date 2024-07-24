@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Taxpayers;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Biometric;
+use App\Models\IDType;
 use App\Models\SystemSetting;
 use App\Models\Taxpayer;
 use App\Traits\CustomAlert;
@@ -104,7 +105,7 @@ class EnrollFingerprint extends Component
         $biometricStatus = SystemSetting::where('code', SystemSetting::BIOMETRIC_STATUS)->first();
 
         if ($biometricStatus) {
-            if ($biometricStatus->value) {
+            if ($biometricStatus->value || !$kyc->zanid_no) {
                 $biometrics = Biometric::where('reference_no', $kyc->id)
                     ->get();
 
@@ -118,12 +119,12 @@ class EnrollFingerprint extends Component
             return;
         }
 
-        if ($this->kyc->tin && !$this->kyc->tin_verified_at){
+        if ($this->kyc->tin_no && !$this->kyc->tin_verified_at){
             $this->customAlert('error', 'TIN No. Not verified by Authorities');
             return;
         }
 
-        if ($this->kyc->zanid && !$this->kyc->zanid_verified_at){
+        if ($this->kyc->zanid_no && !$this->kyc->zanid_verified_at){
             $this->customAlert('error', 'ZANID Not verified by Authorities');
             return;
         }

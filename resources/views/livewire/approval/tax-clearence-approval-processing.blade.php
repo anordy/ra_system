@@ -46,6 +46,25 @@
                     Approve & Complete
                 </button>
             </div>
+        @elseif($this->checkTransition('officer_review'))
+            <div class="modal-footer p-2 m-0">
+                <button wire:click="confirmPopUpModal('reject', 'officer_reject')" class="btn btn-danger px-3 ml-2" type="button"
+                        wire:loading.attr="disabled">
+                    <i class="bi bi-x-square mr-2" wire:loading.remove
+                       wire:target="reject('officer_reject')"></i>
+                    <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
+                       wire:target="reject('officer_reject')"></i>
+                    Reject
+                </button>
+                <button wire:click="confirmPopUpModal('approve', 'officer_review')" class="btn btn-primary px-3 ml-2" type="button"
+                        wire:loading.attr="disabled">
+                    <i class="bi bi-arrow-return-right mr-2" wire:loading.remove
+                       wire:target="approve('officer_review')"></i>
+                    <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
+                       wire:target="approve('officer_review')"></i>
+                    Approve & Forward
+                </button>
+            </div>
         @endif
 
     </div>

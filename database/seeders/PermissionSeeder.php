@@ -95,7 +95,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'tax-investigation-approval-view', 'sys_module_id' => 11],
             ['name' => 'tax-investigation-assessment-view', 'sys_module_id' => 11],
             ['name' => 'tax-investigation-approved-view', 'sys_module_id' => 11],
-            ['name' => 'tax-investigation-view', 'sys_module_id' => 8],
+            ['name' => 'tax-investigation-view', 'sys_module_id' => 11],
+            ['name' => 'tax-investigation-create-case', 'sys_module_id' => 11],
 
             # Disputes Management
             ['name' => 'dispute-waiver-view', 'sys_module_id' => 12],
@@ -502,7 +503,6 @@ class PermissionSeeder extends Seeder
         ];
 
         foreach ($data as $row) {
-//            Permission::updateOrCreate($row);
             Permission::updateOrCreate(
                 ['name' => $row['name']],
                 ['sys_module_id' => $row['sys_module_id']]

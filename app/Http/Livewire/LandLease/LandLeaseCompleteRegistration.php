@@ -5,7 +5,10 @@ namespace App\Http\Livewire\LandLease;
 use App\Enum\GeneralConstant;
 use App\Enum\LeaseStatus;
 use App\Enum\TransactionType;
+use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Jobs\SendCustomMail;
+use App\Jobs\SendCustomSMS;
 use App\Listeners\SendMailFired;
 use App\Models\BusinessLocation;
 use App\Models\District;
@@ -13,6 +16,7 @@ use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\LandLeaseFiles;
 use App\Models\Region;
+use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Models\Ward;
 use App\Traits\TaxpayerLedgerTrait;
@@ -179,7 +183,7 @@ class LandLeaseCompleteRegistration extends Component
             if ($financialYear) {
                 $paymentFinancialMonth = FinancialMonth::select('id', 'name', 'due_date')
                     ->where('financial_year_id', $financialYear->id)
-                    ->where('name', $commence_date->monthName)
+                    ->where('name', $landLease->payment_month)
                     ->firstOrFail();
             } else {
                 Log::error("Create Land Lease Payment: {$year} PENALTY RATES DOES NOT EXIST");
@@ -188,7 +192,10 @@ class LandLeaseCompleteRegistration extends Component
             }
 
             // from commence date, end of month.
-            $originalDueDate = Carbon::parse($landLease->rent_commence_date)->setYear($year)->endOfMonth();
+            $originalDueDate = Carbon::parse($landLease->rent_commence_date)
+                ->setYear($year)
+                ->setMonth(Carbon::parse($landLease->paymentMonth)->month)
+                ->endOfMonth();
 
             if ($originalDueDate->greaterThan(Carbon::now())){
                 return;
@@ -353,9 +360,20 @@ class LandLeaseCompleteRegistration extends Component
 
                 $this->landLease->refresh();
                 $this->createLeasePayment($this->landLease);
+
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                    'phone' => $businessLocation->taxpayer->mobile,
+                    'message' => "Hello {$businessLocation->taxpayer->fullname}, your land lease registration for {$this->dpNumber} has been completed successfully. Please log into your ZRA account to generate control number and proceed with payments."]));
+
+                event(new SendMail(SendCustomMail::SERVICE, $businessLocation->taxpayer->email, [
+                    'name' => $businessLocation->taxpayer->fullname,
+                    'subject' => "Land Lease Registration - {$this->dpNumber}",
+                    'message' => "Your land lease registration for {$this->dpNumber} has been completed successfully. Please log into your ZRA account to generate control number and proceed with payments."
+                ]));
+
             } else {
                 if ($this->applicantType == 'registered') {
-                    $taxpayer = DB::table('taxpayers')->where('reference_no', $this->zrbNumber)->first();
+                    $taxpayer = Taxpayer::query()->where('reference_no', $this->zrbNumber)->first();
 
                     $this->landLease->is_registered = true;
                     $this->landLease->taxpayer_id = $taxpayer->id;
@@ -379,6 +397,17 @@ class LandLeaseCompleteRegistration extends Component
 
                     $this->landLease->refresh();
                     $this->createLeasePayment($this->landLease);
+
+                    event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                        'phone' => $taxpayer->mobile,
+                        'message' => "Hello {$taxpayer->fullname}, your land lease registration for {$this->dpNumber} is complete, please log into your ZRA account to proceed with payments."
+                    ]));
+
+                    event(new SendMail(SendCustomMail::SERVICE, $taxpayer->email, [
+                        'name' => $taxpayer->fullname,
+                        'subject' => "Land Lease Registration - {$this->dpNumber}",
+                        'message' => "Your land lease registration for {$this->dpNumber} has been completed successfully. Please log into your ZRA account to generate control number and proceed with payments."
+                    ]));
                 } else {
                     $this->landLease->is_registered = false;
                     $this->landLease->commence_date = $this->commenceDate;

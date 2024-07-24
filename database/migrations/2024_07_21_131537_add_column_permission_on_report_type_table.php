@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ModifyMvrColorsTable extends Migration
+class AddColumnPermissionOnReportTypeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class ModifyMvrColorsTable extends Migration
      */
     public function up()
     {
-        Schema::table('mvr_colors', function (Blueprint $table) {
-            $table->unsignedBigInteger('mvr_registration_type_id');
-            $table->dropColumn('name');
-            $table->string('color');
-            $table->string('hex_value')->nullable()->change();
+        Schema::table('report_types', function (Blueprint $table) {
+            $table->string('permission')->nullable();
+        });
+
+        Schema::table('parameters', function (Blueprint $table) {
+            $table->string('model_name', 700)->nullable()->change();
         });
     }
 
