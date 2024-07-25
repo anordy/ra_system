@@ -3,10 +3,8 @@
 namespace App\Http\Livewire\WithholdingAgents;
 
 use App\Models\WithholdingAgent;
-use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Exception;
-use id;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CustomAlert;

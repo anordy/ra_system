@@ -46,10 +46,13 @@ class EditResponsiblePersonModal extends Component
         }
         $this->validate();
         try {
-            $this->wa_responsible_person->update([
+            $updated = $this->wa_responsible_person->update([
                 'title' => $this->title,
                 'position' => $this->position,
             ]);
+
+            if (!$updated) throw new Exception('Failed to update responsible person');
+
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error('Error: ' . $e->getMessage(), [
