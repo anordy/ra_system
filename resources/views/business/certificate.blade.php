@@ -11,6 +11,7 @@
             background-size: cover;
             margin: -70px;
         }
+
         .page-two {
             background-image: url("{{ public_path() }}/images/certificate/back_page.jpg");
             background-repeat: no-repeat;
@@ -19,6 +20,7 @@
             page-break-before: always
             /*margin: -70px;*/
         }
+
         .embed {
             position: absolute;
             text-transform: uppercase;
@@ -28,44 +30,54 @@
             padding-left: 70px;
             padding-right: 70px;
         }
+
         .rc-number {
             font-size: 1.15em;
             top: 3.3%;
             right: 23%;
         }
+
         .business-name {
             font-size: 1.8em;
             top: 32.3%;
         }
+
         .taxpayer-name {
             font-size: 1.3em;
             left: 10%;
             top: 42.75%;
         }
+
         .taxpayer {
             font-size: 1.4em;
             top: 38%;
         }
+
         .taxpayer-alt {
             font-size: 1.6em;
             top: 39%;
         }
+
         .trading-as {
             font-size: 0.8em;
             top: 41%;
         }
+
         .reg-no {
             font-size: 2em;
             top: 51%;
         }
+
         .reg-no-alt {
             font-size: 2em;
             top: 51%;
         }
+
         .vrn-no {
             font-size: .8em;
             top: 55%;
         }
+
         .tax-types {
             font-size: 1em;
             top: 60.3%;
@@ -77,6 +89,7 @@
             padding-right: 70px;
             left: 15%;
         }
+
         .location {
             top: 66.2%;
             font-size: 1em;
@@ -88,21 +101,25 @@
             padding-right: 70px;
             left: 29%;
         }
+
         .zra-location {
             font-size: 1em;
             top: 69.2%;
             left: -24%;
         }
+
         .tax-region {
             font-size: 1em;
             top: 72.1%;
             left: -22%;
         }
+
         .commencing-date {
             font-size: 1em;
             top: 63.25%;
             left: -12.0%;
         }
+
         .on-hand-date {
             font-size: 0.8em;
             top: 85.7%;
@@ -114,6 +131,7 @@
             padding-left: 70px;
             padding-right: 70px;
         }
+
         .commissioner-signature {
             top: 73%;
             position: absolute;
@@ -124,6 +142,7 @@
             padding-right: 70px;
             left: 55.5%;
         }
+
         .commissioner-name {
             top: 80.5%;
             position: absolute;
@@ -136,6 +155,7 @@
             margin-left: 55px;
             left: 52.5%;
         }
+
         .commissioner-title {
             top: 82%;
             position: absolute;
@@ -147,9 +167,10 @@
             margin-left: 55px;
             left: 50.5%;
         }
+
         .qr-code {
             overflow: hidden;
-            position:absolute;
+            position: absolute;
             top: 77%;
             right: 76%;
             background: white;
@@ -158,6 +179,7 @@
             width: 180px;
             padding: 5px;
         }
+
         .watermark {
             -webkit-transform: rotate(270deg);
             -moz-transform: rotate(270deg);
@@ -171,6 +193,7 @@
             left: -17%;
             top: 40%;
         }
+
         .online-copy {
             -webkit-transform: rotate(331deg);
             -moz-transform: rotate(331deg);
@@ -184,59 +207,61 @@
             padding-left: 10%;
             top: 40%;
         }
+
         .multiline-font-size {
             font-size: 1.1em !important;
         }
+
         .qr-code-height {
             height: 189px
         }
     </style>
 </head>
 <body>
-    <span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
-    @if ($location->is_headquarter == 0)
-        <div class="watermark">Branch Copy</div>
-    @endif
-    @if(isset($location->business->name) && isset($location->business->taxpayer_name) && strtolower(trim($location->business->name)) != strtolower(trim($location->business->taxpayer_name)))
-        <span class="embed taxpayer @if(strlen($location->business->name) > 45) multiline-font-size @endif">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
-        <span class="embed trading-as @if(strlen($location->business->name) > 45) multiline-font-size @endif">T/A {{ $location->business->name }}</span>
-    @else
-        <span class="embed taxpayer-alt @if(strlen($location->business->name) > 45) multiline-font-size @endif">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
-    @endif
-    <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
-    @if($location->vrn)
-        <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
-        <span class="embed vrn-no">VRN NO: {{ $location->vrn ?? '' }}</span>
-    @else
-        <span class="embed reg-no">{{ $location->business->ztn_number ?? '' }}</span>
-    @endif
-    <span class="tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
-    <span class="location">
+<span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
+@if ($location->is_headquarter == 0)
+    <div class="watermark">Branch Copy</div>
+@endif
+@if(isset($location->business->name) && isset($location->business->taxpayer_name) && strtolower(trim($location->business->name)) != strtolower(trim($location->business->taxpayer_name)))
+    <span class="embed taxpayer @if(strlen($location->business->name) > 45) multiline-font-size @endif">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
+    <span class="embed trading-as @if(strlen($location->business->name) > 45) multiline-font-size @endif">T/A {{ $location->business->name }}</span>
+@else
+    <span class="embed taxpayer-alt @if(strlen($location->business->name) > 45) multiline-font-size @endif">{{ ($location->business->taxpayer_name ? $location->business->taxpayer_name : $location->business->name) ?? '' }}</span>
+@endif
+<span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
+@if($location->vrn)
+    <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
+    <span class="embed vrn-no">VRN NO: {{ $location->vrn ?? '' }}</span>
+@else
+    <span class="embed reg-no">{{ $location->business->ztn_number ?? '' }}</span>
+@endif
+<span class="tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
+<span class="location">
         {{ $location->street->name }} - {{ $location->ward->name }}
     </span>
-    <span class="embed zra-location">
+<span class="embed zra-location">
         {{ $location->region->location }}
     </span>
-    <span class="embed tax-region">
+<span class="embed tax-region">
         {{ $location->taxRegion->name }}
     </span>
-    <span class="embed commencing-date">
+<span class="embed commencing-date">
         {{ $location->date_of_commencing->format('d F Y') }}
     </span>
-    <span class="on-hand-date">
+<span class="on-hand-date">
         {{ now()->format('d F, Y') }}
     </span>
-    <span class="commissioner-signature">
-        <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
+<span class="commissioner-signature">
+        <img src="{{ $signaturePath }}">
     </span>
-    <span class="commissioner-name">
+<span class="commissioner-name">
         {{$commissinerFullName}}
     </span>
-    <span class="commissioner-title">
-        COMMISSIONER GENERAL
+<span class="commissioner-title">
+        {{ $title }}
     </span>
-    <div class="qr-code">
-        <img class="img-fluid qr-code-height" src="{{ $dataUri }}">
+<div class="qr-code">
+    <img class="img-fluid qr-code-height" src="{{ $dataUri }}">
     </div>
 </body>
 <body class="page-two">
