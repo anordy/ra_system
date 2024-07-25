@@ -8,7 +8,6 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\WithholdingAgent;
 use Carbon\Carbon;
-use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class RejectedWithholdingAgentsTable extends DataTableComponent
 {
