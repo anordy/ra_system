@@ -1513,10 +1513,9 @@ trait PaymentsTrait
 
         // Generate return control no.
         $payer_type = get_class($return->return);
-        $payer_name = $return->return->company_name;
+        $payer_name = $return->return->company_name ?? $return->business->name;
         $payer_email = null;
         $payer_phone = $return->return->mobile;
-
 
         $description = "Chartered Flight Return payment for {$payer_name}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;

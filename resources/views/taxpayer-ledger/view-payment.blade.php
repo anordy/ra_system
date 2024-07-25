@@ -30,6 +30,18 @@
                 <div class="card-body">
                     <div class="row m-2 pt-3">
                         <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{ __('Business Name') }}</span>
+                            <p class="my-1">{{ $payment->location->name ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{ __('Requested By') }}</span>
+                            <p class="my-1">{{ $payment->taxpayer->fullname ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">{{ __('Requested On') }}</span>
+                            <p class="my-1">{{ $payment->created_at ? \Carbon\Carbon::create($payment->created_at)->format('d M Y') : 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">{{ __('Control Number') }}</span>
                             <p class="my-1">{{ $payment->latestBill->control_number ?? 'N/A' }}</p>
                         </div>
@@ -43,7 +55,9 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">{{ __('Status') }}</span>
-                            <p class="my-1">{{ $payment->status ?? 'N/A' }}</p>
+                            <p class="my-1">
+                                <span class="badge badge-info">{{ ucfirst($payment->status) ?? 'N/A' }}</span>
+                            </p>
                         </div>
                     </div>
 
@@ -68,6 +82,33 @@
                                     <p class="my-1">{{ $item->currency }} {{ number_format($item->amount ?? 0, 2) }}</p>
                                 </div>
                             </div>
+
+                            @if($item->breakdown)
+                                <div class="row m-2 pt-3">
+                                    <div class="col-md-3 mb-3">
+                                    </div>
+                                    <div class="col-md-9 mb-3">
+                                        <table class="table table-striped table-sm">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col" class="w-25">Payment Name</th>
+                                                <th scope="col" class="w-50">Amount</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($item->breakdown->toArray() ?? [] as $i => $breakDown)
+                                                @if($breakDown > 0)
+                                                    <tr>
+                                                        <td>{{ $i ? ucfirst($i) : 'N/A'  }}</td>
+                                                        <td>{{ $item->currency  }} {{ number_format($breakDown ?? 0, 2) ?? 0 }}</td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endif
                             <hr>
                         @endforeach
                     @endif
