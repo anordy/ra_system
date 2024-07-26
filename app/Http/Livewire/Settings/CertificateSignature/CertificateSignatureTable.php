@@ -62,6 +62,36 @@ class CertificateSignatureTable extends DataTableComponent
             Column::make('End Date', 'end_date')
                 ->sortable()
                 ->searchable(),
+            Column::make('Edit Status', 'is_updated')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span class="badge badge-warning p-2 rounded-0" >Not Updated</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span class="badge badge-success p-2 rounded-0" >Updated</span>
+                        HTML;
+                    }
+                })
+                ->html(),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span class="badge badge-warning p-2 rounded-0" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span class="badge badge-success p-2 rounded-0" >Approved</span>
+                        HTML;
+                    } elseif ($value == 2) {
+                        return <<<HTML
+                            <span class="badge badge-danger p-2 rounded-0" >Rejected</span>
+                        HTML;
+                    }
+                })
+                ->html(),
             Column::make('Added On', 'created_at')
                 ->sortable()
                 ->searchable(),
@@ -73,7 +103,7 @@ class CertificateSignatureTable extends DataTableComponent
 
     public function delete($id)
     {
-        if (!Gate::allows('setting-bank-delete')) {
+        if (!Gate::allows('setting-certificate-signature-delete')) {
             abort(403);
         }
 

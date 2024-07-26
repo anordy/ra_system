@@ -132,6 +132,11 @@
             padding-right: 70px;
         }
 
+        .signature {
+            align-items: center;
+            justify-content: center;
+        }
+
         .commissioner-signature {
             top: 73%;
             position: absolute;
@@ -251,6 +256,7 @@
 <span class="on-hand-date">
         {{ now()->format('d F, Y') }}
     </span>
+<div class="signature">
 <span class="commissioner-signature">
         <img src="{{ $signaturePath }}">
     </span>
@@ -260,6 +266,7 @@
 <span class="commissioner-title">
         {{ $title }}
     </span>
+</div>
 <div class="qr-code">
     <img class="img-fluid qr-code-height" src="{{ $dataUri }}">
     </div>

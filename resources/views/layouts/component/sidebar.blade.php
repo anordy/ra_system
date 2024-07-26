@@ -1318,7 +1318,7 @@
                             <a href="{{ route('settings.api-users.index') }}">API User</a>
                         </li>
                     @endcan
-                    @can('setting-api-user-view')
+                    @can('setting-certificate-signature-view')
                         <li class="{{ request()->is('settings/certificate-signature*') ? 'active' : '' }}">
                             <a href="{{ route('settings.certificate-signature.index') }}">Certificate Signature</a>
                         </li>

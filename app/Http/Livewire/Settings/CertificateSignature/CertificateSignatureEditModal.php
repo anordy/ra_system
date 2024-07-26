@@ -19,18 +19,23 @@ class CertificateSignatureEditModal extends Component
 
     use CustomAlert, DualControlActivityTrait, WithFileUploads;
 
-    public $name, $title, $startDate, $endDate, $signature, $certificate, $currentSignature;
+    public $name, $title, $startDate, $endDate, $signature, $certificate, $currentSignature, $oldValues;
 
 
     protected function rules()
     {
-        return [
+        $rules = [
             'title' => 'required|alpha_num_space|min:5|max:50',
             'name' => 'required|alpha_num_space|min:5|max:100',
             'startDate' => 'required|date',
-            'endDate' => 'required|date',
-            'signature' => 'required|file|mimes:png,jpg,jpeg|max:1024',
+            'endDate' => 'required|date|after:startDate',
         ];
+
+        if (!$this->signature) {
+            $rules['signature'] = 'required|file|mimes:png,jpg,jpeg|max:1024';
+        }
+
+        return $rules;
     }
 
     public function mount($id)
@@ -42,13 +47,19 @@ class CertificateSignatureEditModal extends Component
         $this->currentSignature = $this->certificate->image;
         $this->startDate = $this->certificate->start_date ? Carbon::create($this->certificate->start_date)->format('Y-m-d') : now()->format('Y-m-d');
         $this->endDate = $this->certificate->end_date ? Carbon::create($this->certificate->end_date)->format('Y-m-d') : now()->format('Y-m-d');
+        $this->oldValues = [
+            'name' => $this->certificate->name,
+            'title' => $this->certificate->title,
+            'start_date' => $this->startDate,
+            'end_date' => $this->endDate,
+        ];
     }
 
 
     public function submit()
     {
-        if (!Gate::allows('setting-district-add')) {
-            // abort(403);
+        if (!Gate::allows('setting-certificate-signature-edit')) {
+             abort(403);
         }
 
         $this->validate();
@@ -76,9 +87,16 @@ class CertificateSignatureEditModal extends Component
             $this->certificate->start_date = $this->startDate;
             $this->certificate->end_date = $this->endDate;
 
+            $newValues = [
+                'name' => $this->certificate->name,
+                'title' => $this->certificate->title,
+                'start_date' => $this->startDate,
+                'end_date' => $this->endDate,
+            ];
+
             if (!$this->certificate->save()) throw new Exception('Failed to update certificate');
 
-            $this->triggerDualControl(get_class($this->certificate), $this->certificate->id, DualControl::ADD, 'adding new certificate signature of ' . $this->name . '');
+            $this->triggerDualControl(get_class($this->certificate), $this->certificate->id, DualControl::EDIT, 'Editing certificate signature of ' . $this->name . '', json_encode($this->oldValues), json_encode($newValues));
 
             DB::commit();
 

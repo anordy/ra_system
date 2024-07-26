@@ -352,8 +352,11 @@ function getSignature($modelInstance)
     // Get Signature
     if ($approvedOn) {
         return \App\Models\CertificateSignature::query()
+            ->select(['title', 'name', 'image'])
+            ->where('is_approved', \App\Enum\GeneralConstant::ONE_INT)
             ->where('start_date', '<=', $approvedOn)
             ->where('end_date', '>=', $approvedOn)
+            ->latest()
             ->first();
     }
 

@@ -27,7 +27,7 @@ class CertificateSignatureAddModal extends Component
             'title' => 'required|alpha_num_space|min:5|max:50',
             'name' => 'required|alpha_num_space|min:5|max:100',
             'startDate' => 'required|date',
-            'endDate' => 'required|date',
+            'endDate' => 'required|date|after:startDate',
             'signature' => 'required|file|mimes:png,jpg,jpeg|max:1024',
         ];
     }
@@ -40,13 +40,22 @@ class CertificateSignatureAddModal extends Component
 
     public function submit()
     {
-        if (!Gate::allows('setting-district-add')) {
-            // abort(403);
+        if (!Gate::allows('setting-certificate-signature-add')) {
+             abort(403);
         }
 
         $this->validate();
 
         // Check for overlapping time
+        $checkOverlap = CertificateSignature::query()
+            ->where('start_date', '<=', $this->startDate)
+            ->where('end_date', '>=', $this->endDate)
+            ->exists();
+
+        if ($checkOverlap) {
+            $this->customAlert('warning', 'The current range already exists');
+            return;
+        }
 
         DB::beginTransaction();
 
@@ -76,9 +85,17 @@ class CertificateSignatureAddModal extends Component
                 'image' => $base64
             ]);
 
+
             if (!$certificate) throw new Exception('Failed to save certificate');
 
-            $this->triggerDualControl(get_class($certificate), $certificate->id, DualControl::ADD, 'adding new certificate signature of ' . $this->name . '');
+            $newValues = [
+                'name' => $certificate->name,
+                'title' => $certificate->title,
+                'start_date' => $certificate->start_date,
+                'end_date' => $certificate->end_date,
+            ];
+
+            $this->triggerDualControl(get_class($certificate), $certificate->id, DualControl::ADD, 'adding new certificate signature of ' . $this->name . '', null, $newValues);
 
             DB::commit();
 

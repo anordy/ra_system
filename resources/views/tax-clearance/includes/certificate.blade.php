@@ -57,17 +57,13 @@
             top: 82%;
         }
 
-        .tax-types {
-            font-size: 1.1em;
-            top: 61%;
-        }
-
         .commissioner-signature {
             top: 88%;
             position: absolute;
             text-transform: uppercase;
             font-weight: bold;
-            width: 100%;
+            width: 50%;
+            height: 50%;
             padding-left: 70px;
             padding-right: 70px;
             left: 30px;
@@ -84,6 +80,18 @@
             padding-right: 70px;
             margin-left: 55px;
             left: 30px;
+        }
+
+        .commissioner-title {
+            top: 87%;
+            position: absolute;
+            font-weight: bold;
+            font-size: 20px;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+            margin-left: 50px;
+            left: 1%;
         }
 
         .qr-code {

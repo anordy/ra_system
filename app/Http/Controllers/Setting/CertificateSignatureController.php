@@ -9,8 +9,8 @@ class CertificateSignatureController extends Controller
 {
     public function index()
     {
-        if (!Gate::allows('system-workflow-view')) {
-            // abort(403);
+        if (!Gate::allows('setting-certificate-signature-view')) {
+             abort(403);
         }
         return view('settings.certificate-signature.index');
     }
