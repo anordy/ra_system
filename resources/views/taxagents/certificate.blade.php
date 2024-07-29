@@ -43,7 +43,7 @@
             font-weight: bold
         }
 
-        .sup{
+        .sup {
             text-transform: lowercase;
         }
 
@@ -64,6 +64,7 @@
             text-transform: uppercase;
             font-weight: bold
         }
+
         .endyear {
             position: absolute;
             font-size: 1em;
@@ -91,6 +92,7 @@
             font-weight: bold;
             letter-spacing: 2px;
         }
+
         .commissioner-signature {
             top: 86%;
             position: absolute;
@@ -101,6 +103,7 @@
             padding-right: 70px;
             left: 30px;
         }
+
         .commissioner-name {
             top: 93%;
             position: absolute;
@@ -113,28 +116,45 @@
             margin-left: 55px;
             left: 30px;
         }
-     
+
+        .commissioner-title {
+            top: 84.7%;
+            position: absolute;
+            font-weight: bold;
+            font-size: 26px;
+            width: 100%;
+            padding-left: 60px;
+            padding-right: 70px;
+            margin-left: 10px;
+            left: 1%;
+        }
+
     </style>
 </head>
 
 <body>
-    <span class="taxpayerName">{{ $taxagent->taxpayer->fullName }}</span>
-    <span class="registrationNumber">{{$taxagent->reference_no}}</span>
-    <span class="period">{{$diff.' '.$word}}</span>
-    <span class="startDay">{{date('d', strtotime($start_date))}}<sup class="sup">{{$superStart}}</sup></span>
-    <span class="startYear">{{date('M Y', strtotime($start_date))}}</span>
-    <span class="endday">{{date('d', strtotime($end_date))}}<sup class="sup">{{$superEnd}}</sup></span>
-    <span class="endyear">{{date('M Y', strtotime($end_date))}}</span>
-    <span class="location">{{$taxagent->district->name.', '.$taxagent->region->name}}</span>
-    <span class="commissioner-signature">
-        <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
+<span class="taxpayerName">{{ $taxagent->taxpayer->fullName }}</span>
+<span class="registrationNumber">{{$taxagent->reference_no}}</span>
+<span class="period">{{$diff.' '.$word}}</span>
+<span class="startDay">{{date('d', strtotime($start_date))}}<sup class="sup">{{$superStart}}</sup></span>
+<span class="startYear">{{date('M Y', strtotime($start_date))}}</span>
+<span class="endday">{{date('d', strtotime($end_date))}}<sup class="sup">{{$superEnd}}</sup></span>
+<span class="endyear">{{date('M Y', strtotime($end_date))}}</span>
+<span class="location">{{$taxagent->district->name.', '.$taxagent->region->name}}</span>
+<div class="signature">
+<span class="commissioner-signature">
+        <img src="{{ $signaturePath }}">
     </span>
     <span class="commissioner-name">
         {{$commissinerFullName}}
     </span>
-    <div style="overflow: hidden; position:absolute; top: 81%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
-        <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
-    </div>
+    <span class="commissioner-title">
+        {{ $title }}
+    </span>
+</div>
+<div style="overflow: hidden; position:absolute; top: 81%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
+    <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
+</div>
 </body>
 
 </html>

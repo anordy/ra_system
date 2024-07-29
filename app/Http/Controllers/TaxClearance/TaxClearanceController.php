@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\TaxClearance;
 
 use App\Enum\Currencies;
+use App\Enum\CustomMessage;
 use App\Enum\LeaseStatus;
 use App\Enum\TaxClearanceStatus;
 use App\Http\Controllers\Controller;
@@ -38,6 +39,7 @@ use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use PDF;
 
 class TaxClearanceController extends Controller
@@ -277,10 +279,18 @@ class TaxClearanceController extends Controller
         header('Content-Type: ' . $result->getMimeType());
         $dataUri = $result->getDataUri();
 
-        $signaturePath = SystemSetting::certificatePath();
-        $commissinerFullName = SystemSetting::commissinerFullName();
+        $signature = getSignature($taxClearanceRequest);
 
-        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('dataUri', 'location', 'taxClearanceRequest', 'signaturePath', 'commissinerFullName'));
+        if (!$signature) {
+            session()->flash('error', 'Signature for this time is not configured');
+            return back();
+        }
+
+        $signaturePath = $signature->image;
+        $commissinerFullName = $signature->name;
+        $title = $signature->title;
+
+        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('dataUri', 'location', 'taxClearanceRequest', 'signaturePath', 'commissinerFullName', 'title'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 

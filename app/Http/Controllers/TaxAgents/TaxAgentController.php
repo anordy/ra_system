@@ -97,10 +97,18 @@ class TaxAgentController extends Controller
 
         $dataUri = $result->getDataUri();
 
-        $signaturePath = SystemSetting::certificatePath();
-        $commissinerFullName = SystemSetting::commissinerFullName();
+        $signature = getSignature($taxagent);
 
-        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'start_date', 'end_date', 'superStart', 'superEnd', 'diff', 'word', 'dataUri', 'signaturePath', 'commissinerFullName'));
+        if (!$signature) {
+            session()->flash('error', 'Signature for this certificate period is not configured');
+            return back();
+        }
+
+        $signaturePath = $signature->image;
+        $commissinerFullName = $signature->name;
+        $title = $signature->title;
+
+        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'start_date', 'end_date', 'superStart', 'superEnd', 'diff', 'word', 'dataUri', 'signaturePath', 'commissinerFullName', 'title'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 
