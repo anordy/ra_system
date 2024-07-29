@@ -95,7 +95,7 @@ class CertificateSignatureAddModal extends Component
                 'end_date' => $certificate->end_date,
             ];
 
-            $this->triggerDualControl(get_class($certificate), $certificate->id, DualControl::ADD, 'adding new certificate signature of ' . $this->name . '', null, $newValues);
+            $this->triggerDualControl(get_class($certificate), $certificate->id, DualControl::ADD, 'adding new certificate signature of ' . $this->name . '', null, json_encode($newValues));
 
             DB::commit();
 

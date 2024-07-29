@@ -10,7 +10,7 @@
             System Certificate Management
             <div class="card-tools">
                 @can('system-setting-add')
-                    @if (!approvalLevel(Auth::user()->level_id, 'Maker'))
+                    @if (approvalLevel(Auth::user()->level_id, \App\Enum\GeneralConstant::MAKER))
                         <button class="btn btn-primary btn-sm"
                                 onclick="Livewire.emit('showModal', 'settings.certificate-signature.certificate-signature-add-modal')"><i
                                     class="bi bi-plus-circle-fill pr-1"></i>

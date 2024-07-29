@@ -132,10 +132,6 @@
             padding-right: 70px;
         }
 
-        .signature {
-            align-items: center;
-            justify-content: center;
-        }
 
         .commissioner-signature {
             top: 73%;
@@ -158,7 +154,7 @@
             padding-left: 70px;
             padding-right: 70px;
             margin-left: 55px;
-            left: 52.5%;
+            left: 53.5%;
         }
 
         .commissioner-title {
@@ -258,7 +254,7 @@
     </span>
 <div class="signature">
 <span class="commissioner-signature">
-        <img src="{{ $signaturePath }}">
+        <img src="{{ $signaturePath }}" width="300">
     </span>
 <span class="commissioner-name">
         {{$commissinerFullName}}

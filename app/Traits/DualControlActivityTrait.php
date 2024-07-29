@@ -157,7 +157,6 @@ trait DualControlActivityTrait
         try {
             $update = $data->controllable_type::findOrFail($data->controllable_type_id);
 
-            dd($update);
             if ($data->action == DualControl::ADD) {
                 $update->is_approved = $status;
                 $update->save();

@@ -333,7 +333,7 @@ function getSourceName($model)
 function getSignature($modelInstance)
 {
     if (get_class($modelInstance) === \App\Models\BusinessLocation::class) {
-        $approvedOn = $modelInstance->approved_on;
+        $approvedOn = $modelInstance->approved_on ?? $modelInstance->verified_at;
     } else if (get_class($modelInstance) === \App\Models\TaxClearanceRequest::class) {
         $approvedOn = $modelInstance->approved_on;
     } else if (get_class($modelInstance) === \App\Models\WithholdingAgent::class) {

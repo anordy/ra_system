@@ -3,9 +3,9 @@
 namespace App\Http\Livewire\Settings\CertificateSignature;
 
 use App\Enum\CustomMessage;
-use App\Models\BankAccount;
 use App\Models\CertificateSignature;
 use App\Traits\CustomAlert;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -51,17 +51,17 @@ class CertificateSignatureTable extends DataTableComponent
     {
         return [
             Column::make('Title', 'title')
-                ->sortable()
                 ->searchable(),
             Column::make('Name', 'name')
-                ->sortable()
                 ->searchable(),
             Column::make('Start Date', 'start_date')
-                ->sortable()
-                ->searchable(),
+                ->format(function ($value) {
+                    return Carbon::create($value)->format('d M Y');
+                }),
             Column::make('End Date', 'end_date')
-                ->sortable()
-                ->searchable(),
+                ->format(function ($value) {
+                    return Carbon::create($value)->format('d M Y');
+                }),
             Column::make('Edit Status', 'is_updated')
                 ->format(function ($value, $row) {
                     if ($value == 0) {
@@ -93,13 +93,13 @@ class CertificateSignatureTable extends DataTableComponent
                 })
                 ->html(),
             Column::make('Added On', 'created_at')
-                ->sortable()
-                ->searchable(),
+                ->format(function ($value) {
+                    return Carbon::create($value)->format('d M Y');
+                }),
             Column::make('Action', 'id')
-                ->view('settings.certificate-signature.includes.actions')
+                ->view('settings.certificate-signature.includes.actions'),
         ];
     }
-
 
     public function delete($id)
     {
@@ -108,7 +108,7 @@ class CertificateSignatureTable extends DataTableComponent
         }
 
         $id = decrypt($id);
-        
+
         $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
@@ -128,17 +128,17 @@ class CertificateSignatureTable extends DataTableComponent
     public function confirmed($value)
     {
         try {
-            $data = (object) $value['data'];
+            $data = (object)$value['data'];
 
             $signature = CertificateSignature::find($data->id);
 
-            if(is_null($signature)){
+            if (is_null($signature)) {
                 abort(404);
             }
 
             $deleted = $signature->delete();
 
-            if (!$deleted) throw new Exception('Failed to Deleted Signature');
+            if (!$deleted) throw new Exception('Failed to Delete Signature');
 
             $this->flash('success', 'Signature Deleted Successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
