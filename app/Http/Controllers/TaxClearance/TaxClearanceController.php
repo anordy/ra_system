@@ -4,13 +4,10 @@ namespace App\Http\Controllers\TaxClearance;
 
 use App\Enum\Currencies;
 use App\Enum\CustomMessage;
-use App\Enum\LeaseStatus;
-use App\Enum\TaxClearanceStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
-use App\Models\SystemSetting;
 use App\Models\TaxClearanceRequest;
 use App\Traits\VerificationTrait;
 use Endroid\QrCode\Builder\Builder;
