@@ -50,7 +50,7 @@
             text-align: center;
         }
         .commissioner-signature {
-            top: 86%;
+            top: 85.4%;
             position: absolute;
             text-transform: uppercase;
             font-weight: bold;
@@ -71,6 +71,17 @@
             margin-left: 55px;
             left: 30px;
         }
+        .commissioner-title {
+            top: 84%;
+            position: absolute;
+            font-weight: bold;
+            font-size: 20px;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+            margin-left: 50px;
+            left: 1%;
+        }
     </style>
 </head>
 
@@ -82,10 +93,13 @@
     <span class="embed startDate">{{ $whagent->latestResponsiblePerson->created_at->toFormattedDateString() ?? '' }}</span>
     <span class="embed dateGiven">{{ date('M d, Y') }}</span>
     <span class="commissioner-signature">
-        <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
+        <img src="{{ $signaturePath }}" alt="Signature">
     </span>
     <span class="commissioner-name">
-        {{$commissinerFullName}}
+        {{$commissinerFullName ?? ''}}
+    </span>
+    <span class="commissioner-title">
+        {{ $title ?? '' }}
     </span>
     <div style="overflow: hidden; position:absolute; top: 83%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
         <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">

@@ -79,10 +79,18 @@ class WithholdingAgentController extends Controller
 
         $dataUri = $result->getDataUri();
 
-        $signaturePath = SystemSetting::certificatePath();
-        $commissinerFullName = SystemSetting::commissinerFullName();
+        $signature = getSignature($whagent);
 
-        $pdf = PDF::loadView('withholding-agent.certificate', compact('whagent', 'dataUri', 'signaturePath', 'commissinerFullName'));
+        if (!$signature) {
+            session()->flash('error', 'Signature for this time is not configured');
+            return back();
+        }
+
+        $signaturePath = $signature->image;
+        $commissinerFullName = $signature->name;
+        $title = $signature->title;
+
+        $pdf = PDF::loadView('withholding-agent.certificate', compact('whagent', 'dataUri', 'signaturePath', 'commissinerFullName', 'title'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 

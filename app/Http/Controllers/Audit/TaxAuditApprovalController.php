@@ -81,7 +81,9 @@ class TaxAuditApprovalController extends Controller
             $taxAssessments = TaxAssessment::where('assessment_id', $audit->id)
                 ->where('assessment_type', get_class($audit))->get();
 
-            return view('audit.preview', compact('audit', 'taxAssessments'));
+            $auditDocuments = DB::table('tax_audit_files')->where('tax_audit_id', $audit->id)->get();
+
+            return view('audit.preview', compact('audit', 'taxAssessments', 'auditDocuments'));
         } catch (\Exception $e) {
             report($e);
             Log::error('Error: ' . $e->getMessage(), [

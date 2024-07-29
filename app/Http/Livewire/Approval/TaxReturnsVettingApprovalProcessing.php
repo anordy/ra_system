@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Approval;
 use App\Enum\GeneralConstant;
 use App\Enum\TransactionType;
 use App\Traits\TaxpayerLedgerTrait;
+use Carbon\Carbon;
 use Exception;
 use App\Models\Role;
 use App\Models\User;
@@ -66,7 +67,11 @@ class TaxReturnsVettingApprovalProcessing extends Component
             ->get()
             ->firstOrFail();
 
-        $penaltyIterationsToBeAdded = ($tax_return->penatablemonths) - 1;
+        if (Carbon::now()->gt(Carbon::create($tax_return->curr_payment_due_date))) {
+            $penaltyIterationsToBeAdded = ceil($tax_return->penatablemonths);
+        } else {
+            $penaltyIterationsToBeAdded = 0;
+        }
 
         try {
             return PenaltyForDebt::getPostVettingPenalties($tax_return, $penaltyIterationsToBeAdded);
@@ -109,6 +114,7 @@ class TaxReturnsVettingApprovalProcessing extends Component
                     $tax_return = $this->previewPenalties($this->return->id);
                 } else {
                     $tax_return = $this->previewPenalties($this->return->id);
+
 
                     $child_return = TaxReturn::where('return_type', PortReturn::class)->where('parent', $tax_return->id)->first();
 

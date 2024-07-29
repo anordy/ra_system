@@ -7,15 +7,15 @@
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                aria-selected="true">Audit Informations</a>
+               aria-selected="true">Audit Informations</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-                aria-selected="false">Declaration Analysis</a>
+               aria-selected="false">Declaration Analysis</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
-                aria-selected="false">Approval Details</a>
+               aria-selected="false">Approval Details</a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -88,6 +88,29 @@
                     </div>
                 </div>
             </div>
+            @if (isset($auditDocuments))
+                <div class="pl-3 pr-3 card">
+                    <p class="card-header ">Taxpayer Uploaded Audit Documents</p>
+                    <div class="row pt-3">
+                        @foreach ($auditDocuments as $document)
+                            <div class="col-md-3">
+                                <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
+                                     class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                    @if($document->path)
+                                        <a target="_blank"
+                                           href="{{ route("tax_auditing.files.show", encrypt($document->path)) }}"
+                                           style="font-weight: 500;" class="ml-1">
+                                            {{ $document->name ?? 'N/A' }}
+                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
             <div class="card">
                 <div class="card-header text-uppercase font-weight-bold bg-white">
                     Audit Findings
@@ -109,11 +132,11 @@
                         @if ($audit->entry_minutes)
                             <div class="col-md-3">
                                 <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
-                                    class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                                     class="p-2 mb-3 d-flex rounded-sm align-items-center">
                                     <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                     <a target="_blank"
-                                        href="{{ route("tax_auditing.files.show", encrypt($audit->entry_minutes)) }}"
-                                        style="font-weight: 500;" class="ml-1">
+                                       href="{{ route("tax_auditing.files.show", encrypt($audit->entry_minutes)) }}"
+                                       style="font-weight: 500;" class="ml-1">
                                         Entry Meeting Report
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
@@ -125,8 +148,8 @@
                                 <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
                                     <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                     <a target="_blank"
-                                        href="{{ route("tax_auditing.files.show", encrypt($audit->preliminary_report)) }}"
-                                        class="ml-1 font-weight-bold">
+                                       href="{{ route("tax_auditing.files.show", encrypt($audit->preliminary_report)) }}"
+                                       class="ml-1 font-weight-bold">
                                         Preliminary Report
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
@@ -138,8 +161,8 @@
                                 <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
                                     <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                     <a target="_blank"
-                                        href="{{ route("tax_auditing.files.show", encrypt($audit->working_report)) }}"
-                                        class="ml-1 font-weight-bold">
+                                       href="{{ route("tax_auditing.files.show", encrypt($audit->working_report)) }}"
+                                       class="ml-1 font-weight-bold">
                                         Auditing Working Paper
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
@@ -151,8 +174,8 @@
                                 <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
                                     <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                     <a target="_blank"
-                                        href="{{ route("tax_auditing.files.show", encrypt($audit->final_report)) }}"
-                                        class="ml-1 font-weight-bold">
+                                       href="{{ route("tax_auditing.files.show", encrypt($audit->final_report)) }}"
+                                       class="ml-1 font-weight-bold">
                                         Final Report
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
@@ -164,8 +187,8 @@
                                 <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
                                     <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                     <a target="_blank"
-                                        href="{{ route("tax_auditing.files.show", encrypt($audit->exit_minutes)) }}"
-                                        class="ml-1 font-weight-bold">
+                                       href="{{ route("tax_auditing.files.show", encrypt($audit->exit_minutes)) }}"
+                                       class="ml-1 font-weight-bold">
                                         Exit Minutes
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
@@ -234,7 +257,7 @@
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <livewire:approval.approval-history-table modelName='{{ get_class($audit) }}'
-                modelId="{{ encrypt($audit->id) }}" />
+                                                      modelId="{{ encrypt($audit->id) }}" />
         </div>
     </div>
 

@@ -71,6 +71,7 @@ class BranchesApprovalProcessing extends Component
             }
 
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
+            $this->subject->approved_on = Carbon::now()->toDateTimeString();
             $this->subject->status = BusinessStatus::APPROVED;
 
             $notification_payload = [

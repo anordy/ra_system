@@ -90,9 +90,8 @@ class BusinessFileController extends Controller
         $location = BusinessLocation::with('business', 'business.taxpayer')->findOrFail($locationId);
         $tax = TaxType::findOrFail($taxTypeId);
         $taxType = BusinessTaxType::where('business_id', $location->business->id)->where('tax_type_id', $taxTypeId)->firstOrFail();
-        
         $certificateNumber = $this->generateCertificateNumber($location, $tax->prefix);
-        
+
         $url = env('TAXPAYER_URL') . route('qrcode-check.business.certificate', ['locationId' =>  base64_encode(strval($locationId)), 'taxTypeId' =>  base64_encode(strval($taxTypeId))], 0);
         
         $result = Builder::create()
@@ -114,14 +113,20 @@ class BusinessFileController extends Controller
 
         $dataUri = $result->getDataUri();
 
-        $signaturePath = SystemSetting::certificatePath();
-        $commissinerFullName = SystemSetting::commissinerFullName();
+        $signature = getSignature($location);
 
-        
-        $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber', 'signaturePath', 'commissinerFullName'));
+        if (!$signature) {
+            session()->flash('error', 'Signature for this time is not configured');
+            return back();
+        }
+
+        $signaturePath = $signature->image;
+        $commissinerFullName = $signature->name;
+        $title = $signature->title;
+
+        $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber', 'signaturePath', 'commissinerFullName', 'title'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
-
         return $pdf->stream();
 
     }

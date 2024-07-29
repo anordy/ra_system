@@ -3,7 +3,7 @@
         <h3 class="mt-2 d-flex justify-content-center align-items-center">
             <div style="height: 38px; width: 38px; border-radius: 50%" class="mr-3">
                 <img style="height: 38px; width: 38px; object-fit: contain;" src="{{ asset("images/logo.png") }}"
-                    class="rounded-circle" height="38px">
+                     class="rounded-circle" height="38px">
             </div>
             ZIDRAS
         </h3>
@@ -25,8 +25,8 @@
         @can("taxpayer-management")
             <li class="{{ request()->is("taxpayers*") || request()->is("kycs-amendment*") ? "active" : "" }}">
                 <a href="#taxpayersMenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("taxpayers*") || request()->is("kycs-amendment*") ? "true" : "false" }}"
-                    class="dropdown-toggle">Taxpayers
+                   aria-expanded="{{ request()->is("taxpayers*") || request()->is("kycs-amendment*") ? "true" : "false" }}"
+                   class="dropdown-toggle">Taxpayers
                     Management</a>
                 <ul class="collapse list-unstyled {{ request()->is("taxpayers*") || request()->is("kycs-amendment*") ? "show" : "" }}"
                     id="taxpayersMenu">
@@ -57,7 +57,7 @@
         @can("business-management")
             <li class="{{ request()->is("business*") ? "active" : "" }}">
                 <a href="#businessMenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("business*") ? "true" : "false" }}" class="dropdown-toggle">Business
+                   aria-expanded="{{ request()->is("business*") ? "true" : "false" }}" class="dropdown-toggle">Business
                     Management</a>
                 <ul class="collapse list-unstyled {{ request()->is("business*") ? "show" : "" }}" id="businessMenu">
                     @can("business-registration-view")
@@ -112,7 +112,7 @@
         @can("tax-consultant")
             <li class="{{ request()->is("taxagents*") ? "active" : "" }}">
                 <a href="#taxagentSubmenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("taxagents*") ? "true" : "false" }}" class="dropdown-toggle">Tax
+                   aria-expanded="{{ request()->is("taxagents*") ? "true" : "false" }}" class="dropdown-toggle">Tax
                     Consultants</a>
                 <ul class="collapse list-unstyled {{ request()->is("taxagents*") ? "show" : "" }}" id="taxagentSubmenu">
                     @can("tax-consultant-registration-view")
@@ -138,7 +138,7 @@
         @can("property-tax")
             <li class="{{ request()->is("property-tax*") ? "active" : "" }}">
                 <a href="#propertyTaxMenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("property-tax*") ? "true" : "false" }}" class="dropdown-toggle">Property
+                   aria-expanded="{{ request()->is("property-tax*") ? "true" : "false" }}" class="dropdown-toggle">Property
                     Tax
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is("property-tax*") ? "show" : "" }}"
@@ -181,8 +181,8 @@
         @can("withholding-agent")
             <li class="{{ request()->is("withholdingAgents*") ? "active" : "" }}">
                 <a href="#withholdingAgentsMenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("withholdingAgents*") ? "true" : "false" }}"
-                    class="dropdown-toggle">Withholding Agents</a>
+                   aria-expanded="{{ request()->is("withholdingAgents*") ? "true" : "false" }}"
+                   class="dropdown-toggle">Withholding Agents</a>
                 <ul class="collapse list-unstyled {{ request()->is("withholdingAgents*") ? "show" : "" }}"
                     id="withholdingAgentsMenu">
                     {{-- @can("withholding-agents-registration") --}}
@@ -207,7 +207,7 @@
         @can("tax-return")
             <li class="{{ request()->is("e-filling*") ? "active" : "" }}">
                 <a href="#returnsSubmenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("e-filling*") ? "true" : "false" }}" class="dropdown-toggle">Tax
+                   aria-expanded="{{ request()->is("e-filling*") ? "true" : "false" }}" class="dropdown-toggle">Tax
                     Returns</a>
                 <ul class="collapse list-unstyled {{ request()->is('e-filling*') ? 'show' : '' }}" id="returnsSubmenu">
                     <li class="{{ request()->is('tax-return-cancellation*') ? 'active' : '' }}">
@@ -329,7 +329,8 @@
                 <a href="#tax_verifications" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     Returns Verifications
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}" id="tax_verifications">
+                <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}"
+                    id="tax_verifications">
                     <li class="{{ request()->is('tax_verifications/pending*') ? 'active' : '' }}">
                         <a href="{{ route('tax_verifications.pending') }}">Pending Verifications</a>
                     </li>
@@ -395,7 +396,8 @@
                 <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     Tax Auditing
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is("tax_auditing*") && !request()->is('tax_auditing/business*') ? "show" : "" }}" id="tax_auditing">
+                <ul class="collapse list-unstyled {{ request()->is("tax_auditing*") && !request()->is('tax_auditing/business*') ? "show" : "" }}"
+                    id="tax_auditing">
                     @can("tax-auditing-approved-view")
                         <li class="{{ request()->is("tax_auditing/approvals*") ? "active" : "" }}">
                             <a href="{{ route("tax_auditing.approvals.index") }}">Approvals</a>
@@ -482,8 +484,8 @@
         @can("tax-claim")
             <li class="{{ request()->is("tax-claims*") || request()->is("tax-credits*") ? "active" : "" }}">
                 <a href="#tax-claim" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("tax-claims*") || request()->is("tax-credits*") ? "true" : "false" }}"
-                    class="dropdown-toggle">Tax Claims</a>
+                   aria-expanded="{{ request()->is("tax-claims*") || request()->is("tax-credits*") ? "true" : "false" }}"
+                   class="dropdown-toggle">Tax Claims</a>
                 <ul class="collapse list-unstyled {{ request()->is("tax-claims*") || request()->is("tax-credits*") ? "show" : "" }}"
                     id="tax-claim">
                     @can("tax-claim-view")
@@ -508,8 +510,8 @@
         @can("payment-extension")
             <li class="{{ request()->is("extensions-e-filling*") ? "active" : "" }}">
                 <a href="#extension-menu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("extensions-e-filling*") ? "true" : "false" }}"
-                    class="dropdown-toggle">Payment Extensions</a>
+                   aria-expanded="{{ request()->is("extensions-e-filling*") ? "true" : "false" }}"
+                   class="dropdown-toggle">Payment Extensions</a>
                 <ul class="collapse list-unstyled {{ request()->is("extensions-e-filling*") ? "show" : "" }}"
                     id="extension-menu">
                     @can("payment-extension-view")
@@ -524,8 +526,8 @@
         @can("payment-installment-view")
             <li class="{{ request()->is("installments-e-filling*") ? "active" : "" }}">
                 <a href="#installment-menu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("installments-e-filling*") ? "true" : "false" }}"
-                    class="dropdown-toggle">Installments</a>
+                   aria-expanded="{{ request()->is("installments-e-filling*") ? "true" : "false" }}"
+                   class="dropdown-toggle">Installments</a>
                 <ul class="collapse list-unstyled {{ request()->is("installments-e-filling*") ? "show" : "" }}"
                     id="installment-menu">
                     @can("payment-installment-view")
@@ -550,8 +552,8 @@
         @can("dispute-management")
             <li class="{{ request()->is("assesments*") ? "active" : "" }}">
                 <a href="#assesmentsSubmenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("assesments*") ? "true" : "false" }}"
-                    class="dropdown-toggle">Disputes
+                   aria-expanded="{{ request()->is("assesments*") ? "true" : "false" }}"
+                   class="dropdown-toggle">Disputes
                     Management</a>
                 <ul class="collapse list-unstyled {{ request()->is("assesments*") ? "show" : "" }}"
                     id="assesmentsSubmenu">
@@ -624,7 +626,7 @@
         @can("legal-cases")
             <li class="{{ request()->is("cases*") ? "active" : "" }}">
                 <a href="#lcmSubmenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("cases*") ? "true" : "false" }}" class="dropdown-toggle">Legal Cases
+                   aria-expanded="{{ request()->is("cases*") ? "true" : "false" }}" class="dropdown-toggle">Legal Cases
                     Management</a>
                 <ul class="collapse list-unstyled {{ request()->is("cases*") ? "show" : "" }}" id="lcmSubmenu">
                     @can("legal-cases-view")
@@ -644,7 +646,7 @@
         @can("motor-vehicle-view")
             <li class="{{ request()->is("mvr*") ? "active" : "" }}">
                 <a href="#mvrSubmenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is("mvr*") ? "true" : "false" }}" class="dropdown-toggle">Motor Vehicle
+                   aria-expanded="{{ request()->is("mvr*") ? "true" : "false" }}" class="dropdown-toggle">Motor Vehicle
                     Registration</a>
                 <ul class="collapse list-unstyled {{ request()->is("mvr*") ? "show" : "" }}" id="mvrSubmenu">
                     @can("motor-vehicle-registration")
@@ -704,7 +706,8 @@
         @can('mvr')
             <li class="{{ request()->is('public-service*') ? 'active' : '' }}">
                 <a href="#publicServiceSubmenu" data-toggle="collapse"
-                   aria-expanded="{{ request()->is('public-service*') ? 'true' : 'false' }}" class="dropdown-toggle">Transport Services</a>
+                   aria-expanded="{{ request()->is('public-service*') ? 'true' : 'false' }}" class="dropdown-toggle">Transport
+                    Services</a>
                 <ul class="collapse list-unstyled {{ request()->is('public-service*') ? 'show' : '' }}"
                     id="publicServiceSubmenu">
                     <li class="{{ request()->is('public-service/registrations*') ? 'active' : '' }}">
@@ -764,12 +767,12 @@
         @endcan
 
         @can("land-lease-management")
-                    <li class="{{ request()->is("land-lease*") ? "active" : "" }}">
-                        <a href="#landLeaseSubmenu" data-toggle="collapse"
-                            aria-expanded="{{ request()->is("land-lease*") ? "true" : "false" }}" class="dropdown-toggle">Land
-                            Lease</a>
-                        <ul class="collapse list-unstyled {{ request()->is("land-lease*") ? "show" : "" }}"
-                            id="landLeaseSubmenu">
+            <li class="{{ request()->is("land-lease*") ? "active" : "" }}">
+                <a href="#landLeaseSubmenu" data-toggle="collapse"
+                   aria-expanded="{{ request()->is("land-lease*") ? "true" : "false" }}" class="dropdown-toggle">Land
+                    Lease</a>
+                <ul class="collapse list-unstyled {{ request()->is("land-lease*") ? "show" : "" }}"
+                    id="landLeaseSubmenu">
                     @can('land-lease-create')
                         <li class="{{ request()->is('land-lease/register*') ? 'active' : '' }}">
                             <a href="{{ route('land-lease.register') }}">Register Land Lease</a>
@@ -780,9 +783,9 @@
                             <a href="{{ route('land-lease.list') }}">Land Lease List</a>
                         </li>
                     @endcan
-                        <li class="{{ request()->is('land-lease/approval/list*') ? 'active' : '' }}">
-                            <a href="{{ route('land-lease.approval.list') }}">Land Lease Approvals</a>
-                        </li>
+                    <li class="{{ request()->is('land-lease/approval/list*') ? 'active' : '' }}">
+                        <a href="{{ route('land-lease.approval.list') }}">Land Lease Approvals</a>
+                    </li>
                     @can('land-lease-generate-report')
                         <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
                             <a href="{{ route('land-lease.generate.report') }}">General Report</a>
@@ -801,18 +804,18 @@
         @endcan
 
         @can('managerial-report')
-        <li class="{{ request()->is('reports.general.initial*') ? 'active' : '' }}">
-            <a href="#generalReportsSubmenu" data-toggle="collapse"
-               aria-expanded="{{ request()->is('reports/general*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                General Reports
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('reports/general*') ? 'show' : '' }}"
-                id="generalReportsSubmenu">
-                <li class="{{ request()->is('reports/general*') ? 'active' : '' }}">
-                    <a href="{{ route('reports.general.initial') }}">All Reports</a>
-                </li>
-            </ul>
-        </li>
+            <li class="{{ request()->is('reports.general.initial*') ? 'active' : '' }}">
+                <a href="#generalReportsSubmenu" data-toggle="collapse"
+                   aria-expanded="{{ request()->is('reports/general*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                    General Reports
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('reports/general*') ? 'show' : '' }}"
+                    id="generalReportsSubmenu">
+                    <li class="{{ request()->is('reports/general*') ? 'active' : '' }}">
+                        <a href="{{ route('reports.general.initial') }}">All Reports</a>
+                    </li>
+                </ul>
+            </li>
         @endcan
 
         @can('managerial-report')
@@ -953,8 +956,8 @@
                     @can('view-bank-transactions')
                         <li class="{{ request()->is('payments/pbz/transaction*') ? 'active' : '' }}">
                             <a href="{{ route('payments.pbz.transactions') }}">PBZ Transactions</a>
-                                </li>
-                            @endcan
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan
@@ -1149,7 +1152,8 @@
                     @endcan
                     @can('setting-mvr-transfer-category-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrColor') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrColor') }}">Motor Vehicle Plate Color</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrColor') }}">Motor Vehicle Plate
+                                Color</a>
                         </li>
                     @endcan
                     @can('setting-mvr-classes-view')
@@ -1159,13 +1163,15 @@
                     @endcan
                     @can('setting-mvr-plate-size-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrPlateSize') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrPlateSize') }}">Motor Vehicle Plate Size</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrPlateSize') }}">Motor Vehicle Plate
+                                Size</a>
                         </li>
                     @endcan
                     @can('setting-mvr-plate-size-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrRegistrationType') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrRegistrationType') }}">Motor Vehicle Initial Registration No.
-                                </a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrRegistrationType') }}">Motor Vehicle
+                                Initial Registration No.
+                            </a>
                         </li>
                     @endcan
                     @can('setting-mvr-fee-view')
@@ -1175,17 +1181,20 @@
                     @endcan
                     @can('setting-mvr-deregistration-reason-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrDeRegistrationReason') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrDeRegistrationReason') }}">Motor Vehicle De-Registration Reasons</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrDeRegistrationReason') }}">Motor Vehicle
+                                De-Registration Reasons</a>
                         </li>
                     @endcan
                     @can('setting-mvr-ownership-transfer-reason-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrOwnershipTransferReason') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrOwnershipTransferReason') }}">Motor Vehicle Transfer Reasons</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrOwnershipTransferReason') }}">Motor
+                                Vehicle Transfer Reasons</a>
                         </li>
                     @endcan
                     @can('setting-mvr-transfer-fee-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrTransferFee') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Motor Vehicle Transfer Fees</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Motor Vehicle Transfer
+                                Fees</a>
                         </li>
                     @endcan
                     @can('setting-dl-class-view')
@@ -1216,7 +1225,8 @@
 
                     @can('setting-dl-restriction-view')
                         <li class="{{ request()->is('settings/mvr-generic/DlRestriction') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'DlRestriction') }}">Driver's License Restrictions</a>
+                            <a href="{{ route('settings.mvr-generic.index', 'DlRestriction') }}">Driver's License
+                                Restrictions</a>
                         </li>
                     @endcan
 
@@ -1295,17 +1305,22 @@
                             <a href="{{ route("settings.zrb-bank-accounts.index") }}">ZRA Bank Accounts</a>
                         </li>
                     @endcan
-{{--                    @can('setting-report-parameter-view')--}}
-                        <li class="{{ request()->is('settings/mvr-generic/Parameter') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'Parameter') }}">Report Parameters</a>
-                        </li>
-                        <li class="{{ request()->is('settings/mvr-generic/Report') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index', 'Report') }}">Report Types</a>
-                        </li>
-{{--                    @endcan--}}
+                    {{--                    @can('setting-report-parameter-view')--}}
+                    <li class="{{ request()->is('settings/mvr-generic/Parameter') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index', 'Parameter') }}">Report Parameters</a>
+                    </li>
+                    <li class="{{ request()->is('settings/mvr-generic/Report') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index', 'Report') }}">Report Types</a>
+                    </li>
+                    {{--                    @endcan--}}
                     @can('setting-api-user-view')
                         <li class="{{ request()->is('settings/api-users*') ? 'active' : '' }}">
                             <a href="{{ route('settings.api-users.index') }}">API User</a>
+                        </li>
+                    @endcan
+                    @can('setting-certificate-signature-view')
+                        <li class="{{ request()->is('settings/certificate-signature*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.certificate-signature.index') }}">Certificate Signature</a>
                         </li>
                     @endcan
 
@@ -1314,27 +1329,27 @@
         @endcan
 
         @canany(["system-audit-trail-view", "system-workflow-view", "setting-dual-control-activities-view"])
-                    <li class="{{ request()->is("system*") ? "active" : "" }}">
-                        <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
-                        <ul class="collapse list-unstyled {{ request()->is("system*") ? "show" : "" }}" id="system">
-                            @can("system-audit-trail-view")
-                                <li class="{{ request()->is("system/audits*") ? "active" : "" }}">
-                                    <a href="{{ route("system.audits.index") }}">Audit Trail</a>
-                                </li>
-                            @endcan
-                            @can("system-workflow-view")
-                                <li class="{{ request()->is("system/workflow*") ? "active" : "" }}">
-                                    <a href="{{ route("system.workflow.index") }}">Workflow Configure</a>
-                                </li>
-                            @endcan
-                            @can("setting-dual-control-activities-view")
-                                <li class="{{ request()->is("system/dual-control-activities/*") ? "active" : "" }}">
-                                    <a href="{{ route("system.dual-control-activities.index") }}">Dual Control Activities</a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </li>
-                @endcan
+            <li class="{{ request()->is("system*") ? "active" : "" }}">
+                <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
+                <ul class="collapse list-unstyled {{ request()->is("system*") ? "show" : "" }}" id="system">
+                    @can("system-audit-trail-view")
+                        <li class="{{ request()->is("system/audits*") ? "active" : "" }}">
+                            <a href="{{ route("system.audits.index") }}">Audit Trail</a>
+                        </li>
+                    @endcan
+                    @can("system-workflow-view")
+                        <li class="{{ request()->is("system/workflow*") ? "active" : "" }}">
+                            <a href="{{ route("system.workflow.index") }}">Workflow Configure</a>
+                        </li>
+                    @endcan
+                    @can("setting-dual-control-activities-view")
+                        <li class="{{ request()->is("system/dual-control-activities/*") ? "active" : "" }}">
+                            <a href="{{ route("system.dual-control-activities.index") }}">Dual Control Activities</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
 
         <li class="{{ request()->is('account*') ? 'active' : '' }}">
             <a href="#accountMenu" data-toggle="collapse"

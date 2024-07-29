@@ -1,17 +1,17 @@
 <?php
 
+use App\Models\ApprovalLevel;
+use App\Models\BusinessTaxTypeChange;
+use App\Models\District;
+use App\Models\EducationLevel;
 use App\Models\ExchangeRate;
 use App\Models\InterestRate;
-use Carbon\Carbon;
+use App\Models\Region;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Region;
-use App\Models\District;
-use App\Models\ApprovalLevel;
-use App\Models\EducationLevel;
 use App\Models\UserApprovalLevel;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use App\Models\BusinessTaxTypeChange;
 use Illuminate\Support\Facades\DB;
 
 class TaxType
@@ -241,7 +241,8 @@ function getHotelStarByBusinessId($business_id)
     return $hotel_star;
 }
 
-function getTaxTypeName($taxTypeId) {
+function getTaxTypeName($taxTypeId)
+{
     return \App\Models\TaxType::select('name')->find($taxTypeId)->name ?? '';
 }
 
@@ -251,8 +252,9 @@ function getSubVatName($subVatId)
 }
 
 
-function formatEnum($string) {
-    $string = str_replace( '_', ' ', $string);
+function formatEnum($string)
+{
+    $string = str_replace('_', ' ', $string);
     return ucwords($string);
 }
 
@@ -308,20 +310,57 @@ function interestRate()
 
 }
 
-function getSourceName($model) {
+function getSourceName($model)
+{
     if ($model == \App\Models\Returns\TaxReturn::class) {
         return 'Return';
     } else if ($model == \App\Models\TaxRefund\TaxRefund::class) {
         return 'Tax Refund';
-    }  else if ($model == \App\Models\TaxAssessments\TaxAssessment::class) {
+    } else if ($model == \App\Models\TaxAssessments\TaxAssessment::class) {
         return 'Assessment';
-    }  else if ($model == App\Models\PublicService\PublicServiceReturn::class) {
+    } else if ($model == App\Models\PublicService\PublicServiceReturn::class) {
         return 'Public Service';
-    }  else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
+    } else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
         return 'Public Service';
-    }  else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
+    } else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
         return 'Public Service';
     } else {
         return 'N/A';
     }
+}
+
+
+function getSignature($modelInstance)
+{
+    if (get_class($modelInstance) === \App\Models\BusinessLocation::class) {
+        $approvedOn = $modelInstance->approved_on ?? $modelInstance->verified_at;
+    } else if (get_class($modelInstance) === \App\Models\TaxClearanceRequest::class) {
+        $approvedOn = $modelInstance->approved_on;
+    } else if (get_class($modelInstance) === \App\Models\WithholdingAgent::class) {
+        $approvedOn = $modelInstance->approved_on;
+    } else if (get_class($modelInstance) === \App\Models\TaxAgent::class) {
+        if ($modelInstance->is_first_application == 1) {
+            $start_date = $modelInstance->app_first_date;
+        } else {
+            $start_date = $modelInstance->renew_first_date;
+        }
+        $approvedOn = $start_date;
+    } else {
+        $approvedOn = null;
+    }
+
+    // Get Signature
+    if ($approvedOn) {
+        return \App\Models\CertificateSignature::query()
+            ->select(['title', 'name', 'image'])
+            ->where('is_approved', \App\Enum\GeneralConstant::ONE_INT)
+            ->where('start_date', '<=', $approvedOn)
+            ->where('end_date', '>=', $approvedOn)
+            ->latest()
+            ->first();
+    }
+
+    return null;
+
+
 }

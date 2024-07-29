@@ -3,6 +3,9 @@
 namespace App\Http\Livewire\WithholdingAgents;
 
 
+use App\Enum\AssistantStatus;
+use App\Models\WithholdingAgentStatus;
+use Carbon\Carbon;
 use Exception;
 use App\Models\Ward;
 use App\Models\Region;
@@ -104,6 +107,9 @@ class WithholdingAgentRegistration extends Component
                 'district_id' => $this->district_id,
                 'ward_id' => $this->ward_id,
                 'street_id' => $this->street_id,
+                'approved_on' => Carbon::now(),
+                'app_status' => WithholdingAgentStatus::APPROVED,
+                'status' => AssistantStatus::ACTIVE,
                 'approval_letter' => $this->approval_letter->store('/withholding_agents/approval_letter', "local-admin"),
             ];
 

@@ -110,8 +110,12 @@ class PenaltyForDebt
             throw new \Exception("JOB FAILED TO RUN, NO LATE PAYMENT RATE FOR THE YEAR {$curr_payment_due_date->year}");
         }
 
-        // Subtract 1 from periods as the filing due date is of previous month
-        $period = $tax_return->periods - 1;
+        // Subtract 1 from periods if it is only petroleum return
+        if ($tax_return->return_type != PetroleumReturn::class) {
+            $period = $tax_return->periods;
+        } else {
+            $period = $tax_return->periods - 1;
+        }
 
         $period = abs(round($period));
 
