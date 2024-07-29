@@ -4,32 +4,19 @@ namespace App\Http\Controllers\TaxClearance;
 
 use App\Enum\Currencies;
 use App\Enum\CustomMessage;
-use App\Enum\TaxClearanceStatus;
 use App\Http\Controllers\Controller;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
-use App\Models\Returns\Port\PortReturn;
+use App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController;
 use App\Models\Returns\ReturnStatus;
-use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\TaxReturn;
-use App\Models\Returns\Vat\VatReturn;
-use App\Models\Sequence;
 use App\Models\SystemSetting;
 use App\Models\TaxClearanceRequest;
 use App\Traits\VerificationTrait;
-use Carbon\Carbon;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use PDF;
@@ -37,42 +24,6 @@ use PDF;
 class TaxClearanceController extends Controller
 {
     use VerificationTrait;
-
-    public function generateCertNo()
-    {
-        // fetch all approved certs
-        $certs = TaxClearanceRequest::query()->select('id', 'certificate_number', 'status')->where('status', TaxClearanceStatus::APPROVED)->get();
-
-        $year = date('Y');
-        $sequence = '00001';
-        DB::beginTransaction();
-        try {
-            foreach ($certs as $cert) {
-                $cert->certificate_number = $year . $sequence;
-                $cert->save();
-
-                $incrementedDigits = (int)$sequence + 1;
-                $sequence = str_pad($incrementedDigits, strlen($sequence), '0', STR_PAD_LEFT);
-            }
-
-            $last_cert = Sequence::query()->where('name', Sequence::TAX_CLEARANCE)->first();
-            if ($last_cert) {
-                if ($last_cert->update(['next_id' => $sequence])) {
-                    DB::commit();
-                    return 'success';
-                } else {
-                    DB::rollBack();
-                    return 'Could not update sequence';
-                }
-            } else {
-                DB::rollBack();
-                return 'Sequence does not exist';
-            }
-        } catch (\Exception $ex) {
-            DB::rollBack();
-            return $ex;
-        }
-    }
 
     public function index()
     {
@@ -85,11 +36,19 @@ class TaxClearanceController extends Controller
 
     public function viewRequest($requestId)
     {
+        if (!Gate::allows('tax-clearance-view')) {
+            abort(403);
+        }
+
         return $this->showView($requestId, 'tax-clearance.clearance-request');
     }
 
     public function approval($requestId)
     {
+        if (!Gate::allows('tax-clearance-view')) {
+            abort(403);
+        }
+
         return $this->showView($requestId, 'tax-clearance.approval');
     }
 
@@ -124,12 +83,12 @@ class TaxClearanceController extends Controller
 
             $businessLocationId = $taxClearance->business_location_id;
 
-            $tzsLedgers = (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->getLedgerByCurrency(Currencies::TZS, $businessLocationId);
-            $usdLedgers = (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->getLedgerByCurrency(Currencies::USD, $businessLocationId);
+            $tzsLedgers = (new TaxpayerLedgerController)->getLedgerByCurrency(Currencies::TZS, $businessLocationId);
+            $usdLedgers = (new TaxpayerLedgerController)->getLedgerByCurrency(Currencies::USD, $businessLocationId);
 
             $ledgers = [
-                'TZS' => (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
-                'USD' => (new \App\Http\Controllers\TaxpayerLedger\TaxpayerLedgerController)->joinLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
+                'TZS' => (new TaxpayerLedgerController)->joinLedgers($tzsLedgers['debitLedgers'], $tzsLedgers['creditLedgers']),
+                'USD' => (new TaxpayerLedgerController)->joinLedgers($usdLedgers['debitLedgers'], $usdLedgers['creditLedgers']),
             ];
 
             $tzsCreditSum = $tzsLedgers['creditLedgers']->sum('total_credit_amount') ?? 0;
@@ -154,6 +113,10 @@ class TaxClearanceController extends Controller
 
     public function certificate($clearanceId)
     {
+        if (!Gate::allows('tax-clearance-view')) {
+            abort(403);
+        }
+
         try {
             $taxClearanceRequestId = decrypt($clearanceId);
             $taxClearanceRequest = TaxClearanceRequest::findOrFail($taxClearanceRequestId, ['id', 'business_id', 'business_location_id', 'reason', 'marking', 'approved_on', 'expire_on', 'status', 'deleted_at', 'created_at', 'updated_at', 'certificate_number']);

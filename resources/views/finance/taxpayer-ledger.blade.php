@@ -7,7 +7,7 @@
         <ul class="nav nav-tabs shadow-sm mb-0" id="taxpayerLedger" role="tablist">
             <li class="nav-item" role="presentation">
                 <a class="nav-link active" id="taxclearance-info-tab" data-toggle="tab" href="#taxclearance-info"
-                    role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearence Information </a>
+                    role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearance Information </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="return-infos-tab" data-toggle="tab" href="#return-infos" role="tab"

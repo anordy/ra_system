@@ -9,7 +9,7 @@
             <ul class="nav nav-tabs shadow-sm mb-0" id="waiverContent" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="taxclearance-info-tab" data-toggle="tab" href="#taxclearance-info"
-                        role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearence Information </a>
+                        role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearance Information </a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="debt-infos-tab" data-toggle="tab" href="#debt-infos" role="tab"
@@ -27,7 +27,7 @@
 
                     <div class="row m-2 pt-3">
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Tax Clearence Status</span>
+                            <span class="font-weight-bold text-uppercase">Tax Clearance Status</span>
                             <p class="my-1">
                                 @if ($taxClearance->status === \App\Enum\TaxClearanceStatus::APPROVED)
                                     <span class="badge badge-success py-1 px-2 green-status">
