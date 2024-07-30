@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Enum\CustomMessage;
 use App\Enum\GeneralConstant;
-use App\Models\SystemSetting;
 use App\Models\WithholdingAgent;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -84,6 +83,7 @@ class WithholdingAgentController extends Controller
                 ->build();
 
             header('Content-Type: ' . $result->getMimeType());
+            $dataUri = $result->getDataUri();
 
             $signature = getSignature($whagent);
 
