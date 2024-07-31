@@ -6,6 +6,7 @@
 
 namespace App\Services\JasperReport;
 
+use App\Enum\GeneralConstant;
 use App\Helpers\ReportFormat;
 
 class ReportService
@@ -13,7 +14,7 @@ class ReportService
 
     public function getReport($report, $format = ReportFormat::PDF, $inputControls = [])
     {
-        $hasParam = $report->has_parameter;
+        $hasParam = $report->has_parameter ?? GeneralConstant::ZERO_INT;
         $reportPath = $report->report_url;
 
         return $this->generateTemplate($format, $reportPath, $inputControls, $hasParam);
