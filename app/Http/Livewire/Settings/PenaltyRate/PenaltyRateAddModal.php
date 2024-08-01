@@ -29,7 +29,7 @@ class PenaltyRateAddModal extends Component
     }
 
     protected $rules = [
-        'configs.*.rate' => 'required|numeric',
+        'configs.*.rate' => 'required|numeric|min:0',
         'financial_year_id' => 'required'
     ];
 

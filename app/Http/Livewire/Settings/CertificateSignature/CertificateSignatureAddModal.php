@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -67,13 +68,12 @@ class CertificateSignatureAddModal extends Component
             if ($this->signature) {
                 $signaturePath = $this->signature->store('certificate-signature', 'local');
 
-                $file = storage_path().'/app/'. $signaturePath;
+                $file = Storage::disk('local')->get($signaturePath);
 
                 // Get base64 image
-                $type = pathinfo($file, PATHINFO_EXTENSION);
-                $data = file_get_contents($file);
+                $type = pathinfo($signaturePath, PATHINFO_EXTENSION);
 
-                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($file);
             }
 
             $certificate = CertificateSignature::create([
