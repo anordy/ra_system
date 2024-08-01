@@ -7,6 +7,7 @@ use App\Enum\ReturnCategory;
 use App\Jobs\DemandNotice\SendDebtDemandNoticeEmail;
 use App\Models\PublicService\PublicServiceMotor;
 use App\Models\PublicService\PublicServiceReturn;
+use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
 use Carbon\Carbon;
@@ -59,7 +60,9 @@ class DailyDebtDemandNoticeCommand extends Command
         Log::channel('dailyJobs')->info("Daily Demand notice for tax returns");
 
         // Get tax return which are only in debt step, after 3 demand notices are sent the returns category becomes overdue by which demand notice is not sent
-        $debts = TaxReturn::with('demandNotices')->where('return_category', ReturnCategory::DEBT)
+        $debts = TaxReturn::with('demandNotices')
+            ->where('return_category', ReturnCategory::DEBT)
+            ->whereNotIn('payment_status', [ReturnStatus::COMPLETE, ReturnStatus::NILL])
             ->get();
 
         foreach ($debts as $debt) {
