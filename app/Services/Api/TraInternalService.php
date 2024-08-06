@@ -47,13 +47,13 @@ class TraInternalService
                 curl_close($curl);
                 if ($response){
                     return [
-                        'message' => $response['data']['msg'],
+                        'message' => $response['data']['msg'] ?? 'Failed to retrieve TIN Number',
                         'data' => null
                     ];
                 } else {
                     Log::error('TRA TIN Something wrong: '.$response);
                     return [
-                        'message' => 'failed',
+                        'message' => 'Failed to get TIN Number',
                         'data' => null
                     ];
                 }

@@ -68,7 +68,7 @@ class UserAddModal extends Component
         return [
             'fname' => 'required|min:2|alpha',
             'lname' => 'required|min:2|alpha',
-            'email' => 'required|email|unique:users,email|ends_with:zanrevenue.org,egaz.go.tz,ubx.co.tz',
+            'email' => 'required|email|unique:users,email|ends_with:zanrevenue.org,egaz.go.tz,ubx.co.tz,zbs.go.tz',
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
@@ -145,7 +145,6 @@ class UserAddModal extends Component
             $this->sign($user);
 
             event(new SendSms('user_add', $user->id));
-            event(new SendMail('user_add', $user->id));
 
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
