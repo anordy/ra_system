@@ -216,24 +216,46 @@
         @endforeach
         <tr>
             <td rowspan="2"></td>
-            <td>Penalty (Sec 31)</td>
-            <td>{{ $assessment->currency == \App\Models\Currency::TZS ? "TZS" : "USD" }} {{ number_format($totalPenalty, 2) }}</td>
+            <td>Penalty TZS (Sec 31)</td>
+            <td>TZS {{ number_format($totalPenaltyTZS ?? 0, 2) }}</td>
             <td>-</td>
-            <td>{{ $assessment->currency == \App\Models\Currency::TZS ? "TZS" : "USD" }} {{ number_format($totalPenalty, 2) }}</td>
+            <td>TZS {{ number_format($totalPenaltyTZS ?? 0, 2) }}</td>
         </tr>
         <tr>
-            <td>Interest (Sec 31)</td>
-            <td> {{ $assessment->currency == \App\Models\Currency::TZS ? "TZS" : "USD" }} {{ number_format($totalInterest, 2) }}</td>
+            <td>Interest TZS (Sec 31)</td>
+            <td> TZS {{ number_format($totalInterestTZS ?? 0, 2) }}</td>
             <td>-</td>
-            <td> {{ $assessment->currency == \App\Models\Currency::TZS ? "TZS" : "USD" }} {{ number_format($totalInterest, 2) }}</td>
+            <td> TZS {{ number_format($totalInterestTZS ?? 0, 2) }}</td>
+        </tr>
+
+        <tr>
+            <td rowspan="2"></td>
+            <td>Penalty USD (Sec 31)</td>
+            <td>USD {{ number_format($totalPenaltyUSD ?? 0, 2) }}</td>
+            <td>-</td>
+            <td>USD {{ number_format($totalPenaltyUSD ?? 0, 2) }}</td>
+        </tr>
+        <tr>
+            <td>Interest USD (Sec 31)</td>
+            <td> USD {{ number_format($totalInterestUSD ?? 0, 2) }}</td>
+            <td>-</td>
+            <td> USD {{ number_format($totalInterestUSD ?? 0, 2) }}</td>
         </tr>
 
         <tr class="bold">
-            <td>TOTAL DUE</td>
+            <td>TOTAL DUE TZS</td>
             <td>-</td>
-            <td>{{ $assessment->currency == \App\Models\Currency::TZS ? "TZS" : "USD" }} {{ number_format($totalAmount, 2) }}</td>
+            <td>TZS {{ number_format($totalAmountTZS ?? 0, 2) }}</td>
             <td>-</td>
-            <td>{{ $assessment->currency == \App\Models\Currency::TZS ? "TZS" : "USD" }} {{ number_format($totalAmount, 2) }}</td>
+            <td>TZS {{ number_format($totalAmountTZS ?? 0, 2) }}</td>
+        </tr>
+
+        <tr class="bold">
+            <td>TOTAL DUE USD</td>
+            <td>-</td>
+            <td>USD {{ number_format($totalAmountUSD ?? 0, 2) }}</td>
+            <td>-</td>
+            <td>USD {{ number_format($totalAmountUSD ?? 0, 2) }}</td>
         </tr>
 
     </table>
