@@ -15,7 +15,7 @@ class WithholdingAgentShow extends Component
 
     public function mount($id)
     {
-        $this->withholding_agent = WithholdingAgent::with(['district', 'region', 'ward'])->findOrFail(decrypt($id));
+        $this->withholding_agent = WithholdingAgent::with(['district', 'region', 'ward'])->findOrFail(decrypt($id), ['id', 'tin', 'address', 'wa_number', 'institution_name', 'institution_place', 'email', 'mobile', 'date_of_commencing', 'status', 'ward_id', 'region_id', 'district_id', 'created_at', 'updated_at', 'deleted_at', 'business_id', 'fax', 'alt_mobile', 'street_id', 'approval_letter', 'app_status', 'marking', 'approved_on']);
     }
 
 

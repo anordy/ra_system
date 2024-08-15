@@ -24,7 +24,7 @@ class InterestRateAddModal extends Component
     {
         return [
             'year' => 'required|unique:interest_rates,year|strip_tag',
-            'rate' => 'required|strip_tag',
+            'rate' => 'required|strip_tag|numeric|min:0',
         ];
     }
 

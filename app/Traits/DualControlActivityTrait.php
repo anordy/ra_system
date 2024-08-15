@@ -9,13 +9,14 @@ use App\Models\DualControl;
 use App\Models\DualControlHistory;
 use App\Models\VfmsWard;
 use App\Models\Ward;
+use App\Traits\Vfms\VfmsLocationTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use App\Traits\Vfms\VfmsLocationTrait;
 
 trait DualControlActivityTrait
 {
     use VerificationTrait, VfmsLocationTrait;
+
     public function triggerDualControl($model, $modelId, $action, $action_detail, $old_values = null, $edited_values = null)
     {
         try {
@@ -97,6 +98,8 @@ trait DualControlActivityTrait
                     return 'API User';
                 case DualControl::VAT_TAX_TYPE:
                     return 'VAT Tax Type';
+                case DualControl::CERTIFICATE_SIGNATURE:
+                    return 'Certificate Signature';
                 default:
                     abort(404);
             }
@@ -153,20 +156,21 @@ trait DualControlActivityTrait
     {
         try {
             $update = $data->controllable_type::findOrFail($data->controllable_type_id);
+
             if ($data->action == DualControl::ADD) {
                 $update->is_approved = $status;
                 $update->save();
 
-                if ($data->controllable_type == Ward::class){
+                if ($data->controllable_type == Ward::class) {
 
                     $payload = $update->vfmsLocalityData();
                     $response = $this->addWardToVfms($payload);
-                    if ($response['data']){
+                    if ($response['data']) {
                         $data = json_decode($response['data'], true);
-                        if (array_key_exists('statusCode', $data)){
+                        if (array_key_exists('statusCode', $data)) {
 
                             //Send email to inform admin for proper update on both end
-                            $message = "This alert email concerning creating ZIDRAS new Ward to Vfms Locality(Wards) Records. As ". $payload['locality_name'] ." ward already exists on Vfms records.";
+                            $message = "This alert email concerning creating ZIDRAS new Ward to Vfms Locality(Wards) Records. As " . $payload['locality_name'] . " ward already exists on Vfms records.";
                             $this->sendnotificationToAdmin($message);
 
                             $this->customAlert('warning', 'Ward already exists on Vfms records, please kindly report to administrator.');
@@ -191,17 +195,17 @@ trait DualControlActivityTrait
                 }
 
             } elseif ($data->action == DualControl::EDIT) {
-            $payload = json_decode($data->new_values);
-            $payload = (array) $payload;
-            if ($status == DualControl::APPROVE) {
-                
-                $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
-                $update->update($payload);
-                if ($data->controllable_type == DualControl::USER) {
-                    $this->sign($update);
-                    $message = 'We are writing to inform you that some of your ZRA staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
-                    $this->sendEmailToUser($update, $message);
-                }
+                $payload = json_decode($data->new_values);
+                $payload = (array)$payload;
+                if ($status == DualControl::APPROVE) {
+
+                    $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
+                    $update->update($payload);
+                    if ($data->controllable_type == DualControl::USER) {
+                        $this->sign($update);
+                        $message = 'We are writing to inform you that some of your ZRA staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                        $this->sendEmailToUser($update, $message);
+                    }
 
                     $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                     $update->update($payload);

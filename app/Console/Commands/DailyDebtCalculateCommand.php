@@ -81,9 +81,9 @@ class DailyDebtCalculateCommand extends Command
                  TRUNC(ADD_MONTHS(CAST(curr_payment_due_date as date), 1), 'MM')
              ")
              ->where('vetting_status', VettingStatus::VETTED)
-             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
+             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE, ReturnStatus::NILL])
              ->get();
-//         dd($tax_returns);
+
         foreach ($tax_returns as $tax_return) {
             DB::beginTransaction();
                 try {

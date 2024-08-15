@@ -103,13 +103,15 @@
                         @include('dual-control-activities.details.education-level')
                     @elseif ($result->controllable_type === \App\Models\DualControl::API_USER)
                         @include('dual-control-activities.details.api-users')
+                    @elseif ($result->controllable_type === \App\Models\DualControl::CERTIFICATE_SIGNATURE)
+                        @include('dual-control-activities.details.certificate-signature')
                     @elseif ($result->controllable_type === \App\Models\DualControl::VAT_TAX_TYPE || $result->controllable_type === \App\Models\DualControl::TAXTYPE)
                         @include('dual-control-activities.details.tax-type')
                     @endif
 
                     <div class="d-flex justify-content-end">
-                        @if (approvalLevel(Auth::user()->level_id, 'Checker'))
-                            @if ($result->status == 'pending')
+                        @if (approvalLevel(Auth::user()->level_id, \App\Enum\GeneralConstant::CHECKER))
+                            @if ($result->status == \App\Enum\GeneralConstant::PENDING)
                                 <livewire:settings.dual-control-activity.approve dual_control_id="{{ encrypt($result->id) }}" />
                             @endif
                         @endif

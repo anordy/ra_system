@@ -51,6 +51,22 @@ class GeneralConstant implements Status
 
     const INPUT_TYPE_DATE = 'date';
     const INPUT_TYPE_SELECT = 'select';
+    const PENDING = 'pending';
+    const MAKER = 'Maker';
+    const CHECKER = 'Checker';
+
+    const COMPLETE = 'Complete';
+    const FAILED = 'Failed';
+    const STAFF = 'staff';
+    const ROLE = 'role';
+    const USER = 'user';
+
+    const QR_CODE_SIZE = 207;
+    const QR_CODE_LOGO_SIZE = 36;
+
+    const UTF_8 = 'UTF-8';
+    const DPI = 150;
+    const APPROVAL_LETTER = 'approval_letter';
 
 
     public static function getConstants(): array

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Audit;
 
 use App\Http\Controllers\Controller;
 use App\Models\BusinessLocation;
+use App\Models\Currency;
 use App\Models\SystemSetting;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
@@ -81,7 +82,9 @@ class TaxAuditApprovalController extends Controller
             $taxAssessments = TaxAssessment::where('assessment_id', $audit->id)
                 ->where('assessment_type', get_class($audit))->get();
 
-            return view('audit.preview', compact('audit', 'taxAssessments'));
+            $auditDocuments = DB::table('tax_audit_files')->where('tax_audit_id', $audit->id)->get();
+
+            return view('audit.preview', compact('audit', 'taxAssessments', 'auditDocuments'));
         } catch (\Exception $e) {
             report($e);
             Log::error('Error: ' . $e->getMessage(), [
@@ -98,14 +101,18 @@ class TaxAuditApprovalController extends Controller
     {
         $audit = TaxAudit::findOrFail(decrypt($id));
 
-        $totalInterest = $audit->assessments->sum('interest_amount') ?? 0;
-        $totalPenalty = $audit->assessments->sum('penalty_amount') ?? 0;
-        $totalAmount = $audit->assessments->sum('total_amount') ?? 0;
+        $totalInterestTZS = $audit->assessments->where('currency', Currency::TZS)->sum('interest_amount') ?? 0;
+        $totalPenaltyTZS = $audit->assessments->where('currency', Currency::TZS)->sum('penalty_amount') ?? 0;
+        $totalAmountTZS = $audit->assessments->where('currency', Currency::TZS)->sum('total_amount') ?? 0;
+
+        $totalInterestUSD = $audit->assessments->where('currency', Currency::USD)->sum('interest_amount') ?? 0;
+        $totalPenaltyUSD = $audit->assessments->where('currency', Currency::USD)->sum('penalty_amount') ?? 0;
+        $totalAmountUSD = $audit->assessments->where('currency', Currency::USD)->sum('total_amount') ?? 0;
 
         $signaturePath = SystemSetting::certificatePath();
         $commissionerFullName = SystemSetting::commissinerFullName();
 
-        $pdf = PDF::loadView('audit.assessment.notice', compact('audit', 'signaturePath', 'commissionerFullName', 'totalInterest', 'totalPenalty', 'totalAmount'));
+        $pdf = PDF::loadView('audit.assessment.notice', compact('audit', 'signaturePath', 'commissionerFullName', 'totalInterestTZS', 'totalPenaltyTZS', 'totalAmountTZS', 'totalInterestUSD', 'totalPenaltyUSD', 'totalAmountUSD'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use Exception;
 use Carbon\Carbon;
@@ -111,10 +112,12 @@ class PenaltyForDebt
         }
 
         // Subtract 1 from periods if it is only petroleum return
-        if ($tax_return->return_type != PetroleumReturn::class) {
-            $period = $tax_return->periods;
-        } else {
+        if ($tax_return->return_type === LumpSumReturn::class) {
+            $period = $tax_return->periods + 1;
+        } else if ($tax_return->return_type === PetroleumReturn::class) {
             $period = $tax_return->periods - 1;
+        } else {
+            $period = $tax_return->periods;
         }
 
         $period = abs(round($period));

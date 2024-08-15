@@ -120,6 +120,7 @@ use App\Http\Controllers\RoadLicense\RoadLicenseController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Setting\ApiUserController;
 use App\Http\Controllers\Setting\ApprovalLevelController;
+use App\Http\Controllers\Setting\CertificateSignatureController;
 use App\Http\Controllers\Setting\DualControlActivityController;
 use App\Http\Controllers\Setting\ExchangeRateController;
 use App\Http\Controllers\Setting\InterestRateController;
@@ -277,6 +278,8 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
 
         Route::get('/api-users', [ApiUserController::class, 'index'])->name('api-users.index');
+        Route::get('/certificate-signature', [CertificateSignatureController::class, 'index'])->name('certificate-signature.index');
+
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');

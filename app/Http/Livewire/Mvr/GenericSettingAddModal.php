@@ -50,6 +50,9 @@ class GenericSettingAddModal extends Component
         DlFee::class=>[['title'=>'License Duration','field'=>'dl_license_duration_id', 'class'=>DlLicenseDuration::class,'value_field'=>'number_of_years']],
         Report::class => [
             ['title'=>'Report Module','class'=>ReportType::class,'field'=>'report_type_id'],
+        ],
+        MvrColor::class => [
+            ['title' => 'Registration Type', 'class' => MvrRegistrationType::class, 'field' => 'mvr_registration_type_id']
         ]
     ];
 

@@ -58,15 +58,15 @@ class WithholdingAgent extends Model implements Auditable
             switch ($this->region->location) {
                 case Region::UNGUJA:
                     $ztn_number = $ztn_number . '05';
-                    $mainRegion = MainRegion::where('prefix', MainRegion::UNG)->firstOrFail();
+                    $mainRegion = MainRegion::select('withholding_agent_registration_count')->where('prefix', MainRegion::UNG)->firstOrFail();
                     break;
                 case Region::PEMBA:
                     $ztn_number = $ztn_number . '06';
-                    $mainRegion = MainRegion::where('prefix', MainRegion::PMB)->firstOrFail();
+                    $mainRegion = MainRegion::select('withholding_agent_registration_count')->where('prefix', MainRegion::PMB)->firstOrFail();
                     break;
                 default:
                     Log::error("Invalid Main Region selected!");
-                    abort(404);
+                    throw new \Exception('Invalid Main Region selected!');
             }
 
             // Append year
@@ -83,12 +83,12 @@ class WithholdingAgent extends Model implements Auditable
             $this->wa_number = $ztn_number;
             $this->save();
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::error('Error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
             ]);
+            throw $e;
         }
     }
 

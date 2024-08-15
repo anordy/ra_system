@@ -3,10 +3,7 @@
 namespace App\Http\Livewire\WithholdingAgents;
 
 use App\Enum\WithholdingAgentStatus;
-use App\Models\TaxAgent;
-use App\Models\TaxAgentStatus;
 use App\Models\WithholdingAgent;
-use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Carbon\Carbon;

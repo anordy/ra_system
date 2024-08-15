@@ -229,8 +229,14 @@
 
                         <div class="row justify-content-end">
                             <div class="col-md-3 mb-3">
-                                <span class="font-weight-bold text-uppercase">Grand Total Amount</span>
-                                <p class="my-1">{{ number_format($grandTotal, 2) }} {{ $taxAssessment->currency }}</p>
+                                <span class="font-weight-bold text-uppercase">Grand Total Amount (TZS)</span>
+                                <p class="my-1">TZS {{ number_format($taxAssessments->where('currency', \App\Models\Currency::TZS)->sum('total_amount') ?? 0, 2) }}</p>
+                            </div>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Grand Total Amount (USD)</span>
+                                <p class="my-1">USD {{ number_format($taxAssessments->where('currency', \App\Models\Currency::USD)->sum('total_amount') ?? 0, 2) }} {{ $taxAssessment->currency }}</p>
                             </div>
                         </div>
                     </div>

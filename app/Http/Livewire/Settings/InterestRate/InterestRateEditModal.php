@@ -23,7 +23,7 @@ class InterestRateEditModal extends Component
     protected function rules()
     {
         return [
-            'rate' => 'required|strip_tag',
+            'rate' => 'required|strip_tag|numeric|min:0',
             'year' => 'required|unique:interest_rates,year,' . $this->interestRate->id,
         ];
     }

@@ -9,7 +9,7 @@
             <ul class="nav nav-tabs shadow-sm mb-0" id="waiverContent" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="taxclearance-info-tab" data-toggle="tab" href="#taxclearance-info"
-                        role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearence Information </a>
+                        role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearance Information </a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="debt-infos-tab" data-toggle="tab" href="#debt-infos" role="tab"
@@ -27,19 +27,19 @@
 
                     <div class="row m-2 pt-3">
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Tax Clearence Status</span>
+                            <span class="font-weight-bold text-uppercase">Tax Clearance Status</span>
                             <p class="my-1">
-                                @if ($taxClearance->status === 'approved')
+                                @if ($taxClearance->status === \App\Enum\TaxClearanceStatus::APPROVED)
                                     <span class="badge badge-success py-1 px-2 green-status">
                                         <i class="bi bi-check-circle-fill mr-1"></i>
                                         Approved
                                     </span>
-                                @elseif($taxClearance->status === 'requested')
+                                @elseif($taxClearance->status === \App\Enum\TaxClearanceStatus::REQUESTED)
                                     <span class="badge badge-success py-1 px-2 pending-status">
                                         <i class="bi bi-hourglass-bottom"></i>
                                         Requested
                                     </span>
-                                @elseif($taxClearance->status === 'rejected')
+                                @elseif($taxClearance->status === \App\Enum\TaxClearanceStatus::REJECTED)
                                     <span class="badge badge-success py-1 px-2 danger-status">
                                         <i class="bi bi-x-circle mr-1"></i>
                                         Rejected
@@ -55,15 +55,15 @@
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
-                            <p class="my-1">{{ $taxClearance->businessLocation->business->name }}</p>
+                            <p class="my-1">{{ $taxClearance->businessLocation->business->name ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Branch Name</span>
-                            <p class="my-1">{{ $taxClearance->businessLocation->name }}</p>
+                            <p class="my-1">{{ $taxClearance->businessLocation->name ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Category</span>
-                            <p class="my-1">{{ $taxClearance->businessLocation->business->category->name }}</p>
+                            <p class="my-1">{{ $taxClearance->businessLocation->business->category->name ?? 'N/A' }}</p>
                         </div>
                         @if ($taxClearance->businessLocation->business->alt_mobile)
                             <div class="col-md-4 mb-3">
@@ -80,9 +80,9 @@
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Place of Business</span>
                             <p class="my-1">
-                                {{ $taxClearance->businessLocation->region->name }},
-                                {{ $taxClearance->businessLocation->district->name }},
-                                {{ $taxClearance->businessLocation->ward->name }}
+                                {{ $taxClearance->businessLocation->region->name ?? 'N/A' }},
+                                {{ $taxClearance->businessLocation->district->name ?? 'N/A' }},
+                                {{ $taxClearance->businessLocation->ward->name ?? 'N/A' }}
                             </p>
                         </div>
                         @if ($taxClearance->status === App\Enum\TaxClearanceStatus::APPROVED)
@@ -100,7 +100,7 @@
                         <div class="col-md-8 mb-3">
                             <span class="font-weight-bold text-uppercase">Reason</span>
                             <p class="my-1">
-                                {{ $taxClearance->reason }}.
+                                {{ $taxClearance->reason ?? 'N/A' }}.
                             </p>
                         </div>
                     </div>
@@ -118,9 +118,5 @@
             </div>
         </div>
     </div>
-
-
 @endsection
-@section('scripts')
 
-@endsection

@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Enum\BillStatus;
 use App\Enum\PropertyPaymentCategoryStatus;
 use App\Enum\PropertyStatus;
-use App\Enum\PropertyTypeStatus;
 use App\Jobs\PropertyTax\GeneratePropertyTaxControlNo;
 use App\Models\Currency;
 use App\Models\FinancialYear;
@@ -20,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 class AnnualPropertyTaxBill extends Command
 {
     use PropertyTaxTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -51,26 +51,28 @@ class AnnualPropertyTaxBill extends Command
      */
     public function handle()
     {
-        Log::channel('property-tax')->info('Annual Generate Property Tax Bill');
+        Log::channel('property-tax')->info('Annual Generate Property Tax Bill Start');
         $this->generateBills();
-        Log::channel('property-tax')->info('Annual Generate Property Tax Bill');
+        Log::channel('property-tax')->info('Annual Generate Property Tax Bill End');
     }
 
     public function generateBills()
     {
-        $properties = Property::where('status', PropertyStatus::APPROVED)->get();
+        $currentFinancialYear = FinancialYear::select('id')
+            ->where('code', Carbon::now()->year)
+            ->firstOrFail();
 
-        if ($properties) {
-            foreach ($properties as $property) {
-                $currentFinancialYear = FinancialYear::where('code', Carbon::now()->year)->firstOrFail();
+        Property::query()
+            ->where('status', PropertyStatus::APPROVED)
+            ->chunk(100, function ($properties) use ($currentFinancialYear) {
+                foreach ($properties as $property) {
+                    $isBillPresent = $property->payments->where('financial_year_id', $currentFinancialYear->id)->get();
 
-                $isBillPresent = $property->payments->where('financial_year_id', $currentFinancialYear->id)->get();
-
-                if (!$isBillPresent) {
-                    $this->generateBill($property, $currentFinancialYear->id);
+                    if (!$isBillPresent) {
+                        $this->generateBill($property, $currentFinancialYear->id);
+                    }
                 }
-            }
-        }
+            });
     }
 
     protected function generateBill($property, $financialYearId)
@@ -82,7 +84,7 @@ class AnnualPropertyTaxBill extends Command
             $propertyPayment = PropertyPayment::create([
                 'property_id' => $property->id,
                 'financial_year_id' => $financialYearId,
-                'currency_id' => Currency::where('iso', 'TZS')->firstOrFail()->id,
+                'currency_id' => Currency::where('iso', Currency::TZS)->firstOrFail()->id,
                 'amount' => $amount,
                 'interest' => 0,
                 'total_amount' => $amount,
@@ -92,11 +94,12 @@ class AnnualPropertyTaxBill extends Command
                 'payment_category' => PropertyPaymentCategoryStatus::NORMAL,
             ]);
 
+            if (!$propertyPayment) throw new Exception('Failed to save Property Payment');
+
             GeneratePropertyTaxControlNo::dispatch($propertyPayment);
 
         } catch (Exception $exception) {
             Log::channel('property-tax')->error($exception);
-            throw new Exception('');
         }
 
 

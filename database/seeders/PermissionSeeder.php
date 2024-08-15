@@ -368,7 +368,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-api-user-view', 'sys_module_id' => 18],
             ['name' => 'setting-api-user-add', 'sys_module_id' => 18],
             ['name' => 'setting-api-user-edit', 'sys_module_id' => 18],
-            
+
+            ['name' => 'setting-certificate-signature-view', 'sys_module_id' => 18],
+            ['name' => 'setting-certificate-signature-add', 'sys_module_id' => 18],
+            ['name' => 'setting-certificate-signature-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-certificate-signature-delete', 'sys_module_id' => 18],
 
             # System
             ['name' => 'system-audit-trail-view', 'sys_module_id' => 19],

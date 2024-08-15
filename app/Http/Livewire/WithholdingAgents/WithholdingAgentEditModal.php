@@ -45,18 +45,18 @@ class WithholdingAgentEditModal extends Component
 
     protected $rules = [
         'tin' => 'required|numeric|digits:9',
-        'institution_name' => 'required|strip_tag',
-        'institution_place' => 'required|strip_tag',
+        'institution_name' => 'required|strip_tag|alpha_num_space',
+        'institution_place' => 'required|strip_tag|alpha_num_space',
         'email' => 'required|email',
         'mobile' => 'required|digits_between:10,10',
-        'address' => 'required|strip_tag',
+        'address' => 'required|strip_tag|alpha_num_space',
         'region_id' => 'required|numeric',
         'district_id' => 'required|numeric',
         'ward_id' => 'required|numeric',
         'street_id' => 'required|numeric',
-        'date_of_commencing' => 'required|strip_tag',
+        'date_of_commencing' => 'required|strip_tag|date',
         'alt_mobile' => 'nullable|digits_between:10,10',
-        'fax' => 'nullable|strip_tag'
+        'fax' => 'nullable|strip_tag|alpha_num_space'
     ];
 
     public function mount($id)
@@ -93,12 +93,10 @@ class WithholdingAgentEditModal extends Component
         }
 
         if ($propertyName === 'district_id') {
-            $this->wards = [];
             $this->wards = Ward::where('district_id', $this->district_id)->select('id', 'name')->get();
         }
 
         if ($propertyName === 'ward_id') {
-            $this->streets = [];
             $this->streets = Street::where('ward_id', $this->ward_id)->select('id', 'name')->get();
         }
     }
@@ -112,7 +110,7 @@ class WithholdingAgentEditModal extends Component
 
         try {
 
-            $this->withholding_agent->update([
+            $updated = $this->withholding_agent->update([
                 'tin' => $this->tin,
                 'institution_name' => $this->institution_name,
                 'institution_place' => $this->institution_place,
@@ -127,6 +125,8 @@ class WithholdingAgentEditModal extends Component
                 'fax' => $this->fax,
                 'alt_mobile' => $this->alt_mobile,
             ]);
+
+            if (!$updated) throw new Exception('Failed to update withholding agent');
 
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
