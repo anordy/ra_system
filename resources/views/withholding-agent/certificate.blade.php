@@ -93,7 +93,7 @@
     <span class="embed startDate">{{ $whagent->latestResponsiblePerson->created_at->toFormattedDateString() ?? '' }}</span>
     <span class="embed dateGiven">{{ date('M d, Y') }}</span>
     <span class="commissioner-signature">
-        <img src="{{ $signaturePath }}" alt="Signature">
+        <img src="{{ $signaturePath }}" alt="Signature" width="300">
     </span>
     <span class="commissioner-name">
         {{$commissinerFullName ?? ''}}
