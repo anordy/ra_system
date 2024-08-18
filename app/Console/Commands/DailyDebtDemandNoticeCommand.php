@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Enum\BillStatus;
 use App\Enum\ReturnCategory;
+use App\Enum\VettingStatus;
 use App\Jobs\DemandNotice\SendDebtDemandNoticeEmail;
 use App\Models\PublicService\PublicServiceMotor;
 use App\Models\PublicService\PublicServiceReturn;
@@ -62,6 +63,7 @@ class DailyDebtDemandNoticeCommand extends Command
         // Get tax return which are only in debt step, after 3 demand notices are sent the returns category becomes overdue by which demand notice is not sent
         $debts = TaxReturn::with('demandNotices')
             ->where('return_category', ReturnCategory::DEBT)
+            ->where('vetting_status', VettingStatus::VETTED)
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE, ReturnStatus::NILL])
             ->get();
 
