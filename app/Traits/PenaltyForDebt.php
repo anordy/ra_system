@@ -122,6 +122,10 @@ class PenaltyForDebt
 
         $period = abs(round($period));
 
+        if ($period == 0) {
+            $period = 1;
+        }
+
         $outstanding_amount = roundOff($outstanding_amount, $tax_return->currency);
 
         $penaltableAmount = $outstanding_amount;
