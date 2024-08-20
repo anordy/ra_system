@@ -104,10 +104,11 @@ function getUser($id)
 function getRole($id)
 {
     if (!empty($id)) {
-        $role = Role::query()->findOrFail($id);
-        $role = $role->name;
-        return $role;
+        $role = Role::query()->findOrFail($id, ['name']);
+        return $role->name;
     }
+
+    return 'N/A';
 }
 
 function getEducation($id)
