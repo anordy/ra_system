@@ -54,6 +54,15 @@ return [
         'JSP_URL' => env('JSP_URL'),
         'JSP_USER' => env('JSP_USER'),
         'JSP_PASSWORD' => env('JSP_PASSWORD'),
-    ]
+    ],
+
+    // Web Bulk SMS
+    'wb_sms_url' => env('WB_SMS_URL'),
+    'wb_smsheader' => env('WB_SMS_HEADER'),
+    'wb_sms_password' => env('WB_SMS_PASSWORD'),
+    'wb_sms_channel' => env('WB_SMS_CHANNEL'),
+
+    // SMS Provider
+    'active_sms_provider' => env('ACTIVE_SMS_PROVIDER')
 ]
 ?>
