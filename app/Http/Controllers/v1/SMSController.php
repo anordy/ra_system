@@ -43,8 +43,6 @@ class SMSController extends Controller
             'phoneNumbers' => [ZmCore::formatPhone($send_to)],
         ];
 
-        Log::error(json_encode($payload));
-
         Log::error('SENDING-SMS');
 
         $curl = curl_init();
@@ -55,6 +53,8 @@ class SMSController extends Controller
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_POSTFIELDS => json_encode($payload),
             CURLOPT_HTTPHEADER => array(
                 "accept: application/json",

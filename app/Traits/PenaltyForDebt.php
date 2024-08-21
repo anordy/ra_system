@@ -122,7 +122,7 @@ class PenaltyForDebt
 
         $period = abs(round($period));
 
-        if ($period == 0) {
+        if ($period <= 0) {
             $period = 1;
         }
 
@@ -380,7 +380,11 @@ class PenaltyForDebt
                     $interestAmount = 0;
                     $penaltableAmount = roundOff($latePaymentAmount + $penaltableAmountForPerticularMonth, $tax_return->currency);
                 } else {
-                    $period = round($tax_return->periods) + $i;
+                    $period = ceil($tax_return->periods) + $i;
+
+                    if ($period <= 0) {
+                        $period = 1 + $i;
+                    }
                     $latePaymentAmount = 0;
                     $penaltableAmount = $latePaymentAmount + $penaltableAmountForPerticularMonth;
                     $interestAmount = roundOff(self::calculateInterest($penaltableAmount, $interestRate->rate, $period), $tax_return->currency);

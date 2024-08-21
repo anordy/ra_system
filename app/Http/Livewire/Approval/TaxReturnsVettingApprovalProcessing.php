@@ -68,7 +68,10 @@ class TaxReturnsVettingApprovalProcessing extends Component
             ->firstOrFail();
 
         if (Carbon::now()->gt(Carbon::create($tax_return->curr_payment_due_date))) {
-            $penaltyIterationsToBeAdded = ceil($tax_return->penatablemonths);
+            $penaltyIterationsToBeAdded = ceil($tax_return->periods);
+            if ($penaltyIterationsToBeAdded <= 0) {
+                $penaltyIterationsToBeAdded = 1;
+            }
         } else {
             $penaltyIterationsToBeAdded = 0;
         }
