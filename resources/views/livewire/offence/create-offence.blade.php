@@ -63,7 +63,7 @@
                      @enderror
                   </div>
 
-                  <div class="form-group col-md-6">
+                  <div class="form-group col-md-4">
                      <label class="font-weight-bold">{{ __('Tax Type') }} *</label>
                      <select class="form-control @error('taxType') is-invalid @enderror" wire:model.lazy="taxType" >
                         <option value="" >{{ __('Please choose') }}...</option>
@@ -76,7 +76,22 @@
                      @enderror
                   </div>
 
-                  <div class="form-group col-md-6">
+                  @if(count($subVats ?? []) > 0)
+                     <div class="form-group col-md-4">
+                        <label class="font-weight-bold">{{ __('Vat Category') }} *</label>
+                        <select class="form-control @error('sub_vat_id') is-invalid @enderror" wire:model.lazy="sub_vat_id" >
+                           <option value="" >{{ __('Please choose') }}...</option>
+                           @foreach($subVats as $sub)
+                              <option value="{{ $sub->id }}">{{ $sub->name }}</option>
+                           @endforeach
+                        </select>
+                        @error('sub_vat_id')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                     </div>
+                  @endif
+
+                  <div class="form-group col-md-4">
                      <label class="font-weight-bold">{{ __('Currency') }} *</label>
                      <select class="form-control @error('currency') is-invalid @enderror" wire:model.lazy="currency" >
                         <option value="" >{{ __('Please choose') }}...</option>

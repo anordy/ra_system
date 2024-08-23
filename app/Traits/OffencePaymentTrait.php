@@ -69,6 +69,8 @@ trait OffencePaymentTrait
 
             // $this->flash('success', 'Your landLease was submitted, you will receive your payment information shortly - test');
         }
+
+        return true;
     }
     public function offenceGenerateBill($offencePayment)
     {

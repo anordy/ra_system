@@ -15,19 +15,19 @@ class CreateOffencesTable extends Migration
     {
         Schema::create('offences', function (Blueprint $table) {
             $table->id();
-//            $table->unsignedBigInteger('taxpayer_id');
+            $table->unsignedBigInteger('taxpayer_id')->nullable();
+            $table->unsignedBigInteger('business_id')->nullable();
+            $table->unsignedBigInteger('location_id')->nullable();
             $table->string('name');
             $table->string('mobile');
             $table->string('currency');
             $table->decimal('amount', 15, 2);
             $table->integer('tax_type');
+            $table->unsignedBigInteger('sub_vat_id')->nullable();
             $table->string('status');
             $table->string('receipt_number')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-//            $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
-
         });
     }
 
