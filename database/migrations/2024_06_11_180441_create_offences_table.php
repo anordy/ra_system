@@ -18,6 +18,8 @@ class CreateOffencesTable extends Migration
             $table->unsignedBigInteger('taxpayer_id')->nullable();
             $table->unsignedBigInteger('business_id')->nullable();
             $table->unsignedBigInteger('location_id')->nullable();
+            $table->unsignedBigInteger('id_type')->nullable();
+            $table->string('id_number')->nullable();
             $table->string('name');
             $table->string('mobile');
             $table->string('currency');

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Debt\Offence;
 
 use App\Enum\CustomMessage;
+use App\Models\BusinessLocation;
 use App\Models\Currency;
 use App\Models\Offence\Offence;
 use App\Models\Returns\Vat\SubVat;
@@ -20,7 +21,7 @@ class CreateOffence extends Component
     use CustomAlert, PaymentsTrait, OffencePaymentTrait;
 
     public $taxType, $currency;
-    public $taxTypes, $currencies = [], $subVats = [], $sub_vat_id;
+    public $taxTypes, $currencies = [], $subVats = [], $sub_vat_id, $location;
     public $name, $amount, $mobile;
     public $hasZnumber;
     public $znumber;
@@ -74,19 +75,21 @@ class CreateOffence extends Component
 
     public function fetchBusinessDetails()
     {
+        $this->location = null;
+
         $this->validate([
             'znumber' => 'required',
         ]);
 
         try {
-            $taxpayer = Taxpayer::where('reference_no', $this->znumber)->first();
+            $this->location = BusinessLocation::select('id', 'business_id', 'name', 'mobile')->where('zin', $this->znumber)->first();
 
-            if ($taxpayer) {
-                $this->name = $taxpayer->first_name . ' ' . $taxpayer->last_name;
-                $this->mobile = $taxpayer->mobile;
+            if ($this->location) {
+                $this->name = $this->location->name;
+                $this->mobile = $this->location->mobile;
                 // Populate other fields as needed
             } else {
-                $this->addError('znumber', 'taxpayer not found with this Znumber: ' . $this->znumber);
+                $this->addError('znumber', 'Taxpayer not found with this Znumber: ' . $this->znumber);
                 $this->reset(['znumber', 'name', 'mobile']);
             }
         } catch (\Exception $e) {
@@ -108,7 +111,9 @@ class CreateOffence extends Component
                 'tax_type' => $this->taxType,
                 'mobile' => $this->mobile,
                 'status' => Offence::CONTROL_NUMBER,
-                'sub_vat_id' => $this->sub_vat_id
+                'sub_vat_id' => $this->sub_vat_id,
+                'business_id' => $this->location->business_id,
+                'location_id' => $this->location->id
             ]);
 
             if (!$offence) throw new \Exception('Failed to save offence');

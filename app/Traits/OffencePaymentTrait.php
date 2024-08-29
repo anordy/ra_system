@@ -25,7 +25,7 @@ trait OffencePaymentTrait
         $payer_name = $taxpayer;
         $payer_email = null;
         $payer_phone = $offencePayment->mobile;
-        $description = "Payment for Offence";
+        $description = "Payment for Offence for {$taxpayer}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = $offencePayment->currency;
         $createdby_type = get_class(Auth::user());
