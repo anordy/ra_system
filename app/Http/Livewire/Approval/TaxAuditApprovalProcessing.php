@@ -505,7 +505,10 @@ class TaxAuditApprovalProcessing extends Component
                 }
             }
 
-
+            if ($this->checkTransition('taxpayer_respond_preliminary_report_TL')) {
+                 $operators = $this->subject->officers->pluck('user_id')->toArray();
+            }
+            
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
 
             if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
