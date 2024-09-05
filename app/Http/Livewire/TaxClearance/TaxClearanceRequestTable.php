@@ -65,6 +65,11 @@ class TaxClearanceRequestTable extends DataTableComponent
                 ->whereHas('businessLocation.taxRegion', function ($query) {
                     $query->whereIn('location', $this->locations);
                 })
+                ->whereHas('pinstance', function ($query) {
+                    $query->whereHas('actors', function ($query) {
+                        $query->where('user_id', auth()->id());
+                    });
+                })
                 ->orderBy('tax_clearance_requests.created_at', 'desc');
         }
 

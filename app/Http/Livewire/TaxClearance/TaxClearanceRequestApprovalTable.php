@@ -52,6 +52,11 @@ class TaxClearanceRequestApprovalTable extends DataTableComponent
             ->with('businessLocation:name')
             ->whereHas('businessLocation.taxRegion', function ($query) {
                 $query->whereIn('location', $this->locations);
+            })
+            ->whereHas('pinstance', function ($query) {
+                $query->whereHas('actors', function ($query) {
+                    $query->where('user_id', auth()->id());
+                });
             });
     }
 
