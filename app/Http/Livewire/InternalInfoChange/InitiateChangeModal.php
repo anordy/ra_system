@@ -184,7 +184,7 @@ class InitiateChangeModal extends Component
                     $lumpsumPayment = [
                         'filed_by_id' => auth()->user()->id,
                         'business_id' => $this->location->business_id,
-                        'business_location_id' => $this->location->business_id,
+                        'business_location_id' => $this->location->id,
                         'annual_estimate' => $annualEstimate[0],
                         'payment_quarters' => $quarters[0],
                         'currency' => $currency[0],
