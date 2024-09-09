@@ -14,7 +14,7 @@
                             <th>VAT</th>
                         </thead>
                         <tbody>
-                            @foreach ($return->configReturns as $item)
+                            @foreach ($return->configReturns ?? [] as $item)
                                 <tr>
                                     <td>{{ $item->config->name ?? 'name' }}</td>
                                     <td>{{ number_format($item->value, 2) }}</td>
@@ -51,7 +51,7 @@
                         <th>{{ __('Tax') }}</th>
                     </thead>
                     <tbody>
-                        @foreach ($return_->configReturns as $item)
+                        @foreach ($return_->configReturns ?? [] as $item)
                             <tr>
                                 <td>{{ $item->config->name }}</td>
                                 <td>{{ number_format($item->value, 2) }}</td>
@@ -98,7 +98,7 @@
 
                     <tbody>
                         @if (count($return->penalties))
-                            @foreach ($return->penalties as $penalty)
+                            @foreach ($return->penalties ?? [] as $penalty)
                                 <tr>
                                     <td>{{ $penalty['financial_month_name'] }}</td>
                                     <td>{{ number_format($penalty['tax_amount'], 2) }}
@@ -166,7 +166,7 @@
                     </thead>
 
                     <tbody>
-                        @if (isset($return_) && count($return_->penalties))
+                        @if (isset($return_) && count($return_->penalties ?? []))
                             @foreach ($return_->penalties->where('currency', 'USD') as $penalty)
                                 <tr>
                                     <td>{{ $penalty['financial_month_name'] }}</td>

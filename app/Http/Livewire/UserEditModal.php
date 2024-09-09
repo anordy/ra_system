@@ -38,7 +38,7 @@ class UserEditModal extends Component
         return [
             'fname' => 'required|min:2|alpha',
             'lname' => 'required|min:2|alpha',
-            'email' => 'required|ends_with:zanrevenue.org,egaz.go.tz,ubx.co.tz,zbs.go.tz|unique:users,email,' . $this->user->id . ',id',
+            'email' => 'required|ends_with:zanrevenue.org,egaz.go.tz,ubx.co.tz,zbs.go.tz,kamisheniardhi.go.tz|unique:users,email,' . $this->user->id . ',id',
             'gender' => 'required|in:M,F',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'override_otp' => 'required|in:0,1'
