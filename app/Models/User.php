@@ -117,4 +117,18 @@ class User extends Authenticatable implements PayloadInterface, Auditable
     public function userAnswers(){
         return $this->morphMany(UserAnswer::class, 'user');
     }
+
+    public function getInitialsAttribute()
+    {
+        return $this->getInitials($this->fullname());
+    }
+    private function getInitials($name)
+    {
+        $words = explode(' ', $name);
+        $initials = '';
+        foreach ($words as $word) {
+            $initials .= strtoupper($word[0] ?? '');
+        }
+        return $initials;
+    }
 }

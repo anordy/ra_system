@@ -32,5 +32,7 @@ class Parameter extends Model
     public const PROJECT_ID = 'project_id';
     public const DEPARTMENT_NAME = 'department_name';
     public const TAX_REGION_NAME = 'tax_region_name';
+    public const RG_CATEGORY_ID = 'rg_category_id';
+    public const RG_SUB_CATEGORY_ID = 'sub_category_id';
 
 }

@@ -980,6 +980,32 @@
             </li>
         @endcan
 
+        {{--   TODO: ADD REPORT REGISTER PERMISSIONS     --}}
+        @can('setting-user-view')
+            <li class="{{ request()->is("report-register*") ? "active" : "" }}">
+                <a href="#report-register" data-toggle="collapse" aria-expanded="false"
+                   class="dropdown-toggle">Report Registers</a>
+                <ul class="collapse list-unstyled {{ request()->is("report-register*") ? "show" : "" }}"
+                    id="report-register">
+                    @can("setting-user-view")
+                        <li class="{{ request()->is("report-register/audits*") ? "active" : "" }}">
+                            <a href="{{ route("report-register.incident.index") }}">Incidents</a>
+                        </li>
+                    @endcan
+                    @can("setting-user-view")
+                        <li class="{{ request()->is("report-register/task/*") ? "active" : "" }}">
+                            <a href="{{ route("report-register.task.index") }}">Tasks</a>
+                        </li>
+                    @endcan
+                    @can("setting-user-view")
+                        <li class="{{ request()->is("report-register/settings/*") ? "active" : "" }}">
+                            <a href="{{ route("report-register.settings") }}">Settings</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+
         @can("tra-information")
             <li class="{{ request()->is("tra*") ? "active" : "" }}">
                 <a href="#tra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">

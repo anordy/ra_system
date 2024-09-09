@@ -490,6 +490,19 @@ class ReportsSeeder extends Seeder
                     ]
                 ]
             ],
+            // Report Register
+            [
+                'report_type' => GeneralReportType::REPORT_REGISTER,
+                'reports' => [
+                    [
+                        'name' => 'Logged Reports',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::REPORT_REGISTER,
+                        'report_url' => '/reports/ZRA/ReportRegister/incidents_per_duration',
+                        'parameters' => [Parameter::RG_CATEGORY_ID, Parameter::RG_SUB_CATEGORY_ID, Parameter::DYNAMIC_DATE]
+                    ],
+                ]
+            ],
         ];
 
         $this->call(ReportTypesSeeder::class);

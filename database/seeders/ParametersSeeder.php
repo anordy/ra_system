@@ -157,6 +157,20 @@ class ParametersSeeder extends Seeder
                 'model_name' => 'SELECT DISTINCT NAME, ID FROM TAX_REGIONS WHERE LOCATION = \'DTD\'',
                 'display_name' => 'name',
             ],
+            [
+                'name' => 'Report Register Category',
+                'code' => Parameter::RG_CATEGORY_ID,
+                'input_type' => 'select',
+                'model_name' => TaxType::class,
+                'display_name' => 'name',
+            ],
+            [
+                'name' => 'Report Register Sub Category',
+                'code' => Parameter::RG_SUB_CATEGORY_ID,
+                'input_type' => 'select',
+                'model_name' => TaxType::class,
+                'display_name' => 'name',
+            ],
         ];
 
         foreach ($parameters as $parameter) {
