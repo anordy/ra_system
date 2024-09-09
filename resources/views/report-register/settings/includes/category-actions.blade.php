@@ -1,6 +1,6 @@
 <div>
     <button class="btn btn-primary btn-sm"
-            onclick="Livewire.dispatch('showModal', {alias: 'report-register.settings.category.edit-category', params: '{{ encrypt($value) }}' })">
+            onclick="Livewire.emit('showModal', 'report-register.settings.category.edit-category', '{{ encrypt($value) }}')">
         <i class="bi bi-pen-fill"></i>
     </button>
     <a href="{{ route('report-register.settings.sub-category', encrypt($value)) }}"

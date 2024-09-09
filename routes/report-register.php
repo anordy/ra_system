@@ -11,6 +11,7 @@ use App\Http\Controllers\ReportRegister\TaskController;
 use Illuminate\Support\Facades\Route;
 
 Route::name('report-register.')
+    ->prefix('report-register')
     ->middleware(['2fa', 'auth', 'check-qns'])
     ->group(function () {
 

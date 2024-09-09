@@ -8,7 +8,7 @@
             <h5 class="text-uppercase">Report Register Settings - Sub Categories Configuration</h5>
             <div class="card-tools">
                 <button class="btn btn-primary btn-sm px-3"
-                        onclick="Livewire.dispatch('showModal', { alias: 'report-register.settings.sub-category.create-sub-category', params: '{{ $id }}'})">
+                        onclick="Livewire.emit('showModal', 'report-register.settings.sub-category.create-sub-category', '{{ $id }}')">
                     <i class="bi bi-plus-circle-fill pr-2"></i>
                     Add New Sub Category
                 </button>

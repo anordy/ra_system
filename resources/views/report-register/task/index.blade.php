@@ -9,7 +9,7 @@
             <div class="card-tools">
                 @can('setting-user-add')
                     <button class="btn btn-info btn-sm"
-                            onclick="Livewire.dispatch('showModal', {alias: 'report-register.task.create-task'})"><i
+                            onclick="Livewire.emit('showModal', 'report-register.task.create-task')"><i
                             class="bi bi-plus-circle-fill"></i>
                         New Task
                     </button>

@@ -12,7 +12,7 @@
             <h5 class="text-uppercase">Report Register Incident Categories</h5>
             <div class="card-tools">
                 <button class="btn btn-primary btn-sm px-3"
-                        onclick="Livewire.dispatch('showModal', { alias: 'report-register.settings.category.create-category'})">
+                        onclick="Livewire.emit('showModal', 'report-register.settings.category.create-category')">
                     <i class="bi bi-plus-circle-fill pr-2"></i>
                     Add New Category
                 </button>
