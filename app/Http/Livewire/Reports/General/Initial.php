@@ -8,6 +8,7 @@ use App\Models\FinancialYear;
 use App\Models\Parameter;
 use App\Models\Report;
 use App\Models\ReportParameter;
+use App\Models\ReportRegister\RgSubCategory;
 use App\Models\ReportType;
 use App\Services\JasperReport\ReportService;
 use App\Traits\CustomAlert;
@@ -91,7 +92,14 @@ class Initial extends Component
                 $values = array_column($this->parameters, 'code');
 
                 if ($childParameter && !in_array($childParameter->code, $values)) {
-                    $this->parameters[] = $childParameter;
+                    if (isset($childParameter->parent_id)) {
+                        if ($childParameter->code === Parameter::RG_SUB_CATEGORY_ID) {
+                            $childParameter->model_name = 'SELECT ID,NAME FROM RG_SUB_CATEGORIES WHERE RG_CATEGORY_ID ='. $parameter['value'];
+                        }
+                        $this->parameters[] = $childParameter;
+                    } else {
+                        $this->parameters[] = $childParameter;
+                    }
                 }
 
             }

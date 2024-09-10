@@ -9,6 +9,8 @@ use App\Models\Parameter;
 use App\Models\PaymentStatus;
 use App\Models\Region;
 use App\Models\Relief\ReliefProject;
+use App\Models\ReportRegister\RgCategory;
+use App\Models\ReportRegister\RgSubCategory;
 use App\Models\TaxDepartment;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
@@ -51,6 +53,7 @@ class ParametersSeeder extends Seeder
                 'input_type' => 'select',
                 'model_name' => District::class,
                 'display_name' => 'name',
+                'parent_id' => Parameter::where('code', Parameter::REGION)->firstOrFail()->id
             ],
             [
                 'name' => 'Tax Department',
@@ -164,13 +167,21 @@ class ParametersSeeder extends Seeder
                 'model_name' => TaxType::class,
                 'display_name' => 'name',
             ],
-            [
-                'name' => 'Report Register Sub Category',
-                'code' => Parameter::RG_SUB_CATEGORY_ID,
+    
+                'name' => 'Category',
+                'code' => Parameter::RG_CATEGORY_ID,
                 'input_type' => 'select',
-                'model_name' => TaxType::class,
+                'model_name' => RgCategory::class,
                 'display_name' => 'name',
             ],
+            [
+                'name' => 'Sub Category',
+                'code' => Parameter::RG_SUB_CATEGORY_ID,
+                'input_type' => 'select',
+                'model_name' => RgSubCategory::class,
+                'display_name' => 'name',
+                'parent_id' => Parameter::where('code', Parameter::RG_CATEGORY_ID)->firstOrFail()->id
+            ]
         ];
 
         foreach ($parameters as $parameter) {
