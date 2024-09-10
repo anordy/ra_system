@@ -7,11 +7,12 @@ use App\Enum\ReportRegister\RgAuditEvent;
 use App\Enum\ReportRegister\RgRequestorType;
 use App\Enum\ReportRegister\RgStatus;
 use App\Enum\ReportRegister\RgTaskStatus;
-use App\Jobs\General\SendCustomSMS;
+use App\Events\SendSms;
 use App\Models\ReportRegister\RgAssignment;
 use App\Models\ReportRegister\RgAudit;
 use App\Models\ReportRegister\RgComment;
 use App\Models\ReportRegister\RgRegister;
+use App\Models\ReportRegister\RgSubCategoryNotifiable;
 use App\Models\Taxpayer;
 use App\Models\User;
 use Exception;
@@ -20,7 +21,6 @@ use Illuminate\Support\Facades\DB;
 
 trait ReportRegisterTrait
 {
-    use CustomAlert;
 
     public function assignStaffId($register, $staffId, $status = RgStatus::IN_PROGRESS)
     {
@@ -179,6 +179,20 @@ trait ReportRegisterTrait
 
         } catch (\Exception $exception) {
             throw $exception;
+        }
+    }
+
+    public function notifyBreach($subCategoryId, $title) {
+        $notifiables = RgSubCategoryNotifiable::select('id', 'role_id')->where('rg_sub_category_id', $subCategoryId)->get();
+
+        foreach ($notifiables ?? [] as $notifiable) {
+            $users = User::select('id', 'fname', 'lname', 'phone', 'email')->where('role_id', $notifiable->role_id)->get();
+            foreach ($users as $user) {
+                event(new SendSms(\App\Jobs\SendCustomSMS::SERVICE, NULL, [
+                    'phone' => '0743317069',
+                    'message' => "Hello {$user->fname}, report with title: {$title} has been breached"
+                ]));
+            }
         }
     }
 

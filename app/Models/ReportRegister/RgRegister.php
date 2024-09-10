@@ -61,6 +61,11 @@ class RgRegister extends Model
         return $this->hasMany(RgAssignment::class, 'rg_register_id')->latest();
     }
 
+    public function currentAssigned()
+    {
+        return $this->hasOne(RgAssignment::class, 'rg_register_id')->latest();
+    }
+
     public function getRequesterNameAttribute()
     {
         $requesterName = 'N/A';
