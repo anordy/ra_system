@@ -97,27 +97,6 @@
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Taxpayer Identification Number (TIN)</span>
                     <p class="my-1">{{ $business->tin }}</p>
-
-                    {{-- Start Will be implementated after TRA intergration --}}
-                    {{-- @if (isset($verified))
-                        @if ($verified == 'verified')
-                            <span class="font-weight-light text-success">
-                                <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
-                                TIN Number Verified
-                            </span>
-                        @else
-                            <span class="font-weight-light text-danger">
-                                <i class="bi bi-x-circle-fill" aria-hidden="true"></i>
-                                {{ $verified }}
-                            </span>
-                        @endif
-                    @else
-                        <a href="{{ route('verification.tin', encrypt($business->id)) }}">
-                            <button class="btn btn-info">Verify TIN Number</button>
-                        </a>
-                    @endif --}}
-                    {{-- End Will be implementated after TRA intergration --}}
-
                 </div>
                 @if ($business->previous_zno)
                     <div class="col-md-4 mb-3">

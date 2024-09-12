@@ -61,8 +61,13 @@ class TaxReturnCancellationApprovalProcessing extends Component
                 }
 
                 // Soft delete current tax return and child return
-                $this->subject->return->delete();
-                $this->subject->taxReturn->delete();
+                if ($this->subject->return) {
+                    $this->subject->return->delete();
+                }
+
+                if ($this->subject->taxReturn) {
+                    $this->subject->taxReturn->delete();
+                }
 
             }
 

@@ -871,33 +871,10 @@
                                 <a href="{{ route('public-service.report.index') }}">Transport Service Reports</a>
                             </li>
                         @endcan
-                        @can('managerial-payment-report-view')
-                            <li class="{{ request()->is('reports/tax-payer*') ? 'active' : '' }}">
-                                <a href="{{ route('reports.tax-payer') }}">Taxpayer Reports</a>
-                            </li>
-                        @endcan
                     @endcan
                 </ul>
             </li>
         @endcan
-
-        {{-- @can("managerial-report-view")
-            <li class="{{ request()->is('queries*') ? 'active' : '' }}">
-                <a href="#queriesSubmenu" data-toggle="collapse"
-                   aria-expanded="{{ request()->is('queries*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                    Return Queries
-                </a>
-                <ul class="collapse list-unstyled {{ request()->is('queries*') ? 'show' : '' }}" id="queriesSubmenu">
-                    <li class="{{ request()->is('queries/sales-purchases*') ? 'active' : '' }}">
-                        <a href="{{ route('queries.sales-purchases') }}">Sales Vs Purchases</a>
-                    </li>
-
-                    <li class="{{ request()->is('queries/all-credit-returns*') ? 'active' : '' }}">
-                        <a href="{{ route('queries.all-credit-returns') }}">All Credit Returns</a>
-                    </li>
-                </ul>
-            </li>
-        @endcan --}}
 
         @can('manage-payment-management')
             <li class="{{ request()->is('payments*') ? 'active' : '' }}">
@@ -1329,6 +1306,11 @@
                     @can('setting-api-user-view')
                         <li class="{{ request()->is('settings/api-users*') ? 'active' : '' }}">
                             <a href="{{ route('settings.api-users.index') }}">API User</a>
+                        </li>
+                    @endcan
+                    @can('setting-certificate-signature-view')
+                        <li class="{{ request()->is('settings/certificate-signature*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.certificate-signature.index') }}">Certificate Signature</a>
                         </li>
                     @endcan
 

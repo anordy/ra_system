@@ -940,6 +940,11 @@ trait PaymentsTrait
         $payer_type = get_class($property->taxpayer);
         $payer_id = $property->taxpayer->id;
 
+        if (!$payer_id) {
+            Log::channel('property-tax')->warning("Couldn't create property payment bill for {$propertyPayment->id} as it miss payer's information");
+            return;
+        }
+
         if ($property->ownership->name === PropertyOwnershipTypeStatus::GOVERNMENT || $property->ownership->name === PropertyOwnershipTypeStatus::RELIGIOUS) {
             $payer_name = $property->institution_name;
         } else {

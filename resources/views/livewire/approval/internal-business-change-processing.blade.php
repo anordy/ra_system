@@ -223,7 +223,7 @@
         @elseif ($this->checkTransition('cdt_review'))
         <div class="modal-footer p-2 m-0">
             <button type="button" class="btn btn-danger"
-                    wire:click="confirmPopUpModal('reject', 'cdt_review')">Reject & Return
+                    wire:click="confirmPopUpModal('reject', 'cdt_reject')">Reject & Return
             </button>
             <button type="button" class="btn btn-primary"
                     wire:click="confirmPopUpModal('approve', 'cdt_review')">Approve & Complete

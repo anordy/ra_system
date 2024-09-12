@@ -3,6 +3,11 @@
 @section('title', 'View Port Returns')
 
 @section('content')
+    <div class="row mx-1">
+        <div class="col-md-12">
+            <livewire:returns.return-payment :return="$return->tax_return" />
+        </div>
+    </div>
     <div class="card">
         <div class="card-header bg-white font-weight-bold text-uppercase">
             {{ $return->taxtype->name ?? 'N/A' }} Returns Details for
@@ -49,18 +54,6 @@
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Payment Status</span>
                                  @include('returns.return-payment-status', ['row' => $return])
-                            </div>
-                        </div>
-
-                        <div class="row m-2 pt-3">
-                            <h6>Payment Structure</h6>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">PAYMENT STRUCTURE</div>
-                            <div class="col-md-12">
-                                <livewire:returns.port.returns-port-penalty modelName='App\Models\Returns\Port\PortReturn'
-                                    modelId="{{ encrypt($return->id) }}" />
                             </div>
                         </div>
 

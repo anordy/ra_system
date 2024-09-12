@@ -25,7 +25,7 @@ class PenaltyRateEditModal extends Component
     protected function rules()
     {
         return [
-            'rate' => 'required|numeric',
+            'rate' => 'required|numeric|min:0',
         ];
     }
 

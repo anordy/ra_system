@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enum\GeneralConstant;
 use App\Events\SendMail;
 use App\Jobs\RepostBillSignature;
 use App\Jobs\RepostReturnSignature;
@@ -42,7 +43,7 @@ trait VerificationTrait
                     'signature' => $object->ci_payload
                 ]);
 
-            Log::channel('verification')->info(json_decode($result, true)['verification'] ? 'Complete' : 'Failed');
+            Log::channel('verification')->info(json_decode($result, true)['verification'] ? GeneralConstant::COMPLETE : GeneralConstant::FAILED);
 
             $result = json_decode($result, true)['verification'] == 'true';
 
@@ -95,11 +96,10 @@ trait VerificationTrait
                 ->withOptions(['verify' => false])
                 ->post($url, ['payload' => base64_encode($stringData)]);
 
-            Log::channel('verification')->info(json_decode($result, true)['signature'] ? 'Complete' : 'Failed');
+            Log::channel('verification')->info(json_decode($result, true)['signature'] ? GeneralConstant::COMPLETE : GeneralConstant::FAILED);
 
             return $object->update(['ci_payload' => json_decode($result, true)['signature']]) == 1;
         } catch (\Exception $exception) {
-            Log::error($exception);
             Log::channel('verification')->error($exception);
 
             if ($object instanceof TaxReturn) {

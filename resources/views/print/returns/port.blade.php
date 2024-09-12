@@ -115,7 +115,7 @@
     </tbody>
 </table>
 
-@if($return)
+@if(isset($return))
     <table style="border-collapse:collapse; width:100%">
         <thead>
         <tr>
@@ -167,7 +167,7 @@
     </table>
 @endif
 
-@if($return_)
+@if(isset($return_))
     <table style="border-collapse:collapse; width:100%">
         <thead>
         <tr>
@@ -185,7 +185,7 @@
         <th>Tax ({{ $return_->currency  }})</th>
         </thead>
         <tbody>
-        @foreach ($return_->configReturns as $item)
+        @foreach ($return_->configReturns ?? [] as $item)
             <tr>
                 <td>{{ $item->config->name }}</td>
                 <td>{{ number_format($item->value, 2) }}</td>
@@ -268,7 +268,7 @@
         </tbody>
     </table>
 @endif
-@if($return_ && count($return_->penalties))
+@if($return_ && count($return_->penalties ?? []))
     <table style="border-collapse:collapse; width:100%">
         <thead>
         <tr>
@@ -349,7 +349,7 @@
         </tbody>
     </table>
 @endif
-@if($return_ && $return_->tax_return->latestBill)
+@if($return_ && isset($return_->tax_return->latestBill))
     @php($bill_ = $return_->tax_return->latestBill)
     <table style="border-collapse:collapse; width:100%">
         <thead>
@@ -366,7 +366,7 @@
             <th width="20%">Bill Description</th>
             <td colspan="2">{{ $bill_->description }}</td>
         </tr>
-        @foreach ($bill_->bill_items as $item)
+        @foreach ($bill_->bill_items ?? [] as $item)
             <tr>
                 <th width="20%">Bill Item</th>
                 <td>{{ $item->taxType->name }}</td>

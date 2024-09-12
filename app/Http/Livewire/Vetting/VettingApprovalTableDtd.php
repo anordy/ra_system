@@ -93,12 +93,15 @@ class VettingApprovalTableDtd extends DataTableComponent
             ->whereHas('location.taxRegion', function ($query) {
                 $query->where('location', Region::DTD);
             })
-            ->where('vetting_status', $this->vettingStatus)
-            ->whereHas('pinstance', function ($query) {
+            ->where('vetting_status', $this->vettingStatus);
+
+        if ($this->vettingStatus != VettingStatus::CORRECTION) {
+            $query->whereHas('pinstance', function ($query) {
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });
             });
+        }
 
         // Apply filters
         $returnTable = TaxReturn::getTableName();

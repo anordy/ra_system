@@ -11,14 +11,14 @@
             </span>
             <p class="my-1">{{ number_format($return->latestBill->amount, 2) }} {{ $return->latestBill->currency }}</p>
         </div>
+        <div class="col-md-3">
+            <span class="font-weight-bold text-uppercase">Control No.</span>
+            <p class="my-1">{{ $return->latestBill->control_number ?? '' }}</p>
+        </div>
         @if ($return->payment_status === \App\Models\Returns\ReturnStatus::CN_GENERATED ||
-            $return->payment_status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
-
-            @if($return->latestBill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::SUCCESS)
-                <div class="col-md-4" wire:poll.visible.30000ms="refresh" wire:poll.30000ms>
-                    <span class="font-weight-bold text-uppercase">Control No.</span>
-                    <p class="my-1">{{ $return->latestBill->control_number }}</p>
-                </div>
+            $return->payment_status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY ||
+             $return->latestBill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::ZM_DUPLICATE_BILL_INFO)
+            @if($return->latestBill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::SUCCESS || $return->latestBill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::ZM_DUPLICATE_BILL_INFO)
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase"> </span>
                     <p class="my-1">
@@ -37,6 +37,17 @@
                     <span class="font-weight-bold text-uppercase">Control No. Generation Failed</span>
                     <p class="my-1 text-danger">
                         Generation Failed
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <p class="my-1">
+                        <button target="_blank" wire:click="regenerate"
+                                class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                            <i class="spinner-border spinner-border-xs mr-2" role="status" wire:loading
+                               wire:target="regenerate"></i>
+                            <i class="bi bi-arrow-repeat mr-2" wire:loading.remove wire:target="regenerate"></i>Regenerate
+                            Control No
+                        </button>
                     </p>
                 </div>
             @endif

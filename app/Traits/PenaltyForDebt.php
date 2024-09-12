@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use Exception;
 use Carbon\Carbon;
@@ -111,13 +112,19 @@ class PenaltyForDebt
         }
 
         // Subtract 1 from periods if it is only petroleum return
-        if ($tax_return->return_type != PetroleumReturn::class) {
-            $period = $tax_return->periods;
-        } else {
+        if ($tax_return->return_type === LumpSumReturn::class) {
+            $period = $tax_return->periods + 1;
+        } else if ($tax_return->return_type === PetroleumReturn::class) {
             $period = $tax_return->periods - 1;
+        } else {
+            $period = $tax_return->periods;
         }
 
         $period = abs(round($period));
+
+        if ($period <= 0) {
+            $period = 1;
+        }
 
         $outstanding_amount = roundOff($outstanding_amount, $tax_return->currency);
 
@@ -373,7 +380,11 @@ class PenaltyForDebt
                     $interestAmount = 0;
                     $penaltableAmount = roundOff($latePaymentAmount + $penaltableAmountForPerticularMonth, $tax_return->currency);
                 } else {
-                    $period = round($tax_return->periods) + $i;
+                    $period = ceil($tax_return->periods) + $i;
+
+                    if ($period <= 0) {
+                        $period = 1 + $i;
+                    }
                     $latePaymentAmount = 0;
                     $penaltableAmount = $latePaymentAmount + $penaltableAmountForPerticularMonth;
                     $interestAmount = roundOff(self::calculateInterest($penaltableAmount, $interestRate->rate, $period), $tax_return->currency);

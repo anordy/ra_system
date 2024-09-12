@@ -52,6 +52,8 @@ class DualControl extends Model implements Auditable
     public const API_USER = ApiUser::class;
     public const VAT_TAX_TYPE = SubVat::class;
 
+    public const CERTIFICATE_SIGNATURE = CertificateSignature::class;
+
     //Messages
     public const SUCCESS_MESSAGE = 'Data successfully submitted, Please wait for checker to approve';
     public const ERROR_MESSAGE = 'Something went wrong, Please contact the administrator for help';

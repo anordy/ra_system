@@ -2,17 +2,13 @@
 
 namespace App\Http\Livewire;
 
-use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Audit;
 use App\Models\DualControl;
-use App\Models\Role;
 use App\Models\User;
 use App\Traits\AuditTrait;
 use App\Traits\DualControlActivityTrait;
-use App\Traits\WithSearch;
 use Exception;
-use id;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Support\Facades\Auth;
@@ -276,10 +272,8 @@ class UsersTable extends DataTableComponent
             abort(404);
         }
         event(new SendSms('user_add', $user->id));
-        event(new SendMail('user_add', $user->id));
 
         $this->flash('success', 'Credentials re-send successfully', [], redirect()->back()->getTargetUrl());
-
     }
 
     public function confirmed($value)

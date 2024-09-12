@@ -25,7 +25,7 @@ trait OffencePaymentTrait
         $payer_name = $taxpayer;
         $payer_email = null;
         $payer_phone = $offencePayment->mobile;
-        $description = "Payment for Offence";
+        $description = "Payment for Offence for {$taxpayer}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = $offencePayment->currency;
         $createdby_type = get_class(Auth::user());
@@ -69,6 +69,8 @@ trait OffencePaymentTrait
 
             // $this->flash('success', 'Your landLease was submitted, you will receive your payment information shortly - test');
         }
+
+        return true;
     }
     public function offenceGenerateBill($offencePayment)
     {
