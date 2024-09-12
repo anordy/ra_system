@@ -950,6 +950,19 @@
                             <a href="{{ route("finance.taxpayer.ledger.search") }}">Taxpayer Ledgers</a>
                         </li>
                     @endcan
+                    @can("view-taxpayer-ledgers")
+                        <li class="{{ request()->is('taxpayer-ledger') ? 'active' : '' }}">
+                            <a href="{{ route('finance.taxpayer.ledger.control-numbers') }}"
+                               class="dropdown-toggle">Tax Payments</a>
+                        </li>
+                    @endcan
+                    @can("view-cash-book")
+                        <li class="{{ request()->is('cashbook') ? 'active' : '' }}">
+                            <a href="{{ route('finance.cashbook.index') }}"
+                               class="dropdown-toggle">Cashbook</a>
+                        </li>
+                    @endcan
+
                 </ul>
             </li>
         @endcan

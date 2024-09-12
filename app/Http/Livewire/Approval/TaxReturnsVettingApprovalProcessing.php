@@ -191,12 +191,12 @@ class TaxReturnsVettingApprovalProcessing extends Component
 
                 DB::commit();
 
-                if ($tax_return->return_type != PortReturn::class) {
-                    $this->generateReturnControlNumber($tax_return);
-                } else {
-                    $this->generateReturnControlNumber($tax_return);
-                    $this->generateReturnControlNumber($tax_return_);
-                }
+//                if ($tax_return->return_type != PortReturn::class) {
+//                    $this->generateReturnControlNumber($tax_return);
+//                } else {
+//                    $this->generateReturnControlNumber($tax_return);
+//                    $this->generateReturnControlNumber($tax_return_);
+//                }
 
                 //triggering claim
                 if ($this->return->return_type == VatReturn::class) {
@@ -325,12 +325,12 @@ class TaxReturnsVettingApprovalProcessing extends Component
 
                 DB::commit();
 
-                if ($tax_return->return_type != PortReturn::class) {
-                    $this->generateReturnControlNumber($tax_return);
-                } else {
-                    $this->generateReturnControlNumber($tax_return);
-                    $this->generateReturnControlNumber($tax_return_);
-                }
+//                if ($tax_return->return_type != PortReturn::class) {
+//                    $this->generateReturnControlNumber($tax_return);
+//                } else {
+//                    $this->generateReturnControlNumber($tax_return);
+//                    $this->generateReturnControlNumber($tax_return_);
+//                }
 
                 //triggering claim
                 if ($this->return->return_type == VatReturn::class) {

@@ -11,6 +11,10 @@
             </span>
             <p class="my-1">{{ number_format($return->latestBill->amount, 2) }} {{ $return->latestBill->currency }}</p>
         </div>
+        <div class="col-md-3">
+            <span class="font-weight-bold text-uppercase">Control No.</span>
+            <p class="my-1">{{ $return->latestBill->control_number ?? '' }}</p>
+        </div>
         @if ($return->payment_status === \App\Models\Returns\ReturnStatus::CN_GENERATED ||
             $return->payment_status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY ||
              $return->latestBill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::ZM_DUPLICATE_BILL_INFO)
