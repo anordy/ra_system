@@ -9,7 +9,7 @@ class TaskController extends Controller
 {
     public function index()
     {
-        if (!Gate::allows('system-audit-trail-view')) {
+        if (!Gate::allows('report-register-view-task')) {
             abort(403);
         }
 
@@ -18,7 +18,7 @@ class TaskController extends Controller
 
     public function show($id)
     {
-        if (!Gate::allows('system-audit-trail-view')) {
+        if (!Gate::allows('report-register-view-task')) {
             abort(403);
         }
 

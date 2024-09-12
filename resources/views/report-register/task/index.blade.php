@@ -7,7 +7,7 @@
         <div class="card-header">
             <h5 class="text-uppercase">Tasks</h5>
             <div class="card-tools">
-                @can('setting-user-add')
+                @can('report-register-create-task')
                     <button class="btn btn-info btn-sm"
                             onclick="Livewire.emit('showModal', 'report-register.task.create-task')"><i
                             class="bi bi-plus-circle-fill"></i>

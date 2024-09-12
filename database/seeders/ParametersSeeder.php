@@ -161,27 +161,12 @@ class ParametersSeeder extends Seeder
                 'display_name' => 'name',
             ],
             [
-                'name' => 'Report Register Category',
-                'code' => Parameter::RG_CATEGORY_ID,
-                'input_type' => 'select',
-                'model_name' => TaxType::class,
-                'display_name' => 'name',
-            ],
-    
                 'name' => 'Category',
                 'code' => Parameter::RG_CATEGORY_ID,
                 'input_type' => 'select',
                 'model_name' => RgCategory::class,
                 'display_name' => 'name',
             ],
-            [
-                'name' => 'Sub Category',
-                'code' => Parameter::RG_SUB_CATEGORY_ID,
-                'input_type' => 'select',
-                'model_name' => RgSubCategory::class,
-                'display_name' => 'name',
-                'parent_id' => Parameter::where('code', Parameter::RG_CATEGORY_ID)->firstOrFail()->id
-            ]
         ];
 
         foreach ($parameters as $parameter) {
@@ -192,6 +177,20 @@ class ParametersSeeder extends Seeder
                 $parameter
             );
         }
+
+        Parameter::updateOrCreate(
+            [
+                'code' => Parameter::RG_SUB_CATEGORY_ID
+            ],
+            [
+                'name' => 'Sub Category',
+                'code' => Parameter::RG_SUB_CATEGORY_ID,
+                'input_type' => 'select',
+                'model_name' => RgSubCategory::class,
+                'display_name' => 'name',
+                'parent_id' => Parameter::where('code', Parameter::RG_CATEGORY_ID)->firstOrFail()->id
+            ]
+        );
 
     }
 }

@@ -11,7 +11,7 @@ class IncidentController extends Controller
 {
     public function index()
     {
-        if (!Gate::allows('system-audit-trail-view')) {
+        if (!Gate::allows('report-register-view-incident')) {
             abort(403);
         }
 
@@ -20,7 +20,7 @@ class IncidentController extends Controller
 
     public function show($id)
     {
-        if (!Gate::allows('system-audit-trail-view')) {
+        if (!Gate::allows('report-register-view-incident')) {
             abort(403);
         }
 
@@ -29,7 +29,7 @@ class IncidentController extends Controller
 
     public function settings()
     {
-        if (!Gate::allows('system-audit-trail-view')) {
+        if (!Gate::allows('report-register-view-settings')) {
             abort(403);
         }
 
@@ -38,7 +38,7 @@ class IncidentController extends Controller
 
     public function subCategory($id)
     {
-        if (!Gate::allows('system-audit-trail-view')) {
+        if (!Gate::allows('report-register-view-settings')) {
             abort(403);
         }
 
@@ -48,6 +48,10 @@ class IncidentController extends Controller
 
     public function file($path)
     {
+        if (!Gate::allows('report-register-view-incident')) {
+            abort(403);
+        }
+
         if ($path) {
             try {
                 return Storage::disk('local-admin')->response(decrypt($path));

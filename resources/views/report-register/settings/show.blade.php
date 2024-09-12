@@ -4,18 +4,21 @@
 
 @section('content')
 
-    @livewire('report-register.settings.base-settings')
-
+    @can('report-register-alter-settings')
+        @livewire('report-register.settings.base-settings')
+    @endcan
 
     <div class="card">
         <div class="card-header">
             <h5 class="text-uppercase">Report Register Incident Categories</h5>
             <div class="card-tools">
-                <button class="btn btn-primary btn-sm px-3"
-                        onclick="Livewire.emit('showModal', 'report-register.settings.category.create-category')">
-                    <i class="bi bi-plus-circle-fill pr-2"></i>
-                    Add New Category
-                </button>
+                @can('report-register-alter-settings')
+                    <button class="btn btn-primary btn-sm px-3"
+                            onclick="Livewire.emit('showModal', 'report-register.settings.category.create-category')">
+                        <i class="bi bi-plus-circle-fill pr-2"></i>
+                        Add New Category
+                    </button>
+                @endcan
             </div>
         </div>
         <div class="card-body">
