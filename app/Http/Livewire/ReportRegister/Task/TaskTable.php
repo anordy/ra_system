@@ -83,8 +83,15 @@ class TaskTable extends DataTableComponent
                 })->html(),
             Column::make('Task Date', 'start_date')
                 ->format(function ($value) {
-                    return $value->format('d M, Y');
-                }),
+                    $startDate = $value->format('d M, Y');
+                    if (now() > $startDate) {
+                        return <<< HTML
+                            <span class="badge badge-danger">Due on $startDate</span>
+                        HTML;
+                    } else {
+                        return $value->format('d M, Y');
+                    }
+                })->html(),
             Column::make('Created On', 'created_at')
                 ->format(function ($value) {
                     return $value->format('d M, Y');
