@@ -28,7 +28,11 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Duration</span>
-                    <p class="my-1">{{ \Carbon\Carbon::create($incident->created_at)->diffInDays($incident->assigned->end_date) }} Days</p>
+                    @if(isset($incident->assigned))
+                        <p class="my-1">{{ \Carbon\Carbon::create($incident->created_at)->diffInDays($incident->assigned->end_date ?? $incident->created_at) }} Days</p>
+                    @else
+                        <p class="my-1">Not Assigned</p>
+                    @endif
                 </div>
                 <div class="col-md-12 mb-3">
                     <span class="font-weight-bold text-uppercase">Description</span>

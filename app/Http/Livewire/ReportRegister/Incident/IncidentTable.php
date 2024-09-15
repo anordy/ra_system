@@ -4,10 +4,12 @@ namespace App\Http\Livewire\ReportRegister\Incident;
 
 use App\Enum\ReportRegister\RgRegisterType;
 use App\Enum\ReportRegister\RgRequestorType;
+use App\Models\ReportRegister\RgCategory;
 use App\Models\ReportRegister\RgRegister;
+use App\Models\ReportRegister\RgSubCategory;
+use App\Models\User;
 use App\Traits\CustomAlert;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
@@ -35,6 +37,44 @@ class IncidentTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+    }
+
+    public function filters(): array
+    {
+        $assignees = RgRegister::query()
+            ->select('assigned_to_id')
+            ->where('requester_type', RgRequestorType::TAXPAYER)
+            ->where('register_type', RgRegisterType::INCIDENT)
+            ->distinct()
+            ->pluck('assigned_to_id')
+            ->toArray();
+
+        $users = User::query()->select('id', 'fname', 'lname')
+            ->whereIn('id', $assignees)
+            ->get();
+        $formattedUsers = [];
+        foreach ($users as $user) {
+            $formattedUsers[$user->id] = $user->fullname;
+        }
+
+        $categories = RgCategory::query()->select('id', 'name')->get();
+        $formattedCategories = [];
+        foreach ($categories as $category) {
+            $formattedCategories[$category->id] = $category->name;
+        }
+
+        return [
+            SelectFilter::make('Assigned To')
+                ->options($formattedUsers)
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->where('assigned_to_id', $value);
+                }),
+            SelectFilter::make('Category')
+                ->options($formattedCategories)
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->where('rg_category_id', $value);
+                }),
+        ];
     }
 
 
@@ -103,7 +143,6 @@ class IncidentTable extends DataTableComponent
                 })
         ];
     }
-
 
 
 }

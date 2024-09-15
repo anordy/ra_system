@@ -83,11 +83,11 @@ class TaskTable extends DataTableComponent
                 })->html(),
             Column::make('Task Date', 'start_date')
                 ->format(function ($value) {
-                    return $value->format('d M, Y H:i');
+                    return $value->format('d M, Y');
                 }),
             Column::make('Created On', 'created_at')
                 ->format(function ($value) {
-                    return $value->format('d M, Y H:i');
+                    return $value->format('d M, Y');
                 }),
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {

@@ -23,6 +23,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -147,6 +148,12 @@ class CreateTask extends Component
             $this->flash('success', 'Task successfully created', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
+            foreach ($attachments ?? [] as $fileData) {
+                $savedFilePath = $fileData['path'];
+                if (Storage::disk('local')->exists($savedFilePath)) {
+                    Storage::disk('local')->delete($savedFilePath);
+                }
+            }
             Log::error('REPORT-REGISTER-TASK-CREATE-TASK', [$e]);
             $this->customAlert('error', CustomMessage::error());
         }
