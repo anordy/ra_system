@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Enum\GeneralConstant;
 use App\Enum\ReportRegister\RgRegisterType;
 use App\Enum\ReportRegister\RgStatus;
+use App\Enum\ReportRegister\RgTaskStatus;
+use App\Events\SendSms;
 use App\Models\ReportRegister\RgRegister;
 use App\Models\ReportRegister\RgSettings;
 use App\Traits\ReportRegisterTrait;
@@ -13,7 +15,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class ReportRegisterBreaches extends Command
+class ReportRegisterSchedules extends Command
 {
 
     use ReportRegisterTrait;
@@ -23,14 +25,14 @@ class ReportRegisterBreaches extends Command
      *
      * @var string
      */
-    protected $signature = 'rg:breach';
+    protected $signature = 'rg:schedule';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Mark Report Register as Breached';
+    protected $description = 'Mark Report Register as Breached and Remind unresolved Tasks';
 
     /**
      * Create a new command instance.
@@ -52,6 +54,10 @@ class ReportRegisterBreaches extends Command
         Log::channel('rg-registers')->info('Start of breach marking process');
         $this->markBreaches();
         Log::channel('rg-registers')->info('End of breach marking process');
+
+        Log::channel('rg-registers')->info('Start of task reminder process');
+        $this->remindTasks();
+        Log::channel('rg-registers')->info('End of task reminder process');
     }
 
     public function markBreaches()
@@ -84,6 +90,38 @@ class ReportRegisterBreaches extends Command
                             // Notify the Group
                             $this->notifyBreach($register->rg_sub_category_id, $register->title);
                         }
+                    } catch (Exception $exception) {
+                        Log::channel('report-register')->error($exception);
+                    }
+
+                }
+            });
+    }
+    public function remindTasks()
+    {
+        RgRegister::query()
+            ->select(['id', 'start_date', 'resolved_date', 'breach_date', 'is_breached', 'rg_sub_category_id', 'title', 'assigned_to_id'])
+            ->with(['assigned'])
+            ->where('register_type', RgRegisterType::TASK)
+            ->whereNotIn('status', [RgTaskStatus::CLOSED, RgTaskStatus::CANCELLED])
+            ->chunk(100, function ($registers)  {
+                foreach ($registers as $register) {
+                    try {
+                        $startDate = Carbon::create($register->start_date);
+
+                        if (Carbon::now() > $startDate) {
+                            $message = "Hello {$register->assigned->fname}, a task assigned to you with title: {$register->title} has passed due date without any action";
+                        } else if(Carbon::now()->diffInDays($startDate) == GeneralConstant::ONE_INT) {
+                            $message = "Hello {$register->assigned->fname}, this is a reminder that a task assigned to you with title: {$register->title} is due tomorrow";
+                        } else {
+                            continue;
+                        }
+
+                        event(new SendSms(\App\Jobs\SendCustomSMS::SERVICE, NULL, [
+                            'phone' => $register->assigned->phone,
+                            'message' => $message
+                        ]));
+
                     } catch (Exception $exception) {
                         Log::channel('report-register')->error($exception);
                     }
