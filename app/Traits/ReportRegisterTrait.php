@@ -4,10 +4,12 @@ namespace App\Traits;
 
 use App\Enum\ReportRegister\RgAssignmentStatus;
 use App\Enum\ReportRegister\RgAuditEvent;
+use App\Enum\ReportRegister\RgRegisterType;
 use App\Enum\ReportRegister\RgRequestorType;
 use App\Enum\ReportRegister\RgStatus;
 use App\Enum\ReportRegister\RgTaskStatus;
 use App\Events\SendSms;
+use App\Jobs\SendCustomSMS;
 use App\Models\ReportRegister\RgAssignment;
 use App\Models\ReportRegister\RgAudit;
 use App\Models\ReportRegister\RgComment;
@@ -56,6 +58,23 @@ trait ReportRegisterTrait
 
             DB::commit();
 
+            if ($register->register_type === RgRegisterType::TASK) {
+                $registerType = ucfirst(RgRegisterType::TASK);
+            } else if ($register->register_type === RgRegisterType::INCIDENT) {
+                $registerType = ucfirst(RgRegisterType::INCIDENT);
+            } else {
+                throw new Exception('Invalid Register Type');
+            }
+
+            $assigned = User::find($staffId, ['phone', 'fname']);
+
+            if ($assigned) {
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                    'phone' => $assigned->phone,
+                    'message' => "Hello {$assigned->fname}, you have been assigned on {$registerType}: {$register->title}"
+                ]));
+            }
+
         } catch (Exception $exception) {
             DB::rollBack();
             throw $exception;
@@ -80,7 +99,10 @@ trait ReportRegisterTrait
 
             DB::commit();
 
-            // TODO: Send Notification to assigner on status
+            if ($status === RgStatus::RESOLVED || $status === RgTaskStatus::CLOSED) {
+                $this->notifyWorkersOnClosure($register);
+            }
+
         } catch (Exception $exception) {
             DB::rollBack();
             throw $exception;
@@ -133,7 +155,17 @@ trait ReportRegisterTrait
 
             DB::commit();
 
-            // TODO: Send Notification to requester
+            if ($actorType === RgRequestorType::TAXPAYER && $register->register_type === RgRegisterType::INCIDENT) {
+                $taxpayer = Taxpayer::find($register->requester_id, ['mobile', 'first_name']);
+
+                if ($taxpayer) {
+                    event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                        'phone' => $taxpayer->mobile,
+                        'message' => "Hello {$taxpayer->first_name}, a new comment has been added on your logged incident: {$register->title}"
+                    ]));
+                }
+
+            }
 
         } catch (Exception $exception) {
             DB::rollBack();
@@ -182,18 +214,63 @@ trait ReportRegisterTrait
         }
     }
 
-    public function notifyBreach($subCategoryId, $title) {
+    public function notifyBreach($subCategoryId, $title)
+    {
         $notifiables = RgSubCategoryNotifiable::select('id', 'role_id')->where('rg_sub_category_id', $subCategoryId)->get();
 
         foreach ($notifiables ?? [] as $notifiable) {
             $users = User::select('id', 'fname', 'lname', 'phone', 'email')->where('role_id', $notifiable->role_id)->get();
             foreach ($users as $user) {
                 event(new SendSms(\App\Jobs\SendCustomSMS::SERVICE, NULL, [
-                    'phone' => '0743317069',
+                    'phone' => $user->phone,
                     'message' => "Hello {$user->fname}, report with title: {$title} has been breached"
                 ]));
             }
         }
     }
+
+    private function notifyWorkersOnClosure($register)
+    {
+        $users = User::select('fname', 'lname', 'phone')
+            ->whereIn('id', [$register->assigned_to_id, $register->requester_id])
+            ->get();
+
+        if ($register->register_type === RgRegisterType::TASK) {
+            $registerType = 'Task';
+        } else if ($register->register_type === RgRegisterType::INCIDENT) {
+            $registerType = 'Incident';
+        } else {
+            throw new Exception('Invalid Register Type');
+        }
+
+        foreach ($users as $user) {
+            event(new SendSms(\App\Jobs\SendCustomSMS::SERVICE, NULL, [
+                'phone' => $user->phone,
+                'message' => "Hello {$user->fname}, {$registerType} with title: {$register->title} has been successfully closed"
+            ]));
+        }
+    }
+
+    private function notifyStaff($register, $assignedId)
+    {
+        $user = User::find($assignedId, ['fname', 'lname', 'phone']);
+
+        if ($user) {
+            if ($register->register_type === RgRegisterType::TASK) {
+                $registerType = ucfirst(RgRegisterType::TASK);
+            } else if ($register->register_type === RgRegisterType::INCIDENT) {
+                $registerType = ucfirst(RgRegisterType::INCIDENT);
+            } else {
+                throw new Exception('Invalid Register Type');
+            }
+
+            event(new SendSms(\App\Jobs\SendCustomSMS::SERVICE, NULL, [
+                'phone' => $user->phone,
+                'message' => "Hello {$user->fname}, {$registerType} with title: {$register->title} has been assigned to you"
+            ]));
+        }
+
+    }
+
 
 }

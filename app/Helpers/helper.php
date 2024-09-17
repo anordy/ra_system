@@ -365,3 +365,10 @@ function getSignature($modelInstance)
 
 
 }
+
+function custom_dispatch($job, $time = null): int {
+    if ($time) {
+        return app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job->delay($time));
+    }
+    return app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job);
+}

@@ -38,7 +38,7 @@
                     <div class="col-md-6 mb-3">
                         <div class="form-group">
                             <label>Set Task Priority *</label>
-                            <select wire:model="priority" class="form-control @error('priority') is-invalid @enderror">
+                            <select wire:model.defer="priority" class="form-control @error('priority') is-invalid @enderror">
                                 <option value="">Select Priority</option>
                                 @foreach ($priorities ?? [] as $priority)
                                     <option value="{{ $priority }}">{{ ucfirst($priority) }}</option>
@@ -54,7 +54,7 @@
                     <div class="col-md-6 mb-3">
                         <div class="form-group">
                             <label>Assigned To *</label>
-                            <select wire:model="staffId" class="form-control @error('staffId') is-invalid @enderror">
+                            <select wire:model.defer="staffId" class="form-control @error('staffId') is-invalid @enderror">
                                 <option value="">Select Staff</option>
                                 @foreach ($users ?? [] as $user)
                                     <option value="{{ $user->id }}">{{ ucfirst($user->fullname) }}</option>
@@ -69,8 +69,8 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Task Date *</label>
-                        <input type="date" wire:model="startDate"
-                               min="{{ now()->subDay() }}"
+                        <input type="date" wire:model.defer="startDate"
+                               min="{{ now()->format('Y-m-d') }}"
                                class="form-control {{ $errors->has('startDate') ? 'is-invalid' : '' }}">
                         @error('startDate')
                         <div class="invalid-feedback">
@@ -82,7 +82,7 @@
                     <div class="col-md-6 mb-3">
                         <div class="form-group">
                             <label>Is this a scheduled task? *</label>
-                            <select wire:model.live="isScheduled"
+                            <select wire:model="isScheduled"
                                     class="form-control @error('isScheduled') is-invalid @enderror">
                                 <option value="">Select Option</option>
                                 <option value="{{ \App\Enum\GeneralConstant::ZERO }}">No</option>
@@ -101,7 +101,7 @@
                         <div class="col-md-6 form-group">
                             <label>Schedule Time *</label>
                             <input type="datetime-local" wire:model="scheduledTime"
-                                   min="{{ now()->subDay() }}"
+                                   min="{{ now() }}"
                                    class="form-control {{ $errors->has('scheduledTime') ? 'is-invalid' : '' }}">
                             @error('scheduledTime')
                             <div class="invalid-feedback">

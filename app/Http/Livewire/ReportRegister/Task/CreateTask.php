@@ -43,7 +43,7 @@ class CreateTask extends Component
             'description' => 'required|max:255|alpha_gen',
             'staffId' => 'required|integer|exists:users,id',
             'isScheduled' => ['required', Rule::in([GeneralConstant::ZERO, GeneralConstant::ONE])],
-//            'scheduledTime' => ['required_if:isScheduled,' . GeneralConstant::ONE, 'date'],
+            'scheduledTime' => ['required_if:isScheduled,' . GeneralConstant::ONE, 'date', 'after:5 minutes'],
             'files.*.file' => 'nullable|mimes:pdf,xlsx,xls|max:3072|max_file_name_length:100',
             'files.*.name' => 'nullable|alpha_gen|max:255',
             'priority' => ['required', Rule::in($this->priorities)],
@@ -127,15 +127,13 @@ class CreateTask extends Component
             if ($this->isScheduled === GeneralConstant::ZERO) {
                 SendCustomSMS::dispatch($assignee->phone, "Hello {$assignee->fname}, {$assigner->fname} {$assigner->lname} has assign you a with task: {$this->title}");
             } else if ($this->isScheduled === GeneralConstant::ONE) {
-                $a = SendCustomSMS::dispatch($assignee->phone, "Hello {$assignee->fname}, {$assigner->fname} {$assigner->lname} has assign you a with task: {$this->title}")->delay(Carbon::create($this->scheduledTime));
-
-                Log::info('Scheduled');
-                Log::info('sasa', [$a]);
+                $job = new SendCustomSMS($assignee->phone, "Hello {$assignee->fname}, {$assigner->fname} {$assigner->lname} has assign you a with task: {$this->title}");
+                $jobId = custom_dispatch($job, Carbon::create($this->scheduledTime));
 
                 // Track saved schedules for cancellation
                 $schedule = RgSchedule::create([
                     'rg_register_id' => $rgRegister->id,
-                    'job_reference' => 'sa',
+                    'job_reference' => $jobId,
                     'status' => RgScheduleStatus::PENDING,
                     'time' => Carbon::create($this->scheduledTime)
                 ]);

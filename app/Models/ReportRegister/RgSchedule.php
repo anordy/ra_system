@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class RgSchedule extends Model
 {
@@ -24,6 +25,10 @@ class RgSchedule extends Model
 
     public function canceller(){
         return $this->belongsTo(User::class, 'cancelled_by_id');
+    }
+
+    public function job() {
+        return DB::table('jobs')->where('id', $this->job_reference)->first();
     }
 
 }

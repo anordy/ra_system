@@ -46,6 +46,11 @@ class RgRegister extends Model
         return $this->hasMany(RgSchedule::class, 'rg_register_id');
     }
 
+    public function schedule()
+    {
+        return $this->hasMany(RgSchedule::class, 'rg_register_id')->latest();
+    }
+
     public function comments()
     {
         return $this->hasMany(RgComment::class, 'rg_register_id')->latest();

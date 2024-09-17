@@ -3,14 +3,17 @@
 namespace App\Http\Livewire\ReportRegister\Task;
 
 use App\Enum\CustomMessage;
+use App\Enum\ReportRegister\RgAuditEvent;
 use App\Enum\ReportRegister\RgPriority;
-use App\Enum\ReportRegister\RgStatus;
+use App\Enum\ReportRegister\RgScheduleStatus;
 use App\Enum\ReportRegister\RgTaskStatus;
 use App\Models\ReportRegister\RgSchedule;
 use App\Models\User;
 use App\Traits\CustomAlert;
 use App\Traits\ReportRegisterTrait;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -26,7 +29,7 @@ class ViewTask extends Component
     {
         $this->taskId = decrypt($taskId);
         $this->task = $this->getRegister($this->taskId);
-        $this->schedule = RgSchedule::select('time', 'status')->where('rg_register_id', $this->taskId)->latest()->first();
+        $this->schedule = RgSchedule::select('id', 'time', 'status', 'job_reference', 'cancelled_by_id')->where('rg_register_id', $this->taskId)->latest()->first();
         $this->statuses = RgTaskStatus::getConstants();
         $this->priorities = RgPriority::getConstants();
         $this->status = $this->task->status;
@@ -45,7 +48,7 @@ class ViewTask extends Component
             $this->customAlert('success', 'Report status has been updated');
             $this->task = $this->getRegister($this->taskId);
         } catch (Exception $exception) {
-            Log::error('REPORT-REGISTER-INCIDENT-VIEW-UPDATE-STATUS', [$exception]);
+            Log::error('REPORT-REGISTER-TASK-UPDATE-STATUS', [$exception]);
             $this->customAlert('error', CustomMessage::error());
         }
     }
@@ -72,7 +75,7 @@ class ViewTask extends Component
             $this->customAlert('success', 'Staff has been assigned');
             $this->task = $this->getRegister($this->taskId);
         } catch (Exception $exception) {
-            Log::error('REPORT-REGISTER-INCIDENT-VIEW-UPDATE-PRIORITY', [$exception]);
+            Log::error('REPORT-REGISTER-TASK-VIEW-UPDATE-STAFF-ID', [$exception]);
             $this->customAlert('error', CustomMessage::error());
         }
     }
@@ -88,16 +91,55 @@ class ViewTask extends Component
             $this->customAlert('success', 'Comment has been added');
             $this->task = $this->getRegister($this->taskId);
             $this->comment = null;
-
-            // TODO: Dispatch Job To Notify Requester
-
         } catch (Exception $exception) {
-            Log::error('REPORT-REGISTER-INCIDENT-VIEW-UPDATE-PRIORITY', [$exception]);
+            Log::error('REPORT-REGISTER-TASK-VIEW-SAVE-COMMENT', [$exception]);
             $this->customAlert('error', CustomMessage::error());
         }
     }
 
+    public function cancelTask()
+    {
+        try {
+            DB::beginTransaction();
+            $this->task->status = RgTaskStatus::CANCELLED;
+            if (!$this->task->save()) throw new Exception('Failed to cancel task');
 
+            $this->schedule->cancelled_by_id = Auth::id();
+            $this->schedule->status = RgScheduleStatus::CANCELLED;
+            if (!$this->schedule->save()) throw new Exception('Failed to update schedule');
+
+            $job = DB::table('jobs')->delete($this->schedule->job_reference);
+            if (!$job) throw new Exception('Failed to delete job');
+
+            $this->auditReportRegister($this->task, RgAuditEvent::UPDATED, "Set status to cancelled");
+
+            DB::commit();
+            $this->customAlert('success', 'Task has been cancelled successfully');
+            $this->task = $this->getRegister($this->taskId);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error('REPORT-REGISTER-TASK-CANCEL-SCHEDULE', [$exception]);
+            $this->customAlert('error', CustomMessage::error());
+        }
+    }
+
+    protected $listeners = [
+        'cancelTask'
+    ];
+
+    public function confirmPopUpModal()
+    {
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => 'cancelTask',
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+        ]);
+    }
 
     public function render()
     {
