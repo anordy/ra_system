@@ -84,8 +84,6 @@ class ViewIncident extends Component
             $this->customAlert('success', 'Comment has been added');
             $this->incident = $this->getRegister($this->incidentId);
             $this->comment = null;
-
-            // TODO: Dispatch Job To Notify Requester
         } catch (Exception $exception) {
             Log::error('REPORT-REGISTER-INCIDENT-VIEW-UPDATE-PRIORITY', [$exception]);
             $this->customAlert('error', CustomMessage::error());

@@ -19,7 +19,7 @@ class CreateRgRegistersTable extends Migration
         Schema::create('rg_registers', function (Blueprint $table) {
             $table->id();
             $table->integer('requester_type');
-            $table->integer('is_scheduled');
+            $table->integer('is_scheduled')->default(0);
             $table->unsignedBigInteger('requester_id');
             $table->unsignedBigInteger('rg_category_id')->nullable();
             $table->unsignedBigInteger('rg_sub_category_id')->nullable();

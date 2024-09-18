@@ -43,7 +43,7 @@ class CreateTask extends Component
             'description' => 'required|max:255|alpha_gen',
             'staffId' => 'required|integer|exists:users,id',
             'isScheduled' => ['required', Rule::in([GeneralConstant::ZERO, GeneralConstant::ONE])],
-            'scheduledTime' => ['required_if:isScheduled,' . GeneralConstant::ONE, 'date', 'after:5 minutes'],
+            'scheduledTime' => ['nullable', 'date', 'after:5 minutes'],
             'files.*.file' => 'nullable|mimes:pdf,xlsx,xls|max:3072|max_file_name_length:100',
             'files.*.name' => 'nullable|alpha_gen|max:255',
             'priority' => ['required', Rule::in($this->priorities)],

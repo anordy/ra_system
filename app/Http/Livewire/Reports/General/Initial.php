@@ -145,7 +145,7 @@ class Initial extends Component
             if ($this->year === ReportStatus::all) {
                 // Take all the years
                 $formattedParameters['start_date'] = Carbon::create(2022)->startOfYear()->format('Y-m-d');
-                $formattedParameters['end_date'] = Carbon::now()->format('Y-m-d');
+                $formattedParameters['end_date'] = Carbon::now()->endOfYear()->format('Y-m-d');
             } else {
                 // Format months
                 if ($this->month === ReportStatus::all) {

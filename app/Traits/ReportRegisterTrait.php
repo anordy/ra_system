@@ -20,6 +20,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 trait ReportRegisterTrait
 {
@@ -29,7 +30,7 @@ trait ReportRegisterTrait
         try {
             DB::beginTransaction();
 
-            $updated = $register->update(['status' => $status, 'assigned_to_id' => $staffId]);
+            $updated = $register->update(['status' => $status, 'assigned_to_id' => $staffId, 'start_date' => now()]);
 
             if (!$updated) throw new Exception('Failed to update incident status');
 
@@ -59,9 +60,9 @@ trait ReportRegisterTrait
             DB::commit();
 
             if ($register->register_type === RgRegisterType::TASK) {
-                $registerType = ucfirst(RgRegisterType::TASK);
+                $registerType = 'Task';
             } else if ($register->register_type === RgRegisterType::INCIDENT) {
-                $registerType = ucfirst(RgRegisterType::INCIDENT);
+                $registerType = 'Incident';
             } else {
                 throw new Exception('Invalid Register Type');
             }
@@ -101,6 +102,17 @@ trait ReportRegisterTrait
 
             if ($status === RgStatus::RESOLVED || $status === RgTaskStatus::CLOSED) {
                 $this->notifyWorkersOnClosure($register);
+
+                if ($register->register_type === RgRegisterType::INCIDENT) {
+                    $taxpayer = Taxpayer::find($register->requester_id, ['mobile', 'first_name']);
+
+                    if ($taxpayer) {
+                        event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                            'phone' => $taxpayer->mobile,
+                            'message' => "Hello {$taxpayer->first_name}, your logged incident: {$register->title} has been successfully closed"
+                        ]));
+                    }
+                }
             }
 
         } catch (Exception $exception) {
@@ -131,18 +143,10 @@ trait ReportRegisterTrait
     public function addComment($register, $comment)
     {
         try {
-            if (get_class(Auth::user()) === User::class) {
-                $actorType = RgRequestorType::STAFF;
-            } else if (get_class(Auth::user()) === Taxpayer::class) {
-                $actorType = RgRequestorType::TAXPAYER;
-            } else {
-                throw new \Exception('Invalid actor Type');
-            }
-
             DB::beginTransaction();
 
             $comment = RgComment::create([
-                'commenter_type' => $actorType,
+                'commenter_type' => RgRequestorType::STAFF,
                 'commenter_id' => Auth::id(),
                 'comment' => $comment,
                 'rg_register_id' => $register->id,
@@ -155,16 +159,26 @@ trait ReportRegisterTrait
 
             DB::commit();
 
-            if ($actorType === RgRequestorType::TAXPAYER && $register->register_type === RgRegisterType::INCIDENT) {
+            if ($register->register_type === RgRegisterType::INCIDENT) {
                 $taxpayer = Taxpayer::find($register->requester_id, ['mobile', 'first_name']);
 
                 if ($taxpayer) {
                     event(new SendSms(SendCustomSMS::SERVICE, NULL, [
                         'phone' => $taxpayer->mobile,
-                        'message' => "Hello {$taxpayer->first_name}, a new comment has been added on your logged incident: {$register->title}"
+                        'message' => "Hello {$taxpayer->first_name}, a new comment '{$comment->comment}' has been added on your logged incident: {$register->title}"
                     ]));
                 }
+            } else if ($register->register_type === RgRegisterType::TASK) {
+                $user = User::find($register->requester_id, ['phone', 'fname']);
 
+                if ($user) {
+                    event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                        'phone' => $user->phone,
+                        'message' => "Hello {$user->fname}, a new comment '{$comment->comment}' has been added on your logged incident: {$register->title}"
+                    ]));
+                }
+            } else {
+                throw new Exception('Invalid Register Type');
             }
 
         } catch (Exception $exception) {
@@ -257,9 +271,9 @@ trait ReportRegisterTrait
 
         if ($user) {
             if ($register->register_type === RgRegisterType::TASK) {
-                $registerType = ucfirst(RgRegisterType::TASK);
+                $registerType = 'Task';
             } else if ($register->register_type === RgRegisterType::INCIDENT) {
-                $registerType = ucfirst(RgRegisterType::INCIDENT);
+                $registerType = 'Incident';
             } else {
                 throw new Exception('Invalid Register Type');
             }
