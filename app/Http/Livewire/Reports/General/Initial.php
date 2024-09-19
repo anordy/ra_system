@@ -96,13 +96,14 @@ class Initial extends Component
                         if ($childParameter->code === Parameter::RG_SUB_CATEGORY_ID) {
                             $childParameter->model_name = 'SELECT ID,NAME FROM RG_SUB_CATEGORIES WHERE RG_CATEGORY_ID ='. $parameter['value'];
                         }
-                        $this->parameters[] = $childParameter;
+                        $this->parameters[] = $childParameter->toArray();
                     } else {
-                        $this->parameters[] = $childParameter;
+                        $this->parameters[] = $childParameter->toArray();
                     }
                 }
 
             }
+
         }
 
     }
