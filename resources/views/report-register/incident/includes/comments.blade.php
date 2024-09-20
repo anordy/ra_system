@@ -10,7 +10,7 @@
                 <h5>{{ $comment->commenter_name }}</h5>
                 <p class="px-5">{{ $comment->comment }}</p>
                 <ul class="list-unstyled list-inline media-detail float-left">
-                    <li><i class="bi bi-calendar-date"></i> {{ $comment->created_at->format('d M, Y H:i:s')  }}</li>
+                    <li><i class="bi bi-calendar-date"></i> {{ $comment->comment_reason ? 'Marked as '.ucfirst($comment->comment_reason). ' on ' : ''  }} {{ $comment->created_at->format('d M, Y H:i:s')  }}</li>
                 </ul>
             </div>
         </div>

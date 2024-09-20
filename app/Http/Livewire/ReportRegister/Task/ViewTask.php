@@ -35,13 +35,19 @@ class ViewTask extends Component
         $this->status = $this->task->status;
         $this->priority = $this->task->priority;
         $this->staffId = $this->task->assigned_to_id ?? null;
-        $this->users = User::query()->select('id', 'fname', 'lname')->orderBy('fname', 'ASC')->get();
+        $this->users = User::query()
+            ->select('id', 'fname', 'lname')
+            ->orderBy('fname', 'ASC')
+            ->get();
     }
 
     public function updatedStatus()
     {
         $this->validate([
-            'status' => Rule::in($this->statuses)
+            'status' => Rule::in($this->statuses),
+            'comment' => 'required|min:10|max:255|string'
+        ],[
+            'comment.required' => "Please enter comment for marking this task as {$this->status}"
         ]);
         try {
             $this->updateStatus($this->task, $this->status);
@@ -87,7 +93,10 @@ class ViewTask extends Component
         ]);
 
         try {
-            $this->addComment($this->task, $this->comment);
+            if ($this->task->status != $this->status) {
+                $this->updateStatus($this->task, $this->status);
+            }
+            $this->addComment($this->task, $this->comment, $this->status);
             $this->customAlert('success', 'Comment has been added');
             $this->task = $this->getRegister($this->taskId);
             $this->comment = null;

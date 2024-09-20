@@ -74,6 +74,7 @@
                                 <option value="{{ $status }}">{{ ucfirst($status) }}</option>
                             @endforeach
                         </select>
+                        <small>For any update on the status a comment must be written</small>
                         @error('status')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -106,6 +107,9 @@
                                 <option value="{{ $user->id }}">{{ ucfirst($user->fullname) }}</option>
                             @endforeach
                         </select>
+                        @if(!count($users ?? []))
+                            <small>If no users are available make sure the notifiable roles have been added in the sub category settings</small>
+                        @endif
                         @error('staffId')
                         <div class="invalid-feedback">
                             {{ $message }}

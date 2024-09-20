@@ -140,7 +140,7 @@ trait ReportRegisterTrait
         }
     }
 
-    public function addComment($register, $comment)
+    public function addComment($register, $comment, $status = null)
     {
         try {
             DB::beginTransaction();
@@ -150,7 +150,8 @@ trait ReportRegisterTrait
                 'commenter_id' => Auth::id(),
                 'comment' => $comment,
                 'rg_register_id' => $register->id,
-                'is_read' => false
+                'is_read' => false,
+                'comment_reason' => $status
             ]);
 
             if (!$comment) throw new Exception('Failed to save comment');

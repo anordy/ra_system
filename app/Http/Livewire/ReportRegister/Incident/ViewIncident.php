@@ -29,14 +29,26 @@ class ViewIncident extends Component
         $this->status = $this->incident->status;
         $this->priority = $this->incident->priority;
         $this->staffId = $this->incident->assigned_to_id ?? null;
-        $this->users = User::query()->select('id', 'fname', 'lname')->orderBy('fname', 'ASC')->get();
+        $roles = [];
+        if (isset($this->incident->subcategory->notifiables)) {
+            $roles = $this->incident->subcategory->notifiables->pluck('role_id')->toArray();
+        }
+        $this->users = User::query()
+            ->select('id', 'fname', 'lname')
+            ->whereIn('role_id', $roles)
+            ->orderBy('fname', 'ASC')
+            ->get();
     }
 
     public function updatedStatus()
     {
         $this->validate([
-            'status' => Rule::in($this->statuses)
+            'status' => Rule::in($this->statuses),
+            'comment' => 'required|min:10|max:255|string'
+        ],[
+            'comment.required' => "Please enter comment for marking this incident as {$this->status}"
         ]);
+
         try {
             $this->updateStatus($this->incident, $this->status);
             $this->customAlert('success', 'Report status has been updated');
@@ -80,7 +92,10 @@ class ViewIncident extends Component
             'comment' => 'required|min:10|max:255|string'
         ]);
         try {
-            $this->addComment($this->incident, $this->comment);
+            if ($this->incident->status != $this->status) {
+                $this->updateStatus($this->incident, $this->status);
+            }
+            $this->addComment($this->incident, $this->comment, $this->status);
             $this->customAlert('success', 'Comment has been added');
             $this->incident = $this->getRegister($this->incidentId);
             $this->comment = null;
