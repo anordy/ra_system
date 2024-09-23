@@ -321,9 +321,9 @@ function getSourceName($model)
         return 'Assessment';
     } else if ($model == App\Models\PublicService\PublicServiceReturn::class) {
         return 'Public Service';
-    }  else if ($model == \App\Models\Investigation\TaxInvestigation::class) {
+    } else if ($model == \App\Models\Investigation\TaxInvestigation::class) {
         return 'Tax Investigation';
-    }  else if ($model == \App\Models\TaxAudit\TaxAudit::class) {
+    } else if ($model == \App\Models\TaxAudit\TaxAudit::class) {
         return 'Tax Audit';
     } else {
         return 'N/A';
@@ -366,9 +366,22 @@ function getSignature($modelInstance)
 
 }
 
-function custom_dispatch($job, $time = null): int {
+function custom_dispatch($job, $time = null): int
+{
     if ($time) {
         return app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job->delay($time));
     }
     return app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job);
+}
+
+function getDepartment($id)
+{
+    if (!empty($id)) {
+        $department = \App\Models\ReportRegister\Department::find($id, ['name']);
+
+        if ($department) {
+            return $department->name;
+        }
+    }
+    return 'N/A';
 }

@@ -107,6 +107,8 @@
                         @include('dual-control-activities.details.certificate-signature')
                     @elseif ($result->controllable_type === \App\Models\DualControl::VAT_TAX_TYPE || $result->controllable_type === \App\Models\DualControl::TAXTYPE)
                         @include('dual-control-activities.details.tax-type')
+                    @elseif ($result->controllable_type === \App\Models\DualControl::VIABLE_TAX_TYPE_CHANGE)
+                        @include('dual-control-activities.details.viable-tax-type-change')
                     @endif
 
                     <div class="d-flex justify-content-end">

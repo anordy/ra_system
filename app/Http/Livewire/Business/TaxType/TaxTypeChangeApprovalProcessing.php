@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Business\TaxType;
 
 use App\Enum\CustomMessage;
 use App\Models\BusinessLocation;
+use App\Models\BusinessTaxType;
 use Exception;
 use Carbon\Carbon;
 use App\Events\SendSms;
@@ -76,7 +77,6 @@ class TaxTypeChangeApprovalProcessing extends Component
                 $this->showSubVatOptions = false;
             }
         }
-
     }
 
 
@@ -84,8 +84,7 @@ class TaxTypeChangeApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'effective_date' => 'required|strip_tag',
-            'to_tax_type_currency' => 'required', 
+            'to_tax_type_currency' => 'required|alpha',
             'to_tax_type_id' => 'required|numeric'
         ]);
 
@@ -123,6 +122,15 @@ class TaxTypeChangeApprovalProcessing extends Component
                     }
 
                 }
+
+                $currentTaxType = BusinessTaxType::where('business_id', $this->subject->business_id)
+                    ->where('tax_type_id', $this->subject->from_tax_type_id)
+                    ->firstOrFail();
+
+                $currentTaxType->tax_type_id = $this->subject->to_tax_type_id;
+                $currentTaxType->currency = $this->subject->to_tax_type_currency;
+
+                if (!$currentTaxType->save()) throw new Exception('Failed to update tax type');
 
                 DB::commit();
 

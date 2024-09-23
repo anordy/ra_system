@@ -216,6 +216,31 @@
                 @endif
 
 
+                <tr>
+                    <th>Department</th>
+                    <td>
+                        <p class="my-1">
+                            @if(!empty($result->action != \App\Models\DualControl::EDIT))
+                                {{ getDepartment($data->department_id) }}
+                            @else
+                                {{ getDepartment($old_values->department_id) }}
+                            @endif
+                        </p>
+                    </td>
+                    @if ($new_values)
+                        <td>
+                            {{ getDepartment($new_values->department_id) }}
+                        </td>
+
+                        @if (compareDualControlValues(
+                            $result->action != \App\Models\DualControl::EDIT ? $data->department_id : $old_values->department_id, $new_values->department_id))
+                            <td class="table-success">NOT CHANGED</td>
+                        @else
+                            <td class="table-danger">CHANGED</td>
+                        @endif
+                    @endif
+                </tr>
+
 
                 </tbody>
             </table>

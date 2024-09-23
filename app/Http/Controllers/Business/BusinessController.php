@@ -67,5 +67,12 @@ class BusinessController extends Controller
         }
         return view('business.updates.show', ['updateId' => $id]);
     }
+
+    public function searchQuery(){
+        if (!Gate::allows('search-business')) {
+            abort(403);
+        }
+        return view('business.query.search');
+    }
     
 }

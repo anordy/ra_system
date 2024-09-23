@@ -101,22 +101,43 @@
                 <div class="col-md-3 mb-3">
                     <div class="form-group">
                         <label>Assigned To</label>
-                        <select wire:model.live="staffId" class="form-control @error('staffId') is-invalid @enderror">
-                            <option value="">Select Staff</option>
-                            @foreach ($users ?? [] as $user)
-                                <option value="{{ $user->id }}">{{ ucfirst($user->fullname) }}</option>
-                            @endforeach
-                        </select>
-                        @if(!count($users ?? []))
-                            <small>If no users are available make sure the notifiable roles have been added in the sub category settings</small>
-                        @endif
-                        @error('staffId')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                        <input
+                                type="text"
+                                class="form-input form-control"
+                                placeholder="Search Staffs..."
+                                wire:model="query"
+                                wire:keydown.escape="resetFields"
+                                wire:keydown.tab="resetFields"
+                                wire:keydown.arrow-up="decrementHighlight"
+                                wire:keydown.arrow-down="incrementHighlight"
+                                wire:keydown.enter="selectUser({{ $highlightIndex }})"
+                        />
+
+                        <div wire:loading class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
+                            <div class="list-item">Searching...</div>
                         </div>
-                        @enderror
+
+                        @if(!empty($query))
+                            <div class="fixed top-0 bottom-0 left-0 right-0" wire:click="resetFields"></div>
+
+                            <div class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
+                                @if(!empty($users))
+                                    @foreach($users as $i => $user)
+                                        <a
+                                                href="#" wire:click.prevent="selectUser({{ $i }})"
+                                                class="list-item {{ $highlightIndex === $i ? 'highlight-dropdown' : '' }}"
+                                        >{{ $user['fname'] }} {{ $user['lname'] }}</a>
+                                    @endforeach
+                                @else
+                                    @if(!$staffId)
+                                        <div class="list-item">No results!</div>
+                                    @endif
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </div>
+
             </div>
             <hr>
             <section class="content-item" id="comment">

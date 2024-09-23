@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\ApprovalLevel;
 use App\Models\DualControl;
+use App\Models\ReportRegister\Department;
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\VerificationTrait;
@@ -32,6 +33,7 @@ class UserEditModal extends Component
     public $levels;
     public $level_id;
     public $override_otp;
+    public $departments = [], $department_id;
 
     protected function rules()
     {
@@ -41,14 +43,16 @@ class UserEditModal extends Component
             'email' => 'required|ends_with:zanrevenue.org,egaz.go.tz,ubx.co.tz,zbs.go.tz,kamisheniardhi.go.tz|unique:users,email,' . $this->user->id . ',id',
             'gender' => 'required|in:M,F',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'override_otp' => 'required|in:0,1'
+            'override_otp' => 'required|in:0,1',
+            'department_id' => 'required|integer'
         ];
     }
 
     public function messages()
     {
         return [
-            'override_otp.required' => 'Please specify if users can OTP and use security questions by default.'
+            'override_otp.required' => 'Please specify if users can OTP and use security questions by default.',
+            'department_id.required' => 'User department is required.'
         ];
     }
 
@@ -60,7 +64,7 @@ class UserEditModal extends Component
     public function mount($id)
     {
         $this->roles = Role::all();
-        $user = User::find(decrypt($id));
+        $user = User::find(decrypt($id), ['id', 'fname', 'lname', 'phone', 'gender', 'email', 'role_id', 'level_id', 'override_otp', 'department_id']);
         if (is_null($user)) {
             abort(404);
         }
@@ -73,14 +77,17 @@ class UserEditModal extends Component
         $this->email = $user->email;
         $this->gender = $user->gender ?? '';
         $this->override_otp = $user->override_otp ? 1 : 0;
+        $this->department_id = $user->department_id;
         $this->old_values = [
             'fname' => $this->fname,
             'lname' => $this->lname,
             'gender' => $this->gender,
             'email' => $this->email,
             'phone' => $this->phone,
-            'override_otp' => $this->override_otp ? 1 : 0
+            'override_otp' => $this->override_otp ? 1 : 0,
+            'department_id' => $this->department_id
         ];
+        $this->departments = Department::query()->select('id', 'name')->get();
     }
 
     public function submit()
@@ -109,7 +116,8 @@ class UserEditModal extends Component
                 'email' => $this->email,
                 'phone' => $this->phone,
                 'level_id' => $this->level_id,
-                'override_otp' => $this->override_otp
+                'override_otp' => $this->override_otp,
+                'department_id' => $this->department_id
             ];
 
             // Sign User

@@ -8,14 +8,14 @@
         <tbody>
             <tr>
                 <td>
-                    <span>{{ $taxchange->fromTax->name }} -
+                    <span>{{ $taxchange->fromTax->name ?? 'N/A' }} -
                         {{ $taxchange->from_tax_type_currency ?? '' }}</span><br>
                 </td>
                 <td>
                     @if ($taxchange->toTax && $taxchange->toTax->code == 'vat')
                         {{ $taxchange->subvat ? $taxchange->subvat->name : 'SUBVAT_NOTSET_ERR' }}
                     @else
-                    <span>{{ $taxchange->toTax && $taxchange->toTax->name }} -
+                    <span>{{ $taxchange->toTax->name ?? 'N/A' }} -
                         {{ $taxchange->to_tax_type_currency ?? '' }}</span><br>
                     @endif
                 </td>
@@ -38,7 +38,7 @@
             </tr>
             <tr>
                 <th>Status</th>
-                <td>{{ $taxchange->status }}</td>
+                <td><span class="badge badge-warning">{{ ucfirst($taxchange->status ?? 'N/A') }}</span></td>
             </tr>
             @if ($taxchange->effective_date)
                 <tr>
@@ -109,16 +109,6 @@
                         <option value="USD">United State Dollar</option>
                     </select>
                     @error('to_tax_type_currency')
-                        <span class="text-danger error">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label">Effective Date</label>
-                    <input type="date" min="{{ $today }}"
-                        class="form-control @error('effective_date') is-invalid @enderror" wire:model.defer.defer="effective_date">
-                    @error('effective_date')
                         <span class="text-danger error">{{ $message }}</span>
                     @enderror
                 </div>

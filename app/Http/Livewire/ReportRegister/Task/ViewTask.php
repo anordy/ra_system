@@ -22,11 +22,15 @@ class ViewTask extends Component
 {
     use CustomAlert, ReportRegisterTrait;
 
-    public $statuses = [], $priorities = [], $users = [], $taskId;
+    public $statuses = [], $priorities = [], $taskId;
     public $task, $status, $priority, $staffId, $comment, $schedule;
+    public $query;
+    public $users, $selectedUser;
+    public $highlightIndex;
 
     public function mount($taskId)
     {
+        $this->resetFields();
         $this->taskId = decrypt($taskId);
         $this->task = $this->getRegister($this->taskId);
         $this->schedule = RgSchedule::select('id', 'time', 'status', 'job_reference', 'cancelled_by_id')->where('rg_register_id', $this->taskId)->latest()->first();
@@ -35,10 +39,10 @@ class ViewTask extends Component
         $this->status = $this->task->status;
         $this->priority = $this->task->priority;
         $this->staffId = $this->task->assigned_to_id ?? null;
-        $this->users = User::query()
-            ->select('id', 'fname', 'lname')
-            ->orderBy('fname', 'ASC')
-            ->get();
+        $currentUser = User::find($this->staffId, ['fname', 'lname']);
+        if ($currentUser) {
+            $this->query = $currentUser->fname . ' ' . $currentUser->lname;
+        }
     }
 
     public function updatedStatus()
@@ -148,6 +152,54 @@ class ViewTask extends Component
             'cancelButtonText' => 'Cancel',
             'timer' => null,
         ]);
+    }
+
+    public function resetFields()
+    {
+        $this->query = '';
+        $this->users = [];
+        $this->highlightIndex = 0;
+    }
+
+    public function incrementHighlight()
+    {
+        if ($this->highlightIndex === count($this->users) - 1) {
+            $this->highlightIndex = 0;
+            return;
+        }
+        $this->highlightIndex++;
+    }
+
+    public function decrementHighlight()
+    {
+        if ($this->highlightIndex === 0) {
+            $this->highlightIndex = count($this->users) - 1;
+            return;
+        }
+        $this->highlightIndex--;
+    }
+
+    public function selectUser($index)
+    {
+        $this->selectedUser = $this->users[$index] ?? null;
+        if ($this->selectedUser) {
+            $this->staffId = $this->selectedUser['id'];
+            $this->query = ucfirst($this->selectedUser['fname'].' '.$this->selectedUser['lname']);
+            $this->updatedStaffId();
+        }
+        $this->users = [];
+        $this->highlightIndex = 0;
+    }
+
+    public function updatedQuery()
+    {
+        $this->users = User::query()
+            ->select('id', 'fname', 'lname')
+            ->where('department_id', Auth::user()->department_id)
+            ->whereRaw(DB::raw("LOWER(fname) like '%' || LOWER('$this->query') || '%'"))
+            ->orWhereRaw(DB::raw("LOWER(lname) like '%' || LOWER('$this->query') || '%'"))
+            ->get()
+            ->toArray();
     }
 
     public function render()

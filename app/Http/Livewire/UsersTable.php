@@ -125,7 +125,7 @@ class UsersTable extends DataTableComponent
                     $value = "'".encrypt($value)."'";
 
                     if ($row->is_approved == 1) {
-                        if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker') ) {
+                        if (Gate::allows('setting-user-edit') && !approvalLevel(Auth::user()->level_id, 'Maker') ) {
                             $edit = <<< HTML
                                         <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal', $value)"><i class="bi bi-pencil-square"></i> </button>
                                     HTML;

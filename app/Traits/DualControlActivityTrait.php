@@ -100,8 +100,10 @@ trait DualControlActivityTrait
                     return 'VAT Tax Type';
                 case DualControl::CERTIFICATE_SIGNATURE:
                     return 'Certificate Signature';
+                case DualControl::VIABLE_TAX_TYPE_CHANGE:
+                    return 'Viable Tax Type Change';
                 default:
-                    abort(404);
+                    return 'Missing Dual Control Type';
             }
         } catch (\Exception $exception) {
             Log::error('TRAITS-DUAL-CONTROL-ACTIVITY-TRAIT-GET-MODEL', [$exception]);

@@ -105,7 +105,11 @@
                             <a href="{{ route("business.upgraded-tax-types.index") }}">Upgraded Tax Types</a>
                         </li>
                     @endcan
-
+                    @can("search-business")
+                        <li class="{{ request()->is("business/search*") ? "active" : "" }}">
+                            <a href="{{ route("business.search.query") }}">Search Business</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan
@@ -1338,7 +1342,11 @@
                             <a href="{{ route('settings.certificate-signature.index') }}">Certificate Signature</a>
                         </li>
                     @endcan
-
+                    @can('setting-tax-type-view')
+                        <li class="{{ request()->is('settings/viable/change*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.viable.change') }}">Viable Tax Type Changes</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan

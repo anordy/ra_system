@@ -109,7 +109,7 @@ trait ReportRegisterTrait
                     if ($taxpayer) {
                         event(new SendSms(SendCustomSMS::SERVICE, NULL, [
                             'phone' => $taxpayer->mobile,
-                            'message' => "Hello {$taxpayer->first_name}, your logged incident: {$register->title} has been successfully closed"
+                            'message' => "Hello {$taxpayer->first_name}, your logged incident: {$register->title} has been successfully {$status}"
                         ]));
                     }
                 }

@@ -1,7 +1,8 @@
 <div>
     @if($schedule && $schedule->job())
         <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <strong>This task has been scheduled to run at {{ $schedule->time->format('d M, Y H:i') ?? 'N/A' }} | Schedule Status: {{ ucfirst($schedule->status ?? 'N/A')  }}</strong>
+            <strong>This task has been scheduled to run at {{ $schedule->time->format('d M, Y H:i') ?? 'N/A' }} |
+                Schedule Status: {{ ucfirst($schedule->status ?? 'N/A')  }}</strong>
             <button class="float-right btn btn-danger btn-sm" wire:click="confirmPopUpModal">
                 Cancel Task
             </button>
@@ -41,7 +42,8 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Duration</span>
-                    <p class="my-1">{{ \Carbon\Carbon::create($task->start_date)->diffInDays($task->assigned->end_date) }} Days</p>
+                    <p class="my-1">{{ \Carbon\Carbon::create($task->start_date)->diffInDays($task->assigned->end_date) }}
+                        Days</p>
                 </div>
                 <div class="col-md-12 mb-3">
                     <span class="font-weight-bold text-uppercase">Description</span>
@@ -105,22 +107,47 @@
                         @enderror
                     </div>
                 </div>
+
                 <div class="col-md-3 mb-3">
                     <div class="form-group">
                         <label>Assigned To</label>
-                        <select wire:model="staffId" class="form-control @error('staffId') is-invalid @enderror">
-                            <option value="">Select Staff</option>
-                            @foreach ($users ?? [] as $user)
-                                <option value="{{ $user->id }}">{{ ucfirst($user->fullname) }}</option>
-                            @endforeach
-                        </select>
-                        @error('staffId')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                        <input
+                                type="text"
+                                class="form-input form-control"
+                                placeholder="Search Staffs..."
+                                wire:model="query"
+                                wire:keydown.escape="resetFields"
+                                wire:keydown.tab="resetFields"
+                                wire:keydown.arrow-up="decrementHighlight"
+                                wire:keydown.arrow-down="incrementHighlight"
+                                wire:keydown.enter="selectUser({{ $highlightIndex }})"
+                        />
+
+                        <div wire:loading class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
+                            <div class="list-item">Searching...</div>
                         </div>
-                        @enderror
+
+                        @if(!empty($query))
+                            <div class="fixed top-0 bottom-0 left-0 right-0" wire:click="resetFields"></div>
+
+                            <div class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
+                                @if(!empty($users))
+                                    @foreach($users as $i => $user)
+                                        <a
+                                                href="#" wire:click.prevent="selectUser({{ $i }})"
+                                                class="list-item {{ $highlightIndex === $i ? 'highlight-dropdown' : '' }}"
+                                        >{{ $user['fname'] }} {{ $user['lname'] }}</a>
+                                    @endforeach
+                                @else
+                                    @if(!$staffId)
+                                        <div class="list-item">No results!</div>
+                                    @endif
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </div>
+
             </div>
             <hr>
             <section class="content-item" id="comment">
@@ -144,7 +171,9 @@
 
                         </div>
                         <div class="form-group col-md-6">
-                            <button wire:click="saveComment()" class="btn btn-primary float-right"><i class="bi bi-chat-left-fill"></i> Save Comment</button>
+                            <button wire:click="saveComment()" class="btn btn-primary float-right"><i
+                                        class="bi bi-chat-left-fill"></i> Save Comment
+                            </button>
                         </div>
                     </div>
                     @include('report-register.incident.includes.comments', ['incident' => $task])

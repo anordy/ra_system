@@ -254,6 +254,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::resource('/penalty-rates', PenaltyRateController::class);
         Route::resource('/zrb-bank-accounts', ZrbBankAccountController::class);
         Route::get('/subvat/taxtypes', [TaxTypeController::class, 'vat'])->name('subvat.taxtypes');
+        Route::get('/viable/taxtypes', [TaxTypeController::class, 'changes'])->name('viable.change');
         Route::get('/setting-system-categories/view', [SystemSettingsController::class, 'setting_categories'])->name('setting-system-categories.view');
         Route::get('/system-settings/view', [SystemSettingsController::class, 'system_settings'])->name('system-settings.view');
         Route::get('financial-years', [FinancialYearsController::class, 'index'])->name('financial-years');
@@ -353,6 +354,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
         Route::get('/change-taxtype', [BusinessController::class, 'taxTypeRequests'])->name('taxTypeRequests');
         Route::get('/change-taxtype/{id}', [BusinessController::class, 'viewTaxTypeRequest'])->name('viewTaxTypeRequest');
+        Route::get('/query', [BusinessController::class, 'searchQuery'])->name('search.query');
 
         Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
         Route::get('/branches/{branch}', [BranchController::class, 'show'])->name('branches.show');
