@@ -209,14 +209,6 @@ trait DualControlActivityTrait
                         $this->sendEmailToUser($update, $message);
                     }
 
-                    $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
-                    $update->update($payload);
-                    if ($data->controllable_type == DualControl::USER) {
-                        $this->sign($update);
-                        $message = 'We are writing to inform you that some of your ZRA staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
-                        $this->sendEmailToUser($update, $message);
-                    }
-
                     if (str_contains($data->action_detail, 'editing user role')) {
                         dispatch(new UserUpdateActors($data->controllable_type_id));
                     }

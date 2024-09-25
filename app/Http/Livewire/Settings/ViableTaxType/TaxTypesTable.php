@@ -96,7 +96,7 @@ class TaxTypesTable extends DataTableComponent
                     $value = "'".encrypt($value)."'";
 
                     if ($row->is_approved == 1) {
-                        if (Gate::allows('setting-tax-type-edit') && !$this->isMaker) {
+                        if (Gate::allows('setting-tax-type-edit') && $this->isMaker) {
                             $edit =  <<< HTML
                                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'settings.viable-tax-type.add-viable-tax-type-modal',$value)"><i class="bi bi-pencil-square"></i> </button>
                                 HTML;

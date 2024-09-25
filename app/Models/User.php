@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\ReportRegister\Department;
 use App\Models\Security\UserAnswer;
 use App\Services\Verification\PayloadInterface;
 use App\Traits\HasPermissions;
@@ -53,6 +54,11 @@ class User extends Authenticatable implements PayloadInterface, Auditable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 
     public function level()
@@ -131,4 +137,5 @@ class User extends Authenticatable implements PayloadInterface, Auditable
         }
         return $initials;
     }
+
 }

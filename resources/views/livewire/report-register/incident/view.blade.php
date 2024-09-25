@@ -113,7 +113,7 @@
                                 wire:keydown.enter="selectUser({{ $highlightIndex }})"
                         />
 
-                        <div wire:loading class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
+                        <div wire:loading wire:target="query" class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
                             <div class="list-item">Searching...</div>
                         </div>
 

@@ -149,8 +149,8 @@ class ViewIncident extends Component
         $this->users = User::query()
             ->select('id', 'fname', 'lname')
             ->whereIn('role_id', $this->roles)
-            ->whereRaw(DB::raw("LOWER(fname) like '%' || LOWER('$this->query') || '%'"))
-            ->orWhereRaw(DB::raw("LOWER(lname) like '%' || LOWER('$this->query') || '%'"))
+            ->whereRaw("LOWER(fname) LIKE LOWER(?)", ['%' . $this->query . '%'])
+            ->orWhereRaw("LOWER(lname) LIKE LOWER(?)", ['%' . $this->query . '%'])
             ->get()
             ->toArray();
     }

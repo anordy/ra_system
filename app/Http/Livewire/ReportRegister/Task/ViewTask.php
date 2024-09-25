@@ -196,8 +196,8 @@ class ViewTask extends Component
         $this->users = User::query()
             ->select('id', 'fname', 'lname')
             ->where('department_id', Auth::user()->department_id)
-            ->whereRaw(DB::raw("LOWER(fname) like '%' || LOWER('$this->query') || '%'"))
-            ->orWhereRaw(DB::raw("LOWER(lname) like '%' || LOWER('$this->query') || '%'"))
+            ->whereRaw("LOWER(fname) LIKE LOWER(?)", ['%' . $this->query . '%'])
+            ->orWhereRaw("LOWER(lname) LIKE LOWER(?)", ['%' . $this->query . '%'])
             ->get()
             ->toArray();
     }

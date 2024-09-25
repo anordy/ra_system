@@ -19,6 +19,7 @@ class GeneralConstant implements Status
     const ONE_INT = 1;
     const ZERO_INT = 0;
     const TWO_INT = 2;
+    const FOUR_INT = 4;
     const OWNED = 'Owned';
     const RENTED = 'Rented';
     const ALL = 'all';
