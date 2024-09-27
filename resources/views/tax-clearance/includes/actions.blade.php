@@ -14,7 +14,7 @@ $operators = json_decode($instace->operators, true);
         </a>
     @endif
 @elseif($instace->operator_type == \App\Enum\GeneralConstant::ROLE)
-    @if (in_array(auth()->user()->id, $operators))
+    @if (in_array(auth()->user()->role_id, $operators))
         <a href="{{ route('tax-clearance.request.approval', encrypt($value)) }}" class="btn btn-outline-primary btn-sm">
             <i class="bi bi-eye-fill mr-1"></i> View & Approve
         </a>
