@@ -42,6 +42,14 @@ class TaxVerificationsController extends Controller
         return view('verifications.unpaid');
     }
 
+    public function initiate(){
+        if (!Gate::allows('return-verification')) {
+            abort(403);
+        }
+
+        return view('verifications.initiate');
+    }
+
     public function edit($id)
     {
         if (!Gate::allows('verification-view-all')) {

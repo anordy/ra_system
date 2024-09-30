@@ -109,6 +109,50 @@
                         </span>
                     </div>
             @endif
+            @if($this->checkTransition('send_notification_to_taxpayer'))
+                <div class="row p-0">
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Notification Letter *</label>
+                        <input type="file" class="form-control  @error('notificationLetter') is-invalid @enderror"
+                               wire:model.lazy="notificationLetter">
+                        @error('notificationLetter')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            @endif
+            @if($this->checkTransition('officer_prepare_final_report'))
+                <div class="row p-0">
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Final Report *</label>
+                        <input type="file" class="form-control  @error('finalReport') is-invalid @enderror"
+                               wire:model.lazy="finalReport">
+                        @error('finalReport')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            @endif
+            @if($this->checkTransition('exit_discussion'))
+                <div class="row p-0">
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Final Report *</label>
+                        <input type="file" class="form-control  @error('finalReport') is-invalid @enderror"
+                               wire:model.lazy="finalReport">
+                        @error('finalReport')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Notice of Discussion *</label>
+                        <input type="file" class="form-control  @error('noticeDiscussion') is-invalid @enderror"
+                               wire:model.lazy="noticeDiscussion">
+                        @error('noticeDiscussion')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            @endif
             <div class="row p-0">
                 <div class="col-md-12 mb-3">
                     <div class="form-group">
@@ -132,19 +176,32 @@
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'assign_officers')">Assign &
                     Forward</button>
             </div>
+        @elseif ($this->checkTransition('send_notification_to_taxpayer'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'send_notification_to_taxpayer')">Send Notification To Taxpayer</button>
+            </div>
         @elseif ($this->checkTransition('conduct_verification'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'conduct_verification')">
                     Approve & Forward
                 </button>
             </div>
-        @elseif ($this->checkTransition('verification_review_report'))
+        @elseif ($this->checkTransition('manager_verification_review_report_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'correct_verification_report')">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'manager_verification_review_report_reject')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'verification_review_report')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'manager_verification_review_report_review')">
                     Approve & Forward
+                </button>
+            </div>
+        @elseif ($this->checkTransition('commissioner_verification_review_report_review'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commissioner_verification_review_report_reject')">
+                    Reject & Return Back
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commissioner_verification_review_report_review')">
+                    Send To Taxpayer
                 </button>
             </div>
         @elseif ($this->checkTransition('correct_reviewed_report'))
@@ -153,6 +210,54 @@
                     Reject & Return Back
                 </button>
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'completed')">
+                    Approve & Complete
+                </button>
+            </div>
+        @elseif ($this->checkTransition('officer_prepare_final_report'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'officer_prepare_final_report')">
+                    Approve & Forward
+                </button>
+            </div>
+        @elseif ($this->checkTransition('exit_discussion'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'exit_discussion')">
+                    Approve & Forward
+                </button>
+            </div>
+        @elseif ($this->checkTransition('manager_final_report_review'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'manager_final_report_reject')">
+                    Reject & Return Back
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'manager_final_report_review')">
+                    Approve & Forward
+                </button>
+            </div>
+        @elseif ($this->checkTransition('exit_discussion_correct'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'exit_discussion_correct')">
+                    Reject & Return Back
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commissioner_exit_discussion_review')">
+                    Approve & Forward
+                </button>
+            </div>
+        @elseif ($this->checkTransition('commissioner_final_report_review'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commissioner_final_report_reject')">
+                    Reject & Return Back
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commissioner_final_report_review')">
+                    Approve & Complete
+                </button>
+            </div>
+        @elseif ($this->checkTransition('commissioner_exit_discussion_approve'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commissioner_exit_discussion_reject')">
+                    Reject & Return Back
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commissioner_exit_discussion_approve')">
                     Approve & Complete
                 </button>
             </div>

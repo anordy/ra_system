@@ -56,6 +56,8 @@ class TaxpayersTable extends DataTableComponent
                     }
                 }),
             Column::make('Mobile No', 'mobile')->searchable(),
+            Column::make('Zanid', 'zanid_no')->searchable(),
+            Column::make('Nida', 'nida_no')->searchable(),
             Column::make('Email Address', 'email')->searchable(),
             Column::make('Nationality', 'country_id')
                 ->format(fn ($value, $row) => $row->country->nationality ?? '')->searchable(),
