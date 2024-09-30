@@ -59,24 +59,21 @@ class VerificationsTable extends DataTableComponent
             })
             ->where('tax_verifications.status', $this->status);
 
-        // TODO: Uncomment out this
-//        if ($this->status === TaxVerificationStatus::PENDING && !$this->vetted){
-//            $query->whereHas('pinstance', function ($query) {
-//                $query->whereHas('actors', function ($query) {
-//                    $query->where('user_id', auth()->id());
-//                });
-//            });
-//        }
-//
-//        if ($this->vetted){
-//            $query->whereHas('taxReturn', function (Builder $builder) {
-//                $builder->where('vetting_status', VettingStatus::VETTED);
-//            });
-//        }
+        if ($this->status === TaxVerificationStatus::PENDING && !$this->vetted){
+            $query->whereHas('pinstance', function ($query) {
+                $query->whereHas('actors', function ($query) {
+                    $query->where('user_id', auth()->id());
+                });
+            });
+        }
 
-        $table = TaxVerification::getTableName();
-        $query = $this->dataFilter($query, $this->data, $table);
-        return $query;
+        if ($this->vetted){
+            $query->whereHas('taxReturn', function (Builder $builder) {
+                $builder->where('vetting_status', VettingStatus::VETTED);
+            });
+        }
+
+        return $this->dataAssessmentFilter($query, $this->data);
     }
 
     public function configure(): void
@@ -92,20 +89,13 @@ class VerificationsTable extends DataTableComponent
     {
         return [
             Column::make('Z_Number', 'location.zin')
-                ->sortable()
                 ->searchable(),
             Column::make('TIN', 'business.tin')
-                ->sortable()
                 ->searchable(),
             Column::make('Business Name', 'business.name')
-                ->sortable()
                 ->searchable(),
-            Column::make('Business Location', 'location.name')
-                ->sortable()
-                ->searchable(),
-            Column::make('Tax Type', 'taxtype.name')
-                ->sortable()
-                ->searchable(),
+            Column::make('Business Location', 'location.name'),
+            Column::make('Tax Type', 'taxtype.name'),
             Column::make('Filled On', 'created_at')
                 ->format(fn ($value) => Carbon::create($value)->toDayDateTimeString()),
             Column::make('Action', 'id')

@@ -113,7 +113,7 @@ class TaxVerificationsController extends Controller
         $verification = TaxVerification::with('assessment', 'officers')->findOrFail(decrypt($id));
 
         // Get all associated RiskIndicators
-        $riskIndicators = $verification->riskIndicators;
+        $riskIndicators = $verification->riskIndicators ?? [];
 
         $return = $verification->taxReturn;
         if ($return instanceof PetroleumReturn) {

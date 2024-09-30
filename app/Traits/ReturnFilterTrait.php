@@ -147,4 +147,63 @@ trait ReturnFilterTrait
         }
 
     }
+
+    public function dataAssessmentFilter($filter, $data)
+    {
+        try {
+
+            if ($data == []) {
+                $filter->whereMonth('tax_verifications.created_at', '=', date('m'));
+                $filter->whereYear('tax_verifications.created_at', '=', date('Y'));
+            }
+
+            if (isset($data['year']) && $data['year'] != ReportStatus::All && $data['year'] != ReportStatus::CUSTOM_RANGE) {
+                $filter->whereYear('tax_verifications.created_at', '=', $data['year']);
+            }
+
+            if (isset($data['month']) && $data['month'] != ReportStatus::all && $data['year'] != ReportStatus::CUSTOM_RANGE) {
+                $filter->whereMonth('tax_verifications.created_at', '=', $data['month']);
+            }
+
+            if (isset($data['from']) && isset($data['to']) && $data['year'] == ReportStatus::CUSTOM_RANGE) {
+                $from = Carbon::create($data['from'])->startOfDay();
+                $to = Carbon::create($data['to'])->endOfDay();
+                $filter->whereBetween('tax_verifications.created_at', [$from, $to]);
+            }
+
+            return $filter;
+        } catch (\Exception $exception) {
+            Log::error('TRAITS-DATA-ASSESSMENT-FILTER-TRAIT-DATA-FILTER', [$exception]);
+            throw $exception;
+        }
+
+    }
+
+    public function dataReturnFilter($filter, $data)
+    {
+        try {
+            if ($data == []) {
+                $filter->whereMonth('tax_returns.filing_due_date', '=', date('m'));
+                $filter->whereYear('tax_returns.filing_due_date', '=', date('Y'));
+            }
+
+            if (isset($data['year']) && $data['year'] != ReportStatus::All && $data['year'] != ReportStatus::CUSTOM_RANGE) {
+                $filter->whereYear('tax_returns.filing_due_date', '=', $data['year']);
+            }
+            if (isset($data['month']) && $data['month'] != ReportStatus::all && $data['year'] != ReportStatus::CUSTOM_RANGE) {
+                $filter->whereMonth('tax_returns.filing_due_date', '=', $data['month']);
+            }
+            if (isset($data['from']) && isset($data['to']) && $data['year'] == ReportStatus::CUSTOM_RANGE) {
+                $from = Carbon::create($data['from'])->startOfDay();
+                $to = Carbon::create($data['to'])->endOfDay();
+                $filter->whereBetween('tax_returns.filing_due_date', [$from, $to]);
+            }
+
+            return $filter;
+        } catch (\Exception $exception) {
+            Log::error('TRAITS-DATA-RETURN-FILTER-TRAIT-DATA-FILTER', [$exception]);
+            throw $exception;
+        }
+
+    }
 }

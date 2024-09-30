@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire\Verifications;
 
+use App\Enum\BillStatus;
 use App\Enum\CustomMessage;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Region;
-use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\TaxReturn;
 use App\Models\User;
 use App\Models\Verification\TaxVerification;
@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Illuminate\Support\Facades\Gate;
 
 class UnverifiedReturnsTable extends DataTableComponent
 {
@@ -60,9 +61,9 @@ class UnverifiedReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        // TODO: Filter only vetted and paid returns, within 6 months previous
         $query = TaxReturn::query()
             ->with('business', 'location', 'taxtype', 'financialMonth', 'location.taxRegion', 'return.verification')
+            ->whereIn('payment_status', [BillStatus::COMPLETE, BillStatus::NILL])
             ->whereHas('return', function ($query) {
                 $query->whereDoesntHave('verification');
             })
@@ -70,9 +71,7 @@ class UnverifiedReturnsTable extends DataTableComponent
                 $query->whereIn('location', $this->locations);
             });
 
-        $table = TaxReturn::getTableName();
-        $query = $this->dataFilter($query, $this->data, $table);
-        return $query;
+        return $this->dataReturnFilter($query, $this->data);
     }
 
     public function configure(): void
@@ -91,34 +90,24 @@ class UnverifiedReturnsTable extends DataTableComponent
             Column::make('Taxpayer Name', 'business.taxpayer_name')
                 ->format(function ($value, $row) {
                     return $value ?? 'N/A';
-                })
-                ->sortable()->searchable(),
+                }),
             Column::make('Business Name', 'business.name')
-                ->sortable()
-                ->searchable(),
-            Column::make('Old ZRA No', 'business.previous_zno')
-                ->sortable()
                 ->searchable(),
             Column::make('Branch', 'location.name')
-                ->sortable()
-                ->searchable()
                 ->format(function ($value, $row) {
                     return $row->location->name ?? '';
                 }),
             Column::make('Tax Region', 'location.tax_region_id')
-                ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
                     return $row->location->taxRegion->name ?? '';
                 }),
             Column::make('Tax Type', 'taxtype.name')
-                ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
                     return $row->taxtype->name ?? '';
                 }),
             Column::make('Financial Month', 'financialMonth.name')
-                ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
                     $month = $row->financialMonth->name ?? '';
@@ -126,24 +115,18 @@ class UnverifiedReturnsTable extends DataTableComponent
                     return $month . ' ' . $year;
                 }),
             Column::make('Total', 'total_amount')
-                ->sortable()
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
-                })
-                ->searchable(),
-            Column::make('Currency', 'currency')
-                ->sortable()
-                ->searchable(),
+                }),
+            Column::make('Currency', 'currency'),
             Column::make('Status', 'vetting_status')
-                ->view('vetting.includes.status')
-                ->searchable()
-                ->sortable(),
+                ->view('vetting.includes.status'),
+            Column::make('Payment Status', 'payment_status')
+                ->view('returns.includes.payment-status'),
             Column::make('Filed On', 'created_at')
-                ->sortable()
                 ->format(function ($value, $row) {
                     return Carbon::create($value)->format('M d, Y H:i');
-                })
-                ->searchable(),
+                }),
             Column::make('Action', 'id')
                 ->view('verifications.includes.initiate'),
         ];
@@ -151,9 +134,10 @@ class UnverifiedReturnsTable extends DataTableComponent
 
     public function initiate($id)
     {
-//        if (!Gate::allows('setting-bank-delete')) {
-//            abort(403);
-//        }
+        if (!Gate::allows('verification-initiate')) {
+            // abort(403);
+        }
+
         $id = decrypt($id);
 
         $this->customAlert('warning', 'Are you sure you want to Initiate Verification for this Return ?', [
@@ -188,7 +172,6 @@ class UnverifiedReturnsTable extends DataTableComponent
                 'created_by_id' => Auth::id() ?? null,
                 'created_by_type' => User::class,
                 'status' => TaxVerificationStatus::PENDING,
-                'initiation_reason' => '' // TODO: Take from UI Reason
             ];
 
             TaxVerification::create($data);

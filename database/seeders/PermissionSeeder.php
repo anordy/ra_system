@@ -80,6 +80,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'verification-view-domestic-taxpayers', 'sys_module_id' => 8],
             ['name' => 'verification-view-lto-taxpayers', 'sys_module_id' => 8],
             ['name' => 'verification-view-non-tax-revenue-taxpayers', 'sys_module_id' => 8],
+            ['name' => 'verification-initiate', 'sys_module_id' => 8],
 
 
             # Tax Claim

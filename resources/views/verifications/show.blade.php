@@ -1,13 +1,6 @@
 @extends('layouts.master')
 @section('title', 'Verification Preview')
 @section('content')
-    @if ($verification->status == App\Enum\TaxVerificationStatus::APPROVED)
-        <div class="row m-2 pt-3">
-            <div class="col-md-12">
-                <livewire:assesments.tax-assessment-payment :assessment="$verification->assessment" />
-            </div>
-        </div>
-    @endif
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
@@ -64,7 +57,7 @@
                             <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
                         </div>
 
-                        @if ($riskIndicators)
+                        @if (count($riskIndicators ?? []))
                             <div class="col-md-12 mb-3">
                                 <span class="font-weight-bold text-uppercase text-danger">Risk Indicators on this return</span>
                                 @foreach ($riskIndicators as $riskIndicator)
@@ -72,6 +65,10 @@
                                         <li><p class="my-1">{{ $riskIndicator->risk_indicator }}</p></li>
                                     </ul>
                                 @endforeach
+                            </div>
+                        @else
+                            <div class="col-md-12 mb-3">
+                                <span class="font-weight-bold text-uppercase text-danger">No Risk Indicators on this return</span>
                             </div>
                         @endif
                     </div>
@@ -116,24 +113,24 @@
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                                <p class="my-1">{{ number_format($verification->assessment->principal_amount ?? 0, 2) }}
+                                <p class="my-1">{{ $verification->assessment->currency ?? 'N/A' }} {{ number_format($verification->assessment->principal_amount ?? 0, 2) }}
                                 </p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                                <p class="my-1">{{ number_format($verification->assessment->penalty_amount ?? 0, 2) }}
+                                <p class="my-1">{{ $verification->assessment->currency ?? 'N/A' }} {{ number_format($verification->assessment->penalty_amount ?? 0, 2) }}
                                 </p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                                <p class="my-1">{{ number_format($verification->assessment->interest_amount ?? 0, 2) }}
+                                <p class="my-1">{{ $verification->assessment->currency ?? 'N/A' }} {{ number_format($verification->assessment->interest_amount ?? 0, 2) }}
                                 </p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase"> Total Amount Due</span>
-                                <p class="my-1">{{ number_format($verification->assessment->total_amount ?? 0, 2) }}</p>
+                                <p class="my-1">{{ $verification->assessment->currency ?? 'N/A' }} {{ number_format($verification->assessment->total_amount ?? 0, 2) }}</p>
                             </div>
-                            @if ($verification->assessment->report_path)
+                            @if (isset($verification->assessment->report_path))
                                 <div class="col-md-4">
                                     <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
                                          class="p-2 mb-3 d-flex rounded-sm align-items-center">
