@@ -79,6 +79,7 @@ trait TaxpayerLedgerTrait
                 'interest_amount' => $interestAmount,
                 'penalty_amount' => $penaltyAmount,
                 'total_amount' => $totalAmount,
+                'outstanding_amount' => $totalAmount,
                 'description' => $description,
                 'debit_no' => $transactionType === TransactionType::DEBIT ? $this->generateDebitNumber() : null
             ]);
@@ -108,6 +109,7 @@ trait TaxpayerLedgerTrait
                 $ledger->interest_amount = $interestAmount;
                 $ledger->penalty_amount = $penaltyAmount;
                 $ledger->total_amount = $totalAmount;
+                $ledger->outstanding_amount = $totalAmount;
                 $ledger->transaction_date = Carbon::now();
 
                 if (!$ledger->save()) throw new \Exception('Failed to Save Ledger');

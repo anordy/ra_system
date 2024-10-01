@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Jobs\SendCustomMail;
+use App\Jobs\TaxVerification\VerificationNotificationLetterToTaxPayer;
 use App\Jobs\Vfms\ClientNotificationMail;
 use App\Jobs\Account\SendReferenceNumberMail;
 use App\Jobs\PropertyTax\SendPropertyTaxApprovalMail;
@@ -199,6 +200,8 @@ class SendMailFired
             SendEmailToTaxPayer::dispatch($event->tokenId);
         } else if ($event->service === 'notification-letter-to-taxpayer') {
             NotificationLetterToTaxPayer::dispatch($event->tokenId);
+        }  else if ($event->service === 'verification-notification-letter-to-taxpayer') {
+            VerificationNotificationLetterToTaxPayer::dispatch($event->tokenId);
         } else if ($event->service === 'send-report-to-taxpayer') {
             ExitPreliminaryEmailToTaxPayer::dispatch($event->tokenId);
         } else if ($event->service === 'send-assessment-report-to-taxpayer') {

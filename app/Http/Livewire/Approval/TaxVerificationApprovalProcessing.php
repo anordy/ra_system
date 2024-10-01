@@ -2,39 +2,36 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Enum\TransactionType;
-use App\Events\SendSms;
-use App\Jobs\SendCustomSMS;
-use App\Traits\TaxpayerLedgerTrait;
-use Exception;
-use Carbon\Carbon;
-use App\Models\Role;
-use App\Models\User;
-use App\Models\TaxType;
-use Livewire\Component;
-use App\Events\SendMail;
-use App\Traits\CustomAlert;
-use App\Models\BusinessType;
-use App\Traits\PaymentsTrait;
-use Livewire\WithFileUploads;
-use App\Models\Returns\Vat\SubVat;
-use App\Services\ZanMalipo\ZmCore;
-use Illuminate\Support\Facades\DB;
 use App\Enum\TaxVerificationStatus;
-use Illuminate\Support\Facades\Log;
+use App\Enum\TransactionType;
+use App\Events\SendMail;
 use App\Models\Returns\ReturnStatus;
-use Illuminate\Support\Facades\Auth;
-use App\Services\ZanMalipo\ZmResponse;
-use Illuminate\Validation\Rules\NotIn;
-use App\Models\Returns\Port\PortReturn;
-use App\Traits\WorkflowProcesssingTrait;
-use Illuminate\Validation\Rules\RequiredIf;
+use App\Models\Returns\Vat\SubVat;
+use App\Models\Role;
 use App\Models\TaxAssessments\TaxAssessment;
+use App\Models\TaxType;
+use App\Models\User;
 use App\Models\Verification\TaxVerificationOfficer;
+use App\Services\ZanMalipo\ZmCore;
+use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\CustomAlert;
+use App\Traits\PaymentsTrait;
+use App\Traits\TaxpayerLedgerTrait;
+use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rules\NotIn;
+use Illuminate\Validation\Rules\RequiredIf;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class TaxVerificationApprovalProcessing extends Component
 {
     use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait, TaxpayerLedgerTrait;
+
     public $modelId;
     public $modelName;
     public $comments;
@@ -61,7 +58,7 @@ class TaxVerificationApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId   = decrypt($modelId);
+        $this->modelId = decrypt($modelId);
         $this->taxTypes = TaxType::all();
 
         $this->taxType = $this->taxTypes->firstWhere('code', TaxType::VERIFICATION);
@@ -125,8 +122,8 @@ class TaxVerificationApprovalProcessing extends Component
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [
-                    'teamLeader' => ['required',  new NotIn([$this->teamMember])],
-                    'teamMember' => ['required',  new NotIn([$this->teamLeader])],
+                    'teamLeader' => ['required', new NotIn([$this->teamMember])],
+                    'teamMember' => ['required', new NotIn([$this->teamLeader])],
                 ],
                 [
                     'teamLeader.not_in' => 'Duplicate  already exists as team member',
@@ -179,14 +176,15 @@ class TaxVerificationApprovalProcessing extends Component
 
                 $operators = [intval($this->teamLeader), intval($this->teamMember)];
 
-                // TODO: Format Send Notification to Taxpayer message
-                // event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->return->taxpayer->mobile, 'message' => "Hello {$this->subject->return->taxpayer->fullname}, Your return has been selected for verification"]));
+                //Send Email Notification to taxpayer
+                event(new SendMail('verification-notification-letter-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
             }
 
             if ($this->checkTransition('send_notification_to_taxpayer')) {
                 $notificationLetter = $this->notificationLetter->store('verifications', 'local');
                 $this->subject->notification_letter = $notificationLetter;
                 $this->subject->save();
+                $operators = $this->subject->officers->pluck('user_id')->toArray();
             }
 
             if ($this->checkTransition('conduct_verification')) {
@@ -228,6 +226,9 @@ class TaxVerificationApprovalProcessing extends Component
                             'currency' => $this->subject->taxReturn->currency
                         ]);
                     }
+
+                    $this->subject->preliminary_report_date = now()->addWeekdays(7);
+                    $this->subject->save();
                 } else {
                     if ($assessment) {
                         $this->subject->assessment()->delete();
@@ -275,16 +276,14 @@ class TaxVerificationApprovalProcessing extends Component
                 $this->subject->assessment->payment_due_date = Carbon::now()->addDays(30)->endOfDay();
                 $this->subject->assessment->curr_payment_due_date = Carbon::now()->addDays(30)->endOfDay();
                 $assessment = $this->subject->assessment;
-                $this->recordLedger(TransactionType::DEBIT,TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
+                $this->recordLedger(TransactionType::DEBIT, TaxAssessment::class, $assessment->id, $assessment->principal_amount, $assessment->interest_amount, $assessment->penalty_amount, $assessment->total_amount, $assessment->tax_type_id, $assessment->currency, $assessment->business->taxpayer_id, $assessment->location_id);
                 $this->subject->save();
                 $this->subject->assessment->save();
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
             DB::commit();
-            if ($this->subject->status == TaxVerificationStatus::APPROVED && $this->subject->assessment()->exists()) {
-                $this->generateControlNumber();
-            }
+
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

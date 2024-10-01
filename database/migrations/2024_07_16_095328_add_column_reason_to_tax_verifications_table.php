@@ -18,6 +18,7 @@ class AddColumnReasonToTaxVerificationsTable extends Migration
             $table->string('notification_letter', 255)->nullable();
             $table->string('final_report', 255)->nullable();
             $table->string('notice_of_discussion', 255)->nullable();
+            $table->timestamp('preliminary_report_date')->nullable();
         });
     }
 

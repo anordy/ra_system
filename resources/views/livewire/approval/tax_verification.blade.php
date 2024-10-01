@@ -74,7 +74,7 @@
                     </div>
                     @if ($hasAssessment)
                         <div class="form-group col-lg-6">
-                            <label class="control-label">Principal Amount</label>
+                            <label class="control-label">Principal Amount ({{ $subject->taxReturn->currency ?? 'Missing Currency' }})</label>
                             <input type="text" class="form-control @error('principalAmount') is-invalid @enderror"
                                 wire:model.defer="principalAmount">
                             @error('principalAmount')
@@ -82,7 +82,7 @@
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
-                            <label class="control-label">Penalty Amount</label>
+                            <label class="control-label">Penalty Amount ({{ $subject->taxReturn->currency ?? 'Missing Currency' }})</label>
                             <input type="text" class="form-control @error('penaltyAmount') is-invalid @enderror"
                                 wire:model.defer="penaltyAmount">
                             @error('penaltyAmount')
@@ -90,7 +90,7 @@
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
-                            <label class="control-label">Interest Amount</label>
+                            <label class="control-label">Interest Amount ({{ $subject->taxReturn->currency ?? 'Missing Currency' }})</label>
                             <input type="text" class="form-control @error('interestAmount') is-invalid @enderror"
                                 wire:model.defer="interestAmount">
                             @error('interestAmount')
