@@ -1228,3 +1228,8 @@ ul.timeline > li:before {
     font-size:15px;
     margin-right:10px;
 }
+
+.searchable-item:hover {
+    cursor: pointer;
+    background-color: #e1e1e1;
+}

@@ -21,7 +21,6 @@ class ViewIncident extends Component
 
     public $statuses = [], $priorities = [], $users = [], $incidentId;
     public $incident, $status, $priority, $staffId, $comment, $roles = [];
-    public $query, $selectedUser, $highlightIndex;
 
 
     public function mount($incidentId)
@@ -33,12 +32,16 @@ class ViewIncident extends Component
         $this->status = $this->incident->status;
         $this->priority = $this->incident->priority;
         $this->staffId = $this->incident->assigned_to_id ?? null;
-        $currentUser = User::find($this->staffId, ['fname', 'lname']);
-        if ($currentUser) {
-            $this->query = $currentUser->fname . ' ' . $currentUser->lname;
-        }
         if (isset($this->incident->subcategory->notifiables)) {
             $this->roles = $this->incident->subcategory->notifiables->pluck('role_id')->toArray();
+            $this->users = User::query()
+                ->select('id', 'fname', 'lname')
+                ->whereIn('role_id', $this->roles)
+                ->get()
+                ->map(function ($item) {
+                    $item->fullname = ucwords($item->full_name);
+                    return $item;
+                });
         }
     }
 
@@ -107,53 +110,6 @@ class ViewIncident extends Component
         }
     }
 
-    public function resetFields()
-    {
-        $this->query = '';
-        $this->users = [];
-        $this->highlightIndex = 0;
-    }
-
-    public function incrementHighlight()
-    {
-        if ($this->highlightIndex === count($this->users) - 1) {
-            $this->highlightIndex = 0;
-            return;
-        }
-        $this->highlightIndex++;
-    }
-
-    public function decrementHighlight()
-    {
-        if ($this->highlightIndex === 0) {
-            $this->highlightIndex = count($this->users) - 1;
-            return;
-        }
-        $this->highlightIndex--;
-    }
-
-    public function selectUser($index)
-    {
-        $this->selectedUser = $this->users[$index] ?? null;
-        if ($this->selectedUser) {
-            $this->staffId = $this->selectedUser['id'];
-            $this->query = ucfirst($this->selectedUser['fname'].' '.$this->selectedUser['lname']);
-            $this->updatedStaffId();
-        }
-        $this->users = [];
-        $this->highlightIndex = 0;
-    }
-
-    public function updatedQuery()
-    {
-        $this->users = User::query()
-            ->select('id', 'fname', 'lname')
-            ->whereIn('role_id', $this->roles)
-            ->whereRaw("LOWER(fname) LIKE LOWER(?)", ['%' . $this->query . '%'])
-            ->orWhereRaw("LOWER(lname) LIKE LOWER(?)", ['%' . $this->query . '%'])
-            ->get()
-            ->toArray();
-    }
 
     public function render()
     {

@@ -25,24 +25,29 @@ class ViewTask extends Component
     public $statuses = [], $priorities = [], $taskId;
     public $task, $status, $priority, $staffId, $comment, $schedule;
     public $query;
-    public $users, $selectedUser;
-    public $highlightIndex;
+    public $users;
+
 
     public function mount($taskId)
     {
-        $this->resetFields();
         $this->taskId = decrypt($taskId);
         $this->task = $this->getRegister($this->taskId);
-        $this->schedule = RgSchedule::select('id', 'time', 'status', 'job_reference', 'cancelled_by_id')->where('rg_register_id', $this->taskId)->latest()->first();
+        $this->schedule = RgSchedule::select('id', 'time', 'status', 'job_reference', 'cancelled_by_id')
+            ->where('rg_register_id', $this->taskId)
+            ->latest()
+            ->first();
         $this->statuses = RgTaskStatus::getConstants();
         $this->priorities = RgPriority::getConstants();
         $this->status = $this->task->status;
         $this->priority = $this->task->priority;
         $this->staffId = $this->task->assigned_to_id ?? null;
-        $currentUser = User::find($this->staffId, ['fname', 'lname']);
-        if ($currentUser) {
-            $this->query = $currentUser->fname . ' ' . $currentUser->lname;
-        }
+        $this->users = User::query()->select('id', 'fname', 'lname')
+            ->where('department_id', Auth::user()->department_id)
+            ->get()
+            ->map(function ($item) {
+                $item->fullname = ucwords($item->full_name);
+                return $item;
+            });
     }
 
     public function updatedStatus()
@@ -142,7 +147,7 @@ class ViewTask extends Component
 
     public function confirmPopUpModal()
     {
-        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', CustomMessage::ARE_YOU_SURE, [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -152,54 +157,6 @@ class ViewTask extends Component
             'cancelButtonText' => 'Cancel',
             'timer' => null,
         ]);
-    }
-
-    public function resetFields()
-    {
-        $this->query = '';
-        $this->users = [];
-        $this->highlightIndex = 0;
-    }
-
-    public function incrementHighlight()
-    {
-        if ($this->highlightIndex === count($this->users) - 1) {
-            $this->highlightIndex = 0;
-            return;
-        }
-        $this->highlightIndex++;
-    }
-
-    public function decrementHighlight()
-    {
-        if ($this->highlightIndex === 0) {
-            $this->highlightIndex = count($this->users) - 1;
-            return;
-        }
-        $this->highlightIndex--;
-    }
-
-    public function selectUser($index)
-    {
-        $this->selectedUser = $this->users[$index] ?? null;
-        if ($this->selectedUser) {
-            $this->staffId = $this->selectedUser['id'];
-            $this->query = ucfirst($this->selectedUser['fname'].' '.$this->selectedUser['lname']);
-            $this->updatedStaffId();
-        }
-        $this->users = [];
-        $this->highlightIndex = 0;
-    }
-
-    public function updatedQuery()
-    {
-        $this->users = User::query()
-            ->select('id', 'fname', 'lname')
-            ->where('department_id', Auth::user()->department_id)
-            ->whereRaw("LOWER(fname) LIKE LOWER(?)", ['%' . $this->query . '%'])
-            ->orWhereRaw("LOWER(lname) LIKE LOWER(?)", ['%' . $this->query . '%'])
-            ->get()
-            ->toArray();
     }
 
     public function render()

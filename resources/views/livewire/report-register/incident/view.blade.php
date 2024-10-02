@@ -68,7 +68,7 @@
                 <div class="col-md-3 mb-3">
                     <div class="form-group">
                         <label>Set Status</label>
-                        <select wire:model.live="status" class="form-control @error('status') is-invalid @enderror">
+                        <select wire:model="status" class="form-control @error('status') is-invalid @enderror">
                             <option value="">Select Status</option>
                             @foreach ($statuses ?? [] as $status)
                                 <option value="{{ $status }}">{{ ucfirst($status) }}</option>
@@ -85,7 +85,7 @@
                 <div class="col-md-3 mb-3">
                     <div class="form-group">
                         <label>Set Priority</label>
-                        <select wire:model.live="priority" class="form-control @error('priority') is-invalid @enderror">
+                        <select wire:model="priority" class="form-control @error('priority') is-invalid @enderror">
                             <option value="">Select Priority</option>
                             @foreach ($priorities ?? [] as $priority)
                                 <option value="{{ $priority }}">{{ ucfirst($priority) }}</option>
@@ -98,45 +98,9 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <div class="form-group">
-                        <label>Assigned To</label>
-                        <input
-                                type="text"
-                                class="form-input form-control"
-                                placeholder="Search Staffs..."
-                                wire:model="query"
-                                wire:keydown.escape="resetFields"
-                                wire:keydown.tab="resetFields"
-                                wire:keydown.arrow-up="decrementHighlight"
-                                wire:keydown.arrow-down="incrementHighlight"
-                                wire:keydown.enter="selectUser({{ $highlightIndex }})"
-                        />
 
-                        <div wire:loading wire:target="query" class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
-                            <div class="list-item">Searching...</div>
-                        </div>
+                <x-select-searchable :options="$users" name="staffId" col="3" label="Assigned To" placeholder="Select User" optionNameAccessor="fullname"/>
 
-                        @if(!empty($query))
-                            <div class="fixed top-0 bottom-0 left-0 right-0" wire:click="resetFields"></div>
-
-                            <div class="absolute z-10 w-full bg-white rounded-t-none shadow-lg list-group">
-                                @if(!empty($users))
-                                    @foreach($users as $i => $user)
-                                        <a
-                                                href="#" wire:click.prevent="selectUser({{ $i }})"
-                                                class="list-item {{ $highlightIndex === $i ? 'highlight-dropdown' : '' }}"
-                                        >{{ $user['fname'] }} {{ $user['lname'] }}</a>
-                                    @endforeach
-                                @else
-                                    @if(!$staffId)
-                                        <div class="list-item">No results!</div>
-                                    @endif
-                                @endif
-                            </div>
-                        @endif
-                    </div>
-                </div>
 
             </div>
             <hr>
@@ -157,9 +121,7 @@
                         </div>
                     </div>
                     <div class="row pt-2">
-                        <div class="col-md-1">
-
-                        </div>
+                        <div class="col-md-1"></div>
                         <div class="form-group col-md-6">
                             <button wire:click="saveComment()" class="btn btn-primary float-right"><i class="bi bi-chat-left-fill"></i> Save Comment</button>
                         </div>
