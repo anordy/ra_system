@@ -55,7 +55,13 @@ class CreateTask extends Component
     {
         $this->files = [['file' => null, 'name' => null]];
         $this->priorities = RgPriority::getConstants();
-        $this->users = User::query()->select('id', 'fname', 'lname')->orderBy('fname', 'ASC')->get();
+        $this->users = User::query()->select('id', 'fname', 'lname')
+            ->where('department_id', Auth::user()->department_id)
+            ->get()
+            ->map(function ($item) {
+                $item->fullname = ucwords($item->full_name);
+                return $item;
+            });
     }
 
 
@@ -124,10 +130,12 @@ class CreateTask extends Component
             $assignee = User::findOrFail($this->staffId, ['fname', 'phone', 'email']);
             $assigner = User::findOrFail(Auth::id(), ['fname', 'lname', 'phone', 'email']);
 
+            $message = "Hello {$assignee->fname}, {$assigner->fname} {$assigner->lname} has assign you a with task: {$this->title}";
+
             if ($this->isScheduled === GeneralConstant::ZERO) {
-                SendCustomSMS::dispatch($assignee->phone, "Hello {$assignee->fname}, {$assigner->fname} {$assigner->lname} has assign you a with task: {$this->title}");
+                SendCustomSMS::dispatch($assignee->phone, $message);
             } else if ($this->isScheduled === GeneralConstant::ONE) {
-                $job = new SendCustomSMS($assignee->phone, "Hello {$assignee->fname}, {$assigner->fname} {$assigner->lname} has assign you a with task: {$this->title}");
+                $job = new SendCustomSMS($assignee->phone, $message);
                 $jobId = custom_dispatch($job, Carbon::create($this->scheduledTime));
 
                 // Track saved schedules for cancellation
@@ -135,13 +143,16 @@ class CreateTask extends Component
                     'rg_register_id' => $rgRegister->id,
                     'job_reference' => $jobId,
                     'status' => RgScheduleStatus::PENDING,
-                    'time' => Carbon::create($this->scheduledTime)
+                    'time' => Carbon::create($this->scheduledTime),
+                    'phone' => $assignee->phone,
+                    'message' => $message
                 ]);
 
                 if (!$schedule) throw new Exception('Failed to save schedule information');
             } else {
                 $this->customAlert('warning', 'Invalid schedule option');
             }
+
 
             $this->flash('success', 'Task successfully created', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

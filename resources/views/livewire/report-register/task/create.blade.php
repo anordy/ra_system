@@ -51,22 +51,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="form-group">
-                            <label>Assigned To *</label>
-                            <select wire:model.defer="staffId" class="form-control @error('staffId') is-invalid @enderror">
-                                <option value="">Select Staff</option>
-                                @foreach ($users ?? [] as $user)
-                                    <option value="{{ $user->id }}">{{ ucfirst($user->fullname) }}</option>
-                                @endforeach
-                            </select>
-                            @error('staffId')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                    </div>
+                    <x-select-searchable :options="$users" name="staffId" col="6" label="Assigned To" placeholder="Select User" optionNameAccessor="fullname"/>
                     <div class="col-md-6 form-group">
                         <label>Task Date *</label>
                         <input type="date" wire:model.defer="startDate"

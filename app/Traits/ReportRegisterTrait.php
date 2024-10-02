@@ -69,7 +69,7 @@ trait ReportRegisterTrait
 
             $assigned = User::find($staffId, ['phone', 'fname']);
 
-            if ($assigned) {
+            if ($assigned && $status != RgTaskStatus::CREATED) {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, [
                     'phone' => $assigned->phone,
                     'message' => "Hello {$assigned->fname}, you have been assigned on {$registerType}: {$register->title}"

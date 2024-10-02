@@ -82,9 +82,9 @@ class TaskTable extends DataTableComponent
                     }
                 })->html(),
             Column::make('Task Date', 'start_date')
-                ->format(function ($value) {
+                ->format(function ($value, $row) {
                     $startDate = $value->format('d M, Y');
-                    if (now() > $startDate) {
+                    if (now() > $value && $row->status === 'in-progress') {
                         return <<< HTML
                             <span class="badge badge-danger">Due on $startDate</span>
                         HTML;

@@ -104,6 +104,10 @@ class ViewTask extends Component
         try {
             if ($this->task->status != $this->status) {
                 $this->updateStatus($this->task, $this->status);
+
+                if ($this->status === RgScheduleStatus::CANCELLED) {
+                    $this->cancelTask();
+                }
             }
             $this->addComment($this->task, $this->comment, $this->status);
             $this->customAlert('success', 'Comment has been added');

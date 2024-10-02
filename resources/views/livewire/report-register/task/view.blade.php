@@ -3,9 +3,6 @@
         <div class="alert alert-info alert-dismissible fade show" role="alert">
             <strong>This task has been scheduled to run at {{ $schedule->time->format('d M, Y H:i') ?? 'N/A' }} |
                 Schedule Status: {{ ucfirst($schedule->status ?? 'N/A')  }}</strong>
-            <button class="float-right btn btn-danger btn-sm" wire:click="confirmPopUpModal">
-                Cancel Task
-            </button>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
