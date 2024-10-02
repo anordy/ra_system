@@ -86,7 +86,7 @@
                                                 <td class="text-right">{{ number_format($item->value, 2) }} <strong>(No.
                                                         of bed nights)</strong></td>
                                                 <td>
-                                                    {{ $item->config->rate_type === 'percentage' ? $item->config->rate : getHotelStarByBusinessId($return->business->id)->infrastructure_charged }}
+                                                    {{ $item->config->rate_type === 'percentage' ? $item->config->rate : (getHotelStarByBusinessId($return->business->id)->infrastructure_charged ?? '') }}
                                                     @if($item->config->rate_type =='percentage')
                                                         %
                                                     @else

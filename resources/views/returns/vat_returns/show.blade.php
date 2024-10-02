@@ -176,12 +176,9 @@
                                                                 @if($item->config->rate_type =='percentage')
                                                                     %
                                                                 @else
-                                                                    @if ($item->config->currency == 'both')
-                                                                        <strong>TZS</strong> <br>
-                                                                        <strong>USD</strong>
-                                                                    @elseif ($item->config->currency == 'TZS')
+                                                                    @if ($return->currency == 'TZS')
                                                                         <strong>TZS</strong>
-                                                                    @elseif ($item->config->currency == 'USD')
+                                                                    @elseif ($return->currency == 'USD')
                                                                         <strong>USD</strong>
                                                                     @endif
                                                                 @endif
@@ -200,7 +197,7 @@
                                                                 @if($item->config->rate_type =='percentage')
                                                                     %
                                                                 @else
-                                                                    {{$item->config->currency}}
+                                                                    {{$return->currency}}
                                                                 @endif
                                                             </td>
                                                             <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
@@ -212,7 +209,7 @@
                                                     <tr>
                                                         <td>{{ $item->config->name }}</td>
                                                         <td class="text-right">{{ number_format($item->value, 2) }}
-                                                            <strong>  {{ $item->config->currency}}</strong></td>
+                                                            <strong>  {{ $return->currency}}</strong></td>
                                                         <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }}
                                                             @if($item->config->rate_type =='percentage')
                                                                 %
