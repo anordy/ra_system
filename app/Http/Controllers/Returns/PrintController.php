@@ -52,7 +52,7 @@ class PrintController extends Controller
                 case TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE:
                     $return_ = TaxReturn::select(['id', 'business_id', 'location_id', 'return_id', 'return_type', 'filed_by_id', 'filed_by_type', 'tax_type_id', 'financial_month_id', 'currency', 'principal', 'interest', 'penalty', 'infrastructure', 'airport_safety_fee', 'airport_service_charge', 'seaport_service_charge', 'seaport_transport_charge', 'infrastructure_znz_znz', 'infrastructure_znz_tz', 'rdf_fee', 'road_license_fee', 'withheld_tax', 'credit_brought_forward', 'total_amount', 'outstanding_amount', 'lumpsum_quarter', 'has_claim', 'is_nill', 'filing_method', 'return_status', 'payment_status', 'return_category', 'application_step', 'application_status', 'payment_method', 'payment_due_date', 'filing_due_date', 'curr_payment_due_date', 'curr_filing_due_date', 'sub_vat_id', 'vetting_status', 'marking', 'parent'])
                         ->where('parent', $taxReturn->id)->first() ?? null;
-                    $pdf = PDF::loadView('print.returns.port', ['return' => $taxReturn->return, 'return_' => $return_]);
+                    $pdf = PDF::loadView('print.returns.port', ['return' => $taxReturn->return, 'return_' => $return_->return]);
                     $pdf->setPaper('a4', 'portrait');
                     $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
                     return $pdf->stream();

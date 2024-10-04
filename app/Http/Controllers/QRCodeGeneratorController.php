@@ -18,48 +18,31 @@ use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 
 class QRCodeGeneratorController extends Controller
 {
-    public function invoice($id, Request $request)
+    public function invoice($id)
     {
-        $id = decrypt($id);
-        $bill = ZmBill::with('user')->findOrFail($id);
-        $name = $bill->user->full_name ?? '';
-        
-        $url = env('TAXPAYER_URL') . route('qrcode-check.invoice',  base64_encode(strval($id)), 0);
-
-        $qrPayload = [
-            'opType' => '2',
-            'shortCode' => '100001',
-            'amount' => $bill->amount,
-            'billReference' => $bill->control_number,
-            'billCcy' => $bill->currency,
-            'billExprDt' => Carbon::parse($bill->expire_date)->toDateString(),
-            'billPayOpt' => (int) $bill->payment_option,
-            'billRsv01' => $bill->description
-        ];
+        $url = env('TAXPAYER_URL') . route('qrcode-check.invoice', base64_encode(strval(decrypt($id))));
 
         $result = Builder::create()
-        ->writer(new PngWriter())
-        ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true])
-        ->data(json_encode($qrPayload))
-        ->encoding(new Encoding('UTF-8'))
-        ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-        ->size(300)
-        ->margin(10)
-        ->logoPath(public_path('/images/logo.png'))
-        ->logoResizeToHeight(64)
-        ->logoResizeToWidth(64)
-        ->labelText('SCAN AND PAY')
-        ->labelAlignment(new LabelAlignmentCenter())
-        ->build();
-        
+            ->writer(new PngWriter())
+            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true])
+            ->data($url)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(300)
+            ->margin(10)
+            ->logoPath(public_path('/images/logo.png'))
+            ->logoResizeToHeight(64)
+            ->logoResizeToWidth(64)
+            ->labelText('SCAN AND PAY')
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
         header('Content-Type: ' . $result->getMimeType());
-        
+
         $dataUri = $result->getDataUri();
         
         $pdf = PDF::loadView('zanMalipo.pdf.invoice', compact('dataUri', 'bill'));
-        
-        
-        
+
         return $pdf->download('ZanMalipo_invoice_' . time() . '.pdf');
     }
     
@@ -98,9 +81,30 @@ class QRCodeGeneratorController extends Controller
 
     public function receipt($id)
     {
-        $bill = ZmBill::findOrFail(decrypt($id));
-        $pdf = PDF::loadView('zanMalipo.pdf.receipt', compact('bill'));
-        // return $pdf;
+        $bill = ZmBill::find(decrypt($id));
+
+        $url = env('TAXPAYER_URL') . route('qrcode-check.invoice', base64_encode(strval(decrypt($id))));
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true])
+            ->data($url)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(300)
+            ->margin(10)
+            ->logoPath(public_path('/images/logo.png'))
+            ->logoResizeToHeight(64)
+            ->logoResizeToWidth(64)
+            ->labelText('')
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
+        header('Content-Type: ' . $result->getMimeType());
+
+        $dataUri = $result->getDataUri();
+        $pdf = PDF::loadView('zanMalipo.pdf.receipt', compact('bill', 'dataUri'));
         return $pdf->download('ZanMalipo_receipt_' . time() . '.pdf');
     }
+
 }
