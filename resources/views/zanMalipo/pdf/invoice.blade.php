@@ -135,7 +135,7 @@
             @foreach ($bill->bill_items as $billItem)
                 <tr class="border-top">
                     <td colspan="2" class="padding-left td-title">Billed Item ({{ $loop->index + 1 }}) </td>
-                    <td colspan="2">: {{ $billItem->taxType->name }}
+                    <td colspan="2">: {{ $billItem->taxType->name ?? '' }}
 
                     </td>
                     <td colspan="2" class="align-right">

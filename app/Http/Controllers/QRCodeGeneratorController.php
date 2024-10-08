@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use PDF;
-use Carbon\Carbon;
 use App\Models\ZmBill;
 use App\Models\BusinessBank;
-use Illuminate\Http\Request;
 use App\Models\ZrbBankAccount;
-use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
@@ -20,7 +17,13 @@ class QRCodeGeneratorController extends Controller
 {
     public function invoice($id)
     {
-        $url = env('TAXPAYER_URL') . route('qrcode-check.invoice', base64_encode(strval(decrypt($id))));
+        $billId = decrypt($id);
+
+        $bill = ZmBill::findOrFail($billId);
+
+        $url = route('qrcode-check.invoice', base64_encode(strval(decrypt($id))));
+
+        $url = env('TAXPAYER_URL') . parse_url($url, PHP_URL_PATH);
 
         $result = Builder::create()
             ->writer(new PngWriter())
@@ -53,9 +56,9 @@ class QRCodeGeneratorController extends Controller
         $bankAccount = ZrbBankAccount::findOrFail(decrypt($bankAccountId));
         $businessBank = BusinessBank::find(decrypt($businessBankAccId));
 
-        $name = $bill->payer_name;
+        $url = route('qrcode-check.transfer',  base64_encode(strval($billId)), 0);
 
-        $url = env('TAXPAYER_URL') . route('qrcode-check.transfer',  base64_encode(strval($billId)), 0);
+        $url = env('TAXPAYER_URL') . parse_url($url, PHP_URL_PATH);
 
         $result = Builder::create()
             ->writer(new PngWriter())
@@ -83,7 +86,9 @@ class QRCodeGeneratorController extends Controller
     {
         $bill = ZmBill::find(decrypt($id));
 
-        $url = env('TAXPAYER_URL') . route('qrcode-check.invoice', base64_encode(strval(decrypt($id))));
+        $url = route('qrcode-check.invoice', base64_encode(strval(decrypt($id))));
+
+        $url = env('TAXPAYER_URL') . parse_url($url, PHP_URL_PATH);
 
         $result = Builder::create()
             ->writer(new PngWriter())
