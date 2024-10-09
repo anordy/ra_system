@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Business\Updates;
 
 use App\Models\AccountType;
 use App\Models\Bank;
+use App\Models\Config\HotelNature;
 use Livewire\Component;
 use App\Models\BusinessActivity;
 use App\Models\BusinessFileType;
@@ -63,6 +64,8 @@ class ShowChanges extends Component
             return BusinessFileType::find($id)->name ?? 'N/A';
         } else if ($type == 'hotel_star_id') {
             return HotelStar::find($id)->no_of_stars ?? 'N/A';
+        }  else if ($type == 'hotel_nature_id') {
+            return HotelNature::find($id)->name ?? 'N/A';
         } else {
             return 'N/A';
         }

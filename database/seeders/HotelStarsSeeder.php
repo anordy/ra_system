@@ -24,6 +24,8 @@ class HotelStarsSeeder extends Seeder
             ['name' => 'A', 'no_of_stars' => null, 'infrastructure_charged' => 2, 'currency_id' => 2, 'is_approved' => 1],
             ['name' => 'AA', 'no_of_stars' => null, 'infrastructure_charged' => 2, 'currency_id' => 2, 'is_approved' => 1],
             ['name' => 'Others', 'no_of_stars' => null, 'infrastructure_charged' => 2, 'currency_id' => 2, 'is_approved' => 1],
+            ['name' => 'Under the Ocean', 'no_of_stars' => null, 'infrastructure_charged' => 10, 'currency_id' => 2, 'is_approved' => 1],
+            ['name' => 'Small Island', 'no_of_stars' => null, 'infrastructure_charged' => 10, 'currency_id' => 2, 'is_approved' => 1],
         ];
 
         foreach ($hotelStars as $hotelStar) {

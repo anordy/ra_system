@@ -695,6 +695,10 @@
                         <p class="my-1">{{ $hotel->hotel_location }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Nature of Location</span>
+                        <p class="my-1">{{ $hotel->nature->name ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Hotel Star Rating</span>
                         <p class="my-1">{{ $hotel->star->name ?? 'N/A' }}</p>
                     </div>

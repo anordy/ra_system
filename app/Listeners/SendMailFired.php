@@ -94,7 +94,7 @@ class SendMailFired
             if (is_null($token)) {
                 abort(404);
             }
-            SendOTPEmail::dispatch($event->extra['code'], $token->user->email, $token->user->fullname());
+            SendOTPEmail::dispatch($event->extra['code'], $token->user->email, $token->user->fullname())->onQueue('email');
         } else if ($event->service == 'withholding_agent_registration') {
             /** TokenId is withholding agent history is */
             $withholding_agent = WaResponsiblePerson::find($event->tokenId);
@@ -108,7 +108,7 @@ class SendMailFired
             if (is_null($taxpayer)) {
                 abort(404);
             }
-            SendRegistrationMail::dispatch($taxpayer, $event->extra['code']);
+            SendRegistrationMail::dispatch($taxpayer, $event->extra['code'])->onQueue('email');
         } else if ($event->service == 'kyc-registration') {
             $kyc = KYC::find($event->tokenId);
             SendKYCRegistrationEmail::dispatch($kyc);
