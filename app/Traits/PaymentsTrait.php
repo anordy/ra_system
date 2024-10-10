@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Enum\BillStatus;
 use App\Enum\Currencies;
+use App\Enum\CustomMessage;
 use App\Enum\GeneralConstant;
 use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
@@ -12,6 +13,7 @@ use App\Enum\SubVatConstant;
 use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendZanMalipoSMS;
+use App\Models\Business;
 use App\Models\BusinessTaxType;
 use App\Models\BusinessType;
 use App\Models\Currency;
@@ -231,20 +233,37 @@ trait PaymentsTrait
 
     public function landLeaseGenerateControlNo($leasePayment, $billItems)
     {
-        $taxpayer = $leasePayment->taxpayer;
+        if (isset($leasePayment->landLease->category) && $leasePayment->landLease->category === GeneralConstant::BUSINESS) {
+            $payerId = $leasePayment->landLease->businessLocation->id;
+            $payerName = $leasePayment->landLease->businessLocation->name;
+            $payerMobile = $leasePayment->landLease->businessLocation->business->mobile;
+            $payerEmail = $leasePayment->landLease->businessLocation->business->email;
+            $payerType = Business::class;
+        } else if (isset($leasePayment->landLease->category) && $leasePayment->landLease->category === GeneralConstant::SOLE_OWNER) {
+            $payerId = $leasePayment->landLease->taxpayer->id;
+            $payerName = $leasePayment->landLease->taxpayer->fullname;
+            $payerMobile = $leasePayment->landLease->taxpayer->mobile;
+            $payerEmail = $leasePayment->landLease->taxpayer->email;
+            $payerType = Taxpayer::class;
+        } else {
+            $this->customAlert('warning', CustomMessage::error());
+            return;
+        }
+
         $tax_type = TaxType::where('code', TaxType::LAND_LEASE)->firstOrFail();
         $exchange_rate = $this->getExchangeRate('USD');
 
-        $payer_type = get_class($taxpayer);
-        $payer_name = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
-        $payer_email = $taxpayer->email;
-        $payer_phone = $taxpayer->mobile;
-        $description = "Payment for Land Lease with DP number {$leasePayment->landLease->dp_number}";
+        $payer_type = $payerType;
+        $payer_name = $payerName;
+        $payer_email = $payerEmail;
+        $payer_phone = $payerMobile;
+        $location = ($leasePayment->landLease->region->name ?? '') . ', '. ($leasePayment->landLease->district->name ?? '') . ', ' . ($leasePayment->landLease->ward->name ?? '');
+        $description = "Payment for Land Lease with DP number {$leasePayment->landLease->dp_number} at {$location}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = 'USD';
         $createdby_type = get_class(Auth::user());
         $createdby_id = Auth::id();
-        $payer_id = $taxpayer->id;
+        $payer_id = $payerId;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
         $billableId = $leasePayment->id;
         $billableType = get_class($leasePayment);

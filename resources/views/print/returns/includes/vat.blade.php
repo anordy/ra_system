@@ -21,7 +21,7 @@
             <tr>
                 <td>{{ $item->config->name }}</td>
                 <td class="text-right">{{ number_format($item->value, 2) }}
-                    <strong>  {{ $item->config->currency}}</strong></td>
+                    <strong>  {{ $return->currency}}</strong></td>
                 <td class="table-active"></td>
                 <td class="text-right">{{ number_format($item->vat,2) }}
                     <strong>{{$return->currency}}</strong></td>
@@ -33,11 +33,12 @@
                         <td>{{ $item->config->name }}</td>
                         <td class="text-right">{{ number_format($item->value, 2) }} <strong>(No.
                                 of bed nights)</strong></td>
-                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate }}
+                        <td>
+                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate : (getHotelStarByLocationId($return->business_location_id)->infrastructure_charged ?? '') }}
                             @if($item->config->rate_type =='percentage')
                                 %
                             @else
-                                {{$item->config->currency}}
+                                {{$return->currency}}
                             @endif
                         </td>
                         <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
@@ -50,7 +51,7 @@
                         <td>{{ $item->config->name }}</td>
                         <td class="text-right">{{ number_format($item->value, 2) }}
                             <strong>(Electricity Units)</strong></td>
-                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
+                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $return->currency }}
                         <td>
                         </td>
                         <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
@@ -62,8 +63,8 @@
                 <tr>
                     <td>{{ $item->config->name }}</td>
                     <td class="text-right">{{ number_format($item->value, 2) }}
-                        <strong>  {{ $item->config->currency}}</strong></td>
-                    <td> {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $item->config->currency }}
+                        <strong>  {{ $return->currency}}</strong></td>
+                    <td> {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd .''. $return->currency }}
                     </td>
                     <td class="text-right">{{ number_format($item->vat,2) }}
                         <strong>{{$return->currency}}</strong></td>

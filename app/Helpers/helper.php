@@ -385,3 +385,29 @@ function getDepartment($id)
     }
     return 'N/A';
 }
+
+function getHotelStarByLocationId($location_id)
+{
+    $businessHotel = \App\Models\BusinessHotel::query()
+        ->with(['nature:id,name', 'star'])
+        ->select('hotel_nature_id', 'hotel_star_id')
+        ->where('location_id', $location_id)
+        ->first();
+
+    if (!$businessHotel) {
+        return 'N/A';
+    }
+
+    if (isset($businessHotel->nature->name)) {
+        if ($businessHotel->nature->name == \App\Models\Config\HotelNature::NORMAL) {
+            return $businessHotel->star;
+        } else {
+            return \App\Models\HotelStar::query()
+                ->select('infrastructure_charged', 'name')
+                ->where('name', $businessHotel->nature->name ?? null)
+                ->first();
+        }
+    } else {
+        return $businessHotel->star;
+    }
+}

@@ -9,11 +9,11 @@
     <ul class="nav nav-tabs shadow-sm mb-0">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                aria-selected="true"> {{ $location->name }} Branch Information</a>
+               aria-selected="true"> {{ $location->name }} Branch Information</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="approval-tab" data-toggle="tab" href="#approval" role="tab" aria-controls="approval"
-                aria-selected="false">Approval History</a>
+               aria-selected="false">Approval History</a>
         </li>
     </ul>
 
@@ -80,7 +80,7 @@
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Effective Date</span>
                         <p class="my-1">{{ $location->effective_date->toFormattedDateString() }}</p>
-                    </div> 
+                    </div>
                 @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Pre Estimated Turnover</span>
@@ -158,7 +158,7 @@
                 </div>
                 @if($location->vfms_associated_at)
                     <div class="row col-md-12">
-                        <livewire:business.vfms.business-unit-details :location="$location" />
+                        <livewire:business.vfms.business-unit-details :location="$location"/>
                     </div>
                 @endif
                 <div class="col-md-12 mt-1 d-flex justify-content-end mb-4">
@@ -166,8 +166,8 @@
                         <div>
                             @foreach ($location->business->taxTypes as $type)
                                 <a target="_blank"
-                                    href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
-                                    class="btn btn-success btn-sm mt-1 text-white">
+                                   href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
+                                   class="btn btn-success btn-sm mt-1 text-white">
                                     <i class="bi bi-patch-check"></i>
                                     {{ $type->name }} Certificate
                                 </a>
@@ -198,8 +198,12 @@
                         <p class="my-1">{{ $hotel->hotel_location }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">{{ __('Hotel Star Rating') }}</span>
-                        <p class="my-1">{{ $hotel->star->no_of_stars ?? 'N/A' }} {{ __('Stars') }}</p>
+                        <span class="font-weight-bold text-uppercase">Nature of Location</span>
+                        <p class="my-1">{{ $hotel->nature->name ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Hotel Star Rating</span>
+                        <p class="my-1">{{ $hotel->star->name ?? 'N/A' }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Number of Rooms</span>
@@ -238,13 +242,13 @@
 
         <div class="tab-pane fade m-2" id="approval" role="tabpanel" aria-labelledby="approval-tab">
             <livewire:approval.approval-history-table modelName='App\Models\BusinessLocation'
-                modelId="{{ encrypt($location->id) }}" />
+                                                      modelId="{{ encrypt($location->id) }}"/>
         </div>
     </div>
 
     <div class="mt-4">
         <livewire:approval.branches-approval-processing modelName='App\Models\BusinessLocation'
-            modelId="{{ encrypt($location->id) }}" />
+                                                        modelId="{{ encrypt($location->id) }}"/>
     </div>
 
 @endsection

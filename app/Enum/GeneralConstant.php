@@ -69,6 +69,9 @@ class GeneralConstant implements Status
     const DPI = 150;
     const APPROVAL_LETTER = 'approval_letter';
 
+    const BUSINESS = 'business';
+    const SOLE_OWNER = 'sole owner';
+
 
     public static function getConstants(): array
     {

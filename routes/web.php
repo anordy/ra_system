@@ -171,6 +171,7 @@ Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
     Route::get('/business-certificate/{locationId}/{taxTypeId}', [QRCodeCheckController::class, 'businessCertificate'])->name('business.certificate');
     Route::get('/taxagents-certificate/{id}', [QRCodeCheckController::class, 'taxAgentsCertificate'])->name('taxagents.certificate');
     Route::get('/invoice/{id}', [QRCodeCheckController::class, 'invoice'])->name('invoice');
+    Route::get('/receipt/{id}', [QRCodeCheckController::class, 'receipt'])-> name('receipt');
     Route::get('/transfer/{billId}', [QRCodeCheckController::class, 'transfer'])->name('transfer');
     Route::get('/mvr/de-registration/{id}', [QRCodeCheckController::class, 'mvrDeregistrationCertificate'])->name('mvr.de-registration');
     Route::get('/mvr/registration/{id}', [QRCodeCheckController::class, 'mvrRegistrationCertificate'])->name('mvr.registration');

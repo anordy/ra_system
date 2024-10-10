@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use PDF;
-use Carbon\Carbon;
 use App\Models\ZmBill;
 use App\Models\BusinessBank;
-use Illuminate\Http\Request;
 use App\Models\ZrbBankAccount;
-use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
@@ -18,48 +15,37 @@ use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 
 class QRCodeGeneratorController extends Controller
 {
-    public function invoice($id, Request $request)
+    public function invoice($id)
     {
-        $id = decrypt($id);
-        $bill = ZmBill::with('user')->findOrFail($id);
-        $name = $bill->user->full_name ?? '';
-        
-        $url = env('TAXPAYER_URL') . route('qrcode-check.invoice',  base64_encode(strval($id)), 0);
+        $billId = decrypt($id);
 
-        $qrPayload = [
-            'opType' => '2',
-            'shortCode' => '100001',
-            'amount' => $bill->amount,
-            'billReference' => $bill->control_number,
-            'billCcy' => $bill->currency,
-            'billExprDt' => Carbon::parse($bill->expire_date)->toDateString(),
-            'billPayOpt' => (int) $bill->payment_option,
-            'billRsv01' => $bill->description
-        ];
+        $bill = ZmBill::findOrFail($billId);
+
+        $url = route('qrcode-check.invoice', base64_encode(strval(decrypt($id))));
+
+        $url = env('TAXPAYER_URL') . parse_url($url, PHP_URL_PATH);
 
         $result = Builder::create()
-        ->writer(new PngWriter())
-        ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true])
-        ->data(json_encode($qrPayload))
-        ->encoding(new Encoding('UTF-8'))
-        ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-        ->size(300)
-        ->margin(10)
-        ->logoPath(public_path('/images/logo.png'))
-        ->logoResizeToHeight(64)
-        ->logoResizeToWidth(64)
-        ->labelText('SCAN AND PAY')
-        ->labelAlignment(new LabelAlignmentCenter())
-        ->build();
-        
+            ->writer(new PngWriter())
+            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true])
+            ->data($url)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(300)
+            ->margin(10)
+            ->logoPath(public_path('/images/logo.png'))
+            ->logoResizeToHeight(64)
+            ->logoResizeToWidth(64)
+            ->labelText('SCAN AND PAY')
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
         header('Content-Type: ' . $result->getMimeType());
-        
+
         $dataUri = $result->getDataUri();
         
         $pdf = PDF::loadView('zanMalipo.pdf.invoice', compact('dataUri', 'bill'));
-        
-        
-        
+
         return $pdf->download('ZanMalipo_invoice_' . time() . '.pdf');
     }
     
@@ -70,9 +56,9 @@ class QRCodeGeneratorController extends Controller
         $bankAccount = ZrbBankAccount::findOrFail(decrypt($bankAccountId));
         $businessBank = BusinessBank::find(decrypt($businessBankAccId));
 
-        $name = $bill->payer_name;
+        $url = route('qrcode-check.transfer',  base64_encode(strval($billId)), 0);
 
-        $url = env('TAXPAYER_URL') . route('qrcode-check.transfer',  base64_encode(strval($billId)), 0);
+        $url = env('TAXPAYER_URL') . parse_url($url, PHP_URL_PATH);
 
         $result = Builder::create()
             ->writer(new PngWriter())
@@ -98,9 +84,32 @@ class QRCodeGeneratorController extends Controller
 
     public function receipt($id)
     {
-        $bill = ZmBill::findOrFail(decrypt($id));
-        $pdf = PDF::loadView('zanMalipo.pdf.receipt', compact('bill'));
-        // return $pdf;
+        $bill = ZmBill::find(decrypt($id));
+
+        $url = route('qrcode-check.invoice', base64_encode(strval(decrypt($id))));
+
+        $url = env('TAXPAYER_URL') . parse_url($url, PHP_URL_PATH);
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true])
+            ->data($url)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(300)
+            ->margin(10)
+            ->logoPath(public_path('/images/logo.png'))
+            ->logoResizeToHeight(64)
+            ->logoResizeToWidth(64)
+            ->labelText('')
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
+        header('Content-Type: ' . $result->getMimeType());
+
+        $dataUri = $result->getDataUri();
+        $pdf = PDF::loadView('zanMalipo.pdf.receipt', compact('bill', 'dataUri'));
         return $pdf->download('ZanMalipo_receipt_' . time() . '.pdf');
     }
+
 }

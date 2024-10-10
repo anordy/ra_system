@@ -87,49 +87,6 @@ class QRCodeCheckController extends Controller
         return view('qr-check.index', ['code' => $code]);
     }
 
-    public function invoice($id)
-    {
-        $bill = ZmBill::with('user')->find(base64_decode($id));
-        $name = $bill->user->full_name ?? '';
-
-        if (!$bill) {
-            return view('qr-check.error');
-        }
-
-        $code = [
-            "shortCode" => "001001",
-            "bill Reference" => $bill->control_number,
-            "amount" => number_format($bill->amount) .' '.$bill->currency,
-            "bill Currency" => $bill->currency,
-            "bill Expiry Date" => $bill->expire_date,
-            // "billRsv01" => "ZANZIBAR REVENUE AUTHORITY | {$name}"
-        ];
-        
-
-        return view('qr-check.index', ['code' => $code]);
-    }
-
-    public function transfer($billId)
-    {
-        $bill = ZmBill::find(base64_decode($billId));
-        $name = $bill->payer_name;
-
-        if (!$bill) {
-            return view('qr-check.error');
-        }
-
-        $code = [
-            "shortCode" => "001001",
-            "bill Reference" => $bill->control_number,
-            "amount" => number_format($bill->amount) .' '.$bill->currency,
-            "bill Currency" => $bill->currency,
-            "bill Expiry Date" => $bill->expire_date,
-            // "billRsv01" => "ZANZIBAR REVENUE AUTHORITY | {$name}"
-        ];
-        
-        return view('qr-check.index', ['code' => $code]);
-    }
-
     public function mvrDeregistrationCertificate($id)
     {
         $id = base64_decode($id);
@@ -207,6 +164,64 @@ class QRCodeCheckController extends Controller
             'ZIN'           => $location->zin,
             'Business Name' => $location->business->name,
             'Location'      => $location->street->name.', '. $location->district->name.', '. $location->region->name,
+        ];
+
+        return view('qr-check.index', ['code' => $code]);
+    }
+
+    public function invoice($id)
+    {
+        $bill = ZmBill::with('user')->find(base64_decode($id));
+
+        if (!$bill) {
+            return view('qr-check.error');
+        }
+
+        $code = [
+            "Payer Name" => $bill->payer_name,
+            "Control Number" => $bill->control_number,
+            "Paid Amount" => number_format($bill->amount) . ' ' . $bill->currency,
+            "Expiry Date" => $bill->expire_date,
+        ];
+
+
+        return view('qr-check.index', ['code' => $code]);
+    }
+
+    public function transfer($billId)
+    {
+        $bill = ZmBill::find(base64_decode($billId));
+
+        if (!$bill) {
+            return view('qr-check.error');
+        }
+
+        $code = [
+            "Payer Name" => $bill->payer_name,
+            "Control Number" => $bill->control_number,
+            "Amount" => number_format($bill->amount) . ' ' . $bill->currency,
+            "Currency" => $bill->currency,
+            "Expiry Date" => $bill->expire_date,
+        ];
+
+        return view('qr-check.index', ['code' => $code]);
+    }
+
+    public function receipt($billId)
+    {
+        $bill = ZmBill::find(base64_decode($billId));
+
+        if (!$bill) {
+            return view('qr-check.error');
+        }
+
+        $code = [
+            "Payer Name" => $bill->payer_name,
+            "Control Number" => $bill->control_number,
+            "Paid Amount" => number_format($bill->amount) . ' ' . $bill->currency,
+            "Currency" => $bill->currency,
+            "Expiry Date" => $bill->expire_date,
+            "Paid On" => $bill->payment->trx_time ? Carbon::make($bill->payment->trx_time)->format('d-M-Y H:i') : 'N/A'
         ];
 
         return view('qr-check.index', ['code' => $code]);

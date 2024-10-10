@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Approval;
 
 use App\Enum\GeneralConstant;
 use App\Enum\TransactionType;
+use App\Models\FinancialMonth;
+use App\Traits\PenaltyTrait;
 use App\Traits\TaxpayerLedgerTrait;
 use Carbon\Carbon;
 use Exception;
@@ -37,7 +39,7 @@ use App\Models\Returns\Port\PortReturn;
 
 class TaxReturnsVettingApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, TaxVerificationTrait, TaxReturnHistory, TaxClaimsTrait, VatReturnTrait, TaxpayerLedgerTrait;
+    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait, TaxVerificationTrait, TaxReturnHistory, TaxClaimsTrait, VatReturnTrait, TaxpayerLedgerTrait, PenaltyTrait;
 
     public $modelId;
     public $modelName;
@@ -55,6 +57,31 @@ class TaxReturnsVettingApprovalProcessing extends Component
         $this->registerWorkflow($modelName, $this->modelId);
     }
 
+    private function getIterations($financialMonth)
+    {
+        try {
+            $currentFinancialMonth = $this->getCurrentFinancialMonth();
+
+            $diffInMonths = FinancialMonth::query()
+                ->select(['id'])
+                ->whereBetween('due_date', [$financialMonth->due_date, $currentFinancialMonth->due_date])
+                ->count();
+
+            $penaltyIterations = $diffInMonths - 1;
+
+            if (Carbon::today() < $currentFinancialMonth->due_date) {
+                $penaltyIterations = $penaltyIterations - 1;
+            }
+
+            return $penaltyIterations;
+
+        } catch (Exception $exception) {
+            Log::error('TRAITS-PENALTY-TRAIT-GET-ITERATIONS', [$exception]);
+            throw $exception;
+        }
+    }
+
+
     public function previewPenalties($tax_return_id)
     {
         $tax_return = TaxReturn::selectRaw('
@@ -67,11 +94,9 @@ class TaxReturnsVettingApprovalProcessing extends Component
             ->get()
             ->firstOrFail();
 
+
         if (Carbon::now()->gt(Carbon::create($tax_return->curr_payment_due_date))) {
-            $penaltyIterationsToBeAdded = ceil($tax_return->periods);
-            if ($penaltyIterationsToBeAdded <= 0) {
-                $penaltyIterationsToBeAdded = 1;
-            }
+            $penaltyIterationsToBeAdded = abs($this->getIterations($tax_return->financialMonth) - $tax_return->return->penalties()->count());
         } else {
             $penaltyIterationsToBeAdded = 0;
         }
