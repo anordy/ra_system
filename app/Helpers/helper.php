@@ -7,6 +7,7 @@ use App\Models\EducationLevel;
 use App\Models\ExchangeRate;
 use App\Models\InterestRate;
 use App\Models\Region;
+use App\Models\Returns\Vat\SubVat;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserApprovalLevel;
@@ -410,4 +411,15 @@ function getHotelStarByLocationId($location_id)
     } else {
         return $businessHotel->star;
     }
+}
+
+function isEighteenPercent($subVatId) {
+    $subVat = \App\Models\Returns\Vat\SubVat::find($subVatId, ['code']);
+
+    if (in_array($subVat->code, [SubVat::FINANCIALSERVICES, SubVat::TELECOMMUNICATIONDATASERVICES, SubVat::TELECOMMUNICATIONVOICESERVICES, SubVat::TELEPHONE, SubVat::INSURANCE])){
+        return true;
+    }
+
+    return false;
+
 }

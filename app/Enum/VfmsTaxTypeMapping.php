@@ -17,6 +17,7 @@ class VfmsTaxTypeMapping implements Status
     const I = TaxType::VAT; // VAT In Banking and Communication
     const J = TaxType::AIRBNB;
     const Z = TaxType::LUMPSUM_PAYMENT;
+    const K = TaxType::VAT; // Vat on Insurance
 
 //    const I = TaxType::B
 

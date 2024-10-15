@@ -7,9 +7,9 @@
                 <table class="table table-bordered table-responsive table-sm">
                     <thead>
                         <th>Item Name</th>
-                        <th>Value</th>
-                        <th>Rate</th>
-                        <th>VAT</th>
+                        <th>Number of Liters/ Value</th>
+                        <th>Rate per Liter</th>
+                        <th>Amount</th>
                     </thead>
                     <tbody>
                     @if(!empty($return->configReturns))

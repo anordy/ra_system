@@ -15,4 +15,10 @@ class SubVat extends Model implements Auditable
         'name', 'gfs_code', 'is_approved', 'is_updated'
     ];
 
+    public const TELECOMMUNICATIONDATASERVICES = 'VAT on  Telecommunication data services';
+    public const TELECOMMUNICATIONVOICESERVICES = 'VAT on  Telecommunication Voice services';
+    public const FINANCIALSERVICES = 'VAT on Financial Services';
+    public const TELEPHONE = 'VAT on Telephone';
+    public const INSURANCE = 'VAT on Insurance';
+
 }
