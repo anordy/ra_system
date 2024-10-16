@@ -13,29 +13,12 @@
     <th>Item Name</th>
     <th>Number of Liters/ Value</th>
     <th>Rate per Liter</th>
-    <th>Amount ({{ $return->currency  }})</th>
+    <th>Amount</th>
     </thead>
     <tbody>
     @foreach ($return->configReturns as $item)
         @if($item->config->col_type == 'heading')
         @elseif($item->config->code === 'MSP' && $item->config->rate == 300 && $item->vat == 0)
-            )
-            <tr>
-                <td>{{ $item->config->name ?? 'name' }}</td>
-                <td>{{ number_format($item->value, 2) }}</td>
-                <td>
-                    @if($item->config->rate_type === 'percentage')
-                        {{ $item->config->rate }}%
-                    @elseif($item->config->rate_type === 'fixed')
-                        @if($item->config->rate_usd)
-                            {{ $item->config->rate_usd }} USD
-                        @else
-                            {{ $item->config->rate == 0 ? 1 : $item->config->rate }} {{ $item->config->currency ?? 'N/A' }}
-                        @endif
-                    @endif
-                </td>
-                <td>{{ number_format($item->vat, 1) }}</td>
-            </tr>
         @else
             <tr>
                 <td>{{ $item->config->name ?? 'name' }}</td>

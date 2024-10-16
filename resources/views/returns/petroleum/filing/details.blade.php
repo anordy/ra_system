@@ -14,6 +14,9 @@
                     <tbody>
                     @if(!empty($return->configReturns))
                         @foreach ($return->configReturns as $item)
+                            @if($item->config->col_type == 'heading')
+                            @elseif($item->config->code === 'MSP' && $item->config->rate == 300 && $item->vat == 0)
+                            @else
                             <tr>
                                 <td>{{ $item->config->name ?? 'name' }}</td>
                                 <td>{{ number_format($item->value, 2) }}</td>
@@ -30,6 +33,7 @@
                                 </td>
                                 <td>{{ number_format($item->vat, 2) }}</td>
                             </tr>
+                            @endif
                         @endforeach
                     @endif
                     </tbody>
