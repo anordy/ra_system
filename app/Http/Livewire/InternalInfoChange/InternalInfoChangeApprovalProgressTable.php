@@ -6,6 +6,7 @@ use App\Models\InternalBusinessUpdate;
 use App\Models\WorkflowTask;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
+use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -39,23 +40,17 @@ class InternalInfoChangeApprovalProgressTable extends DataTableComponent
         return [
             Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
             Column::make("Business Name", "pinstance.business_id")
-                ->label(fn ($row) => $row->pinstance->business->name ?? '')
-                ->searchable(),
+                ->label(fn ($row) => $row->pinstance->business->name ?? ''),
             Column::make("Branch", "pinstance.location_id")
-                ->label(fn ($row) => $row->pinstance->location->name ?? '')
-                ->searchable(),
+                ->label(fn ($row) => $row->pinstance->location->name ?? ''),
             Column::make("Information Type", "pinstance.type")
-                ->label(fn ($row) => ucfirst(str_replace('_', ' ', $row->pinstance->type))  ?? 'N/A')
-                ->searchable(),
+                ->label(fn ($row) => ucfirst(str_replace('_', ' ', $row->pinstance->type))  ?? 'N/A'),
             Column::make("Triggered On", "pinstance.created_at")
-                ->label(fn ($row) => $row->pinstance->created_at ?? 'N/A')
-                ->searchable(),
+                ->label(fn ($row) => $row->pinstance->created_at ?? 'N/A'),
             Column::make('From State', 'from_place')
-                ->format(fn ($value) => strtoupper($value))
-                ->sortable()->searchable(),
+                ->format(fn ($value) => strtoupper($value)),
             Column::make('Current State', 'to_place')
-                ->format(fn ($value) => strtoupper($value))
-                ->sortable()->searchable(),
+                ->format(fn ($value) => strtoupper($value)),
             Column::make('Status', 'pinstance.status')
                 ->label(function ($row) {
                     $status = $row->pinstance->status;

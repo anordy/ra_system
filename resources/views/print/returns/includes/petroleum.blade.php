@@ -11,9 +11,9 @@
 <table class="tbl-bordered tbl-p-6" style="width: 100%; margin-top: 10px;">
     <thead>
     <th>Item Name</th>
-    <th>Number of Liters/ Value</th>
-    <th>Rate per Liter</th>
-    <th>Amount</th>
+    <th>Number of Litres/ Value</th>
+    <th>Rate per Litre</th>
+    <th>Amount ({{$return->currency}})</th>
     </thead>
     <tbody>
     @foreach ($return->configReturns as $item)

@@ -58,25 +58,26 @@ class RegistrationsTable extends DataTableComponent
         return [
             Column::make('ZTN', 'ztn_number')
                 ->format(fn ($value) => $value ?? 'N/A')
-                ->sortable()->searchable(),
+                ->searchable(),
             Column::make('Business Category', 'category.name')
-                ->format(fn ($value) => strtoupper($value ?? 'N/A'))
-                ->sortable()->searchable(),
+                ->format(fn ($value) => strtoupper($value ?? 'N/A')),
             Column::make('Business Type', 'business_type')
-                ->format(fn ($value) => strtoupper($value ?? 'N/A'))
-                ->sortable()->searchable(),
+                ->format(fn ($value) => strtoupper($value ?? 'N/A')),
             Column::make('Business Name', 'name')->format(function ($value) {
-                return $value ? $value : 'N/A';
-            })->sortable()->searchable(),
+                return $value ?? 'N/A';
+            })->searchable(),
+            Column::make('Taxpayer Name', 'taxpayer_name')->format(function ($value) {
+                return $value ?? 'N/A';
+            })->searchable(),
             Column::make('TIN', 'tin')->format(function ($value) {
-                return $value ? $value : 'N/A';
-            })->sortable()->searchable(),
+                return $value ?? 'N/A';
+            }),
             Column::make('Buss. Reg. No.', 'reg_no')->format(function ($value) {
-                return $value ? $value : 'N/A';
-            })->sortable()->searchable(),
+                return $value ?? 'N/A';
+            }),
             Column::make('Mobile', 'mobile')->format(function ($value) {
-                return $value ? $value : 'N/A';
-            })->sortable()->searchable(),
+                return $value ?? 'N/A';
+            }),
             Column::make('Status', 'status')
                 ->view('business.registrations.includes.status'),
             Column::make('Action', 'id')

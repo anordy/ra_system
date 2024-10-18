@@ -63,9 +63,9 @@
                     <table class="table table-bordered table-responsive table-sm table">
                         <thead>
                         <th>Item Name</th>
-                        <th>Number of Liters/ Value</th>
-                        <th>Rate per Liter</th>
-                        <th>Amount</th>
+                        <th>Number of Litres/ Value</th>
+                        <th>Rate per Litre</th>
+                        <th>Amount ({{$return->currency}})</th>
                         </thead>
                         <tbody>
                         @if(!empty($return->configReturns))

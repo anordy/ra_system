@@ -39,11 +39,9 @@ class RegistrationsProgressApprovalTable extends DataTableComponent
         return [
             Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
             Column::make('Business Category', 'pinstance.category.name')
-                ->label(fn ($row) => $row->pinstance->category->name ?? 'N/A')
-                ->sortable()->searchable(),
+                ->label(fn ($row) => $row->pinstance->category->name ?? 'N/A'),
             Column::make('Business Type', 'pinstance.business_type')
-                ->label(fn ($row) => strtoupper($row->pinstance->business_type ?? 'N/A'))
-                ->sortable()->searchable(),
+                ->label(fn ($row) => strtoupper($row->pinstance->business_type ?? 'N/A')),
             Column::make('Business Name', 'pinstance.name')
                 ->label(fn ($row) => $row->pinstance->name ?? 'N/A')
                 ->searchable(function (Builder $query, $searchTerm) {
@@ -51,19 +49,23 @@ class RegistrationsProgressApprovalTable extends DataTableComponent
                         $query->whereRaw(DB::raw("LOWER(name) like '%' || LOWER('$searchTerm') || '%'"));
                     });
                 }),
+            Column::make('Taxpayer Name', 'pinstance.taxpayer_name')
+                ->label(fn ($row) => $row->pinstance->taxpayer_name ?? 'N/A')
+                ->searchable(function (Builder $query, $searchTerm) {
+                    return $query->orWhereHas('pinstance', function ($query) use ($searchTerm) {
+                        $query->whereRaw(DB::raw("LOWER(taxpayer_name) like '%' || LOWER('$searchTerm') || '%'"));
+                    });
+                }),
             Column::make('TIN', 'pinstance.tin')
-                ->label(fn ($row) => $row->pinstance->tin ?? '')->sortable()->searchable(),
+                ->label(fn ($row) => $row->pinstance->tin ?? ''),
             Column::make('Buss. Reg. No.', 'pinstance.reg_no')
-                ->label(fn ($row) => $row->pinstance->reg_no ?? 'N/A')
-                ->sortable()->searchable(),
+                ->label(fn ($row) => $row->pinstance->reg_no ?? 'N/A'),
             Column::make('Mobile', 'pinstance_type')
-                ->label(fn ($row) => $row->pinstance->mobile ?? '')->sortable()->searchable(),
+                ->label(fn ($row) => $row->pinstance->mobile ?? ''),
             Column::make('From State', 'from_place')
-                ->format(fn ($value) => strtoupper($value))
-                ->sortable()->searchable(),
+                ->format(fn ($value) => strtoupper($value)),
             Column::make('Current State', 'to_place')
-                ->format(fn ($value) => strtoupper($value))
-                ->sortable()->searchable(),
+                ->format(fn ($value) => strtoupper($value)),
             Column::make('Status', 'pinstance.mobile')
                 ->label(function ($row) {
                     return view('business.registrations.includes.approval_status', compact('row'));
