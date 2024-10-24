@@ -22,6 +22,8 @@ class CreateNtrBusinessDeregistrationsTable extends Migration
             $table->string('status');
             $table->timestamp('approved_on')->nullable();
             $table->timestamp('rejected_on')->nullable();
+            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->unsignedBigInteger('rejected_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

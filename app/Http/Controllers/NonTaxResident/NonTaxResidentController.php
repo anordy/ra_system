@@ -5,17 +5,20 @@ namespace App\Http\Controllers\NonTaxResident;
 use App\Enum\CustomMessage;
 use App\Http\Controllers\Controller;
 use App\Models\Ntr\NtrBusiness;
+use App\Models\Ntr\NtrBusinessDeregistration;
 use App\Models\Ntr\NtrBusinessUpdate;
 use Illuminate\Support\Facades\Log;
 
 class NonTaxResidentController extends Controller
 {
 
-    public function listBusinesses() {
+    public function listBusinesses()
+    {
         return view('non-tax-resident.business.index');
     }
 
-    public function showBusiness($id) {
+    public function showBusiness($id)
+    {
         try {
             $id = decrypt($id);
             $business = NtrBusiness::findOrFail($id, ['id', 'ntr_business_category_id', 'other_category', 'ownership_type', 'individual_first_name', 'individual_middle_name', 'individual_last_name', 'individual_position', 'individual_address', 'entity_type', 'name', 'nature_of_business', 'business_address', 'country_id', 'ntr_taxpayer_id', 'street', 'status', 'vrn', 'ztn_number', 'email', 'created_at', 'updated_at', 'deleted_at', 'ztn_location_number',]);
@@ -27,27 +30,44 @@ class NonTaxResidentController extends Controller
         }
     }
 
-    public function listReturns() {
+    public function listReturns()
+    {
         return view('non-tax-resident.returns.index');
     }
 
-    public function showReturn() {
+    public function showReturn()
+    {
         return view('non-tax-resident.returns.show');
     }
 
-    public function listDeregistrations() {
-        return view('non-tax-resident.deregistrations.show');
+    public function listDeregistrations()
+    {
+        return view('non-tax-resident.de-registrations.index');
     }
 
-    public function showDeregistration() {
-        return view('non-tax-resident.deregistrations.show');
+    public function showDeregistration($id)
+    {
+        try {
+            $id = decrypt($id);
+            $deRegistration = NtrBusinessDeregistration::query()
+                ->with(['business:id,name,country_id,ntr_business_category_id,ntr_taxpayer_id,street,status,vrn,ztn_number,ztn_location_number'])
+                ->findOrFail($id, ['id', 'ntr_business_id', 'ntr_taxpayer_id', 'marking', 'reason', 'status', 'approved_on', 'rejected_on', 'created_at', 'approved_by', 'rejected_by']);
+
+            return view('non-tax-resident.de-registrations.show', ['business' => $deRegistration->business, 'deRegistration' => $deRegistration]);
+        } catch (\Exception $exception) {
+            Log::error('NTR-BUSINESS-CONTROLLER-SHOW-DEREGISTRATION', [$exception]);
+            session()->flash('error', CustomMessage::error());
+            return back();
+        }
     }
 
-    public function listBusinessUpdates() {
+    public function listBusinessUpdates()
+    {
         return view('non-tax-resident.updates.index');
     }
 
-    public function showBusinessUpdates($id) {
+    public function showBusinessUpdates($id)
+    {
         try {
             $id = decrypt($id);
             $updates = NtrBusinessUpdate::query()

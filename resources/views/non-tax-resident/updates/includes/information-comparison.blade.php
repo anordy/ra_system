@@ -70,39 +70,6 @@
         </div>
     </div>
 
-    <!-- Business Attachments Table -->
-    <div class="card mb-4">
-        <div class="card-header">Business Attachments</div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Attachment</th>
-                    <th>Current File</th>
-                    <th>New File</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($formattedInfo['current_business_attachments'] ?? [] as $index => $attachment)
-                    <tr>
-                        <td>{{ $attachment['name'] }}</td>
-                        <td>{{ $attachment['file'] }}</td>
-                        <td>{{ $formattedInfo['new_business_attachments'][$index]['file'] ?? 'N/A' }}</td>
-                        <td>
-                            @if(($attachment['file'] ?? '') === ($formattedInfo['new_business_attachments'][$index]['file'] ?? ''))
-                                <span class="badge badge-success">Not Changed</span>
-                            @else
-                                <span class="badge badge-danger">Changed</span>
-                            @endif
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-
     <!-- Business Contacts Table -->
     <div class="card mb-4">
         <div class="card-header">Business Contacts</div>
@@ -124,6 +91,57 @@
                         <td>{{ $formattedInfo['new_business_contacts'][$index]['mobile'] ?? 'N/A' }}</td>
                         <td>
                             @if(($contact['mobile'] ?? '') === ($formattedInfo['new_business_contacts'][$index]['mobile'] ?? ''))
+                                <span class="badge badge-success">Not Changed</span>
+                            @else
+                                <span class="badge badge-danger">Changed</span>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Business Attachments Table -->
+    <div class="card mb-4">
+        <div class="card-header">Business Attachments</div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Attachment</th>
+                    <th>Current File</th>
+                    <th>New File</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($formattedInfo['current_business_attachments'] ?? [] as $index => $attachment)
+                    <tr>
+                        <td>{{ $attachment['name'] }}</td>
+                        <td>       <div
+                                    class="p-2 mb-3 d-flex rounded-sm align-items-center file-background">
+                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                <a target="_blank" href="{{ route('tax-return-cancellation.file', encrypt($attachment['file'])) }}"
+                                   class="ml-1 font-weight-bold">
+                                    View File
+                                    <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                </a>
+                            </div></td>
+                        <td>
+                            <div
+                                    class="p-2 mb-3 d-flex rounded-sm align-items-center file-background">
+                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                <a target="_blank" href="{{ route('tax-return-cancellation.file', encrypt($formattedInfo['new_business_attachments'][$index]['file'])) }}"
+                                   class="ml-1 font-weight-bold">
+                                    View File
+                                    <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            @if(($attachment['file'] ?? '') === ($formattedInfo['new_business_attachments'][$index]['file'] ?? ''))
                                 <span class="badge badge-success">Not Changed</span>
                             @else
                                 <span class="badge badge-danger">Changed</span>
