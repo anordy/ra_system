@@ -11,4 +11,6 @@ class NtrBusinessContactPerson extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    protected $table = 'ntr_business_contact_persons';
 }

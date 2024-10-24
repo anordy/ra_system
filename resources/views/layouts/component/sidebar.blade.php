@@ -109,6 +109,37 @@
                 </ul>
             </li>
         @endcan
+
+        @can("tax-consultant")
+            <li class="{{ request()->is("ntr*") ? "active" : "" }}">
+                <a href="#ntrSubmenu" data-toggle="collapse"
+                   aria-expanded="{{ request()->is("ntr*") ? "true" : "false" }}" class="dropdown-toggle">Non Tax
+                    Residents</a>
+                <ul class="collapse list-unstyled {{ request()->is("ntr*") ? "show" : "" }}" id="ntrSubmenu">
+                    @can("tax-consultant-registration-view")
+                        <li class="{{ request()->is("ntr/business") ? "active" : "" }}">
+                            <a href="{{ route("ntr.business.index") }}">Registered Businesses</a>
+                        </li>
+                    @endcan
+                    @can("active-tax-consultant-view")
+                        <li class="{{ request()->is("ntr/returns*") ? "active" : "" }}">
+                            <a href="{{ route("ntr.returns.index") }}">Filed Tax Returns</a>
+                        </li>
+                    @endcan
+                    @can("tax-consultant-renewal-requests-view")
+                        <li class="{{ request()->is("ntr/business/de-registrations*") ? "active" : "" }}">
+                            <a href="{{ route("ntr.business.de-registration.index") }}">Business De-registrations</a>
+                        </li>
+                    @endcan
+                    @can("tax-consultant-renewal-requests-view")
+                        <li class="{{ request()->is("ntr/business/updates*") ? "active" : "" }}">
+                            <a href="{{ route("ntr.business.updates.index") }}">Business Updates</a>
+                        </li>
+                    @endcan
+
+                </ul>
+            </li>
+        @endcan
         @can("tax-consultant")
             <li class="{{ request()->is("taxagents*") ? "active" : "" }}">
                 <a href="#taxagentSubmenu" data-toggle="collapse"

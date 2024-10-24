@@ -503,6 +503,12 @@ class PermissionSeeder extends Seeder
             # Tax Refund
             ['name' => 'itu-view-business-with-risk', 'sys_module_id' => 34],
             ['name' => 'itu-add-business-to-audit', 'sys_module_id' => 34],
+
+            # Non Tax Resident
+            ['name' => 'non-tax-resident-view-business', 'sys_module_id' => 100],
+            ['name' => 'non-tax-resident-view-de-registrations', 'sys_module_id' => 100],
+            ['name' => 'non-tax-resident-view-business-updates', 'sys_module_id' => 100],
+            ['name' => 'non-tax-resident-view-tax-returns', 'sys_module_id' => 100],
         ];
 
         foreach ($data as $row) {
