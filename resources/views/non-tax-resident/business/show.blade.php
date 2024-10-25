@@ -112,7 +112,7 @@
             <div class="row m-2 pt-3">
                 @foreach($business->socials ?? [] as $social)
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">{{ $social->account->name ?? 'N/A' }}</span>
+                        <span class="font-weight-bold text-uppercase"><i class="mr-2 bi bi-{{$social->account->icon ?? ''}}"></i>{{ $social->account->name ?? 'N/A' }}</span>
                         <p class="my-1"><a class="text-primary" href="{{ $social->url }}" target="_blank">{{ $social->url }}</a></p>
                     </div>
                 @endforeach
@@ -122,7 +122,7 @@
             <div class="row m-2 pt-3">
                 @foreach($business->contacts ?? [] as $contact)
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">{{ $contact->name ?? 'N/A' }}</span>
+                        <span class="font-weight-bold text-uppercase">Name: {{ $contact->name ?? 'N/A' }}</span>
                         <p class="my-1">Tel: {{ $contact->phone ?? 'N/A' }}</p>
                     </div>
                 @endforeach

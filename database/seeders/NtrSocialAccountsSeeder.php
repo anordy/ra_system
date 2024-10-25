@@ -17,7 +17,14 @@ class NtrSocialAccountsSeeder extends Seeder
         $socialAccounts = ['Facebook', 'Instagram', 'Twitter'];
 
         foreach ($socialAccounts as $account) {
-            NtrSocialAccount::create(['name' => $account]);
+            NtrSocialAccount::updateOrCreate(
+                [
+                    'name' => $account
+                ],
+                [
+                    'name' => $account, 'icon' => strtolower($account)
+                ]
+            );
         }
     }
 }

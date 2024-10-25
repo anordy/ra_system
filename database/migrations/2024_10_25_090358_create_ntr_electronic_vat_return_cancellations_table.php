@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateNtrSocialAccountsTable extends Migration
+class CreateNtrElectronicVatReturnCancellationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateNtrSocialAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ntr_social_accounts', function (Blueprint $table) {
+        Schema::create('ntr_electronic_vat_return_cancellations', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50);
-            $table->string('icon', 50);
-            $table->boolean('is_active')->default(true);
+            $table->unsignedBigInteger('return_id');
+            $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('cancelled_by');
+            $table->string('reason');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +31,6 @@ class CreateNtrSocialAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ntr_social_accounts');
+        Schema::dropIfExists('ntr_electronic_vat_return_cancellations');
     }
 }
