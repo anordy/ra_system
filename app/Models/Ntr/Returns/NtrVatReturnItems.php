@@ -12,4 +12,10 @@ class NtrVatReturnItems extends Model
 
     protected $table = 'ntr_electronic_vat_return_items';
 
+    protected $guarded = [];
+
+    public function config() {
+        return $this->belongsTo(NtrVatReturnConfig::class, 'config_id');
+    }
+
 }

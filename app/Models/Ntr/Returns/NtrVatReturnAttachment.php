@@ -12,4 +12,7 @@ class NtrVatReturnAttachment extends Model
 
     protected $table = 'ntr_electronic_vat_return_attachments';
 
+    protected $guarded = [];
+
+
 }

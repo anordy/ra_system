@@ -18,8 +18,9 @@ class CreateNtrElectronicVatReturnItemsTable extends Migration
             $table->unsignedBigInteger('config_id');
             $table->decimal('value',20, 2);
             $table->decimal('vat',20, 2);
-            $table->string('rate_type',20, 2)->default('percentage');
-            $table->decimal('rate',20, 2);
+            $table->string('rate_type',20, 2)->nullable();
+            $table->string('currency',20, 2)->nullable();
+            $table->decimal('rate',20, 2)->nullable();
             $table->unsignedBigInteger('return_id');
             $table->unsignedBigInteger('business_id');
             $table->timestamps();

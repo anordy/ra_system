@@ -12,4 +12,7 @@ class NtrVatReturnCancellation extends Model
 
     protected $table = 'ntr_electronic_vat_return_cancellations';
 
+    protected $guarded = [];
+
+
 }

@@ -12,4 +12,6 @@ class NtrVatReturnConfig extends Model
 
     protected $table = 'ntr_electronic_vat_return_configs';
 
+    protected $guarded = [];
+
 }

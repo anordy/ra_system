@@ -25,7 +25,8 @@ class CreateNtrElectronicVatReturnsTable extends Migration
             $table->unsignedBigInteger('financial_year_id');
             $table->unsignedBigInteger('financial_month_id');
             $table->integer('edited_count')->default(0);
-            $table->enum('status', ReturnStatus::getConstants());
+            $table->string('status');
+            $table->enum('payment_status', ReturnStatus::getConstants());
             $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
             $table->decimal('principal', 20, 2)->default(0);
             $table->decimal('penalty', 20, 2)->default(0);
