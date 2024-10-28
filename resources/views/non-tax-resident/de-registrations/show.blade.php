@@ -42,23 +42,41 @@
                     <p class="my-1">{{ $deRegistration->created_at ? \Carbon\Carbon::create($deRegistration->created_at)->format('d M, Y') : 'N/A' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Approved Date</span>
-                    <p class="my-1">{{ $deRegistration->approved_on ? \Carbon\Carbon::create($deRegistration->approved_on)->format('d M, Y') : 'N/A' }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Rejected Date</span>
-                    <p class="my-1">{{ $deRegistration->rejected_on ? \Carbon\Carbon::create($deRegistration->rejected_on)->format('d M, Y') : 'N/A' }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Status</span>
-                    <p class="my-1">{{ $deRegistration->status }}</p>
+                    <p class="my-1">
+                            <span class="font-weight-bold text-info">
+                                <i class="bi bi-check-circle-fill mr-1"></i>
+                                {{ strtoupper($deRegistration->status ?? 'N/A') }}
+                            </span>
+                    </p>
                 </div>
+                @if($deRegistration->approved_on)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Approved Date</span>
+                        <p class="my-1">{{  \Carbon\Carbon::create($deRegistration->approved_on)->format('d M, Y') ?? 'N/A' }}</p>
+                    </div>
+                @endif
+                @if($deRegistration->rejected_on)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Rejected Date</span>
+                        <p class="my-1">{{ \Carbon\Carbon::create($deRegistration->rejected_on)->format('d M, Y') ?? 'N/A' }}</p>
+                    </div>
+                @endif
+
                 <div class="col-md-12 mb-3">
                     <span class="font-weight-bold text-uppercase">Reason</span>
                     <p class="my-1">{{ $deRegistration->reason }}</p>
                 </div>
             </div>
 
+            <div class="mt-4 mx-4">
+                <span class="font-weight-bold text-uppercase">Outstanding Liabilities</span>
+                <div class="mt-2">
+                    <livewire:non-tax-resident.returns.business-returns-table
+                            ntrBusinessId="{{ encrypt($business->id) }}"/>
+                </div>
+
+            </div>
 
             <div class="mt-4 mx-4">
                 <livewire:approval.non-tax-resident.ntr-business-deregistration-approval-processing

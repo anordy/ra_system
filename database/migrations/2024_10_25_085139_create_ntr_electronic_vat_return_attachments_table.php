@@ -17,6 +17,7 @@ class CreateNtrElectronicVatReturnAttachmentsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('return_id');
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('financial_month_id');
             $table->string('customer_name');
             $table->string('service_description');
             $table->enum('currency', ['USD', 'TZS'])->default('USD');

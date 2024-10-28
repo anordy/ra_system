@@ -46,4 +46,12 @@ class NtrVatReturn extends Model
     public function latestBill(){
         return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
+
+    public function cancellation() {
+        return $this->hasOne(NtrVatReturnCancellation::class, 'return_id');
+    }
+
+    public function attachments(){
+        return $this->hasMany(NtrVatReturnAttachment::class, 'return_id');
+    }
 }

@@ -122,10 +122,15 @@
                         </li>
                     @endcan
                     @can("active-tax-consultant-view")
-                        <li class="{{ request()->is("ntr/returns*") ? "active" : "" }}">
+                        <li class="{{ request()->is("ntr/filed-returns*") ? "active" : "" }}">
                             <a href="{{ route("ntr.returns.index") }}">Filed Tax Returns</a>
                         </li>
                     @endcan
+                        @can("active-tax-consultant-view")
+                            <li class="{{ request()->is("ntr/cancelled-returns*") ? "active" : "" }}">
+                                <a href="{{ route("ntr.returns.cancelled") }}">Cancelled Tax Returns</a>
+                            </li>
+                        @endcan
                     @can("tax-consultant-renewal-requests-view")
                         <li class="{{ request()->is("ntr/business/de-registrations*") ? "active" : "" }}">
                             <a href="{{ route("ntr.business.de-registration.index") }}">Business De-registrations</a>

@@ -1,19 +1,33 @@
 @extends('layouts.master')
 
-@section('title', 'Business Registration Details')
+@section('title', 'Tax Return Details')
 
 @section('content')
     <div class="d-flex justify-content-end pb-2">
-        <a class="btn btn-info" href="{{route('ntr.business.index')}}">
-            <i class="bi bi-arrow-return-left mr-2"></i>
-            Back
-        </a>
+        @if($return->status === \App\Enum\NonTaxResident\NtrReturnStatus::FILED)
+            <button class="btn btn-outline-danger btn-sm mx-2"
+                    onclick="Livewire.emit('showModal', 'non-tax-resident.returns.cancel-return-modal',  '{{ encrypt($return->id) }}')">
+                <i class="bi bi-x mr-2"></i>
+                Cancel Return
+            </button>
+        @endif
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <livewire:non-tax-resident.returns.return-payment :return="$return"/>
+        </div>
     </div>
 
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                aria-selected="true">Business Information</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="deregister-tab" data-toggle="tab" href="#deregister" role="tab"
+               aria-controls="deregister"
+               aria-selected="true">Tax Return Information</a>
         </li>
     </ul>
 
@@ -105,44 +119,141 @@
                     <span class="font-weight-bold text-uppercase">Registration Date</span>
                     <p class="my-1">{{ $business->created_at ? \Carbon\Carbon::create($business->created_at)->format('d M, Y') : 'N/A' }}</p>
                 </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Return Status</span>
+                    <p class="my-1">
+                        <span class="font-weight-bold text-success">
+                                <i class="bi bi-check-circle-fill mr-1"></i>
+                                {{ strtoupper($return->status) }}
+                        </span>
+                    </p>
+                </div>
+                @if($return->cancellation)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Cancelled Date</span>
+                        <p class="my-1">{{ $return->cancellation->created_at ? \Carbon\Carbon::create($return->cancellation->created_at)->format('d M, Y') : 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Cancelled By</span>
+                        <p class="my-1">{{ $return->cancellation->taxpayer->full_name ?? 'N/A'  }}</p>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <span class="font-weight-bold text-uppercase">Cancellation Reason</span>
+                        <p class="my-1">
+                            {{ $return->cancellation->reason }}
+                        </p>
+                    </div>
+                @endif
 
             </div>
+        </div>
+        <div class="tab-pane fade show" id="deregister" role="tabpanel" aria-labelledby="deregister-tab">
+            <div class="m-4">
+                <table class="table table-bordered mb-0 normal-text">
+                    <thead>
+                    <th class="w-30">Nature of Supplies</th>
+                    <th class="w-20">Total Amount (Excluding Tax)</th>
+                    <th class="w-10">Rate</th>
+                    <th class="w-20">Total VAT Charged</th>
+                    </thead>
+                    <tbody>
+                    @if(!empty($return->items))
+                        @foreach ($return->items as $item)
+                            <tr>
+                                <td>{{ $item->config->name }}</td>
+                                <td>{{ number_format($item->value, 2) }}</td>
+                                @if($item->config->rate_applicable)
+                                    <td>
+                                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate . '%' : $item->config->rate_usd }}
+                                    </td>
+                                @else
+                                    <td class="bg-secondary"></td>
+                                @endif
+                                <td>{{ number_format($item->vat, 2) }}</td>
+                                {{--                                    <td class="bg-secondary"></td>--}}
+                            </tr>
+                        @endforeach
+                    @else
+                        <span>{{ __('No Return Items Found')  }}</span>
+                    @endif
+                    </tbody>
+                    <tfoot>
+                    <tr class="bg-secondary">
+                        <th class="w-20">{{ __('Total') }}</th>
+                        <th class="w-30"></th>
+                        <th class="w-25"></th>
+                        <th class="w-25">{{ number_format($return->total_amount_due) }}</th>
+                    </tr>
+                    </tfoot>
+                </table>
+                @if($return->attachments)
+                    <table class="table table-bordered table-striped normal-text mt-4">
+                        <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Service Description</th>
+                            <th>Amount (USD)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($return->attachments as $attachment)
+                            <tr>
+                                <td>{{ $attachment->customer_name }}</td>
+                                <td>{{ $attachment->service_description }}
+                                <td>{{ number_format($attachment->paid_amount ?? 0, 2) }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th colspan="2" class="text-right">Total Amount:</th>
+                            <th>
+                                {{ number_format($return->attachments->sum('paid_amount'), 2) }}
+                            </th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                @endif
+                <table class="table table-bordered table-striped normal-text mt-4">
+                    <thead>
+                    <tr>
+                        <th>{{ __('Month') }}</th>
+                        <th>{{ __('Tax Amount') }}</th>
+                        <th>{{ __('Late Filing Amount') }}</th>
+                        <th>{{ __('Late Payment Amount') }}</th>
+                        <th>{{ __('Interest Rate') }}</th>
+                        <th>{{ __('Interest Amount') }}</th>
+                        <th>{{ __('Payable Amount') }}</th>
+                    </tr>
+                    </thead>
 
-            <h6 class="mx-4">Social Media Accounts</h6><hr>
-            <div class="row m-2 pt-3">
-                @foreach($business->socials ?? [] as $social)
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">{{ $social->account->name ?? 'N/A' }}</span>
-                        <p class="my-1"><a class="text-primary" href="{{ $social->url }}" target="_blank">{{ $social->url }}</a></p>
-                    </div>
-                @endforeach
-            </div>
-
-            <h6 class="mx-4">Contact Persons</h6><hr>
-            <div class="row m-2 pt-3">
-                @foreach($business->contacts ?? [] as $contact)
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">{{ $contact->name ?? 'N/A' }}</span>
-                        <p class="my-1">Tel: {{ $contact->phone ?? 'N/A' }}</p>
-                    </div>
-                @endforeach
-            </div>
-
-            <h6 class="mx-4">Attachments</h6><hr>
-            <div class="row m-2 pt-3">
-                @foreach($business->attachments ?? [] as $attachment)
-                    <div class="col-md-4 mb-3">
-                        <div
-                             class="p-2 mb-3 d-flex rounded-sm align-items-center file-background">
-                            <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
-                            <a target="_blank" href="{{ route('tax-return-cancellation.file', encrypt($attachment->attachment_path)) }}"
-                               class="ml-1 font-weight-bold">
-                                {{ $attachment->type->name ?? 'N/A' }}
-                                <i class="bi bi-arrow-up-right-square ml-1"></i>
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
+                    <tbody>
+                    @if(count($return->penalties))
+                        @foreach ($return->penalties as $penalty)
+                            <tr>
+                                <td>{{ $penalty['financial_month_name'] }}</td>
+                                <td>{{ number_format($penalty['tax_amount'], 2) }}
+                                    <strong>{{ $return->currency}}</strong></td>
+                                <td>{{ number_format($penalty['late_filing'], 2) }}
+                                    <strong>{{ $return->currency}}</strong></td>
+                                <td>{{ number_format($penalty['late_payment'], 2) }}
+                                    <strong>{{ $return->currency}}</strong></td>
+                                <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
+                                <td>{{ number_format($penalty['rate_amount'], 2) }}
+                                    <strong>{{ $return->currency}}</strong></td>
+                                <td>{{ number_format($penalty['penalty_amount'], 2)}}
+                                    <strong>{{ $return->currency}}</strong></td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="7" class="text-center py-3">
+                                {{ __('No penalties for this return') }}.
+                            </td>
+                        </tr>
+                    @endif
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
