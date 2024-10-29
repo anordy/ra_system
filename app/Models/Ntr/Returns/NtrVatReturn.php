@@ -6,6 +6,7 @@ use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Ntr\NtrBusiness;
 use App\Models\Taxpayer;
+use App\Models\TaxType;
 use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +26,10 @@ class NtrVatReturn extends Model
 
     public function taxpayer() {
         return $this->belongsTo(Taxpayer::class, 'filed_by_id');
+    }
+
+    public function taxType() {
+        return $this->belongsTo(TaxType::class, 'tax_type_id');
     }
 
     public function month() {

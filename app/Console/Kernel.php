@@ -55,6 +55,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:ps-reopen')->dailyAt('01:02')->runInBackground();
         $schedule->command('app:ps-de-register')->dailyAt('01:04')->runInBackground();
         $schedule->command('dl:expired')->dailyAt('01:05')->runInBackground();
+        $schedule->command('daily:debt-ntr')->dailyAt('01:10')->runInBackground();
 
         // RUNNING AT SPECIFIC TIME & DAY
         // $schedule->command('daily:debt')->cron('51 14 04 01 *')->runInBackground();
