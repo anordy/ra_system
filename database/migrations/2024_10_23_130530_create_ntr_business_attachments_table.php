@@ -18,6 +18,7 @@ class CreateNtrBusinessAttachmentsTable extends Migration
             $table->unsignedBigInteger('ntr_business_id');
             $table->string('ntr_business_attachment_id');
             $table->string('attachment_path');
+            $table->boolean('is_required')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

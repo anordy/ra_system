@@ -22,7 +22,7 @@ class NonTaxResidentController extends Controller
     {
         try {
             $id = decrypt($id);
-            $business = NtrBusiness::findOrFail($id, ['id', 'ntr_business_category_id', 'other_category', 'ownership_type', 'individual_first_name', 'individual_middle_name', 'individual_last_name', 'individual_position', 'individual_address', 'entity_type', 'name', 'nature_of_business', 'business_address', 'country_id', 'ntr_taxpayer_id', 'street', 'status', 'vrn', 'ztn_number', 'email', 'created_at', 'updated_at', 'deleted_at', 'ztn_location_number',]);
+            $business = NtrBusiness::findOrFail($id, ['id', 'ntr_business_category_id', 'other_category', 'ownership_type', 'ntr_business_nature_id', 'ntr_payment_gateway_id', 'entity_type', 'name', 'business_address', 'country_id', 'ntr_taxpayer_id', 'street', 'status', 'vrn', 'ztn_number', 'email', 'created_at', 'updated_at', 'deleted_at', 'ztn_location_number',]);
             return view('non-tax-resident.business.show', compact('business'));
         } catch (\Exception $exception) {
             Log::error('NTR-BUSINESS-CONTROLLER-SHOW-BUSINESS', [$exception]);
@@ -46,7 +46,7 @@ class NonTaxResidentController extends Controller
         try {
             $id = decrypt($id);
             $return = NtrVatReturn::with([
-                'business:id,ntr_business_category_id,other_category,ownership_type,individual_first_name,individual_middle_name,individual_last_name,individual_position,individual_address,entity_type,name,nature_of_business,business_address,country_id,ntr_taxpayer_id,street,status,vrn,ztn_number,email,created_at,ztn_location_number',
+                'business:id,ntr_business_category_id,other_category,ownership_type,ntr_payment_gateway_id,ntr_business_nature_id,entity_type,name,business_address,country_id,ntr_taxpayer_id,street,status,vrn,ztn_number,email,created_at,ztn_location_number',
                 'cancellation:id,return_id,reason,created_at,cancelled_by'
             ])->findOrFail($id, ['id', 'business_id', 'filed_by_type', 'filed_by_id', 'currency', 'tax_type_id', 'financial_year_id', 'financial_month_id', 'edited_count', 'status', 'payment_status', 'return_category', 'principal', 'penalty', 'interest', 'total_amount_due', 'total_amount_due_with_penalties', 'paid_at', 'filing_due_date', 'payment_due_date', 'curr_payment_due_date', 'created_at']);
             return view('non-tax-resident.returns.show', ['return' => $return, 'business' => $return->business]);

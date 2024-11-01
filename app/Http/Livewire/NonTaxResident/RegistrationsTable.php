@@ -37,7 +37,7 @@ class RegistrationsTable extends DataTableComponent
             Column::make('VRN #', "vrn"),
             Column::make('Email', "email"),
             Column::make('Country of Residence', "country.name"),
-            Column::make('Nature of Business', "nature_of_business"),
+            Column::make('Nature of Business', "nature.name"),
             Column::make('Registrar', "ntr_taxpayer_id")
                 ->format(function ($value, $row) {
                   return $row->taxpayer->full_name ?? 'N/A';

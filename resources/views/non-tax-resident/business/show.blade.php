@@ -65,18 +65,6 @@
                         <p class="my-1">{{ $business->other_category }}</p>
                     </div>
                 @endif
-                @if($business->individual_position)
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Individual Position</span>
-                        <p class="my-1">{{ $business->individual_position }}</p>
-                    </div>
-                @endif
-                @if($business->individual_address)
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Individual Address</span>
-                        <p class="my-1">{{ $business->individual_address }}</p>
-                    </div>
-                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Email</span>
                     <p class="my-1">{{ $business->email }}</p>
@@ -87,7 +75,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Nature of Business</span>
-                    <p class="my-1">{{ $business->nature_of_business }}</p>
+                    <p class="my-1">{{ $business->nature->name ?? 'N/A' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Country</span>
@@ -107,6 +95,37 @@
                 </div>
 
             </div>
+
+            @if($business->owner)
+                <h6 class="mx-4">Owner's Information</h6>
+                <div class="row m-2 pt-3">
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Full Name</span>
+                        <p class="my-1">{{ $business->owner->full_name ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Position</span>
+                        <p class="my-1">{{ $business->owner->position ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Nationality</span>
+                        <p class="my-1">{{ $business->owner->country->name ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Address</span>
+                        <p class="my-1">{{ $business->owner->address ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Passport No</span>
+                        <p class="my-1">{{ $business->owner->passport_number ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Identification No</span>
+                        <p class="my-1">{{ $business->owner->id_number ?? 'N/A' }}</p>
+                    </div>
+                </div>
+            @endif
+
 
             <h6 class="mx-4">Social Media Accounts</h6><hr>
             <div class="row m-2 pt-3">

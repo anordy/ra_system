@@ -113,8 +113,7 @@
         @can("tax-consultant")
             <li class="{{ request()->is("ntr*") ? "active" : "" }}">
                 <a href="#ntrSubmenu" data-toggle="collapse"
-                   aria-expanded="{{ request()->is("ntr*") ? "true" : "false" }}" class="dropdown-toggle">Non Tax
-                    Residents</a>
+                   aria-expanded="{{ request()->is("ntr*") ? "true" : "false" }}" class="dropdown-toggle">Digital Services Taxation</a>
                 <ul class="collapse list-unstyled {{ request()->is("ntr*") ? "show" : "" }}" id="ntrSubmenu">
                     @can("tax-consultant-registration-view")
                         <li class="{{ request()->is("ntr/business") ? "active" : "" }}">
