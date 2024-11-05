@@ -3,12 +3,6 @@
 @section('title', 'Business Registration Details')
 
 @section('content')
-    <div class="d-flex justify-content-end pb-2">
-        <a class="btn btn-info" href="{{route('ntr.business.index')}}">
-            <i class="bi bi-arrow-return-left mr-2"></i>
-            Back
-        </a>
-    </div>
 
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
@@ -85,6 +79,12 @@
                     <span class="font-weight-bold text-uppercase">Business Street</span>
                     <p class="my-1">{{ $business->street }}</p>
                 </div>
+                @if($business->annual_revenue_threshold)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Annual Revenue Threshold (USD)</span>
+                        <p class="my-1">{{ $business->annual_revenue_threshold }}</p>
+                    </div>
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Registered By</span>
                     <p class="my-1">{{ $business->taxpayer->full_name ?? 'N/A' }}</p>

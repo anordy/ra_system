@@ -15,9 +15,21 @@
                 </tr>
                 </thead>
                 <tbody>
-                @php
-                    $fields = ['name' => 'Name', 'email' => 'Email', 'street' => 'Street', 'business_address' => 'Address', 'nature_of_business' => 'Nature of Business'];
-                @endphp
+{{--                'passport_number' => $currentData['individualPassportNo'] ?? null,--}}
+{{--                'owner_full_name' => $currentData['individualFullName'] ?? null,--}}
+{{--                'owner_identification_type' => $currentData['identificationType'] ?? null,--}}
+{{--                'owner_identification_number' => $currentData['individualIdNo'] ?? null,--}}
+{{--                'owner_nationality' => $currentData['individualNationalityId'] ?? null,--}}
+                @if($business->business_type == \App\Enum\NonTaxResident\NtrBusinessType::NON_RESIDENT)
+                    @php
+                        $fields = ['name' => 'Name', 'email' => 'Email', 'business_street' => 'Street', 'business_address' => 'Address', 'business_nature' => 'Nature of Business'];
+                    @endphp
+                @else
+                    @php
+                        $fields = ['name' => 'Name', 'email' => 'Email', 'business_street' => 'Street', 'business_address' => 'Address', 'business_nature' => 'Nature of Business', 'annual_revenue_threshold' => 'Annual Revenue Threshold', 'payment_gateway' => 'Payment Gateway'];
+                    @endphp
+                @endif
+
                 @foreach($fields as $key => $label)
                     <tr>
                         <td>{{ $label }}</td>
@@ -119,21 +131,25 @@
                 <tbody>
                 @foreach($formattedInfo['current_business_attachments'] ?? [] as $index => $attachment)
                     <tr>
-                        <td>{{ $attachment['name'] }}</td>
-                        <td>       <div
-                                    class="p-2 mb-3 d-flex rounded-sm align-items-center file-background">
-                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
-                                <a target="_blank" href="{{ route('tax-return-cancellation.file', encrypt($attachment['file'])) }}"
-                                   class="ml-1 font-weight-bold">
-                                    View File
-                                    <i class="bi bi-arrow-up-right-square ml-1"></i>
-                                </a>
-                            </div></td>
+                        <td>{{ $attachment['name'] ?? '' }}</td>
                         <td>
                             <div
                                     class="p-2 mb-3 d-flex rounded-sm align-items-center file-background">
                                 <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
-                                <a target="_blank" href="{{ route('tax-return-cancellation.file', encrypt($formattedInfo['new_business_attachments'][$index]['file'])) }}"
+                                <a target="_blank"
+                                   href="{{ route('tax-return-cancellation.file', encrypt($attachment['file'] ?? 'N/A')) }}"
+                                   class="ml-1 font-weight-bold">
+                                    View File
+                                    <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <div
+                                    class="p-2 mb-3 d-flex rounded-sm align-items-center file-background">
+                                <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                <a target="_blank"
+                                   href="{{ route('tax-return-cancellation.file', encrypt($formattedInfo['new_business_attachments'][$index]['file'] ?? 'N/A')) }}"
                                    class="ml-1 font-weight-bold">
                                     View File
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\NonTaxResident;
 
 use App\Enum\NonTaxResident\NtrApplicationType;
+use App\Enum\NonTaxResident\NtrBusinessType;
 use App\Models\Ntr\NtrBusiness;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -42,13 +43,15 @@ class RegistrationsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                   return $row->taxpayer->full_name ?? 'N/A';
                 }),
-            Column::make('Ownership Type', "ownership_type")
+            Column::make('Business Type', "business_type")
                 ->format(function ($value) {
-                   if ($value == NtrApplicationType::INDIVIDUAL) {
-                       return 'Individual';
-                   } else {
-                       return 'Entity';
-                   }
+                    if ($value == NtrBusinessType::ECOMMERCE) {
+                        return 'E-commerce';
+                    } else if ($value == NtrBusinessType::NON_RESIDENT) {
+                        return 'Non Resident';
+                    } else {
+                        return 'N/A';
+                    }
                 }),
             Column::make('Registration Date', "created_at")
                 ->format(function ($value) {

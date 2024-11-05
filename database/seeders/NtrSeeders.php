@@ -19,5 +19,6 @@ class NtrSeeders extends Seeder
         $this->call(NtrSocialAccountsSeeder::class);
         $this->call(NtrNatureOfBusinessSeeder::class);
         $this->call(NtrVatReturnConfigSeeder::class);
+        $this->call(NtrIdTypeSeeder::class);
     }
 }

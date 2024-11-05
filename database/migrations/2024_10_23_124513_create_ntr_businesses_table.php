@@ -15,23 +15,25 @@ class CreateNtrBusinessesTable extends Migration
     {
         Schema::create('ntr_businesses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('ntr_business_category_id');
+            $table->unsignedBigInteger('ntr_business_category_id')->nullable();
             $table->string('other_category')->nullable();
-            $table->integer('ownership_type');
+            $table->integer('ownership_type')->nullable();
             $table->integer('business_type');
             $table->string('entity_type')->nullable();
             $table->string('name');
-            $table->string('business_address');
-            $table->unsignedBigInteger('country_id');
+            $table->string('business_address')->nullable();
+            $table->unsignedBigInteger('country_id')->nullable();
+            $table->unsignedBigInteger('incorporation_country_id')->nullable();
             $table->unsignedBigInteger('ntr_business_nature_id');
             $table->unsignedBigInteger('ntr_payment_gateway_id')->nullable();
             $table->unsignedBigInteger('ntr_taxpayer_id')->index('ntr_businesses_taxpayer_id');
-            $table->string('street');
+            $table->string('street')->nullable();
             $table->string('status')->nullable();
             $table->string('vrn')->nullable();
             $table->string('ztn_number')->nullable();
             $table->string('ztn_location_number')->nullable();
             $table->string('email')->unique()->nullable();
+            $table->decimal('annual_revenue_threshold', 20, 2)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

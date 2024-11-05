@@ -22,7 +22,7 @@ class NonTaxResidentController extends Controller
     {
         try {
             $id = decrypt($id);
-            $business = NtrBusiness::findOrFail($id, ['id', 'ntr_business_category_id', 'other_category', 'ownership_type', 'ntr_business_nature_id', 'ntr_payment_gateway_id', 'entity_type', 'name', 'business_address', 'country_id', 'ntr_taxpayer_id', 'street', 'status', 'vrn', 'ztn_number', 'email', 'created_at', 'updated_at', 'deleted_at', 'ztn_location_number',]);
+            $business = NtrBusiness::findOrFail($id, ['id', 'ntr_business_category_id', 'other_category', 'ownership_type', 'ntr_business_nature_id', 'ntr_payment_gateway_id', 'annual_revenue_threshold', 'entity_type', 'name', 'business_address', 'country_id', 'ntr_taxpayer_id', 'street', 'status', 'vrn', 'ztn_number', 'email', 'created_at', 'updated_at', 'deleted_at', 'ztn_location_number',]);
             return view('non-tax-resident.business.show', compact('business'));
         } catch (\Exception $exception) {
             Log::error('NTR-BUSINESS-CONTROLLER-SHOW-BUSINESS', [$exception]);
@@ -88,7 +88,7 @@ class NonTaxResidentController extends Controller
         try {
             $id = decrypt($id);
             $updates = NtrBusinessUpdate::query()
-                ->with(['business:id,name,country_id,ntr_business_category_id,ntr_taxpayer_id,street,status,vrn,ztn_number,ztn_location_number'])
+                ->with(['business:id,name,country_id,ntr_business_category_id,ntr_taxpayer_id,street,status,vrn,ztn_number,ztn_location_number,business_type'])
                 ->findOrFail($id, ['id', 'ntr_business_id', 'ntr_taxpayer_id', 'current_business_info', 'current_contacts', 'current_socials', 'current_attachments', 'new_business_info', 'new_contacts', 'new_socials', 'new_attachments', 'created_at']);
 
             $formattedInfo = [
