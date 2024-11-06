@@ -220,7 +220,10 @@
             @enderror
         </div>
         <div class="col-md-4">
-            <button class="btn btn-primary btn-cm" wire:click="submit">Submit</button>
+            <button class="btn btn-primary btn-cm" wire:click="submit" wire:loading.attr="disabled">
+                <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
+                   wire:target="submit"></i>
+                Submit</button>
         </div>
 
         @if ($fileName)

@@ -32,5 +32,6 @@ class Parameter extends Model
     public const PROJECT_ID = 'project_id';
     public const DEPARTMENT_NAME = 'department_name';
     public const TAX_REGION_NAME = 'tax_region_name';
+    public const DST_BUSINESS_TYPE = 'business_type';
 
 }

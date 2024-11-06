@@ -490,6 +490,19 @@ class ReportsSeeder extends Seeder
                     ]
                 ]
             ],
+            // DST
+            [
+                'report_type' => GeneralReportType::DST,
+                'reports' => [
+                    [
+                        'name' => 'Registered Businesses',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::DST,
+                        'report_url' => '/reports/ZRA/Dst/registered_businesses',
+                        'parameters' => [Parameter::DYNAMIC_DATE, Parameter::DST_BUSINESS_TYPE]
+                    ],
+                ]
+            ],
         ];
 
         $this->call(ReportTypesSeeder::class);

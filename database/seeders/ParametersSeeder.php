@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enum\NonTaxResident\NtrBusinessType;
 use App\Models\District;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
@@ -155,6 +156,13 @@ class ParametersSeeder extends Seeder
                 'code' => Parameter::TAX_REGION_NAME,
                 'input_type' => 'select',
                 'model_name' => 'SELECT DISTINCT NAME, ID FROM TAX_REGIONS WHERE LOCATION = \'DTD\'',
+                'display_name' => 'name',
+            ],
+            [
+                'name' => 'Business Type',
+                'code' => Parameter::DST_BUSINESS_TYPE,
+                'input_type' => 'select',
+                'model_name' => NtrBusinessType::class,
                 'display_name' => 'name',
             ],
         ];
