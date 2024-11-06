@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Approval\NonTaxResident;
 
 
 use App\Enum\CustomMessage;
+use App\Jobs\NonTaxResident\SendBusinessDeregistrationMail;
 use App\Models\BusinessStatus;
 use App\Traits\CustomAlert;
 use App\Traits\WorkflowProcesssingTrait;
@@ -55,6 +56,9 @@ class NtrBusinessDeregistrationApprovalProcessing extends Component
 
             DB::commit();
 
+            // Send Mail
+            SendBusinessDeregistrationMail::dispatch($this->subject->taxpayer->email, $this->subject->business->name, BusinessStatus::APPROVED);
+
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
@@ -81,6 +85,7 @@ class NtrBusinessDeregistrationApprovalProcessing extends Component
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             DB::commit();
+            SendBusinessDeregistrationMail::dispatch($this->subject->taxpayer->email, $this->subject->business->name, BusinessStatus::REJECTED);
             $this->flash('success', 'Application Rejected', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
