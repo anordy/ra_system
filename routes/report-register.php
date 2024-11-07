@@ -21,6 +21,7 @@ Route::name('report-register.')
 
     Route::prefix('incident')->name('incident.')->group(function () {
         Route::get('/', [IncidentController::class, 'index'])->name('index');
+        Route::get('/staff/reports', [IncidentController::class, 'staff'])->name('staff');
         Route::get('/{id}', [IncidentController::class, 'show'])->name('view');
     });
 

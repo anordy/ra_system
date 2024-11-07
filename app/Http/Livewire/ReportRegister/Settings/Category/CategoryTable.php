@@ -17,9 +17,16 @@ class CategoryTable extends DataTableComponent
         'confirmed'
     ];
 
+    public $requesterType;
+
+    public function mount($requesterType) {
+        $this->requesterType = $requesterType;
+    }
+
     public function builder(): Builder
     {
         return RgCategory::query()
+            ->where('requester_type', $this->requesterType)
             ->orderBy('name', 'Asc');
     }
 

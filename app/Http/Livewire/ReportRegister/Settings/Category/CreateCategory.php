@@ -14,7 +14,11 @@ class CreateCategory extends Component
 {
     use CustomAlert;
 
-    public $name, $description;
+    public $name, $description, $requesterType;
+
+    public function mount($requesterType) {
+        $this->requesterType = decrypt($requesterType);
+    }
 
     protected function rules()
     {
@@ -32,7 +36,7 @@ class CreateCategory extends Component
             $rgCategory = RgCategory::create([
                 'name' => $this->name,
                 'description' => $this->description,
-                'requester_type' => RgRequestorType::TAXPAYER
+                'requester_type' => $this->requesterType
             ]);
 
             if (!$rgCategory) throw new Exception('Failed to save category');

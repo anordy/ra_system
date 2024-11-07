@@ -1001,8 +1001,13 @@
                 <ul class="collapse list-unstyled {{ request()->is("report-register*") ? "show" : "" }}"
                     id="report-register">
                     @can("report-register-view-incident")
-                        <li class="{{ request()->is("report-register/audits*") ? "active" : "" }}">
-                            <a href="{{ route("report-register.incident.index") }}">Incidents</a>
+                        <li class="{{ request()->is("report-register*") ? "active" : "" }}">
+                            <a href="{{ route("report-register.incident.index") }}">Taxpayer Incidents</a>
+                        </li>
+                    @endcan
+                    @can("report-register-view-incident")
+                        <li class="{{ request()->is("report-register/staff/reports*") ? "active" : "" }}">
+                            <a href="{{ route("report-register.incident.staff") }}">Staff Incidents</a>
                         </li>
                     @endcan
                     @can("report-register-view-task")

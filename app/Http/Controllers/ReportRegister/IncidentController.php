@@ -18,6 +18,15 @@ class IncidentController extends Controller
         return view('report-register.incident.index');
     }
 
+    public function staff()
+    {
+        if (!Gate::allows('report-register-view-incident')) {
+            abort(403);
+        }
+
+        return view('report-register.incident.staff-incidents');
+    }
+
     public function show($id)
     {
         if (!Gate::allows('report-register-view-incident')) {

@@ -104,17 +104,25 @@ trait ReportRegisterTrait
                 $this->notifyWorkersOnClosure($register);
 
                 if ($register->register_type === RgRegisterType::INCIDENT) {
-                    $taxpayer = Taxpayer::find($register->requester_id, ['mobile', 'first_name']);
-
-                    if ($taxpayer) {
-                        event(new SendSms(SendCustomSMS::SERVICE, NULL, [
-                            'phone' => $taxpayer->mobile,
-                            'message' => "Hello {$taxpayer->first_name}, your logged incident: {$register->title} has been successfully {$status}"
-                        ]));
+                    if ($register->requestor_type === RgRequestorType::TAXPAYER) {
+                        $taxpayer = Taxpayer::find($register->requester_id, ['mobile', 'first_name']);
+                        if ($taxpayer) {
+                            event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                                'phone' => $taxpayer->mobile,
+                                'message' => "Hello {$taxpayer->first_name}, your logged incident: {$register->title} has been successfully {$status}"
+                            ]));
+                        }
+                    } else if ($register->requestor_type === RgRequestorType::STAFF) {
+                        $user = User::find($register->requester_id, ['phone', 'fname']);
+                        if ($user) {
+                            event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                                'phone' => $user->phone,
+                                'message' => "Hello {$user->fname}, your logged incident: {$register->title} has been successfully {$status}"
+                            ]));
+                        }
                     }
                 }
             }
-
         } catch (Exception $exception) {
             DB::rollBack();
             throw $exception;
@@ -161,13 +169,24 @@ trait ReportRegisterTrait
             DB::commit();
 
             if ($register->register_type === RgRegisterType::INCIDENT) {
-                $taxpayer = Taxpayer::find($register->requester_id, ['mobile', 'first_name']);
+                if ($register->requestor_type === RgRequestorType::TAXPAYER) {
+                    $taxpayer = Taxpayer::find($register->requester_id, ['mobile', 'first_name']);
 
-                if ($taxpayer) {
-                    event(new SendSms(SendCustomSMS::SERVICE, NULL, [
-                        'phone' => $taxpayer->mobile,
-                        'message' => "Hello {$taxpayer->first_name}, a new comment '{$comment->comment}' has been added on your logged incident: {$register->title}"
-                    ]));
+                    if ($taxpayer) {
+                        event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                            'phone' => $taxpayer->mobile,
+                            'message' => "Hello {$taxpayer->first_name}, a new comment '{$comment->comment}' has been added on your logged incident: {$register->title}"
+                        ]));
+                    }
+                } else if ( $register->requestor_type === RgRequestorType::STAFF) {
+                    $user = User::find($register->requester_id, ['phone', 'fname']);
+
+                    if ($user) {
+                        event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                            'phone' => $user->phone,
+                            'message' => "Hello {$user->fname}, a new comment '{$comment->comment}' has been added on your logged incident: {$register->title}"
+                        ]));
+                    }
                 }
             } else if ($register->register_type === RgRegisterType::TASK) {
                 $user = User::find($register->requester_id, ['phone', 'fname']);
@@ -263,6 +282,21 @@ trait ReportRegisterTrait
                 'phone' => $user->phone,
                 'message' => "Hello {$user->fname}, {$registerType} with title: {$register->title} has been successfully closed"
             ]));
+        }
+    }
+
+    public function notifyNotifiables($subCategoryId, $title) {
+        $notifiables = RgSubCategoryNotifiable::select('id', 'role_id')->where('rg_sub_category_id', $subCategoryId)->get();
+
+        foreach ($notifiables as $notifiable) {
+            $users = User::select('id', 'fname', 'lname', 'phone', 'email')->where('role_id', $notifiable->role_id)->get();
+
+            foreach ($users as $user) {
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                    'phone' => $user->phone,
+                    'message' => "Hello {$user->fname}, a new report about {$title} has been registered by taxpayer to the system"
+                ]));
+            }
         }
     }
 
