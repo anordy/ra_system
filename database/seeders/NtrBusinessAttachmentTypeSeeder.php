@@ -91,7 +91,8 @@ class NtrBusinessAttachmentTypeSeeder extends Seeder
                     'name' => $attachment['name'],
                     'is_for_entity' => $attachment['is_for_entity'],
                     'is_required' => $attachment['is_required'],
-                    'business_type' => $attachment['business_type']
+                    'business_type' => $attachment['business_type'],
+                    'description' => $attachment['description']
                 ]
             );
         }

@@ -16,6 +16,7 @@ class AddColumnIsNtrOnTaxpayersTable extends Migration
         Schema::table('taxpayers', function (Blueprint $table) {
             $table->boolean('is_ntr')->default(false)->nullable();
             $table->string('physical_address')->nullable()->change();
+            $table->string('mobile')->nullable()->change();
             $table->timestamp('biometric_verified_at')->nullable()->change();
         });
     }

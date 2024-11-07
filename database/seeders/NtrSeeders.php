@@ -20,5 +20,6 @@ class NtrSeeders extends Seeder
         $this->call(NtrNatureOfBusinessSeeder::class);
         $this->call(NtrVatReturnConfigSeeder::class);
         $this->call(NtrIdTypeSeeder::class);
+        $this->call(CountriesPhoneCodeTableSeeder::class);
     }
 }

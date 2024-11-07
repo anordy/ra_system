@@ -9,6 +9,7 @@ use App\Events\SendSms;
 use App\Jobs\Bill\CancelBill;
 use App\Jobs\Debt\GenerateAssessmentDebtControlNo;
 use App\Models\Debts\DebtWaiver;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
 use App\Models\WaiverStatus;
 use App\Traits\CustomAlert;
@@ -127,8 +128,8 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 if (!$this->debt_waiver->ledger) {
                     $this->recordLedger(
                         TransactionType::DEBIT,
-                        DebtWaiver::class,
-                        $this->subject->id,
+                        TaxAssessment::class,
+                        $this->debt->id,
                         $this->debt->principal_amount,
                         $this->penaltyAmountDue,
                         $this->interestAmountDue,
