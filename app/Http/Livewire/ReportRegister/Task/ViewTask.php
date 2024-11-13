@@ -3,10 +3,12 @@
 namespace App\Http\Livewire\ReportRegister\Task;
 
 use App\Enum\CustomMessage;
+use App\Enum\ReportRegister\RgAssignmentStatus;
 use App\Enum\ReportRegister\RgAuditEvent;
 use App\Enum\ReportRegister\RgPriority;
 use App\Enum\ReportRegister\RgScheduleStatus;
 use App\Enum\ReportRegister\RgTaskStatus;
+use App\Models\ReportRegister\RgAssignment;
 use App\Models\ReportRegister\RgSchedule;
 use App\Models\User;
 use App\Traits\CustomAlert;
@@ -40,7 +42,12 @@ class ViewTask extends Component
         $this->priorities = RgPriority::getConstants();
         $this->status = $this->task->status;
         $this->priority = $this->task->priority;
-        $this->staffId = $this->task->assigned_to_id ?? null;
+        $assignees = RgAssignment::where('rg_register_id', $this->taskId)->where('status', RgAssignmentStatus::ASSIGNED)->pluck('assignee_id')->toArray();
+
+        if (count($assignees ?? []) > 0) {
+            $this->staffId = $assignees;
+        }
+
         $this->users = User::query()->select('id', 'fname', 'lname')
             ->where('department_id', Auth::user()->department_id)
             ->get()
@@ -55,7 +62,7 @@ class ViewTask extends Component
         $this->validate([
             'status' => Rule::in($this->statuses),
             'comment' => 'required|min:10|max:255|string'
-        ],[
+        ], [
             'comment.required' => "Please enter comment for marking this task as {$this->status}"
         ]);
         try {
@@ -86,7 +93,7 @@ class ViewTask extends Component
     public function updatedStaffId()
     {
         try {
-            $this->assignStaffId($this->task, $this->staffId);
+            $this->assignTaskToStaffId($this->task, $this->staffId);
             $this->customAlert('success', 'Staff has been assigned');
             $this->task = $this->getRegister($this->taskId);
         } catch (Exception $exception) {

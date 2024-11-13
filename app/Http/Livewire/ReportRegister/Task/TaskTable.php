@@ -24,8 +24,8 @@ class TaskTable extends DataTableComponent
             ->with(['assigned'])
             ->where('requester_type', RgRequestorType::STAFF)
             ->where('requester_id', Auth::id())
-            ->orWhere('assigned_to_id', Auth::id())
             ->where('register_type', RgRegisterType::TASK)
+            ->orWhere('assigned_to_id', Auth::id())
             ->orderBy('created_at', 'Desc');
     }
 
@@ -83,13 +83,17 @@ class TaskTable extends DataTableComponent
                 })->html(),
             Column::make('Task Date', 'start_date')
                 ->format(function ($value, $row) {
-                    $startDate = $value->format('d M, Y');
-                    if (now() > $value && $row->status === 'in-progress') {
-                        return <<< HTML
+                    if ($value) {
+                        $startDate = $value ? $value->format('d M, Y') : 'N/A';
+                        if (now() > $value && $row->status === 'in-progress') {
+                            return <<< HTML
                             <span class="badge badge-danger">Due on $startDate</span>
                         HTML;
+                        } else {
+                            return $value->format('d M, Y');
+                        }
                     } else {
-                        return $value->format('d M, Y');
+                        return 'N/A';
                     }
                 })->html(),
             Column::make('Created On', 'created_at')

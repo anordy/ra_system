@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:ps-reopen')->dailyAt('01:02')->runInBackground();
         $schedule->command('app:ps-de-register')->dailyAt('01:04')->runInBackground();
         $schedule->command('dl:expired')->dailyAt('01:05')->runInBackground();
-        $schedule->command('rg:schedule')->dailyAt('01:07')->runInBackground();
+        $schedule->command('rg:schedule')->everyThirtyMinutes()->runInBackground();
     }
 
     /**

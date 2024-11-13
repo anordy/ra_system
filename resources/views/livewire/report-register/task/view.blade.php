@@ -105,8 +105,21 @@
                     </div>
                 </div>
 
-                <x-select-searchable :options="$users" name="staffId" col="3" label="Assigned To" placeholder="Select User" optionNameAccessor="fullname"/>
-
+                <div class="form-group col-lg-12">
+                    <label class="">Assigned To * </label>
+                    <select class="form-control min-height-150" wire:model="staffId" multiple>
+                        <option disabled>Choose option</option>
+                        @foreach ($users ?? [] as $user)
+                            <option value="{{ $user->id }}">{{ $user->fullname }}</option>
+                        @endforeach
+                    </select>
+                    <small>Please press CTRL key on your keyboard to select more than one assignee</small>
+                    <br>
+                    @error('staffId')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+                
             </div>
             <hr>
             <section class="content-item" id="comment">

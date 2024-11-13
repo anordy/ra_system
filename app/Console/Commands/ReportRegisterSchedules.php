@@ -81,8 +81,19 @@ class ReportRegisterSchedules extends Command
                 foreach ($registers as $register) {
                     try {
                         $startDate = Carbon::create($register->currentAssigned->start_date);
+                        $breachDate = $startDate->addDays($daysToBreach);
 
-                        if (Carbon::now() > $startDate->addDays($daysToBreach)) {
+                        // Remind half-way before breach
+                        if (Carbon::now()->gt($breachDate->subHours(12))) {
+                            $message = "Hello {$register->assigned->fname}, this is a reminder that a task assigned to you with title: {$register->title} will breach in 12 hours";
+                            event(new SendSms(\App\Jobs\SendCustomSMS::SERVICE, NULL, [
+                                'phone' => $register->assigned->phone,
+                                'message' => $message
+                            ]));
+                        }
+
+                        // Mark as breached completely
+                        if (Carbon::now() > $breachDate) {
                             $register->breach_date = now();
                             $register->is_breached = GeneralConstant::ONE_INT;
                             if (!$register->save()) throw new Exception('Failed to Update Breach Status');

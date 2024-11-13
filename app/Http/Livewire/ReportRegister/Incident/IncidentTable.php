@@ -93,6 +93,7 @@ class IncidentTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return $row->requester_name;
                 }),
+            Column::make('Requester Mobile', 'requester_mobile'),
             Column::make('Category', 'rg_category_id')
                 ->format(function ($value, $row) {
                     $category = $row->category->name ?? 'N/A';

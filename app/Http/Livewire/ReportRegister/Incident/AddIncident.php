@@ -88,7 +88,8 @@ class AddIncident extends Component
                 'status' => RgStatus::SUBMITTED,
                 'rg_category_id' => $this->categoryId,
                 'rg_sub_category_id' => $this->subCategoryId,
-                'register_type' => RgRegisterType::INCIDENT
+                'register_type' => RgRegisterType::INCIDENT,
+                'requester_mobile' => Auth::user()->phone
             ]);
 
             if (!$rgRegister) throw new Exception('Failed to save incident');

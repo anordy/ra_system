@@ -27,6 +27,10 @@
                     <p class="my-1">{{ $incident->requester_name }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Mobile</span>
+                    <p class="my-1">{{ $incident->requester_mobile ?? 'N/A' }}</p>
+                </div>
+                <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Duration</span>
                     @if(isset($incident->assigned))
                         <p class="my-1">{{ \Carbon\Carbon::create($incident->created_at)->diffInDays($incident->assigned->end_date ?? $incident->created_at) }} Days</p>

@@ -20,7 +20,6 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 trait ReportRegisterTrait
 {
@@ -75,6 +74,61 @@ trait ReportRegisterTrait
                     'message' => "Hello {$assigned->fname}, you have been assigned on {$registerType}: {$register->title}"
                 ]));
             }
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
+    }
+
+    public function assignTaskToStaffId($register, $staffIds, $status = RgStatus::IN_PROGRESS)
+    {
+        try {
+            DB::beginTransaction();
+
+            if (count($register->assignees) > 0) {
+                $deleted = $register->assignees()->update(['status' => RgAssignmentStatus::RE_ASSIGNED, 'end_date' => now()]);
+
+                if (!$deleted) throw new Exception('Failed to delete assignees');
+            }
+
+            foreach ($staffIds as $key => $staffId) {
+                if ($key == 0) {
+                    $updated = $register->update(['status' => $status, 'assigned_to_id' => $staffId, 'start_date' => now()]);
+                    if (!$updated) throw new Exception('Failed to update incident status');
+                }
+
+                $assigned = RgAssignment::create([
+                    'assignee_id' => $staffId,
+                    'assigner_id' => Auth::id(),
+                    'rg_register_id' => $register->id,
+                    'start_date' => now(),
+                    'assigned_date' => now(),
+                    'status' => RgAssignmentStatus::ASSIGNED
+                ]);
+
+                if (!$assigned) throw new Exception('Failed to assign incident');
+
+                if ($register->register_type === RgRegisterType::TASK) {
+                    $registerType = 'Task';
+                } else if ($register->register_type === RgRegisterType::INCIDENT) {
+                    $registerType = 'Incident';
+                } else {
+                    throw new Exception('Invalid Register Type');
+                }
+
+                $assigned = User::find($staffId, ['phone', 'fname']);
+
+                if ($assigned && $status != RgTaskStatus::CREATED) {
+                    event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                        'phone' => $assigned->phone,
+                        'message' => "Hello {$assigned->fname}, you have been assigned on {$registerType}: {$register->title}"
+                    ]));
+                }
+
+            }
+
+            DB::commit();
 
         } catch (Exception $exception) {
             DB::rollBack();
@@ -178,7 +232,7 @@ trait ReportRegisterTrait
                             'message' => "Hello {$taxpayer->first_name}, a new comment '{$comment->comment}' has been added on your logged incident: {$register->title}"
                         ]));
                     }
-                } else if ( $register->requestor_type === RgRequestorType::STAFF) {
+                } else if ($register->requestor_type === RgRequestorType::STAFF) {
                     $user = User::find($register->requester_id, ['phone', 'fname']);
 
                     if ($user) {
@@ -211,7 +265,7 @@ trait ReportRegisterTrait
     {
         return RgRegister::query()
             ->with(['assigned', 'comments', 'audits', 'assignees', 'attachments:rg_register_id,name,path', 'category', 'subcategory'])
-            ->findOrFail($incidentId, ['id', 'requester_type', 'requester_id', 'register_type', 'title', 'description', 'start_date', 'resolved_date', 'breach_date', 'status', 'priority', 'is_breached', 'created_at', 'rg_category_id', 'rg_sub_category_id', 'code', 'is_scheduled', 'assigned_to_id']);
+            ->findOrFail($incidentId, ['id', 'requester_type', 'requester_id', 'register_type', 'requester_mobile', 'title', 'description', 'start_date', 'resolved_date', 'breach_date', 'status', 'priority', 'is_breached', 'created_at', 'rg_category_id', 'rg_sub_category_id', 'code', 'is_scheduled', 'assigned_to_id']);
     }
 
     /**
@@ -285,7 +339,8 @@ trait ReportRegisterTrait
         }
     }
 
-    public function notifyNotifiables($subCategoryId, $title) {
+    public function notifyNotifiables($subCategoryId, $title)
+    {
         $notifiables = RgSubCategoryNotifiable::select('id', 'role_id')->where('rg_sub_category_id', $subCategoryId)->get();
 
         foreach ($notifiables as $notifiable) {

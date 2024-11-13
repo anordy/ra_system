@@ -41,7 +41,8 @@ class CreateTask extends Component
         return [
             'title' => 'required|max:100|alpha_gen',
             'description' => 'required|max:255|alpha_gen',
-            'staffId' => 'required|integer|exists:users,id',
+            'staffId' => 'required|array',
+            'staffId.*' => 'required|exists:users,id',
             'isScheduled' => ['required', Rule::in([GeneralConstant::ZERO, GeneralConstant::ONE])],
             'scheduledTime' => ['nullable', 'date', 'after:5 minutes'],
             'files.*.file' => 'nullable|mimes:pdf,xlsx,xls|max:3072|max_file_name_length:100',
@@ -111,7 +112,7 @@ class CreateTask extends Component
                 if (!$attachment) throw new Exception('Failed to save attachment');
             }
 
-            $this->assignStaffId($rgRegister, $this->staffId, RgTaskStatus::CREATED);
+            $this->assignTaskToStaffId($rgRegister, $this->staffId, RgTaskStatus::CREATED);
 
             // Audit incident
             $this->auditReportRegister($rgRegister, RgAuditEvent::CREATED, "Created task");
@@ -125,34 +126,41 @@ class CreateTask extends Component
 
             if (!$audit) throw new Exception('Failed to save audit');
 
-            DB::commit();
+            $assignees = User::query()
+                ->select('fname', 'phone', 'email')
+                ->whereIn('id', $this->staffId)
+                ->get();
 
-            $assignee = User::findOrFail($this->staffId, ['fname', 'phone', 'email']);
             $assigner = User::findOrFail(Auth::id(), ['fname', 'lname', 'phone', 'email']);
 
-            $message = "Hello {$assignee->fname}, {$assigner->fname} {$assigner->lname} has assign you a with task: {$this->title}";
-
             if ($this->isScheduled === GeneralConstant::ZERO) {
-                SendCustomSMS::dispatch($assignee->phone, $message);
+                foreach ($assignees ?? [] as $assignee) {
+                    $message = "Hello {$assignee->fname}, {$assigner->fname} {$assigner->lname} has assign you a with task: {$this->title}";
+                    SendCustomSMS::dispatch($assignee->phone, $message);
+                }
             } else if ($this->isScheduled === GeneralConstant::ONE) {
-                $job = new SendCustomSMS($assignee->phone, $message);
-                $jobId = custom_dispatch($job, Carbon::create($this->scheduledTime));
+                foreach ($assignees ?? [] as $assignee) {
+                    $message = "Hello {$assignee->fname}, {$assigner->fname} {$assigner->lname} has assign you a with task: {$this->title}";
+                    $job = new SendCustomSMS($assignee->phone, $message);
+                    $jobId = custom_dispatch($job, Carbon::create($this->scheduledTime));
 
-                // Track saved schedules for cancellation
-                $schedule = RgSchedule::create([
-                    'rg_register_id' => $rgRegister->id,
-                    'job_reference' => $jobId,
-                    'status' => RgScheduleStatus::PENDING,
-                    'time' => Carbon::create($this->scheduledTime),
-                    'phone' => $assignee->phone,
-                    'message' => $message
-                ]);
+                    // Track saved schedules for cancellation
+                    $schedule = RgSchedule::create([
+                        'rg_register_id' => $rgRegister->id,
+                        'job_reference' => $jobId,
+                        'status' => RgScheduleStatus::PENDING,
+                        'time' => Carbon::create($this->scheduledTime),
+                        'phone' => $assignee->phone,
+                        'message' => $message
+                    ]);
 
-                if (!$schedule) throw new Exception('Failed to save schedule information');
+                    if (!$schedule) throw new Exception('Failed to save schedule information');
+                }
             } else {
                 $this->customAlert('warning', 'Invalid schedule option');
             }
 
+            DB::commit();
 
             $this->flash('success', 'Task successfully created', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

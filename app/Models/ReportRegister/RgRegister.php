@@ -75,12 +75,12 @@ class RgRegister extends Model
     {
         $requesterName = 'N/A';
         if ($this->requester_type === RgRequestorType::TAXPAYER) {
-            $taxpayer = Taxpayer::find($this->requester_id, ['first_name', 'middle_name', 'last_name']);
+            $taxpayer = Taxpayer::find($this->requester_id, ['first_name', 'middle_name', 'last_name', 'mobile']);
             if ($taxpayer) {
                 $requesterName = $taxpayer->fullname;
             }
         } else if ($this->requester_type === RgRequestorType::STAFF) {
-            $staff = User::find($this->requester_id, ['fname', 'lname']);
+            $staff = User::find($this->requester_id, ['fname', 'lname', 'phone']);
             if ($staff) {
                 $requesterName = $staff->fullname;
             }
