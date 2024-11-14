@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Storage;
 
 class IncidentController extends Controller
 {
+    public function summary()
+    {
+        if (!Gate::allows('report-register-view-incident')) {
+            abort(403);
+        }
+
+        return view('report-register.incident.summary');
+    }
+
     public function index()
     {
         if (!Gate::allows('report-register-view-incident')) {

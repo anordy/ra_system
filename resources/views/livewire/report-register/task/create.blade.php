@@ -66,7 +66,6 @@
                         @enderror
                     </div>
 
-{{--                    <x-select-searchable :options="$users" name="staffId" col="6" label="Assigned To" placeholder="Select User" optionNameAccessor="fullname"/>--}}
                     <div class="col-md-6 form-group">
                         <label>Task Date *</label>
                         <input type="date" wire:model.defer="startDate"

@@ -20,9 +20,10 @@ Route::name('report-register.')
     Route::get('/file/{path}', [IncidentController::class, 'file'])->name('file');
 
     Route::prefix('incident')->name('incident.')->group(function () {
-        Route::get('/', [IncidentController::class, 'index'])->name('index');
+        Route::get('/taxpayer/reports', [IncidentController::class, 'index'])->name('index');
         Route::get('/staff/reports', [IncidentController::class, 'staff'])->name('staff');
         Route::get('/{id}', [IncidentController::class, 'show'])->name('view');
+        Route::get('/summary/information', [IncidentController::class, 'summary'])->name('summary');
     });
 
     Route::prefix('task')->name('task.')->group(function () {
