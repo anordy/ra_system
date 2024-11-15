@@ -52,7 +52,7 @@ class InitiateChangeModal extends Component
     public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList = [];
     public $previousOwner;
     public $newOwnerZno;
-    public $taxDepartment, $selectedDepartment, $lumpsumPayment = [], $currentTaxTypes = [];
+    public $taxDepartment, $selectedDepartment, $selectedTaxRegion, $lumpsumPayment = [], $currentTaxTypes = [];
 
     public function mount()
     {
@@ -249,8 +249,8 @@ class InitiateChangeModal extends Component
                     'location_id' => $this->location->id,
                     'type' => InternalInfoType::TAX_REGION,
                     'triggered_by' => Auth::id(),
-                    'old_values' => json_encode(['tax_region_id' => $this->location->tax_region_id, 'name' => TaxRegion::findOrFail($this->location->tax_region_id)->name]),
-                    'new_values' => json_encode(['tax_region_id' => $this->taxRegionId, 'name' => TaxRegion::findOrFail($this->taxRegionId)->name]),
+                    'old_values' => json_encode(['tax_region_id' => $this->location->tax_region_id, 'name' => $this->location->taxRegion->name, 'department_id' => $this->location->taxRegion->department_id, 'department_name' => $this->location->taxRegion->department->name ?? null]),
+                    'new_values' => json_encode(['tax_region_id' => $this->selectedTaxRegion, 'name' => TaxRegion::findOrFail($this->selectedTaxRegion)->name, 'department_id' => $this->selectedDepartment, 'department_name' => TaxDepartment::find($this->selectedDepartment)->name]),
                 ]);
             }
 
@@ -394,7 +394,8 @@ class InitiateChangeModal extends Component
                 $this->taxRegions = TaxRegion::select('id', 'name')->get();
                 $this->taxRegionId = $this->location->tax_region_id;
                 $this->taxDepartment = TaxDepartment::all();
-
+                $this->selectedTaxRegion = $this->location->tax_region_id;
+                $this->selectedDepartment = $this->location->taxRegion->department_id;
             } else if ($this->informationType === 'isic') {
                 $this->isiiciList = ISIC1::all();
             } else if ($this->informationType === 'businessOwnership') {

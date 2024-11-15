@@ -305,6 +305,15 @@
                                             <td class="table-success">Changed</td>
                                         @endif
                                     </tr>
+                                    <tr>
+                                        <td>{{ json_decode($info->old_values)->department_name ?? 'N/A' }}</td>
+                                        <td>{{ json_decode($info->new_values)->department_name ?? '' }}</td>
+                                        @if (json_decode($info->old_values)->department_name == json_decode($info->new_values)->department_name)
+                                            <td class="table-primary">Unchanged</td>
+                                        @else
+                                            <td class="table-success">Changed</td>
+                                        @endif
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
