@@ -89,7 +89,8 @@ class ReconEnquiriesTable extends DataTableComponent
     public function resend($id)
     {
         try {
-            $enquireRecon = (new ZanMalipoInternalService)->requestRecon($id);
+            $enquireRecon = (new ZanMalipoInternalService)->requestRecon($id['data']['id']);
+            $this->customAlert('success', 'Recon sent successfully');
         } catch (Exception $e) {
             Log::error('Error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
