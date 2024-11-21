@@ -85,22 +85,6 @@ class NonFilersTable extends DataTableComponent
         ];
     }
 
-    public function bulkActions(): array
-    {
-        return [
-            'export' => 'Export',
-        ];
-    }
-
-    public function export()
-    {
-        $users = $this->getSelected();
-
-        $this->clearSelected();
-
-//        return Excel::download(new UsersExport($users), 'users.xlsx');
-    }
-
     private function getFinancialMonths($year)
     {
         try {
