@@ -126,6 +126,11 @@
                         </li>
                     @endcan
                         @can("active-tax-consultant-view")
+                            <li class="{{ request()->is("ntr/non-filers*") ? "active" : "" }}">
+                                <a href="{{ route("ntr.returns.non-filers") }}">Non Filers</a>
+                            </li>
+                        @endcan
+                        @can("active-tax-consultant-view")
                             <li class="{{ request()->is("ntr/cancelled-returns*") ? "active" : "" }}">
                                 <a href="{{ route("ntr.returns.cancelled") }}">Cancelled Tax Returns</a>
                             </li>

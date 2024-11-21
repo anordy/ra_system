@@ -18,11 +18,16 @@ class NonTaxResidentController extends Controller
         return view('non-tax-resident.business.index');
     }
 
+    public function listNonFilers()
+    {
+        return view('non-tax-resident.returns.non-filers');
+    }
+
     public function showBusiness($id)
     {
         try {
             $id = decrypt($id);
-            $business = NtrBusiness::findOrFail($id, ['id', 'ntr_business_category_id', 'other_category', 'ownership_type', 'ntr_business_nature_id', 'ntr_payment_gateway_id', 'annual_revenue_threshold', 'entity_type', 'name', 'business_address', 'country_id', 'ntr_taxpayer_id', 'street', 'status', 'vrn', 'ztn_number', 'email', 'created_at', 'updated_at', 'deleted_at', 'ztn_location_number',]);
+            $business = NtrBusiness::findOrFail($id, ['id', 'ntr_business_category_id', 'other_category', 'ownership_type', 'ntr_business_nature_id', 'payment_gateways', 'other_nature_of_business', 'website', 'annual_revenue_threshold', 'entity_type', 'name', 'business_address', 'country_id', 'ntr_taxpayer_id', 'street', 'status', 'vrn', 'ztn_number', 'email', 'created_at', 'updated_at', 'deleted_at', 'ztn_location_number',]);
             return view('non-tax-resident.business.show', compact('business'));
         } catch (\Exception $exception) {
             Log::error('NTR-BUSINESS-CONTROLLER-SHOW-BUSINESS', [$exception]);

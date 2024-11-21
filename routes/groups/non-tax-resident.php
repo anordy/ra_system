@@ -13,6 +13,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->name('ntr.')->group(function ()
 
     Route::get('/cancelled-returns', [NonTaxResidentController::class, 'listCancelledReturns'])->name('returns.cancelled');
     Route::get('/filed-returns', [NonTaxResidentController::class, 'listFiledReturns'])->name('returns.index');
+    Route::get('/non-filers', [NonTaxResidentController::class, 'listNonFilers'])->name('returns.non-filers');
     Route::get('/returns/{id}', [NonTaxResidentController::class, 'showReturn'])->name('returns.show');
     Route::get('/business/updates', [NonTaxResidentController::class, 'listBusinessUpdates'])->name('business.updates.index');
     Route::get('/business/updates/{id}', [NonTaxResidentController::class, 'showBusinessUpdates'])->name('business.updates.show');

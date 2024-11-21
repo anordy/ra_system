@@ -21,7 +21,6 @@ class BusinessReturnsTable extends DataTableComponent
     public function builder(): Builder
     {
         return NtrVatReturn::where('business_id', $this->ntrBusinessId)
-            ->where('payment_status','!=', ReturnStatus::COMPLETE)
             ->orderBy('ntr_electronic_vat_returns.created_at', 'desc');
     }
 
@@ -49,6 +48,8 @@ class BusinessReturnsTable extends DataTableComponent
             Column::make('Taxable Amount', "total_amount_due_with_penalties")
                 ->format(function ($value) {
                     return number_format($value ?? GeneralConstant::ZERO_INT, 2);
+                })->footer(function($rows) {
+                    return 'Total: ' . $rows->sum('total_amount_due_with_penalties');
                 }),
             Column::make('Filed Date', "created_at")
                 ->format(function ($value) {
@@ -57,7 +58,7 @@ class BusinessReturnsTable extends DataTableComponent
                     }
                     return 'N/A';
                 }),
-            Column::make('Status', 'payment_status')->view('returns.includes.payment-status'),
+            Column::make('Status', 'payment_status')->view('returns.includes.payment-status')
         ];
     }
 
