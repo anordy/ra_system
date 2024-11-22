@@ -11,37 +11,21 @@ class IncidentController extends Controller
 {
     public function summary()
     {
-        if (!Gate::allows('report-register-view-incident')) {
-            abort(403);
-        }
-
         return view('report-register.incident.summary');
     }
 
     public function index()
     {
-        if (!Gate::allows('report-register-view-incident')) {
-            abort(403);
-        }
-
         return view('report-register.incident.index');
     }
 
     public function staff()
     {
-        if (!Gate::allows('report-register-view-incident')) {
-            abort(403);
-        }
-
         return view('report-register.incident.staff-incidents');
     }
 
     public function show($id)
     {
-        if (!Gate::allows('report-register-view-incident')) {
-            abort(403);
-        }
-
         return view('report-register.incident.show', compact('id'));
     }
 
@@ -66,10 +50,6 @@ class IncidentController extends Controller
 
     public function file($path)
     {
-        if (!Gate::allows('report-register-view-incident')) {
-            abort(403);
-        }
-
         if ($path) {
             try {
                 return Storage::disk('local-admin')->response(decrypt($path));

@@ -30,5 +30,14 @@ Route::name('report-register.')
         Route::get('/', [TaskController::class, 'index'])->name('index');
         Route::get('/{id}', [TaskController::class, 'show'])->name('view');
     });
-
 });
+
+Route::name('task-assignments.')
+    ->prefix('task-assignments')
+    ->middleware(['2fa', 'auth', 'check-qns'])
+    ->group(function () {
+        Route::prefix('task')->name('task.')->group(function () {
+            Route::get('/', [TaskController::class, 'index'])->name('index');
+            Route::get('/{id}', [TaskController::class, 'show'])->name('view');
+        });
+    });

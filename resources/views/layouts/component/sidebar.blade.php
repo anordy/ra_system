@@ -117,7 +117,8 @@
         @can("tax-consultant")
             <li class="{{ request()->is("ntr*") ? "active" : "" }}">
                 <a href="#ntrSubmenu" data-toggle="collapse"
-                   aria-expanded="{{ request()->is("ntr*") ? "true" : "false" }}" class="dropdown-toggle">Digital Services Taxation</a>
+                   aria-expanded="{{ request()->is("ntr*") ? "true" : "false" }}" class="dropdown-toggle">Digital
+                    Services Taxation</a>
                 <ul class="collapse list-unstyled {{ request()->is("ntr*") ? "show" : "" }}" id="ntrSubmenu">
                     @can("tax-consultant-registration-view")
                         <li class="{{ request()->is("ntr/business") ? "active" : "" }}">
@@ -129,16 +130,16 @@
                             <a href="{{ route("ntr.returns.index") }}">Filed Tax Returns</a>
                         </li>
                     @endcan
-                        @can("active-tax-consultant-view")
-                            <li class="{{ request()->is("ntr/non-filers*") ? "active" : "" }}">
-                                <a href="{{ route("ntr.returns.non-filers") }}">Non Filers</a>
-                            </li>
-                        @endcan
-                        @can("active-tax-consultant-view")
-                            <li class="{{ request()->is("ntr/cancelled-returns*") ? "active" : "" }}">
-                                <a href="{{ route("ntr.returns.cancelled") }}">Cancelled Tax Returns</a>
-                            </li>
-                        @endcan
+                    @can("active-tax-consultant-view")
+                        <li class="{{ request()->is("ntr/non-filers*") ? "active" : "" }}">
+                            <a href="{{ route("ntr.returns.non-filers") }}">Non Filers</a>
+                        </li>
+                    @endcan
+                    @can("active-tax-consultant-view")
+                        <li class="{{ request()->is("ntr/cancelled-returns*") ? "active" : "" }}">
+                            <a href="{{ route("ntr.returns.cancelled") }}">Cancelled Tax Returns</a>
+                        </li>
+                    @endcan
                     @can("tax-consultant-renewal-requests-view")
                         <li class="{{ request()->is("ntr/business/de-registrations*") ? "active" : "" }}">
                             <a href="{{ route("ntr.business.de-registration.index") }}">Business De-registrations</a>
@@ -1034,40 +1035,31 @@
             </li>
         @endcan
 
-        @can('report-register')
-            <li class="{{ request()->is("report-register*") ? "active" : "" }}">
-                <a href="#report-register" data-toggle="collapse" aria-expanded="false"
-                   class="dropdown-toggle">Report Registers</a>
-                <ul class="collapse list-unstyled {{ request()->is("report-register*") ? "show" : "" }}"
-                    id="report-register">
-                    @can("report-register-view-incident")
-                        <li class="{{ request()->is("report-register/incident/summary*") ? "active" : "" }}">
-                            <a href="{{ route("report-register.incident.summary") }}">Summary</a>
-                        </li>
-                    @endcan
-                    @can("report-register-view-incident")
-                        <li class="{{ request()->is("report-register/taxpayer/reports*") ? "active" : "" }}">
-                            <a href="{{ route("report-register.incident.index") }}">Taxpayer Incidents</a>
-                        </li>
-                    @endcan
-                    @can("report-register-view-incident")
-                        <li class="{{ request()->is("report-register/staff/reports*") ? "active" : "" }}">
-                            <a href="{{ route("report-register.incident.staff") }}">Staff Incidents</a>
-                        </li>
-                    @endcan
-                    @can("report-register-view-task")
-                        <li class="{{ request()->is("report-register/task/*") ? "active" : "" }}">
-                            <a href="{{ route("report-register.task.index") }}">Tasks</a>
-                        </li>
-                    @endcan
-                    @can("report-register-view-settings")
-                        <li class="{{ request()->is("report-register/settings/*") ? "active" : "" }}">
-                            <a href="{{ route("report-register.settings") }}">Settings</a>
-                        </li>
-                    @endcan
-                </ul>
-            </li>
-        @endcan
+        <li class="{{ request()->is("report-register*") ? "active" : "" }}">
+            <a href="#report-register" data-toggle="collapse" aria-expanded="false"
+               class="dropdown-toggle">Report Incidents</a>
+            <ul class="collapse list-unstyled {{ request()->is("report-register*") ? "show" : "" }}"
+                id="report-register">
+                <li class="{{ request()->is("report-register/incident/summary*") ? "active" : "" }}">
+                    <a href="{{ route("report-register.incident.summary") }}">Summary</a>
+                </li>
+                <li class="{{ request()->is("report-register/taxpayer/reports*") ? "active" : "" }}">
+                    <a href="{{ route("report-register.incident.index") }}">Taxpayer Incidents</a>
+                </li>
+                <li class="{{ request()->is("report-register/staff/reports*") ? "active" : "" }}">
+                    <a href="{{ route("report-register.incident.staff") }}">Staff Incidents</a>
+                </li>
+                @can("report-register-view-settings")
+                    <li class="{{ request()->is("report-register/settings/*") ? "active" : "" }}">
+                        <a href="{{ route("report-register.settings") }}">Settings</a>
+                    </li>
+                @endcan
+            </ul>
+        </li>
+
+        <li class="{{ request()->is("task*") ? "active" : "" }}">
+            <a href="{{ route("task-assignments.task.index") }}">Task Assignments</a>
+        </li>
 
         @can("tra-information")
             <li class="{{ request()->is("tra*") ? "active" : "" }}">

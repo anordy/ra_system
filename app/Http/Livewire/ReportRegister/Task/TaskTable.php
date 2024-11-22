@@ -22,10 +22,12 @@ class TaskTable extends DataTableComponent
     {
         return RgRegister::query()
             ->with(['assigned'])
+            ->where('register_type', RgRegisterType::TASK)
             ->where('requester_type', RgRequestorType::STAFF)
             ->where('requester_id', Auth::id())
-            ->where('register_type', RgRegisterType::TASK)
-            ->orWhere('assigned_to_id', Auth::id())
+            ->whereHas('assigned', function ($query) {
+                $query->orWhere('assigned_to_id', Auth::id());
+            })
             ->orderBy('created_at', 'Desc');
     }
 
@@ -45,7 +47,7 @@ class TaskTable extends DataTableComponent
         return [
             Column::make('Title', 'title')
                 ->format(function ($value) {
-                    if (strlen($value) > 20){
+                    if (strlen($value) > 20) {
                         return substr($value, 0, 20) . '...';
                     }
                     return $value;
