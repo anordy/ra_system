@@ -52,6 +52,11 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('web')
                 ->namespace($this->namespace)
+                ->prefix('report-register')
+                ->group(base_path('routes/report-register.php'));
+
+            Route::middleware('web')
+                ->namespace($this->namespace)
                 ->prefix('ntr')
                 ->group(base_path('routes/groups/non-tax-resident.php'));
         });

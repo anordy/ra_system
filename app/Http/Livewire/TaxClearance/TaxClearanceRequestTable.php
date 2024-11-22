@@ -31,7 +31,7 @@ class TaxClearanceRequestTable extends DataTableComponent
         } elseif ($status == TaxClearanceStatus::REJECTED) {
             $this->rejected = true;
         } else {
-            $this->approved = true;
+            $this->requested = true;
         }
 
         if ($department === Region::DTD) {

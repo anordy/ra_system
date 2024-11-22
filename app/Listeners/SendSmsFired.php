@@ -91,7 +91,7 @@ class SendSmsFired
             if (is_null($token)) {
                 abort(404);
             }
-            SendOTPSMS::dispatch($event->extra['code'], $token->user->fullname(), $token->user->phone);
+            SendOTPSMS::dispatch($event->extra['code'], $token->user->fullname(), $token->user->phone)->onQueue('sms');
         } else if ($event->service == 'withholding_agent_registration') {
             /** TokenId is withholding agent id */
             $withholding_agent = WaResponsiblePerson::find($event->tokenId);

@@ -3,40 +3,44 @@
 namespace App\Http\Livewire\Business\TaxType;
 
 use App\Enum\CustomMessage;
-use App\Models\BusinessLocation;
-use Exception;
-use Carbon\Carbon;
-use App\Events\SendSms;
-use App\Models\TaxType;
-use Livewire\Component;
+use App\Enum\GeneralConstant;
 use App\Events\SendMail;
+use App\Events\SendSms;
+use App\Models\BusinessLocation;
 use App\Models\BusinessStatus;
+use App\Models\BusinessTaxType;
+use App\Models\BusinessTaxTypeChange;
+use App\Models\LumpSumPayment;
+use App\Models\Returns\LumpSum\LumpSumConfig;
+use App\Models\Returns\Vat\SubVat;
+use App\Models\TaxType;
+use App\Traits\CustomAlert;
+use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\BusinessTaxTypeChange;
-use App\Models\Returns\Vat\SubVat;
-use App\Traits\WorkflowProcesssingTrait;
-use App\Traits\CustomAlert;
+use Livewire\Component;
 
 
 class TaxTypeChangeApprovalProcessing extends Component
 {
     use WorkflowProcesssingTrait, CustomAlert;
+
     public $modelId;
     public $modelName;
     public $comments;
     public $taxchange;
-    public $selectedTaxTypes = [];
-    public $oldTaxTypes = [];
     public $taxTypes;
     public $from_tax_type_id;
     public $to_tax_type_id;
     public $to_tax_type_currency;
     public $effective_date;
     public $today;
-    public $subVatOptions = [];
+    public $subVatOptions = [], $annualSales = [];
     public $showSubVatOptions = false;
     public $sub_vat_id;
+    public $showLumpsumOptions = false, $lumpSumAnnualSaleId, $selectedAnnualSale = [];
 
     public function mount($modelName, $modelId)
     {
@@ -51,32 +55,54 @@ class TaxTypeChangeApprovalProcessing extends Component
             $this->to_tax_type_id = $this->taxchange->to_tax_type_id;
             $this->from_tax_type_id = $this->taxchange->from_tax_type_id;
             $this->to_tax_type_currency = $this->taxchange->to_tax_type_currency;
-            $this->taxTypes   = TaxType::select('id', 'name')->where('category', 'main')->get();
+            $this->taxTypes = TaxType::select('id', 'name')->where('category', 'main')->get();
             $this->today = Carbon::today()->addDay()->format('Y-m-d');
 
-            if ($this->taxchange->toTax && $this->taxchange->toTax->code == TaxType::VAT) {
-                $this->subVatOptions = SubVat::all();
+            if (isset($this->taxchange->toTax->code) && $this->taxchange->toTax->code === TaxType::VAT) {
+                $this->subVatOptions = SubVat::query()->select('id', 'name', 'code')->get();
                 $this->showSubVatOptions = true;
+            } else if (isset($this->taxchange->toTax->code) && $this->taxchange->toTax->code === TaxType::LUMPSUM_PAYMENT) {
+                $this->annualSales = LumpSumConfig::select('id', 'min_sales_per_year', 'max_sales_per_year', 'payments_per_year', 'payments_per_installment')->get();
+                $this->showLumpsumOptions = true;
+                $this->showSubVatOptions = false;
+                $estimate = LumpSumPayment::where('business_id', $this->subject->business_id)->select('annual_estimate')->first();
+                $this->selectedAnnualSale = [
+                    'annual_estimate' => number_format($estimate->annual_estimate ?? 0, 2),
+                    'quarter_estimate' => number_format(($estimate->annual_estimate ?? 0) / GeneralConstant::FOUR_INT)
+                ];
             }
         } catch (Exception $exception) {
             Log::error('TAX-TYPE-CHANGE-APPROVAL-MOUNT', [$exception]);
             abort(500, 'Something went wrong, please contact your system administrator for support.');
         }
-        
+
     }
 
     public function updated($property)
     {
-        if ($property === 'to_tax_type_id') { 
-            $taxType = TaxType::findOrFail($this->to_tax_type_id);
+        if ($property === 'to_tax_type_id') {
+            $taxType = TaxType::findOrFail($this->to_tax_type_id, ['code']);
             if ($taxType->code == TaxType::VAT) {
                 $this->subVatOptions = SubVat::all();
                 $this->showSubVatOptions = true;
+                $this->showLumpsumOptions = false;
+            } else if ($taxType->code == TaxType::LUMPSUM_PAYMENT) {
+                $this->annualSales = LumpSumConfig::select('id', 'min_sales_per_year', 'max_sales_per_year', 'payments_per_year', 'payments_per_installment')->get();
+                $this->showLumpsumOptions = true;
+                $this->showSubVatOptions = false;
             } else {
                 $this->showSubVatOptions = false;
+                $this->showLumpsumOptions = false;
             }
         }
 
+        if ($property === 'lumpSumAnnualSaleId') {
+            $estimate = LumpSumConfig::findOrFail($this->lumpSumAnnualSaleId, ['payments_per_year']);
+            $this->selectedAnnualSale = [
+                'annual_estimate' => number_format($estimate->payments_per_year, 2),
+                'quarter_estimate' => number_format(($estimate->payments_per_year ?? 0) / GeneralConstant::FOUR_INT)
+            ];
+        }
     }
 
 
@@ -84,8 +110,7 @@ class TaxTypeChangeApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'effective_date' => 'required|strip_tag',
-            'to_tax_type_currency' => 'required', 
+            'to_tax_type_currency' => 'required|alpha',
             'to_tax_type_id' => 'required|numeric'
         ]);
 
@@ -96,7 +121,13 @@ class TaxTypeChangeApprovalProcessing extends Component
 
         if ($this->showSubVatOptions) {
             $this->validate([
-                'sub_vat_id' => 'required'
+                'sub_vat_id' => 'required|integer'
+            ]);
+        }
+
+        if ($this->showLumpsumOptions) {
+            $this->validate([
+                'lumpSumAnnualSaleId' => 'required|integer'
             ]);
         }
 
@@ -105,7 +136,7 @@ class TaxTypeChangeApprovalProcessing extends Component
             if ($this->checkTransition('registration_manager_review')) {
 
                 $this->subject->status = BusinessStatus::APPROVED;
-                $this->subject->effective_date = $this->effective_date;
+                $this->subject->effective_date = Carbon::now()->toDateTimeString();
                 $this->subject->to_sub_vat_id = $this->sub_vat_id;
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
 
@@ -121,8 +152,43 @@ class TaxTypeChangeApprovalProcessing extends Component
                             }
                         }
                     }
+                } else if ($taxType->code === TaxType::LUMPSUM_PAYMENT) {
+                    $estimate = LumpSumConfig::findOrFail($this->lumpSumAnnualSaleId, ['payments_per_year']);
+
+                    $locations = BusinessLocation::select('id')->where('business_id', $this->taxchange->business_id)->get();
+
+                    if (count($locations) > 0) {
+                        foreach ($locations as $location) {
+                            $paymentExists = LumpSumPayment::query()->select('id')
+                                ->where('business_location_id', $location->id)
+                                ->first();
+
+                            if ($paymentExists) {
+                                if (!$paymentExists->delete()) throw new Exception('Failed to delete lumpsum payment');
+                            }
+
+                            LumpSumPayment::create([
+                                'filed_by_id' => auth()->user()->id,
+                                'business_id' => $this->subject->business_id,
+                                'business_location_id' => $location->id,
+                                'annual_estimate' => $estimate->payments_per_year,
+                                'payment_quarters' => GeneralConstant::FOUR_INT,
+                                'currency' => $this->subject->to_tax_type_currency,
+                            ]);
+                        }
+                    }
 
                 }
+
+                $currentTaxType = BusinessTaxType::where('business_id', $this->subject->business_id)
+                    ->where('tax_type_id', $this->subject->from_tax_type_id)
+                    ->firstOrFail();
+
+                $currentTaxType->tax_type_id = $this->subject->to_tax_type_id;
+                $currentTaxType->sub_vat_id = $this->sub_vat_id;
+                $currentTaxType->currency = $this->subject->to_tax_type_currency;
+
+                if (!$currentTaxType->save()) throw new Exception('Failed to update tax type');
 
                 DB::commit();
 

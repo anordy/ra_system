@@ -7,6 +7,7 @@ use App\Models\Audit;
 use App\Models\DualControl;
 use App\Models\User;
 use App\Traits\AuditTrait;
+use App\Traits\CustomAlert;
 use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +15,6 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -23,6 +23,7 @@ class UsersTable extends DataTableComponent
     use CustomAlert, AuditTrait, ThrottlesLogins, DualControlActivityTrait;
 
     protected $model = User::class;
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -67,19 +68,20 @@ class UsersTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('E-mail', 'email')
-                ->sortable()
                 ->searchable(),
             Column::make('Role', 'role.name')
-                ->sortable()
                 ->searchable(),
             Column::make('Approval Level', 'level.name')
-                ->sortable()
                 ->searchable(),
+            Column::make('Department', 'department.name')
+                ->format(function ($value) {
+                    return ucfirst($value ?? 'N/A');
+                }),
             Column::make('Configuration', 'created_at')
                 ->format(function ($value, $row) {
                     if (Gate::allows('setting-role-assign-permission')) {
-                        $value = "'".encrypt($row->id)."'";
-                        return  <<< HTML
+                        $value = "'" . encrypt($row->id) . "'";
+                        return <<< HTML
                             <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'assign-approval-level-add-modal', $value)"><i class="fas fa-cog mr-2"></i>Add Level</button>
                         HTML;
                     }
@@ -93,7 +95,7 @@ class UsersTable extends DataTableComponent
                             <button class="btn btn-info btn-sm" wire:click="activate($row->id, $row->status)"><i class="bi bi-unlock-fill"></i> </button>
                         HTML;
                     } else if ($row->status != 1 && Gate::allows('setting-user-change-status')) {
-                        return  <<< HTML
+                        return <<< HTML
                             <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="bi bi-lock-fill"></i> </button>
                         HTML;
                     }
@@ -122,10 +124,10 @@ class UsersTable extends DataTableComponent
                     $changePwd = '';
                     $delete = '';
                     $mail = '';
-                    $value = "'".encrypt($value)."'";
+                    $value = "'" . encrypt($value) . "'";
 
                     if ($row->is_approved == 1) {
-                        if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker') ) {
+                        if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<< HTML
                                         <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal', $value)"><i class="bi bi-pencil-square"></i> </button>
                                     HTML;
@@ -159,7 +161,7 @@ class UsersTable extends DataTableComponent
 
             Column::make('Role Action', 'role.id')
                 ->format(function ($value, $row) {
-                    $value = "'".encrypt($row->id)."'";
+                    $value = "'" . encrypt($row->id) . "'";
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-change-role')) {
                             return <<< HTML
@@ -238,9 +240,9 @@ class UsersTable extends DataTableComponent
     {
         DB::beginTransaction();
         try {
-            $data = (object) $value['data'];
+            $data = (object)$value['data'];
             $user = User::find($data->id);
-            if(is_null($user)){
+            if (is_null($user)) {
                 abort(404);
             }
             if ($user->is_approved == DualControl::NOT_APPROVED) {
@@ -255,7 +257,7 @@ class UsersTable extends DataTableComponent
                 $this->triggerDualControl(get_class($user), $user->id, DualControl::ACTIVATE, 'activating user', json_encode(['status' => 0]), json_encode(['status' => 1, 'auth_attempt' => 0]));
             }
             DB::commit();
-            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return;
         } catch (Exception $e) {
             DB::rollBack();
@@ -266,9 +268,9 @@ class UsersTable extends DataTableComponent
 
     public function sendCredential($value)
     {
-        $data = (object) $value['data'];
+        $data = (object)$value['data'];
         $user = User::find(decrypt($data->id));
-        if(is_null($user)){
+        if (is_null($user)) {
             abort(404);
         }
         event(new SendSms('user_add', $user->id));
@@ -279,9 +281,9 @@ class UsersTable extends DataTableComponent
     public function confirmed($value)
     {
         try {
-            $data = (object) $value['data'];
+            $data = (object)$value['data'];
             $user = User::find(decrypt($data->id));
-            if(is_null($user)){
+            if (is_null($user)) {
                 abort(404);
             }
             if ($user->is_approved == DualControl::NOT_APPROVED) {
@@ -289,7 +291,7 @@ class UsersTable extends DataTableComponent
                 return;
             }
             $this->triggerDualControl(get_class($user), $user->id, DualControl::DELETE, 'deleting user');
-            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return;
         } catch (Exception $e) {
             report($e);

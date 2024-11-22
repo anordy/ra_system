@@ -2,12 +2,11 @@
 
 namespace App\Http\Livewire\Verifications;
 
-use App\Enum\DisputeStatus;
 use App\Enum\TaxVerificationStatus;
-use App\Models\Returns\ReturnStatus;
+use App\Enum\VettingStatus;
+use App\Models\Region;
 use App\Models\Verification\TaxVerification;
 use App\Traits\ReturnFilterTrait;
-use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
@@ -20,9 +19,27 @@ class VerificationAssessmentTable extends DataTableComponent
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     
-    public $data = [];
+    public $data = [], $locations = [], $department;
 
     public $model = TaxVerification::class;
+
+    public function mount($department){
+
+        $this->department = $department;
+
+        if ($department === Region::DTD) {
+            $this->locations = [Region::DTD];
+        } else if ($department === Region::LTD) {
+            $this->locations = [Region::LTD, Region::UNGUJA];
+        } else if ($department === Region::PEMBA) {
+            $this->locations = [Region::PEMBA];
+        } else if ($department === Region::NTRD) {
+            $this->locations = [Region::NTRD];
+        } else {
+            $this->locations = [Region::DTD, Region::LTD, Region::PEMBA, Region::NTRD, Region::UNGUJA];
+        }
+
+    }
 
     public function filterData($data)
     {
@@ -32,14 +49,13 @@ class VerificationAssessmentTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $returnTable = TaxVerification::getTableName();
-        $filter      = (new TaxVerification)->newQuery();
-        $filter      = $this->dataFilter($filter, $this->data, $returnTable);
+        $query = TaxVerification::query()
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->whereIn('location', $this->locations);
+            })
+            ->where('tax_verifications.status', TaxVerificationStatus::APPROVED);
 
-        return $filter->with('business', 'location', 'taxType', 'taxReturn')
-            ->has('assessment')
-            ->where('tax_verifications.status', TaxVerificationStatus::APPROVED)
-            ->orderByDesc('tax_verifications.id');
+        return $this->dataAssessmentFilter($query, $this->data);
     }
 
     public function configure(): void
@@ -63,15 +79,19 @@ class VerificationAssessmentTable extends DataTableComponent
             Column::make('Filled By', 'created_by_id')
                 ->format(function ($value, $row) {
                     $user = $row->createdBy()->first();
-
                     return $user->full_name ?? '';
                 }),
-            Column::make('Filled On', 'created_at')
+            Column::make('Currency', 'assessment.currency'),
+            Column::make('Amount', 'assessment.total_amount')
+                ->format(function ($value) {
+                    return number_format($value ?? 0);
+                }),
+            Column::make('Added On', 'created_at')
                 ->format(fn ($value) => Carbon::create($value)->toDayDateTimeString()),
             Column::make('Payment Status', 'tax_return_id')
                 ->view('verification.payment_status'),
             Column::make('Action', 'id')
-                ->view('verification.assessment.action')
+                ->view('verifications.assessments.action')
                 ->html(true),
         ];
     }

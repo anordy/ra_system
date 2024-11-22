@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\ReportRegister\Department;
 use App\Models\Security\UserAnswer;
 use App\Services\Verification\PayloadInterface;
 use App\Traits\HasPermissions;
@@ -53,6 +54,11 @@ class User extends Authenticatable implements PayloadInterface, Auditable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 
     public function level()
@@ -117,4 +123,19 @@ class User extends Authenticatable implements PayloadInterface, Auditable
     public function userAnswers(){
         return $this->morphMany(UserAnswer::class, 'user');
     }
+
+    public function getInitialsAttribute()
+    {
+        return $this->getInitials($this->fullname());
+    }
+    private function getInitials($name)
+    {
+        $words = explode(' ', $name);
+        $initials = '';
+        foreach ($words as $word) {
+            $initials .= strtoupper($word[0] ?? '');
+        }
+        return $initials;
+    }
+
 }

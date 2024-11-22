@@ -24,4 +24,13 @@ class TaxTypeController extends Controller
 
         return view('settings.vat');
     }
+
+    public function changes()
+    {
+        if (!Gate::allows('setting-tax-type-view')) {
+            abort(403);
+        }
+
+        return view('settings.viable.change');
+    }
 }

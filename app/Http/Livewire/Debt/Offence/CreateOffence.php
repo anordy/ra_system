@@ -112,8 +112,8 @@ class CreateOffence extends Component
                 'mobile' => $this->mobile,
                 'status' => Offence::CONTROL_NUMBER,
                 'sub_vat_id' => $this->sub_vat_id,
-                'business_id' => $this->location->business_id,
-                'location_id' => $this->location->id
+                'business_id' => $this->location->business_id ?? null,
+                'location_id' => $this->location->id ?? null
             ]);
 
             if (!$offence) throw new \Exception('Failed to save offence');

@@ -7,10 +7,10 @@ use App\Enum\VettingStatus;
 use App\Models\Region;
 use App\Models\Verification\TaxVerification;
 use App\Models\WorkflowTask;
-use App\Traits\CustomAlert;
 use App\Traits\ReturnFilterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -23,11 +23,26 @@ class VerificationsTable extends DataTableComponent
     public $data = [];
 
     public $model = WorkflowTask::class;
-    public $status, $vetted;
+    public $status, $vetted, $department, $locations;
 
-    public function mount($status, $vetted = false){
+    public function mount($status, $department, $vetted = false){
         $this->status = $status;
         $this->vetted = $vetted;
+
+        $this->department = $department;
+
+        if ($department === Region::DTD) {
+            $this->locations = [Region::DTD];
+        } else if ($department === Region::LTD) {
+            $this->locations = [Region::LTD, Region::UNGUJA];
+        } else if ($department === Region::PEMBA) {
+            $this->locations = [Region::PEMBA];
+        } else if ($department === Region::NTRD) {
+            $this->locations = [Region::NTRD];
+        } else {
+            $this->locations = [Region::DTD, Region::LTD, Region::PEMBA, Region::NTRD, Region::UNGUJA];
+        }
+
     }
 
     public function filterData($data)
@@ -39,12 +54,13 @@ class VerificationsTable extends DataTableComponent
     public function builder(): Builder
     {
         $query = TaxVerification::query()
-            ->with(['taxReturn'])
+            ->whereHas('location.taxRegion', function ($query) {
+                $query->whereIn('location', $this->locations);
+            })
             ->where('tax_verifications.status', $this->status);
 
         if ($this->status === TaxVerificationStatus::PENDING && !$this->vetted){
             $query->whereHas('pinstance', function ($query) {
-                $query->where('status', '!=', 'completed');
                 $query->whereHas('actors', function ($query) {
                     $query->where('user_id', auth()->id());
                 });
@@ -57,8 +73,7 @@ class VerificationsTable extends DataTableComponent
             });
         }
 
-        $table = TaxVerification::getTableName();
-        return $this->dataFilter($query, $this->data, $table);
+        return $this->dataAssessmentFilter($query, $this->data);
     }
 
     public function configure(): void
@@ -68,37 +83,19 @@ class VerificationsTable extends DataTableComponent
             'default' => true,
             'class'   => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['tax_return_type', 'tax_return_id']);
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Control Number', 'business.reg_no')
-                ->sortable()
-                ->searchable()
-                ->label(function ($row, $value) {
-                    if (isset($row->taxReturn->tax_return->latestBill->control_number)) {
-                        return $row->taxReturn->tax_return->latestBill->control_number;
-                    } else {
-                        return 'N/A';
-                    }
-                }),
             Column::make('Z_Number', 'location.zin')
-                ->sortable()
                 ->searchable(),
             Column::make('TIN', 'business.tin')
-                ->sortable()
                 ->searchable(),
             Column::make('Business Name', 'business.name')
-                ->sortable()
                 ->searchable(),
-            Column::make('Business Location', 'location.name')
-                ->sortable()
-                ->searchable(),
-            Column::make('Tax Type', 'taxtype.name')
-                ->sortable()
-                ->searchable(),
+            Column::make('Business Location', 'location.name'),
+            Column::make('Tax Type', 'taxtype.name'),
             Column::make('Filled On', 'created_at')
                 ->format(fn ($value) => Carbon::create($value)->toDayDateTimeString()),
             Column::make('Action', 'id')

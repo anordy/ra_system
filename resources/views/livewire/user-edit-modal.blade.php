@@ -73,6 +73,18 @@
                                 <div class="small text-muted mt-1 mb-0">When allowed, user will be able to log into their account using security questions irrespective of any configurations.</div>
                             @endif
                         </div>
+                        <div class="form-group col-lg-6">
+                            <label class="">Department </label>
+                            <select class="form-control" wire:model.defer="department_id">
+                                <option selected>Choose option</option>
+                                @foreach($departments ?? [] as $department)
+                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('department_id')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
                 </div>
             </div>

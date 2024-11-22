@@ -114,6 +114,13 @@ class ReportsSeeder extends Seeder
                         'report_url' => '/reports/ZRA/TaxPayer/tax_payer_for_the_past_twelve_months_report',
                         'parameters' => [Parameter::START_DATE, Parameter::END_DATE]
                     ],
+                    [
+                        'name' => 'Taxpayer By Tax Type',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::BUSINESS,
+                        'report_url' => '/reports/ZRA/Business/business_by_tax_type',
+                        'parameters' => [Parameter::TAX_TYPE, Parameter::DYNAMIC_DATE]
+                    ],
                 ]
             ],
             // Returns
@@ -169,13 +176,13 @@ class ReportsSeeder extends Seeder
                         'report_url' => '/reports/ZRA/Returns/filed_tax_returns_by_department_region',
                         'parameters' => [Parameter::DYNAMIC_DATE, Parameter::DEPARTMENT, Parameter::TAX_REGION_NAME]
                     ],
-//                    [
-//                        'name' => 'Non Filers based on Financial Month',
-//                        'has_parameter' => 1,
-//                        'report_type_name' => GeneralReportType::RETURNS,
-//                        'report_url' => '/reports/ZRA/Returns/non_filers_per_financial_month',
-//                        'parameters' => [Parameter::FINANCIAL_YEAR, Parameter::FINANCIAL_MONTH]
-//                    ],
+                    //                    [
+                    //                        'name' => 'Non Filers based on Financial Month',
+                    //                        'has_parameter' => 1,
+                    //                        'report_type_name' => GeneralReportType::RETURNS,
+                    //                        'report_url' => '/reports/ZRA/Returns/non_filers_per_financial_month',
+                    //                        'parameters' => [Parameter::FINANCIAL_YEAR, Parameter::FINANCIAL_MONTH]
+                    //                    ],
                 ]
             ],
             // Debt
@@ -500,16 +507,29 @@ class ReportsSeeder extends Seeder
                         'report_type_name' => GeneralReportType::DST,
                         'report_url' => '/reports/ZRA/Dst/registered_businesses',
                         'parameters' => [Parameter::DYNAMIC_DATE, Parameter::DST_BUSINESS_TYPE]
+                    ]
+                ]
+            ],
+            // Report Register
+            [
+                'report_type' => GeneralReportType::REPORT_REGISTER,
+                'reports' => [
+                    [
+                        'name' => 'Logged Reports',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::REPORT_REGISTER,
+                        'report_url' => '/reports/ZRA/ReportRegister/incidents_per_duration',
+                        'parameters' => [Parameter::RG_CATEGORY_ID, Parameter::RG_SUB_CATEGORY_ID, Parameter::DYNAMIC_DATE]
                     ],
                 ]
             ],
         ];
 
-        $this->call(ReportTypesSeeder::class);
-        $this->call(ParametersSeeder::class);
-
         DB::table('report_parameters')->truncate();
         DB::table('reports')->truncate();
+
+        $this->call(ReportTypesSeeder::class);
+        $this->call(ParametersSeeder::class);
 
 
         foreach ($reports as $i => $report) {
@@ -555,10 +575,7 @@ class ReportsSeeder extends Seeder
                         ]);
                     }
                 }
-
-
             }
-
         }
     }
 }

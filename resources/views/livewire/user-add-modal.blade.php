@@ -83,6 +83,18 @@
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="form-group col-lg-6">
+                            <label class="">Department </label>
+                            <select class="form-control" wire:model.defer="department_id">
+                                <option value="" disabled selected>Choose option</option>
+                                @foreach($departments ?? [] as $department)
+                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('department_id')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
                 </div>
             </div>

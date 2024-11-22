@@ -58,14 +58,32 @@
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">New Hotel Star Rating</label>
-                            <select type="text" class="form-control" wire:model.lazy="newHotelStarId"
-                                    id="newHotelStarId">
+                            <select type="text" class="form-control" wire:model.lazy="newHotelStarId">
                                 <option value="">--------- N/A ---------</option>
                                 @foreach ($hotelStars as $hotelStar)
                                     <option value="{{ $hotelStar->id }}">{{ $hotelStar->name }}</option>
                                 @endforeach
                             </select>
                             @error('newHotelStarId')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row pr-3 pl-3">
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Current Hotel Location Nature</label>
+                            <input type="text" class="form-control" value="{{ $businessHotel->nature->name ?? 'N/A' }}"
+                                   disabled>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">New Hotel Location Nature</label>
+                            <select type="text" class="form-control" wire:model.lazy="newHotelNatureId">
+                                <option value="">--------- N/A ---------</option>
+                                @foreach ($hotelNatures ?? [] as $hotelNature)
+                                    <option value="{{ $hotelNature->id }}">{{ $hotelNature->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('newHotelNatureId')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>

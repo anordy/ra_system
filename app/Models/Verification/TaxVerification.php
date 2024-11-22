@@ -67,4 +67,9 @@ class TaxVerification extends Model implements Auditable
     {
         return $this->belongsToMany(RiskIndicator::class, 'tax_verification_risk_indicator', 'verification_id', 'risk_indicator_id');
     }
+
+    public function files()
+    {
+        return $this->hasMany(TaxVerificationFile::class, 'tax_verification_id', 'id');
+    }
 }

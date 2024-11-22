@@ -105,7 +105,11 @@
                             <a href="{{ route("business.upgraded-tax-types.index") }}">Upgraded Tax Types</a>
                         </li>
                     @endcan
-
+                    @can("search-business")
+                        <li class="{{ request()->is("business/search*") ? "active" : "" }}">
+                            <a href="{{ route("business.search.query") }}">Search Business</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan
@@ -377,15 +381,12 @@
                     <li class="{{ request()->is('tax_verifications/approved*') ? 'active' : '' }}">
                         <a href="{{ route('tax_verifications.approved') }}">Approved Verifications</a>
                     </li>
-                    <li class="{{ request()->is('tax_verifications/unpaid*') ? 'active' : '' }}">
-                        <a href="{{ route('tax_verifications.unpaid') }}">Unpaid Verifications</a>
-                    </li>
                     <li class="{{ request()->is("tax_verifications/assessments*") ? "active" : "" }}">
                         <a href="{{ route("tax_verifications.assessments.index") }}">Assessments</a>
                     </li>
-                    {{-- <li class="{{ request()->is("tax_verifications/verified*") ? "active" : "" }}">
-                        <a href="{{ route("tax_verifications.verified.index") }}">Approved Returns</a>
-                    </li> --}}
+                    <li class="{{ request()->is("tax_verifications/initiate*") ? "active" : "" }}">
+                        <a href="{{ route("tax_verifications.initiate") }}">Initiate Verification</a>
+                    </li>
                 </ul>
             </li>
         @endcan
@@ -990,6 +991,19 @@
                             <a href="{{ route("finance.taxpayer.ledger.search") }}">Taxpayer Ledgers</a>
                         </li>
                     @endcan
+                    @can("view-taxpayer-ledgers")
+                        <li class="{{ request()->is('taxpayer-ledger') ? 'active' : '' }}">
+                            <a href="{{ route('finance.taxpayer.ledger.control-numbers') }}"
+                               class="dropdown-toggle">Tax Payments</a>
+                        </li>
+                    @endcan
+                    @can("view-cash-book")
+                        <li class="{{ request()->is('cashbook') ? 'active' : '' }}">
+                            <a href="{{ route('finance.cashbook.index') }}"
+                               class="dropdown-toggle">Cashbook</a>
+                        </li>
+                    @endcan
+
                 </ul>
             </li>
         @endcan
@@ -1014,6 +1028,41 @@
                     @can('port-location-view')
                         <li class="{{ request()->is('tax-refund/index') ? 'active' : '' }}">
                             <a href="{{ route('tax-refund.index') }}">Tax Refunds</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+
+        @can('report-register')
+            <li class="{{ request()->is("report-register*") ? "active" : "" }}">
+                <a href="#report-register" data-toggle="collapse" aria-expanded="false"
+                   class="dropdown-toggle">Report Registers</a>
+                <ul class="collapse list-unstyled {{ request()->is("report-register*") ? "show" : "" }}"
+                    id="report-register">
+                    @can("report-register-view-incident")
+                        <li class="{{ request()->is("report-register/incident/summary*") ? "active" : "" }}">
+                            <a href="{{ route("report-register.incident.summary") }}">Summary</a>
+                        </li>
+                    @endcan
+                    @can("report-register-view-incident")
+                        <li class="{{ request()->is("report-register/taxpayer/reports*") ? "active" : "" }}">
+                            <a href="{{ route("report-register.incident.index") }}">Taxpayer Incidents</a>
+                        </li>
+                    @endcan
+                    @can("report-register-view-incident")
+                        <li class="{{ request()->is("report-register/staff/reports*") ? "active" : "" }}">
+                            <a href="{{ route("report-register.incident.staff") }}">Staff Incidents</a>
+                        </li>
+                    @endcan
+                    @can("report-register-view-task")
+                        <li class="{{ request()->is("report-register/task/*") ? "active" : "" }}">
+                            <a href="{{ route("report-register.task.index") }}">Tasks</a>
+                        </li>
+                    @endcan
+                    @can("report-register-view-settings")
+                        <li class="{{ request()->is("report-register/settings/*") ? "active" : "" }}">
+                            <a href="{{ route("report-register.settings") }}">Settings</a>
                         </li>
                     @endcan
                 </ul>
@@ -1340,7 +1389,11 @@
                             <a href="{{ route('settings.certificate-signature.index') }}">Certificate Signature</a>
                         </li>
                     @endcan
-
+                    @can('setting-tax-type-view')
+                        <li class="{{ request()->is('settings/viable/change*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.viable.change') }}">Viable Tax Type Changes</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan

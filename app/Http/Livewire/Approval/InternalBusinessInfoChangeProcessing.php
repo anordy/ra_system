@@ -7,6 +7,7 @@ use App\Enum\InternalInfoType;
 use App\Models\BusinessHotel;
 use App\Models\BusinessLocation;
 use App\Models\BusinessType;
+use App\Models\Config\HotelNature;
 use App\Models\Currency;
 use App\Models\HotelStar;
 use App\Models\ISIC1;
@@ -56,7 +57,7 @@ class InternalBusinessInfoChangeProcessing extends Component
     public $isiiciList = [], $isiiciiList = [], $isiiciiiList = [], $isiicivList = [];
     public $newOwnerZno;
     public $defaultSubVatOptions = [];
-    public $taxDepartment = [], $selectedDepartment, $currentDepartmentId;
+    public $taxDepartment = [], $selectedDepartment, $currentDepartmentId, $newHotelNatureId, $hotelNatures =[];
 
     public function mount($modelName, $modelId)
     {
@@ -70,8 +71,10 @@ class InternalBusinessInfoChangeProcessing extends Component
 
         // Load Hotel stars data
         if ($this->infoType === InternalInfoType::HOTEL_STARS) {
-            $this->hotelStars = HotelStar::select('id', 'no_of_stars', 'name')->orderBy('no_of_stars', 'asc')->get();
+            $this->hotelStars = HotelStar::select('id', 'no_of_stars', 'name')->whereNotIn('name', [HotelNature::SMALL_ISLAND, HotelNature::UNDER_THE_OCEAN])->orderBy('id', 'asc')->get();
+            $this->hotelNatures = HotelNature::select('id', 'name')->orderBy('name', 'asc')->get();
             $this->newHotelStar = json_decode($this->info->new_values)->id;
+            $this->newHotelNatureId = json_decode($this->info->new_values)->nature_id ?? null;
         }
 
         if ($this->infoType === InternalInfoType::EFFECTIVE_DATE) {
@@ -161,7 +164,8 @@ class InternalBusinessInfoChangeProcessing extends Component
 
         if ($this->checkTransition('registration_manager_review')) {
             $this->validate([
-                'newHotelStar' => 'required_if:infoType,hotel_stars|nullable|numeric',
+                'newHotelStar' => 'required_if:infoType,hotel_stars|nullable|integer',
+                'newHotelNatureId' => 'required_if:infoType,hotel_stars|nullable|integer',
                 'newEffectiveDate' => 'required_if:infoType,effective_date|nullable|date',
                 'ltoStatus' => 'required_if:infoType,lto|nullable|boolean',
                 'electricStatus' => 'required_if:infoType,electric|nullable|boolean',
@@ -271,6 +275,13 @@ class InternalBusinessInfoChangeProcessing extends Component
                     $this->info->update(['new_values' => json_encode(['tax_region_id' => $this->taxRegionId, 'name' => TaxRegion::findOrFail($this->taxRegionId)->name])]);
                 }
 
+                if ($this->infoType === InternalInfoType::HOTEL_STARS) {
+                    $selectedStar = HotelStar::select('id', 'no_of_stars', 'name')->findOrFail($this->newHotelStar);
+                    $selectedNature = HotelNature::select('id', 'name')->findOrFail($this->newHotelNatureId);
+                    $newValues = json_encode(['nature_id' => $this->newHotelNatureId, 'nature_name' => $selectedNature->name, 'name' => $selectedStar->name ?? null, 'no_of_stars' => $selectedStar->no_of_stars ?? null, 'id' => $this->newHotelStar]);
+                    $this->info->update(['new_values' => $newValues]);
+                }
+
                 if ($this->infoType === InternalInfoType::ISIC) {
                     $this->info->update([
                         'new_values' => json_encode([
@@ -291,8 +302,8 @@ class InternalBusinessInfoChangeProcessing extends Component
 
                 // Update Hotel Star Rating
                 if ($this->subject->type === InternalInfoType::HOTEL_STARS) {
-                    $businessHotel = BusinessHotel::select('id', 'hotel_star_id')->where('location_id', $this->subject->location_id)->firstOrFail();
-                    $businessHotel->update(['hotel_star_id' => json_decode($this->subject->new_values)->id]);
+                    $businessHotel = BusinessHotel::select('id', 'hotel_star_id', 'hotel_nature_id')->where('location_id', $this->subject->location_id)->firstOrFail();
+                    $businessHotel->update(['hotel_star_id' => json_decode($this->subject->new_values)->id, 'hotel_nature_id' => json_decode($this->subject->new_values)->nature_id ?? null]);
                 }
 
                 // Update Effective Date

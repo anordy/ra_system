@@ -32,6 +32,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'qualified-tax-types-view', 'sys_module_id' => 2],
             ['name' => 'qualified-tax-types-add', 'sys_module_id' => 2],
             ['name' => 'upgraded-tax-types-view', 'sys_module_id' => 2],
+            ['name' => 'search-business', 'sys_module_id' => 2],
 
             # Tax Consultant
             ['name' => 'tax-consultant-registration-view', 'sys_module_id' => 3],
@@ -79,6 +80,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'verification-view-domestic-taxpayers', 'sys_module_id' => 8],
             ['name' => 'verification-view-lto-taxpayers', 'sys_module_id' => 8],
             ['name' => 'verification-view-non-tax-revenue-taxpayers', 'sys_module_id' => 8],
+            ['name' => 'verification-initiate', 'sys_module_id' => 8],
 
 
             # Tax Claim
@@ -443,6 +445,7 @@ class PermissionSeeder extends Seeder
 
             # Manage Finances
             ['name' => 'view-taxpayer-ledgers', 'sys_module_id' => 24],
+            ['name' => 'view-cash-book', 'sys_module_id' => 24],
 
             # Driver's Licence
             ['name' => 'driver-licences-view', 'sys_module_id' => 25],
@@ -509,6 +512,14 @@ class PermissionSeeder extends Seeder
             ['name' => 'non-tax-resident-view-de-registrations', 'sys_module_id' => 100],
             ['name' => 'non-tax-resident-view-business-updates', 'sys_module_id' => 100],
             ['name' => 'non-tax-resident-view-tax-returns', 'sys_module_id' => 100],
+            
+            # Report Register
+            ['name' => 'report-register-view-incident', 'sys_module_id' => 36],
+            ['name' => 'report-register-view-task', 'sys_module_id' => 36],
+            ['name' => 'report-register-create-task', 'sys_module_id' => 36],
+            ['name' => 'report-register-view-settings', 'sys_module_id' => 36],
+            ['name' => 'report-register-alter-settings', 'sys_module_id' => 36],
+            ['name' => 'report-register-view-incident', 'sys_module_id' => 36],
         ];
 
         foreach ($data as $row) {

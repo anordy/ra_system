@@ -8,6 +8,7 @@ use App\Models\ApprovalLevel;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\DualControl;
+use App\Models\ReportRegister\Department;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\DatabaseNotification;
@@ -43,12 +44,14 @@ class UserAddModal extends Component
     public $accessLevel = false;
     public $adminCheck;
     public $override_otp;
+    public $departments = [], $department_id;
 
     public function mount()
     {
         $this->roles = Role::where('is_approved',1)->get();
         $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
         $this->adminCheck = Role::where('name', Role::ADMINISTRATOR)->value('id');
+        $this->departments = Department::query()->select('id', 'name')->get();
     }
 
     public function updated($property){
@@ -71,7 +74,8 @@ class UserAddModal extends Component
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'override_otp' => 'required|in:0,1'
+            'override_otp' => 'required|in:0,1',
+            'department_id' => 'required|integer'
         ];
     }
 
@@ -82,7 +86,8 @@ class UserAddModal extends Component
 
     public function messages(){
         return [
-            'override_otp.required' => 'Please specify if users can OTP and use security questions by default.'
+            'override_otp.required' => 'Please specify if users can OTP and use security questions by default.',
+            'department_id.required' => 'User department is required.'
         ];
     }
 
@@ -113,7 +118,8 @@ class UserAddModal extends Component
                 'status' => 1,
                 'level_id' => $this->level_id,
                 'password' => Hash::make($this->password),
-                'override_otp' => $this->override_otp
+                'override_otp' => $this->override_otp,
+                'department_id' => $this->department_id
             ]);
 
 

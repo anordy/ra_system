@@ -7,6 +7,7 @@ use App\Models\EducationLevel;
 use App\Models\ExchangeRate;
 use App\Models\InterestRate;
 use App\Models\Region;
+use App\Models\Returns\Vat\SubVat;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserApprovalLevel;
@@ -321,10 +322,10 @@ function getSourceName($model)
         return 'Assessment';
     } else if ($model == App\Models\PublicService\PublicServiceReturn::class) {
         return 'Public Service';
-    } else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
-        return 'Public Service';
-    } else if ($model == \App\Models\MvrRegistrationStatusChange::class) {
-        return 'Public Service';
+    } else if ($model == \App\Models\Investigation\TaxInvestigation::class) {
+        return 'Tax Investigation';
+    } else if ($model == \App\Models\TaxAudit\TaxAudit::class) {
+        return 'Tax Audit';
     } else {
         return 'N/A';
     }
@@ -366,6 +367,26 @@ function getSignature($modelInstance)
 
 }
 
+function custom_dispatch($job, $time = null): int
+{
+    if ($time) {
+        return app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job->delay($time));
+    }
+    return app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job);
+}
+
+function getDepartment($id)
+{
+    if (!empty($id)) {
+        $department = \App\Models\ReportRegister\Department::find($id, ['name']);
+
+        if ($department) {
+            return $department->name;
+        }
+    }
+    return 'N/A';
+}
+
 function getHotelStarByLocationId($location_id)
 {
     $businessHotel = \App\Models\BusinessHotel::query()
@@ -390,4 +411,15 @@ function getHotelStarByLocationId($location_id)
     } else {
         return $businessHotel->star;
     }
+}
+
+function isEighteenPercent($subVatId) {
+    $subVat = \App\Models\Returns\Vat\SubVat::find($subVatId, ['code']);
+
+    if (in_array($subVat->code, [SubVat::FINANCIALSERVICES, SubVat::TELECOMMUNICATIONDATASERVICES, SubVat::TELECOMMUNICATIONVOICESERVICES, SubVat::TELEPHONE, SubVat::INSURANCE])){
+        return true;
+    }
+
+    return false;
+
 }

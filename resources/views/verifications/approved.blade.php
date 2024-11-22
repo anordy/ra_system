@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Return Verifications')
+@section('title', 'Approved Return Verifications')
 
 @section('content')
     <div class="card">
@@ -25,35 +25,35 @@
                     <a href="#pemba-verifications" class="nav-item nav-link font-weight-bold">Pemba Verifications</a>
                 @endcan
             </nav>
-            <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
+            <div class="tab-content border border-top-0">
                 @can('verification-view-all')
                     <div id="all-verifications" class="tab-pane fade active show p-3">
                         <livewire:verifications.verifications-filter tablename="verifications.verifications-table" />
-                        <livewire:verifications.verifications-table status="{{ \App\Enum\TaxVerificationStatus::APPROVED }}" />
+                        <livewire:verifications.verifications-table vetted="true" department="ALL" status="{{ \App\Enum\TaxVerificationStatus::APPROVED }}" />
                     </div>
                 @endcan
                 @can('verification-view-domestic-taxpayers')
                     <div id="domestic-verifications" class="tab-pane fade p-3">
-                        <livewire:verifications.verifications-filter tablename="verifications.d-t-d-verifications-table" />
-                        <livewire:verifications.d-t-d-verifications-table status="{{ \App\Enum\TaxVerificationStatus::APPROVED }}" />
+                        <livewire:verifications.verifications-filter tablename="verifications.verifications-table" />
+                        <livewire:verifications.verifications-table vetted="true" department="{{ \App\Models\Region::DTD }}" status="{{ \App\Enum\TaxVerificationStatus::APPROVED }}" />
                     </div>
                 @endcan
                 @can('verification-view-lto-taxpayers')
                     <div id="lto-verifications" class="tab-pane fade p-3">
-                        <livewire:verifications.verifications-filter tablename="verifications.l-t-o-verifications-table" />
-                        <livewire:verifications.l-t-o-verifications-table status="{{ \App\Enum\TaxVerificationStatus::APPROVED }}" />
+                        <livewire:verifications.verifications-filter tablename="verifications.verifications-table" />
+                        <livewire:verifications.verifications-table vetted="true" department="{{ \App\Models\Region::LTD }}" status="{{ \App\Enum\TaxVerificationStatus::APPROVED }}" />
                     </div>
                 @endcan
                 @can('verification-view-non-tax-revenue-taxpayers')
                     <div id="ntr-verifications" class="tab-pane fade p-3">
-                        <livewire:verifications.verifications-filter tablename="verifications.n-t-r-verifications-table" />
-                        <livewire:verifications.n-t-r-verifications-table status="{{ \App\Enum\TaxVerificationStatus::APPROVED }}" />
+                        <livewire:verifications.verifications-filter tablename="verifications.verifications-table" />
+                        <livewire:verifications.verifications-table vetted="true" department="{{ \App\Models\Region::NTRD }}" status="{{ \App\Enum\TaxVerificationStatus::APPROVED }}" />
                     </div>
                 @endcan
                 @can('verification-view-pemba')
                     <div id="pemba-verifications" class="tab-pane fade p-3">
-                        <livewire:verifications.verifications-filter tablename="verifications.pemba-verifications-table" />
-                        <livewire:verifications.pemba-verifications-table status="{{ \App\Enum\TaxVerificationStatus::APPROVED }}" />
+                        <livewire:verifications.verifications-filter tablename="verifications.verifications-table" />
+                        <livewire:verifications.verifications-table vetted="true" department="{{ \App\Models\Region::PEMBA }}" status="{{ \App\Enum\TaxVerificationStatus::APPROVED }}" />
                     </div>
                 @endcan
             </div>

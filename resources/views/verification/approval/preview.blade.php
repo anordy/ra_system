@@ -4,32 +4,18 @@
 
 @section('content')
 
-    @if(isset($verification->taxReturn->tax_return->latestBill))
-        <div class="mx-1">
-            <livewire:returns.return-payment :return="$verification->taxReturn->tax_return" />
-        </div>
-    @endif
-
-    @if ($verification->status == App\Enum\TaxVerificationStatus::APPROVED)
-        <div class="row m-2 pt-3">
-            <div class="col-md-12">
-                <livewire:assesments.tax-assessment-payment :assessment="$verification->assessment" />
-            </div>
-        </div>
-    @endif
-
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                aria-selected="true">Verification Report</a>
+               aria-selected="true">Verification Report</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-                aria-selected="false">Return Information</a>
+               aria-selected="false">Return Information</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
-                aria-selected="false">Approval Details</a>
+               aria-selected="false">Approval Details</a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -74,16 +60,29 @@
                             <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
                         </div>
 
-                        @if ($riskIndicators)
-                        <div class="col-md-12 mb-3">
-                            <span class="font-weight-bold text-uppercase text-danger">Risk Indicators on this return</span>
-                            @foreach ($riskIndicators as $riskIndicator)
-                            <ul>
-                                <li><p class="my-1">{{ $riskIndicator->risk_indicator }}</p></li>
-                            </ul>    
-                            @endforeach
-                        </div>
+                        @if($verification->initiation_reason)
+                            <div class="col-md-12 mb-3">
+                                <span class="font-weight-bold text-danger text-uppercase">Initiation Reason</span>
+                                <p class="my-1">{{ $verification->initiation_reason }}</p>
+                            </div>
                         @endif
+
+                        @if (count($riskIndicators ?? []))
+                            <div class="col-md-12 mb-3">
+                                <span class="font-weight-bold text-uppercase text-danger">Risk Indicators on this return</span>
+                                @foreach ($riskIndicators as $riskIndicator)
+                                    <ul>
+                                        <li><p class="my-1">{{ $riskIndicator->risk_indicator }}</p></li>
+                                    </ul>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="col-md-12 mb-3">
+                                <span class="font-weight-bold text-uppercase text-danger">No Risk Indicators on this return</span>
+                            </div>
+                        @endif
+
+
                     </div>
                 </div>
             </div>
@@ -107,18 +106,89 @@
                                 <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
                                     <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                     <a target="_blank"
-                                        href="{{ route('tax_verifications.files.show', encrypt($verification->assessment_report)) }}"
-                                        class="ml-1 font-weight-bold">
+                                       href="{{ route('tax_verifications.files.show', encrypt($verification->assessment_report)) }}"
+                                       class="ml-1 font-weight-bold">
                                         Verification Report
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
                                 </div>
                             </div>
                         @endif
+
+                        @if ($verification->notification_letter)
+                            <div class="col-md-3">
+                                <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                    <a target="_blank"
+                                       href="{{ route('tax_verifications.files.show', encrypt($verification->notification_letter)) }}"
+                                       class="ml-1 font-weight-bold">
+                                        Taxpayer Notification Letter
+                                        <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if ($verification->final_report)
+                            <div class="col-md-3">
+                                <div
+                                        class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                    <a target="_blank"
+                                       href="{{ route('tax_verifications.files.show', encrypt($verification->final_report)) }}"
+                                       class="ml-1 font-weight-bold">
+                                        Final Report
+                                        <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+
+                            @if ($verification->notice_of_discussion)
+                                <div class="col-md-3">
+                                    <div
+                                            class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                        <a target="_blank"
+                                           href="{{ route('tax_verifications.files.show', encrypt($verification->notice_of_discussion)) }}"
+                                           class="ml-1 font-weight-bold">
+                                            Notice of Discussion
+                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+
                     </div>
 
                 </div>
             </div>
+
+            @if($verification->files)
+                <div class="card">
+                    <div class="card-header text-uppercase font-weight-bold bg-white">
+                        Responded Documents
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach($verification->files as $file)
+                                <div class="col-md-3">
+                                    <div class="file-blue-border p-2 mb-3 d-flex rounded-sm align-items-center">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
+                                        <a target="_blank"
+                                           href="{{ route('tax_verifications.files.show', encrypt($file->file)) }}"
+                                           class="ml-1 font-weight-bold">
+                                            {{ strtoupper($file->name ?? 'N/A')  }}
+                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
 
             @if ($verification->assessment)
                 <div class="card">
@@ -129,31 +199,31 @@
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                                <p class="my-1">{{ number_format($verification->assessment->principal_amount ?? 0, 2) }}
+                                <p class="my-1">{{ $verification->assessment->currency }} {{ number_format($verification->assessment->principal_amount ?? 0, 2) }}
                                 </p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                                <p class="my-1">{{ number_format($verification->assessment->penalty_amount ?? 0, 2) }}
+                                <p class="my-1">{{ $verification->assessment->currency }} {{ number_format($verification->assessment->penalty_amount ?? 0, 2) }}
                                 </p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                                <p class="my-1">{{ number_format($verification->assessment->interest_amount ?? 0, 2) }}
+                                <p class="my-1">{{ $verification->assessment->currency }} {{ number_format($verification->assessment->interest_amount ?? 0, 2) }}
                                 </p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase"> Total Amount Due</span>
-                                <p class="my-1">{{ number_format($verification->assessment->total_amount ?? 0, 2) }}</p>
+                                <p class="my-1">{{ $verification->assessment->currency }} {{ number_format($verification->assessment->total_amount ?? 0, 2) }}</p>
                             </div>
                             @if ($verification->assessment->report_path)
                                 <div class="col-md-4">
                                     <div
-                                        class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
+                                            class="p-2 mb-3 d-flex rounded-sm align-items-center file-blue-border">
                                         <i class="bi bi-file-earmark-pdf-fill px-2 font-x-large"></i>
                                         <a target="_blank"
-                                            href="{{ route('tax_verifications.files.show', encrypt($verification->assessment->report_path)) }}"
-                                            class="ml-1 font-weight-bold">
+                                           href="{{ route('tax_verifications.files.show', encrypt($verification->assessment->report_path)) }}"
+                                           class="ml-1 font-weight-bold">
                                             Verification Report
                                             <i class="bi bi-arrow-up-right-square ml-1"></i>
                                         </a>
@@ -166,7 +236,7 @@
             @endif
 
             <livewire:approval.tax-verification-approval-processing modelName='{{ get_class($verification) }}'
-                                                                    modelId="{{ encrypt($verification->id) }}" />
+                                                                    modelId="{{ encrypt($verification->id) }}"/>
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if (view()->exists($viewRender))
@@ -188,7 +258,7 @@
             <div class="card">
                 <div class="card-body">
                     <livewire:approval.approval-history-table modelName='{{ get_class($verification) }}'
-                        modelId="{{ encrypt($verification->id) }}" />
+                                                              modelId="{{ encrypt($verification->id) }}"/>
 
                 </div>
             </div>
