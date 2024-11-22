@@ -24,7 +24,7 @@ class CreateNtrBusinessesTable extends Migration
             $table->string('business_address')->nullable();
             $table->unsignedBigInteger('country_id')->nullable();
             $table->unsignedBigInteger('incorporation_country_id')->nullable();
-            $table->unsignedBigInteger('ntr_business_nature_id');
+            $table->unsignedBigInteger('ntr_business_nature_id')->nullable();
             $table->unsignedBigInteger('ntr_payment_gateway_id')->nullable();
             $table->unsignedBigInteger('ntr_taxpayer_id')->index('ntr_businesses_taxpayer_id');
             $table->string('street')->nullable();
@@ -34,6 +34,9 @@ class CreateNtrBusinessesTable extends Migration
             $table->string('ztn_location_number')->nullable();
             $table->string('email')->unique()->nullable();
             $table->decimal('annual_revenue_threshold', 20, 2)->nullable();
+            $table->string('other_nature_of_business')->nullable();
+            $table->string('payment_gateways')->nullable();
+            $table->string('website')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

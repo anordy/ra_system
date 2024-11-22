@@ -50,7 +50,7 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '0', 'name' => 'Property Tax', 'code' => TaxType::PROPERTY_TAX]);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '142203270234', 'name' => 'Chartered Sea', 'code' => TaxType::CHARTERED_SEA]);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '142203270232', 'name' => 'Chartered Flight', 'code' => TaxType::CHARTERED_FLIGHT]);
-        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '142203270232', 'name' => 'Vat Electronic Services', 'code' => TaxType::VAT_ELECTRONIC_SERVICES]);
+        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '142203270232', 'name' => 'Vat on Digital Services', 'code' => TaxType::VAT_ELECTRONIC_SERVICES]);
 
     }
 }

@@ -29,7 +29,7 @@
                         @elseif($business->status === \App\Models\BusinessStatus::DEREGISTERED)
                             <span class="font-weight-bold text-danger">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
-                                Rejected
+                                De-registered
                             </span>
                         @else
                             <span class="font-weight-bold text-info">

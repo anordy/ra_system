@@ -18,6 +18,7 @@ class CreateNtrBusinessAttachmentTypesTable extends Migration
             $table->string('name', 50);
             $table->string('description', 255);
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_required')->default(false);
             $table->boolean('is_for_entity')->default(true);
             $table->integer('business_type');
             $table->timestamps();

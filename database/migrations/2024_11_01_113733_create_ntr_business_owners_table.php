@@ -17,8 +17,8 @@ class CreateNtrBusinessOwnersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('taxpayer_id');
             $table->unsignedBigInteger('ntr_business_id');
-            $table->unsignedBigInteger('nationality_id');
-            $table->string('full_name');
+            $table->unsignedBigInteger('nationality_id')->nullable();
+            $table->string('full_name')->nullable();
             $table->string('address')->nullable();
             $table->string('position')->nullable();
             $table->string('universal_tin')->nullable();

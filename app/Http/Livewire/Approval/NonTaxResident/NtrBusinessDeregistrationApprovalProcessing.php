@@ -45,7 +45,7 @@ class NtrBusinessDeregistrationApprovalProcessing extends Component
 
             if ($this->checkTransition('compliance_manager_review')) {
                 $this->subject->status = BusinessStatus::APPROVED;
-                $this->subject->business->status = BusinessStatus::APPROVED;
+                $this->subject->business->status = BusinessStatus::DEREGISTERED;
                 $this->subject->approved_on = Carbon::now();
                 $this->subject->approved_by = Auth::id();
                 if (!$this->subject->save()) throw new Exception('Failed to save de-registration data');

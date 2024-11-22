@@ -37,6 +37,7 @@ class CreateNtrElectronicVatReturnsTable extends Migration
             $table->date('filing_due_date')->nullable();
             $table->date('payment_due_date')->nullable();
             $table->date('curr_payment_due_date')->nullable();
+            $table->boolean('is_nill')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
