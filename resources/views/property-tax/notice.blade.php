@@ -17,6 +17,7 @@
         }
 
         img.logo {
+            /*width: 140px;*/
             height: 120px;
             margin-bottom: 10px;
         }
@@ -72,6 +73,7 @@
 
         .letterhead {
             height: 80px;
+            /*padding: 0 30px;*/
         }
 
         ol li {
@@ -160,7 +162,7 @@
 
     </table>
 </div>
-<div class="align-center" style="background-color: red; position:fixed; bottom: 0">
+<div class="bottom align-center" style="background-color: red; position:fixed; bottom: 0">
     <img class="letterhead" src="{{ public_path() . '/images/letterhead.png'  }}">
 </div>
 </body>

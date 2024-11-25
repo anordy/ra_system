@@ -37,7 +37,7 @@ class SendPropertyTaxApprovalSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->property->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "You have successful registered your property with unit registration number {$this->property->urn} for property tax. Your will receive payment control number shortly.";
+        $customer_message = "You have successful registered your property with unit registration number {$this->property->urn} for property tax. You will receive payment control number shortly.";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

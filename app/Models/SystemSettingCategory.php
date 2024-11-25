@@ -18,6 +18,7 @@ class SystemSettingCategory extends Model implements Auditable
     public const LOGIN_SETTINGS = 'login-settings';
     public const CERTIFICATE_SETTINGS = 'certificate-settings';
     public const FILING_DEADLINE = 'filing-deadline';
+    const LAST_CONFIGURATIONS_CHECK = 'last-configurations-check';
     public const OTHER = 'other';
 
     public function system_settings(){

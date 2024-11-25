@@ -61,7 +61,7 @@ class VfdmsReceiptsTable extends DataTableComponent
             Column::make('Tax Amount', 'total_tax_amount')
                 ->sortable()
                 ->searchable(),
-            Column::make('Cancelled', 'iscancelled')
+            Column::make('Cancelled', 'is_cancelled')
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
@@ -74,7 +74,7 @@ class VfdmsReceiptsTable extends DataTableComponent
                     }
                 })
                 ->html(),
-            Column::make('On hold', 'isonhold')
+            Column::make('On hold', 'is_onhold')
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML
@@ -87,7 +87,7 @@ class VfdmsReceiptsTable extends DataTableComponent
                     }
                 })
                 ->html(),
-            Column::make('Utilized', 'isutilized')
+            Column::make('Utilized', 'is_utilized')
                 ->format(function ($value, $row) {
                     if ($value == 0) {
                         return <<<HTML

@@ -54,21 +54,15 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
 
             if ($this->checkTransition('registration_manager_review')) {
 
-                $new_values = json_decode($this->amendmentRequest->new_values, true);
+                    $new_values = json_decode($this->amendmentRequest->new_values, true);
 
-                $taxpayer_details = $new_values;
+                    $taxpayer_details = $new_values;
 
                     /** Update taxpayer information */
-                    if ($this->verify($taxpayer)){
-                        $taxpayer->update($taxpayer_details);
-                        $this->sign($taxpayer);
-                        $this->subject->status = TaxpayerAmendmentRequest::APPROVED;
-                    } else {
-                        $this->subject->status = TaxpayerAmendmentRequest::TEMPERED;
-                        $this->doTransition('tempered_information_detected', ['status' => 'agree', 'comment' => $this->comments]);
-                        $this->flash('error', 'Data submitted could not be verified, please contact system administrator.', [], redirect()->back()->getTargetUrl());
-                    }
-
+                    $taxpayer->update($taxpayer_details);
+                    $this->sign($taxpayer);
+                    $this->subject->status = TaxpayerAmendmentRequest::APPROVED;
+                    
                     $this->subject->save();
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
@@ -81,11 +75,7 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
@@ -114,11 +104,7 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::commit();
-            Log::error('Error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            Log::error($e);
             $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

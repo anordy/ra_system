@@ -83,6 +83,8 @@ class RequestRecon extends Component
                 'ReconcOpt' => $this->recon_type
             ]);
 
+            if (!$recon) throw new Exception('Failed to save recon');
+
             $enquireRecon = (new ZanMalipoInternalService)->requestRecon($recon->id);
 
             // If response returns error rollback recon request

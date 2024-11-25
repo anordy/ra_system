@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Http\Middleware\Check2FA;
 use App\Rules\AlphaNumSpaceRule;
 use App\Rules\AlphaGenericRule;
 use App\Rules\AlphaSpaceRule;
@@ -19,6 +18,7 @@ use App\Services\LivewireModal\Modals;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use App\Rules\MaxFileNameLengthRule;
+use App\Http\Middleware\Check2FA;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -74,7 +74,7 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
-        Livewire::addPersistentMiddleware([
+	Livewire::addPersistentMiddleware([
             Check2FA::class
         ]);
     }

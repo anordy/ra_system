@@ -5,15 +5,14 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">Current Tax Department</label>
-                    <select disabled class="form-control @error('selectedDepartment') is-invalid @enderror"
-                            wire:model.defer="selectedDepartment"
-                            wire:change="selectedDepartment($event.target.value) ">
-                        <option value="null" disabled selected>Select</option>
+                    <select disabled class="form-control @error('currentDepartmentId') is-invalid @enderror"
+                            wire:model.defer="currentDepartmentId">
+                        <option value="null" disabled selected>Select (N/A)</option>
                         @foreach ($taxDepartment as $department)
                             <option value="{{ $department->id }}">{{ $department->name }}</option>
                         @endforeach
                     </select>
-                    @error('selectedDepartment')
+                    @error('currentDepartmentId')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
@@ -24,9 +23,8 @@
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">New Tax Department</label>
                     <select disabled class="form-control @error('selectedDepartment') is-invalid @enderror"
-                            wire:model.defer="selectedDepartment"
-                            wire:change="selectedDepartment($event.target.value) ">
-                        <option value="null" disabled selected>Select</option>
+                            wire:model.defer="selectedDepartment">
+                        <option value="null" disabled selected>Select (N/A)</option>
                         @foreach ($taxDepartment as $department)
                             <option value="{{ $department->id }}">{{ $department->name }}</option>
                         @endforeach
@@ -44,14 +42,14 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">Current Tax Region</label>
-                    <select disabled class="form-control @error('taxRegionId') is-invalid @enderror"
-                            wire:model.defer="taxRegionId">
+                    <select disabled class="form-control @error('currentTaxRegionId') is-invalid @enderror"
+                            wire:model.defer="currentTaxRegionId">
                         <option value="null" disabled selected>Select</option>
                         @foreach ($taxRegions as $region)
                             <option value="{{ $region->id }}">{{ $region->name }}</option>
                         @endforeach
                     </select>
-                    @error('taxRegionId')
+                    @error('currentTaxRegionId')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>

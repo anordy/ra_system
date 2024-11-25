@@ -27,7 +27,7 @@ class CreateLeasePayment extends Component
     public $displayMonth;
     public $eligibleToPayment = false;
     public $unpaidLease;
-    public const ADVANCE_PAYMENT_MAX_YEARS = 3;
+    public const ADVANCE_PAYMENT_MAX_YEARS =3;
 
     public function mount($landLease)
     {
@@ -79,8 +79,11 @@ class CreateLeasePayment extends Component
                     Log::error("LandLeasePayment: Financial year not defined, provided year: " . $financialYear);
                     $this->customAlert('warning', __('Something went wrong, please contact ZRA support for more assist!'));
                 }
+
             }
+
         }
+        $this->checkReviewPeriod();
     }
 
     function checkReviewPeriod()
@@ -96,32 +99,40 @@ class CreateLeasePayment extends Component
             $duration = Carbon::now()->diffInYears($reviewYear);
             if ($duration <= 1) {
                 $this->eligibleToPayment = true;
-                TODO: //Check review period for the next three years to allow payments, this will be implemented after a review Module implementation
+                TODO: //Check review period for the next three years to allow payments, this will be implemented after a review Module implemenetation
             }
         }
     }
 
     public function submit()
     {
-        if ($this->landLease['rent_commence_date'] > now()->addYears(self::ADVANCE_PAYMENT_MAX_YEARS)) {
-            $this->customAlert('error', __('Failed, Cannot create lease payment for more than 3 years'));
-        }
-        DB::beginTransaction();
-        $response = $this->createLeasePayment($this->landLease, $this->paymentFinancialMonth);
-        if ($response) {
-            DB::commit();
-            $this->customAlert('success', 'Land Lease Payment for ' . $this->displayMonth . ' - ' . $this->displayYear . ' year successfully');
 
-            if (Auth::user()->id == $this->landLease['taxpayer_id']) {
-                return redirect()->route("land-lease.taxpayer.view", ['id' => encrypt($this->landLease['id'])]);
-            } else {
-                return redirect()->route("land-lease.view", ['id' => encrypt($this->landLease['id'])]);
+        if ($this->eligibleToPayment) {
+            //limit advance payment to 3 years
+            if ($this->landLease['rent_commence_date'] > now()->addYears(self::ADVANCE_PAYMENT_MAX_YEARS)) {
+                $this->customAlert('error', __('Failed, Cannot create lease payment for more than 3 years'));
             }
+            DB::beginTransaction();
+            $response = $this->createLeasePayment($this->landLease, $this->paymentFinancialMonth);
+            if ($response) {
+                DB::commit();
+                $this->customAlert('success', 'Land Lease Payment for ' . $this->displayMonth . ' - ' . $this->displayYear . ' year successfully');
 
+                if (Auth::user()->id == $this->landLease['taxpayer_id']) {
+                    return redirect()->route("land-lease.taxpayer.view", ['id' => encrypt($this->landLease['id'])]);
+                } else {
+                    return redirect()->route("land-lease.view", ['id' => encrypt($this->landLease['id'])]);
+                }
+
+            } else {
+                DB::rollBack();
+                $this->customAlert('error', __('Failed to create lease payment'));
+            }
         } else {
-            DB::rollBack();
-            $this->customAlert('error', __('Failed to create lease payment'));
+            $this->customAlert('warning', 'You can not create lease payment for ' . $this->displayYear . '. Please wait till your contract review', ['timer' => 10000]);
         }
+
+
     }
 
     public function render()

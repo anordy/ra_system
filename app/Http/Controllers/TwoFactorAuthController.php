@@ -62,12 +62,12 @@ class TwoFactorAuthController extends Controller
 
         $otp->used = true;
         $otp->save();
-
+            
         if ($user->is_first_login == true || $user->pass_expired_on <= Carbon::now()) {
             return redirect()->route('password.change');
         } else {
             session()->put('user_2fa', $user->id);
-            return redirect()->intended('dashboard');
+            return redirect()->route('home');
         }
     }
 
@@ -106,12 +106,11 @@ class TwoFactorAuthController extends Controller
         return redirect()->route('login');
     }
 
-    public function securityQuestions()
-    {
+    public function securityQuestions(){
         // Check if security questions config is enabled
         $setting = SystemSetting::where('code', SystemSetting::ENABLE_OTP_ALTERNATIVE)->first();
 
-        if (($setting && $setting->value) || Auth::user()->override_otp) {
+        if (($setting && $setting->value) || Auth::user()->override_otp){
             return view('auth.security-questions');
         }
 

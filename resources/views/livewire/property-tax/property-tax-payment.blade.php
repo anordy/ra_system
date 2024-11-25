@@ -79,6 +79,26 @@
                 </p>
             </div>
         @endif
+
+        @if($payment->latestBill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::FAILED_COMMUNICATION_ERROR)
+            <div class="col-md-4">
+                <span class="font-weight-bold text-uppercase">Control No. Generation Failed</span>
+                <p class="my-1 text-danger">
+                    Generation Failed
+                </p>
+            </div>
+            <div class="col-md-4">
+                <p class="my-1">
+                    <button target="_blank" wire:click="regenerate"
+                            class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                        <i class="spinner-border spinner-border-xs mr-2" role="status" wire:loading
+                           wire:target="regenerate"></i>
+                        <i class="bi bi-arrow-repeat mr-2" wire:loading.remove wire:target="regenerate"></i>Regenerate
+                        Control No
+                    </button>
+                </p>
+            </div>
+        @endif
         <div class="col-md-12 mt-3">
             <span class="font-weight-bold text-uppercase">{{ __('ZanMalipo status') }}:</span>
             <span>

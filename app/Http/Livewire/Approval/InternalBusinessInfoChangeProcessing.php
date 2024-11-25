@@ -113,10 +113,12 @@ class InternalBusinessInfoChangeProcessing extends Component
             $this->newTaxRegion = json_decode($this->info->new_values, TRUE);
             $this->currentTaxRegionId = $this->currentTaxRegion['tax_region_id'];
             $this->taxRegionId = $this->newTaxRegion['tax_region_id'];
-            $this->selectedDepartment = TaxRegion::findOrFail($this->taxRegionId, ['department_id'])->department_id;
-            $this->currentDepartmentId = $this->selectedDepartment;
+            $this->selectedDepartment = $this->newTaxRegion['department_id'] ?? null;
+            $this->currentDepartmentId = $this->currentTaxRegion['department_id'] ?? null;
+
             $this->taxDepartment = TaxDepartment::select('id', 'name')->get();
             $this->taxRegions = TaxRegion::select('id', 'name')->where('department_id', $this->selectedDepartment)->get();
+
         }
 
         if ($this->infoType === InternalInfoType::BUSINESS_OWNERSHIP) {
@@ -272,7 +274,7 @@ class InternalBusinessInfoChangeProcessing extends Component
                 }
 
                 if ($this->infoType === InternalInfoType::TAX_REGION) {
-                    $this->info->update(['new_values' => json_encode(['tax_region_id' => $this->taxRegionId, 'name' => TaxRegion::findOrFail($this->taxRegionId)->name])]);
+                    $this->info->update(['new_values' => json_encode(['tax_region_id' => $this->taxRegionId, 'name' => TaxRegion::findOrFail($this->taxRegionId)->name, 'department_id' => $this->selectedDepartment])]);
                 }
 
                 if ($this->infoType === InternalInfoType::HOTEL_STARS) {

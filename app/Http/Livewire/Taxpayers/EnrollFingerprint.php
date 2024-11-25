@@ -119,11 +119,6 @@ class EnrollFingerprint extends Component
             return;
         }
 
-        if ($this->kyc->tin_no && !$this->kyc->tin_verified_at){
-            $this->customAlert('error', 'TIN No. Not verified by Authorities');
-            return;
-        }
-
         if ($this->kyc->zanid_no && !$this->kyc->zanid_verified_at){
             $this->customAlert('error', 'ZANID Not verified by Authorities');
             return;
