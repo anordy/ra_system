@@ -30,7 +30,6 @@ class SecurityHeader
             $response->headers->set('Permissions-Policy', 'autoplay=(self), camera=(), encrypted-media=(self), fullscreen=(), geolocation=(self), gyroscope=(self), magnetometer=(), microphone=(), midi=(), payment=(), sync-xhr=(self), usb=()');
             $response->headers->set('Connection', 'off');
             $response->headers->set('X-Permitted-Cross-Domain-Policies', 'none');
-            $response->headers->set('Clear-Site-Data', 'cache, cookies');
             $response->headers->set('Cross-Origin-Embedder-Policy', 'same-origin');
             $response->headers->set('Cross-Origin-Opener-Policy', 'same-origin');
             $response->headers->set('Cross-Origin-Resource-Policy', 'same-origin');
@@ -59,7 +58,8 @@ class SecurityHeader
             null,
             '/',
             'password.request',
-            'password.reset'
+            'password.reset',
+            'password.confirm'
         ]);
     }
 }

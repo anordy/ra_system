@@ -19,7 +19,7 @@ class VerifyHostMiddleware
 
         if (config('app.env') != 'local') {
 
-            $allowedHosts = ['zanmalipo.go.tz', 'portalzidras.zanrevenue.org'];
+            $allowedHosts = ['zanmalipo.go.tz', env('BASE_URL', 'manzidras.zanrevenue.org')];
 
             $host = $request->getHost();
 
