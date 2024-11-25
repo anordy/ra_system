@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\FinancialMonths;
 
+use App\Jobs\Bill\UpdateDueDate;
 use App\Models\DualControl;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
@@ -83,6 +84,7 @@ class EditModal extends Component
             $this->edited_month->update($payload);
             $this->triggerDualControl(get_class($this->edited_month), $this->edited_month->id, DualControl::EDIT, 'editing financial month '.$this->edited_month->name. ' '.$this->edited_month->year->code, json_encode($this->old_values), json_encode($payload));
             DB::commit();
+            UpdateDueDate::dispatch($this->edited_month);
             $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer'=>8000]);
             return redirect()->route('settings.financial-months');
 

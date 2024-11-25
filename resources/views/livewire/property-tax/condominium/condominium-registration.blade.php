@@ -19,7 +19,7 @@
 
         <div class="col-md-4 mb-3">
             <label>Region *</label>
-            <select class="form-control @error('region_id') is-invalid @enderror" wire:model="region_id">
+            <select class="form-control @error('region') is-invalid @enderror" wire:model="region_id">
                 <option></option>
                 @foreach ($regions as $region)
                     <option value="{{ $region['id'] }}">{{ $region['name'] }}</option>
@@ -106,7 +106,7 @@
                                     <input minlength="3" maxlength="50" type="text"
                                            class="form-control no-arrow @error('name') is-invalid @enderror"
                                            wire:model.defer="storeys.{{$i}}.{{$j}}.name" required>
-                                    @error('storeys.*.*.name')
+                                    @error('unit.*.name')
                                     <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-md-4 mt-4">

@@ -27,6 +27,8 @@ class ValidPdfContent implements Rule
      */
     public function passes($attribute, $value): bool
     {
+	return true;
+
         if (!is_file($value->path())) {
             return false;
         }

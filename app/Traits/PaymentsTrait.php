@@ -407,7 +407,7 @@ trait PaymentsTrait
         // If business tax type is of VAT take sub vat
         if ($tax_type->code == TaxType::VAT) {
             $businessTax = BusinessType::where('business_id', $debt->business_id)->where('tax_type_id', $debt->tax_type_id)->firstOrFail();
-            $tax_type = SubVat::findOrFail($businessTax);
+            $tax_type = SubVat::findOrFail($businessTax->sub_vat_id);
         }
 
         if ($debt->principal_amount > 0) {

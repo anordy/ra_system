@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\DebtWaiverCategory;
 use App\Enum\TransactionType;
 use App\Events\SendMail;
 use App\Events\SendSms;
@@ -47,6 +48,15 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
         $this->taxTypes = TaxType::all();
         $this->registerWorkflow($modelName, $this->modelId);
         $this->forwardToCommisioner = $this->canForwardToCommisioner($this->debt);
+        $this->penaltyPercent = $this->debt_waiver->penalty_rate ?? 0;
+        $this->interestPercent = $this->debt_waiver->interest_rate ?? 0;
+
+        $this->penaltyAmount = roundOff(($this->debt->penalty * $this->penaltyPercent) / 100, $this->debt->currency);
+        $this->interestAmount = roundOff(($this->debt->interest * $this->interestPercent) / 100, $this->debt->currency);
+        $this->penaltyAmountDue = $this->debt->penalty - $this->penaltyAmount;
+        $this->interestAmountDue = $this->debt->interest - $this->interestAmount;
+        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->debt->principal);
+        $this->total = round($this->total, 2);
     }
 
     public function updated($propertyName)
@@ -89,75 +99,10 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             'comments' => 'required|string|strip_tag',
         ]);
 
-        if ($this->checkTransition('debt_manager_review')) {
-        }
-
-        if ($this->checkTransition('crdm_complete')) {
-            if (!$this->forwardToCommisioner) {
-                $this->validate([
-                    'interestPercent' => 'required|numeric',
-                    'penaltyPercent' => 'required|numeric',
-                ]);
-                DB::beginTransaction();
-                try {
-                    $this->debt_waiver->update([
-                        'penalty_rate' => $this->penaltyPercent ?? 0,
-                        'interest_rate' => $this->interestPercent ?? 0,
-                        'penalty_amount' => $this->penaltyAmount ?? 0,
-                        'interest_amount' => $this->interestAmount ?? 0,
-                    ]);
-
-                    $this->debt->update([
-                        'penalty_amount' => $this->penaltyAmountDue,
-                        'interest_amount' => $this->interestAmountDue,
-                        'total_amount' => $this->total,
-                        'outstanding_amount' => $this->total,
-                        'application_status' => 'waiver',
-                    ]);
-
-                    $this->subject->status = WaiverStatus::APPROVED;
-                    $this->subject->save();
-
-                    $notification_payload = [
-                        'debt' => $this->debt,
-                    ];
-
-                    DB::commit();
-
-                    event(new SendSms('debt-waiver-approval', $notification_payload));
-                    event(new SendMail('debt-waiver-approval', $notification_payload));
-                } catch (Exception $e) {
-                    DB::rollBack();
-                    Log::error('Error: ' . $e->getMessage(), [
-                        'file' => $e->getFile(),
-                        'line' => $e->getLine(),
-                        'trace' => $e->getTraceAsString(),
-                    ]);
-                    $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
-                    return;
-                }
-
-                try {
-                    if ($this->debt->bill) {
-                        CancelBill::dispatch($this->debt->bill, 'Debt has been waived');
-                        GenerateAssessmentDebtControlNo::dispatch($this->debt);
-                    } else {
-                        GenerateAssessmentDebtControlNo::dispatch($this->debt);
-                    }
-                } catch (Exception $e) {
-                    Log::error('Error: ' . $e->getMessage(), [
-                        'file' => $e->getFile(),
-                        'line' => $e->getLine(),
-                        'trace' => $e->getTraceAsString(),
-                    ]);
-                }
-            }
-        }
-
-        if ($this->checkTransition('commissioner_complete')) {
+        if ($this->checkTransition('commissioner_general_complete')) {
             $this->validate([
-                'interestPercent' => 'required|numeric',
-                'penaltyPercent' => 'required|numeric',
+                'interestPercent' => 'required|numeric|min:1',
+                'penaltyPercent' => 'required|numeric|min:1',
             ]);
             DB::beginTransaction();
             try {
@@ -215,6 +160,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             }
 
             try {
+                $this->debt = DebtWaiver::findOrFail($this->modelId)->debt;
                 if ($this->debt->bill) {
                     CancelBill::dispatch($this->debt->bill, 'Debt has been waived');
                     // Cancel previous debit action ?

@@ -76,7 +76,7 @@ class PBZReversalsTable extends DataTableComponent
         ]);
         $this->setPerPageAccepted([15, 25, 50, 100]);
         if ($this->statement){
-            $this->setPerPage(100);
+            $this->setPerPage(25);
         }
     }
 

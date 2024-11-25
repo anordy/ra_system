@@ -36,11 +36,12 @@ class CancelledPaymentsTable extends DataTableComponent
         if (isset($data['currency']) && $data['currency'] != GeneralConstant::ALL) {
             $filter->Where('currency', $data['currency']);
         }
+
+
         if (isset($data['range_start']) && isset($data['range_end'])) {
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
-        }  else {
-            $filter->whereBetween('created_at', [Carbon::now()->toDateString(), Carbon::now()->toDateString()]);
         }
+
 
         if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::NOT_APPLICABLE){
             $filter->whereNull('pbz_status');
@@ -53,6 +54,7 @@ class CancelledPaymentsTable extends DataTableComponent
         if (isset($data['pbz_status']) && $data['pbz_status'] == GeneralConstant::REVERSED){
             $filter->where('pbz_status', 'reversed');
         }
+
 
         return $filter->with('billable')->whereIn('status', [PaymentStatus::CANCELLED])->orderBy('created_at', 'DESC');
     }

@@ -50,15 +50,16 @@ class FinancialMonthsTable extends DataTableComponent
 
         return [
             Column::make("Month", "name")
-                ->sortable()->searchable(),
+                ->sortable(),
             Column::make("year", "year.code")
-                ->sortable()->searchable(),
+                ->sortable()
+                ->searchable(),
             Column::make("Normal Due Date", "due_date")
-                ->sortable()->searchable(),
+                ->sortable(),
             Column::make("Lumpsum Due Date", "lumpsum_due_date")
-                ->sortable()->searchable(),
+                ->sortable(),
             Column::make("Created At", "created_at")
-                ->sortable()->searchable(),
+                ->sortable(),
             Column::make('Approval Status', 'is_approved')
                 ->format(function ($value, $row) {
                     if ($value == 0) {

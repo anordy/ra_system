@@ -15,5 +15,7 @@ class TaxReturnHistory extends Model
         'return_items',
         'penalties',
         'version',
+        'created_at',
+        'updated_at',
     ];
 }

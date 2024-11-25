@@ -57,6 +57,18 @@
                             </div>
                         </div>
 
+                        <div class="row m-2 pt-3">
+                            <h6>Payment Structure</h6>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">PAYMENT STRUCTURE</div>
+                            <div class="col-md-12">
+                                <livewire:returns.port.returns-port-penalty modelName='App\Models\Returns\Port\PortReturn'
+                                    modelId="{{ encrypt($return->id) }}" />
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">

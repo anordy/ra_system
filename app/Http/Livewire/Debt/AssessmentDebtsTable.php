@@ -17,7 +17,7 @@ class AssessmentDebtsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxAssessment::query()->where('assessment_step', ReturnCategory::DEBT)->orderBy('tax_assessments.created_at', 'desc');
+        return TaxAssessment::query()->where('assessment_step','!=', ReturnCategory::OVERDUE)->orderBy('tax_assessments.created_at', 'desc');
     }
 
     public function configure(): void

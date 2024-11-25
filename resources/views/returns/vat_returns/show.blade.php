@@ -210,7 +210,12 @@
                                                         <td>{{ $item->config->name }}</td>
                                                         <td class="text-right">{{ number_format($item->value, 2) }}
                                                             <strong>  {{ $return->currency}}</strong></td>
-                                                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }}
+                                                        <td>
+                                                            @if(isEighteenPercent($return->sub_vat_id) && $item->config->code == 'SRS')
+                                                                {{ $item->config->rate_type === 'percentage' ? 18 : $item->config->rate_usd.''. $return->currency ?? '' }}
+                                                            @else
+                                                                {{ $item->config->rate_type === 'percentage' ? $item->config->rate : ($item->config->rate_usd.''. $return->currency ?? '') }}
+                                                            @endif
                                                             @if($item->config->rate_type =='percentage')
                                                                 %
                                                             @endif

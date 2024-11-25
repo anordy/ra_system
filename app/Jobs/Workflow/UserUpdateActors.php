@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Workflow;
 
+use App\Models\Taxpayer;
 use App\Models\User;
 use App\Models\WorkflowTask;
 use App\Models\WorkflowTaskOperator;

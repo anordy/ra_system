@@ -63,13 +63,16 @@
                     <table class="table table-bordered table-responsive table-sm table">
                         <thead>
                         <th>Item Name</th>
-                        <th>Value ({{ $return->currency ?? 'N/A' }})</th>
-                        <th>Rate</th>
-                        <th>VAT ({{ $return->currency ?? 'N/A' }})</th>
+                        <th>Number of Litres/ Value</th>
+                        <th>Rate per Litre</th>
+                        <th>Amount ({{$return->currency}})</th>
                         </thead>
                         <tbody>
                         @if(!empty($return->configReturns))
                             @foreach ($return->configReturns as $item)
+                                @if($item->config->col_type == 'heading')
+                                @elseif($item->config->code === 'MSP' && $item->config->rate == 300 && $item->vat == 0)
+                                @else
                                 <tr>
                                     <td>{{ $item->config->name ?? 'name' }}</td>
                                     <td>{{ number_format($item->value, 2) }}</td>
@@ -86,6 +89,7 @@
                                     </td>
                                     <td>{{ number_format($item->vat, 1) }}</td>
                                 </tr>
+                                @endif
                             @endforeach
                         @endif
                         </tbody>

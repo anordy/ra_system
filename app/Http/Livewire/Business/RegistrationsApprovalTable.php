@@ -42,12 +42,10 @@ class RegistrationsApprovalTable extends DataTableComponent
         return [
             Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
             Column::make('Business Category', 'pinstance.category.name')
-                ->label(fn ($row) => $row->pinstance->category->name ?? 'N/A')
-                ->sortable(),
+                ->label(fn ($row) => $row->pinstance->category->name ?? 'N/A'),
             Column::make('Business Type', 'pinstance.business_type')
-                ->label(fn ($row) => strtoupper($row->pinstance->business_type ?? 'N/A'))
-                ->sortable(),
-            Column::make('Business Namse', 'pinstance.name')
+                ->label(fn ($row) => strtoupper($row->pinstance->business_type ?? 'N/A')),
+            Column::make('Business Name', 'pinstance.name')
                 ->label(fn ($row) => $row->pinstance->name ?? 'N/A')
                 ->sortable()
                 ->searchable(function (Builder $query, $searchTerm) {

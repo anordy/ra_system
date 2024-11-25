@@ -82,11 +82,11 @@ class UncategorizedClaimsTable extends DataTableComponent
                 ->format(function ($value){
                     return $value ?? 'N/A';
                 }),
-
             Column::make('Status', 'status')
                 ->format(function ($vlaue, $row){
                     return view('claims.includes.status', ['row' => $row]);
                 }),
+            Column::make('Created On', 'created_at'),
             Column::make('Action', 'id')
                 ->format(function ($value, $row){
                     return view('claims.includes.actions', ['value' => $row->id]);
