@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\NonTaxResident\SendNtrBusinessRegistrationMail;
 use App\Jobs\SendCustomMail;
 use App\Jobs\TaxVerification\VerificationNotificationLetterToTaxPayer;
 use App\Jobs\Vfms\ClientNotificationMail;
@@ -260,6 +261,8 @@ class SendMailFired
             SendPropertyTaxExtensionApprovalMail::dispatch($event->tokenId);
         } else if ($event->service === SendCustomMail::SERVICE) {
             SendCustomMail::dispatch($event->tokenId, $event->extra);
+        }  else if($event->service === SendNtrBusinessRegistrationMail::SERVICE) {
+            SendNtrBusinessRegistrationMail::dispatch($event->tokenId, $event->extra['code'])->onQueue('email');
         }
     }
 }
