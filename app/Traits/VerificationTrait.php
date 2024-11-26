@@ -57,10 +57,6 @@ trait VerificationTrait
                     'data' => json_encode($object)
                 ]);
 
-                if ($verification){
-                    event(new SendMail('failed-verification', $verification));
-                }
-
                 return false;
             }
 
