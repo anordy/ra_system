@@ -42,9 +42,6 @@ class ChangePassword extends Component
         'new_password.regex' => 'Password must contain at least one digit, one uppercase letter, one lowercase letter and special character.',
     ];
 
-    public function mount()
-    {
-    }
 
     public function submit()
     {
