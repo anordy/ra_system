@@ -88,7 +88,7 @@
             <div class="row pt-3">
                 <x-input name="dpNumber" label="DP Number" required></x-input>
                 <x-input name="commenceDate" label="Commence Date" type='date' required></x-input>
-                <x-input name="rentCommenceDate" label="Rent Commence Date" type='date' required></x-input>
+                <x-input name="rentCommenceDate" label="ZIDRAS Commence Date" type='date' required></x-input>
                 <div class="col-md-4 form-group">
                     <label for="applicant_category" class="d-flex justify-content-between'">
                         <span>

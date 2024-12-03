@@ -258,7 +258,7 @@ trait PaymentsTrait
         $payer_email = $payerEmail;
         $payer_phone = $payerMobile;
         $location = ($leasePayment->landLease->region->name ?? '') . ', '. ($leasePayment->landLease->district->name ?? '') . ', ' . ($leasePayment->landLease->ward->name ?? '');
-        $description = "Payment for Land Lease with DP number {$leasePayment->landLease->dp_number} at {$location}";
+        $description = "Payment for Land Lease with DP number {$leasePayment->landLease->dp_number} at {$location} for {$leasePayment->financialYear->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = 'USD';
         $createdby_type = get_class(Auth::user());

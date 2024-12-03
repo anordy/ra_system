@@ -3,16 +3,6 @@
 @section('title', 'Tax Return Details')
 
 @section('content')
-    <div class="d-flex justify-content-end pb-2">
-        @if($return->status === \App\Enum\NonTaxResident\NtrReturnStatus::FILED)
-            <button class="btn btn-outline-danger btn-sm mx-2"
-                    onclick="Livewire.emit('showModal', 'non-tax-resident.returns.cancel-return-modal',  '{{ encrypt($return->id) }}')">
-                <i class="bi bi-x mr-2"></i>
-                Cancel Return
-            </button>
-        @endif
-    </div>
-
     <div class="row">
         <div class="col-md-12">
             <livewire:non-tax-resident.returns.return-payment :return="$return"/>
