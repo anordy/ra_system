@@ -1,13 +1,13 @@
 @component('mail::message')
-# Hello {{ $taxpayer->first_name }},
+    # Hello {{ $business->name ?? 'N/A' }},
 
-Welcome to ZRA, please use the following details to access your account.
+    Welcome to ZRA, please use the following details to access your account.
 
-@component('mail::panel')
-Reference No: **{{ $taxpayer->reference_no }}<br>**
-Password: **{{ $code }}**
-@endcomponent
+    @component('mail::panel')
+        Z Number: **{{ $business->ztn_number ?? 'N/A' }}<br>**
+        Password: **{{ $code }}**
+    @endcomponent
 
-Thanks,<br>
-{{ config('app.name') }}
+    Thanks,<br>
+    {{ config('app.name') }}
 @endcomponent

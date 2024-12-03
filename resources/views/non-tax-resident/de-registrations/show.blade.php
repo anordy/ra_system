@@ -34,10 +34,6 @@
                     <p class="my-1">{{ $business->country->name ?? 'N/A' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Updated By</span>
-                    <p class="my-1">{{ $deRegistration->taxpayer->full_name ?? 'N/A' }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Requested Date</span>
                     <p class="my-1">{{ $deRegistration->created_at ? \Carbon\Carbon::create($deRegistration->created_at)->format('d M, Y') : 'N/A' }}</p>
                 </div>

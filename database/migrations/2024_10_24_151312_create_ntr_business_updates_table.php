@@ -16,7 +16,6 @@ class CreateNtrBusinessUpdatesTable extends Migration
         Schema::create('ntr_business_updates', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ntr_business_id');
-            $table->unsignedBigInteger('ntr_taxpayer_id');
             $table->text('current_business_info', 500);
             $table->text('current_contacts', 400)->nullable();
             $table->text('current_socials', 400)->nullable();

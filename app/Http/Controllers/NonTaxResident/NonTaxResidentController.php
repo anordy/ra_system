@@ -27,7 +27,7 @@ class NonTaxResidentController extends Controller
     {
         try {
             $id = decrypt($id);
-            $business = NtrBusiness::findOrFail($id, ['id', 'ntr_business_category_id', 'other_category', 'ownership_type', 'ntr_business_nature_id', 'payment_gateways', 'other_nature_of_business', 'website', 'annual_revenue_threshold', 'entity_type', 'name', 'business_address', 'country_id', 'ntr_taxpayer_id', 'street', 'status', 'vrn', 'ztn_number', 'email', 'created_at', 'updated_at', 'deleted_at', 'ztn_location_number',]);
+            $business = NtrBusiness::findOrFail($id, ['id', 'ntr_business_category_id', 'other_category', 'ownership_type', 'ntr_business_nature_id', 'payment_gateways', 'other_nature_of_business', 'website', 'annual_revenue_threshold', 'entity_type', 'name', 'business_address', 'country_id','street', 'status', 'vrn', 'ztn_number', 'email', 'created_at', 'updated_at', 'deleted_at', 'ztn_location_number',]);
             return view('non-tax-resident.business.show', compact('business'));
         } catch (\Exception $exception) {
             Log::error('NTR-BUSINESS-CONTROLLER-SHOW-BUSINESS', [$exception]);
@@ -51,7 +51,7 @@ class NonTaxResidentController extends Controller
         try {
             $id = decrypt($id);
             $return = NtrVatReturn::with([
-                'business:id,ntr_business_category_id,other_category,ownership_type,ntr_payment_gateway_id,ntr_business_nature_id,entity_type,name,business_address,country_id,ntr_taxpayer_id,street,status,vrn,ztn_number,email,created_at,ztn_location_number',
+                'business:id,ntr_business_category_id,other_category,ownership_type,ntr_payment_gateway_id,ntr_business_nature_id,entity_type,name,business_address,country_id,street,status,vrn,ztn_number,email,created_at,ztn_location_number',
                 'cancellation:id,return_id,reason,created_at,cancelled_by'
             ])->findOrFail($id, ['id', 'business_id', 'filed_by_type', 'filed_by_id', 'currency', 'tax_type_id', 'financial_year_id', 'financial_month_id', 'edited_count', 'status', 'payment_status', 'return_category', 'principal', 'penalty', 'interest', 'total_amount_due', 'total_amount_due_with_penalties', 'paid_at', 'filing_due_date', 'payment_due_date', 'curr_payment_due_date', 'created_at']);
             return view('non-tax-resident.returns.show', ['return' => $return, 'business' => $return->business]);
@@ -72,8 +72,8 @@ class NonTaxResidentController extends Controller
         try {
             $id = decrypt($id);
             $deRegistration = NtrBusinessDeregistration::query()
-                ->with(['business:id,name,country_id,ntr_business_category_id,ntr_taxpayer_id,street,status,vrn,ztn_number,ztn_location_number'])
-                ->findOrFail($id, ['id', 'ntr_business_id', 'ntr_taxpayer_id', 'marking', 'reason', 'status', 'approved_on', 'rejected_on', 'created_at', 'approved_by', 'rejected_by']);
+                ->with(['business:id,name,country_id,ntr_business_category_id,street,status,vrn,ztn_number,ztn_location_number'])
+                ->findOrFail($id, ['id', 'ntr_business_id', 'marking', 'reason', 'status', 'approved_on', 'rejected_on', 'created_at', 'approved_by', 'rejected_by']);
 
             return view('non-tax-resident.de-registrations.show', ['business' => $deRegistration->business, 'deRegistration' => $deRegistration]);
         } catch (\Exception $exception) {
@@ -93,8 +93,8 @@ class NonTaxResidentController extends Controller
         try {
             $id = decrypt($id);
             $updates = NtrBusinessUpdate::query()
-                ->with(['business:id,name,country_id,ntr_business_category_id,ntr_taxpayer_id,street,status,vrn,ztn_number,ztn_location_number,business_type'])
-                ->findOrFail($id, ['id', 'ntr_business_id', 'ntr_taxpayer_id', 'current_business_info', 'current_contacts', 'current_socials', 'current_attachments', 'new_business_info', 'new_contacts', 'new_socials', 'new_attachments', 'created_at']);
+                ->with(['business:id,name,country_id,ntr_business_category_id,street,status,vrn,ztn_number,ztn_location_number,business_type'])
+                ->findOrFail($id, ['id', 'ntr_business_id','current_business_info', 'current_contacts', 'current_socials', 'current_attachments', 'new_business_info', 'new_contacts', 'new_socials', 'new_attachments', 'created_at']);
 
             $formattedInfo = [
                 'current_business_info' => json_decode($updates->current_business_info, true),

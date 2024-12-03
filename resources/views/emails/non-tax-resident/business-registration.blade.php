@@ -1,5 +1,5 @@
 @component('mail::message')
-    # Hello {{ $taxpayer->first_name }},
+    # Hello {{ $business->name ?? 'N/A' }},
 
     {{ $message }}
 

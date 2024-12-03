@@ -57,7 +57,7 @@ class NtrBusinessDeregistrationApprovalProcessing extends Component
             DB::commit();
 
             // Send Mail
-            SendBusinessDeregistrationMail::dispatch($this->subject->taxpayer->email, $this->subject->business->name, BusinessStatus::APPROVED);
+            SendBusinessDeregistrationMail::dispatch($this->subject->business->email, $this->subject->business->name, BusinessStatus::APPROVED);
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

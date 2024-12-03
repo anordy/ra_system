@@ -15,7 +15,6 @@ class CreateNtrBusinessOwnersTable extends Migration
     {
         Schema::create('ntr_business_owners', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('taxpayer_id');
             $table->unsignedBigInteger('ntr_business_id');
             $table->unsignedBigInteger('nationality_id')->nullable();
             $table->string('full_name')->nullable();

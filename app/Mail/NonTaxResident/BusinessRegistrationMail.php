@@ -2,7 +2,7 @@
 
 namespace App\Mail\NonTaxResident;
 
-use App\Models\Taxpayer;
+use App\Models\Ntr\NtrBusiness;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,16 +11,16 @@ class BusinessRegistrationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $taxpayer, $message;
+    public $business, $message;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Taxpayer $taxpayer, $message)
+    public function __construct(NtrBusiness $business, $message)
     {
-        $this->taxpayer = $taxpayer;
+        $this->business = $business;
         $this->message = $message;
     }
 

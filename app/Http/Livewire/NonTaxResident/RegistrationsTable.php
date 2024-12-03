@@ -39,10 +39,6 @@ class RegistrationsTable extends DataTableComponent
             Column::make('Email', "email"),
             Column::make('Country of Residence', "country.name"),
             Column::make('Nature of Business', "nature.name"),
-            Column::make('Registrar', "ntr_taxpayer_id")
-                ->format(function ($value, $row) {
-                  return $row->taxpayer->full_name ?? 'N/A';
-                }),
             Column::make('Business Type', "business_type")
                 ->format(function ($value) {
                     if ($value == NtrBusinessType::ECOMMERCE) {

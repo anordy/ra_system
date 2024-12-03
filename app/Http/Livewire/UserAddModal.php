@@ -11,10 +11,12 @@ use App\Models\DualControl;
 use App\Models\ReportRegister\Department;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserApprovalLevel;
 use App\Notifications\DatabaseNotification;
 use App\Traits\DualControlActivityTrait;
 use App\Traits\VerificationTrait;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -135,6 +137,15 @@ class UserAddModal extends Component
                     $message = 'New ' . Role::find($this->role)->name ?? 'N/A' . ' ' . $user->fullname() . ' created by ' . auth()->user()->fname . ' ' . auth()->user()->lname,
                     $href = 'settings.users.index',
                 ));
+            }
+
+            if ($this->level_id) {
+                UserApprovalLevel::create([
+                    'approval_level_id:' => $this->level_id,
+                    'created_by' => Auth::id(),
+                    'role_id' => $user->role_id,
+                    'user_id' => $user->id
+                ]);
             }
 
             DB::commit();

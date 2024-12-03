@@ -16,9 +16,4 @@ class NtrBusinessUpdate extends Model
     public function business() {
         return $this->belongsTo(NtrBusiness::class, 'ntr_business_id');
     }
-
-    public function taxpayer() {
-        return $this->belongsTo(Taxpayer::class, 'ntr_taxpayer_id');
-    }
-
 }

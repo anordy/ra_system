@@ -16,7 +16,6 @@ class CreateNtrBusinessDeregistrationsTable extends Migration
         Schema::create('ntr_business_deregistrations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ntr_business_id');
-            $table->unsignedBigInteger('ntr_taxpayer_id');
             $table->string('reason');
             $table->string('marking')->nullable();
             $table->string('status');

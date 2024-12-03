@@ -35,10 +35,6 @@ class RegistrationUpdatesTable extends DataTableComponent
             Column::make('ZTN Number', "business.ztn_location_number"),
             Column::make('VRN #', "business.vrn"),
             Column::make('Country of Residence', "business.country.name"),
-            Column::make('Updated By', "ntr_taxpayer_id")
-                ->format(function ($value, $row) {
-                    return $row->taxpayer->full_name ?? 'N/A';
-                }),
             Column::make('Updated Date', "created_at")
                 ->format(function ($value) {
                     if ($value) {

@@ -16,15 +16,15 @@ class SendNtrRegistrationMail implements ShouldQueue
 
     public const SERVICE = 'ntr-registration';
 
-    private $taxpayer, $code;
+    private $business, $code;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($taxpayer, $code)
+    public function __construct($business, $code)
     {
-        $this->taxpayer = $taxpayer;
+        $this->business = $business;
         $this->code = $code;
     }
 
@@ -35,8 +35,8 @@ class SendNtrRegistrationMail implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->taxpayer->email) {
-            Mail::to($this->taxpayer->email)->send(new Registration($this->taxpayer, $this->code));
+        if ($this->business->email) {
+            Mail::to($this->business->email)->send(new Registration($this->business, $this->code));
         }
     }
 }

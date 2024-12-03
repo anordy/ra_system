@@ -17,16 +17,16 @@ class SendNtrBusinessRegistrationMail implements ShouldQueue
 
     const SERVICE = 'ntr-business-registration-mail';
 
-    public $taxpayer, $message;
+    public $business, $message;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($taxpayer, $message)
+    public function __construct($business, $message)
     {
-        $this->taxpayer = $taxpayer;
+        $this->business = $business;
         $this->message = $message;
     }
 
@@ -39,8 +39,8 @@ class SendNtrBusinessRegistrationMail implements ShouldQueue
     public function handle()
     {
         try {
-            if ($this->taxpayer->email) {
-                Mail::to($this->taxpayer->email)->send(new BusinessRegistrationMail($this->taxpayer, $this->message));
+            if ($this->business->email) {
+                Mail::to($this->business->email)->send(new BusinessRegistrationMail($this->business, $this->message));
             }
         } catch (\Exception $exception) {
             Log::error('NON-TAX-RESIDENT-SEND-BUSINESS-REGISTRATION-MAIL-JOB', [$exception]);

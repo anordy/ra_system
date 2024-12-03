@@ -3,22 +3,34 @@
 namespace App\Models\Ntr;
 
 use App\Models\Country;
-use App\Models\MainRegion;
 use App\Models\Taxpayer;
-use App\Models\TaxRegion;
-use Carbon\Carbon;
+use App\Services\Verification\PayloadInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class NtrBusiness extends Model
+class NtrBusiness extends Authenticatable implements PayloadInterface
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    public static function getPayloadColumns(): array
+    {
+        return [
+            'id',
+            'email',
+        ];
+    }
+
+    public static function getTableName(): string
+    {
+        return 'taxpayers';
+    }
 
     public function taxpayer()
     {
