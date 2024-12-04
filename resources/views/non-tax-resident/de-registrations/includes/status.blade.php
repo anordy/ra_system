@@ -4,7 +4,7 @@
                 Active
             </span>
 @elseif($row->status === \App\Models\BusinessStatus::PENDING)
-    <span class="badge badge-danger py-1 px-2">
+    <span class="badge badge-warning py-1 px-2">
         <i class="bi bi-clock-history mr-1"></i>
         {{ __('Pending') }}
     </span>
@@ -21,6 +21,6 @@
 @else
     <span class="badge badge-danger py-1 px-2">
         <i class="bi bi-record-circle mr-1"></i>
-        Unknown Status
+        {{ $row->status ?? 'N/A' }}
     </span>
 @endif

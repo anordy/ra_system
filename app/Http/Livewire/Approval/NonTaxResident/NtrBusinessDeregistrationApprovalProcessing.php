@@ -57,7 +57,9 @@ class NtrBusinessDeregistrationApprovalProcessing extends Component
             DB::commit();
 
             // Send Mail
-            SendBusinessDeregistrationMail::dispatch($this->subject->business->email, $this->subject->business->name, BusinessStatus::APPROVED);
+            if ($this->subject->business->email) {
+                SendBusinessDeregistrationMail::dispatch($this->subject->business->email, $this->subject->business->name, BusinessStatus::APPROVED);
+            }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
@@ -77,7 +79,7 @@ class NtrBusinessDeregistrationApprovalProcessing extends Component
 
         try {
             DB::beginTransaction();
-            if ($this->checkTransition('compliance_manager_reject')) {
+            if ($this->checkTransition('compliance_manager_reject') || $this->checkTransition('compliance_officer_reject')) {
                 $this->subject->status = BusinessStatus::REJECTED;
                 $this->subject->rejected_on = Carbon::now();
                 $this->subject->rejected_by = Auth::id();
@@ -85,7 +87,9 @@ class NtrBusinessDeregistrationApprovalProcessing extends Component
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             DB::commit();
-            SendBusinessDeregistrationMail::dispatch($this->subject->taxpayer->email, $this->subject->business->name, BusinessStatus::REJECTED);
+            if ($this->subject->business->email) {
+                SendBusinessDeregistrationMail::dispatch($this->subject->business->email, $this->subject->business->name, BusinessStatus::REJECTED);
+            }
             $this->flash('success', 'Application Rejected', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();

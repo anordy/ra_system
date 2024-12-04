@@ -60,7 +60,7 @@ class DeRegistrationsTable extends DataTableComponent
                     }
                     return 'N/A';
                 }),
-            Column::make('Status', 'status')->view('non-tax-resident.business.includes.status'),
+            Column::make('Status', 'status')->view('non-tax-resident.de-registrations.includes.status'),
             Column::make('Action', 'id')->view('non-tax-resident.de-registrations.includes.actions'),
         ];
     }
