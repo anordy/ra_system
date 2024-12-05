@@ -1,21 +1,13 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\PropertyTax;
 
 use App\Enum\BillStatus;
-use App\Enum\PropertyPaymentCategoryStatus;
-use App\Enum\PropertyStatus;
-use App\Enum\PropertyTypeStatus;
 use App\Jobs\Bill\CancelBill;
-use App\Jobs\Debt\GenerateControlNo;
 use App\Jobs\PropertyTax\GeneratePropertyTaxControlNo;
 use App\Jobs\PropertyTax\SendPropertyTaxPaymentReminderApprovalSMS;
-use App\Models\Currency;
-use App\Models\FinancialYear;
-use App\Models\PropertyTax\Property;
 use App\Models\PropertyTax\PropertyPayment;
 use App\Models\PropertyTax\PropertyPaymentReminder;
-use App\Models\Returns\TaxReturn;
 use App\Traits\PropertyTaxTrait;
 use Carbon\Carbon;
 use Exception;

@@ -47,7 +47,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('daily:reopen-business')->dailyAt('00:25')->runInBackground();
         $schedule->command('update:installment')->dailyAt('00:30')->runInBackground();
         $schedule->command('daily:delete-draft-businesses-exceed-seven-days')->dailyAt('00:45')->runInBackground();
-        $schedule->command('annual:property-tax-bill')->yearlyOn(7,1,'00:50')->runInBackground();
         $schedule->command('monthly:property-tax-bill-reminder')->dailyAt('00:55')->runInBackground();
         $schedule->command('app:ps-close')->dailyAt('01:00')->runInBackground();
         $schedule->command('app:ps-reopen')->dailyAt('01:02')->runInBackground();
@@ -55,6 +54,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('dl:expired')->dailyAt('01:05')->runInBackground();
         $schedule->command('daily:debt-ntr')->dailyAt('01:10')->runInBackground();
         $schedule->command('rg:schedule')->everyThirtyMinutes()->runInBackground();
+        $schedule->command('annual:property-tax-bill')->dailyAt('01:20')->runInBackground();
 
         // RUNNING AT SPECIFIC TIME & DAY
         // $schedule->command('daily:debt')->cron('51 14 04 01 *')->runInBackground();

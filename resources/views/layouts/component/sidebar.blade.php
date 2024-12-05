@@ -214,11 +214,16 @@
                             <a href="{{ route("property-tax.payment-extension.index") }}">Payment Extension Request</a>
                         </li>
                     @endcan
-                    {{--                    @can("next-bills-preview") --}}
-                    {{--                        <li class="{{ request()->is('property-tax/next-bills') ? 'active' : '' }}"> --}}
-                    {{--                            <a href="{{ route('property-tax.next.bills') }}">Next Bills Preview</a> --}}
-                    {{--                        </li> --}}
-                    {{--                    @endcan --}}
+                    @can("properties-registrations")
+                         <li class="{{ request()->is('property-tax/paid-payments') ? 'active' : '' }}">
+                             <a href="{{ route('property-tax.payments.paid') }}">Paid Properties Payments</a>
+                         </li>
+                    @endcan
+                    @can("properties-registrations")
+                         <li class="{{ request()->is('property-tax/unpaid-payments') ? 'active' : '' }}">
+                              <a href="{{ route('property-tax.payments.unpaid') }}">Unpaid Properties Payments</a>
+                         </li>
+                    @endcan
                 </ul>
             </li>
         @endcan

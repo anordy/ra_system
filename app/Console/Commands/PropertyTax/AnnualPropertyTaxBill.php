@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\PropertyTax;
 
 use App\Enum\BillStatus;
+use App\Enum\GeneralConstant;
 use App\Enum\PropertyPaymentCategoryStatus;
 use App\Enum\PropertyStatus;
 use App\Jobs\PropertyTax\GeneratePropertyTaxControlNo;
@@ -32,7 +33,7 @@ class AnnualPropertyTaxBill extends Command
      *
      * @var string
      */
-    protected $description = 'Generate property tax bill annually';
+    protected $description = 'Generate property tax bill';
 
     /**
      * Create a new command instance.
@@ -52,24 +53,33 @@ class AnnualPropertyTaxBill extends Command
     public function handle()
     {
         Log::channel('property-tax')->info('Annual Generate Property Tax Bill Start');
-        $this->generateBills();
+        $year = Carbon::now()->year;
+        $this->generateBills($year);
         Log::channel('property-tax')->info('Annual Generate Property Tax Bill End');
     }
 
-    public function generateBills()
+    public function generateBills($year)
     {
-        $currentFinancialYear = FinancialYear::select('id')
-            ->where('code', Carbon::now()->year)
+        $currentFinancialYear = FinancialYear::select('id', 'code')
+            ->where('code', $year)
             ->firstOrFail();
 
         Property::query()
             ->where('status', PropertyStatus::APPROVED)
+            ->whereDoesntHave('payments', function ($query) use ($currentFinancialYear) {
+                $query->where('financial_year_id', $currentFinancialYear->id);
+            })
+//            ->whereYear('created_at', $year)
             ->chunk(100, function ($properties) use ($currentFinancialYear) {
                 foreach ($properties as $property) {
-                    $isBillPresent = $property->payments->where('financial_year_id', $currentFinancialYear->id)->get();
+                    $registrationYear = Carbon::create($property->created_at)->year;
 
-                    if (!$isBillPresent) {
-                        $this->generateBill($property, $currentFinancialYear->id);
+                    $doesPaymentExist = $property->payments->where('financial_year_id', $currentFinancialYear->id)->first();
+
+                    if (!$doesPaymentExist) {
+                        if ($registrationYear >= $currentFinancialYear->code) {
+                            $this->generateBill($property, $currentFinancialYear->id);
+                        }
                     }
                 }
             });
@@ -86,10 +96,10 @@ class AnnualPropertyTaxBill extends Command
                 'financial_year_id' => $financialYearId,
                 'currency_id' => Currency::where('iso', Currency::TZS)->firstOrFail()->id,
                 'amount' => $amount,
-                'interest' => 0,
+                'interest' => GeneralConstant::ZERO_INT,
                 'total_amount' => $amount,
-                'payment_date' => Carbon::now()->addMonths(3),
-                'curr_payment_date' => Carbon::now()->addMonths(3),
+                'payment_date' => Carbon::now()->endOfYear(),
+                'curr_payment_date' => Carbon::now()->endOfYear(),
                 'payment_status' => BillStatus::SUBMITTED,
                 'payment_category' => PropertyPaymentCategoryStatus::NORMAL,
             ]);

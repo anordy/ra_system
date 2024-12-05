@@ -202,6 +202,9 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
 
     Route::prefix('property-tax')->name('property-tax.')->group(function () {
         Route::get('/index', [PropertyTaxController::class, 'index'])->name('index');
+        Route::get('/paid-payments', [PropertyTaxController::class, 'paidPayments'])->name('payments.paid');
+        Route::get('/unpaid-payments', [PropertyTaxController::class, 'unpaidPayments'])->name('payments.unpaid');
+        Route::get('/non-generated-payments', [PropertyTaxController::class, 'nonGenBills'])->name('payments.non-gen-bills');
         Route::get('/show/{id}', [PropertyTaxController::class, 'show'])->name('show');
         Route::get('/index/next-bills', [PropertyTaxController::class, 'nextBills'])->name('next.bills');
         Route::get('/get/bill/{id}', [PropertyTaxController::class, 'getBill'])->name('bill');
