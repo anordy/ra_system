@@ -6,7 +6,6 @@ use App\Enum\ReportRegister\RgRegisterType;
 use App\Enum\ReportRegister\RgRequestorType;
 use App\Models\ReportRegister\RgCategory;
 use App\Models\ReportRegister\RgRegister;
-use App\Models\ReportRegister\RgSubCategory;
 use App\Models\User;
 use App\Traits\CustomAlert;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,7 +25,7 @@ class IncidentTable extends DataTableComponent
             ->with(['assigned'])
             ->where('requester_type', RgRequestorType::TAXPAYER)
             ->where('register_type', RgRegisterType::INCIDENT)
-            ->orderBy('created_at', 'Desc');
+            ->orderBy('id', 'Desc');
     }
 
     public function configure(): void
@@ -81,6 +80,11 @@ class IncidentTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('', 'updated_at')
+                ->format(function ($value, $row) {
+                    return '#'. $row->code ?? 'N/A';
+                })
+                ->searchable(),
             Column::make('Title', 'title')
                 ->format(function ($value) {
                     if (strlen($value) > 10) {

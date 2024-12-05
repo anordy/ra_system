@@ -1,7 +1,7 @@
 <div>
     <div class="card">
         <div class="card-header">
-            <h5> Report Title: #{{ $incident->code }} {{ $incident->title ?? 'N/A' }}</h5>
+            <h5> Incident Title: #{{ $incident->code }} - {{ $incident->title ?? 'N/A' }}</h5>
             @include('report-register.incident.includes.status', ['status' => $incident->status])
             <div class="card-tools">
                 {{ $incident->created_at->format('d M, Y H:i') }}
@@ -13,6 +13,12 @@
                     <span class="font-weight-bold text-uppercase">Category</span>
                     <p class="my-1"><span class="badge badge-info">{{ $incident->category->name ?? 'N/A' }}</span></p>
                 </div>
+                @if($incident->transferred_id)
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Transferred To Category</span>
+                        <p class="my-1"><span class="badge badge-info">{{ $incident->transferred->name ?? 'N/A' }}</span></p>
+                    </div>
+                @endif
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Sub Category</span>
                     <p class="my-1"><span class="badge badge-info">{{ $incident->subcategory->name ?? 'N/A'  }}</span>
@@ -105,6 +111,8 @@
 
                 <x-select-searchable :options="$users" name="staffId" col="3" label="Assigned To" placeholder="Select User" optionNameAccessor="fullname"/>
 
+                <x-select-searchable :options="$transferCategories" name="transferCategoryId" col="3" label="Transfer To" placeholder="Select Transfer Category" optionNameAccessor="name"/>
+
 
             </div>
             <hr>
@@ -127,7 +135,11 @@
                     <div class="row pt-2">
                         <div class="col-md-1"></div>
                         <div class="form-group col-md-6">
-                            <button wire:click="saveComment()" class="btn btn-primary float-right"><i class="bi bi-chat-left-fill"></i> Save Comment</button>
+                            @if(!$isTransferredSelected)
+                                <button wire:click="saveComment()" class="btn btn-primary float-right"><i class="bi bi-chat-left-fill"></i> Save Comment</button>
+                            @else
+                                <button wire:click="saveTransferredState()" class="btn btn-primary float-right"><i class="bi bi-chat-left-fill"></i> Save Comment</button>
+                            @endif
                         </div>
                     </div>
                     @include('report-register.incident.includes.comments')

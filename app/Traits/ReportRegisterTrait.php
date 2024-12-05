@@ -265,7 +265,7 @@ trait ReportRegisterTrait
     {
         return RgRegister::query()
             ->with(['assigned', 'comments', 'audits', 'assignees', 'attachments:rg_register_id,name,path', 'category', 'subcategory'])
-            ->findOrFail($incidentId, ['id', 'requester_type', 'requester_id', 'register_type', 'requester_mobile', 'title', 'description', 'start_date', 'resolved_date', 'breach_date', 'status', 'priority', 'is_breached', 'created_at', 'rg_category_id', 'rg_sub_category_id', 'code', 'is_scheduled', 'assigned_to_id']);
+            ->findOrFail($incidentId, ['id', 'requester_type', 'requester_id', 'register_type', 'requester_mobile', 'title', 'description', 'start_date', 'resolved_date', 'breach_date', 'status', 'priority', 'is_breached', 'created_at', 'rg_category_id', 'rg_sub_category_id', 'code', 'is_scheduled', 'assigned_to_id', 'transferred_id']);
     }
 
     /**

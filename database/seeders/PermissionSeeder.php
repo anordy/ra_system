@@ -520,6 +520,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'report-register-view-settings', 'sys_module_id' => 36],
             ['name' => 'report-register-alter-settings', 'sys_module_id' => 36],
             ['name' => 'report-register-view-incident', 'sys_module_id' => 36],
+            ['name' => 'report-register-transfer-incident', 'sys_module_id' => 36],
         ];
 
         foreach ($data as $row) {

@@ -3,8 +3,12 @@
 namespace App\Http\Livewire\ReportRegister\Incident;
 
 use App\Enum\CustomMessage;
+use App\Enum\ReportRegister\RgAuditEvent;
 use App\Enum\ReportRegister\RgPriority;
 use App\Enum\ReportRegister\RgStatus;
+use App\Models\ReportRegister\RgCategory;
+use App\Models\ReportRegister\RgSubCategory;
+use App\Models\ReportRegister\RgSubCategoryNotifiable;
 use App\Models\User;
 use App\Traits\CustomAlert;
 use App\Traits\ReportRegisterTrait;
@@ -19,8 +23,8 @@ class ViewIncident extends Component
 {
     use CustomAlert, ReportRegisterTrait;
 
-    public $statuses = [], $priorities = [], $users = [], $incidentId;
-    public $incident, $status, $priority, $staffId, $comment, $roles = [];
+    public $statuses = [], $priorities = [], $users = [], $incidentId, $transferCategories = [], $transferCategoryId;
+    public $incident, $status, $priority, $staffId, $comment, $roles = [], $isTransferredSelected = false;
 
 
     public function mount($incidentId)
@@ -32,8 +36,25 @@ class ViewIncident extends Component
         $this->status = $this->incident->status;
         $this->priority = $this->incident->priority;
         $this->staffId = $this->incident->assigned_to_id ?? null;
+        $this->transferCategoryId = $this->incident->transferred_id;
+        if ($this->transferCategoryId) {
+            $transferId = $this->transferCategoryId;
+        } else {
+            $transferId = $this->incident->rg_category_id;
+        }
+        $this->transferCategories = RgCategory::query()
+            ->select('id', 'name')
+            ->where('id', '!=', $transferId)
+            ->get();
         if (isset($this->incident->subcategory->notifiables)) {
+            $additionalRoles = [];
+            if ($this->transferCategoryId) {
+                $additionalSubCategories = RgSubCategory::query()->select('id')->where('rg_category_id', $this->transferCategoryId)->pluck('id')->toArray();
+                $additionalRoles = RgSubCategoryNotifiable::query()->select('role_id')->whereIn('rg_sub_category_id', $additionalSubCategories)->pluck('role_id')->toArray();
+
+            }
             $this->roles = $this->incident->subcategory->notifiables->pluck('role_id')->toArray();
+            $this->roles = [...$additionalRoles, ...$this->roles];
             $this->users = User::query()
                 ->select('id', 'fname', 'lname')
                 ->whereIn('role_id', $this->roles)
@@ -91,6 +112,35 @@ class ViewIncident extends Component
         }
     }
 
+    public function updatedtransferCategoryId()
+    {
+        $this->isTransferredSelected = true;
+        $this->validate([
+            'comment' => 'required|min:10|max:255|string'
+        ],[
+            'comment.required' => "Please enter reason for transferring this incident"
+        ]);
+
+    }
+
+    public function saveTransferredState() {
+        try {
+            $transferredName = RgCategory::find($this->transferCategoryId, ['name']);
+            DB::beginTransaction();
+            $this->incident->transferred_id = $this->transferCategoryId;
+            if (!$this->incident->save()) throw new Exception('Failed to update incident');
+            $this->addComment($this->incident, $this->comment, $this->status);
+            $this->auditReportRegister($this->incident, RgAuditEvent::UPDATED, "Incident transferred to {$transferredName->name}");
+            DB::commit();
+            $this->customAlert('success', 'Incident has been transferred successfully');
+            return redirect(request()->header('Referer'));
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error('REPORT-REGISTER-INCIDENT-VIEW-SAVE-TRANSFERRED-STATE', [$exception]);
+            $this->customAlert('error', CustomMessage::error());
+        }
+    }
+
     public function saveComment()
     {
         $this->validate([
@@ -100,6 +150,7 @@ class ViewIncident extends Component
             if ($this->incident->status != $this->status) {
                 $this->updateStatus($this->incident, $this->status);
             }
+
             $this->addComment($this->incident, $this->comment, $this->status);
             $this->customAlert('success', 'Comment has been added');
             $this->incident = $this->getRegister($this->incidentId);

@@ -80,6 +80,11 @@ class StaffIncidentTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('', 'updated_at')
+                ->format(function ($value, $row) {
+                    return '#'. $row->code ?? 'N/A';
+                })
+                ->searchable(),
             Column::make('Title', 'title')
                 ->format(function ($value) {
                     if (strlen($value) > 10) {

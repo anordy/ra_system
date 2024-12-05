@@ -26,6 +26,11 @@ class RgRegister extends Model
         return $this->belongsTo(RgCategory::class, 'rg_category_id');
     }
 
+    public function transferred()
+    {
+        return $this->belongsTo(RgCategory::class, 'transferred_id');
+    }
+
     public function subcategory()
     {
         return $this->belongsTo(RgSubCategory::class, 'rg_sub_category_id');
@@ -69,6 +74,10 @@ class RgRegister extends Model
     public function currentAssigned()
     {
         return $this->hasOne(RgAssignment::class, 'rg_register_id')->latest();
+    }
+
+    public function getCodeAttribute() {
+        return str_pad($this->id, 4, '0', STR_PAD_LEFT);
     }
 
     public function getRequesterNameAttribute()
