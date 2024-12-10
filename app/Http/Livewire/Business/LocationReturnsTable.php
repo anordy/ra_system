@@ -18,7 +18,8 @@ class LocationReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::where('location_id', $this->locationId)
+        return TaxReturn::with('pinstance')
+            ->where('location_id', $this->locationId)
             ->orderByDesc('tax_returns.financial_month_id');
     }
 
@@ -29,7 +30,6 @@ class LocationReturnsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['']);
     }
 
     public function columns(): array
@@ -60,7 +60,7 @@ class LocationReturnsTable extends DataTableComponent
             Column::make('Financial Month', 'financial_month_id')
                 ->format(function ($value, $row) {
                     return "{$row->financialMonth->name} {$row->financialMonth->year->code}";
-                })->sortable()->searchable(),
+                })->searchable(),
             Column::make('Payment Status', 'payment_status')
                 ->view('finance.includes.status')->sortable()->searchable(),
             Column::make('Filing Due Date', 'curr_filing_due_date')
@@ -69,8 +69,12 @@ class LocationReturnsTable extends DataTableComponent
                 }),
             Column::make('Filed On', 'created_at')
                 ->format(function ($value) {
-                    return $value->toFormattedDateString();
-                })->sortable()->searchable(),
+                    return $value ? Carbon::create($value)->format('M d, Y H:i') : 'N/A';
+                }),
+            Column::make('Approved On', 'pinstance.approved_on')
+                ->format(function ($value) {
+                    return $value ? Carbon::create($value)->format('M d, Y H:i') : 'N/A';
+                }),
         ];
     }
 

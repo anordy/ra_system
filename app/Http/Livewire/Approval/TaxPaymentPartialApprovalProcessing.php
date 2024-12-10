@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Approval;
 use App\Enum\CustomMessage;
 use App\Enum\ReturnStatus;
 use App\Events\SendSms;
+use App\Jobs\Bill\CancelBill;
 use App\Jobs\SendCustomSMS;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
@@ -47,6 +48,17 @@ class TaxPaymentPartialApprovalProcessing extends Component
                 $this->subject->approved_on = Carbon::now();
                 $this->subject->staff_id = Auth::id();
                 $this->subject->save();
+
+                // Cancel current control number if exists
+                $items = $this->subject->items ?? [];
+
+                foreach ($items as $item) {
+                    $latestBill = $item->ledger->source->latestBill;
+
+                    if ($latestBill) {
+                        CancelBill::dispatch($latestBill, 'Bill Cancelled, Partial Partial Payment Requested');
+                    }
+                }
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Vetting;
 
+use App\Enum\ReportStatus;
 use Livewire\Component;
 
 class VettingFilter extends Component
@@ -20,7 +21,7 @@ class VettingFilter extends Component
     {
         //set current year at first
         $this->year = date('Y');
-        $this->month = strval(intval(date('m')));
+        $this->month = date('m');
         $this->period = 'Monthly';
         $this->tableName = $tablename;
 
@@ -36,7 +37,7 @@ class VettingFilter extends Component
         $this->optionYears[] = 'Custom Range';
     }
 
-    public function fillter()
+    public function filter()
     {
         $filters = [
             'type' => $this->payment_type,
@@ -45,7 +46,6 @@ class VettingFilter extends Component
             'from' => $this->from,
             'to' => $this->to,
         ];
-
         $this->emitTo($this->tableName, 'filterData', $filters);
     }
 

@@ -13,7 +13,6 @@ use App\Models\User;
 use App\Traits\CustomAlert;
 use App\Traits\ReportRegisterTrait;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;

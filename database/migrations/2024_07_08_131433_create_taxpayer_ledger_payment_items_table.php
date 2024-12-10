@@ -20,6 +20,8 @@ class CreateTaxpayerLedgerPaymentItemsTable extends Migration
             $table->unsignedBigInteger('tax_type_id');
             $table->string('currency');
             $table->decimal('amount', 20,2);
+            $table->string('source_type');
+            $table->string('source_id');
             $table->timestamps();
         });
     }

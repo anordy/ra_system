@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:ps-de-register')->dailyAt('01:04')->runInBackground();
         $schedule->command('dl:expired')->dailyAt('01:05')->runInBackground();
         $schedule->command('daily:debt-ntr')->dailyAt('01:10')->runInBackground();
-        $schedule->command('rg:schedule')->everyThirtyMinutes()->runInBackground();
+        $schedule->command('rg:schedule')->dailyAt('12:00')->runInBackground();
         $schedule->command('annual:property-tax-bill')->dailyAt('01:20')->runInBackground();
 
         // RUNNING AT SPECIFIC TIME & DAY

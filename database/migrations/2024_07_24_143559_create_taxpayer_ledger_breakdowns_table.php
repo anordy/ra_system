@@ -29,7 +29,7 @@ class CreateTaxpayerLedgerBreakdownsTable extends Migration
             $table->decimal('current_road_license_fee', 20, 2)->default(0);
             $table->decimal('current_total_amount', 20, 2)->default(0);
             
-            $table->decimal('principal', 20, 2);
+            $table->decimal('principal', 20, 2)->default(0);
             $table->decimal('interest', 20, 2)->default(0);
             $table->decimal('penalty', 20, 2)->default(0);
             $table->decimal('infrastructure', 20, 2)->default(0);
