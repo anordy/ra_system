@@ -128,7 +128,7 @@ class ViewIncident extends Component
             DB::beginTransaction();
             $this->incident->transferred_id = $this->transferCategoryId;
             if (!$this->incident->save()) throw new Exception('Failed to update incident');
-            $this->addComment($this->incident, $this->comment, $this->status);
+            $this->addComment($this->incident, $this->comment, 'Transferred');
             $this->auditReportRegister($this->incident, RgAuditEvent::UPDATED, "Incident transferred to {$transferredName->name}");
             DB::commit();
             $this->customAlert('success', 'Incident has been transferred successfully');

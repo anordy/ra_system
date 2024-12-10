@@ -743,6 +743,32 @@ trait PaymentsTrait
                     'tax_type_id' => $seaportTransportChargeTax->id
                 ];
             }
+
+            if ($tax_return->infrastructure_znz_tz > 0) {
+                $seaportTransportChargeTax = $taxTypes->where('code', TaxType::INFRASTRUCTURE)->firstOrFail();
+                $billItems[] = [
+                    'billable_id' => $tax_return->id,
+                    'billable_type' => get_class($tax_return),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $tax_return->infrastructure_znz_tz,
+                    'currency' => $tax_return->currency,
+                    'gfs_code' => $seaportTransportChargeTax->gfs_code,
+                    'tax_type_id' => $seaportTransportChargeTax->id
+                ];
+            }
+
+            if ($tax_return->infrastructure_znz_znz > 0) {
+                $seaportTransportChargeTax = $taxTypes->where('code', TaxType::INFRASTRUCTURE)->firstOrFail();
+                $billItems[] = [
+                    'billable_id' => $tax_return->id,
+                    'billable_type' => get_class($tax_return),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $tax_return->infrastructure_znz_znz,
+                    'currency' => $tax_return->currency,
+                    'gfs_code' => $seaportTransportChargeTax->gfs_code,
+                    'tax_type_id' => $seaportTransportChargeTax->id
+                ];
+            }
         }
 
         return $billItems;
