@@ -1040,31 +1040,35 @@
             </li>
         @endcan
 
-        <li class="{{ request()->is("report-register*") ? "active" : "" }}">
-            <a href="#report-register" data-toggle="collapse" aria-expanded="false"
-               class="dropdown-toggle">Report Incidents</a>
-            <ul class="collapse list-unstyled {{ request()->is("report-register*") ? "show" : "" }}"
-                id="report-register">
-                <li class="{{ request()->is("report-register/incident/summary*") ? "active" : "" }}">
-                    <a href="{{ route("report-register.incident.summary") }}">Summary</a>
-                </li>
-                <li class="{{ request()->is("report-register/taxpayer/reports*") ? "active" : "" }}">
-                    <a href="{{ route("report-register.incident.index") }}">Taxpayer Incidents</a>
-                </li>
-                <li class="{{ request()->is("report-register/staff/reports*") ? "active" : "" }}">
-                    <a href="{{ route("report-register.incident.staff") }}">Staff Incidents</a>
-                </li>
-                @can("report-register-view-settings")
-                    <li class="{{ request()->is("report-register/settings/*") ? "active" : "" }}">
-                        <a href="{{ route("report-register.settings") }}">Settings</a>
-                    </li>
-                @endcan
-            </ul>
-        </li>
 
-        <li class="{{ request()->is("task*") ? "active" : "" }}">
-            <a href="{{ route("task-assignments.task.index") }}">Task Assignments</a>
-        </li>
+        @if(0)
+            <li class="{{ request()->is("report-register*") ? "active" : "" }}">
+                <a href="#report-register" data-toggle="collapse" aria-expanded="false"
+                   class="dropdown-toggle">Report Incidents</a>
+                <ul class="collapse list-unstyled {{ request()->is("report-register*") ? "show" : "" }}"
+                    id="report-register">
+                    <li class="{{ request()->is("report-register/incident/summary*") ? "active" : "" }}">
+                        <a href="{{ route("report-register.incident.summary") }}">Summary</a>
+                    </li>
+                    <li class="{{ request()->is("report-register/taxpayer/reports*") ? "active" : "" }}">
+                        <a href="{{ route("report-register.incident.index") }}">Taxpayer Incidents</a>
+                    </li>
+                    <li class="{{ request()->is("report-register/staff/reports*") ? "active" : "" }}">
+                        <a href="{{ route("report-register.incident.staff") }}">Staff Incidents</a>
+                    </li>
+                    @can("report-register-view-settings")
+                        <li class="{{ request()->is("report-register/settings/*") ? "active" : "" }}">
+                            <a href="{{ route("report-register.settings") }}">Settings</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+
+            <li class="{{ request()->is("task*") ? "active" : "" }}">
+                <a href="{{ route("task-assignments.task.index") }}">Task Assignments</a>
+            </li>
+        @endif
+
 
         @can("tra-information")
             <li class="{{ request()->is("tra*") ? "active" : "" }}">
