@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enum\NonTaxResident\NtrBusinessType;
 use App\Models\District;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
@@ -9,6 +10,8 @@ use App\Models\Parameter;
 use App\Models\PaymentStatus;
 use App\Models\Region;
 use App\Models\Relief\ReliefProject;
+use App\Models\ReportRegister\RgCategory;
+use App\Models\ReportRegister\RgSubCategory;
 use App\Models\TaxDepartment;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
@@ -51,6 +54,7 @@ class ParametersSeeder extends Seeder
                 'input_type' => 'select',
                 'model_name' => District::class,
                 'display_name' => 'name',
+                'parent_id' => Parameter::where('code', Parameter::REGION)->firstOrFail()->id
             ],
             [
                 'name' => 'Tax Department',
@@ -157,6 +161,20 @@ class ParametersSeeder extends Seeder
                 'model_name' => 'SELECT DISTINCT NAME, ID FROM TAX_REGIONS WHERE LOCATION = \'DTD\'',
                 'display_name' => 'name',
             ],
+            [
+                'name' => 'Business Type',
+                'code' => Parameter::DST_BUSINESS_TYPE,
+                'input_type' => 'select',
+                'model_name' => NtrBusinessType::class,
+                'display_name' => 'name',
+            ],
+            [
+                'name' => 'Category',
+                'code' => Parameter::RG_CATEGORY_ID,
+                'input_type' => 'select',
+                'model_name' => RgCategory::class,
+                'display_name' => 'name',
+            ],
         ];
 
         foreach ($parameters as $parameter) {
@@ -167,6 +185,20 @@ class ParametersSeeder extends Seeder
                 $parameter
             );
         }
+
+        Parameter::updateOrCreate(
+            [
+                'code' => Parameter::RG_SUB_CATEGORY_ID
+            ],
+            [
+                'name' => 'Sub Category',
+                'code' => Parameter::RG_SUB_CATEGORY_ID,
+                'input_type' => 'select',
+                'model_name' => RgSubCategory::class,
+                'display_name' => 'name',
+                'parent_id' => Parameter::where('code', Parameter::RG_CATEGORY_ID)->firstOrFail()->id
+            ]
+        );
 
     }
 }

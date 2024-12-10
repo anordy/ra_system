@@ -26,6 +26,26 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="row pr-3 pl-3">
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Current Hotel Location Nature</label>
+                            <input type="text" class="form-control" value="{{ json_decode($info->old_values)->nature_name ?? 'N/A' }}"
+                                   disabled>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">New Hotel Location Nature</label>
+                            <select type="text" class="form-control" wire:model.lazy="newHotelNatureId">
+                                <option value="">--------- N/A ---------</option>
+                                @foreach ($hotelNatures ?? [] as $hotelNature)
+                                    <option value="{{ $hotelNature->id }}">{{ $hotelNature->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('newHotelNatureId')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
                 @endif
 
                 @if ($info->type === \App\Enum\InternalInfoType::EFFECTIVE_DATE)
@@ -89,7 +109,27 @@
                             @enderror
                         </div>
                     </div>
-                @endif
+                        <div class="row pr-3 pl-3">
+                            <div class="form-group col-lg-6">
+                                <label class="control-label">Current Hotel Location Nature</label>
+                                <input type="text" class="form-control" value="{{ json_decode($info->old_values)->nature_name ?? 'N/A' }}"
+                                       disabled>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="control-label">New Hotel Location Nature</label>
+                                <select type="text" disabled class="form-control" wire:model.lazy="newHotelNatureId">
+                                    <option value="">--------- N/A ---------</option>
+                                    @foreach ($hotelNatures ?? [] as $hotelNature)
+                                        <option value="{{ $hotelNature->id }}">{{ $hotelNature->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('newHotelNatureId')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                    @endif
                 @if ($info->type === \App\Enum\InternalInfoType::EFFECTIVE_DATE)
 
                     <div class="row pr-3 pl-3">
@@ -149,6 +189,25 @@
                         @enderror
                     </div>
                 </div>
+                        <div class="row pr-3 pl-3">
+                            <div class="form-group col-lg-6">
+                                <label class="control-label">Current Hotel Location Nature</label>
+                                <input type="text" class="form-control" value="{{ json_decode($info->old_values)->nature_name ?? 'N/A' }}"
+                                       disabled>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="control-label">New Hotel Location Nature</label>
+                                <select type="text" disabled class="form-control" wire:model.lazy="newHotelNatureId">
+                                    <option value="">--------- N/A ---------</option>
+                                    @foreach ($hotelNatures ?? [] as $hotelNature)
+                                        <option value="{{ $hotelNature->id }}">{{ $hotelNature->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('newHotelNatureId')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
             @endif
             @if ($info->type === \App\Enum\InternalInfoType::EFFECTIVE_DATE)
 

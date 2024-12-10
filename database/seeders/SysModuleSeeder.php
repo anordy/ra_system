@@ -50,7 +50,8 @@ class SysModuleSeeder extends Seeder
             ['id' => 33, 'code' => 'vfm-integration', 'name' => 'VFMS Integration'],
             ['id' => 34, 'code' => 'itu', 'name' => 'ITU'],
             ['id' => 35, 'code' => 'reports', 'name' => 'Reports'],
-
+            ['id' => 36, 'code' => 'report-register', 'name' => 'Report Register'],
+            ['id' => 100, 'code' => 'non-tax-residence', 'name' => 'Non Tax Residence'],
         ];
         foreach ($data as $row) {
             SysModule::updateOrCreate($row);

@@ -48,7 +48,7 @@ class SearchTaxpayerAccount extends Component
 
     public function search()
     {
-//        $this->validate();
+        $this->validate();
         $this->getAccounts();
     }
 
@@ -97,7 +97,7 @@ class SearchTaxpayerAccount extends Component
 
         $this->tzsOpeningFigures = [];
 
-        $tzsLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
+        $tzsLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at', 'debit_no')
             ->where('business_location_id', $businessLocationId)
             ->where('currency', Currencies::TZS)
             ->orderBy('source_type', 'ASC')
@@ -116,7 +116,7 @@ class SearchTaxpayerAccount extends Component
 
         $this->usdOpeningFigures = [];
 
-        $usdLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
+        $usdLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at', 'debit_no')
             ->where('business_location_id', $businessLocationId)
             ->where('currency', Currencies::USD)
             ->orderBy('source_type', 'ASC')
@@ -168,7 +168,7 @@ class SearchTaxpayerAccount extends Component
 
         $this->tzsOpeningFigures = [];
 
-        $tzsLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
+        $tzsLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at', 'debit_no')
             ->where('business_id', $businessId)
             ->where('currency', Currencies::TZS)
             ->orderBy('source_type', 'ASC')
@@ -187,7 +187,7 @@ class SearchTaxpayerAccount extends Component
 
         $this->usdOpeningFigures = [];
 
-        $usdLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at')
+        $usdLedgers = TaxpayerLedger::query()->select('id', 'source_type', 'source_id', 'zm_payment_id', 'business_location_id', 'financial_month_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at', 'debit_no')
             ->where('business_id', $businessId)
             ->where('currency', Currencies::USD)
             ->orderBy('source_type', 'ASC')

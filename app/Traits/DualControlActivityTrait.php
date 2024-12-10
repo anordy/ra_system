@@ -100,8 +100,10 @@ trait DualControlActivityTrait
                     return 'VAT Tax Type';
                 case DualControl::CERTIFICATE_SIGNATURE:
                     return 'Certificate Signature';
+                case DualControl::VIABLE_TAX_TYPE_CHANGE:
+                    return 'Viable Tax Type Change';
                 default:
-                    abort(404);
+                    return 'Missing Dual Control Type';
             }
         } catch (\Exception $exception) {
             Log::error('TRAITS-DUAL-CONTROL-ACTIVITY-TRAIT-GET-MODEL', [$exception]);
@@ -198,14 +200,6 @@ trait DualControlActivityTrait
                 $payload = json_decode($data->new_values);
                 $payload = (array)$payload;
                 if ($status == DualControl::APPROVE) {
-
-                    $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
-                    $update->update($payload);
-                    if ($data->controllable_type == DualControl::USER) {
-                        $this->sign($update);
-                        $message = 'We are writing to inform you that some of your ZRA staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
-                        $this->sendEmailToUser($update, $message);
-                    }
 
                     $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                     $update->update($payload);

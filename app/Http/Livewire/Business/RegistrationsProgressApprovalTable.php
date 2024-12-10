@@ -49,6 +49,13 @@ class RegistrationsProgressApprovalTable extends DataTableComponent
                         $query->whereRaw(DB::raw("LOWER(name) like '%' || LOWER('$searchTerm') || '%'"));
                     });
                 }),
+            Column::make('Taxpayer Name', 'pinstance.taxpayer_name')
+                ->label(fn ($row) => $row->pinstance->taxpayer_name ?? 'N/A')
+                ->searchable(function (Builder $query, $searchTerm) {
+                    return $query->orWhereHas('pinstance', function ($query) use ($searchTerm) {
+                        $query->whereRaw(DB::raw("LOWER(taxpayer_name) like '%' || LOWER('$searchTerm') || '%'"));
+                    });
+                }),
             Column::make('TIN', 'pinstance.tin')
                 ->label(fn ($row) => $row->pinstance->tin ?? ''),
             Column::make('Buss. Reg. No.', 'pinstance.reg_no')

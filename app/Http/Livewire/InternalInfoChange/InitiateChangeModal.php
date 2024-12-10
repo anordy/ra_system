@@ -7,6 +7,7 @@ use App\Models\Business;
 use App\Models\BusinessHotel;
 use App\Models\BusinessLocation;
 use App\Models\BusinessType;
+use App\Models\Config\HotelNature;
 use App\Models\Currency;
 use App\Models\HotelStar;
 use App\Models\InternalBusinessUpdate;
@@ -36,7 +37,7 @@ class InitiateChangeModal extends Component
     use CustomAlert, WorkflowProcesssingTrait;
 
     public $informationType;
-    public $businessHotel, $newHotelStarId, $hotelStars = [];
+    public $businessHotel, $newHotelStarId, $hotelStars = [], $hotelNatures = [], $newHotelNatureId;
     public $zin, $location;
     public $currentEffectiveDate, $newEffectiveDate;
     public $selectedTaxTypes = [], $taxTypes = [];
@@ -64,6 +65,7 @@ class InitiateChangeModal extends Component
             'informationType' => 'required',
             'zin' => 'required',
             'newHotelStarId' => 'required_if:informationType,hotelStars',
+            'newHotelNatureId' => 'required_if:informationType,hotelStars',
             'newEffectiveDate' => 'required_if:informationType,effectiveDate',
             'ltoStatus' => 'required_if:informationType,lto',
             'electricStatus' => 'required_if:informationType,electric',
@@ -135,14 +137,15 @@ class InitiateChangeModal extends Component
             // Record data to be altered in Business hotel stars
             if ($this->informationType === 'hotelStars') {
                 $selectedStar = HotelStar::select('id', 'no_of_stars', 'name')->findOrFail($this->newHotelStarId);
+                $selectedNature = HotelNature::select('id', 'name')->findOrFail($this->newHotelNatureId);
 
                 $internalChange = InternalBusinessUpdate::create([
                     'business_id' => $this->location->business_id,
                     'location_id' => $this->location->id,
                     'type' => InternalInfoType::HOTEL_STARS,
                     'triggered_by' => Auth::id(),
-                    'old_values' => json_encode(['name' => $this->businessHotel->star->name ?? null, 'no_of_stars' => $this->businessHotel->star->no_of_stars ?? null, 'id' => $this->businessHotel->hotel_star_id ?? null]),
-                    'new_values' => json_encode(['name' => $selectedStar->name ?? null, 'no_of_stars' => $selectedStar->no_of_stars ?? null, 'id' => $this->newHotelStarId]),
+                    'old_values' => json_encode(['nature_id' => $this->businessHotel->nature->id, 'nature_name' => $this->businessHotel->nature->name, 'name' => $this->businessHotel->star->name ?? null, 'no_of_stars' => $this->businessHotel->star->no_of_stars ?? null, 'id' => $this->businessHotel->hotel_star_id ?? null]),
+                    'new_values' => json_encode(['nature_id' => $this->newHotelNatureId, 'nature_name' => $selectedNature->name, 'name' => $selectedStar->name ?? null, 'no_of_stars' => $selectedStar->no_of_stars ?? null, 'id' => $this->newHotelStarId]),
                 ]);
             }
 
@@ -332,8 +335,9 @@ class InitiateChangeModal extends Component
             // Load hotel stars & Business hotel if hotelStars info type is selected
             if ($this->informationType === 'hotelStars') {
                 if ($this->location->business->business_type === 'hotel') {
-                    $this->hotelStars = HotelStar::select('id', 'no_of_stars', 'name')->orderBy('id', 'asc')->get();
-                    $this->businessHotel = BusinessHotel::select('id', 'location_id', 'hotel_star_id')->with('star')->where('location_id', $this->location->id)->first();;
+                    $this->hotelStars = HotelStar::select('id', 'no_of_stars', 'name')->whereNotIn('name', [HotelNature::SMALL_ISLAND, HotelNature::UNDER_THE_OCEAN])->orderBy('id', 'asc')->get();
+                    $this->hotelNatures = HotelNature::select('id', 'name')->orderBy('name', 'asc')->get();
+                    $this->businessHotel = BusinessHotel::select('id', 'location_id', 'hotel_star_id', 'hotel_nature_id')->with('star', 'nature')->where('location_id', $this->location->id)->first();;
                 } else {
                     $this->customAlert('error', 'Business Location is not of Hotel Type');
                 }

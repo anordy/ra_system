@@ -40,6 +40,11 @@ class LandLease extends Model implements Auditable
     {
         return $this->belongsTo(Taxpayer::class, 'created_by');
     }
+
+    public function location()
+    {
+        return $this->belongsTo(BusinessLocation::class, 'business_location_id');
+    }
     public function completedBy()
     {
         return $this->belongsTo(User::class, 'completed_by');
@@ -80,5 +85,9 @@ class LandLease extends Model implements Auditable
     public function leaseCurrencyApplication()
     {
         return $this->hasMany(LeaseCurrencyChangeApplication::class);
+    }
+
+    public function file() {
+        return $this->hasOne(LandLeaseFiles::class, 'land_lease_id')->latest();
     }
 }

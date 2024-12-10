@@ -30,7 +30,7 @@ class VerificationsFilter extends Component
         $this->period    = ReportStatus::MONTHLY;
         $this->tableName = $tablename;
         //get options for years
-        $optionStartYear   = date('Y');
+        $optionStartYear   = date('Y') - 1;
         $this->optionYears = range($optionStartYear, date('Y'));
 
         //add All to year options

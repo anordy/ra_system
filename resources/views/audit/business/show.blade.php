@@ -125,8 +125,9 @@
                                     @endswitch
 
                                     <h5 class="text-danger mt-4 text-uppercase">Risk Indicators On This Return:</h5>
+                                        {{ dd($location->taxVerifications->where("taxReturn", $taxReturn)->first()->riskIndicators()->count())  }}
                                     <ul>
-                                        @foreach ($location->taxVerifications->where("taxReturn", $taxReturn)->first()->riskIndicators as $riskIndicator)
+                                        @foreach ($location->taxVerifications->where("taxReturn", $taxReturn)->first()->riskIndicators ?? [] as $riskIndicator)
                                             <li>{{ $riskIndicator->risk_indicator }}</li>
                                         @endforeach
                                     </ul>

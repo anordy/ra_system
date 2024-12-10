@@ -109,8 +109,8 @@
             </div>
             <div class="col-md-3">
                 <span class="font-weight-bold text-uppercase">Bill Status</span>
-                <p class="my-1 text-danger">
-                    Generation Failed
+                <p class="my-1 text-warning">
+                    Not Generated
                 </p>
             </div>
             <div class="col-md-3">
@@ -240,8 +240,8 @@
             </div>
             <div class="col-md-3">
                 <span class="font-weight-bold text-uppercase">Bill Status</span>
-                <p class="my-1 text-danger">
-                    Generation Failed
+                <p class="my-1 text-dark">
+                    Not Generated
                 </p>
             </div>
             <div class="col-md-3">

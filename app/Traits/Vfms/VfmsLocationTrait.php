@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Traits\Vfms;
 
 use App\Enum\VfmsTaxTypeMapping;
@@ -12,13 +13,13 @@ use App\Models\VfmsWard;
 use App\Models\Ward;
 use App\Services\Api\ApiAuthenticationService;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 trait VfmsLocationTrait
 {
-    function checkRegion($data){
-        if (array_key_exists('region_name', $data)){
+    function checkRegion($data)
+    {
+        if (array_key_exists('region_name', $data)) {
             $region = Region::select('id', 'name')->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$data['region_name']}%"])->first();
             return $region;
         } else {
@@ -27,9 +28,10 @@ trait VfmsLocationTrait
     }
 
 
-    function addRegion($data){
+    function addRegion($data)
+    {
 
-        $pattern = '/'.Region::PEMBA.'/';
+        $pattern = '/' . Region::PEMBA . '/';
         if (array_key_exists('region_name', $data)) {
 
             if (preg_match($pattern, $data['region_name'])) {
@@ -52,69 +54,75 @@ trait VfmsLocationTrait
         }
     }
 
-    function addOrCheckDistrict($region, $data){
+    function addOrCheckDistrict($region, $data)
+    {
         $district = $this->checkDistrict($region, $data);
-        if ($district){
+        if ($district) {
             $this->addWard($district, $data);
         } else {
             $this->addDistrict($region, $data);
         }
     }
 
-    function addDistrict($region, $data){
+    function addDistrict($region, $data)
+    {
         $district = District::create([
             'name' => $data['district_name'],
             'region_id' => $region->id,
             'is_approved' => true,
             'is_updated' => true,
-            'created_at' =>Carbon::now()
+            'created_at' => Carbon::now()
         ]);
 
         $this->addWard($district, $data);
     }
 
-    function checkDistrict($region, $data){
+    function checkDistrict($region, $data)
+    {
         $district = District::select('id', 'name')
             ->where('region_id', $region->id)
             ->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$data['district_name']}%"])->first();
         return $district;
     }
 
-    function addWard($district, $data){
-      $ward = Ward::create([
+    function addWard($district, $data)
+    {
+        $ward = Ward::create([
             'name' => $data['locality_name'],
             'district_id' => $district->id,
             'is_approved' => true,
             'is_updated' => true,
-            'created_at' =>Carbon::now()
+            'created_at' => Carbon::now()
         ]);
 
-      Street::create([
-          'name' => $data['locality_name'],
-          'ward_id' => $ward->id,
-          'is_approved' => true,
-          'is_updated' => true,
-          'created_at' =>Carbon::now()
-      ]);
+        Street::create([
+            'name' => $data['locality_name'],
+            'ward_id' => $ward->id,
+            'is_approved' => true,
+            'is_updated' => true,
+            'created_at' => Carbon::now()
+        ]);
     }
 
-    private function addVfmsWardToZidras($ward, $data){
+    private function addVfmsWardToZidras($ward, $data)
+    {
         VfmsWard::updateOrCreate([
             'ward_id' => $ward->id,
             'locality_id' => $data->locality_id
-        ],[
+        ], [
             'ward_id' => $ward->id,
             'locality_id' => $data->locality_id,
             'locality_name' => $ward->name,
         ]);
     }
 
-    function vfmsCheck($locality_id){
+    function vfmsCheck($locality_id)
+    {
         $vfms_internal = config('modulesconfig.api_url') . '/vfms-internal/get_locality';
         $access_token = (new ApiAuthenticationService)->getAccessToken();
 
         if ($access_token) {
-            $authorization = "Authorization: Bearer ". $access_token;
+            $authorization = "Authorization: Bearer " . $access_token;
 
             $payload = [
                 'locality_id' => $locality_id
@@ -153,12 +161,13 @@ trait VfmsLocationTrait
         }
     }
 
-    function addWardToVfms($request){
+    function addWardToVfms($request)
+    {
         $vfms_internal = config('modulesconfig.api_url') . '/vfms-internal/add_locality';
         $access_token = (new ApiAuthenticationService)->getAccessToken();
 
         if ($access_token) {
-            $authorization = "Authorization: Bearer ". $access_token;
+            $authorization = "Authorization: Bearer " . $access_token;
 
             $payload = [
                 'district_name' => $request['district_name'],
@@ -202,34 +211,39 @@ trait VfmsLocationTrait
         }
     }
 
-    function mapVfmsTaxType($tax_type) {
+    function mapVfmsTaxType($tax_type)
+    {
         if ($tax_type == 'A' || $tax_type == 'B') {
             return VfmsTaxTypeMapping::A;
         } else if ($tax_type == 'C') {
             return VfmsTaxTypeMapping::C;
-        }  else if ($tax_type == 'D') {
+        } else if ($tax_type == 'D') {
             return VfmsTaxTypeMapping::D;
-        }  else if ($tax_type == 'E') {
+        } else if ($tax_type == 'E') {
             return VfmsTaxTypeMapping::E;
-        }  else if ($tax_type == 'F') {
+        } else if ($tax_type == 'F') {
             return VfmsTaxTypeMapping::F;
-        }  else if ($tax_type == 'G') {
+        } else if ($tax_type == 'G') {
             return VfmsTaxTypeMapping::G;
-        }else if ($tax_type == 'I') {
-                return VfmsTaxTypeMapping::I;
-        }else if ($tax_type == 'J') {
+        } else if ($tax_type == 'I') {
+            return VfmsTaxTypeMapping::I;
+        } else if ($tax_type == 'J') {
             return VfmsTaxTypeMapping::J;
+        } else if ($tax_type == 'K') {
+            return VfmsTaxTypeMapping::K;
         } else {
             return null;
         }
     }
 
-    function checkIfAssociated($businessUnit){
+    function checkIfAssociated($businessUnit)
+    {
         $checkBusinessUnit = VfmsBusinessUnit::where('unit_id', $businessUnit['unit_id'])->where('location_id', '!=', null)->exists();
         return $checkBusinessUnit;
     }
 
-    function sendnotificationToAdmin($message){
+    function sendnotificationToAdmin($message)
+    {
         $payload = [
             'message' => $message,
             'user_name' => null,
@@ -248,7 +262,7 @@ trait VfmsLocationTrait
         $access_token = (new ApiAuthenticationService)->getAccessToken();
 
         if ($access_token) {
-            $authorization = "Authorization: Bearer ". $access_token;
+            $authorization = "Authorization: Bearer " . $access_token;
 
             $payload = ['location_info' => $request];
 
@@ -275,19 +289,19 @@ trait VfmsLocationTrait
             Log::info('VFMS: Post ward to Vfms End!');
             Log::channel('vfms')->info($response);
             $response = json_decode($response);
-            if (isset($response->error)){
+            if (isset($response->error)) {
                 return [
                     'message' => $response->error,
                     'code' => $statusCode
                 ];
             }
-            if (isset($response->statusCode)){
+            if (isset($response->statusCode)) {
                 return [
                     'message' => $response->statusMessage,
                     'code' => $response->statusCode
                 ];
             }
-            $message =  $response->message;
+            $message = $response->message;
             curl_close($curl);
             return [
                 'message' => $message,
@@ -303,7 +317,8 @@ trait VfmsLocationTrait
         }
     }
 
-    public function getLocationBusinessUnits($previous_zno, $location_id){
+    public function getLocationBusinessUnits($previous_zno, $location_id)
+    {
         return VfmsBusinessUnit::where('znumber', $previous_zno)
             ->where('location_id', $location_id)
             ->where('is_headquarter', true)
@@ -339,9 +354,10 @@ trait VfmsLocationTrait
         return $tree;
     }
 
-    private function removeAssociatedBusinessUnits(){
-        foreach ($this->response as $key => $item){
-            if ($this->checkIfAssociated($item)){
+    private function removeAssociatedBusinessUnits()
+    {
+        foreach ($this->response as $key => $item) {
+            if ($this->checkIfAssociated($item)) {
                 unset($this->response[$key]);
             }
         }

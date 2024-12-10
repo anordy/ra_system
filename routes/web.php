@@ -46,6 +46,7 @@ use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\Extension\ExtensionController;
+use App\Http\Controllers\Finances\CashBookController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Installment\InstallmentController;
 use App\Http\Controllers\Installment\InstallmentRequestController;
@@ -201,6 +202,9 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
 
     Route::prefix('property-tax')->name('property-tax.')->group(function () {
         Route::get('/index', [PropertyTaxController::class, 'index'])->name('index');
+        Route::get('/paid-payments', [PropertyTaxController::class, 'paidPayments'])->name('payments.paid');
+        Route::get('/unpaid-payments', [PropertyTaxController::class, 'unpaidPayments'])->name('payments.unpaid');
+        Route::get('/non-generated-payments', [PropertyTaxController::class, 'nonGenBills'])->name('payments.non-gen-bills');
         Route::get('/show/{id}', [PropertyTaxController::class, 'show'])->name('show');
         Route::get('/index/next-bills', [PropertyTaxController::class, 'nextBills'])->name('next.bills');
         Route::get('/get/bill/{id}', [PropertyTaxController::class, 'getBill'])->name('bill');
@@ -254,6 +258,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::resource('/penalty-rates', PenaltyRateController::class);
         Route::resource('/zrb-bank-accounts', ZrbBankAccountController::class);
         Route::get('/subvat/taxtypes', [TaxTypeController::class, 'vat'])->name('subvat.taxtypes');
+        Route::get('/viable/taxtypes', [TaxTypeController::class, 'changes'])->name('viable.change');
         Route::get('/setting-system-categories/view', [SystemSettingsController::class, 'setting_categories'])->name('setting-system-categories.view');
         Route::get('/system-settings/view', [SystemSettingsController::class, 'system_settings'])->name('system-settings.view');
         Route::get('financial-years', [FinancialYearsController::class, 'index'])->name('financial-years');
@@ -353,6 +358,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
         Route::get('/change-taxtype', [BusinessController::class, 'taxTypeRequests'])->name('taxTypeRequests');
         Route::get('/change-taxtype/{id}', [BusinessController::class, 'viewTaxTypeRequest'])->name('viewTaxTypeRequest');
+        Route::get('/query', [BusinessController::class, 'searchQuery'])->name('search.query');
 
         Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
         Route::get('/branches/{branch}', [BranchController::class, 'show'])->name('branches.show');
@@ -527,6 +533,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/approved', [TaxVerificationsController::class, 'approved'])->name('approved');
         Route::get('/pending', [TaxVerificationsController::class, 'pending'])->name('pending');
         Route::get('/unpaid', [TaxVerificationsController::class, 'unpaid'])->name('unpaid');
+        Route::get('/initiate', [TaxVerificationsController::class, 'initiate'])->name('initiate');
         Route::get('/show/{verification}', [TaxVerificationsController::class, 'show'])->name('show');
         Route::get('/edit/{verification}', [TaxVerificationsController::class, 'edit'])->name('edit');
     });
@@ -840,6 +847,13 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/taxpayer/ledger/{businessLocationId}/tax/{taxTypeId}', [TaxpayerLedgerController::class, 'show'])->name('taxpayer.ledger.show');
         Route::get('/taxpayer/ledger/{businessLocationId}/summary', [TaxpayerLedgerController::class, 'summary'])->name('taxpayer.ledger.summary');
         Route::get('/taxpayer/ledger/{businessId}/summary/business', [TaxpayerLedgerController::class, 'businessSummary'])->name('taxpayer.ledger.business-summary');
+        Route::get('/control-numbers', [TaxpayerLedgerController::class, 'controlNumbers'])->name('taxpayer.ledger.control-numbers');
+        Route::get('/view-payment/{id}', [TaxpayerLedgerController::class, 'showPayment'])->name('taxpayer.ledger.payment.show');
+
+        Route::prefix('cashbook')->as('cashbook.')->group(function () {
+            Route::get('/', [CashBookController::class, 'index'])->name('index');
+            Route::get('/show/{accountNum}', [CashBookController::class, 'show'])->name('show');
+        });
     });
 
     Route::prefix('public-service')->as('public-service.')->group(function () {

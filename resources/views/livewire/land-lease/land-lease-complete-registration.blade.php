@@ -94,7 +94,7 @@
         <div class="row pt-3">
             <x-input name="dpNumber" label="DP Number" required></x-input>
             <x-input name="commenceDate" label="Commence Date" type='date' required></x-input>
-            <x-input name="rentCommenceDate" label="Rent Commence Date" type='date' required></x-input>
+            <x-input name="rentCommenceDate" label="ZIDRAS Commence Date" type='date' required></x-input>
             <x-input name="area" x-data x-mask:dynamic="$money($input)" label="Area" type='text' required></x-input>
             <x-input name="usedFor" label="Lease For" type='text' required></x-input>
             <div class="col-md-4 form-group">

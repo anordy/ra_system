@@ -137,5 +137,9 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowMvrTemporaryTransportSeeder::class);
         $this->call(CharteredConfigSeeder::class);
         $this->call(HotelNatureSeeder::class);
+        $this->call(CountriesPhoneCodeTableSeeder::class);
+        $this->call(NtrSocialAccountsSeeder::class);
+        $this->call(NtrBusinessCategorySeeder::class);
+        $this->call(NtrBusinessAttachmentTypeSeeder::class);
     }
 }

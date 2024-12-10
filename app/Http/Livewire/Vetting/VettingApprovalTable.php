@@ -135,13 +135,13 @@ class VettingApprovalTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return "{$row->location->name}";
+                    return $row->location->name ?? 'N/A';
                 }),
             Column::make('Tax Region', 'location.tax_region_id')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return "{$row->location->taxRegion->name}";
+                    return $row->location->taxRegion->name ?? 'N/A';
                 }),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()

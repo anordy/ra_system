@@ -29,31 +29,31 @@
                 @can('verification-view-all')
                     <div id="all-verifications" class="tab-pane fade active show p-3">
                         <livewire:verifications.verifications-filter tablename="verifications.assessments-table" />
-                        <livewire:verifications.assessments-table status="{{ \App\Enum\TaxVerificationStatus::PENDING }}" />
+                        <livewire:verifications.verification-assessment-table department="ALL" status="{{ \App\Enum\TaxVerificationStatus::PENDING }}" />
                     </div>
                 @endcan
                 @can('verification-view-domestic-taxpayers')
                     <div id="domestic-verifications" class="tab-pane fade p-3">
                         <livewire:verifications.verifications-filter tablename="verifications.d-t-d-assessments-table" />
-                        <livewire:verifications.d-t-d-assessments-table status="{{ \App\Enum\TaxVerificationStatus::PENDING }}" />
+                        <livewire:verifications.verification-assessment-table department="{{ \App\Models\Region::DTD }}" status="{{ \App\Enum\TaxVerificationStatus::PENDING }}" />
                     </div>
                 @endcan
                 @can('verification-view-lto-taxpayers')
                     <div id="lto-verifications" class="tab-pane fade p-3">
                         <livewire:verifications.verifications-filter tablename="verifications.l-t-o-assessments-table" />
-                        <livewire:verifications.l-t-o-assessments-table status="{{ \App\Enum\TaxVerificationStatus::PENDING }}" />
+                        <livewire:verifications.verification-assessment-table department="{{ \App\Models\Region::LTD }}" status="{{ \App\Enum\TaxVerificationStatus::PENDING }}" />
                     </div>
                 @endcan
                 @can('verification-view-non-tax-revenue-taxpayers')
                     <div id="ntr-verifications" class="tab-pane fade p-3">
                         <livewire:verifications.verifications-filter tablename="verifications.n-t-r-assessments-table" />
-                        <livewire:verifications.n-t-r-assessments-table status="{{ \App\Enum\TaxVerificationStatus::PENDING }}" />
+                        <livewire:verifications.verification-assessment-table department="{{ \App\Models\Region::NTRD }}" status="{{ \App\Enum\TaxVerificationStatus::PENDING }}" />
                     </div>
                 @endcan
                 @can('verification-view-pemba')
                     <div id="pemba-verifications" class="tab-pane fade p-3">
                         <livewire:verifications.verifications-filter tablename="verifications.pemba-assessments-table" />
-                        <livewire:verifications.pemba-assessments-table status="{{ \App\Enum\TaxVerificationStatus::PENDING }}" />
+                        <livewire:verifications.verification-assessment-table department="{{ \App\Models\Region::PEMBA }}" status="{{ \App\Enum\TaxVerificationStatus::PENDING }}" />
                     </div>
                 @endcan
             </div>

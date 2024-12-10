@@ -29,7 +29,17 @@
             Paid Partially
         </span>
 @elseif($value)
-    <span class="badge badge-secondary py-1 px-2 text-uppercase">
+    {{ $value }}
+
+    @if($row->is_nill)
+        <span class="badge badge-success py-1 px-2">
+            <i class="bi bi-check-circle-fill mr-1"></i>
+            {{ __('Nill') }}
+        </span>
+    @else
+        <span class="badge badge-secondary py-1 px-2 text-uppercase">
         {{ $value }}
     </span>
+    @endif
+
 @endif

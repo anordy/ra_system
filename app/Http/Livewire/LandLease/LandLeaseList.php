@@ -49,33 +49,22 @@ class LandLeaseList extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make("DP Number", "dp_number")
-                ->searchable()
-                ->sortable(),
-            Column::make("Applicant Type", "category")
-                ->format(function ($value) {
-                    return ucwords($value);
-                })
-                ->searchable()
-                ->sortable(),
-
-            Column::make("Lease For", "lease_for")
-                ->searchable()
-                ->sortable(),
-            Column::make("Area", "area")
+                ->searchable(),
+            Column::make("Name", "business_location_id")
                 ->format(function ($value, $row) {
-                    return number_format($value);
+                    if ($row->category === 'business') {
+                        return $row->location->name ?? 'N/A';
+                    } else {
+                        return $row->taxpayer->full_name ?? 'N/A';
+                    }
                 })
-                ->searchable()
-                ->sortable(),
+                ->searchable(),
             Column::make("Region", "region.name")
-                ->searchable()
-                ->sortable(),
+                ->searchable(),
             Column::make("District", "district.name")
-                ->searchable()
-                ->sortable(),
+                ->searchable(),
             Column::make("Ward", "ward.name")
-                ->searchable()
-                ->sortable(),
+                ->searchable(),
             Column::make('Payment Amount (USD)', 'payment_amount')
                 ->format(function ($value, $row) {
                     return number_format($value);

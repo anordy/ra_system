@@ -40,6 +40,27 @@ class PropertyTaxController extends Controller
         return view('property-tax.next-financial-year-bills');
     }
 
+    public function paidPayments() {
+        if (!Gate::allows('properties-registrations')) {
+            abort(403);
+        }
+        return view('property-tax.payment.paid');
+    }
+
+    public function unpaidPayments() {
+        if (!Gate::allows('properties-registrations')) {
+            abort(403);
+        }
+        return view('property-tax.payment.unpaid');
+    }
+
+    public function nonGenBills() {
+        if (!Gate::allows('properties-registrations')) {
+            abort(403);
+        }
+        return view('property-tax.payment.non-gen-bills');
+    }
+
     public function getBill($id){
         if (!Gate::allows('properties-registrations')) {
             abort(403);

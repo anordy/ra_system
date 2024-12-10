@@ -165,36 +165,38 @@
 
                     @endif
 
-                @endif
-
-                @if($duration === \App\Enum\ReportStatus::range)
-                    <div class="col-md-4 form-group">
-                        <label class="d-flex justify-content-between">
+                    @if($duration === \App\Enum\ReportStatus::range)
+                        <div class="col-md-4 form-group">
+                            <label class="d-flex justify-content-between">
                             <span>
                                 Start Date
                             </span>
-                        </label>
-                        <input type="date" wire:model.defer="start_date" class="form-control">
-                        @error('start_date')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                            </label>
+                            <input type="date" wire:model.defer="start_date" class="form-control">
+                            @error('start_date')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
                         </div>
-                        @enderror
-                    </div>
-                    <div class="col-md-4 form-group">
-                        <label class="d-flex justify-content-between'">
+                        <div class="col-md-4 form-group">
+                            <label class="d-flex justify-content-between'">
                             <span>
                                 End Date
                             </span>
-                        </label>
-                        <input type="date" wire:model.defer="end_date" class="form-control">
-                        @error('end_date')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                            </label>
+                            <input type="date" wire:model.defer="end_date" class="form-control">
+                            @error('end_date')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
                         </div>
-                        @enderror
-                    </div>
+                    @endif
+
+
                 @endif
+
 
             @endforeach
         @endif
@@ -220,7 +222,10 @@
             @enderror
         </div>
         <div class="col-md-4">
-            <button class="btn btn-primary btn-cm" wire:click="submit">Submit</button>
+            <button class="btn btn-primary btn-cm" wire:click="submit" wire:loading.attr="disabled">
+                <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
+                   wire:target="submit"></i>
+                Submit</button>
         </div>
 
         @if ($fileName)

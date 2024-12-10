@@ -57,6 +57,7 @@ class TaxType extends Model implements Auditable
 
     public const CHARTERED_FLIGHT = 'chartered-flight';
 
+    public const VAT_ELECTRONIC_SERVICES = 'vat-electronic-services';
 
     protected $fillable = [
         'name', 'gfs_code', 'is_approved', 'is_updated', 'category', 'code'

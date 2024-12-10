@@ -3,9 +3,10 @@
 namespace App\Http\Livewire\Business;
 
 use App\Models\Returns\TaxReturn;
-use App\Traits\WithSearch;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\WorkflowTask;
 use App\Traits\CustomAlert;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -17,7 +18,9 @@ class LocationReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::where('location_id', $this->locationId);
+        return TaxReturn::with('pinstance')
+            ->where('location_id', $this->locationId)
+            ->orderByDesc('tax_returns.financial_month_id');
     }
 
     public function configure(): void
@@ -36,42 +39,42 @@ class LocationReturnsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Principal', 'principal')
-                ->format(function ($value, $row){
+                ->format(function ($value, $row) {
                     return number_format($value, 2);
                 }),
-            Column::make('Penalties', 'penalty')->format(function ($value, $row){
+            Column::make('Penalties', 'penalty')->format(function ($value, $row) {
                 return number_format($value, 2);
             }),
-            Column::make('Interest', 'interest')->format(function ($value, $row){
+            Column::make('Interest', 'interest')->format(function ($value, $row) {
                 return number_format($value, 2);
             }),
             Column::make('Total', 'total_amount')
-            ->format(function ($value, $row){
-                return number_format($value, 2);
-            }),
+                ->format(function ($value, $row) {
+                    return number_format($value, 2);
+                }),
             Column::make('Outstanding Amount', 'outstanding_amount')
-                ->format(function ($value, $row){
+                ->format(function ($value, $row) {
                     return number_format($value, 2);
                 }),
             Column::make('Currency', 'currency'),
             Column::make('Financial Month', 'financial_month_id')
-                ->format(function ($value, $row){
+                ->format(function ($value, $row) {
                     return "{$row->financialMonth->name} {$row->financialMonth->year->code}";
-                })->sortable()->searchable(),
-            Column::make('Return Category', 'return_category')
-                ->format(function ($value){
-                    return ucfirst($value);
-                })->sortable()->searchable(),
+                })->searchable(),
             Column::make('Payment Status', 'payment_status')
                 ->view('finance.includes.status')->sortable()->searchable(),
-            Column::make('Filing Due Date', 'filing_due_date')
-                ->format(function ($value){
+            Column::make('Filing Due Date', 'curr_filing_due_date')
+                ->format(function ($value) {
                     return $value->toFormattedDateString();
                 }),
-            Column::make('Current Filing Due Date', 'curr_filing_due_date')
-                ->format(function ($value){
-                    return $value->toFormattedDateString();
-                })->sortable()->searchable(),
+            Column::make('Filed On', 'created_at')
+                ->format(function ($value) {
+                    return $value ? Carbon::create($value)->format('M d, Y H:i') : 'N/A';
+                }),
+            Column::make('Approved On', 'pinstance.approved_on')
+                ->format(function ($value) {
+                    return $value ? Carbon::create($value)->format('M d, Y H:i') : 'N/A';
+                }),
         ];
     }
 

@@ -1754,7 +1754,8 @@ class CountriesTableSeeder extends Seeder
     ];
 
         foreach($nations as $nation){
-            Country::updateOrcreate([
+            Country::updateOrcreate(
+                [
                 'name' => $nation['en_short_name'],
                 'nationality' => $nation['nationality'],
                 'code' => $nation['alpha_2_code'],

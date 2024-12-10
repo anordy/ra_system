@@ -367,6 +367,26 @@ function getSignature($modelInstance)
 
 }
 
+function custom_dispatch($job, $time = null): int
+{
+    if ($time) {
+        return app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job->delay($time));
+    }
+    return app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job);
+}
+
+function getDepartment($id)
+{
+    if (!empty($id)) {
+        $department = \App\Models\ReportRegister\Department::find($id, ['name']);
+
+        if ($department) {
+            return $department->name;
+        }
+    }
+    return 'N/A';
+}
+
 function getHotelStarByLocationId($location_id)
 {
     $businessHotel = \App\Models\BusinessHotel::query()

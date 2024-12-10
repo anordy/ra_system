@@ -47,10 +47,10 @@ class LandLeaseRegistrationApproveList extends DataTableComponent
                 ->format(function ($value, $row) {
                     return $row['rn'];
                 })
-                ->searchable()
+                ->sortable(),
+            Column::make("Document Name", 'file.name')
                 ->sortable(),
             Column::make("Created Date", 'created_at')
-                ->searchable()
                 ->sortable(),
             Column::make("Completed By", 'completed_by')
                 ->format(
@@ -58,10 +58,8 @@ class LandLeaseRegistrationApproveList extends DataTableComponent
                        return $this->getInitiator($row['completed_by']) ?? '';
                     }
                 )
-                ->searchable()
                 ->sortable(),
-            Column::make('Completed Date', 'completed_at')
-                ->sortable(),
+            Column::make('Completed Date', 'completed_at'),
             Column::make("Approval Status", "approval_status")->view("land-lease.includes.registration-approval-status"),
             Column::make("Reject Reason", "comments")
                 ->format(function ($value, $row) {
@@ -98,7 +96,7 @@ class LandLeaseRegistrationApproveList extends DataTableComponent
 
     public function getInitiator($id)
     {
-        $initiator = User::find($id);
+        $initiator = User::find($id, ['fname', 'lname']);
         if ($initiator){
             return $initiator->fname . ' ' . $initiator->lname;
         }
