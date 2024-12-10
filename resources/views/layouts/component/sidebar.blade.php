@@ -114,38 +114,38 @@
             </li>
         @endcan
 
-        @can("tax-consultant")
+        @can("non-tax-residence")
             <li class="{{ request()->is("ntr*") ? "active" : "" }}">
                 <a href="#ntrSubmenu" data-toggle="collapse"
                    aria-expanded="{{ request()->is("ntr*") ? "true" : "false" }}" class="dropdown-toggle">Digital
                     Services Taxation</a>
                 <ul class="collapse list-unstyled {{ request()->is("ntr*") ? "show" : "" }}" id="ntrSubmenu">
-                    @can("tax-consultant-registration-view")
+                    @can("non-tax-resident-view-business")
                         <li class="{{ request()->is("ntr/business") ? "active" : "" }}">
                             <a href="{{ route("ntr.business.index") }}">Registered Businesses</a>
                         </li>
                     @endcan
-                    @can("active-tax-consultant-view")
+                    @can("non-tax-resident-view-tax-returns")
                         <li class="{{ request()->is("ntr/filed-returns*") ? "active" : "" }}">
                             <a href="{{ route("ntr.returns.index") }}">Filed Tax Returns</a>
                         </li>
                     @endcan
-                    @can("active-tax-consultant-view")
+                    @can("non-tax-resident-view-tax-returns")
                         <li class="{{ request()->is("ntr/non-filers*") ? "active" : "" }}">
                             <a href="{{ route("ntr.returns.non-filers") }}">Non Filers</a>
                         </li>
                     @endcan
-                    @can("active-tax-consultant-view")
+                    @can("non-tax-resident-view-tax-returns")
                         <li class="{{ request()->is("ntr/cancelled-returns*") ? "active" : "" }}">
                             <a href="{{ route("ntr.returns.cancelled") }}">Cancelled Tax Returns</a>
                         </li>
                     @endcan
-                    @can("tax-consultant-renewal-requests-view")
+                    @can("non-tax-resident-view-de-registrations")
                         <li class="{{ request()->is("ntr/business/de-registrations*") ? "active" : "" }}">
                             <a href="{{ route("ntr.business.de-registration.index") }}">Business De-registrations</a>
                         </li>
                     @endcan
-                    @can("tax-consultant-renewal-requests-view")
+                    @can("non-tax-resident-view-business-updates")
                         <li class="{{ request()->is("ntr/business/updates*") ? "active" : "" }}">
                             <a href="{{ route("ntr.business.updates.index") }}">Business Updates</a>
                         </li>
