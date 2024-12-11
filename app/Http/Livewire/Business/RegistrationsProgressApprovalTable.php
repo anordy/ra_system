@@ -27,7 +27,7 @@ class RegistrationsProgressApprovalTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects('pinstance_type', 'user_type');
+        $this->setAdditionalSelects(['pinstance_type', 'user_type']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -53,7 +53,7 @@ class RegistrationsProgressApprovalTable extends DataTableComponent
                 ->label(fn ($row) => $row->pinstance->taxpayer_name ?? 'N/A')
                 ->searchable(function (Builder $query, $searchTerm) {
                     return $query->orWhereHas('pinstance', function ($query) use ($searchTerm) {
-                        $query->whereRaw(DB::raw("LOWER(taxpayer_name) like '%' || LOWER('$searchTerm') || '%'"));
+                       // $query->whereRaw(DB::raw("LOWER(taxpayer_name) like '%' || LOWER('$searchTerm') || '%'"));
                     });
                 }),
             Column::make('TIN', 'pinstance.tin')

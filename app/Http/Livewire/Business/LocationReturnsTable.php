@@ -18,8 +18,7 @@ class LocationReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxReturn::with('pinstance')
-            ->where('location_id', $this->locationId)
+        return TaxReturn::where('location_id', $this->locationId)
             ->orderByDesc('tax_returns.financial_month_id');
     }
 
@@ -71,7 +70,7 @@ class LocationReturnsTable extends DataTableComponent
                 ->format(function ($value) {
                     return $value ? Carbon::create($value)->format('M d, Y H:i') : 'N/A';
                 }),
-            Column::make('Approved On', 'pinstance.approved_on')
+            Column::make('Approved On', 'approved_on')
                 ->format(function ($value) {
                     return $value ? Carbon::create($value)->format('M d, Y H:i') : 'N/A';
                 }),
