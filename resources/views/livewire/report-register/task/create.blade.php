@@ -117,14 +117,17 @@
                             <input type="text" wire:model.defer="files.{{ $index }}.name" class="form-control"
                                    placeholder="Enter Document Name" value="{{ $file["name"] }}">
                             @error("files.$index.name")
-                            <span class="text-danger">{{ __("Please Enter Name of The Document") }}</span>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <input type="file" wire:model.defer="files.{{ $index }}.file" class="form-control">
+                            <input type="file" wire:model="files.{{ $index }}.file" class="form-control">
                             @error("files.$index.file")
-                            <span
-                                class="text-danger">{{ __("Please Upload Valid Document File  In PDF or EXCEL Format") }}</span>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                             @enderror
                         </div>
                         @if ($index > 0)

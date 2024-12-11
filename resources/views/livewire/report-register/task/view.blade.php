@@ -7,13 +7,11 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-    @else
-
     @endif
 
     <div class="card">
         <div class="card-header">
-            <h5> Report Title: #{{ $task->code }} {{ $task->title ?? 'N/A' }}</h5>
+            <h5> Task Title: #{{ $task->code }} {{ $task->title ?? 'N/A' }}</h5>
             @include('report-register.task.includes.status', ['status' => $task->status])
             <div class="card-tools">
                 {{ $task->created_at->format('d M, Y H:i') }}
@@ -46,7 +44,7 @@
                     <span class="font-weight-bold text-uppercase">Description</span>
                     <p class="my-1">{{ $task->description ?? 'N/A'  }}</p>
                 </div>
-                @include('report-register.incident.includes.attachments')
+                @include('report-register.incident.includes.attachments', ['incident' => $task])
             </div>
         </div>
     </div>
@@ -71,6 +69,7 @@
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active card p-2" id="assignment" role="tabpanel"
              aria-labelledby="assignment-tab">
+            @if($task->status != \App\Enum\ReportRegister\RgTaskStatus::CLOSED)
             <div class="row m-4">
                 <div class="col-md-3 mb-3">
                     <div class="form-group">
@@ -119,7 +118,7 @@
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                
+
             </div>
             <hr>
             <section class="content-item" id="comment">
@@ -139,9 +138,7 @@
                         </div>
                     </div>
                     <div class="row pt-2">
-                        <div class="col-md-1">
-
-                        </div>
+                        <div class="col-md-1"></div>
                         <div class="form-group col-md-6">
                             <button wire:click="saveComment()" class="btn btn-primary float-right"><i
                                         class="bi bi-chat-left-fill"></i> Save Comment
@@ -151,6 +148,10 @@
                     @include('report-register.incident.includes.comments', ['incident' => $task])
                 </div>
             </section>
+            @else
+                <p>No Actions Available as this Task has been Closed</p>
+            @endif
+
         </div>
         <div class="tab-pane fade card p-2" id="audits" role="tabpanel" aria-labelledby="audits-tab">
             @include('report-register.incident.includes.audits', ['incident' => $task])

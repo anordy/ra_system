@@ -74,7 +74,7 @@ class CreateTask extends Component
             $attachments = [];
 
             foreach ($this->files ?? [] as $file) {
-                if (isset($file['file']) && !$file['file']) {
+                if (isset($file['file']) && $file['file']) {
                     $filePath = $file['file']->store('tasks', 'local');
                     if ($filePath) {
                         $attachments[] = [
