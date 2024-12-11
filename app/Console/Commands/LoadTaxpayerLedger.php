@@ -51,8 +51,7 @@ class LoadTaxpayerLedger extends Command
      */
     public function handle()
     {
-        $this->addDebitNumberToCredits();
-//        return;
+
         try {
             $this->line('Recording tax returns ledgers');
 
@@ -85,10 +84,10 @@ class LoadTaxpayerLedger extends Command
                     );
 
                     if (!$ledger) throw new \Exception('Failed to save ledger');
+
+                    unset($return);
                 }
             });
-
-            $this->addSourceTypesToPaymentItems();
 
             $this->line('Recording payments ledgers');
 
@@ -122,13 +121,16 @@ class LoadTaxpayerLedger extends Command
                                     'interest_amount' => 0,
                                     'penalty_amount' => 0,
                                     'total_amount' => $payment->bill->paid_amount,
-//                                    'debit_no' => $item->ledger->debit_no
+                                    'debit_no' => TaxpayerLedger::where('source_type', $payment->bill->billable_type)->where('source_id', $payment->bill->billable_id)->where('transaction_type', TransactionType::DEBIT)->first()->debit_no ?? null
                                 ]
                             );
                             if (!$ledger) throw new \Exception('Failed to save ledger');
                         }
 
                     }
+
+                    unset($payment);
+
 
                 }
             });
@@ -162,6 +164,9 @@ class LoadTaxpayerLedger extends Command
                     );
 
                     if (!$ledger) throw new \Exception('Failed to save ledger');
+
+                    unset($assessment);
+
                 }
             });
 
@@ -176,11 +181,9 @@ class LoadTaxpayerLedger extends Command
                         ->get();
 
                     $ledger->outstanding_amount = abs($ledger->total_amount - $credits->sum('total_amount'));
-
-                    if ($ledger->outstanding_amount == 0 && $ledger->payment_status) {
-                        $ledger->payment_status = ReturnStatus::COMPLETE;
-                    }
                     $ledger->save();
+
+                    unset($ledger);
                 }
             });
 
@@ -191,38 +194,6 @@ class LoadTaxpayerLedger extends Command
         return 0;
     }
 
-    private function addSourceTypesToPaymentItems() {
-        $paymentItems = TaxpayerLedgerPaymentItem::query()->get();
-
-        $count = 0;
-        foreach ($paymentItems as $paymentItem) {
-            if ($paymentItem->ledger) {
-                $paymentItem->update([
-                    'source_type' => $paymentItem->ledger->source_type,
-                    'source_id' => $paymentItem->ledger->source_id,
-                ]);
-            } else {
-                $count++;
-            }
-        }
-        $this->info("Skipped {$count} payment items as they dont have a linked ledger");
-
-    }
-
-    private function addDebitNumberToCredits() {
-        $paymentItems = TaxpayerLedger::query()->where('transaction_type', TransactionType::CREDIT)->get();
-
-        foreach ($paymentItems as $paymentItem) {
-                $ledger = TaxpayerLedger::query()->where('source_type', $paymentItem->source_type)
-                    ->where('source_id', $paymentItem->source_id)
-                    ->first();
-
-                $paymentItem->update([
-                   'debit_no' => $ledger->debit_no
-                ]);
-        }
-
-    }
 
     private function loadPartialPayments($payment) {
         // Get base payment

@@ -74,20 +74,7 @@ class PenaltyForDebt
         // Join return penalties & Debt penalties
         $tax_return->return->penalties = $tax_return->return->penalties->concat($tax_return->penalties)->sortBy('tax_amount');
 
-        if (count($tax_return->return->penalties) > 0) {
-            $outstanding_amount = $tax_return->return->penalties->last()->penalty_amount;
-        } else {
-            if ($tax_return->return_type != PetroleumReturn::class) {
-                $outstanding_amount = $tax_return->principal;
-            } else {
-                $outstanding_amount = $tax_return->principal + $tax_return->infrastructure;
-            }
-        }
-
-        // If return has waiver, use the waived amount as outstanding amount
-        if ($tax_return->waiver) {
-            $outstanding_amount = $tax_return->outstanding_amount;
-        }
+        $outstanding_amount = $tax_return->outstanding_amount;
 
         $curr_payment_due_date = Carbon::create($tax_return->curr_payment_due_date);
 
@@ -196,17 +183,6 @@ class PenaltyForDebt
     public static function generateAssessmentsPenalty($assessment)
     {
         $outstanding_amount = $assessment->outstanding_amount;
-
-        if (count($assessment->penalties) > 0) {
-            $outstanding_amount = $assessment->penalties->last()->penalty_amount;
-        } else {
-            $outstanding_amount = $assessment->principal;
-        }
-
-        // If assessment has waiver, use the waived amount as outstanding amount
-        if ($assessment->waiver) {
-            $outstanding_amount = $assessment->outstanding_amount;
-        }
 
         $curr_payment_due_date = Carbon::create($assessment->curr_payment_due_date);
 
