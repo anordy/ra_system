@@ -49,9 +49,21 @@
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Bill Created By</span>
                     <p class="my-1">
-                        {{ $bill->createdBy->fullName ?? '' }}
+                        {{ $bill->createdby_type == 'job' ? 'N/A' : $bill->createdBy->fullName }}
                     </p>
                 </div>
+                @if($bill->status == \App\Enum\GeneralConstant::PAID)
+                    <div class="col-md-3">
+                        <span class="font-weight-bold text-uppercase"> </span>
+                        <p class="my-1">
+                            <a target="_blank" href="{{ route('bill.receipt', encrypt($bill->id)) }}"
+                               class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                                <i class="bi bi-download mr-3"></i><u>Download Payment Receipt</u>
+                            </a>
+                        </p>
+                    </div>
+                @endif
+
             </div>
             <x-bill-structure :bill="$bill" :withCard="false" />
         </div>
@@ -78,7 +90,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Paid At</span>
-                        <p class="my-1 text-uppercase">{{ $tnx->transaction_time?->toDayDateTimeString() ?? 'N/A' }}</p>
+                        <p class="my-1 text-uppercase">{{ $tnx->transaction_time ? $tnx->transaction_time->toDayDateTimeString() : 'N/A' }}</p>
                     </div>
                 @endif
                 @if($tnx = $bill->pbzReversal)
@@ -92,7 +104,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Reversed At</span>
-                        <p class="my-1 text-uppercase">{{ $tnx->transaction_time?->toDayDateTimeString() ?? 'N/A' }}</p>
+                        <p class="my-1 text-uppercase">{{ $tnx->transaction_time ? $tnx->transaction_time->toDayDateTimeString() : 'N/A' }}</p>
                     </div>
                 @endif
             </div>

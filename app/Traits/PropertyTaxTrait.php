@@ -222,5 +222,34 @@ trait PropertyTaxTrait
 
         return $urn;
     }
+
+    public function getPayableFinancialYear($propertyId)
+    {
+        try {
+            $latestPayment = PropertyPayment::query()
+                ->select('financial_year_id')
+                ->where('property_id', $propertyId)
+                ->latest()
+                ->first();
+
+            if (!$latestPayment || !$latestPayment->year) {
+                throw new \Exception('Missing Latest Property Payment');
+            }
+
+            $financialYearCode = $latestPayment->year->code + 1;
+
+            $nextYear = Carbon::now()->year + 1;
+
+            if ($financialYearCode >= $nextYear) {
+                return null;
+            }
+
+            return FinancialYear::select('id', 'code')->where('code', $financialYearCode)->first();
+        } catch (\Exception $exception) {
+            Log::error('PROPERTY-TAX-GET-VIABLE-FINANCIAL-YEAR', [$exception]);
+            throw $exception;
+        }
+    }
+
 }
 

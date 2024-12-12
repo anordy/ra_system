@@ -3,10 +3,10 @@
 @section('title', 'View Property')
 
 @section('content')
-    @if ($property->status === \App\Enum\PropertyStatus::APPROVED)
+    @if($property->status === \App\Enum\PropertyStatus::APPROVED && $property->latestPayment)
         <div class="row mx-1">
             <div class="col-md-12">
-                <livewire:property-tax.property-tax-payment :payment="$property->payment"/>
+                <livewire:property-tax.property-tax-payment :payment="$property->latestPayment" />
             </div>
         </div>
     @endif

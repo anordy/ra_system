@@ -301,4 +301,33 @@ trait TaxpayerLedgerTrait
         }
     }
 
+    public function updateLedger($sourceType, $sourceId, $principalAmount, $interestAmount, $penaltyAmount, $totalAmount)
+    {
+        try {
+
+            $ledger = TaxpayerLedger::updateOrCreate(
+                [
+                    'source_type' => $sourceType,
+                    'source_id' => $sourceId,
+                    'transaction_type' => TransactionType::DEBIT,
+                ],
+                [
+                'source_type' => $sourceType,
+                'source_id' => $sourceId,
+                'principal_amount' => $principalAmount,
+                'interest_amount' => $interestAmount,
+                'penalty_amount' => $penaltyAmount,
+                'total_amount' => $totalAmount,
+                'outstanding_amount' => $totalAmount,
+            ]);
+
+            if (!$ledger) throw new \Exception('Failed to save ledger transaction');
+
+        } catch (\Exception $exception) {
+            Log::error('TRAITS-TAXPAYER-LEDGER-TRAIT-RECORD-LEDGER', [$exception]);
+            throw $exception;
+        }
+    }
+
+
 }

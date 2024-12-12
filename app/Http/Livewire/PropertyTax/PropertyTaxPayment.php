@@ -2,23 +2,74 @@
 
 namespace App\Http\Livewire\PropertyTax;
 
+use App\Enum\BillStatus;
+use App\Enum\CustomMessage;
+use App\Enum\GeneralConstant;
+use App\Enum\PropertyPaymentCategoryStatus;
+use App\Models\Currency;
+use App\Models\PropertyTax\PropertyPayment;
 use App\Services\ZanMalipo\GepgResponse;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
+use App\Traits\PropertyTaxTrait;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class PropertyTaxPayment extends Component
 {
-    use CustomAlert, PaymentsTrait, GepgResponse;
+    use CustomAlert, PaymentsTrait, GepgResponse, PropertyTaxTrait;
 
-    public $payment;
+    public $payment, $viableFinancialYear;
 
     public function mount($payment)
     {
         $this->payment = $payment;
+        $this->viableFinancialYear = $this->getPayableFinancialYear($this->payment->property_id);
     }
+
+    public function generateFinancialYearPayment() {
+        try {
+            $amount = $this->payment->amount ?? GeneralConstant::ZERO_INT;
+
+            if (!$amount || $amount <= GeneralConstant::ZERO_INT) {
+                $this->customAlert('warning', 'Property payment does not have amount');
+                return;
+            }
+
+            $dueDate = Carbon::now()->endOfYear();
+
+            if ($dueDate->lt(Carbon::now())) {
+                $dueDate = $dueDate->addMonth();
+            }
+
+            $propertyPayment = PropertyPayment::create([
+                'property_id' => $this->payment->property_id,
+                'financial_year_id' => $this->viableFinancialYear->id,
+                'currency_id' => Currency::select('id')->where('iso', 'TZS')->firstOrFail()->id,
+                'amount' => $amount,
+                'interest' => GeneralConstant::ZERO_INT,
+                'total_amount' => $amount,
+                'payment_date' => $dueDate,
+                'curr_payment_date' => $dueDate,
+                'payment_status' => BillStatus::SUBMITTED,
+                'payment_category' => PropertyPaymentCategoryStatus::NORMAL,
+            ]);
+
+            if (!$propertyPayment) throw new Exception('Failed to create property payment');
+
+            $this->generatePropertyTaxControlNumber($propertyPayment);
+
+            session()->flash('success', CustomMessage::RECEIVE_PAYMENT_SHORTLY);
+            return redirect(request()->header('Referer'));
+
+        } catch (Exception $exception) {
+            $this->customAlert('error', 'Bill could not be generated, please try again later.');
+            Log::error('GENERATE-FINANCIAL-YEAR', [$exception]);
+        }
+    }
+
 
     public function refresh()
     {

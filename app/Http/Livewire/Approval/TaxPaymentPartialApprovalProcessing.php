@@ -7,6 +7,7 @@ use App\Enum\ReturnStatus;
 use App\Events\SendSms;
 use App\Jobs\Bill\CancelBill;
 use App\Jobs\SendCustomSMS;
+use App\Models\TaxpayerLedger\TaxpayerLedgerBreakdown;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
@@ -48,6 +49,10 @@ class TaxPaymentPartialApprovalProcessing extends Component
                 $this->subject->approved_on = Carbon::now();
                 $this->subject->staff_id = Auth::id();
                 $this->subject->save();
+
+                $breakdowns = TaxpayerLedgerBreakdown::query()
+                    ->whereIn('ledger_id', json_decode($this->subject->ledger_ids))
+                    ->update(['status' => 1]);
 
                 // Cancel current control number if exists
                 $items = $this->subject->items ?? [];

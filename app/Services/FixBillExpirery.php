@@ -2,11 +2,71 @@
 
 namespace App\Services;
 
+use App\Jobs\Bill\CancelBill;
+use App\Jobs\Debt\GenerateControlNo;
 use App\Models\Audit;
+use App\Models\Debts\DebtPenalty;
+use App\Models\Returns\TaxReturn;
+use App\Traits\TaxpayerLedgerTrait;
 use Carbon\Carbon;
 
 class FixBillExpirery
 {
+    use TaxpayerLedgerTrait;
+
+    public function up($id) {
+        $return = TaxReturn::find($id);
+        $return->principal = $return->return->petroleum_levy;
+        $return->interest = 0;
+        $return->total_amount = $return->return->total_amount_due;
+        $return->outstanding_amount = $return->return->total_amount_due;
+        $return->save();
+
+        $this->updateLedger(TaxReturn::class, $return->id, $return->principal, 0, 0, $return->total_amount);
+    }
+
+    public function zp($id) {
+        $return = TaxReturn::find($id);
+
+        $return->principal = $return->return->petroleum_levy;
+        $return->interest = 0;
+        $return->total_amount = $return->return->total_amount_due;
+        $return->outstanding_amount = $return->return->total_amount_due;
+        $return->save();
+
+        $this->updateLedger(TaxReturn::class, $return->id, $return->principal, 0, 0, $return->total_amount);
+
+        $return = TaxReturn::find($id);
+
+        if ($return->latestBill) {
+            CancelBill::dispatch($return, 'Bill Adjustment');
+        }
+
+        GenerateControlNo::dispatch($return);
+    }
+
+    public function membe($id) {
+        $return = TaxReturn::find($id);
+
+        $return->interest = 14700;
+        $return->total_amount = 830700;
+        $return->outstanding_amount = 830700;
+
+        $return->save();
+
+        DebtPenalty::whereIn('id', ['16611', '19439'])->forceDelete();
+
+        $return = TaxReturn::find($id);
+
+        $this->updateLedger(TaxReturn::class, $return->id, $return->principal, 0, 0, $return->total_amount);
+
+        if ($return->latestBill) {
+            CancelBill::dispatch($return, 'Bill Adjustment');
+        }
+
+        GenerateControlNo::dispatch($return);
+
+    }
 
     public function run()
     {

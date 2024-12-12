@@ -79,4 +79,8 @@ class Property extends Model
     {
         return $this->morphOne(TaxpayerLedger::class, 'source');
     }
+
+    public function latestPayment(){
+        return $this->hasOne(PropertyPayment::class, 'property_id')->latest();
+    }
 }

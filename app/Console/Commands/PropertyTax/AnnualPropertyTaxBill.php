@@ -66,21 +66,19 @@ class AnnualPropertyTaxBill extends Command
 
         Property::query()
             ->where('status', PropertyStatus::APPROVED)
-            ->whereDoesntHave('payments', function ($query) use ($currentFinancialYear) {
-                $query->where('financial_year_id', $currentFinancialYear->id);
-            })
-//            ->whereYear('created_at', $year)
             ->chunk(100, function ($properties) use ($currentFinancialYear) {
                 foreach ($properties as $property) {
-                    $registrationYear = Carbon::create($property->created_at)->year;
-
-                    $doesPaymentExist = $property->payments->where('financial_year_id', $currentFinancialYear->id)->first();
+                    $doesPaymentExist = PropertyPayment::query()
+                        ->select('id')
+                        ->where('property_ud', $property->id)
+                        ->where('financial_year_id', $currentFinancialYear->id)
+                        ->first();
 
                     if (!$doesPaymentExist) {
-                        if ($registrationYear >= $currentFinancialYear->code) {
-                            $this->generateBill($property, $currentFinancialYear->id);
-                        }
+                        $this->generateBill($property, $currentFinancialYear->id);
                     }
+
+                    unset($property);
                 }
             });
     }
