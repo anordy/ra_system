@@ -1745,7 +1745,8 @@ trait PaymentsTrait
             }
 
 
-            $exchangeRate = $this->getExchangeRate(Currency::TZS);
+            $exchangeRate = $this->getExchangeRate($ledgerPayment->currency);
+
             $zmBill = ZmCore::createBill(
                 $ledgerPayment->id,
                 get_class($ledgerPayment),
