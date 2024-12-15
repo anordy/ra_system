@@ -47,7 +47,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('daily:reopen-business')->dailyAt('00:25')->runInBackground();
         $schedule->command('update:installment')->dailyAt('00:30')->runInBackground();
         $schedule->command('daily:delete-draft-businesses-exceed-seven-days')->dailyAt('00:45')->runInBackground();
-        $schedule->command('monthly:property-tax-bill-reminder')->dailyAt('00:55')->runInBackground();
         $schedule->command('app:ps-close')->dailyAt('01:00')->runInBackground();
         $schedule->command('app:ps-reopen')->dailyAt('01:02')->runInBackground();
         $schedule->command('app:ps-de-register')->dailyAt('01:04')->runInBackground();
