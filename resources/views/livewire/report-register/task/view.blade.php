@@ -90,7 +90,7 @@
                 <div class="col-md-3 mb-3">
                     <div class="form-group">
                         <label>Set Priority</label>
-                        <select wire:model.live="priority" class="form-control @error('priority') is-invalid @enderror">
+                        <select wire:model.live="priority" disabled class="form-control @error('priority') is-invalid @enderror">
                             <option value="">Select Priority</option>
                             @foreach ($priorities ?? [] as $priority)
                                 <option value="{{ $priority }}">{{ ucfirst($priority) }}</option>
