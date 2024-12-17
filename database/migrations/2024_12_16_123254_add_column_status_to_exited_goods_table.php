@@ -15,7 +15,6 @@ class AddColumnStatusToExitedGoodsTable extends Migration
     {
         Schema::table('exited_goods', function (Blueprint $table) {
             $table->string('exporter_name', 250)->nullable();
-            $table->string('exporter_name', 250)->nullable();
             $table->string('destination_country_code', 4)->nullable();
             $table->string('destination_country_name', 250)->nullable();
             $table->string('exit_status', 50)->nullable();
