@@ -197,9 +197,7 @@ trait PaymentsTrait
     public function cancelBill(ZmBill $bill, $cancellationReason)
     {
         if (config('app.env') != 'local') {
-            $cancelBill = (new ZanMalipoInternalService)->cancelBill($bill, $cancellationReason);
-
-            return $cancelBill;
+            return (new ZanMalipoInternalService)->cancelBill($bill, $cancellationReason);
         } else {
             $bill->status = PaymentStatus::CANCELLED;
             $bill->cancellation_reason = $cancellationReason ?? '';
@@ -1709,7 +1707,6 @@ trait PaymentsTrait
                 $ledger = $item->ledger;
                 $exchangeRate = $this->getExchangeRate($item->currency);
 
-
                 if ($ledger->taxtype->code != TaxType::AIRPORT_SERVICE_SAFETY_FEE &&
                     $ledger->taxtype->code != TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE &&
                     $ledger->taxtype->code != TaxType::VAT) {
@@ -1747,17 +1744,23 @@ trait PaymentsTrait
 
             $exchangeRate = $this->getExchangeRate($ledgerPayment->currency);
 
+            $business = $ledgerPayment->location->business;
+            $payerName = $business->name;
+            $payerEmail = $business->email ?? null;
+            $payerType = get_class($business);
+            $payerId = $business->id;
+
             $zmBill = ZmCore::createBill(
                 $ledgerPayment->id,
                 get_class($ledgerPayment),
                 0,
-                $ledgerPayment->taxpayer_id,
-                Taxpayer::class,
-                $ledgerPayment->taxpayer->fullname,
-                $ledgerPayment->taxpayer->email,
+                $payerId,
+                $payerType,
+                $payerName,
+                $payerEmail,
                 ZmCore::formatPhone($ledgerPayment->taxpayer->mobile),
                 Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
-                "Control number for Multiple Debits",
+                "Payment for Debit Number {$ledgerPayment->debit_numbers}",
                 ZmCore::PAYMENT_OPTION_EXACT,
                 $ledgerPayment->currency,
                 $exchangeRate,
