@@ -49,7 +49,7 @@
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Bill Created By</span>
                     <p class="my-1">
-                        {{ $bill->createdby_type == 'job' ? 'N/A' : $bill->createdBy->fullName }}
+                        {{ $bill->createdby_type == 'job' ? 'N/A' : ($bill->createdBy->fullName ?? 'N/A') }}
                     </p>
                 </div>
                 @if($bill->status == \App\Enum\GeneralConstant::PAID)
