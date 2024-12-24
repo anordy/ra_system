@@ -154,7 +154,6 @@ class UserAddModal extends Component
             $this->sign($user);
 
             event(new SendSms('user_add', $user->id));
-            // event(new SendMail('user_add', $user->id));
 
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

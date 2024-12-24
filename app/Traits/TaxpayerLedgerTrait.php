@@ -10,10 +10,12 @@ use App\Models\Installment\InstallmentItem;
 use App\Models\PartialPayment;
 use App\Models\Returns\TaxReturn;
 use App\Models\Sequence;
-use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\TaxpayerLedger\TaxpayerLedgerPayment;
+use App\Models\ZmBill;
+use App\Models\ZmPayment;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 trait TaxpayerLedgerTrait
@@ -89,6 +91,10 @@ trait TaxpayerLedgerTrait
 
             if (!$ledger) throw new \Exception('Failed to save ledger transaction');
 
+            if (config('app.env') == 'local') {
+                $this->postDebit($ledger);
+            }
+
         } catch (\Exception $exception) {
             Log::error('TRAITS-TAXPAYER-LEDGER-TRAIT-RECORD-LEDGER', [$exception]);
             throw $exception;
@@ -99,7 +105,7 @@ trait TaxpayerLedgerTrait
     {
         try {
 
-            if ( $interestAmount < 0 || $penaltyAmount < 0 || $totalAmount < 0) {
+            if ($interestAmount < 0 || $penaltyAmount < 0 || $totalAmount < 0) {
                 throw new \Exception('Invalid Amount provided');
             }
 
@@ -134,7 +140,8 @@ trait TaxpayerLedgerTrait
      * @return void
      * @throws \Exception
      */
-    public function recordDebitLedger($service, $fee, $taxTypeId, $taxpayerId = null){
+    public function recordDebitLedger($service, $fee, $taxTypeId, $taxpayerId = null)
+    {
         // Record ledger transaction
         $this->recordLedger(
             TransactionType::DEBIT,
@@ -150,15 +157,16 @@ trait TaxpayerLedgerTrait
         );
     }
 
-    public function generateDebitNumber() {
+    public function generateDebitNumber()
+    {
         try {
             $sequence = Sequence::where('name', Sequence::DEBIT_NUMBER)->first();
 
             if (!$sequence) {
                 $sequence = Sequence::create([
-                   'name' => Sequence::DEBIT_NUMBER,
-                   'prefix' => 'TDN',
-                   'next_id' => 1
+                    'name' => Sequence::DEBIT_NUMBER,
+                    'prefix' => 'TDN',
+                    'next_id' => 1
                 ]);
             }
 
@@ -188,12 +196,12 @@ trait TaxpayerLedgerTrait
                 $billableId = $billable->payment_id;
             }
 
-            if($billableType === InstallmentItem::class){
+            if ($billableType === InstallmentItem::class) {
                 $billableType = $bill->billable->installment->installable_type;
                 $billableId = $bill->billable->installment->installable_id;
             }
 
-            if($billableType === TaxpayerLedgerPayment::class){
+            if ($billableType === TaxpayerLedgerPayment::class) {
                 $items = $bill->billable->items;
 
                 foreach ($items as $item) {
@@ -312,20 +320,150 @@ trait TaxpayerLedgerTrait
                     'transaction_type' => TransactionType::DEBIT,
                 ],
                 [
-                'source_type' => $sourceType,
-                'source_id' => $sourceId,
-                'principal_amount' => $principalAmount,
-                'interest_amount' => $interestAmount,
-                'penalty_amount' => $penaltyAmount,
-                'total_amount' => $totalAmount,
-                'outstanding_amount' => $totalAmount,
-            ]);
+                    'source_type' => $sourceType,
+                    'source_id' => $sourceId,
+                    'principal_amount' => $principalAmount,
+                    'interest_amount' => $interestAmount,
+                    'penalty_amount' => $penaltyAmount,
+                    'total_amount' => $totalAmount,
+                    'outstanding_amount' => $totalAmount,
+                ]);
 
             if (!$ledger) throw new \Exception('Failed to save ledger transaction');
 
         } catch (\Exception $exception) {
             Log::error('TRAITS-TAXPAYER-LEDGER-TRAIT-RECORD-LEDGER', [$exception]);
             throw $exception;
+        }
+    }
+
+    public function postDebit($ledger)
+    {
+        try {
+            $url = env('FINANCE_URL') . '/api/getTaxReceivableDebitEntry';
+
+            if ($ledger->business_id) {
+                $debitorType = 'business';
+                $debitorNumber = $ledger->location->zin;
+            } else {
+                $debitorType = 'taxpayer';
+                $debitorNumber = $ledger->taxpayer->reference_no;
+            }
+
+            $bill = ZmBill::query()
+                ->where('billable_type', $ledger->source_type)
+                ->where('billable_id', $ledger->source_id)
+                ->where('status', '!=', 'paid')
+                ->latest()
+                ->firstOrFail();
+
+            $payload = [
+                'debitNumber' => $ledger->debit_no,
+                'controlNumber' => $bill->control_number,
+                'taxTypeId' => $ledger->tax_type_id,
+                'currencyType' => $ledger->currency,
+                'currentExchangeRate' => $bill->exchange_rate,
+                'amount' => $ledger->total_amount,
+                'debitorType' => $debitorType,
+                'debitorRegistrationNumber' => $debitorNumber,
+                'createdBy' => Auth::id() ?? 0,
+            ];
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_CONNECTTIMEOUT => 30,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_HTTPHEADER => array(
+                    "accept: application/json",
+                    "content-type: application/json",
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            Log::info($response);
+
+            $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+            if ($statusCode != 200) {
+                // Handle gateway timeout, request timeout by forwading to next api call to handle error ie. zan malipo
+                if ($statusCode == 0 || $statusCode == 408 || curl_errno($curl) == 28) {
+                    return null;
+                }
+                Log::error(curl_error($curl));
+                curl_close($curl);
+                throw new \Exception($response);
+            }
+            curl_close($curl);
+
+            return $response;
+        } catch (\Throwable $exception) {
+            Log::error('TAXPAYER-LEDGER-POST-DEBIT', [$exception]);
+            return false;
+        }
+    }
+
+    private function postCredit($paymentId, $ledger)
+    {
+        try {
+            $url = env('FINANCE_URL') . '/api/getTaxReceivableCreditEntry';
+
+            $payment = ZmPayment::findOrFail($paymentId, ['control_number', 'ctr_acc_num']);
+
+            $accountNumber = $payment->ctr_acc_num;
+
+            if (env('APP_ENV') == 'local') {
+                $accountNumber = $ledger->currency == 'TZS' ? '1234567890' : '500600200';
+            }
+
+            $payload = [
+                'debitNumber' => $ledger->debit_no,
+                'controlNumber' => $payment->control_number,
+                'amount' => $ledger->total_amount,
+                'bankAccountNumber' => $accountNumber,
+                'createdBy' => 0,
+            ];
+
+            Log::info(json_encode($payload));
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_CONNECTTIMEOUT => 30,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_HTTPHEADER => array(
+                    "accept: application/json",
+                    "content-type: application/json",
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            Log::info($response);
+            $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+            if ($statusCode != 200) {
+                // Handle gateway timeout, request timeout by forwading to next api call to handle error ie. zan malipo
+                if ($statusCode == 0 || $statusCode == 408 || curl_errno($curl) == 28) {
+                    return null;
+                }
+                Log::error(curl_error($curl));
+                curl_close($curl);
+                throw new \Exception($response);
+            }
+            curl_close($curl);
+
+            return true;
+        } catch (\Throwable $exception) {
+            Log::error('TAXPAYER-LEDGER-POST-CREDIT', [$exception]);
+            return false;
         }
     }
 

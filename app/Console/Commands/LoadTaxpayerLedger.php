@@ -58,6 +58,14 @@ class LoadTaxpayerLedger extends Command
             // TAX RETURNS
             TaxReturn::chunk(100, function ($taxReturns) {
                 foreach ($taxReturns as $return) {
+
+                    $ledger = TaxpayerLedger::query()
+                        ->select('debit_no')
+                        ->where('source_type', TaxReturn::class)
+                        ->where('source_id', $return->id)
+                        ->where('transaction_type', TransactionType::DEBIT)
+                        ->first();
+
                     $ledger = TaxpayerLedger::updateOrCreate(
                         [
                             'source_type' => TaxReturn::class,
@@ -79,11 +87,13 @@ class LoadTaxpayerLedger extends Command
                             'interest_amount' => $return->interest,
                             'penalty_amount' => $return->penalty,
                             'total_amount' => $return->total_amount,
-                            'debit_no' => $this->generateDebitNumber()
+                            'debit_no' => $ledger->debit_no ?? $this->generateDebitNumber()
                         ]
                     );
 
                     if (!$ledger) throw new \Exception('Failed to save ledger');
+
+                    $this->postDebit($ledger);
 
                     unset($return);
                 }
@@ -96,9 +106,20 @@ class LoadTaxpayerLedger extends Command
                 foreach ($payments as $payment) {
 
                     if ($payment->bill) {
+                        $debitNo = TaxpayerLedger::select('debit_no')->where('source_type', $payment->bill->billable_type)->where('source_id', $payment->bill->billable_id)->where('transaction_type', TransactionType::DEBIT)->first();
+
+                        if ($debitNo) {
+                            $debitNo = $debitNo->debit_no;
+                        } else {
+                            continue;
+                        }
+
                         if ($payment->bill->billable_type === TaxpayerLedgerPayment::class) {
                             $this->loadPartialPayments($payment);
                         } else {
+                            if ($payment->bill->billable_type == 'App\Models\ReceivableAccountInvoice' || $payment->bill->billable_type == 'App\Models\ReceivableAccountStaffLoanPayment') {
+                                continue;
+                            }
                             $ledger = TaxpayerLedger::updateOrCreate(
                                 [
                                     'source_type' => $payment->bill->billable_type,
@@ -121,10 +142,12 @@ class LoadTaxpayerLedger extends Command
                                     'interest_amount' => 0,
                                     'penalty_amount' => 0,
                                     'total_amount' => $payment->bill->paid_amount,
-                                    'debit_no' => TaxpayerLedger::where('source_type', $payment->bill->billable_type)->where('source_id', $payment->bill->billable_id)->where('transaction_type', TransactionType::DEBIT)->first()->debit_no ?? null
+                                    'debit_no' => $debitNo
                                 ]
                             );
                             if (!$ledger) throw new \Exception('Failed to save ledger');
+                            $this->postCredit($payment->id, $ledger);
+
                         }
 
                     }
@@ -138,6 +161,14 @@ class LoadTaxpayerLedger extends Command
             // TAX ASSESSMENTS
             TaxAssessment::chunk(100, function ($assessments) {
                 foreach ($assessments as $assessment) {
+
+            $ledger = TaxpayerLedger::query()
+                ->select('debit_no')
+                ->where('source_type', TaxAssessment::class)
+                ->where('source_id', $assessment->id)
+                ->where('transaction_type', TransactionType::DEBIT)
+                ->first();
+
                     $ledger = TaxpayerLedger::updateOrCreate(
                         [
                             'source_type' => TaxAssessment::class,
@@ -159,12 +190,12 @@ class LoadTaxpayerLedger extends Command
                             'interest_amount' => $assessment->interest_amount,
                             'penalty_amount' => $assessment->penalty_amount,
                             'total_amount' => $assessment->total_amount,
-                            'debit_no' => $this->generateDebitNumber()
+                            'debit_no' => $ledger->debit_no ?? $this->generateDebitNumber()
                         ]
                     );
 
                     if (!$ledger) throw new \Exception('Failed to save ledger');
-
+                    $this->postDebit($ledger);
                     unset($assessment);
 
                 }
@@ -203,16 +234,23 @@ class LoadTaxpayerLedger extends Command
         $paymentItems = $ledgerPayment->items;
 
         foreach ($paymentItems as $paymentItem) {
-            TaxpayerLedger::updateOrCreate(
+            $debitNo = TaxpayerLedger::select('debit_no')->where('source_type', $paymentItem->source_type)->where('source_id', $paymentItem->source_id)->where('transaction_type', TransactionType::DEBIT)->first();
+
+            if ($debitNo) {
+                $debitNo = $debitNo->debit_no;
+            } else {
+                continue;
+            }
+            $ledger = TaxpayerLedger::updateOrCreate(
                 [
                     'source_type' => $paymentItem->source_type,
-                    'source_id' => $paymentItem->source_type,
+                    'source_id' => $paymentItem->source_id,
                     'transaction_type' => TransactionType::CREDIT,
                     'zm_payment_id' => $payment->id
                 ],
                 [
                     'source_type' => $paymentItem->source_type,
-                    'source_id' => $paymentItem->source_type,
+                    'source_id' => $paymentItem->source_id,
                     'zm_payment_id' => $payment->id,
                     'tax_type_id' => $paymentItem->tax_type_id,
                     'taxpayer_id' => $payment->bill->payer_id,
@@ -225,9 +263,13 @@ class LoadTaxpayerLedger extends Command
                     'principal_amount' => 0,
                     'interest_amount' => 0,
                     'penalty_amount' => 0,
-                    'total_amount' => $paymentItem->amount
+                    'total_amount' => $paymentItem->amount,
+                    'debit_no' => $debitNo
                 ]
             );
+
+            $this->postCredit($payment->id, $ledger);
+
         }
 
     }
