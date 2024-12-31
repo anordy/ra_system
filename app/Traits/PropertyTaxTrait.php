@@ -21,17 +21,13 @@ trait PropertyTaxTrait
     use TaxpayerLedgerTrait;
 
     public function generateMonthlyInterest($propertyPayment) {
-        // Check if payment due date diff in days btn now is 30 days
         $currentPaymentDate = Carbon::parse($propertyPayment->curr_payment_date);
         $paymentDate = Carbon::parse($propertyPayment->payment_date);
-        $initialDate = Carbon::parse($propertyPayment->created_at);
         $currentDate = Carbon::now();
 
-        $period = $currentDate->floatDiffInMonths($paymentDate);
+        $period = 1 + abs($currentDate->floatDiffInMonths($paymentDate));
 
-        // TODO: Add condition to calculate interest whenever viable but not everyday
-        if ($initialDate->diffInMonths($paymentDate) >= 3 && $currentDate->gt($currentPaymentDate)) {
-
+        if (Carbon::now()->gt($currentPaymentDate)) {
             try {
                 DB::beginTransaction();
 

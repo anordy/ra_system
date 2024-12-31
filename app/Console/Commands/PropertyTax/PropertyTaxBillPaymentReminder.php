@@ -5,9 +5,8 @@ namespace App\Console\Commands\PropertyTax;
 use App\Enum\BillStatus;
 use App\Jobs\Bill\CancelBill;
 use App\Jobs\PropertyTax\GeneratePropertyTaxControlNo;
-use App\Jobs\PropertyTax\SendPropertyTaxPaymentReminderApprovalSMS;
+use App\Models\FinancialYear;
 use App\Models\PropertyTax\PropertyPayment;
-use App\Models\PropertyTax\PropertyPaymentReminder;
 use App\Traits\PropertyTaxTrait;
 use Carbon\Carbon;
 use Exception;
@@ -17,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 class PropertyTaxBillPaymentReminder extends Command
 {
     use PropertyTaxTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -49,63 +49,97 @@ class PropertyTaxBillPaymentReminder extends Command
     public function handle()
     {
         Log::channel('property-tax')->info('Sending Property Tax Bill Payment Reminder');
-        $this->sendReminders();
+        $this->updateDueDate();
+        //$this->calculateInterest();
         Log::channel('property-tax')->info('Completed Sending Property Tax Bill Payment Reminder');
     }
 
-    public function sendReminders()
+    public function generateBill()
     {
         $payments = PropertyPayment::where('payment_status', '!=', BillStatus::COMPLETE)->get();
 
+        foreach ($payments ?? [] as $payment) {
+            $currentPaymentDate = Carbon::parse($payment->curr_payment_date);
 
-        if ($payments) {
-            foreach ($payments as $payment) {
-                $currentPaymentDate = Carbon::parse($payment->curr_payment_date);
-                $diffInDays = Carbon::now()->diffInDays($currentPaymentDate);
+            $hasDueDateExpired = Carbon::now()->gt($currentPaymentDate);
 
+            if ($hasDueDateExpired) {
+                $newPaymentDate = Carbon::now()->addDays(30);
+                $payment->curr_payment_date = $newPaymentDate;
+                $payment->save();
+
+                GeneratePropertyTaxControlNo::dispatch($payment);
+
+            }
+
+        }
+    }
+
+    public function updateDueDate()
+    {
+        $currentFinancialYear = FinancialYear::select('id', 'code')
+            ->where('code', 2024)
+            ->firstOrFail();
+
+        $payments = PropertyPayment::query()
+            ->where('financial_year_id', $currentFinancialYear->id)
+            ->where('payment_status', '!=', BillStatus::COMPLETE)->get();
+
+        $i = 0;
+        foreach ($payments ?? [] as $payment) {
+            $i++;
+            $currentPaymentDate = Carbon::parse($payment->curr_payment_date);
+
+            $hasDueDateExpired = Carbon::now()->gt($currentPaymentDate);
+
+            if ($hasDueDateExpired) {
+                $newPaymentDate = Carbon::now()->endOfYear()->endOfDay();
+
+                $payment->curr_payment_date = $newPaymentDate;
+                $payment->payment_date = $newPaymentDate;
+                $payment->save();
+
+                GeneratePropertyTaxControlNo::dispatch($payment);
+
+            }
+
+        }
+
+        $this->line('Finished updating due date');
+        $this->line($i);
+
+    }
+
+    public function calculateInterest()
+    {
+        $payments = PropertyPayment::where('payment_status', '!=', BillStatus::COMPLETE)->get();
+
+        foreach ($payments ?? [] as $payment) {
+            $currentPaymentDate = Carbon::parse($payment->curr_payment_date);
+
+            if (Carbon::now()->gt($currentPaymentDate)) {
                 try {
-                    if (count($payment->reminders) === 0 && $diffInDays === 30) {
-                        $this->sendPaymentReminder($payment);
-                    } else if (count($payment->reminders) === 1 && $diffInDays === 60) {
-                        $this->sendPaymentReminder($payment);
-                    } else if (count($payment->reminders) === 2 && $diffInDays === 90) {
-                        $this->sendPaymentReminder($payment);
-                    } else {
-                        // Don't send anything, we give up, start calculating interest on each month
-                        $this->incrementInterest($payment);
-                    }
+                    $this->incrementInterest($payment);
                 } catch (Exception $exception) {
                     Log::error($exception);
                     throw new Exception($exception);
                 }
-
             }
         }
     }
 
-    protected function sendPaymentReminder($propertyPayment)
+
+    protected function incrementInterest($propertyPayment)
     {
-        $reminder = PropertyPaymentReminder::create([
-            'property_payment_id' => $propertyPayment->id
-        ]);
-
-        if ($reminder) {
-            // Dispatch SMS for payment reminder
-            SendPropertyTaxPaymentReminderApprovalSMS::dispatch($propertyPayment->payment);
-        }
-    }
-
-    protected function incrementInterest($propertyPayment) {
-
         $incrementedPropertyPayment = $this->generateMonthlyInterest($propertyPayment);
 
         if ($incrementedPropertyPayment && $propertyPayment->latestBill) {
             CancelBill::dispatch($propertyPayment->latestBill, 'Property Tax Interest Increment');
         }
 
-         $propertyPayment = PropertyPayment::find($propertyPayment->id);
+        $propertyPayment = PropertyPayment::find($propertyPayment->id);
 
-         GeneratePropertyTaxControlNo::dispatch($propertyPayment);
+        GeneratePropertyTaxControlNo::dispatch($propertyPayment);
 
     }
 

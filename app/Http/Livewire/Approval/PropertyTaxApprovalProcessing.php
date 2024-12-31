@@ -79,8 +79,8 @@ class PropertyTaxApprovalProcessing extends Component
                     'amount' => $amount,
                     'interest' => 0,
                     'total_amount' => $amount,
-                    'payment_date' => Carbon::now()->addMonths(3),
-                    'curr_payment_date' => Carbon::now()->addMonths(3),
+                    'payment_date' => Carbon::now()->endOfYear()->endOfDay(),
+                    'curr_payment_date' => Carbon::now()->endOfYear()->endOfDay(),
                     'payment_status' => BillStatus::SUBMITTED,
                     'payment_category' => PropertyPaymentCategoryStatus::NORMAL,
                 ]);

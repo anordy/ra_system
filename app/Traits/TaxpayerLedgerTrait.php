@@ -353,7 +353,6 @@ trait TaxpayerLedgerTrait
             $bill = ZmBill::query()
                 ->where('billable_type', $ledger->source_type)
                 ->where('billable_id', $ledger->source_id)
-                ->where('status', '!=', 'paid')
                 ->latest()
                 ->firstOrFail();
 
@@ -366,7 +365,7 @@ trait TaxpayerLedgerTrait
                 'amount' => $ledger->total_amount,
                 'debitorType' => $debitorType,
                 'debitorRegistrationNumber' => $debitorNumber,
-                'createdBy' => Auth::id() ?? 0,
+                'createdBy' => 0,
             ];
 
             $curl = curl_init();

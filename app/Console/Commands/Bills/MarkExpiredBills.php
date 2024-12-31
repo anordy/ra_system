@@ -52,6 +52,7 @@ class MarkExpiredBills extends Command
     public function markExpired()
     {
         ZmBill::query()
+            ->select('id', 'status', 'expire_date', 'created_at', 'updated_at')
             ->whereRaw("CURRENT_DATE - CAST(expire_date as date) > 0")
             ->where('status', BillStatus::PENDING)
             ->chunk(100, function ($bills) {

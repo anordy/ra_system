@@ -96,8 +96,8 @@ class AnnualPropertyTaxBill extends Command
                 'amount' => $amount,
                 'interest' => GeneralConstant::ZERO_INT,
                 'total_amount' => $amount,
-                'payment_date' => Carbon::now()->endOfYear(),
-                'curr_payment_date' => Carbon::now()->endOfYear(),
+                'payment_date' => Carbon::now()->endOfYear()->endOfDay(),
+                'curr_payment_date' => Carbon::now()->endOfYear()->endOfDay(),
                 'payment_status' => BillStatus::SUBMITTED,
                 'payment_category' => PropertyPaymentCategoryStatus::NORMAL,
             ]);
