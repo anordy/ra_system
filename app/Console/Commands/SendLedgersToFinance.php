@@ -43,11 +43,13 @@ class SendLedgersToFinance extends Command
      */
     public function handle()
     {
-      $this->loadDebitNo();
-//      $this->send();
+//      $this->loadDebitNo();
+        $this->sendDebits();
+//        $this->sendCredits();
     }
 
-    public function send() {
+    public function sendDebits()
+    {
         try {
             $this->line('Sending debit ledgers');
 
@@ -70,30 +72,35 @@ class SendLedgersToFinance extends Command
 
             $this->info('Completed sending debit ledger');
 
-            $this->line('Sending Credit ledgers');
-            TaxpayerLedger::query()
-                ->select(['id', 'source_type', 'source_id', 'financial_month_id', 'zm_payment_id', 'business_id', 'business_location_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'description', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at', 'updated_at', 'deleted_at', 'outstanding_amount', 'debit_no'])
-                ->where('transaction_type', TransactionType::CREDIT)
-                ->where('sent_to_finance', 0)
-                ->chunk(100, function ($ledgers) {
-                    foreach ($ledgers as $ledger) {
-                        $response = $this->postCredit($ledger->zm_payment_id, $ledger);
-
-                        if (isset($response['status']) && $response['status']) {
-                            $ledger->sent_to_finance = 1;
-                            $ledger->save();
-                        }
-
-                        unset($ledger);
-                    }
-                });
 
         } catch (\Exception $exception) {
             $this->error($exception);
         }
     }
 
-    public function loadDebitNo() {
+    public function sendCredits()
+    {
+        $this->line('Sending Credit ledgers');
+        TaxpayerLedger::query()
+            ->select(['id', 'source_type', 'source_id', 'financial_month_id', 'zm_payment_id', 'business_id', 'business_location_id', 'taxpayer_id', 'tax_type_id', 'transaction_date', 'transaction_type', 'currency', 'description', 'principal_amount', 'interest_amount', 'penalty_amount', 'total_amount', 'created_at', 'updated_at', 'deleted_at', 'outstanding_amount', 'debit_no'])
+            ->where('transaction_type', TransactionType::CREDIT)
+            ->where('sent_to_finance', 0)
+            ->chunk(100, function ($ledgers) {
+                foreach ($ledgers as $ledger) {
+                    $response = $this->postCredit($ledger->zm_payment_id, $ledger);
+
+                    if (isset($response['status']) && $response['status']) {
+                        $ledger->sent_to_finance = 1;
+                        $ledger->save();
+                    }
+
+                    unset($ledger);
+                }
+            });
+    }
+
+    public function loadDebitNo()
+    {
         TaxpayerLedger::query()
             ->where('transaction_type', TransactionType::CREDIT)
             ->whereNull('debit_no')

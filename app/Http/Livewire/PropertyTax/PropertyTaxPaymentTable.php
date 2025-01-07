@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\PropertyTax;
 
-use App\Enum\PropertyTypeStatus;
 use App\Models\PropertyTax\PropertyPayment;
 use App\Traits\CustomAlert;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 
 class PropertyTaxPaymentTable extends DataTableComponent
 {
@@ -37,14 +37,10 @@ class PropertyTaxPaymentTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Property Name', 'property_id')
+            Column::make('Control No', 'created_at')
                 ->searchable()
                 ->format(function ($value, $row) {
-                    if ($row->type != PropertyTypeStatus::CONDOMINIUM) {
-                        return $row->property->name ?? 'N/A';
-                    } else {
-                        return "{$row->property->name} - {$row->property->unit->name}";
-                    }
+                    return $row->latestBill->control_number ?? 'N/A';
                 }),
             Column::make('Payment Year', 'financial_year_id')
                 ->searchable()
@@ -82,7 +78,8 @@ class PropertyTaxPaymentTable extends DataTableComponent
                 }),
             Column::make('Status', 'payment_status')
                 ->view('property-tax.includes.payment-status'),
-
+            Column::make('Actions', 'id')
+                ->view('property-tax.includes.bill-status'),
         ];
     }
 

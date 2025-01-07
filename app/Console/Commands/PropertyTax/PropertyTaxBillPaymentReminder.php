@@ -49,8 +49,7 @@ class PropertyTaxBillPaymentReminder extends Command
     public function handle()
     {
         Log::channel('property-tax')->info('Sending Property Tax Bill Payment Reminder');
-        $this->updateDueDate();
-        //$this->calculateInterest();
+        $this->calculateInterest();
         Log::channel('property-tax')->info('Completed Sending Property Tax Bill Payment Reminder');
     }
 
@@ -75,6 +74,10 @@ class PropertyTaxBillPaymentReminder extends Command
         }
     }
 
+    /**
+     * Used to update due date due to ZRA policy change if necessary
+     * @return void
+     */
     public function updateDueDate()
     {
         $currentFinancialYear = FinancialYear::select('id', 'code')
@@ -82,6 +85,7 @@ class PropertyTaxBillPaymentReminder extends Command
             ->firstOrFail();
 
         $payments = PropertyPayment::query()
+            ->select('id', 'curr_payment_date', 'payment_date')
             ->where('financial_year_id', $currentFinancialYear->id)
             ->where('payment_status', '!=', BillStatus::COMPLETE)->get();
 
@@ -98,8 +102,6 @@ class PropertyTaxBillPaymentReminder extends Command
                 $payment->curr_payment_date = $newPaymentDate;
                 $payment->payment_date = $newPaymentDate;
                 $payment->save();
-
-                GeneratePropertyTaxControlNo::dispatch($payment);
 
             }
 
@@ -135,11 +137,11 @@ class PropertyTaxBillPaymentReminder extends Command
 
         if ($incrementedPropertyPayment && $propertyPayment->latestBill) {
             CancelBill::dispatch($propertyPayment->latestBill, 'Property Tax Interest Increment');
+            $propertyPayment = PropertyPayment::find($propertyPayment->id);
+
+            GeneratePropertyTaxControlNo::dispatch($propertyPayment);
         }
 
-        $propertyPayment = PropertyPayment::find($propertyPayment->id);
-
-        GeneratePropertyTaxControlNo::dispatch($propertyPayment);
 
     }
 

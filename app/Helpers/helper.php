@@ -144,16 +144,21 @@ function isNullOrEmpty($value)
 
 function approvalLevel($level_id, $level_name): bool
 {
-    $approval = ApprovalLevel::query()->where('id', $level_id)->where('name', $level_name)->first();
-    if (!empty($approval)) {
-        $level = UserApprovalLevel::where('approval_level_id', $approval->id)
-            ->where('user_id', Auth::id())->orderByDesc('id')->first();
-        if (!empty($level)) {
-            return true;
-        }
+    $level = ApprovalLevel::query()
+        ->select('name', 'id')
+        ->where('name', $level_name)
+        ->first();
+
+    if (!$level) {
         return false;
     }
-    return false;
+
+    if ($level_id == $level->id) {
+        return true;
+    } else {
+        return false;
+    }
+
 }
 
 function compareDualControlValues($old_values, $new_values)
@@ -413,10 +418,11 @@ function getHotelStarByLocationId($location_id)
     }
 }
 
-function isEighteenPercent($subVatId) {
+function isEighteenPercent($subVatId)
+{
     $subVat = \App\Models\Returns\Vat\SubVat::find($subVatId, ['code']);
 
-    if (in_array($subVat->code, [SubVat::FINANCIALSERVICES, SubVat::TELECOMMUNICATIONDATASERVICES, SubVat::TELECOMMUNICATIONVOICESERVICES, SubVat::TELEPHONE, SubVat::INSURANCE])){
+    if (in_array($subVat->code, [SubVat::FINANCIALSERVICES, SubVat::TELECOMMUNICATIONDATASERVICES, SubVat::TELECOMMUNICATIONVOICESERVICES, SubVat::TELEPHONE, SubVat::INSURANCE])) {
         return true;
     }
 
