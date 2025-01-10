@@ -21,8 +21,8 @@ class VettingFilter extends Component
     {
         //set current year at first
         $this->year = date('Y');
-        $this->month = date('m');
-        $this->period = 'Monthly';
+        $this->month = ReportStatus::all;
+        $this->period = ReportStatus::MONTHLY;
         $this->tableName = $tablename;
 
         //get options for years
@@ -30,11 +30,11 @@ class VettingFilter extends Component
         $this->optionYears = range($currentYear - 4, $currentYear); // Start year: current year minus 4
 
         //add All to year options
-        $this->optionYears[] = 'All';
+        $this->optionYears[] = ReportStatus::All;
         //sort array
         rsort($this->optionYears);
         //add Range to year options
-        $this->optionYears[] = 'Custom Range';
+        $this->optionYears[] = ReportStatus::CUSTOM_RANGE;
     }
 
     public function filter()
@@ -51,6 +51,6 @@ class VettingFilter extends Component
 
     public function render()
     {
-        return view('livewire.vetting.vetting-filter ');
+        return view('livewire.vetting.vetting-filter');
     }
 }

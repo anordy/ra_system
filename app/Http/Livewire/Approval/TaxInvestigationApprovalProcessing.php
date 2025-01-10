@@ -282,8 +282,8 @@ class TaxInvestigationApprovalProcessing extends Component
     private function validateConductInvestigation()
     {
         $this->validate([
-            'preliminaryReport' => 'required|max:1024',
-            'noticeOfDiscussion' => 'required|max:1024',
+            'preliminaryReport' => 'required|max:3072',
+            'noticeOfDiscussion' => 'required|max:3072',
             'hasAssessment' => ['required', 'boolean'],
         ]);
 
@@ -292,32 +292,32 @@ class TaxInvestigationApprovalProcessing extends Component
 
         if ($this->preliminaryReport != $this->subject->preliminary_report) {
             $this->validate([
-                'preliminaryReport' => 'required|mimes:pdf,csv|max:1024|max_file_name_length:100'
+                'preliminaryReport' => 'required|mimes:pdf,csv,xls,xlsx|max:3072|max_file_name_length:100'
             ]);
         }
 
         if ($this->noticeOfDiscussion != $this->subject->notice_of_discussion) {
             $this->validate([
-                'noticeOfDiscussion' => 'required|mimes:pdf,csv|max:1024|max_file_name_length:100'
+                'noticeOfDiscussion' => 'required|mimes:pdf,csv,xls,xlsx|max:3072|max_file_name_length:100'
             ]);
         }
     }
     private function validateFinalReport()
     {
         $this->validate([
-            'finalReport' => 'required|max:1024',
-            'workingReport' => 'nullable|max:1024',
+            'finalReport' => 'required|max:3072',
+            'workingReport' => 'nullable|max:3072',
         ]);
 
         if ($this->finalReport != $this->subject->final_report) {
             $this->validate([
-                'finalReport' => 'required|mimes:pdf,csv|max:1024|max_file_name_length:100'
+                'finalReport' => 'required|mimes:pdf,csv,xls,xlsx|max:3072|max_file_name_length:100'
             ]);
         }
 
         if ($this->workingReport != $this->subject->working_report) {
             $this->validate([
-                'workingReport' => 'nullable|mimes:pdf,csv|max:1024|max_file_name_length:100'
+                'workingReport' => 'nullable|mimes:pdf,csv,xls,xlsx|max:3072|max_file_name_length:100'
             ]);
         }
     }
@@ -328,9 +328,9 @@ class TaxInvestigationApprovalProcessing extends Component
         $validationRules = [];
         foreach ($taxTypes as $taxType) {
             $taxTypeKey = str_replace(' ', '_', $taxType);
-            $validationRules["principalAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
-            $validationRules["interestAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
-            $validationRules["penaltyAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*$/'];
+            $validationRules["principalAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*(\.[0-9]{1,2})?$/'];
+            $validationRules["interestAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*(\.[0-9]{1,2})?$/'];
+            $validationRules["penaltyAmounts.{$taxTypeKey}"] = [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[0-9,]*(\.[0-9]{1,2})?$/'];
         }
         return $validationRules;
     }
