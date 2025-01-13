@@ -359,7 +359,7 @@ class TaxInvestigationApprovalProcessing extends Component
             }
 
             $this->subject->period_to = $this->periodTo;
-            $this->subject->period_from = $this->periodTo;
+            $this->subject->period_from = $this->periodFrom;
             $this->subject->intension = $this->allegations;
             $this->subject->scope = $this->descriptions;
             $this->subject->save();
