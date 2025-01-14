@@ -742,7 +742,7 @@ trait PaymentsTrait
                 ];
             }
 
-            if ($tax_return->infrastructure_znz_tz > 0) {
+            if ($tax_return->currency == Currencies::USD && $tax_return->infrastructure_znz_tz > 0) {
                 $seaportTransportChargeTax = $taxTypes->where('code', TaxType::INFRASTRUCTURE)->firstOrFail();
                 $billItems[] = [
                     'billable_id' => $tax_return->id,
@@ -755,7 +755,7 @@ trait PaymentsTrait
                 ];
             }
 
-            if ($tax_return->infrastructure_znz_znz > 0) {
+            if ($tax_return->currency == Currencies::USD && $tax_return->infrastructure_znz_znz > 0) {
                 $seaportTransportChargeTax = $taxTypes->where('code', TaxType::INFRASTRUCTURE)->firstOrFail();
                 $billItems[] = [
                     'billable_id' => $tax_return->id,
