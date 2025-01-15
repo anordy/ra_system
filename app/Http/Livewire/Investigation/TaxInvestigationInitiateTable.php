@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Investigation;
 use App\Enum\TaxInvestigationStatus;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Investigation\TaxInvestigation;
+use App\Models\WorkflowTask;
 use App\Traits\WithSearch;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
@@ -62,9 +63,9 @@ class TaxInvestigationInitiateTable extends DataTableComponent
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location')
-                ->label(fn ($row) => $row->taxInvestigationLocationNames()),
+                ->label(fn ($row) => $row->taxInvestigationLocationNames() ?? 'N/A'),
             Column::make('Tax Types')
-                ->label(fn ($row) => $row->taxInvestigationTaxTypeNames()),
+                ->label(fn ($row) => $row->taxInvestigationTaxTypeNames() ?? 'N/A'),
             Column::make('Period From', 'period_from')
                 ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
             Column::make('Period To', 'period_to')
@@ -151,12 +152,18 @@ class TaxInvestigationInitiateTable extends DataTableComponent
             if (is_null($investigation)) {
                 abort(404);
             }
+
+            WorkflowTask::query()
+                ->where('pinstance_type', TaxInvestigation::class)
+                ->where('pinstance_id', $investigation->id)
+                ->delete();
+
             $investigation->delete();
 
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->customAlert('warning', 'Something whent wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

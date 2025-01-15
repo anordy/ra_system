@@ -141,7 +141,7 @@ class UserAddModal extends Component
 
             if ($this->level_id) {
                 UserApprovalLevel::create([
-                    'approval_level_id:' => $this->level_id,
+                    'approval_level_id' => $this->level_id,
                     'created_by' => Auth::id(),
                     'role_id' => $user->role_id,
                     'user_id' => $user->id
