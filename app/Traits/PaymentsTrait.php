@@ -989,6 +989,7 @@ trait PaymentsTrait
         if ($property->ownership->name === PropertyOwnershipTypeStatus::GOVERNMENT || $property->ownership->name === PropertyOwnershipTypeStatus::RELIGIOUS) {
             $payer_name = $property->institution_name;
         } else {
+            // TODO: Add property name as payer name before checking responsible - Victor Salim
             if ($property->responsible) {
                 $payer_name = $property->responsible->first_name . ' ' . $property->responsible->last_name;
                 if (!trim($payer_name)) {
