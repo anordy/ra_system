@@ -19,6 +19,7 @@ trait ExchangeRateTrait
                     ->whereRaw("TO_CHAR(exchange_date, 'mm') = TO_CHAR(SYSDATE, 'mm')
                             AND TO_CHAR(exchange_date, 'yyyy') = TO_CHAR(SYSDATE, 'yyyy')")
                     ->where('is_approved', true)
+                    ->latest()
                     ->first()
                     ->toArray();
 
