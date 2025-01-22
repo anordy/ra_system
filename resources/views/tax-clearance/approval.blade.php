@@ -13,7 +13,11 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="debt-infos-tab" data-toggle="tab" href="#debt-infos" role="tab"
-                        aria-controls="debt-infos" aria-selected="false">Debts Information</a>
+                        aria-controls="debt-infos" aria-selected="false">Debts Summary Information</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="debt-source-tab" data-toggle="tab" href="#debt-source" role="tab"
+                       aria-controls="debt-source" aria-selected="false">Debt Source Information</a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="approvalHistory-tab" data-toggle="tab" href="#approvalHistory" role="tab"
@@ -110,6 +114,9 @@
                 </div>
                 <div class="tab-pane fade show" id="debt-infos" role="tabpanel" aria-labelledby="debt-infos-tab">
                     @include('tax-clearance.includes.tax_clearence_info')
+                </div>
+                <div class="tab-pane fade show" id="debt-source" role="tabpanel" aria-labelledby="debt-infos-tab">
+                    @livewire('taxpayer-ledger.business-location-ledger', ['businessLocationId' => $taxClearance->business_location_id])
                 </div>
                 <div class="tab-pane fade" id="approvalHistory" role="tabpanel" aria-labelledby="approvalHistory-tab">
                     <livewire:approval.approval-history-table modelName='App\Models\TaxClearanceRequest'
