@@ -141,5 +141,6 @@ class DatabaseSeeder extends Seeder
         $this->call(NtrSocialAccountsSeeder::class);
         $this->call(NtrBusinessCategorySeeder::class);
         $this->call(NtrBusinessAttachmentTypeSeeder::class);
+        $this->call(TraSeeder::class);
     }
 }
