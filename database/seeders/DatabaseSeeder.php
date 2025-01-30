@@ -142,5 +142,6 @@ class DatabaseSeeder extends Seeder
         $this->call(NtrBusinessCategorySeeder::class);
         $this->call(NtrBusinessAttachmentTypeSeeder::class);
         $this->call(TraSeeder::class);
+        $this->call(DesignationsSeeder::class);
     }
 }

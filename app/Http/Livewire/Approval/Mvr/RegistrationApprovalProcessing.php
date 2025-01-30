@@ -165,7 +165,7 @@ class RegistrationApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('zbs_officer_review')) {
+            if ($this->checkTransition('zbs_officer_review') || $transition === 'mvr_registration_officer_reject_to_applicant') {
                 $this->subject->status = MvrRegistrationStatus::CORRECTION;
                 $this->subject->save();
             }

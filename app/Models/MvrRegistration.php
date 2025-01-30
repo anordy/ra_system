@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\PublicService\PublicServiceMotor;
 use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\Tra\ChassisNumber;
+use App\Models\Tra\TancisChassisNumber;
 use App\Models\Tra\Tin;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +20,7 @@ class MvrRegistration extends Model
     protected $guarded = [];
 
     public function chassis(){
-        return $this->belongsTo(ChassisNumber::class, 'chassis_number_id');
+        return $this->belongsTo(TancisChassisNumber::class, 'chassis_number_id');
     }
 
     public function taxpayer(){

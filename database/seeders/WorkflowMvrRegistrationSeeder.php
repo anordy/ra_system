@@ -80,6 +80,11 @@ class WorkflowMvrRegistrationSeeder extends Seeder
                 'to' => 'zbs_officer',
                 'condition' => '',
             ],
+            'mvr_registration_officer_reject_to_applicant' => [
+                'from' => 'mvr_registration_officer',
+                'to' => 'correct_application',
+                'condition' => '',
+            ],
             'application_filled_incorrect' => [
                 'from' => 'zbs_officer',
                 'to' => 'correct_application',
@@ -88,6 +93,11 @@ class WorkflowMvrRegistrationSeeder extends Seeder
             'application_corrected' => [
                 'from' => 'correct_application',
                 'to' => 'zbs_officer',
+                'condition' => '',
+            ],
+            'application_corrected_to_officer' => [
+                'from' => 'correct_application',
+                'to' => 'mvr_registration_officer',
                 'condition' => '',
             ],
             'mvr_registration_manager_reject' => [

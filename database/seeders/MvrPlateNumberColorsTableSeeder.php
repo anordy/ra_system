@@ -19,11 +19,13 @@ class MvrPlateNumberColorsTableSeeder extends Seeder
         $colors = [
             [
                 'mvr_registration_type_id' => 1,
-                'color' => 'White/Black'
+                'color' => 'White/Black',
+                'name' => 'White/Black',
             ],
             [
                 'mvr_registration_type_id' => 2,
-                'color' => 'White/Black'
+                'color' => 'White/Black',
+                'name' => 'White/Black'
             ]
         ];
 

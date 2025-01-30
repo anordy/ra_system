@@ -37,7 +37,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Registerer Name</span>
-                <p class="my-1">{{ $reg->taxpayer->fullname ?? 'N/A' }}</p>
+                <p class="my-1">{{ $reg->taxpayer->artificial_name ?? $reg->taxpayer->fullname }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Registration Number</span>
