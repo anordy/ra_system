@@ -13,7 +13,7 @@ class CreateTraVehicleTransmissionTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tra_vehicle_transmission_types', function (Blueprint $table) {
+        Schema::create('tra_vehicle_trans_types', function (Blueprint $table) {
             $table->id();
             $table->string('code', 5);
             $table->string('name', 100);
@@ -30,6 +30,6 @@ class CreateTraVehicleTransmissionTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tra_vehicle_transmission_types');
+        Schema::dropIfExists('tra_vehicle_trans_types');
     }
 }
