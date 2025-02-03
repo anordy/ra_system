@@ -76,4 +76,32 @@ class MvrRegistration extends Model
     {
         return $this->morphOne(TaxpayerLedger::class, 'source');
     }
+
+    public function attachments() {
+        return $this->hasMany(MvrRegistrationAttachment::class, 'mvr_registration_id');
+    }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
+
+    public function ward()
+    {
+        return $this->belongsTo(Ward::class);
+    }
+
+    public function street()
+    {
+        return $this->belongsTo(Street::class);
+    }
+
+    public function location() {
+        return "{$this->region->name} {$this->district->name} {$this->ward->name} {$this->street->name}";
+    }
 }

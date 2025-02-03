@@ -212,6 +212,8 @@ class RegistrationApprovalProcessing extends Component
     public function generateControlNumber()
     {
         try {
+            // TODO: Check bill creation based on personalized for government to support reorder & generate plate number printing for ordinary
+
             $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
             $fee = MvrFee::query()->where([
                 'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,

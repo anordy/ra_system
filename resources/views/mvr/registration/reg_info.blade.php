@@ -36,8 +36,20 @@
                 </p>
             </div>
             <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Registerer Type</span>
+                <p class="my-1">{{ formatEnum($reg->taxpayer->ownership_type ?? 'N/A') }}</p>
+            </div>
+            <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Registerer Name</span>
                 <p class="my-1">{{ $reg->taxpayer->artificial_name ?? $reg->taxpayer->fullname }}</p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Registerer Mobile</span>
+                <p class="my-1">{{ $reg->taxpayer->mobile ?? 'N/A' }}</p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Registerer Reference</span>
+                <p class="my-1">{{ $reg->taxpayer->reference_no ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Registration Number</span>
@@ -73,10 +85,6 @@
                 <span class="font-weight-bold text-uppercase">Plate Number Color</span>
                 <p class="my-1">{{ $reg->regtype->color ? ($reg->regtype->color->color ?? 'N/A') : 'N/A' }}</p>
             </div>
-            <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Register Type</span>
-                <p class="my-1">{{ $reg->register_type ?? 'N/A' }}</p>
-            </div>
 
             @if ($reg->agent)
                 <div class="col-md-3 mb-3">
@@ -93,6 +101,26 @@
                 </div>
             @endif
 
+            <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Region</span>
+                <p class="my-1">{{ $reg->region->name ?? 'N/A' }}</p>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">District</span>
+                <p class="my-1">{{ $reg->district->name ?? 'N/A' }}</p>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Ward</span>
+                <p class="my-1">{{ $reg->ward->name ?? 'N/A' }}</p>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Street</span>
+                <p class="my-1">{{ $reg->street->name ?? 'N/A' }}</p>
+            </div>
+
             @if($reg->inspection)
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Inspection Mileage</span>
@@ -102,7 +130,7 @@
                     <span class="font-weight-bold text-uppercase">Inspection Date</span>
                     <p class="my-1">{{ Carbon\Carbon::parse($reg->inspection->inspection_date)->format('d M Y') }}</p>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
                         <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
                         <a target="_blank"

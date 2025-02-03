@@ -23,6 +23,7 @@ class AlterFirstNameToKycsTable extends Migration
             $table->string('reg_type')->nullable();
             $table->string('service_type')->nullable();
             $table->string('ownership_type')->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->boolean('is_temp_reg')->default(0);
             $table->string('first_name')->change()->nullable();
             $table->string('last_name')->change()->nullable();

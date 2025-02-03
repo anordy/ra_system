@@ -133,12 +133,20 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
 
     public function fullname()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        if (!$this->first_name) {
+            return $this->artificial_name;
+        } else {
+            return $this->first_name . ' ' . $this->last_name;
+        }
     }
 
     public function getFullNameAttribute()
     {
-        return "{$this->first_name} {$this->middle_name} {$this->last_name}";
+        if (!$this->first_name) {
+            return $this->artificial_name;
+        } else {
+            return $this->first_name . ' ' . $this->last_name;
+        }
     }
 
 

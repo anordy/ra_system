@@ -3,11 +3,14 @@
 namespace App\Http\Livewire\Mvr\Registration;
 
 use App\Enum\MvrRegistrationStatus;
+use App\Enum\ReportStatus;
 use App\Models\MvrRegistration;
+use App\Models\Region;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class MvrApprovedRegistrationsTable extends DataTableComponent
 {
@@ -68,5 +71,23 @@ class MvrApprovedRegistrationsTable extends DataTableComponent
     }
 
 
+    public function filters(): array
+    {
+        return [
+            SelectFilter::make('Region')
+                ->options([
+                    'all' => ReportStatus::All,
+                    'unguja' => ucfirst(Region::UNGUJA),
+                    'pemba' => ucfirst(Region::PEMBA),
+                ])
+                ->filter(function (Builder $builder, string $value) {
+                    if ($value != 'all') {
+                        $builder->whereHas('region', function ($query) use ($value) {
+                            $query->where('location', $value);
+                        });
+                    }
+                }),
+        ];
+    }
 
 }
