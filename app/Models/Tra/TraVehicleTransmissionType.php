@@ -10,7 +10,7 @@ class TraVehicleTransmissionType extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'tra_vehicle_transmission_types';
+    protected $table = 'tra_vehicle_trans_types';
 
     protected $guarded = [];
 }
