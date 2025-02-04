@@ -151,6 +151,9 @@ class PermissionSeeder extends Seeder
             ['name' => 'public-service-approve-registrations', 'sys_module_id' => 15],
             ['name' => 'public-service-approve-temporary-closures', 'sys_module_id' => 15],
             ['name' => 'public-service-approve-de-registrations', 'sys_module_id' => 15],
+            ['name' => 'mvr-blacklist', 'sys_module_id' => 15],
+            ['name' => 'mvr-blacklist-zra', 'sys_module_id' => 15],
+            ['name' => 'mvr-blacklist-zartsa', 'sys_module_id' => 15],
 
             # Land Lease
             ['name' => 'land-lease-create', 'sys_module_id' => 16],

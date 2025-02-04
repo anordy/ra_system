@@ -18,6 +18,7 @@ class MvrRegistrationStatus implements Status
     const STATUS_RETIRED = 'RETIRED';
     const STATUS_CHANGE = 'STATUS CHANGE';
     const REJECTED = 'REJECTED';
+    const BLOCKED ='BLOCKED';
 
 
     static function getConstants(): array

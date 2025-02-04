@@ -15,15 +15,15 @@ class TancisChassisNumber extends Model
     protected $table = 'tancis_chassis_numbers';
 
     public function categoryType(){
-        return $this->belongsTo(TraVehicleCategory::class, 'vehicle_category');
+        return $this->belongsTo(TraVehicleCategory::class, 'vehicle_category', 'code');
     }
 
     public function fuelType(){
-        return $this->belongsTo(TraVehicleFuelType::class, 'fuel_type');
+        return $this->belongsTo(TraVehicleFuelType::class, 'fuel_type', 'code');
     }
 
     public function makeType(){
-        return $this->belongsTo(TraVehicleMake::class, 'make');
+        return $this->belongsTo(TraVehicleMake::class, 'make', 'code');
     }
 
     public function modelType(){
@@ -35,7 +35,7 @@ class TancisChassisNumber extends Model
     }
 
     public function colorType(){
-        return $this->belongsTo(TraVehicleColor::class, 'vehicle_color');
+        return $this->belongsTo(TraVehicleColor::class, 'vehicle_color', 'code');
     }
 
     public function usageType(){
@@ -48,5 +48,9 @@ class TancisChassisNumber extends Model
 
     public function transmissionType(){
         return $this->belongsTo(TraVehicleTransmissionType::class, 'transmission_type', 'code');
+    }
+
+    public function bodyType(){
+        return $this->belongsTo(TraVehicleBodyType::class, 'body_type', 'code');
     }
 }

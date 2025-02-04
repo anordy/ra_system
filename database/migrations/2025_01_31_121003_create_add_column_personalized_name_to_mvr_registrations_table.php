@@ -19,6 +19,7 @@ class CreateAddColumnPersonalizedNameToMvrRegistrationsTable extends Migration
             $table->unsignedBigInteger('district_id')->nullable();
             $table->unsignedBigInteger('ward_id')->nullable();
             $table->unsignedBigInteger('street_id')->nullable();
+            $table->boolean('is_blocked')->default(0);
         });
     }
 

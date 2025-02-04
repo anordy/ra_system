@@ -261,7 +261,7 @@ function getSubVatName($subVatId)
 
 function formatEnum($string)
 {
-    $string = str_replace('_', ' ', $string);
+    $string = str_replace(['_', '-'], ' ', $string);
     return ucwords($string);
 }
 

@@ -743,8 +743,11 @@
                             <a href="{{ route('mvr.agent') }}">Transport Agents</a>
                         </li>
                     @endcan
-
-
+{{--                    @can('mvr-blacklist')--}}
+                        <li class="{{ request()->is('mvr/blacklist') ? 'active' : '' }}">
+                            <a href="{{ route('mvr.blacklist.index') }}">Registration Blacklists</a>
+                        </li>
+{{--                    @endcan--}}
                 </ul>
             </li>
         @endif

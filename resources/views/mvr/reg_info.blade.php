@@ -36,6 +36,10 @@
                 </p>
             </div>
             <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Is Blocked</span>
+                <p class="my-1"><span class="badge badge-primary py-1 px-2">{{ $reg->is_blocked ? 'Yes' : 'No'}}</span></p>
+            </div>
+            <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Registerer Name</span>
                 <p class="my-1">{{ $reg->taxpayer->fullname ?? 'N/A' }}</p>
             </div>

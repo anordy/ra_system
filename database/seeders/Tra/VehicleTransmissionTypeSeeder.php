@@ -22,12 +22,12 @@ class VehicleTransmissionTypeSeeder extends Seeder
         );
 
         foreach ($transmissions as $transmission) {
-//            TraVehicleTransmissionType::updateOrCreate([
-//                'code' => $transmission['code']
-//            ],[
-//                'code' => $transmission['code'],
-//                'name' => $transmission['name']
-//            ]);
+            TraVehicleTransmissionType::updateOrCreate([
+                'code' => $transmission['code']
+            ],[
+                'code' => $transmission['code'],
+                'name' => $transmission['name']
+            ]);
         }
 
     }

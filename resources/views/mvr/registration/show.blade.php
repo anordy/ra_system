@@ -50,7 +50,7 @@
                             <th>Owner's Name</th>
                             <th>Owner's TIN</th>
                             <th>Plate Number</th>
-                            <th>Registration Number</th>
+                            <th>Serial Number</th>
                             <th>Date of Registration</th>
                             <th>Status</th>
                         </tr>

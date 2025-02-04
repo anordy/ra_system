@@ -63,6 +63,7 @@ use App\Http\Controllers\ISIC4Controller;
 use App\Http\Controllers\KYC\KycAmendmentRequestController;
 use App\Http\Controllers\LandLease\LandLeaseController;
 use App\Http\Controllers\MVR\AgentsController;
+use App\Http\Controllers\MVR\BlacklistController;
 use App\Http\Controllers\MVR\DeRegistrationController;
 use App\Http\Controllers\MVR\MotorVehicleRegistrationController;
 use App\Http\Controllers\MVR\MvrGenericSettingController;
@@ -793,6 +794,10 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/agent', [AgentsController::class, 'index'])->name('agent');
         Route::get('/agent/create', [AgentsController::class, 'create'])->name('agent.create');
         Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
+
+        // Blacklist
+        Route::get('/blacklists', [BlacklistController::class, 'index'])->name('blacklist.index');
+        Route::get('/blacklists/{id}', [BlacklistController::class, 'show'])->name('blacklist.show');
     });
 
     Route::name('road-license.')->prefix('road-license')->group(function () {

@@ -1,19 +1,7 @@
-@extends('layouts.master')
-
-@section('title', 'Driver\'s License')
-
-@section('content')
+<div>
     <div class="card mt-3">
         <div class="card-header">
             Driver's License Details
-            <div class="card-tools">
-                <a target="_blank"
-                   href="{{route('drivers-license.license.print',encrypt($license->id))}}">
-                    <button class="btn btn-sm btn-success">
-                        <i class="bi bi-file-earmark-pdf-fill mr-1"></i> Print Driver's Licence
-                    </button>
-                </a>
-            </div>
         </div>
         <div class="card-body">
             <div class="col-12">
@@ -140,5 +128,4 @@
             </div>
         </div>
     </div>
-@endsection
-
+</div>

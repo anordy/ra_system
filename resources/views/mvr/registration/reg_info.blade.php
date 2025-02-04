@@ -52,7 +52,7 @@
                 <p class="my-1">{{ $reg->taxpayer->reference_no ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Registration Number</span>
+                <span class="font-weight-bold text-uppercase">Serial Number</span>
                 <p class="my-1">{{ $reg->registration_number ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
@@ -74,7 +74,7 @@
                 </div>
             @endif
             <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Plate Number</span>
+                <span class="font-weight-bold text-uppercase">Registration Number</span>
                 <p class="my-1">{{ $reg->plate_number ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">

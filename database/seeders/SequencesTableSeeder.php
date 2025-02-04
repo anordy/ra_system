@@ -36,7 +36,30 @@ class SequencesTableSeeder extends Seeder
                 'next_id' => 1,
                 'next_sequence' => '01/000',
             ],
-            // You can add more sequences here as needed
+            [
+                'name' => Sequence::PLATE_ALPHABET,
+                'prefix' => 'PA',
+                'next_id' => 1,
+                'next_sequence' => 'AA',
+            ],
+            [
+                'name' => Sequence::PLATE_NUMBER,
+                'prefix' => 'PN',
+                'next_id' => 1,
+                'next_sequence' => '101',
+            ],
+            [
+                'name' => Sequence::SLS_PLATE_NUMBER,
+                'prefix' => 'SLS',
+                'next_id' => 1,
+                'next_sequence' => '01/000',
+            ],
+            [
+                'name' => Sequence::SMZ_PLATE_NUMBER,
+                'prefix' => 'SMZ',
+                'next_id' => 1,
+                'next_sequence' => '01/000',
+            ],
         ];
 
         foreach ($sequences as $sequence) {

@@ -63,14 +63,12 @@
             position: absolute;
             top: 560px;
             left: 310px;
-            width: 300px;
         }
 
         #model {
             position: absolute;
             top: 650px;
             left: 310px;
-            width: 300px;
         }
 
         #chassis {
@@ -129,35 +127,19 @@
 </head>
 <body>
 <div id="owner-name">
-    @if($motor_vehicle->agent)
-        @if($motor_vehicle->is_agent_registration)
-            @if($motor_vehicle->use_company_name)
-                {{strtoupper($motor_vehicle->agent->company_name ?? 'N/A')}}
-            @else
-                {{strtoupper($motor_vehicle->taxpayer->fullname ?? 'N/A')}}
-            @endif
-        @else
-            @if($motor_vehicle->tin)
-                {{strtoupper($motor_vehicle->tin->fullname ?? $motor_vehicle->tin->taxpayer_name )}}
-            @else
-                {{ 'N/A'  }}
-            @endif
-        @endif
-    @else
-        {{strtoupper($motor_vehicle->taxpayer->fullname ?? 'N/A')}}
-    @endif
+    {{strtoupper($motor_vehicle->taxpayer->full_name ?? 'N/A')}}
 </div>
 <div id="reg-no">{{strtoupper($motor_vehicle->registration_number)}}</div>
 <div id="reg-date">{{strtoupper(\Carbon\Carbon::parse($motor_vehicle->registered_at)->format('d/m/Y'))}}</div>
 <div id="plate">{{strtoupper($motor_vehicle->plate_number)}}</div>
-<div id="yom">{{strtoupper($motor_vehicle->chassis->year ?? '')}}</div>
-<div id="make">{{strtoupper($motor_vehicle->chassis->make)}}</div>
-<div id="model">{{strtoupper($motor_vehicle->chassis->model_type)}}</div>
-<div id="chassis">{{strtoupper($motor_vehicle->chassis->chassis_number)}}</div>
-<div id="style">{{strtoupper($motor_vehicle->chassis->body_type)}}</div>
-<div id="engine">{{strtoupper($motor_vehicle->chassis->engine_number)}}</div>
-<div id="color">{{strtoupper($motor_vehicle->chassis->color)}}</div>
-<div id="capacity">{{strtoupper($motor_vehicle->chassis->engine_cubic_capacity)}} cc</div>
+<div id="yom">{{strtoupper($motor_vehicle->chassis->vehicle_manufacture_year ?? '')}}</div>
+<div id="make">{{strtoupper($motor_vehicle->chassis->makeType->name ?? '')}}</div>
+<div id="model">{{strtoupper($motor_vehicle->chassis->modelType->name ?? '')}}</div>
+<div id="chassis">{{strtoupper($motor_vehicle->chassis->chassis_number ?? '')}}</div>
+<div id="style">{{strtoupper($motor_vehicle->chassis->bodyType->name ?? '')}}</div>
+<div id="engine">{{strtoupper($motor_vehicle->chassis->engine_number ?? '')}}</div>
+<div id="color">{{strtoupper($motor_vehicle->chassis->colorType->name ?? '')}}</div>
+<div id="capacity">{{strtoupper($motor_vehicle->chassis->engine_capacity ?? '')}} cc</div>
 <div id="barcode">
     <img src="data:image/png;base64,' . {{ DNS1D::getBarcodePNG($motor_vehicle->registration_number, 'C39+',4,100, array(1,1,1), false)  }} . '"
          alt="barcode"/>

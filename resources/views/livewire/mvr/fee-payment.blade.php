@@ -54,17 +54,20 @@
                             Paid
                         </p>
                     </div>
-                    @if(get_class($motorVehicle) === 'App\Models\MvrRegistrationStatusChange' || get_class($motorVehicle) === \App\Models\MvrRegistration::class)
-                        <div class="col-md-3">
-                            <span class="font-weight-bold text-uppercase"> </span>
-                            <p class="my-1">
-                                <a target="_blank"
-                                   href="{{ route('mvr.registration.certificate', encrypt($motorVehicle->id)) }}"
-                                   class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
-                                    <i class="bi bi-download mr-3"></i><u>{{ __('Download Registration Certificate') }}</u>
-                                </a>
-                            </p>
-                        </div>
+
+                    @if(get_class($motorVehicle) === \App\Models\MvrRegistrationStatusChange::class || get_class($motorVehicle) === \App\Models\MvrRegistration::class)
+                        @if(\Carbon\Carbon::create($motorVehicle->registered_at)->gt(now()->subDay()))
+                            <div class="col-md-3">
+                                <span class="font-weight-bold text-uppercase"> </span>
+                                <p class="my-1">
+                                    <a target="_blank"
+                                       href="{{ route('mvr.registration.certificate', encrypt($motorVehicle->id)) }}"
+                                       class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                                        <i class="bi bi-download mr-3"></i><u>{{ __('Download Registration Certificate') }}</u>
+                                    </a>
+                                </p>
+                            </div>
+                        @endif
                     @elseif(get_class($motorVehicle) === \App\Models\MvrDeregistration::class)
                         <div class="col-md-3">
                             <span class="font-weight-bold text-uppercase"> </span>

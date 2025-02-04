@@ -38,6 +38,7 @@ class DlDriversLicense extends Model implements Auditable
     const STATUS_DAMAGED_OR_LOST ='LOST/DAMAGED';
     const STATUS_EXPIRED ='EXPIRED';
     const ACTIVE ='ACTIVE';
+    const BLOCKED ='BLOCKED';
 
 	protected $table = 'dl_drivers_licenses';
 	protected $casts = [
@@ -85,5 +86,9 @@ class DlDriversLicense extends Model implements Auditable
     public function application()
     {
         return $this->hasOne(DlLicenseApplication::class,'id', 'dl_license_application_id');
+    }
+
+    public function blacklist(){
+        return $this->morphOne(MvrBlacklist::class, 'blacklist');
     }
 }
