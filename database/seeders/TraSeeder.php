@@ -33,5 +33,6 @@ class TraSeeder extends Seeder
         $this->call(VehicleTransmissionTypeSeeder::class);
         $this->call(VehicleUsageTypeSeeder::class);
         $this->call(VehicleOwnerCategorySeeder::class);
+        $this->call(TancisChassisNumbersSeeder::class);
     }
 }
