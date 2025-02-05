@@ -17,7 +17,7 @@
                 <i class="bi bi-check-circle-fill mr-1"></i>
                 {{ __('Registered') }}
                         </span>
-                @elseif($reg->status === \App\Enum\MvrRegistrationStatus::STATUS_RETIRED)
+                    @elseif($reg->status === \App\Enum\MvrRegistrationStatus::STATUS_RETIRED)
                         <span class="badge badge-danger py-1 px-2">
                 <i class="bi bi-check-circle-fill mr-1"></i>
                 {{ __('Retired') }}
@@ -33,6 +33,11 @@
                 {{ $reg->status }}
             </span>
                     @endif
+                </p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Is Blocked</span>
+                <p class="my-1"><span class="badge badge-primary py-1 px-2">{{ $reg->is_blocked ? 'Yes' : 'No'}}</span>
                 </p>
             </div>
             <div class="col-md-3 mb-3">
