@@ -144,5 +144,6 @@ class DatabaseSeeder extends Seeder
         $this->call(NtrBusinessAttachmentTypeSeeder::class);
         $this->call(TraSeeder::class);
         $this->call(DesignationsSeeder::class);
+        $this->call(MvrPlateNumberTypeSeeder::class);
     }
 }
