@@ -17,11 +17,7 @@ class DlLicenseRestriction extends Model
         'dl_restriction_id' => 'int'
     ];
 
-    protected $fillable = [
-        'dl_license_application_id',
-        'dl_license_id',
-        'dl_restriction_id'
-    ];
+    protected $guarded = [];
 
     public function license_application()
     {

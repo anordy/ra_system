@@ -39,26 +39,25 @@ class LicenseApplicationsTable extends DataTableComponent
 	      'default' => true,
 	      'class' => 'table-bordered table-sm',
 	    ]);
+
+        $this->setAdditionalSelects(['last_name']);
     }
 
     public function columns(): array
     {
         return [
-            Column::make(__("Applicant's Name"), "dl_drivers_license_owner_id")
-                ->format(function ($dl_drivers_license_owner_id) {
-                    $owner = DlDriversLicenseOwner::find($dl_drivers_license_owner_id);
-                    return $owner ? $owner->fullname() : null;
+            Column::make(__("Applicant's Name"), "first_name")
+                ->format(function ($value, $row) {
+                    return $row->first_name . ' ' . $row->last_name;
                 })
                 ->sortable(),
-            // Column::make("Applicants TIN", "taxpayer.tin")
-            //     ->sortable(),
-            Column::make("Type", "type")
+            Column::make("Type", "license_type")
                 ->format(fn($type)=>ucwords(strtolower($type)))
                 ->sortable(),
-            Column::make("Application Date", "created_at")
-                ->format(fn($date)=>Carbon::parse($date)->format('Y-m-d'))
-                ->sortable(),
             Column::make("Status", "status")
+                ->sortable(),
+            Column::make("Initiated Date", "created_at")
+                ->format(fn($date) => Carbon::parse($date)->format('Y-m-d'))
                 ->sortable(),
             Column::make('Action', 'id')
                 ->format(function ($value) {

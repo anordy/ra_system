@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDlApplicationLicenseClassesTable extends Migration
+class AlterClassIdToDlDriversLicenseClassesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateDlApplicationLicenseClassesTable extends Migration
      */
     public function up()
     {
-        Schema::create('dl_app_license_classes', function (Blueprint $table) {
-            $table->id();
+        Schema::table('dl_drivers_license_classes', function (Blueprint $table) {
             $table->unsignedBigInteger('dl_license_application_id');
-            $table->unsignedBigInteger('dl_license_class_id');
-            $table->timestamps();
+            $table->string('certificate_number')->nullable();
+            $table->timestamp('certificate_date')->nullable();
         });
     }
 
@@ -28,6 +27,8 @@ class CreateDlApplicationLicenseClassesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dl_app_license_classes');
+        Schema::table('dl_drivers_license_classes', function (Blueprint $table) {
+            //
+        });
     }
 }

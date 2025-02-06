@@ -28,7 +28,6 @@ class DlApplicationStatus extends Model
     const RENEW = 'RENEW';
     const ACTIVE = 'ACTIVE';
     const ADD_CLASS = 'CLASS';
-    protected $table = 'dl_application_status';
     const STATUS_PENDING_APPROVAL = 'Pending Approval';
     const STATUS_INITIATED = 'Initiated';
     const STATUS_DETAILS_CORRECTION = 'Details Correction';
@@ -40,6 +39,9 @@ class DlApplicationStatus extends Model
     protected $fillable = [
 		'name'
 	];
+
+    protected $table = 'dl_application_status';
+
 
 	public function dl_license_applications()
 	{

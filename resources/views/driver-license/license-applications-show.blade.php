@@ -106,11 +106,12 @@
                             <p class="my-1">{{ $application->confirmation_number ?? 'N/A' }}</p>
                         </div>
                     @endif
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">License Duration</span>
-                        <p class="my-1">{{ $application->license_duration ?? 'N/A' }} Years</p>
-
-                    </div>
+                    @if($application->license_duration_id)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">License Duration</span>
+                            <p class="my-1">{{ $application->license_duration ?? 'N/A' }} Years</p>
+                        </div>
+                    @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">License Classes</span>
                         <p class="my-1">
@@ -129,7 +130,8 @@
                             <ul>
                                 @foreach ($application->licenseRestrictions as $licenseRestriction)
                                     <li>
-                                        {{ $licenseRestriction->restriction->description }} ({{ $licenseRestriction->restriction->symbol }})
+                                        {{ $licenseRestriction->restriction->description }}
+                                        ({{ $licenseRestriction->restriction->symbol }})
                                     </li>
                                 @endforeach
                             </ul>
@@ -156,14 +158,40 @@
 
             <div class="card">
                 <div class="card-header">
+                    License Classes
+                </div>
+                <div class="card-body">
+                    @foreach($application->application_license_classes as $class)
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Class Name</span>
+                                <p class="my-1">{{ $class->license_class->name ?? 'N/A' }}
+                                    - {{ $class->license_class->description ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Certificate Number</span>
+                                <p class="my-1">{{ $class->certificate_number ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Certificate Date</span>
+                                <p class="my-1">{{ $class->certificate_date ?? 'N/A' }}</p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
                     Applicant Details
                 </div>
                 <div class="card-body row">
                     <div class="col-auto px-4">
-                        @if ($application->type == 'FRESH' && empty($application->drivers_license_owner->photo_path))
+                        @if ($application->type == 'FRESH' && empty($application->drivers_license->photo_path))
                             <img class="dl-passport shadow" src="{{ url('/images/profile.png') }}">
                         @else
-                            <img class="dl-passport shadow"  src="{{ route('drivers-license.license.file', encrypt($application->drivers_license_owner->photo_path)) }}">
+                            <img class="dl-passport shadow"
+                                 src="{{ route('drivers-license.license.file', encrypt($application->drivers_license->photo_path)) }}">
                         @endif
                         @if ($application->status === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
                             <button class="btn btn-primary btn-sm btn-block mt-3"
@@ -178,102 +206,31 @@
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">{{ __('name') }}</span>
                                 <p class="my-1">
-                                    {{ $applicant->first_name ?? 'N/A' }} {{ $applicant->middle_name ?? ''}} {{ $applicant->last_name ?? 'N/A' }}
+                                    {{ $application->first_name ?? 'N/A' }} {{ $application->middle_name ?? ''}} {{ $application->last_name ?? 'N/A' }}
                                 </p>
                             </div>
 
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">{{ __('TIN') }}</span>
-                                <p class="my-1">{{ $applicant->tin ?? 'N/A' }}</p>
+                                <p class="my-1">{{ $application->tin ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">{{ __('Email Address') }}</span>
-                                <p class="my-1">{{ $applicant->email ?? 'N/A' }}</p>
+                                <p class="my-1">{{ $application->email ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">{{ __('Mobile') }}</span>
-                                <p class="my-1">{{ $applicant->mobile ?? 'N/A' }}</p>
+                                <p class="my-1">{{ $application->mobile ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">{{ __('Alternative') }}</span>
-                                <p class="my-1">{{ $applicant->alt_mobile ?? 'N/A' }}</p>
+                                <p class="my-1">{{ $application->alt_mobile ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">{{ __('Date of birth') }}</span>
-                                <p class="my-1">{{ $applicant->dob ? Carbon\Carbon::parse($applicant->dob)->format('d-m-Y') : 'N/A' }}
+                                <p class="my-1">{{ $application->dob ? Carbon\Carbon::parse($application->dob)->format('d-m-Y') : 'N/A' }}
                                 </p>
                             </div>
-                            @if($applicant->birth_certificate_no)
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">{{ __('Birth Certificate No.') }}</span>
-                                    <p class="my-1">{{ $applicant->birth_certificate_no ?? '' }}
-                                    </p>
-                                </div>
-                            @endif
-                            @if($applicant->birth_certificate)
-                                <div class="col-md-4">
-                                    <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
-                                        <a target="_blank"
-                                           href="{{ route('drivers-license.license.file', encrypt($applicant->birth_certificate)) }}"
-                                           class="ml-1"> Birth Certificate
-                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            @endif
-                            @if($applicant->passport_no)
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">{{ __('Passport No.') }}</span>
-                                    <p class="my-1">{{ $applicant->passport_no ?? '' }}
-                                    </p>
-                                </div>
-                            @endif
-                            @if($applicant->passport_attachment)
-                                <div class="col-md-4">
-                                    <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
-                                        <a target="_blank"
-                                           href="{{ route('drivers-license.license.file', encrypt($applicant->passport_attachment)) }}"
-                                           class="ml-1"> Passport Attachment
-                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            @endif
-                            @if($applicant->zan_id)
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">{{ __('ZanID') }}</span>
-                                    <p class="my-1">{{ $applicant->zan_id ?? '' }}
-                                    </p>
-                                </div>
-                            @endif
-                            @if($applicant->ref_no)
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">{{ __('Reference No.') }}</span>
-                                    <p class="my-1">{{ $applicant->ref_no ?? '' }}
-                                    </p>
-                                </div>
-                            @endif
-                            @if($applicant->nida)
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">{{ __('NIDA No') }}</span>
-                                    <p class="my-1">{{ $applicant->nida ?? '' }}
-                                    </p>
-                                </div>
-                            @endif
-                            @if($applicant->nida_attachment)
-                                <div class="col-md-4">
-                                    <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
-                                        <a target="_blank"
-                                           href="{{ route('drivers-license.license.file', encrypt($applicant->nida_attachment)) }}"
-                                           class="ml-1"> Passport Attachment
-                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -281,83 +238,85 @@
 
             <livewire:approval.mvr.driver-license-approval-processing
                     modelName='App\Models\DlLicenseApplication' modelId="{{ encrypt($application->id) }}"/>
-        </div>
 
-        <div class="tab-pane fade p-3" id="approval" role="tabpanel" aria-labelledby="approval-tab">
-            <livewire:approval.approval-history-table modelName='App\Models\DlLicenseApplication'
-                                                      modelId="{{ encrypt($application->id) }}"/>
         </div>
+    </div>
 
-        @if (!empty($application->drivers_license) || $application->type == \App\Enum\GeneralConstant::DUPLICATE)
-            <div class="tab-pane p-3 " id="license" role="tabpanel" aria-labelledby="license-tab">
-                <div class="card">
-                    <div class="card-header">
-                        Licence Information
-                        <div class="card-tools">
-                            @if ($application->status === \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)
-                                <a target="_blank" class="btn btn-primary text-white" href="{{ route('drivers-license.license.print', encrypt($application->drivers_license->id)) }}">
-                                    <i class="bi bi-printer-fill mr-1"></i> PRINT LICENSE
-                                </a>
-                            @endif
-                            @if ($application->status === \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)
-                                <a href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}">
-                                    <button class="btn btn-success">
-                                        <i class="bi bi-check2-circle mr-1"></i> UPDATE AS PRINTED
-                                    </button>
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="card-body row">
-                        @if($application->drivers_license_owner->photo_path)
-                            <div class="col-auto px-4">
-                                <img src="{{ route('drivers-license.license.file', encrypt($application->drivers_license_owner->photo_path)) }}"
-                                     class="dl-passport shadow">
-                            </div>
+    <div class="tab-pane fade p-3" id="approval" role="tabpanel" aria-labelledby="approval-tab">
+        <livewire:approval.approval-history-table modelName='App\Models\DlLicenseApplication'
+                                                  modelId="{{ encrypt($application->id) }}"/>
+    </div>
+
+    @if (!empty($application->drivers_license) || $application->type == \App\Enum\GeneralConstant::DUPLICATE)
+        <div class="tab-pane p-3 " id="license" role="tabpanel" aria-labelledby="license-tab">
+            <div class="card">
+                <div class="card-header">
+                    Licence Information
+                    <div class="card-tools">
+                        @if ($application->status === \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)
+                            <a target="_blank" class="btn btn-primary text-white"
+                               href="{{ route('drivers-license.license.print', encrypt($application->drivers_license->id)) }}">
+                                <i class="bi bi-printer-fill mr-1"></i> PRINT LICENSE
+                            </a>
                         @endif
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">License Number</span>
-                                    <p class="my-1">{{ $application->drivers_license->license_number ?? 'N/A' }}</p>
-                                </div>
+                        @if ($application->status === \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)
+                            <a href="{{ route('drivers-license.applications.printed', encrypt($application->id)) }}">
+                                <button class="btn btn-success">
+                                    <i class="bi bi-check2-circle mr-1"></i> UPDATE AS PRINTED
+                                </button>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+                <div class="card-body row">
+                    @if(isset($application->drivers_license->photo_path))
+                        <div class="col-auto px-4">
+                            <img src="{{ route('drivers-license.license.file', encrypt($application->drivers_license->photo_path)) }}"
+                                 class="dl-passport shadow">
+                        </div>
+                    @endif
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">License Number</span>
+                                <p class="my-1">{{ $application->drivers_license->license_number ?? 'N/A' }}</p>
+                            </div>
 
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">License Classes</span>
-                                    <p class="my-1">
-                                        @if($application->application_license_classes)
-                                            @foreach ($application->application_license_classes as $class)
-                                                {{ $class->license_class->name ?? 'N/A' }},
-                                            @endforeach
-                                        @endif
-                                    </p>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">License Restrictions</span>
-                                    <ol class="mx-0">
-                                        @foreach($application->licenseRestrictions as $licenseRestrictions)
-                                            <li>{{ $licenseRestrictions->restriction->description ?? 'N/A' }}</li>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">License Classes</span>
+                                <p class="my-1">
+                                    @if($application->application_license_classes)
+                                        @foreach ($application->application_license_classes as $class)
+                                            {{ $class->license_class->name ?? 'N/A' }},
                                         @endforeach
-                                    </ol>
-                                </div>
+                                    @endif
+                                </p>
+                            </div>
 
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">Issued Date</span>
-                                    <p class="my-1">
-                                        {{ $application->drivers_license->issued_date ? $application->drivers_license->issued_date->format('Y-m-d') : 'N/A' }}</p>
-                                </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">License Restrictions</span>
+                                <ol class="mx-0">
+                                    @foreach($application->licenseRestrictions as $licenseRestrictions)
+                                        <li>{{ $licenseRestrictions->restriction->description ?? 'N/A' }}</li>
+                                    @endforeach
+                                </ol>
+                            </div>
 
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">Expire Date</span>
-                                    <p class="my-1">
-                                        {{ $application->drivers_license->expiry_date ? $application->drivers_license->expiry_date->format('Y-m-d') : 'N/A' }}</p>
-                                </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Issued Date</span>
+                                <p class="my-1">
+                                    {{ $application->drivers_license->issued_date ? $application->drivers_license->issued_date->format('Y-m-d') : 'N/A' }}</p>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Expire Date</span>
+                                <p class="my-1">
+                                    {{ $application->drivers_license->expiry_date ? $application->drivers_license->expiry_date->format('Y-m-d') : 'N/A' }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        @endif
-    </div>
+        </div>
+    @endif
 @endsection

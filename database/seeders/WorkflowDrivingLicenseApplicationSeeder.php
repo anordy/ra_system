@@ -24,16 +24,21 @@ class WorkflowDrivingLicenseApplicationSeeder extends Seeder
         $supports =  ['App\Models\DlLicenseApplication'];
         $places =  [
             'initiate' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => []
+            ],
+            'applicant' => [
                 'owner' => 'taxpayer',
                 'operator_type' => 'user',
                 'operators' => []
             ],
-            'correct_application' => [
-                'owner' => 'taxpayer',
-                'operator_type' => 'user',
-                'operators' => []
+            'zartsa_officer' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [1,2,3]
             ],
-            'transport_officer' => [
+            'zra_officer' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1,2,3]
@@ -45,26 +50,21 @@ class WorkflowDrivingLicenseApplicationSeeder extends Seeder
             ],
         ];
         $transitions = [
-            'application_submitted' => [
+            'application_initiated' => [
                 'from' => 'initiate',
-                'to'   => 'transport_officer',
+                'to'   => 'applicant',
                 'condition' => '',
             ],
-            'transport_officer_review' => [
-                'from' => 'transport_officer',
+            'zra_officer_review' => [
+                'from' => 'zra_officer',
                 'to'   => 'completed',
                 'condition' => '',
             ],
-            'application_filled_incorrect' => [
-                'from' => 'transport_officer',
-                'to'   => 'correct_application',
+            'application_submitted' => [
+                'from' => 'applicant',
+                'to'   => 'zra_officer',
                 'condition' => '',
-            ],
-            'application_corrected' => [
-                'from' => 'correct_application',
-                'to'   => 'transport_officer',
-                'condition' => '',
-            ],
+            ]
         ];
 
         Workflow::updateOrCreate([

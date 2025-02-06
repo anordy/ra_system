@@ -28,16 +28,11 @@ class DlApplicationLicenseClass extends Model implements Auditable
 {
 	use \OwenIt\Auditing\Auditable;
 
-	protected $table = 'dl_app_license_classes';
+	protected $table = 'dl_drivers_license_classes';
 
 	protected $casts = [
 		'dl_license_application_id' => 'int',
 		'dl_license_class_id' => 'int'
-	];
-
-	protected $fillable = [
-		'dl_license_application_id',
-		'dl_license_class_id'
 	];
 
 	public function license_application()

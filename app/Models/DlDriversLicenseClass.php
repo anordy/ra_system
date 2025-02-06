@@ -35,10 +35,7 @@ class DlDriversLicenseClass extends Model implements Auditable
 		'dl_license_class_id' => 'int'
 	];
 
-	protected $fillable = [
-		'dl_drivers_license_id',
-		'dl_license_class_id'
-	];
+    protected $guarded = [];
 
 	public function drivers_license()
 	{
