@@ -68,8 +68,12 @@ class DLClassSeeder extends Seeder
             [
                 'name' => 'G',
                 'description' => 'General (All Vehicles)',
+<<<<<<< HEAD
                 'from_age' => 0,
                 'to_age' => 0,
+=======
+                'age' => 0,
+>>>>>>> f3a92b814 (add: base dl initiation)
             ],
             [
                 'name' => 'M',
