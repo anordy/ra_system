@@ -794,6 +794,18 @@
                    class="dropdown-toggle">Driver's Licenses</a>
                 <ul class="collapse list-unstyled {{ request()->is('drivers-license*') || request()->is('rio*') ? 'show' : '' }}"
                     id="dlSubmenu">
+                    @can('driver-licences-view')
+                        <li class="{{ request()->is('drivers-license/initiate*') ? 'active' : '' }}">
+                            <a href="{{ route('drivers-license.license.initiate') }}">Driver's License Initiation</a>
+                        </li>
+                    @endcan
+
+                    @can('driver-licences-view')
+                        <li class="{{ request()->is('drivers-license/initiations*') ? 'active' : '' }}">
+                            <a href="{{ route('drivers-license.license.initiations') }}">Driver's Licenses Initiations</a>
+                        </li>
+                    @endcan
+
                     @can('driver-licences-application')
                         <li
                                 class="{{ request()->is('drivers-license/applications*') ? 'active' : '' }}">
@@ -812,6 +824,7 @@
                             <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
                         </li>
                     @endcan
+
                 </ul>
             </li>
         @endcan

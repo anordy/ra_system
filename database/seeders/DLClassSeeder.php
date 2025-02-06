@@ -17,48 +17,65 @@ class DLClassSeeder extends Seeder
         $classes = [
             [
                 'name' => 'A',
-                'description' => 'Motorcycle'
+                'description' => 'Motorcycle',
+                'from_age' => 18,
+                'to_age' => 20,
             ],
             [
                 'name' => 'B',
-                'description' => 'Private Car > 7 seats'
+                'description' => 'Private Car > 7 seats',
+                'from_age' => 21,
+                'to_age' => 24,
             ],
             [
                 'name' => 'B1',
-                'description' => 'Private Car <= 7 seats'
+                'description' => 'Private Car <= 7 seats',
+                'from_age' => 18,
+                'to_age' => 20,
+
             ],
             [
                 'name' => 'C',
-                'description' => 'Goods Vehicle > 3.5 Tons'
+                'description' => 'Goods Vehicle > 3.5 Tons',
+                'from_age' => 21,
+                'to_age' => 24,
+
             ],
             [
                 'name' => 'C1',
-                'description' => 'Goods Vehicle <= 3.5 Tons'
+                'description' => 'Goods Vehicle <= 3.5 Tons',
+                'from_age' => 18,
+                'to_age' => 20,
             ],
             [
                 'name' => 'D',
-                'description' => 'Public Vehicle > 7 seats'
+                'description' => 'Public Vehicle > 7 seats',
+                'from_age' => 25,
+                'to_age' => 120,
             ],
             [
                 'name' => 'D1',
-                'description' => 'Public Vehicle <= 7 seats'
+                'description' => 'Public Vehicle <= 7 seats',
+                'from_age' => 21,
+                'to_age' => 24,
             ],
             [
                 'name' => 'E',
-                'description' => 'Tractors'
+                'description' => 'Tractors',
+                'from_age' => 21,
+                'to_age' => 24,
             ],
             [
                 'name' => 'G',
-                'description' => 'General (All Vehicles)'
+                'description' => 'General (All Vehicles)',
+                'age' => 0,
             ],
             [
                 'name' => 'M',
-                'description' => 'Moped'
+                'description' => 'Moped',
+                'from_age' => 16,
+                'to_age' => 17,
             ],
-            [
-                'name' => 'N',
-                'description' => 'None'
-            ]
         ];
         foreach ($classes as $cl){
             DlLicenseClass::updateOrCreate($cl);

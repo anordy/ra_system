@@ -814,6 +814,8 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/applications/{id}', [LicenseApplicationsController::class, 'show'])->name('applications.show');
         Route::get('/applications/license/{id}', [LicenseApplicationsController::class, 'license'])->name('license.print');
         Route::get('/applications/file/{location}', [LicenseApplicationsController::class, 'getFile'])->name('license.file');
+        Route::get('/initiate', [LicenseApplicationsController::class, 'initiateLicense'])->name('license.initiate');
+        Route::get('/initiations', [LicenseApplicationsController::class, 'licenseInitiations'])->name('license.initiations');
     });
 
     Route::prefix('rio')->as('rio.')->group(function () {

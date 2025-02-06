@@ -111,4 +111,20 @@ class LicenseApplicationsController extends Controller
         return view('driver-license.licenses-index');
     }
 
+    public function initiateLicense()
+    {
+        if (!Gate::allows('driver-licences-view')) {
+            abort(403);
+        }
+        return view('driver-license.licenses-initiate');
+    }
+
+    public function licenseInitiations()
+    {
+        if (!Gate::allows('driver-licences-view')) {
+            abort(403);
+        }
+        return view('driver-license.licenses-initiations');
+    }
+
 }
