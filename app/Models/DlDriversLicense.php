@@ -56,4 +56,9 @@ class DlDriversLicense extends Model implements Auditable
     public function blacklist(){
         return $this->morphOne(MvrBlacklist::class, 'blacklist');
     }
+
+    public function taxpayer()
+    {
+        return $this->belongsTo(Taxpayer::class);
+    }
 }

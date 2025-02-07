@@ -24,7 +24,7 @@ class FeePayment extends Component
         // Fetch the fee
         $this->fee = DlFee::select('id', 'amount')
             ->where('dl_license_duration_id', $this->license->license_duration_id)
-            ->where('type', $license->type)
+            ->where('type', strtoupper($license->type))
             ->first();
 
     }

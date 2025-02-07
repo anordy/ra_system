@@ -16,7 +16,7 @@ class AddTinToTaxpayersTable extends Migration
         Schema::table('taxpayers', function (Blueprint $table) {
             $table->string('tin_no')->nullable();
             $table->dateTime('tin_verified_at')->nullable();
-            // $table->timestamp('biometric_verified_at')->nullable()->change();
+            $table->timestamp('biometric_verified_at')->nullable()->change();
         });
     }
 

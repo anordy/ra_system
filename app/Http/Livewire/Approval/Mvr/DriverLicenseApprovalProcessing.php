@@ -39,37 +39,9 @@ class DriverLicenseApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
-        $this->selectedRestrictions = [];
-        $this->restrictions = DlRestriction::select('id', 'symbol', 'description')->get();
-        $this->attachments = [
-            [
-                'file' => '',
-            ],
-        ];
     }
 
 
-    public function addAttachment()
-    {
-        $this->attachments[] = [
-            'file' => '',
-        ];
-    }
-
-    public function removeAttachment($i)
-    {
-        unset($this->attachments[$i]);
-    }
-
-    public function updatedSelectedRestrictions($value)
-    {
-        $this->selectedRestrictions[] = (int) $value;
-        // Remove 0 and false values from the array
-        $this->selectedRestrictions = array_filter($this->selectedRestrictions, function ($item) {
-            return $item !== 0 && $item !== false;
-        });
-        $this->selectedRestrictions = array_unique($this->selectedRestrictions);
-    }
 
     public function approve($transition)
     {
@@ -78,32 +50,11 @@ class DriverLicenseApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('transport_officer_review') && $transition === 'transport_officer_review') {
+            if ($this->checkTransition('zra_officer_review') && $transition === 'zra_officer_review') {
+
                 $this->validate([
                     'comments' => 'required|strip_tag',
-                    'attachments.*.file' => 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
                 ]);
-
-                DlLicenseRestriction::where('dl_license_application_id', $this->subject->id)->delete();
-                foreach ($this->selectedRestrictions as $_id => $_value) {
-                    if (!empty($_value)) {
-                        $class = DlLicenseRestriction::query()->create([
-                            'dl_license_application_id' => $this->subject->id,
-                            'dl_restriction_id' => $_id
-                        ]);
-
-                        if (!$class) {
-                            throw new \Exception('Could not persist driving license restriction information');
-                        }
-                    }
-                }
-
-                foreach ($this->attachments as $attachment) {
-                    DlApplicationCertificate::create([
-                        'location' => $attachment['file']->store('dl_files'),
-                        'dl_license_application_id' => $this->subject->id
-                    ]);
-                }
 
                 $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->payment_status = BillStatus::CN_GENERATING;
@@ -123,28 +74,22 @@ class DriverLicenseApprovalProcessing extends Component
 
             DB::commit();
 
-            if ($this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT && $transition === 'transport_officer_review') {
+            if ($this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT && $transition === 'zra_officer_review') {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, [
-                    'phone' => $this->subject->drivers_license_owner->mobile,
-                    'message' => "
-                Hello {$this->subject->drivers_license_owner->fullname()}, your driver license application has been approved, you will receive your payment control number shortly."
+                    'phone' => $this->subject->taxpayer->mobile,
+                    'message' => "Hello {$this->subject->taxpayer->fullname()}, your driver license application has been approved, you will receive your payment control number shortly."
                 ]));
             }
 
             // Generate Control Number after MVR SC Approval
-            if ($this->subject->status == DlApplicationStatus::STATUS_PENDING_PAYMENT && $transition === 'transport_officer_review') {
+            if ($this->subject->status == DlApplicationStatus::STATUS_PENDING_PAYMENT && $transition === 'zra_officer_review') {
                 $this->generateControlNumber();
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-
-            Log::error('Error approving application: ' . $exception->getMessage(), [
-                'subject_id' => $this->subject->id,
-                'applicant name' => $this->subject->drivers_license_owner->fullname(),
-                'exception' => $exception,
-            ]);
+            Log::error('ERROR-APPROVING-DL-APPLICATION',[$exception]);
             $this->customAlert('error', 'Something went wrong');
             return;
         }

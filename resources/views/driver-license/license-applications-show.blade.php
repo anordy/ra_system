@@ -109,19 +109,9 @@
                     @if($application->license_duration_id)
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">License Duration</span>
-                            <p class="my-1">{{ $application->license_duration ?? 'N/A' }} Years</p>
+                            <p class="my-1">{{ $application->license_duration->description ?? 'N/A' }}</p>
                         </div>
                     @endif
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">License Classes</span>
-                        <p class="my-1">
-                            @if($application->application_license_classes)
-                                @foreach ($application->application_license_classes as $class)
-                                    {{ $class->license_class->name ?? 'N/A' }},
-                                @endforeach
-                            @endif
-                        </p>
-                    </div>
 
 
                     @if($application->licenseRestrictions->count())
@@ -187,11 +177,11 @@
                 </div>
                 <div class="card-body row">
                     <div class="col-auto px-4">
-                        @if ($application->type == 'FRESH' && empty($application->drivers_license->photo_path))
+                        @if ($application->type == 'FRESH' && empty($application->photo_path))
                             <img class="dl-passport shadow" src="{{ url('/images/profile.png') }}">
                         @else
                             <img class="dl-passport shadow"
-                                 src="{{ route('drivers-license.license.file', encrypt($application->drivers_license->photo_path)) }}">
+                                 src="{{ route('drivers-license.license.file', encrypt($application->photo_path)) }}">
                         @endif
                         @if ($application->status === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
                             <button class="btn btn-primary btn-sm btn-block mt-3"
@@ -248,7 +238,7 @@
     </div>
 
     @if (!empty($application->drivers_license) || $application->type == \App\Enum\GeneralConstant::DUPLICATE)
-        <div class="tab-pane p-3 " id="license" role="tabpanel" aria-labelledby="license-tab">
+        <div class="tab-pane p-3" id="license" role="tabpanel" aria-labelledby="license-tab">
             <div class="card">
                 <div class="card-header">
                     Licence Information
@@ -269,9 +259,9 @@
                     </div>
                 </div>
                 <div class="card-body row">
-                    @if(isset($application->drivers_license->photo_path))
+                    @if(isset($application->photo_path))
                         <div class="col-auto px-4">
-                            <img src="{{ route('drivers-license.license.file', encrypt($application->drivers_license->photo_path)) }}"
+                            <img src="{{ route('drivers-license.license.file', encrypt($application->photo_path)) }}"
                                  class="dl-passport shadow">
                         </div>
                     @endif

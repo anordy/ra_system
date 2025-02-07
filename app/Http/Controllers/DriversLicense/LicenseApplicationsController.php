@@ -65,7 +65,7 @@ class LicenseApplicationsController extends Controller
         $id = decrypt($id);
         $license = DlDriversLicense::query()->findOrFail($id);
 
-        $imagePath = Storage::disk('local')->get($license->drivers_license_owner->photo_path);
+        $imagePath = Storage::disk('local')->get($license->application->photo_path);
         $imageData = base64_encode($imagePath);
         $base64Image = 'data:image/png;base64,' . $imageData;
 

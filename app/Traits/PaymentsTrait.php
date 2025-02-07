@@ -1199,7 +1199,7 @@ trait PaymentsTrait
         $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
 
         if (!$license->ledger) {
-            $taxpayerId = $license->drivers_license_owner->taxpayer_id ?? $license->applicant->id;
+            $taxpayerId = $license->taxpayer_id;
             $this->recordDebitLedger($license, $fee->amount, $taxType->id, $taxpayerId);
         }
 
@@ -1208,13 +1208,13 @@ trait PaymentsTrait
             $license->id,
             get_class($license),
             $taxType->id,
-            $license->driving_school_id,
+            $license->taxpayer_id,
             Taxpayer::class,
-            $license->drivers_license_owner->fullname(),
-            $license->drivers_license_owner->email,
-            ZmCore::formatPhone($license->drivers_license_owner->mobile),
+            $license->taxpayer->fullname(),
+            $license->taxpayer->email,
+            ZmCore::formatPhone($license->taxpayer->mobile),
             Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
-            "{$fee->name} Driving License For {$license->drivers_license_owner->fullname()}",
+            "{$fee->name} Driving License For {$license->taxpayer->fullname()}",
             ZmCore::PAYMENT_OPTION_EXACT,
             Currencies::TZS,
             $exchangeRate,

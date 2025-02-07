@@ -31,12 +31,12 @@ class DlLicenseApplication extends Model implements Auditable
 
 	public function blood_group()
 	{
-		return $this->belongsTo(DlBloodGroup::class,'dl_blood_group_id');
+		return $this->belongsTo(DlBloodGroup::class,'blood_group_id');
 	}
 
         public function license_duration()
 	{
-		return $this->belongsTo(DlLicenseDuration::class,'dl_license_duration_id');
+		return $this->belongsTo(DlLicenseDuration::class,'license_duration_id');
 	}
 
 	public function taxpayer()

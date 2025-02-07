@@ -5,14 +5,14 @@ namespace App\Http\Livewire\DriversLicense;
 
 use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
-use App\Models\DlDriversLicenseClass;
 use App\Models\DlLicenseApplication;
+use App\Traits\CustomAlert;
 use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -23,9 +23,6 @@ class CapturePassportModal extends Component
     use CustomAlert, WithFileUploads, WorkflowProcesssingTrait;
 
     public $application_id;
-    /**
-     * @var  TemporaryUploadedFile
-     */
     public $photo;
     public $licenseId;
     private $photo_path = null;
@@ -39,7 +36,7 @@ class CapturePassportModal extends Component
     protected function rules()
     {
         return [
-            'photo' => 'required|mimes:png,jpg,jpeg|max:1024'
+            'photo' => 'required|mimes:png,jpg,jpeg|max:3072'
         ];
     }
 
@@ -75,7 +72,6 @@ class CapturePassportModal extends Component
     }
 
 
-
     public function render()
     {
         return view('livewire.drivers-license.capture-passport-modal');
@@ -85,8 +81,8 @@ class CapturePassportModal extends Component
     {
         try {
             $photoPath = $this->photo->store('dl_passport');
-            $dla->drivers_license_owner->photo_path = $photoPath;
-            $dla->drivers_license_owner->save();
+            $dla->photo_path = $photoPath;
+            $dla->save();
         } catch (Exception $exception) {
             Log::error('DRIVERS-LICENSE-CAPTURE-PASSPORT-MODAL-UPDATE-DRIVER-PHOTO', [$exception]);
             throw $exception;
@@ -95,79 +91,17 @@ class CapturePassportModal extends Component
 
     private function generateLicense(DlLicenseApplication $dla)
     {
-        $owner = $dla->drivers_license_owner;
+        $dlLicense = $dla->drivers_license;
 
-        $originalLicense = DlDriversLicense::query()
-            ->where('dl_drivers_license_owner_id', $dla->dl_drivers_license_owner_id)
-            ->latest()
-            ->first();
+        $dlLicense->license_number = 'Z'. DlDriversLicense::getNextLicenseNumber();
+        $dlLicense->issued_date = date('Y-m-d');
+        $dlLicense->expiry_date = Carbon::now()->addYears($dla->license_duration->number_of_years)->format('Y-m-d');
+        $dlLicense->status = DlApplicationStatus::ACTIVE;
 
-        if ($originalLicense) {
-            $newLicense = new DlDriversLicense();
-            $arr = $originalLicense->toArray();
-
-            unset($arr['id']);
-            unset($arr['created_at']);
-            unset($arr['updated_at']);
-
-            $newLicense->fill($arr);
-            $newLicense->status = DlApplicationStatus::ACTIVE;
-
-            if ($dla->type === DlApplicationStatus::RENEW) {
-                $newLicense->license_duration = $dla->license_duration;
-                $newLicense->license_number = DlDriversLicense::getNextLicenseNumber();
-                $newLicense->issued_date = date('Y-m-d');
-                $newLicense->expiry_date = date('Y-m-d', strtotime("+{$dla->license_duration} years"));
-            } elseif($dla->type === DlApplicationStatus::ADD_CLASS){
-                $newLicense->license_number = DlDriversLicense::getNextLicenseNumber();
-            }
-
-            try {
-                // Delete existing license class associations
-                // TODO: WHY ?
-                // Take old classes and associate with the new driver license
-                //$newLicense->drivers_license_classes()->delete();
-                $newLicense->save();
-                $dla->drivers_license_id = $newLicense->id;
-                $dla->save();
-
-            } catch (Exception $exception) {
-                Log::error('DRIVERS-LICENSE-CAPTURE-PASSPORT-MODAL-GENERATE-LICENSE', [$exception]);
-                throw $exception;
-            }
-
-        } else {
-            $newLicense = DlDriversLicense::create([
-                'dl_drivers_license_owner_id' => $owner->id,
-                'taxpayer_id' => $owner->taxpayer_id,
-                'license_number' => DlDriversLicense::getNextLicenseNumber(),
-                'license_duration' => $dla->license_duration,
-                'issued_date' => date('Y-m-d'),
-                'expiry_date' => date('Y-m-d', strtotime("+{$dla->license_duration} years")),
-                'license_restrictions' => $dla->license_restrictions ?? 'none',
-                'dl_license_application_id' => $dla->id, // remove column
-                'dl_license_duration_id' => $dla->license_duration_id,
-                'status' => DlApplicationStatus::ACTIVE
-            ]);
+        if (!$dlLicense->save()) {
+            throw new Exception('Error saving drivers license');
         }
 
-        if (!$newLicense) {
-            throw new Exception('Failed to save new license into database');
-        }
-
-        // Associate License Classes with the new License
-        foreach ($dla->application_license_classes()->get() as $class) {
-            DlDriversLicenseClass::query()->create([
-                'dl_drivers_license_id' => $newLicense->id,
-                'dl_license_class_id' => $class->dl_license_class_id
-            ]);
-        }
-
-        // Update restrictions
-        $dla->licenseRestrictions()->update(['dl_license_id' => $newLicense->id]);
-
-        $this->licenseId = $newLicense->id;
-        return $newLicense;
     }
 
 }
