@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\MvrPlateNumberType;
+use App\Models\MvrPlateSize;
 use Illuminate\Database\Seeder;
 
 class MvrPlateNumberTypeSeeder extends Seeder
@@ -31,6 +32,16 @@ class MvrPlateNumberTypeSeeder extends Seeder
 
         foreach ($types as $type) {
             MvrPlateNumberType::updateOrCreate($type);
+        }
+
+        $sizes = [
+            [
+                'name' => '400x200'
+            ]
+        ];
+
+        foreach ($sizes as $size) {
+            MvrPlateSize::updateOrCreate($size);
         }
     }
 }
