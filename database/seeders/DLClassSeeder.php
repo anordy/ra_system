@@ -78,7 +78,7 @@ class DLClassSeeder extends Seeder
             ],
         ];
         foreach ($classes as $cl){
-            DlLicenseClass::updateOrCreate($cl);
+            DlLicenseClass::updateOrCreate(['name' => $cl['name']], $cl);
         }
     }
 }

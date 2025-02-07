@@ -51,7 +51,7 @@ class LicenseApplicationsTable extends DataTableComponent
                     return $row->first_name . ' ' . $row->last_name;
                 })
                 ->sortable(),
-            Column::make("Type", "license_type")
+            Column::make("Type", "type")
                 ->format(fn($type)=>ucwords(strtolower($type)))
                 ->sortable(),
             Column::make("Status", "status")
