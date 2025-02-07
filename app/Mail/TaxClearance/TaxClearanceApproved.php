@@ -45,7 +45,8 @@ class TaxClearanceApproved extends Mailable
 
         $location = $taxClearanceRequest->businessLocation;
 
-        $url = config('modulesconfig.taxpayer_url') . route('qrcode-check.tax-clearance.certificate', ['clearanceId' => base64_encode($taxClearanceRequestId)], 0);
+        $url = config('modulesconfig.taxpayer_url') . route('qrcode-check.tax-clearance.certificate', ['clearanceId' => base64_encode($taxClearanceRequest->id)], 0);
+
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
