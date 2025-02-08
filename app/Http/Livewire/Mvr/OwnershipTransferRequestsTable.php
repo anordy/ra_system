@@ -19,9 +19,9 @@ class OwnershipTransferRequestsTable extends DataTableComponent
 	public function builder(): Builder
 	{
         if (empty($this->status_id)){
-            return MvrOwnershipTransfer::query();
+            return MvrOwnershipTransfer::query()->orderBy('mvr_ownership_transfer.created_at', 'desc');
         }else{
-            return MvrOwnershipTransfer::query()->whereIn('mvr_request_status_id',[$this->status_id]);
+            return MvrOwnershipTransfer::query()->whereIn('mvr_request_status_id',[$this->status_id])->orderBy('mvr_ownership_transfer.created_at', 'desc');
         }
 	}
 
