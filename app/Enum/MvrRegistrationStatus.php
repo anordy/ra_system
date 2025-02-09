@@ -16,6 +16,7 @@ class MvrRegistrationStatus implements Status
     const STATUS_INSPECTION = 'INSPECTION';
     const STATUS_DE_REGISTERED = 'DE REGISTERED';
     const STATUS_RETIRED = 'RETIRED';
+    const TEMPORARY_TRANSPORT = 'TEMPORARY TRANSPORT';
     const STATUS_CHANGE = 'STATUS CHANGE';
     const REJECTED = 'REJECTED';
     const BLOCKED ='BLOCKED';

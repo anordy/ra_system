@@ -88,8 +88,7 @@
                     </div>
                 </div>
             </div>
-
-            @include('mvr.reg_info', ['reg' => $transport->mvr])
+            @include('mvr.temporary-transports.temporary_transport_info', ['reg' => $transport->mvr])
             @can('mvr-approve-temporary-transports')
                 <livewire:approval.mvr.temporary-transport-approval-processing
                     modelName='App\Models\MvrTemporaryTransport'

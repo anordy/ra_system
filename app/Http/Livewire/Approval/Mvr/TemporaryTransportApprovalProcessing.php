@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval\Mvr;
 
+use App\Enum\MvrRegistrationStatus;
 use App\Enum\MvrTemporaryTransportStatus;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
@@ -44,6 +45,9 @@ class TemporaryTransportApprovalProcessing extends Component
                 $this->subject->status = MvrTemporaryTransportStatus::APPROVED;
                 $this->subject->approved_on = Carbon::now();
                 $this->subject->save();
+
+                $this->subject->mvr->status = MvrRegistrationStatus::TEMPORARY_TRANSPORT;
+                $this->subject->mvr->save();
             }
 
             $this->subject->save();
