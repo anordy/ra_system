@@ -48,10 +48,13 @@ class LicenseApplicationsController extends Controller
     {
         $id = decrypt($id);
 
-        $application = DlLicenseApplication::query()->findOrFail($id);
+        $application = DlLicenseApplication::query()->findOrFail($id, ['id', 'status']);
         try {
             $application->status = DlApplicationStatus::STATUS_COMPLETED;
-            $application->save();
+            $application->license->status = DlApplicationStatus::ACTIVE;
+            $application->previousApplication->license->status = DlApplicationStatus::INACTIVE;
+            if (!$application->license->save()) throw new Exception('Could not save license');
+            if (!$application->save()) throw new Exception('Could not save application');
         } catch (Exception $e) {
             Log::error('DRIVERS-LICENSE-LICENSE-APPLICATION-CONTROLLER-PRINTED', [$e]);
             session()->flash('error', 'Could not update application');

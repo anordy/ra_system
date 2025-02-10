@@ -36,7 +36,8 @@ class ApprovalProcessing extends Component
         $this->validate(['comments' => 'required|strip_tag', 'duration_id' => 'required|numeric'], ['duration_id.required' => 'You must select License Duration to approve']);
 
         try {
-            $fee = DlFee::where(['type' => $this->subject->type, 'dl_license_duration_id' => $this->subject->dl_license_duration_id])
+            $fee = DlFee::select('id', 'name', 'amount', 'type', 'gfs_code', 'duration', 'created_at')
+                ->where(['type' => $this->subject->type, 'dl_license_duration_id' => $this->subject->dl_license_duration_id])
                 ->first();
 
             if (empty($fee)) {

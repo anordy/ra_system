@@ -31,6 +31,7 @@ class AlterDurationToDlLicenseApplicationsTable extends Migration
             $table->string('status')->nullable();
             $table->string('payment_status')->nullable();
             $table->string('photo_path')->nullable();
+            $table->unsignedBigInteger('previous_application_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

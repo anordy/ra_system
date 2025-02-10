@@ -58,15 +58,10 @@ class DriverLicenseApprovalProcessing extends Component
 
                 $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->payment_status = BillStatus::CN_GENERATING;
-                $this->subject->save();
+                if (!$this->subject->save()) throw new Exception('Failed to save application payment status');
 
                 if ($this->subject->type == DlApplicationStatus::ADD_CLASS){
-                    $lastDlLicense = DlDriversLicense::where('dl_drivers_license_owner_id', $this->subject->dl_drivers_license_owner_id)->latest()->first();
 
-                    if ($this->subject->type == GeneralConstant::ADD_CLASS) {
-                        $lastDlLicense->status = GeneralConstant::ADD_CLASS;
-                        $lastDlLicense->save();
-                    }
                 }
             }
 
@@ -169,7 +164,7 @@ class DriverLicenseApprovalProcessing extends Component
                 ->where('type', $this->subject->type)
                 ->first();
 
-            if (empty ($fee)) {
+            if (empty($fee)) {
                 $errorMessage = "Driver License fee for this application is not configured";
                 $this->customAlert('error', $errorMessage);
                 return;

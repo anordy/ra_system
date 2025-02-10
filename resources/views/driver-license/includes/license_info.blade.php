@@ -175,7 +175,7 @@
         @foreach($application->application_license_classes ?? [] as $class)
             <div class="row">
                 <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Class Name</span>
+                    <span class="font-weight-bold text-uppercase">Class Name @if(!$class->is_initiation_accepted) (Newly Added) @endif</span>
                     <p class="my-1">{{ $class->license_class->name ?? 'N/A' }}
                         - {{ $class->license_class->description ?? 'N/A' }}</p>
                 </div>

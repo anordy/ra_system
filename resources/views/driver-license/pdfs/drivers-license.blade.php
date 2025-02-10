@@ -93,7 +93,7 @@
 
         #class {
             position: absolute;
-            top: 785px;
+            top: 790px;
             left: 720px;
             min-width: 230px;
             color: red;
@@ -178,7 +178,7 @@
 <div id="expiry">{{ \Carbon\Carbon::parse($license->expiry_date)->format('d/m/Y') }}</div>
 <div id="blood-group">{{ $license->application->blood_group->name ?? 'N/A' }}</div>
 <div id="class">
-    @foreach ($license->application->drivers_license_classes ?? [] as $class)
+    @foreach ($license->drivers_license_classes ?? [] as $class)
         {{ $class->license_class->name }} @if(!$loop->last) / @endif
     @endforeach
 </div>
@@ -208,7 +208,7 @@
     </div>
 </div>
 <div id="class-information">
-    @foreach($license->application->drivers_license_classes ?? [] as $class)
+    @foreach($license->drivers_license_classes ?? [] as $class)
         <div>
             <div style="width: 150px; display: inline-block;">
                 {{ $class->license_class->name }}

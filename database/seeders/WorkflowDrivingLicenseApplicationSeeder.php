@@ -55,6 +55,16 @@ class WorkflowDrivingLicenseApplicationSeeder extends Seeder
                 'to'   => 'applicant',
                 'condition' => '',
             ],
+            'application_initiated_for_class' => [
+                'from' => 'initiate',
+                'to'   => 'zra_officer',
+                'condition' => '',
+            ],
+            'application_initiated_for_renewal' => [
+                'from' => 'applicant',
+                'to'   => 'zra_officer',
+                'condition' => '',
+            ],
             'zra_officer_review' => [
                 'from' => 'zra_officer',
                 'to'   => 'completed',
@@ -67,7 +77,11 @@ class WorkflowDrivingLicenseApplicationSeeder extends Seeder
             ]
         ];
 
-        Workflow::updateOrCreate([
+        Workflow::updateOrCreate(
+            [
+              'code' => 'LICENSE_APPLICATION',
+            ],
+            [
             'code' => 'LICENSE_APPLICATION',
             'summary' => 'Drivers License Application Closure Workflow',
             'name' => $name,

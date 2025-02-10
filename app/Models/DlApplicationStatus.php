@@ -28,6 +28,7 @@ class DlApplicationStatus extends Model
     const RENEW = 'RENEW';
 
     const ACTIVE = 'ACTIVE';
+    const INACTIVE = 'INACTIVE';
     const ADD_CLASS = 'CLASS';
     const STATUS_PENDING_APPROVAL = 'Pending Approval';
     const STATUS_INITIATED = 'Initiated';

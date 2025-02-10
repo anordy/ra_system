@@ -1,4 +1,4 @@
-@props(['col' => 4, 'name', 'label' => '', 'type' => 'text', 'helper' => ''])
+@props(['col' => 4, 'name', 'label' => '', 'type' => 'text', 'helper' => '', 'disabled' => false])
 
 <div class="col-md-{{ $col ? $col : '4' }} form-group">
     <label for="{{ $name }}" class="{{ $helper ? 'd-flex justify-content-between' : '' }}">
@@ -12,7 +12,7 @@
             </a>
         @endif
     </label>
-    <input {{ $attributes }} id="{{ $name }}" type="{{ $type }}" wire:model.defer="{{ $name }}" class="form-control {{ $errors->has($name) ?'is-invalid' : '' }}">
+    <input {{ $attributes }} id="{{ $name }}" type="{{ $type }}" wire:model.defer="{{ $name }}" class="form-control {{ $errors->has($name) ?'is-invalid' : '' }}" @if($disabled) disabled @endif>
     @error($name)
         <div class="invalid-feedback">
             {{ $message }}

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\DriversLicense\Initiation;
 
 use App\Enum\CustomMessage;
+use App\Enum\DlFeeType;
 use App\Enum\GeneralConstant;
 use App\Models\DlApplicationStatus;
 use App\Models\DlBloodGroup;
@@ -76,6 +77,7 @@ class FreshApplication extends Component
         try {
             \DB::beginTransaction();
 
+
             $application = DlLicenseApplication::create([
                 'blood_group_id' => $this->bloodGroupId,
                 'dob' => $this->dob,
@@ -84,8 +86,8 @@ class FreshApplication extends Component
                 'last_name' => $this->lastName,
                 'middle_name' => $this->middleName,
                 'status' => DlApplicationStatus::STATUS_INITIATED,
-                'certificate_of_competence' => 'TEST',
-                'license_type' => 'FRESH'
+                'certificate_of_competence' => 'X',
+                'type' => DlFeeType::FRESH
             ]);
 
 
