@@ -28,11 +28,7 @@ class MvrColor extends Model implements Auditable
 	use \OwenIt\Auditing\Auditable;
 	protected $table = 'mvr_colors';
 
-	protected $fillable = [
-		'color',
-        'mvr_registration_type_id',
-		'hex_value'
-	];
+	protected $guarded = [];
 
     public function registration_type(){
         return $this->belongsTo(MvrRegistrationType::class, 'mvr_registration_type_id', 'id');
