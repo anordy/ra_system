@@ -17,7 +17,7 @@ use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Livewire\Component;
 
-class LicenseInitiation extends Component
+class FreshApplication extends Component
 {
     use CustomAlert, WorkflowProcesssingTrait;
 
@@ -141,6 +141,6 @@ class LicenseInitiation extends Component
 
     public function render()
     {
-        return view('livewire.drivers-license.initiation.license-initiation');
+        return view('livewire.drivers-license.initiation.fresh-application');
     }
 }

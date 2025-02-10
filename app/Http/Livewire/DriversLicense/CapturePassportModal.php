@@ -48,14 +48,20 @@ class CapturePassportModal extends Component
         $this->validate();
 
         try {
-            DB::transaction(function () use ($dla) {
-                $this->updateDriverPhoto($dla);
-                $this->generateLicense($dla);
-                $dla->status = DlApplicationStatus::STATUS_LICENSE_PRINTING;
-                $dla->save();
-            });
 
-            $this->flash('success', 'Photo Uploaded and License is created successful', [], route('drivers-license.licenses.show', encrypt($this->licenseId)));
+            if ($dla->photo_path) {
+                $this->updateDriverPhoto($dla);
+                $this->flash('success', 'Photo re-uploaded successfully', [], route('drivers-license.licenses.show', encrypt($this->licenseId)));
+            } else {
+                DB::transaction(function () use ($dla) {
+                    $this->updateDriverPhoto($dla);
+                    $this->generateLicense($dla);
+                    $dla->status = DlApplicationStatus::STATUS_LICENSE_PRINTING;
+                    $dla->save();
+                });
+                $this->flash('success', 'Photo Uploaded and License is created successful', [], route('drivers-license.licenses.show', encrypt($this->licenseId)));
+            }
+
         } catch (Exception $exception) {
             DB::rollBack();
 

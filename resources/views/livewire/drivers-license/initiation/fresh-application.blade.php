@@ -3,7 +3,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12 pt-3">
-                    <h4>Initiate Driver's License Application</h4>
+                    <h4>Initiate Fresh Driver's License Application</h4>
                     <p class="mb-3">Provide the required applicant information to continue</p>
                     <hr/>
                 </div>

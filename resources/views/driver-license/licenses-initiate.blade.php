@@ -3,5 +3,5 @@
 @section('title', 'Initiate Driver\'s License')
 
 @section('content')
-    <livewire:drivers-license.initiation.license-initiation/>
+    <livewire:drivers-license.initiation.select-type/>
 @endsection

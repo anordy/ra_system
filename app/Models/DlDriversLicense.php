@@ -59,6 +59,6 @@ class DlDriversLicense extends Model implements Auditable
 
     public function taxpayer()
     {
-        return $this->belongsTo(Taxpayer::class);
+        return $this->belongsTo(Taxpayer::class, 'taxpayer_id');
     }
 }
