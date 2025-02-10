@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Mvr;
 
 use App\Enum\GeneralConstant;
-use App\Enum\MvrRegistrationStatus;
 use App\Models\MvrDeregistration;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
@@ -13,6 +12,7 @@ use App\Models\MvrRegistrationParticularChange;
 use App\Models\MvrRegistrationStatusChange;
 use App\Services\ZanMalipo\GepgResponse;
 use App\Traits\CustomAlert;
+use App\Traits\MvrRegistrationTrait;
 use App\Traits\PaymentsTrait;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -20,7 +20,7 @@ use Livewire\Component;
 
 class FeePayment extends Component
 {
-    use CustomAlert, PaymentsTrait, GepgResponse;
+    use CustomAlert, PaymentsTrait, GepgResponse, MvrRegistrationTrait;
 
     public $motorVehicle, $fee, $feeType;
 
@@ -30,8 +30,9 @@ class FeePayment extends Component
         $this->getFee();
     }
 
-    public function getFee(){
-        switch (get_class($this->motorVehicle)){
+    public function getFee()
+    {
+        switch (get_class($this->motorVehicle)) {
             case MvrRegistration::class:
                 $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
 
@@ -122,7 +123,7 @@ class FeePayment extends Component
                 return;
             }
 
-            switch (get_class($this->motorVehicle)){
+            switch (get_class($this->motorVehicle)) {
                 case MvrRegistration::class:
                 case MvrRegistrationStatusChange::class:
                 case MvrRegistrationParticularChange::class:
@@ -137,7 +138,8 @@ class FeePayment extends Component
                     $this->generateMvrDeregistrationControlNumber($this->motorVehicle, $this->fee);
                     break;
 
-                default: throw new Exception("Failed to find MVR registration type.");
+                default:
+                    throw new Exception("Failed to find MVR registration type.");
             }
 
             $this->customAlert(GeneralConstant::SUCCESS, 'Your request was submitted, you will receive your payment information shortly.');
@@ -151,6 +153,16 @@ class FeePayment extends Component
     public function getGepgStatus($code)
     {
         return $this->getResponseCodeStatus($code)['message'];
+    }
+
+    public function processRegistrationPlateNumber()
+    {
+        try {
+            $this->updateNextPlateNumber($this->motorVehicle->regtype, $this->motorVehicle->class, $this->motorVehicle);
+        } catch (Exception $e) {
+            Log::error('MVR-FEE-PAYMENT-PROCESS-PLATE-NUMBER', [$e]);
+            $this->customAlert(GeneralConstant::ERROR, 'Failed to Generate Plate Number, please try again later.');
+        }
     }
 
     public function render()
