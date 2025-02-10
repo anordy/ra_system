@@ -4,10 +4,8 @@ namespace App\Http\Livewire\Business;
 
 use App\Models\Business;
 use App\Models\WorkflowTask;
-use App\Traits\WithSearch;
-use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -42,29 +40,33 @@ class RegistrationsApprovalTable extends DataTableComponent
         return [
             Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
             Column::make('Business Category', 'pinstance.category.name')
-                ->label(fn ($row) => $row->pinstance->category->name ?? 'N/A'),
+                ->label(fn($row) => $row->pinstance->category->name ?? 'N/A'),
             Column::make('Business Type', 'pinstance.business_type')
-                ->label(fn ($row) => strtoupper($row->pinstance->business_type ?? 'N/A')),
+                ->label(fn($row) => strtoupper($row->pinstance->business_type ?? 'N/A')),
             Column::make('Business Name', 'pinstance.name')
-                ->label(fn ($row) => $row->pinstance->name ?? 'N/A')
+                ->label(fn($row) => $row->pinstance->name ?? 'N/A')
                 ->sortable()
                 ->searchable(function (Builder $query, $searchTerm) {
-                    return $query->orWhereHas('pinstance', function ($query) use ($searchTerm) {
-                        $query->whereRaw(DB::raw("LOWER(name) like '%' || LOWER('$searchTerm') || '%'"));
+                    return $query->orWhere(function ($query) use ($searchTerm) {
+                        $query->whereRaw("EXISTS (
+                               SELECT 1 FROM businesses 
+                                WHERE businesses.id = workflow_tasks.pinstance_id
+                                AND LOWER(businesses.name) LIKE '%' || LOWER(?) || '%'
+                            )", [$searchTerm]);
                     });
                 }),
             Column::make('TIN', 'pinstance.tin')
-                ->label(fn ($row) => $row->pinstance->tin ?? '')->sortable(),
+                ->label(fn($row) => $row->pinstance->tin ?? '')->sortable(),
             Column::make('Buss. Reg. No.', 'pinstance.reg_no')
-                ->label(fn ($row) => $row->pinstance->reg_no ?? 'N/A')->sortable(),
+                ->label(fn($row) => $row->pinstance->reg_no ?? 'N/A')->sortable(),
             Column::make('Mobile', 'pinstance_type')
-                ->label(fn ($row) => $row->pinstance->mobile ?? '')->sortable(),
+                ->label(fn($row) => $row->pinstance->mobile ?? '')->sortable(),
             Column::make('Tax Region', 'pinstance.taxRegion')
-                ->label(fn ($row) => $row->pinstance->headquarter->taxRegion->name ?? 'N/A')->sortable(),
+                ->label(fn($row) => $row->pinstance->headquarter->taxRegion->name ?? 'N/A')->sortable(),
             Column::make('Ward', 'pinstance')
-                ->label(fn ($row) => $row->pinstance->businessWardName() ?? '')->sortable(),
+                ->label(fn($row) => $row->pinstance->businessWardName() ?? '')->sortable(),
             Column::make('Street', 'pinstance')
-                ->label(fn ($row) =>  $row->pinstance->businessStreetName()  ?? '')->sortable(),
+                ->label(fn($row) => $row->pinstance->businessStreetName() ?? '')->sortable(),
             Column::make('Status', 'pinstance.mobile')
                 ->label(function ($row) {
                     return view('business.registrations.includes.approval_status', compact('row'));
