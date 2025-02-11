@@ -52,13 +52,13 @@ class SequencesTableSeeder extends Seeder
                 'name' => Sequence::SLS_PLATE_NUMBER,
                 'prefix' => 'SLS',
                 'next_id' => 1,
-                'next_sequence' => '01/000',
+                'next_sequence' => '101',
             ],
             [
                 'name' => Sequence::SMZ_PLATE_NUMBER,
                 'prefix' => 'SMZ',
                 'next_id' => 1,
-                'next_sequence' => '01/000',
+                'next_sequence' => '101',
             ],
         ];
 

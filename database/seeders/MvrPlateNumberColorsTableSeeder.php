@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\MvrColor;
 use App\Models\MvrMake;
 use App\Models\MvrModel;
+use App\Models\MvrRegistrationType;
 use Illuminate\Database\Seeder;
 
 class MvrPlateNumberColorsTableSeeder extends Seeder
@@ -16,21 +17,19 @@ class MvrPlateNumberColorsTableSeeder extends Seeder
      */
     public function run()
     {
-        $colors = [
-            [
-                'mvr_registration_type_id' => 1,
+
+        $mvrRegTypes = MvrRegistrationType::query()->get(['id', 'name']);
+
+        foreach ($mvrRegTypes as $mvrRegType) {
+            MvrColor::updateOrCreate([
+                'mvr_registration_type_id' => $mvrRegType->id,
                 'color' => 'White/Black',
                 'name' => 'White/Black',
-            ],
-            [
-                'mvr_registration_type_id' => 2,
+            ], [
+                'mvr_registration_type_id' => $mvrRegType->id,
                 'color' => 'White/Black',
-                'name' => 'White/Black'
-            ]
-        ];
-
-        foreach ($colors as $color) {
-            MvrColor::query()->updateOrcreate($color);
+                'name' => 'White/Black',
+            ]);
         }
     }
 }
