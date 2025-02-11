@@ -27,10 +27,12 @@ class AlterDurationToDlLicenseApplicationsTable extends Migration
             $table->string('certificate_of_competence');
             $table->unsignedBigInteger('taxpayer_id')->nullable();
             $table->string('type')->nullable();
+            $table->string('duplicate_type')->nullable();
             $table->string('marking')->nullable();
             $table->string('status')->nullable();
             $table->string('payment_status')->nullable();
             $table->string('photo_path')->nullable();
+            $table->string('lost_report_path')->nullable();
             $table->unsignedBigInteger('previous_application_id')->nullable();
             $table->timestamps();
             $table->softDeletes();

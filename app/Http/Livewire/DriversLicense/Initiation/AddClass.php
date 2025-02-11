@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\DriversLicense\Initiation;
 
+use App\Enum\AlertType;
 use App\Enum\CustomMessage;
 use App\Enum\DlFeeType;
 use App\Enum\GeneralConstant;
@@ -13,7 +14,9 @@ use App\Models\DlLicenseRestriction;
 use App\Traits\CustomAlert;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
+use DB;
 use Livewire\Component;
+use Log;
 
 class AddClass extends Component
 {
@@ -49,7 +52,7 @@ class AddClass extends Component
             // Get previous application
             $newApplication = $this->licenseInfo->application->replicate();
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             $newApplication->status = DlApplicationStatus::STATUS_INITIATED;
             $newApplication->payment_status = DlApplicationStatus::STATUS_INITIATED;
@@ -94,12 +97,12 @@ class AddClass extends Component
             $this->registerWorkflow(get_class($newApplication), $newApplication->id);
             $this->doTransition('application_initiated_for_class', ['status' => 'agree', 'comment' => 'approved']);
 
-            \DB::commit();
-            $this->flash('success', 'Application added successfully', [], redirect()->back()->getTargetUrl());
+            DB::commit();
 
+            $this->flash('success', 'Application added successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
-            \DB::rollBack();
-            \Log::error('LICENSE-INITIATION: ', [$exception]);
+            DB::rollBack();
+            Log::error('LICENSE-INITIATION: ', [$exception]);
             $this->customAlert(GeneralConstant::ERROR, CustomMessage::ERROR);
         }
     }
@@ -143,32 +146,44 @@ class AddClass extends Component
             $this->addError('licenseNumber', 'Taxpayer is invalid.');
         }
 
-        $dateOfBirth = $taxpayer->date_of_birth;
-        $this->age = Carbon::create($dateOfBirth)->diff(Carbon::now())->format('%y');
-
-
-        $this->age = 21; // TODO: remove after testing
-        $this->classes = DlLicenseClass::select('id', 'from_age', 'to_age', 'name', 'description')
-            ->where('from_age', '<=', $this->age)
-            ->where('to_age', '>=', $this->age)
-            ->get();
+        try {
+            $dateOfBirth = $taxpayer->date_of_birth;
+            $this->age = Carbon::create($dateOfBirth)->diff(Carbon::now())->format('%y');
+            $this->age = 21;// TODO: remove after testing
+            $this->classes = DlLicenseClass::select('id', 'from_age', 'to_age', 'name', 'description')
+                ->where('from_age', '<=', $this->age)
+                ->where('to_age', '>=', $this->age)
+                ->get();
+        } catch (\Exception $e) {
+            Log::error('DRIVER-LICENSE-FETCH-CLASS', [$e]);
+            $this->customAlert(AlertType::ERROR, CustomMessage::ERROR);
+        }
     }
 
 
     public function addClass()
     {
-        $this->licenseClasses[] = [
-            'disabled' => false,
-            'classId' => null,
-            'certificateNumber' => null,
-            'certificateDate' => null
-        ];
-
+        try {
+            $this->licenseClasses[] = [
+                'disabled' => false,
+                'classId' => null,
+                'certificateNumber' => null,
+                'certificateDate' => null
+            ];
+        } catch (\Exception $e) {
+            Log::error('DRIVER-LICENSE-ADD-CLASS', [$e]);
+            $this->customAlert(AlertType::ERROR, CustomMessage::ERROR);
+        }
     }
 
     public function removeClass($i)
     {
-        unset($this->licenseClasses[$i]);
+       try {
+            unset($this->licenseClasses[$i]);
+        } catch (\Exception $e) {
+            Log::error('DRIVER-LICENSE-REMOVE-CLASS', [$e]);
+            $this->customAlert(AlertType::ERROR, CustomMessage::ERROR);
+        }
     }
 
     public function render()

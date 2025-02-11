@@ -91,7 +91,7 @@ trait TaxpayerLedgerTrait
 
             if (!$ledger) throw new \Exception('Failed to save ledger transaction');
 
-            if (config('app.env') == 'local') {
+            if (config('app.env') == 'production') {
                 $this->postDebit($ledger);
             }
 
@@ -354,7 +354,12 @@ trait TaxpayerLedgerTrait
                 ->where('billable_type', $ledger->source_type)
                 ->where('billable_id', $ledger->source_id)
                 ->latest()
-                ->firstOrFail();
+                ->first();
+
+            if (!$bill) {
+                Log::error('TAXPAYER-LEDGER-POST-DEBIT-BILL-NOT-FOUND', ['Failed to find bill for ledger']);
+                return null;
+            }
 
             $payload = [
                 'debitNumber' => $ledger->debit_no,

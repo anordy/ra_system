@@ -48,12 +48,14 @@ class LicenseApplicationsController extends Controller
     {
         $id = decrypt($id);
 
-        $application = DlLicenseApplication::query()->findOrFail($id, ['id', 'status']);
+        $application = DlLicenseApplication::query()->findOrFail($id, ['id', 'status', 'previous_application_id']);
+
         try {
             $application->status = DlApplicationStatus::STATUS_COMPLETED;
-            $application->license->status = DlApplicationStatus::ACTIVE;
-            $application->previousApplication->license->status = DlApplicationStatus::INACTIVE;
-            if (!$application->license->save()) throw new Exception('Could not save license');
+            $application->drivers_license->status = DlApplicationStatus::ACTIVE;
+            $application->previousApplication->drivers_license->status = DlApplicationStatus::INACTIVE;
+            if (!$application->previousApplication->drivers_license->save()) throw new Exception('Could not save previous license');
+            if (!$application->drivers_license->save()) throw new Exception('Could not save license');
             if (!$application->save()) throw new Exception('Could not save application');
         } catch (Exception $e) {
             Log::error('DRIVERS-LICENSE-LICENSE-APPLICATION-CONTROLLER-PRINTED', [$e]);
@@ -64,7 +66,6 @@ class LicenseApplicationsController extends Controller
 
     public function license($id)
     {
-
         $id = decrypt($id);
         $license = DlDriversLicense::query()->findOrFail($id);
 
@@ -99,7 +100,7 @@ class LicenseApplicationsController extends Controller
             abort(403);
         }
 
-        $license = DlDriversLicense::with(['drivers_license_owner', 'drivers_license_classes', 'application'])
+        $license = DlDriversLicense::with(['drivers_license_classes', 'application'])
             ->findOrFail(decrypt($id));
 
         return view('driver-license.licenses-show', compact('license'));

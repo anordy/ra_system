@@ -29,6 +29,9 @@ class DlApplicationStatus extends Model
 
     const ACTIVE = 'ACTIVE';
     const INACTIVE = 'INACTIVE';
+
+    const DISTORTED = 'DISTORTED';
+
     const ADD_CLASS = 'CLASS';
     const STATUS_PENDING_APPROVAL = 'Pending Approval';
     const STATUS_INITIATED = 'Initiated';
@@ -37,6 +40,7 @@ class DlApplicationStatus extends Model
     const STATUS_TAKING_PICTURE = 'Taking Picture';
     const STATUS_LICENSE_PRINTING = 'License Printing';
     const CORRECTION = 'Correction';
+    const REJECTED = 'Rejected';
 
     protected $fillable = [
 		'name'

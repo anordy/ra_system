@@ -26,11 +26,13 @@ class DlDriversLicense extends Model implements Auditable
 
     public static function getNextLicenseNumber()
     {
-        $last = self::query()->orderBy('license_number','DESC')->first();
-        if (empty($last)){
-            return '1000000001';
+        $last = self::query()->orderBy('license_number', 'DESC')->first();
+        if (!$last || !isset($last->license_number)) {
+            return 'Z1000000001';
         }
-        return $last->license_number+1;
+
+        $lastNumber = (int)preg_replace('/[^\d]/', '', $last->license_number);
+        return 'Z' . str_pad($lastNumber + 1, 10, '0', STR_PAD_LEFT);
     }
 
 	public function license_duration()

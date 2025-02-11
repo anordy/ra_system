@@ -6,7 +6,7 @@
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab"
-               aria-controls="home" aria-selected="true">Drive Licence Application</a>
+               aria-controls="home" aria-selected="true">Driver Licence Application</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="approval-tab" data-toggle="tab" href="#approval" role="tab"

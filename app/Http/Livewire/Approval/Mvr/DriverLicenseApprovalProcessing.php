@@ -2,17 +2,14 @@
 
 namespace App\Http\Livewire\Approval\Mvr;
 
+use App\Enum\AlertType;
 use App\Enum\BillStatus;
+use App\Enum\CustomMessage;
 use App\Enum\GeneralConstant;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
-use App\Models\DlApplicationCertificate;
 use App\Models\DlApplicationStatus;
-use App\Models\DlDriversLicense;
 use App\Models\DlFee;
-use App\Models\DlLicenseApplication;
-use App\Models\DlLicenseRestriction;
-use App\Models\DlRestriction;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
 use App\Traits\TaxpayerLedgerTrait;
@@ -21,6 +18,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 class DriverLicenseApprovalProcessing extends Component
@@ -30,7 +28,7 @@ class DriverLicenseApprovalProcessing extends Component
     public $modelId;
     public $modelName;
     public $comments;
-    public $approvalReport;
+    public $approvalReport, $lostReport;
     public $selectedRestrictions, $restrictions;
     public $attachments = [];
 
@@ -39,31 +37,38 @@ class DriverLicenseApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
+        $this->lostReport = $this->subject->lost_report_path;
     }
-
 
 
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
 
+        $this->validate([
+            'comments' => 'required|strip_tag',
+        ]);
+
+        if ($this->lostReport instanceof TemporaryUploadedFile) {
+            $this->validate([
+                'lostReport' => 'required|mimes:pdf|valid_pdf|max:3072|max_file_name_length:100',
+            ]);
+        }
+
         try {
-            DB::beginTransaction();
-
             if ($this->checkTransition('zra_officer_review') && $transition === 'zra_officer_review') {
-
-                $this->validate([
-                    'comments' => 'required|strip_tag',
-                ]);
-
                 $this->subject->status = DlApplicationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->payment_status = BillStatus::CN_GENERATING;
-                if (!$this->subject->save()) throw new Exception('Failed to save application payment status');
-
-                if ($this->subject->type == DlApplicationStatus::ADD_CLASS){
-
-                }
             }
+
+            if ($this->lostReport instanceof TemporaryUploadedFile) {
+                $lostReport = $this->lostReport->store('dlLostReport', 'local');
+                $this->subject->lost_report_path = $lostReport;
+            }
+
+            DB::beginTransaction();
+
+            if (!$this->subject->save()) throw new Exception('Failed to save application payment status');
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
@@ -84,8 +89,8 @@ class DriverLicenseApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('ERROR-APPROVING-DL-APPLICATION',[$exception]);
-            $this->customAlert('error', 'Something went wrong');
+            Log::error('ERROR-APPROVING-DL-APPLICATION', [$exception]);
+            $this->customAlert(AlertType::ERROR, CustomMessage::ERROR);
             return;
         }
     }
@@ -101,33 +106,28 @@ class DriverLicenseApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('application_filled_incorrect')) {
-                $this->subject->status = DlApplicationStatus::CORRECTION;
-                $this->subject->save();
+            if ($this->checkTransition('police_officer_reject')) {
+                $this->subject->status = DlApplicationStatus::REJECTED;
+                if (!$this->subject->save()) throw new Exception('Failed to save application status');
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
             DB::commit();
 
-            if ($this->subject->status = DlApplicationStatus::CORRECTION) {
+            if ($this->subject->status === DlApplicationStatus::REJECTED) {
                 // Send correction email/sms
-                event(new SendSms(SendCustomSMS::SERVICE, NULL, [
-                    'phone' => $this->subject->drivers_license_owner->mobile,
-                    'message' => "
-                Hello {$this->subject->drivers_license_owner->fullname()}, your driver license application requires correction, please vist your driving school/login to the system to perform data update."
+                event(new SendSms(SendCustomSMS::SERVICE, null, [
+                    'phone' => $this->subject->taxpayer->mobile,
+                    'message' => "Hello {$this->subject->taxpayer->full_name}, your driver license application has been rejected, Please login to the system to view the reasons."
                 ]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Error rejecting application: ' . $exception->getMessage(), [
-                'subject_id' => $this->subject->id,
-                'applicant name' => $this->subject->drivers_license_owner->fullname(),
-                'exception' => $exception,
-            ]);
-            $this->customAlert('error', 'Something went wrong');
+            Log::error('ERROR-REJECTING-DL-APPLICATION', [$exception]);
+            $this->customAlert(AlertType::ERROR, CustomMessage::ERROR);
         }
 
     }
@@ -139,7 +139,7 @@ class DriverLicenseApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', CustomMessage::ERROR, [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -160,13 +160,14 @@ class DriverLicenseApprovalProcessing extends Component
         try {
             // Fetch the fee
             $fee = DlFee::query()
+                ->select('id', 'name', 'amount', 'type', 'gfs_code')
                 ->where('dl_license_duration_id', $this->subject->license_duration_id)
                 ->where('type', $this->subject->type)
                 ->first();
 
             if (empty($fee)) {
                 $errorMessage = "Driver License fee for this application is not configured";
-                $this->customAlert('error', $errorMessage);
+                $this->customAlert(AlertType::ERROR, $errorMessage);
                 return;
             } else {
                 $classFactor = 1;
@@ -177,14 +178,8 @@ class DriverLicenseApprovalProcessing extends Component
                 $this->generateDLicenseControlNumber($this->subject, $fee, $classFactor);
             }
         } catch (Exception $e) {
-
-            Log::error('Error generating control number: ' . $e->getMessage(), [
-                'subject_id' => $this->subject->id,
-                'license_duration_id' => $this->subject->license_duration_id,
-                'exception' => $e,
-            ]);
-
-            $this->customAlert('error', 'Failed to generate control number, please try again');
+            Log::error('DL-GENERATE-CONTROL-NUMBER', [$e]);
+            $this->customAlert(AlertType::ERROR, CustomMessage::FAILED_TO_GENERATE_CONTROL_NUMBER);
         }
     }
 

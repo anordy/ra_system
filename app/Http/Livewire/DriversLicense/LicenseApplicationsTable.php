@@ -28,7 +28,7 @@ class LicenseApplicationsTable extends DataTableComponent
 	}
 
     public function mount($status){
-        $this->status = $status ?? '';
+        $this->status = $status ?? null;
     }
 
 	public function configure(): void

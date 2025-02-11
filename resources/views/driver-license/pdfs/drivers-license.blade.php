@@ -160,9 +160,25 @@
             right: 300px;
             left: 300px;
         }
+        .watermark {
+            -webkit-transform: rotate(331deg);
+            -moz-transform: rotate(331deg);
+            -o-transform: rotate(331deg);
+            transform: rotate(331deg);
+            font-size: 4em;
+            color: rgba(255, 5, 5, 0.17);
+            position: absolute;
+            font-family: 'Denk One', sans-serif;
+            text-transform: uppercase;
+            padding-left: 10%;
+            top: 46%;
+        }
     </style>
 </head>
 <body>
+@if($license->application->type === \App\Enum\DlFeeType::DUPLICATE)
+    <div class="watermark">DUPLICATE</div>
+@endif
 <div id="image">
     <img src="{{ $base64Image }}" alt="Passport Size">
 </div>
@@ -170,9 +186,14 @@
 <div id="sex">{{ strtoupper($license->taxpayer->gender ?? 'N/A') }}</div>
 <div id="dob">{{ \Carbon\Carbon::parse($license->taxpayer->date_of_birth)->format('d/m/Y') }}</div>
 <div id="restrictions">
-    @foreach($license->licenseRestrictions ?? [] as $lR)
-        {{ $lR->restriction->symbol }} @if(!$loop->last) / @endif
-    @endforeach
+    @if(count($license->licenseRestrictions ?? []))
+        @foreach($license->licenseRestrictions as $lR)
+            {{ $lR->restriction->symbol }} @if(!$loop->last) / @endif
+        @endforeach
+    @else
+        None
+    @endif
+
 </div>
 <div id="issue">{{ \Carbon\Carbon::parse($license->issued_date)->format('d/m/Y') }}</div>
 <div id="expiry">{{ \Carbon\Carbon::parse($license->expiry_date)->format('d/m/Y') }}</div>
@@ -185,9 +206,6 @@
 
 <div id="zin">{{ $license->license_number ?? 'N/A' }}</div>
 <div id="pin">{{ $license->taxpayer->reference_no ?? 'N/A' }}</div>
-@if($license->status === \App\Models\DlDriversLicense::STATUS_DAMAGED_OR_LOST)
-    <div id="duplicate">DUPLICATE</div>
-@endif
 <div id="barcode">
     <img src="data:image/png;base64,' . {{ DNS1D::getBarcodePNG($license->license_number, 'C39+',4,100, array(1,1,1), false)  }} . '" alt="barcode"   />
 </div>

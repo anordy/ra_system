@@ -42,7 +42,7 @@
 
         <div class="col-md-3 mb-3">
             <span class="font-weight-bold text-uppercase">Application Type</span>
-            <p class="my-1">{{ $application->type ?? 'N/A' }}</p>
+            <p class="my-1">{{ $application->type ?? 'N/A' }} @if($application->duplicate_type) {{ $application->duplicate_type }}  @endif</p>
         </div>
 
 
@@ -51,12 +51,12 @@
             <p class="my-1">{{ $application->created_at ? \Carbon\Carbon::create($application->created_at)->format('d-m-Y') : 'N/A' }}</p>
         </div>
 
-        @if (!empty($application->lost_report))
+        @if (!empty($application->lost_report_path))
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Loss Report</span>
                 <p class="my-1">
                     <a class="btn btn-sm btn-success" target="_blank"
-                       href="{{ route('mvr.files', encrypt($application->lost_report)) }}">
+                       href="{{ route('mvr.files', encrypt($application->lost_report_path)) }}">
                         <i class="bi bi-eye mr-1"></i> Preview Report
                     </a>
                 </p>
@@ -114,7 +114,7 @@
     <div class="card-header">
         License Information
         <div class="card-tools">
-            @if ($application->status === \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)
+            @if ($application->status != \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)
                 <a target="_blank" class="btn btn-primary text-white"
                    href="{{ route('drivers-license.license.print', encrypt($application->drivers_license->id)) }}">
                     <i class="bi bi-printer-fill mr-1"></i> PRINT LICENSE
@@ -212,13 +212,13 @@
                     Capture Passport
                 </button>
             @endif
-            @if ($application->status === \App\Models\DlApplicationStatus::STATUS_COMPLETED)
-                <button class="btn btn-primary btn-sm btn-block mt-3"
-                        onclick="Livewire.emit('showModal', 'drivers-license.capture-passport-modal',{{ $application->id }})">
-                    <i class="bi bi-camera-fill mr-1"></i>
-                    Re-capture Passport
-                </button>
-            @endif
+{{--            @if ($application->status === \App\Models\DlApplicationStatus::STATUS_COMPLETED)--}}
+{{--                <button class="btn btn-primary btn-sm btn-block mt-3"--}}
+{{--                        onclick="Livewire.emit('showModal', 'drivers-license.capture-passport-modal',{{ $application->id }})">--}}
+{{--                    <i class="bi bi-camera-fill mr-1"></i>--}}
+{{--                    Re-capture Passport--}}
+{{--                </button>--}}
+{{--            @endif--}}
         </div>
         <div class="col">
             <div class="row">

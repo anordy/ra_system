@@ -3,6 +3,10 @@
 namespace App\Http\Livewire\DriversLicense;
 
 
+use App\Enum\AlertType;
+use App\Enum\CustomMessage;
+use App\Enum\DlFeeType;
+use App\Enum\GeneralConstant;
 use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
 use App\Models\DlLicenseApplication;
@@ -14,23 +18,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
-use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 class CapturePassportModal extends Component
 {
-
     use CustomAlert, WithFileUploads, WorkflowProcesssingTrait;
 
-    public $application_id;
+    public $applicationId;
     public $photo;
     public $licenseId;
-    private $photo_path = null;
+    private $photoPath = null;
 
 
-    public function mount($application_id)
+    public function mount($applicationId)
     {
-        $this->application_id = $application_id;
+        $this->applicationId = $applicationId;
     }
 
     protected function rules()
@@ -43,37 +45,36 @@ class CapturePassportModal extends Component
 
     public function submit()
     {
-        $dla = DlLicenseApplication::findOrFail($this->application_id);
-
         $this->validate();
 
         try {
+            $dlApplication = DlLicenseApplication::findOrFail($this->applicationId);
 
-            if ($dla->photo_path) {
-                $this->updateDriverPhoto($dla);
-                $this->flash('success', 'Photo re-uploaded successfully', [], route('drivers-license.licenses.show', encrypt($this->licenseId)));
+            if ($dlApplication->photo_path) {
+                $this->updateDriverPhoto($dlApplication);
+                $this->flash(AlertType::SUCCESS, 'Photo re-uploaded successfully', [], redirect()->back()->getTargetUrl());
             } else {
-                DB::transaction(function () use ($dla) {
-                    $this->updateDriverPhoto($dla);
-                    $this->generateLicense($dla);
-                    $dla->status = DlApplicationStatus::STATUS_LICENSE_PRINTING;
-                    $dla->save();
+                DB::transaction(function () use ($dlApplication) {
+                    $this->updateDriverPhoto($dlApplication);
+
+                    if ($dlApplication->type != DlFeeType::RENEW) {
+                        $this->generateLicense($dlApplication);
+                    } else {
+                        $this->generateLicense($dlApplication, false);
+                    }
+                    $dlApplication->status = DlApplicationStatus::STATUS_LICENSE_PRINTING;
+                    if (!$dlApplication->save()) throw new Exception('Failed to save drivers license application');
                 });
-                $this->flash('success', 'Photo Uploaded and License is created successful', [], route('drivers-license.licenses.show', encrypt($this->licenseId)));
+                $this->flash(AlertType::SUCCESS, 'Photo Uploaded and License has been created successfully', [], redirect()->back()->getTargetUrl());
             }
 
         } catch (Exception $exception) {
             DB::rollBack();
-
-            Log::error('Error creating driver license: ' . $exception->getMessage(), [
-                'subject_id' => $dla->id,
-                'exception' => $exception,
-            ]);
-
-            if (Storage::disk('local')->exists($this->photo_path)) {
-                Storage::disk('local')->delete($this->photo_path);
+            Log::error('DRIVER-LICENSE-CAPTURE-PASSPORT', [$exception]);
+            if (Storage::disk('local')->exists($this->photoPath)) {
+                Storage::disk('local')->delete($this->photoPath);
             }
-            $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
+            $this->customAlert(AlertType::ERROR, CustomMessage::ERROR);
         }
     }
 
@@ -85,21 +86,26 @@ class CapturePassportModal extends Component
 
     private function updateDriverPhoto(DlLicenseApplication $dla)
     {
-        try {
-            $photoPath = $this->photo->store('dl_passport');
-            $dla->photo_path = $photoPath;
-            $dla->save();
-        } catch (Exception $exception) {
-            Log::error('DRIVERS-LICENSE-CAPTURE-PASSPORT-MODAL-UPDATE-DRIVER-PHOTO', [$exception]);
-            throw $exception;
+        $photoPath = $this->photo->store('dl_passport');
+
+        if (!$photoPath) {
+            $this->customAlert(GeneralConstant::WARNING, 'Failed to upload photo');
+            return;
         }
+        $dla->photo_path = $photoPath;
+
+        if (!$dla->save()) throw new Exception('Failed to save drivers license application');
+
     }
 
-    private function generateLicense(DlLicenseApplication $dla)
+    private function generateLicense(DlLicenseApplication $dla, $generateNumber = true)
     {
         $dlLicense = $dla->drivers_license;
 
-        $dlLicense->license_number = 'Z'. DlDriversLicense::getNextLicenseNumber();
+        if ($generateNumber) {
+            $dlLicense->license_number = DlDriversLicense::getNextLicenseNumber();
+        }
+
         $dlLicense->issued_date = date('Y-m-d');
         $dlLicense->expiry_date = Carbon::now()->addYears($dla->license_duration->number_of_years)->format('Y-m-d');
         $dlLicense->status = DlApplicationStatus::ACTIVE;

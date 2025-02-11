@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\DriversLicense\Initiation;
 
+use App\Enum\AlertType;
 use App\Enum\CustomMessage;
 use App\Enum\DlFeeType;
 use App\Enum\GeneralConstant;
@@ -16,7 +17,9 @@ use App\Models\DlRestriction;
 use App\Traits\CustomAlert;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
+use Exception;
 use Livewire\Component;
+use Log;
 
 class FreshApplication extends Component
 {
@@ -64,11 +67,16 @@ class FreshApplication extends Component
     }
 
     public function addClass() {
-        $this->licenseClasses[] = [
-            'classId' => null,
-            'certificateNumber' => null,
-            'certificateDate' => null
-        ];
+     try {
+            $this->licenseClasses[] = [
+                'classId' => null,
+                'certificateNumber' => null,
+                'certificateDate' => null
+            ];
+        } catch (Exception $e) {
+         Log::error(__CLASS__ . '::' . __FUNCTION__, [$e]);
+         $this->customAlert(AlertType::ERROR, CustomMessage::ERROR);
+        }
     }
     
     public function submit() {
@@ -76,7 +84,6 @@ class FreshApplication extends Component
 
         try {
             \DB::beginTransaction();
-
 
             $application = DlLicenseApplication::create([
                 'blood_group_id' => $this->bloodGroupId,
@@ -91,13 +98,13 @@ class FreshApplication extends Component
             ]);
 
 
-            if (!$application) throw new \Exception('Error creating application');
+            if (!$application) throw new Exception('Error creating application');
 
             $license = DlDriversLicense::create([
                 'dl_license_application_id' => $application->id,
             ]);
 
-            if (!$license) throw new \Exception('Error creating license');
+            if (!$license) throw new Exception('Error creating license');
 
             foreach ($this->licenseClasses ?? [] as $class) {
                 $class = DlDriversLicenseClass::create([
@@ -108,7 +115,7 @@ class FreshApplication extends Component
                     'certificate_date' => $class['certificateDate'],
                 ]);
 
-                if (!$class) throw new \Exception('Error creating license class');
+                if (!$class) throw new Exception('Error creating license class');
             }
 
             foreach ($this->restrictionIds ?? [] as $restrictionId) {
@@ -118,7 +125,7 @@ class FreshApplication extends Component
                     'dl_license_id' => $license->id
                 ]);
 
-                if (!$restriction) throw new \Exception('Error creating license restriction');
+                if (!$restriction) throw new Exception('Error creating license restriction');
             }
 
             $this->registerWorkflow(get_class($application), $application->id);
@@ -128,7 +135,7 @@ class FreshApplication extends Component
 
             $this->flash('success', 'Application added successfully', [], redirect()->back()->getTargetUrl());
 
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             \DB::rollBack();
             \Log::error('LICENSE-INITIATION: ', [$exception]);
             $this->customAlert(GeneralConstant::ERROR, CustomMessage::ERROR);
