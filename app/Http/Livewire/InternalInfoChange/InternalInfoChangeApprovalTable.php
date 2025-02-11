@@ -24,9 +24,6 @@ class InternalInfoChangeApprovalTable extends DataTableComponent
             ->where('pinstance_type', InternalBusinessUpdate::class)
             ->where('status', '!=', WorkflowTask::COMPLETED)
             ->where('owner', WorkflowTask::STAFF)
-            ->whereHas('pinstance', function ($query) {
-                $query->where('status', InternalInfoChangeStatus::PENDING);
-            })
             ->whereHas('actors', function ($query) {
                 $query->where('user_id', auth()->id());
             });
