@@ -14,6 +14,7 @@ use App\Models\MvrFeeType;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatusChangeFile;
 use App\Models\MvrRegistrationStatusChange;
+use App\Models\MvrReorderPlateNumberFee;
 use App\Models\MvrReorderPlateNumberFile;
 use App\Models\TaxType;
 use App\Traits\CustomAlert;
@@ -135,7 +136,7 @@ class ReorderApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            // dd('Do not disturb');
+           
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
             DB::commit();
@@ -157,17 +158,14 @@ class ReorderApprovalProcessing extends Component
         // Generate Control Number after MVR SC Approval
         if ($this->subject->status == MvrReorderStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
-                $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::REORDER_PLATE_NUMBER]);
-
-                $fee = MvrFee::query()->where([
-                    'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
-                    'mvr_fee_type_id' => $feeType->id,
-                    'mvr_class_id' => $this->subject->mvr_class_id,
-                    'mvr_plate_number_type_id' => $this->subject->mvr_plate_number_type_id
-                ])->first();
+                $payload = [
+                    'quantity' => $this->subject->quantity,
+                     'is_rfid' => $this->subject->is_rfid
+                     ];
+                $fee = MvrReorderPlateNumberFee::query()->where($payload)->first();;
 
                 if (empty($fee)) {
-                    $this->customAlert('error', "Registration fee for selected reorder plate number type is not configured");
+                    $this->customAlert('error', "Registration fee for selected reorder plate number  is not configured");
                     return;
                 }
 
@@ -251,7 +249,6 @@ class ReorderApprovalProcessing extends Component
     }
 
     public function generateControlNumber($fee) {
-        dd('her');
         try {
             DB::beginTransaction();
 

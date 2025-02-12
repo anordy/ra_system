@@ -48,7 +48,7 @@ class MvrReorderPlateNumber extends Model
     }
 
     public function attachments() {
-        return $this->hasMany(MvrRegistrationStatusChangeFile::class, 'mvr_status_change_id');
+        return $this->hasMany(MvrReorderPlateNumberFile::class, 'mvr_reorder_plate_number_id');
     }
 
     public static function getNexPlateNumber(mixed $regType, $class): mixed

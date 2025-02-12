@@ -142,6 +142,7 @@ use App\Http\Controllers\TaxRefund\TaxRefundController;
 use App\Http\Controllers\TaxTypeController;
 use App\Http\Controllers\Tra\TraController;
 use App\Http\Controllers\TransactionFeeController;
+use App\Http\Controllers\ReorderFeeController;
 use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\UpgradeTaxType\QualifiedTaxTypeController;
 use App\Http\Controllers\UpgradeTaxType\UpgradedTaxTypeController;
@@ -278,9 +279,11 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
             Route::post('/editlumpsum/{config_id}', [ReturnController::class, 'editLumpSum'])->name('edit.lumpSum');
         });
 
+
         Route::get('/tax-consultant-duration', [TaxAgentController::class, 'duration'])->name('tax-consultant-duration');
 
         Route::resource('/transaction-fees', TransactionFeeController::class);
+        Route::resource('/reorder-fees', ReorderFeeController::class);
 
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
 

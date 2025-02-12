@@ -39,13 +39,13 @@ class GenericSettingAddModal extends Component
         MvrModel::class => [['title' => 'Motor vehicle Make', 'class' => MvrMake::class, 'field' => 'mvr_make_id']],
         MvrTransferFee::class => [['title' => 'Transfer Category', 'class' => MvrTransferCategory::class, 'field' => 'mvr_transfer_category_id']],
         MvrFee::class => [
-            ['title' => 'Fee Type/Category', 'class' => MvrFeeType::class, 'field' => 'mvr_fee_type_id'],
             ['title' => 'Motor vehicle Registration Type', 'class' => MvrRegistrationType::class, 'field' => 'mvr_registration_type_id'],
             ['title' => 'Motor vehicle Class', 'class' => MvrClass::class, 'field' => 'mvr_class_id'],
             ['title' => 'Motor vehicle Class', 'class' => MvrClass::class, 'field' => 'mvr_class_id',
                 'dy_data' => "\$relation['data']=App\Models\MvrRegistrationType::query()->where(['name'=>App\Models\MvrRegistrationType::TYPE_PRIVATE_GOLDEN,'id'=>\$relation_data['mvr_registration_type_id']])->exists()?
                              App\Models\MvrClass::query()->whereNotIn('category',['C'])->get():App\Models\MvrClass::query()->get();"
             ],
+            ['title' => 'Fee Type/Category', 'class' => MvrFeeType::class, 'field' => 'mvr_fee_type_id'],
         ],
         DlFee::class=>[['title'=>'License Duration','field'=>'dl_license_duration_id', 'class'=>DlLicenseDuration::class,'value_field'=>'number_of_years']],
         Report::class => [

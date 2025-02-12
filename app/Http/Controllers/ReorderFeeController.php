@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TransactionFee;
-use App\Http\Requests\StoreTransactionFeeRequest;
-use App\Http\Requests\UpdateTransactionFeeRequest;
+use App\Models\MvrReorderPlateNumberFee;
+use App\Http\Requests\StoreMvrReorderPlateNumberFeeRequest;
+use App\Http\Requests\UpdateMvrReorderPlateNumberFeeRequest;
 use Illuminate\Support\Facades\Gate;
 
-class TransactionFeeController extends Controller
+class ReorderFeeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class TransactionFeeController extends Controller
         if (!Gate::allows('setting-transaction-fees-view')) {
             abort(403);
         }
-        return view('settings.transaction_fees');
+        return view('settings.reorder_fees');
     }
     /**
      * Show the form for creating a new resource.
@@ -33,10 +33,10 @@ class TransactionFeeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreTransactionFeeRequest  $request
+     * @param  \App\Http\Requests\StoreMvrReorderPlateNumberFeeRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTransactionFeeRequest $request)
+    public function store(StoreMvrReorderPlateNumberFeeRequest $request)
     {
         //
     }
@@ -44,10 +44,10 @@ class TransactionFeeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\TransactionFee  $transactionFee
+     * @param  \App\Models\MvrReorderPlateNumberFee  $MvrReorderPlateNumberFee
      * @return \Illuminate\Http\Response
      */
-    public function show(TransactionFee $transactionFee)
+    public function show(MvrReorderPlateNumberFee $MvrReorderPlateNumberFee)
     {
         //
     }
@@ -55,10 +55,10 @@ class TransactionFeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\TransactionFee  $transactionFee
+     * @param  \App\Models\MvrReorderPlateNumberFee  $MvrReorderPlateNumberFee
      * @return \Illuminate\Http\Response
      */
-    public function edit(TransactionFee $transactionFee)
+    public function edit(MvrReorderPlateNumberFee $MvrReorderPlateNumberFee)
     {
         //
     }
@@ -66,11 +66,11 @@ class TransactionFeeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTransactionFeeRequest  $request
-     * @param  \App\Models\TransactionFee  $transactionFee
+     * @param  \App\Http\Requests\UpdateMvrReorderPlateNumberFeeRequest  $request
+     * @param  \App\Models\MvrReorderPlateNumberFee  $MvrReorderPlateNumberFee
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTransactionFeeRequest $request, TransactionFee $transactionFee)
+    public function update(UpdateMvrReorderPlateNumberFeeRequest $request, MvrReorderPlateNumberFee $MvrReorderPlateNumberFee)
     {
         //
     }
@@ -78,10 +78,10 @@ class TransactionFeeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\TransactionFee  $transactionFee
+     * @param  \App\Models\MvrReorderPlateNumberFee  $MvrReorderPlateNumberFee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TransactionFee $transactionFee)
+    public function destroy(MvrReorderPlateNumberFee $MvrReorderPlateNumberFee)
     {
         //
     }

@@ -1271,6 +1271,11 @@
                                 Fees</a>
                         </li>
                     @endcan
+                    @can('setting-mvr-transfer-fee-view')
+                    <li class="{{ request()->is("settings/reorder-config/*") ? "active" : "" }}">
+                        <a href="{{ route("settings.reorder-fees.index") }}">Reorder Plate Number Fee</a>
+                    </li>
+                    @endcan
                     @can('setting-dl-class-view')
                         <li class="{{ request()->is('settings/mvr-generic/DlLicenseClass') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'DlLicenseClass') }}">Driver's License

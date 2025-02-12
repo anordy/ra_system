@@ -35,6 +35,7 @@ class DualControl extends Model implements Auditable
     public const INTEREST_RATE = InterestRate::class;
     public const PENALTY_RATE = PenaltyRate::class;
     public const TRANSACTION_FEE = TransactionFee::class;
+    public const REORDER_FEE = MvrReorderPlateNumberFee::class;
     public const ZRBBANKACCOUNT = ZrbBankAccount::class;
     public const FINANCIAL_YEAR = FinancialYear::class;
     public const FINANCIAL_MONTH = FinancialMonth::class;
