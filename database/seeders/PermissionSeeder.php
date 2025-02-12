@@ -462,6 +462,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'motor-vehicle-registration', 'sys_module_id' => 26],
             ['name' => 'motor-vehicle-plate-number-printing', 'sys_module_id' => 26],
             ['name' => 'motor-vehicle-status-change-request', 'sys_module_id' => 26],
+            ['name' => 'motor-vehicle-reorder-plate-number', 'sys_module_id' => 26],
             ['name' => 'motor-vehicle-transfer-ownership', 'sys_module_id' => 26],
             ['name' => 'motor-vehicle-deregistration', 'sys_module_id' => 26],
             ['name' => 'motor-vehicle-written-off', 'sys_module_id' => 26],

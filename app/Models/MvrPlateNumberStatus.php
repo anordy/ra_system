@@ -28,6 +28,8 @@ class MvrPlateNumberStatus extends Model
     const STATUS_PRINTED = 'PRINTED';
     const STATUS_RECEIVED = 'RECEIVED FROM PRINTING';
     const STATUS_ACTIVE = 'ACTIVE';
+    const STATUS_LOST = 'LOST';
+    const STATUS_DISTORTED = 'DISTORTED';
     const STATUS_RETIRED = 'RETIRED';
     const STATUS_EXPIRED = 'EXPIRED';
 

@@ -11,6 +11,7 @@ use App\Models\MvrOwnershipTransfer;
 use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationParticularChange;
 use App\Models\MvrRegistrationStatusChange;
+use App\Models\MvrReorderPlateNumber;
 use App\Services\ZanMalipo\GepgResponse;
 use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
@@ -45,7 +46,6 @@ class FeePayment extends Component
 
             case MvrRegistrationStatusChange::class:
                 $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
-
                 $this->fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
                     'mvr_class_id' => $this->motorVehicle->mvr_class_id,
@@ -53,6 +53,17 @@ class FeePayment extends Component
                     'mvr_plate_number_type_id' => $this->motorVehicle->mvr_plate_number_type_id
                 ])->first();
                 break;
+
+                case MvrReorderPlateNumber::class:
+                    $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::REORDER_PLATE_NUMBER]);
+                    dd($this->feeType);
+                    $this->fee = MvrFee::query()->where([
+                        'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
+                        'mvr_class_id' => $this->motorVehicle->mvr_class_id,
+                        'mvr_fee_type_id' => $this->feeType->id,
+                        'mvr_plate_number_type_id' => $this->motorVehicle->mvr_plate_number_type_id
+                    ])->first();
+                    break;
 
             case MvrOwnershipTransfer::class:
                 $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TRANSFER_OWNERSHIP]);

@@ -714,6 +714,12 @@
                         </li>
                     @endcan
 
+                    {{-- @can("motor-vehicle-reorder-plate-number") --}}
+                    <li class="{{ request()->is("mvr/registration/reorder*") ? "active" : "" }}">
+                        <a href="{{ route("mvr.registration.reorder.index") }}">Reorder Plate Number</a>
+                    </li>
+                   {{-- @endcan --}}
+
                     @can('motor-vehicle-status-change-request')
                         <li class="{{ request()->is('mvr/registration/particular*') ? 'active' : '' }}">
                             <a href="{{ route('mvr.registration.particular.index') }}">Particular Change Request</a>

@@ -766,6 +766,13 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/registration/status/show/{id}', [\App\Http\Controllers\MVR\MotorVehicleRegistrationStatusChangeController::class, 'show'])->name('registration.status.show');
         Route::get('/registration/status/correct/{id}', [\App\Http\Controllers\MVR\MotorVehicleRegistrationStatusChangeController::class, 'update'])->name('registration.status.update');
 
+         /**
+         * Registration Status Change
+         */
+        Route::get('/registration/reorder/index', [\App\Http\Controllers\MVR\MotorVehicleReorderPlateNumberController::class, 'index'])->name('registration.reorder.index');
+        Route::get('/registration/reorder/show/{id}', [\App\Http\Controllers\MVR\MotorVehicleReorderPlateNumberController::class, 'show'])->name('registration.reorder.show');
+        Route::get('/registration/reorder/correct/{id}', [\App\Http\Controllers\MVR\MotorVehicleReorderPlateNumberController::class, 'update'])->name('registration.reorder.update');
+
         /**
          * Ownership Transfer
          */
