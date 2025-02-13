@@ -129,7 +129,7 @@ class ReorderApprovalProcessing extends Component
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->payment_status = BillStatus::CN_GENERATING;
                 if($this->subject->replacement_reason == MvrReorderStatus::LOST) {
-                $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_ACTIVE;
+                $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_LOST;
                 } else {
                     $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_DISTORTED;
                 }

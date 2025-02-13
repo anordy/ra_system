@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Workflow;
 use Illuminate\Database\Seeder;
 
-class WorkflowMvrReorderLostPlateNumberSeeder extends Seeder
+class WorkflowMvrReorderPlateNumberSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,7 +14,7 @@ class WorkflowMvrReorderLostPlateNumberSeeder extends Seeder
      */
     public function run()
     {
-        $name = 'mvr_reorder_lost_plate_number';
+        $name = 'mvr_reorder_plate_number';
         $type = 'workflow';
         $marking_store = [
             'type'      => 'multiple_state',
@@ -65,19 +65,34 @@ class WorkflowMvrReorderLostPlateNumberSeeder extends Seeder
             ],
         ];
         $transitions = [
-            'application_submitted' => [
+            'application_submitted_lost' => [
                 'from' => 'apply',
                 'to' => 'mvr_police',
                 'condition' => '',
             ],
-            'application_filled_incorrect' => [
+            'application_submitted_distorted' => [
+                'from' => 'apply',
+                'to' => 'mvr_registration_officer',
+                'condition' => '',
+            ],
+            'application_filled_incorrect_lost' => [
                 'from' => 'mvr_police',
                 'to' => 'correct_application',
                 'condition' => '',
             ],
-            'application_corrected' => [
+            'application_corrected_lost' => [
                 'from' => 'correct_application',
                 'to' => 'mvr_police',
+                'condition' => '',
+            ],
+            'application_filled_incorrect_distorted' => [
+                'from' => 'mvr_registration_officer',
+                'to' => 'correct_application',
+                'condition' => '',
+            ],
+            'application_corrected_distorted' => [
+                'from' => 'correct_application',
+                'to' => 'mvr_registration_officer',
                 'condition' => '',
             ],
             'mvr_police_review' => [
@@ -95,7 +110,7 @@ class WorkflowMvrReorderLostPlateNumberSeeder extends Seeder
                 'to' => 'mvr_registration_officer',
                 'condition' => '',
             ],
-            'mvr_registration_officer_reject' => [
+            'mvr_registration_officer_lost_reject' => [
                 'from' => 'mvr_registration_officer',
                 'to' => 'mvr_zartsa',
                 'condition' => '',
@@ -120,11 +135,11 @@ class WorkflowMvrReorderLostPlateNumberSeeder extends Seeder
 
         Workflow::updateOrCreate(
             [
-                'code' => 'MVR_REORDER_LOST_PLATE_NUMBER',
+                'code' => 'MVR_REORDER_PLATE_NUMBER',
             ],
             [
-            'code' => 'MVR_REORDER_LOST_PLATE_NUMBER',
-            'summary' => 'Motor Vehicle Reorder Lost Plate Number',
+            'code' => 'MVR_REORDER_PLATE_NUMBER',
+            'summary' => 'Motor Vehicle Reorder Distorted Plate Number',
             'name' => $name,
             'type' => $type,
             'initial_marking' => $initial_marking,
