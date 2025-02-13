@@ -140,5 +140,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MvrPlateNumberTypeSeeder::class);
         $this->call(WorkflowMvrReorderPlateNumberSeeder::class);
         $this->call(NtrSeeders::class);
+        $this->call(ReportsSeeder::class);
     }
 }

@@ -13,11 +13,14 @@
 
     <ul class="nav nav-tabs shadow-sm mb-0" id="myTab">
         <li class="nav-item">
+    <ul class="nav nav-tabs shadow-sm mb-0" id="myTab">
+        <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" aria-controls="home" role="tab"
                 aria-selected="true">
                 Registration Information
             </a>
         </li>
+        
         <li class="nav-item">
             <a class="nav-link" id="approval-tab" data-toggle="tab" href="#approval" aria-controls="approval"
                role="tab" aria-selected="true">
