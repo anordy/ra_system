@@ -237,6 +237,13 @@ class ReportsSeeder extends Seeder
                 'report_type' => GeneralReportType::MVR,
                 'reports' => [
                     [
+                        'name' => 'Registration Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::MVR,
+                        'report_url' => '/reports/ZRA/mvr/_de_registered_vehicles',
+                        'parameters' => [Parameter::MVR_LOCATION, Parameter::MVR_VEHICLE_CATEGORY, Parameter::MVR_VEHICLE_REGISTRATION_TYPE, Parameter::MVR_PAYMENT_STATUS, Parameter::MVR_BLACKLIST, Parameter::MVR_CLASS, Parameter::DYNAMIC_DATE]
+                    ],
+                    [
                         'name' => 'De Registered Vehicles',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::MVR,
@@ -581,6 +588,7 @@ class ReportsSeeder extends Seeder
                 if (count($r['parameters'] ?? [])) {
                     foreach ($r['parameters'] as $parameter) {
                         $parameter = Parameter::where('code', $parameter)->firstOrFail();
+
                         // Add report parameters
                         ReportParameter::updateOrCreate([
                             'report_id' => $reportData->id,

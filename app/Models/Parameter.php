@@ -43,4 +43,14 @@ class Parameter extends Model
     public const DL_IS_BLOCKED = 'is_blocked';
     public const DL_PAYMENT_STATUS = 'payment_status';
     public const DL_DURATION = 'duration_id';
+
+    // Mvr registration
+    public const MVR_PAYMENT_STATUS = 'mvr_payment_status';
+    public const MVR_VEHICLE_REGISTRATION_TYPE = 'mvr_registration_type';
+    public const MVR_VEHICLE_CATEGORY = 'mvr_vehicle_category';
+    public const MVR_LOCATION = 'mvr_location';
+    public const MVR_CLASS = 'mvr_class';
+
+    public const MVR_BLACKLIST = 'mvr_is_blocked';
+
 }

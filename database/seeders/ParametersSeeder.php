@@ -7,6 +7,9 @@ use App\Models\District;
 use App\Models\DlLicenseDuration;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
+use App\Models\MvrClass;
+use App\Models\MvrPlateNumberType;
+use App\Models\MvrRegistrationType;
 use App\Models\Parameter;
 use App\Models\PaymentStatus;
 use App\Models\Region;
@@ -28,12 +31,10 @@ class ParametersSeeder extends Seeder
     public function run()
     {
         // Map Data
-        $licenseDurations = DlLicenseDuration::select('id', 'description')->get();
-        $licenseDurationsMapping = ['' => 'All'];
-
-        foreach ($licenseDurations as $licenseDuration) {
-            $licenseDurationsMapping[$licenseDuration->id] = $licenseDuration->description;
-        }
+        $licenseDurationsMapping = DlLicenseDuration::pluck('description', 'id')->prepend('All', '');
+        $mvrCategories = MvrRegistrationType::pluck('name', 'id')->prepend('All', '');
+        $mvrRegTypes = MvrPlateNumberType::pluck('name', 'id')->prepend('All', '');
+        $mvrClasses = MvrClass::pluck('category', 'category')->prepend('All', '');
 
 
         $parameters = [
@@ -228,7 +229,49 @@ class ParametersSeeder extends Seeder
                 'model_name' => json_encode($licenseDurationsMapping),
                 'display_name' => 'description',
             ],
-
+            // MVR
+            [
+                'name' => 'Payment Status',
+                'code' => Parameter::MVR_PAYMENT_STATUS,
+                'input_type' => 'array',
+                'model_name' => json_encode(['' => 'All', 'complete' => 'Paid', 'control-number-generated' => 'Unpaid']),
+                'display_name' => null,
+            ],
+            [
+                'name' => 'Vehicle Category',
+                'code' => Parameter::MVR_VEHICLE_CATEGORY,
+                'input_type' => 'array',
+                'model_name' => json_encode($mvrCategories),
+                'display_name' => null,
+            ],
+            [
+                'name' => 'Registration Type',
+                'code' => Parameter::MVR_VEHICLE_REGISTRATION_TYPE,
+                'input_type' => 'array',
+                'model_name' => json_encode($mvrRegTypes),
+                'display_name' => null,
+            ],
+            [
+                'name' => 'Is Blacklisted',
+                'code' => Parameter::MVR_BLACKLIST,
+                'input_type' => 'array',
+                'model_name' => json_encode(['' => 'All', '0' => 'No', '1' => 'Yes']),
+                'display_name' => null,
+            ],
+            [
+                'name' => 'Location',
+                'code' => Parameter::MVR_LOCATION,
+                'input_type' => 'array',
+                'model_name' => json_encode(['' => 'All', 'unguja' => 'Unguja', 'pemba' => 'Pemba']),
+                'display_name' => null,
+            ],
+            [
+                'name' => 'Vehicle Class',
+                'code' => Parameter::MVR_CLASS,
+                'input_type' => 'array',
+                'model_name' => json_encode($mvrClasses),
+                'display_name' => null,
+            ],
         ];
 
         foreach ($parameters as $parameter) {
