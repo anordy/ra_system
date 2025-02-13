@@ -60,6 +60,12 @@
                 <span class="font-weight-bold text-uppercase">Serial Number</span>
                 <p class="my-1">{{ $reg->registration_number ?? 'N/A' }}</p>
             </div>
+            @if($reg->personalized_name)
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Personalized Number</span>
+                    <p class="my-1">{{ $reg->personalized_name }}</p>
+                </div>
+            @endif
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Registered On</span>
                 <p class="my-1">{{ $reg->registered_at ?? 'N/A' }}</p>

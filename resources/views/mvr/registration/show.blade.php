@@ -9,21 +9,21 @@
         @livewire('mvr.fee-payment', ['motorVehicle' => $motorVehicle])
     @endif
 
-    <ul class="nav nav-tabs shadow-sm mb-0" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
+    <ul class="nav nav-tabs shadow-sm mb-0" id="myTab">
+        <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" aria-controls="home" role="tab"
                aria-selected="true">
                 Registration Information
             </a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="plate-number-tab" data-toggle="tab" href="#plate-number"
                aria-controls="plate-number"
                role="tab" aria-selected="true">
                 Plate Number History
             </a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="approval-tab" data-toggle="tab" href="#approval" aria-controls="approval"
                role="tab" aria-selected="true">
                 Approval History
@@ -43,14 +43,14 @@
                     Plate Number Histories
                 </div>
                 <div class="card-body">
-                    <table width="50%" class="table table-sm table-striped">
+                    <table class="table table-sm table-striped">
                         <thead>
                         <tr>
                             <th>No</th>
                             <th>Owner's Name</th>
                             <th>Owner's TIN</th>
-                            <th>Plate Number</th>
                             <th>Serial Number</th>
+                            <th>Registration Number</th>
                             <th>Date of Registration</th>
                             <th>Status</th>
                         </tr>
@@ -81,7 +81,7 @@
                                 <td>{{ $plateHistory->registrant_tin ?? 'N/A'  }}</td>
                                 <td>{{ $plateHistory->plate_number ?? 'N/A'  }}</td>
                                 <td>{{ $plateHistory->registration_number ?? 'N/A'  }}</td>
-                                <td>{{ \Carbon\Carbon::create($plateHistory->registered_at)->format('d M Y')  }}</td>
+                                <td>{{ $plateHistory->registered_at ? \Carbon\Carbon::create($plateHistory->registered_at)->format('d M Y') : 'N/A'  }}</td>
                                 <td> @if($plateHistory->status === \App\Enum\MvrRegistrationStatus::PENDING)
                                         <span class="badge badge-info py-1 px-2">
                                             <i class="bi bi-check-circle-fill mr-1"></i>

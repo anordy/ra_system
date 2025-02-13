@@ -90,7 +90,7 @@ class Zanid extends Component
         try {
             $this->kyc->update([
                 'first_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_FIRST_NAME']),
-                'middle_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_MIDLE_NAME']),
+                'middle_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_MIDLE_NAME'] ?? null),
                 'last_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_LAST_NAME']),
                 'zanid_verified_at' => Carbon::now()->toDateTimeString(),
             ]);

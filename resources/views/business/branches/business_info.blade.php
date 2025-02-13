@@ -1,34 +1,34 @@
 <div class="row">
-    <ul class="nav nav-tabs shadow-sm mb-0" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
+    <ul class="nav nav-tabs shadow-sm mb-0" id="myTab">
+        <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Business Information</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="location-tab" data-toggle="tab" href="#location" role="tab"
                 aria-controls="location" aria-selected="false">Location</a>
         </li>
         @if ($business->partners->count())
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="partners-tab" data-toggle="tab" href="#partners" role="tab"
                     aria-controls="partners" aria-selected="false">Partners</a>
             </li>
         @endif
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
                 aria-controls="contact" aria-selected="false">Assistants & Tax Consultants</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="bank-tab" data-toggle="tab" href="#bank" role="tab" aria-controls="bank"
                 aria-selected="false">Bank Account</a>
         </li>
         @if ($business->hotel)
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="hotel-tab" data-toggle="tab" href="#hotel" role="tab" aria-controls="hotel"
                     aria-selected="false">Hotel Information</a>
             </li>
         @endif
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="document-tab" data-toggle="tab" href="#document" role="tab"
                 aria-controls="document" aria-selected="false">Business Attachments</a>
         </li>

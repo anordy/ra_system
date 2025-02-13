@@ -5,18 +5,18 @@
 @section('content')
     <div class="card mt-3">
         <div class="card-body">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="nav-item">
                     <a class="nav-link active" id="details-a" data-toggle="tab" href="#details" role="tab"
                        aria-controls="home" aria-selected="true">Case Details</a>
                 </li>
 
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="proceedings-a" data-toggle="tab" href="#proceedings" role="tab"
                        aria-controls="home" aria-selected="true">Proceedings</a>
                 </li>
                 @if(!empty($case->date_closed))
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item">
                         <a class="nav-link" id="appeals-a" data-toggle="tab" href="#appeals" role="tab"
                            aria-controls="profile" aria-selected="false">Appeals</a>
                     </li>

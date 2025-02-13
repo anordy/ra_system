@@ -1,27 +1,27 @@
 <div>
     <ul class="nav nav-tabs shadow-sm mb-0">
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Complainant</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="dispute-tab" data-toggle="tab" href="#dispute" role="tab"
                 aria-controls="dispute" aria-selected="false">Tax In Dispute</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="assessment-histories-tab" data-toggle="tab" href="#assessment-histories" role="tab"
                 aria-controls="assessment-histories" aria-selected="false">Assessment History</a>
         </li>
 
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="ground-tab" data-toggle="tab" href="#ground" role="tab" aria-controls="ground"
                 aria-selected="false">Ground dispute</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="reason-tab" data-toggle="tab" href="#reason" role="tab" aria-controls="reason"
                 aria-selected="false">Reason for Ground</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="attachment-tab" data-toggle="tab" href="#attachment" role="tab"
                 aria-controls="attachment" aria-selected="false">Attachments</a>
         </li>

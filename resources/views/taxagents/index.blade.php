@@ -5,16 +5,16 @@
 @section('content')
     <div class="card mt-3">
         <div class="card-body">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="nav-item">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
                        aria-controls="home" aria-selected="true">Pending Requests</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="progress-tab" data-toggle="tab" href="#progress" role="tab"
                        aria-controls="home" aria-selected="true">On Progress Requests</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="rejected-tab" data-toggle="tab" href="#rejected" role="tab"
                        aria-controls="profile" aria-selected="false">Rejected Requests</a>
                 </li>

@@ -16,12 +16,12 @@
         </div>
         <div class="card-body">
             <div>
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="nav-item">
                         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab"
                             aria-controls="home" aria-selected="true">Business Details</a>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item">
                         <a class="nav-link" id="academic-tab" data-toggle="tab" href="#academic" role="tab"
                             aria-controls="profile" aria-selected="false">Return Items</a>
                     </li>

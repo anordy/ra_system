@@ -25,6 +25,7 @@ class InterestRateSeeder extends Seeder
             ['year'=>2022,'rate'=>0.0180],
             ['year'=>2023,'rate'=>0.0180],
             ['year'=>2024,'rate'=>0.0180],
+            ['year'=>2025,'rate'=>0.0180],
         ];
 
         foreach($rates as $item){

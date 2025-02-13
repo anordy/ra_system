@@ -16,16 +16,16 @@
         </div>
         <div class="card-body">
             <div>
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="nav-item">
                         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#summary" role="tab"
                            aria-controls="home" aria-selected="true">Summary</a>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item">
                         <a class="nav-link" id="return-items-tab" data-toggle="tab" href="#return-items" role="tab"
                            aria-controls="profile" aria-selected="false">Return Information</a>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item">
                         <a class="nav-link" id="penalties-tab" data-toggle="tab" href="#penalties" role="tab"
                            aria-controls="penalties" aria-selected="false">Penalties</a>
                     </li>

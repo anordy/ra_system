@@ -1,26 +1,26 @@
 <div>
     <div class="card">
         <div class="card-body">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="nav-item">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab"
                        aria-controls="home"
                        aria-selected="true">Business & Application Details</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="academic-tab" data-toggle="tab" href="#academic" role="tab"
                        aria-controls="profile" aria-selected="false">Academic Details</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="prof-tab" data-toggle="tab" href="#prof" role="tab" aria-controls="contact"
                        aria-selected="false">Professional Details</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="training-tab" data-toggle="tab" href="#training" role="tab"
                        aria-controls="contact" aria-selected="false">Training Details</a>
                 </li>
 
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="attachment-tab" data-toggle="tab" href="#attachment" role="tab"
                        aria-controls="contact" aria-selected="false">Documents</a>
                 </li>

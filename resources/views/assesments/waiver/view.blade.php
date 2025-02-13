@@ -5,12 +5,12 @@
 @section("content")
     <div class="card p-0 m-0">
         <div class="card-body mt-0 p-2">
-            <ul class="nav nav-tabs shadow-sm mb-0" id="waiverContent" role="tablist">
-                <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs shadow-sm mb-0" id="waiverContent">
+                <li class="nav-item">
                     <a class="nav-link active" id="waiverInfo-tab" data-toggle="tab" href="#waiverInfo" role="tab"
                         aria-controls="waiverInfo" aria-selected="true">Waiver Information</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="approvalHistory-tab" data-toggle="tab" href="#approvalHistory" role="tab"
                         aria-controls="approvalHistory" aria-selected="false">Approval History</a>
                 </li>

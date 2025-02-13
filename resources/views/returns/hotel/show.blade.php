@@ -17,16 +17,16 @@
         <div class="card-body">
             <h6 class="text-uppercase mt-2 ml-2"></h6>
             <div>
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="nav-item">
                         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab"
                             aria-controls="home" aria-selected="true">Business Details</a>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item">
                         <a class="nav-link" id="academic-tab" data-toggle="tab" href="#academic" role="tab"
                             aria-controls="profile" aria-selected="false">Return Items</a>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item">
                         <a class="nav-link" id="penalty-tab" data-toggle="tab" href="#penalty" role="tab"
                             aria-controls="penalty" aria-selected="false">Penalties</a>
                     </li>

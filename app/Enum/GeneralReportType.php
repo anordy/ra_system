@@ -23,6 +23,7 @@ class GeneralReportType implements Status
     const DISPUTE = 'DISPUTES';
     const DST = 'DIGITAL SERVICES TAXATION';
     const REPORT_REGISTER = 'REPORT REGISTER';
+    const DRIVERS_LICENSE = 'DRIVERS LICENSE';
 
     static function getConstants(): array
     {

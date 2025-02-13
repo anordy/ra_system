@@ -8,16 +8,16 @@
             Tax Consultant Renew Request
         </div>
         <div class="card-body">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="nav-item">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
                        aria-controls="home" aria-selected="true">Pending Renew Request</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="progress-tab" data-toggle="tab" href="#progress" role="tab"
                        aria-controls="progress" aria-selected="true">Progress Renew Request</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="approved-tab" data-toggle="tab" href="#approved" role="tab"
                        aria-controls="profile" aria-selected="false">Approved Renew Requests</a>
                 </li>

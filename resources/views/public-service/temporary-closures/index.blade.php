@@ -8,17 +8,17 @@
             Transport Service Temporary Closures
         </div>
         <div class="card-body">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="nav-item">
                     <a class="nav-link active" id="to-print-link" data-toggle="tab" href="#all" role="tab"
                        aria-controls="home" aria-selected="true">All Registrations</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="printed-link" data-toggle="tab" href="#pending-approval" role="tab"
                        aria-controls="profile" aria-selected="false">Pending Approval</a>
                 </li>
 
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="printed-link" data-toggle="tab" href="#rejected" role="tab"
                        aria-controls="rejected" aria-selected="false">Rejected</a>
                 </li>

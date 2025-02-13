@@ -4,21 +4,21 @@
 
 @section('content')
 
-    <ul class="nav nav-tabs shadow-sm mb-0" id="myTab" role="tablist">
-        {{-- <li class="nav-item" role="presentation">
+    <ul class="nav nav-tabs shadow-sm mb-0" id="myTab">
+        {{-- <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Complainant</a>
         </li> --}}
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="dispute-tab" data-toggle="tab" href="#dispute" role="tab" aria-controls="dispute"
                 aria-selected="false">Tax In Dispute</a>
         </li>
 
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="ground-tab" data-toggle="tab" href="#ground" role="tab" aria-controls="ground"
                 aria-selected="false">Ground objection</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="reason-tab" data-toggle="tab" href="#reason" role="tab" aria-controls="reason"
                 aria-selected="false">Reason for Ground</a>
         </li>

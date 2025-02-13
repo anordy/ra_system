@@ -27,7 +27,7 @@
     </div>
 
     @if ($is_verified_triggered && $zanid_data != null)
-        @if ($zanid_data['data'] !== null)
+        @if (isset($zanid_data['data']) && $zanid_data['data'] !== null)
         <hr>
         <div class="row">
             <div class="col-md-11">
@@ -45,16 +45,6 @@
                             <td>{{ strtoupper($kyc->first_name) }}</td>
                             <td>{{ ucfirst($zanid_data['data']['PRSN_FIRST_NAME']) }}</td>
                             @if ($this->compareProperties($kyc->first_name, $zanid_data['data']['PRSN_FIRST_NAME']))
-                                <td class="table-succes">{{ $matchesText }}</td>
-                            @else
-                                <td class="table-danger">{{ $notValidText }}</td>
-                            @endif
-                        </tr>
-                        <tr>
-                            <th>MIDDLE NAME</th>
-                            <td>{{ strtoupper($kyc->middle_name) }}</td>
-                            <td>{{ ucfirst(($zanid_data['data']['PRSN_MIDLE_NAME']) ?? 'N/A') }}</td>
-                            @if ($this->compareProperties($kyc->middle_name, $zanid_data['data']['PRSN_MIDLE_NAME']))
                                 <td class="table-succes">{{ $matchesText }}</td>
                             @else
                                 <td class="table-danger">{{ $notValidText }}</td>

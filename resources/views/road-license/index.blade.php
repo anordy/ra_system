@@ -10,12 +10,12 @@
         </div>
 
         <div class="card-body">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="nav-item">
                     <a class="nav-link active" id="to-print-link" data-toggle="tab" href="#all" role="tab"
                        aria-controls="home" aria-selected="true">All Road Licenses</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="printed-link" data-toggle="tab" href="#pending-approval" role="tab"
                        aria-controls="profile" aria-selected="false">Pending Approval</a>
                 </li>

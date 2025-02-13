@@ -9,26 +9,26 @@
         </div>
 
         <div class="card-body mt-0 p-2">
-            <ul class="nav nav-tabs shadow-sm" id="myPurchaseTab" role="tablist">
-                <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs shadow-sm" id="myPurchaseTab">
+                <li class="nav-item">
                     <a class="nav-link active font-weight-bold" id="ldt-tab"
                        data-toggle="tab" href="#ltd" role="tab"
                        aria-controls="standard-supplies-list"
                        aria-selected="true">{{ __('Large Taxpayer Department') }}</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link font-weight-bold" id="dtd-tab"
                        data-toggle="tab" href="#dtd" role="tab"
                        aria-controls="standard-supplies-list"
                        aria-selected="true">{{ __('Domestic Tax Department') }}</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link font-weight-bold" id="ntrd-tab"
                        data-toggle="tab" href="#ntrd" role="tab"
                        aria-controls="standard-supplies-list"
                        aria-selected="true">{{ __('Non Tax Revenue Department') }}</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link font-weight-bold" id="pemba-tab"
                        data-toggle="tab" href="#pemba" role="tab"
                        aria-controls="standard-supplies-list"

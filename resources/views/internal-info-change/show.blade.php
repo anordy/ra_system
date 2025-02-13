@@ -7,7 +7,7 @@
 @section('title', "{$info_type} Information Change for {$info->business->name}")
 
 @section('content')
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <ul class="nav nav-tabs" id="myTab">
         <li class="nav-item">
             <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
                aria-controls="profile"

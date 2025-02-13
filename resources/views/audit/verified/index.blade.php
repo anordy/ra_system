@@ -9,7 +9,7 @@
             Tax Audits Approved
         </div>
         <div class="card-body">
-            <nav class="nav nav-tabs justify-content-between my-3 flex-nowrap" role="tablist">
+            <nav class="nav nav-tabs justify-content-between my-3 flex-nowrap">
                 <a href="#domestic-tax-payers" class="nav-item nav-link font-weight-bold active" data-toggle="tab">Domestic Tax Department (DTD)</a>
                 <a href="#large-tax-payers" class="nav-item nav-link font-weight-bold" data-toggle="tab">Large Taxpayers Department (LTD)</a>
                 <a href="#non-tax-revenues" class="nav-item nav-link font-weight-bold" data-toggle="tab">Non-Tax Revenue Department (NTRD)</a>

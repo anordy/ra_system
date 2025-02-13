@@ -8,13 +8,13 @@
         <div class="card-header">Motor Vehicle Registrations</div>
 
         <div class="card-body">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="nav-item">
                     <a class="nav-link active" id="to-print-link" data-toggle="tab" href="#all" role="tab"
                        aria-controls="home" aria-selected="true">Approved Motor Vehicles</a>
                 </li>
                 @can('mvr_approve_registration')
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item">
                         <a class="nav-link" id="printed-link" data-toggle="tab" href="#pending-approval" role="tab"
                            aria-controls="profile" aria-selected="false">Pending Approval</a>
                     </li>

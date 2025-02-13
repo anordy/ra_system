@@ -6,20 +6,20 @@
 
     <div class="card p-0 m-0">
         <div class="card-body mt-0 p-2">
-            <ul class="nav nav-tabs shadow-sm mb-0" id="waiverContent" role="tablist">
-                <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs shadow-sm mb-0" id="waiverContent">
+                <li class="nav-item">
                     <a class="nav-link active" id="taxclearance-info-tab" data-toggle="tab" href="#taxclearance-info"
                         role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearance Information </a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="debt-infos-tab" data-toggle="tab" href="#debt-infos" role="tab"
                        aria-controls="debt-infos" aria-selected="false">Debts Summary Information</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="debt-source-tab" data-toggle="tab" href="#debt-source" role="tab"
                        aria-controls="debt-source" aria-selected="false">Debt Source Information</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="approvalHistory-tab" data-toggle="tab" href="#approvalHistory" role="tab"
                         aria-controls="approvalHistory" aria-selected="false">Approval History</a>
                 </li>

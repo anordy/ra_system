@@ -1,25 +1,25 @@
 <div class="pt-3 px-2">
     <ul class="nav nav-tabs shadow-sm mb-0">
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Business Information</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="location-tab" data-toggle="tab" href="#location" role="tab"
                 aria-controls="location" aria-selected="false">Location</a>
         </li>
         @if ($business->partners->count())
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="partners-tab" data-toggle="tab" href="#partners" role="tab"
                     aria-controls="partners" aria-selected="false">Partners</a>
             </li>
         @endif
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
                 aria-controls="contact" aria-selected="false">Assistants & Tax Consultants</a>
         </li>
         @if (count($business->banks))
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="bank-tab" data-toggle="tab" href="#bank" role="tab" aria-controls="bank"
                     aria-selected="false">
                     Bank Accounts
@@ -27,24 +27,24 @@
             </li>
         @endif
         @if ($business->hotel)
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="hotel-tab" data-toggle="tab" href="#hotel" role="tab" aria-controls="hotel"
                     aria-selected="false">Hotel Information</a>
             </li>
         @endif
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="business-attachment-tab" data-toggle="tab" href="#business-attachment"
                 role="tab" aria-controls="business-attachment" aria-selected="false">Business Attachments</a>
         </li>
         @if ($business->reg_no && $business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED &&
                 (count($directors) || count($shareholders) || count($shares)))
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="bpra-information-tab" data-toggle="tab" href="#bpra-information"
                         role="tab" aria-controls="bpra-information" aria-selected="false">BPRA Information</a>
                 </li>
         @endif
         @if($business->tin && $business->tininformation && $business->tin_verification_status === \App\Enum\TinVerificationStatus::APPROVED)
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="tin-information-tab" data-toggle="tab" href="#tin-information"
                    role="tab" aria-controls="tin-information" aria-selected="false">TIN Information</a>
             </li>

@@ -23,12 +23,12 @@
     </div>
 
     <div class="card">
-        <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
-            <li class="nav-item" role="presentation">
+        <ul class="nav nav-tabs shadow-sm" id="myTab" style="margin-bottom: 0;">
+            <li class="nav-item">
                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#lease-infos" role="tab"
                    aria-controls="lease-infos" aria-selected="true">Lease Informations</a>
             </li>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="lease-payments-tab" data-toggle="tab" href="#lease-payments" role="tab"
                    aria-controls="lease-payments" aria-selected="false">Lease Payments</a>
             </li>

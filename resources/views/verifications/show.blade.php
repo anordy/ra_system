@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Verification Preview')
 @section('content')
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <ul class="nav nav-tabs" id="myTab">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                aria-selected="true">Verification Report</a>

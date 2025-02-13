@@ -36,4 +36,11 @@ class Parameter extends Model
     public const RG_CATEGORY_ID = 'rg_category_id';
     public const RG_SUB_CATEGORY_ID = 'sub_category_id';
 
+    // Drivers license
+    public const DL_LOCATION = 'location';
+    public const DL_STATUS = 'status';
+    public const DL_TYPE = 'type';
+    public const DL_IS_BLOCKED = 'is_blocked';
+    public const DL_PAYMENT_STATUS = 'payment_status';
+    public const DL_DURATION = 'duration_id';
 }

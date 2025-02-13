@@ -59,22 +59,6 @@
                 <span class="font-weight-bold text-uppercase">Register Type</span>
                 <p class="my-1">{{ $reg->register_type ?? 'N/A' }}</p>
             </div>
-
-            @if($reg->agent)
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Is Registration For Agent?</span>
-                    <p class="my-1">{{ $reg->is_agent_registration ? 'Yes' : 'No' }}</p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Use Agent Company Name?</span>
-                    <p class="my-1">{{ $reg->use_company_name ? 'Yes' : 'No' }}</p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Registrant TIN</span>
-                    <p class="my-1">{{ $reg->registrant_tin ?? 'N/A' }}</p>
-                </div>
-            @endif
-
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Registered On</span>
                 <p class="my-1">{{ $reg->registered_at ?? 'N/A' }}</p>

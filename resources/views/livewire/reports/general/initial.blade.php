@@ -59,6 +59,27 @@
                         </div>
                         @enderror
                     </div>
+                @elseif($parameter['input_type'] === 'array')
+                    <div class="col-md-4 form-group">
+                        <label class="d-flex justify-content-between'">
+                            <span>
+                                {{ $parameter['name'] }}
+                            </span>
+                        </label>
+                        <select wire:model="parameters.{{ $i }}.value" class="form-control">
+                            <option value="">--choose option---</option>
+                                @foreach (json_decode($parameter['model_name'], true) ?? [] as $i => $row)
+                                    <option value="{{ $i }}">
+                                        {{ $row ?? 'N/A' }}
+                                    </option>
+                                @endforeach
+                        </select>
+                        @error('parameters.' . $i . '.code')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
                 @elseif($parameter['input_type'] === 'select')
                     <div class="col-md-4 form-group">
                         <label class="d-flex justify-content-between'">

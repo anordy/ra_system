@@ -1,10 +1,10 @@
 <div class="pt-3 px-2">
     <ul class="nav nav-tabs shadow-sm mb-0">
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                aria-selected="true">Business Information</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="tax-type-tab" data-toggle="tab" href="#tax-type" role="tab"
                aria-controls="tax-type" aria-selected="false">Tax Types</a>
         </li>

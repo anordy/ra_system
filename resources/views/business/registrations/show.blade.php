@@ -14,7 +14,7 @@
         <div class="card-body">
             <ul class="nav nav-tabs shadow-sm mb-0">
                 @foreach($business->locations as $location)
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item">
                         <a class="nav-link {{ $loop->first ? 'active' : '' }}"
                            id="{{ strtolower(str_replace(' ', '-', $location->name)) }}-tab"
                            data-toggle="tab" href="#{{ strtolower(str_replace(' ', '-', $location->name)) }}"

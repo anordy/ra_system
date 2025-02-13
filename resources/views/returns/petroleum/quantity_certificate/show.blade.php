@@ -3,7 +3,7 @@
 @section('title', 'Certificate of Quantity')
 
 @section('content')
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <ul class="nav nav-tabs" id="myTab">
         <li class="nav-item">
             <a class="nav-link active" id="certificate-tab" data-toggle="tab" href="#certificate" role="tab"
                 aria-controls="certificate" aria-selected="true">Certificate of Quantity Information</a>

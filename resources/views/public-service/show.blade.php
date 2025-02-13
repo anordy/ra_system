@@ -4,12 +4,12 @@
 
 @section('content')
 
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
-        <li class="nav-item" role="presentation">
+    <ul class="nav nav-tabs shadow-sm" id="myTab" style="margin-bottom: 0;">
+        <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                aria-selected="true"> Transport Service Registration Information</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="approval-tab" data-toggle="tab" href="#approval" role="tab" aria-controls="approval"
                aria-selected="false">Approval History</a>
         </li>

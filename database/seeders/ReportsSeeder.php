@@ -523,6 +523,19 @@ class ReportsSeeder extends Seeder
                     ],
                 ]
             ],
+            // Driver's License
+            [
+                'report_type' => GeneralReportType::DRIVERS_LICENSE,
+                'reports' => [
+                    [
+                        'name' => 'Driver License Report',
+                        'has_parameter' => 1,
+                        'report_type_name' => GeneralReportType::DRIVERS_LICENSE,
+                        'report_url' => '/reports/ZRA/DriverLicense/driving_license_report',
+                        'parameters' => [Parameter::DYNAMIC_DATE, Parameter::DL_PAYMENT_STATUS, Parameter::DL_LOCATION, Parameter::DL_STATUS, Parameter::DL_IS_BLOCKED, Parameter::DL_TYPE, Parameter::DL_DURATION]
+                    ],
+                ]
+            ],
         ];
 
         DB::table('report_parameters')->truncate();
@@ -532,7 +545,7 @@ class ReportsSeeder extends Seeder
         $this->call(ParametersSeeder::class);
 
 
-        foreach ($reports as $i => $report) {
+        foreach ($reports as $report) {
             $reportType = ReportType::select('id')
                 ->where('name', $report['report_type'])
                 ->first();
@@ -541,7 +554,7 @@ class ReportsSeeder extends Seeder
                 throw new \Exception('Missing report type');
             }
 
-            foreach ($report['reports'] as $j => $r) {
+            foreach ($report['reports'] as $r) {
                 $code = strtolower($r['name']);
                 // Replace spaces with hyphens
                 $code = str_replace(' ', '-', $code);

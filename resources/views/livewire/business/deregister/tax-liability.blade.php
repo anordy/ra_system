@@ -36,24 +36,24 @@
 
     <div>
         <ul class="nav nav-tabs shadow-sm mb-0">
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link active" id="return-debts-tab" data-toggle="tab" href="#return-debts" role="tab"
                     aria-controls="return-debts" aria-selected="true">Return Debts</a>
             </li>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="verification-debts-tab" data-toggle="tab" href="#verification-debts"
                     role="tab" aria-controls="verification-debts" aria-selected="false">Verification Debts</a>
             </li>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="audit-debts-tab" data-toggle="tab" href="#audit-debts" role="tab"
                     aria-controls="audit-debts" aria-selected="false">Audit Debts</a>
             </li>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="investigation-debts-tab" data-toggle="tab" href="#investigation-debts"
                     role="tab" aria-controls="investigation-debts" aria-selected="false">Investigation Debts</a>
             </li>
 
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="landlease-debts-tab" data-toggle="tab" href="#landlease-debts" role="tab"
                     aria-controls="landlease-debts" aria-selected="false">
                     Land Lease Debts

@@ -27,18 +27,18 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card-body mt-0 p-2 px-0">
-                                            <ul class="nav nav-tabs shadow-sm mb-0" id="myTab" role="tablist">
-                                                <li class="nav-item" role="presentation">
+                                            <ul class="nav nav-tabs shadow-sm mb-0" id="myTab">
+                                                <li class="nav-item">
                                                     <a class="nav-link active" id="directors-tab" data-toggle="tab"
                                                        href="#directors" role="tab" aria-controls="directors"
                                                        aria-selected="true">Directors</a>
                                                 </li>
-                                                <li class="nav-item" role="presentation">
+                                                <li class="nav-item">
                                                     <a class="nav-link" id="shareholders-tab" data-toggle="tab"
                                                        href="#shareholders" role="tab" aria-controls="shareholders"
                                                        aria-selected="false">Shareholders</a>
                                                 </li>
-                                                <li class="nav-item" role="presentation">
+                                                <li class="nav-item">
                                                     <a class="nav-link" id="shares_distribution-tab" data-toggle="tab"
                                                        href="#shares_distribution" role="tab"
                                                        aria-controls="shares_distribution" aria-selected="false">Shares

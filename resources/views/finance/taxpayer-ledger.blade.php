@@ -4,20 +4,20 @@
 
 @section('content')
     <div class="card-body mt-0 p-2">
-        <ul class="nav nav-tabs shadow-sm mb-0" id="taxpayerLedger" role="tablist">
-            <li class="nav-item" role="presentation">
+        <ul class="nav nav-tabs shadow-sm mb-0" id="taxpayerLedger">
+            <li class="nav-item">
                 <a class="nav-link active" id="taxclearance-info-tab" data-toggle="tab" href="#taxclearance-info"
                     role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearance Information </a>
             </li>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="return-infos-tab" data-toggle="tab" href="#return-infos" role="tab"
                     aria-controls="return-infos" aria-selected="false">Return Information</a>
             </li>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="debt-infos-tab" data-toggle="tab" href="#debt-infos" role="tab"
                     aria-controls="debt-infos" aria-selected="false">Unpaid Debts Information</a>
             </li>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="paid-debt-infos-tab" data-toggle="tab" href="#paid-debt-infos" role="tab"
                     aria-controls="paid-debt-infos" aria-selected="false">Paid Debts Information</a>
             </li>
@@ -158,7 +158,7 @@
                     <div class="card-body">
                         <ul class="nav nav-tabs shadow-sm mb-0">
                             @foreach ($business->locations as $location)
-                                <li class="nav-item" role="presentation">
+                                <li class="nav-item">
                                     <a class="nav-link {{ $loop->first ? 'active' : '' }}"
                                         id="{{ strtolower(str_replace(' ', '-', $location->name)) }}-tab"
                                         data-toggle="tab"

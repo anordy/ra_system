@@ -18,7 +18,7 @@
         </div>
         <div class="card-body">
             @livewire("approval.approval-count-card", ["modelName" => "TaxAudit"])
-            <ul class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-tabs">
                 <li class="nav-item font-weight-bold">
                     <a class="nav-link active" data-toggle="tab" href="#businesses-added-to-audit" role="tab"
                         aria-selected="true">Businesses Added to Audit</a>
@@ -35,7 +35,7 @@
             <div class="tab-content">
                 <div class="tab-pane py-2 px-1 fade show active" id="businesses-added-to-audit" role="tabpanel"
                     aria-labelledby="businesses-added-to-audit-tab">
-                    <nav class="nav nav-tabs mt-2 flex-nowrap" role="tablist">
+                    <nav class="nav nav-tabs mt-2 flex-nowrap">
                         <a href="#domestic-tax-payers" class="nav-item nav-link  active" data-toggle="tab">Domestic Tax Department
                             (DTD)</a>
                         <a href="#large-tax-payers" class="nav-item nav-link " data-toggle="tab">Large Taxpayers Department (LTD)</a>
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="tab-pane py-2 px-1 fade" id="pending-approval" role="tabpanel" aria-labelledby="pending-approval-tab">
-                    <nav class="nav nav-tabs mt-2 flex-nowrap" role="tablist">
+                    <nav class="nav nav-tabs mt-2 flex-nowrap">
                         <a href="#approval-domestic-tax-payers" class="nav-item nav-link  active" data-toggle="tab">Domestic Tax Department
                             (DTD)</a>
                         <a href="#approval-large-tax-payers" class="nav-item nav-link " data-toggle="tab">Large Taxpayers Department (LTD)</a>
@@ -91,7 +91,7 @@
                     </div>
                 </div>
                 <div class="tab-pane py-2 px-1 fade" id="approval-progress" role="tabpanel" aria-labelledby="approval-progress-tab">
-                    <nav class="nav nav-tabs mt-2 flex-nowrap" role="tablist">
+                    <nav class="nav nav-tabs mt-2 flex-nowrap">
                         <a href="#approval-domestic-tax-payers" class="nav-item nav-link  active" data-toggle="tab">Domestic Tax Department
                             (DTD)</a>
                         <a href="#approval-progress-large-tax-payers" class="nav-item nav-link " data-toggle="tab">Large Taxpayers Department (LTD)</a>

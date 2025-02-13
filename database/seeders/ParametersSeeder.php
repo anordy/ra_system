@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enum\NonTaxResident\NtrBusinessType;
 use App\Models\District;
+use App\Models\DlLicenseDuration;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Parameter;
@@ -26,6 +27,15 @@ class ParametersSeeder extends Seeder
      */
     public function run()
     {
+        // Map Data
+        $licenseDurations = DlLicenseDuration::select('id', 'description')->get();
+        $licenseDurationsMapping = ['' => 'All'];
+
+        foreach ($licenseDurations as $licenseDuration) {
+            $licenseDurationsMapping[$licenseDuration->id] = $licenseDuration->description;
+        }
+
+
         $parameters = [
             [
                 'name' => 'Start Date',
@@ -54,7 +64,7 @@ class ParametersSeeder extends Seeder
                 'input_type' => 'select',
                 'model_name' => District::class,
                 'display_name' => 'name',
-                'parent_id' => Parameter::where('code', Parameter::REGION)->firstOrFail()->id
+//                'parent_id' => Parameter::where('code', Parameter::REGION)->firstOrFail()->id
             ],
             [
                 'name' => 'Tax Department',
@@ -175,6 +185,50 @@ class ParametersSeeder extends Seeder
                 'model_name' => RgCategory::class,
                 'display_name' => 'name',
             ],
+            // Driver's license
+            [
+                'name' => 'License Status',
+                'code' => Parameter::DL_STATUS,
+                'input_type' => 'array',
+                'model_name' => json_encode(['ACTIVE' => 'Active Licenses', 'INACTIVE' => 'Inactive Licenses']),
+                'display_name' => null,
+            ],
+            [
+                'name' => 'Application Type',
+                'code' => Parameter::DL_TYPE,
+                'input_type' => 'array',
+                'model_name' => json_encode(['' => 'All', 'FRESH' => 'New Applications', 'RENEWAL' => 'Renewed Applications', 'DUPLICATE' => 'Duplicate Applications', 'CLASS' => 'Add Class Applications']),
+                'display_name' => null,
+            ],
+            [
+                'name' => 'Location',
+                'code' => Parameter::DL_LOCATION,
+                'input_type' => 'array',
+                'model_name' => json_encode(['' => 'All', 'unguja' => 'Unguja', 'pemba' => 'Pemba']),
+                'display_name' => null,
+            ],
+            [
+                'name' => 'Is Blacklisted',
+                'code' => Parameter::DL_IS_BLOCKED,
+                'input_type' => 'array',
+                'model_name' => json_encode(['' => 'All', '0' => 'No', '1' => 'Yes']),
+                'display_name' => null,
+            ],
+            [
+                'name' => 'Payment Status',
+                'code' => Parameter::DL_PAYMENT_STATUS,
+                'input_type' => 'array',
+                'model_name' => json_encode(['' => 'All', 'complete' => 'Paid', 'control-number-generated' => 'Unpaid']),
+                'display_name' => null,
+            ],
+            [
+                'name' => 'License Duration',
+                'code' => Parameter::DL_DURATION,
+                'input_type' => 'array',
+                'model_name' => json_encode($licenseDurationsMapping),
+                'display_name' => 'description',
+            ],
+
         ];
 
         foreach ($parameters as $parameter) {

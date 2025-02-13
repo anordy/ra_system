@@ -1,23 +1,23 @@
 <div class="">
     <ul class="nav nav-tabs shadow-sm mb-0">
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link active" id="unpaid-return-debts-{{$location_id}}-tab" data-toggle="tab" href="#unpaid-return-debts-{{$location_id}}" role="tab" aria-controls="unpaid-return-debts-{{$location_id}}"
                 aria-selected="true">Return Debts</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="unpaid-verification-debts-{{$location_id}}-tab" data-toggle="tab" href="#unpaid-verification-debts-{{$location_id}}" role="tab"
                 aria-controls="unpaid-verification-debts-{{$location_id}}" aria-selected="false">Verification Debts</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="unpaid-audit-debts-{{$location_id}}-tab" data-toggle="tab" href="#unpaid-audit-debts-{{$location_id}}" role="tab"
                 aria-controls="unpaid-audit-debts-{{$location_id}}" aria-selected="false">Audit Debts</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="unpaid-investigation-debts-{{$location_id}}-tab" data-toggle="tab" href="#unpaid-investigation-debts-{{$location_id}}"
                 role="tab" aria-controls="unpaid-investigation-debts-{{$location_id}}" aria-selected="false">Investigation Debts</a>
         </li>
         
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="unpaid-landlease-debts-{{$location_id}}-tab" data-toggle="tab" href="#unpaid-landlease-debts-{{$location_id}}"
                 role="tab" aria-controls="unpaid-landlease-debts-{{$location_id}}" aria-selected="false">
                 Land Lease Debts

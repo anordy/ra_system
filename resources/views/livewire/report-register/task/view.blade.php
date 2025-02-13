@@ -50,7 +50,7 @@
     </div>
 
 
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <ul class="nav nav-tabs" id="myTab">
         <li class="nav-item">
             <a class="nav-link active" id="assignment-tab" data-toggle="tab" href="#assignment" role="tab"
                aria-controls="assignment"

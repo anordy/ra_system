@@ -16,20 +16,20 @@
             BFO Return Details
         </div>
         <div class="card-body">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="nav-item">
                     <a class="nav-link active" id="bill-summary-tab" data-toggle="tab" href="#bill" role="tab"
                        aria-controls="bill" aria-selected="false">Bill Summary</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="bussiness-tab" data-toggle="tab" href="#bussiness" role="tab"
                        aria-controls="bussiness" aria-selected="true">Business Details</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="items-tab" data-toggle="tab" href="#items" role="tab" aria-controls="items"
                        aria-selected="false">Return Items</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="penalties-tab" data-toggle="tab" href="#penalties" role="tab"
                        aria-controls="penalties" aria-selected="false">Penalties</a>
                 </li>

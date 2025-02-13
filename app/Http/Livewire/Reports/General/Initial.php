@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Reports\General;
 
+use App\Enum\AlertType;
 use App\Enum\CustomMessage;
 use App\Enum\ReportStatus;
 use App\Models\FinancialYear;
@@ -72,7 +73,12 @@ class Initial extends Component
                 ->where('code', $this->report_code)
                 ->where('report_type_id', $this->report_type_id)
                 ->first();
-            
+
+            if(!$this->report){
+                $this->customAlert(AlertType::WARNING, 'No report found for this selection');
+                return;
+            }
+
             $this->parameters = ReportParameter::query()
                 ->join('parameters p', 'p.id', '=', 'report_parameters.parameter_id')
                 ->where('report_id', $this->report->id)

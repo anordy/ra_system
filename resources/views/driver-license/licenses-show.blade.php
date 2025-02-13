@@ -3,12 +3,12 @@
 @section('title', 'Driver\'s License')
 
 @section('content')
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
+    <ul class="nav nav-tabs" id="myTab">
+        <li class="nav-item">
             <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab"
                aria-controls="home" aria-selected="true">Driver Licence Details</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="approval-tab" data-toggle="tab" href="#approval" role="tab"
                aria-controls="home">License History</a>
         </li>

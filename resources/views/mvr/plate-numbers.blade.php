@@ -8,21 +8,21 @@
             Plate Numbers
         </div>
         <div class="card-body">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <ul class="nav nav-tabs" id="myTab">
                 @can('print_plate_number')
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link active" id="to-print-link" data-toggle="tab" href="#to-print" role="tab"
                        aria-controls="home" aria-selected="true">To Print</a>
                 </li>
                 @endcan
                 @can('receive_plate_number')
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item">
                         <a class="nav-link" id="printed-link" data-toggle="tab" href="#printed" role="tab"
                            aria-controls="profile" aria-selected="false">Printed</a>
                     </li>
                  @endcan
                  @can('receive_plate_number')
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item">
                         <a class="nav-link" id="received-link" data-toggle="tab" href="#received" role="tab"
                            aria-controls="profile" aria-selected="false">Received</a>
                     </li>

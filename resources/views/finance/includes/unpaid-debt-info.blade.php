@@ -1,23 +1,23 @@
 <div class="">
     <ul class="nav nav-tabs shadow-sm mb-0">
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link active" id="return-debts-{{$location_id}}-tab" data-toggle="tab" href="#return-debts-{{$location_id}}" role="tab" aria-controls="return-debts-{{$location_id}}"
                 aria-selected="true">Return Debts</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="verification-debts-{{$location_id}}-tab" data-toggle="tab" href="#verification-debts-{{$location_id}}" role="tab"
                 aria-controls="verification-debts-{{$location_id}}" aria-selected="false">Verification Debts</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="audit-debts-{{$location_id}}-tab" data-toggle="tab" href="#audit-debts-{{$location_id}}" role="tab"
                 aria-controls="audit-debts-{{$location_id}}" aria-selected="false">Audit Debts</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="investigation-debts-{{$location_id}}-tab" data-toggle="tab" href="#investigation-debts-{{$location_id}}"
                 role="tab" aria-controls="investigation-debts-{{$location_id}}" aria-selected="false">Investigation Debts</a>
         </li>
         
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="landlease-debts-{{$location_id}}-tab" data-toggle="tab" href="#landlease-debts-{{$location_id}}"
                 role="tab" aria-controls="landlease-debts-{{$location_id}}" aria-selected="false">
                 Land Lease Debts

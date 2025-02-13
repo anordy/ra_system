@@ -12,31 +12,31 @@
 
                 <div class="col-md-12 mt-3">
                     <ul class="nav nav-tabs shadow-sm mb-0">
-                        <li class="nav-item" role="presentation">
+                        <li class="nav-item">
                             <a class="nav-link active" id="claim-details-tab" data-toggle="tab" href="#claim-details"
                                 role="tab" aria-controls="claim-details" aria-selected="true">Claim Details</a>
                         </li>
                         @if ($claim->oldReturn)
-                            <li class="nav-item" role="presentation">
+                            <li class="nav-item">
                                 <a class="nav-link" id="old-return-tab" data-toggle="tab" href="#old-return" role="tab"
                                     aria-controls="old-return" aria-selected="true">Filed Return</a>
                             </li>
                         @endif
                         @if ($claim->newReturn)
-                            <li class="nav-item" role="presentation">
+                            <li class="nav-item">
                                 <a class="nav-link" id="new-return-tab" data-toggle="tab" href="#new-return" role="tab"
                                     aria-controls="new-return" aria-selected="false">New Return</a>
                             </li>
                         @endif
                         @if (!empty($claim->credit))
                             @if (count($claim->credit->items))
-                                <li class="nav-item" role="presentation">
+                                <li class="nav-item">
                                     <a class="nav-link" id="credit-items-tab" data-toggle="tab" href="#credit-items"
                                         role="tab" aria-controls="credit-items" aria-selected="false">Credit Items</a>
                                 </li>
                             @endif
                         @endif
-                        <li class="nav-item" role="presentation">
+                        <li class="nav-item">
                             <a class="nav-link" id="approval-history-tab" data-toggle="tab" href="#approval-history"
                                 role="tab" aria-controls="approval-history" aria-selected="true">Approval History</a>
                         </li>

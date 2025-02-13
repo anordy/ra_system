@@ -10,8 +10,8 @@
         </div>
     </div>
 
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
-        <li class="nav-item" role="presentation">
+    <ul class="nav nav-tabs shadow-sm" id="myTab" style="margin-bottom: 0;">
+        <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                aria-selected="true"> Tax Refund Information</a>
         </li>

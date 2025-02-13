@@ -12,21 +12,21 @@
     @endif
 
     <ul class="nav nav-tabs shadow-sm mb-0">
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                aria-selected="true"> Property Information</a>
         </li>
         @if($property->type == \App\Enum\PropertyTypeStatus::STOREY_BUSINESS || $property->type == \App\Enum\PropertyTypeStatus::RESIDENTIAL_STOREY)
-            <li class="nav-item" role="presentation">
+            <li class="nav-item">
                 <a class="nav-link" id="storeys-tab" data-toggle="tab" href="#storeys" role="tab" aria-controls="storeys"
                    aria-selected="true"> Storeys and Units</a>
             </li>
         @endif
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="payment-tab" data-toggle="tab" href="#payment" role="tab" aria-controls="home"
                aria-selected="true"> Payment History</a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item">
             <a class="nav-link" id="approval-tab" data-toggle="tab" href="#approval" role="tab" aria-controls="approval"
                aria-selected="false">Approval History</a>
         </li>

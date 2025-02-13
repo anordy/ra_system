@@ -3,53 +3,53 @@
         <h6 class="text-uppercase mt-2 ml-2">Filled Return Details For {{ $return->taxtype->name }}</h6>
         <hr>
         <div>
-            <ul  class="nav nav-tabs" id="myTab" role="tablist">
+            <ul  class="nav nav-tabs" id="myTab">
 
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link active" id="academic-tab" data-toggle="tab" href="#academic" role="tab"
                        aria-controls="profile" aria-selected="false">Return Details</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="prof-tab" data-toggle="tab" href="#prof" role="tab"
                        aria-controls="contact"
                        aria-selected="false">Supplier & Cash Sales</a>
                 </li>
 
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="hotel-tab" data-toggle="tab" href="#hotel" role="tab"
                        aria-controls="contact"
                        aria-selected="false">Hotel</a>
                 </li>
 
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="zero-tab" data-toggle="tab" href="#zero" role="tab"
                        aria-controls="contact"
                        aria-selected="false">Zero Rated</a>
                 </li>
 
 
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="training-tab" data-toggle="tab" href="#training" role="tab"
                        aria-controls="contact" aria-selected="false">Penalties</a>
                 </li>
 
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="payment-summary-tab" data-toggle="tab" href="#payment-summary" role="tab"
                        aria-controls="payment-summary" aria-selected="false">Payment Summary</a>
                 </li>
 
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="withheld-tab" data-toggle="tab" href="#withheld"
                        role="tab"
                        aria-controls="withheld" aria-selected="false">Withheld</a>
                 </li>
 
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="special-relief-tab" data-toggle="tab" href="#special-relief" role="tab"
                        aria-controls="special-relief"
                        aria-selected="false">Special Relief</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item">
                     <a class="nav-link" id="exempt-supplies-tab" data-toggle="tab" href="#exempt-supplies" role="tab"
                        aria-controls="exempt-supplies"
                        aria-selected="false">Exempt Supplies</a>
