@@ -37,7 +37,6 @@ class FeePayment extends Component
         switch (get_class($this->motorVehicle)) {
             case MvrRegistration::class:
                 $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
-
                 $this->fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
                     'mvr_class_id' => $this->motorVehicle->mvr_class_id,
@@ -73,7 +72,6 @@ class FeePayment extends Component
 
             case MvrOwnershipTransfer::class:
                 $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TRANSFER_OWNERSHIP]);
-
                 $this->fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->motorVehicle->motor_vehicle->mvr_registration_type_id,
                     'mvr_class_id' => $this->motorVehicle->motor_vehicle->mvr_class_id,
@@ -84,12 +82,10 @@ class FeePayment extends Component
 
             case MvrRegistrationParticularChange::class:
                 $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
-
                 $this->fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
                     'mvr_class_id' => $this->motorVehicle->mvr_class_id,
                     'mvr_fee_type_id' => $this->feeType->id,
-                    'mvr_plate_number_type_id' => $this->motorVehicle->mvr_plate_number_type_id
                 ])->first();
                 break;
 
@@ -102,6 +98,7 @@ class FeePayment extends Component
                     'mvr_class_id' => $this->motorVehicle->registration->mvr_class_id,
                     'mvr_plate_number_type_id' => $this->motorVehicle->registration->mvr_plate_number_type_id
                 ])->first();
+
                 break;
 
             default:
@@ -143,7 +140,8 @@ class FeePayment extends Component
                 $this->customAlert(GeneralConstant::ERROR, "Fee for the selected registration type is not configured");
                 return;
             }
-            switch (get_class($this->motorVehicle)){
+
+            switch (get_class($this->motorVehicle)) {
                 case MvrRegistration::class:
                     case MvrRegistrationStatusChange::class:
                         case MvrReorderPlateNumber::class:

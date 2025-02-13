@@ -50,19 +50,15 @@
                     @endphp
                 
                     @foreach ($fields as $key => $label)
-                        @if (!empty($$key)) {{-- Check if the Livewire property has a value --}}
-                            <div class="form-group col-md-3">
-                                <label class="control-label">{{ $label }}</label>
-                                <input type="text" class="form-control" wire:model.defer="{{ $key }}" value="{{ $$key }}" disabled>
-                                @error($key)
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        @endif
+                        <div class="form-group col-md-3">
+                            <label class="control-label">{{ $label }}</label>
+                            <input type="text" class="form-control" wire:model.defer="{{ $key }}">
+                            @error('{{ $key }}')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     @endforeach
                 </div>
-                
-                
             @endif
 
             <div class="row">

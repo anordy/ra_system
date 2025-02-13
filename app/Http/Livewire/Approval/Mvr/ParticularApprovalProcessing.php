@@ -33,7 +33,7 @@ class ParticularApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $approvalReport;
-    public $engineNo, $chassisNo, $bodyStyle, $color;
+    public $engineNo, $chassisNo, $bodyStyle, $color, $make, $model, $engineCapacity, $yearOfManufacture;
 
     public function mount($modelName, $modelId)
     {
@@ -46,6 +46,10 @@ class ParticularApprovalProcessing extends Component
             $this->color = $this->subject->change->color;
             $this->chassisNo = $this->subject->change->chassis_number;
             $this->bodyStyle = $this->subject->change->body_style;
+            $this->make = $this->subject->change->make;
+            $this->model = $this->subject->change->mode;
+            $this->engineCapacity = $this->subject->change->engine_capacity;
+            $this->yearOfManufacture = $this->subject->change->year_of_manufacture;
         }
     }
 
@@ -63,6 +67,10 @@ class ParticularApprovalProcessing extends Component
                 'chassisNo' => 'nullable|alpha_num',
                 'bodyStyle' => 'nullable|alpha',
                 'color' => 'nullable|alpha',
+                'make' => 'nullable|alpha_num',
+                'model' => 'nullable|alpha_num',
+                'engineCapacity' => 'nullable|alpha_num',
+                'yearOfManufacture' => 'nullable|alpha_num',
                 'approvalReport' => 'required|mimes:pdf|valid_pdf|max:1024|max_file_name_length:100',
             ]);
         }
@@ -81,14 +89,20 @@ class ParticularApprovalProcessing extends Component
                 ChassisNumberChange::updateOrCreate(
                     [
                         'particular_change_id' => $this->subject->id,
-                    ], [
-                    'color' => $this->color,
-                    'engine_number' => $this->engineNo,
-                    'chassis_number' => $this->chassisNo,
-                    'body_style' => $this->bodyStyle,
-                    'chassis_number_id' => $this->subject->chassis->id,
-                    'particular_change_id' => $this->subject->id,
-                ]);
+                    ],
+                    [
+                        'color' => $this->color,
+                        'engine_number' => $this->engineNo,
+                        'chassis_number' => $this->chassisNo,
+                        'body_style' => $this->bodyStyle,
+                        'make' => $this->make,
+                        'model' => $this->model,
+                        'engine_capacity' => $this->engineCapacity,
+                        'year_of_manufacture' => $this->yearOfManufacture,
+                        'chassis_number_id' => $this->subject->chassis->id,
+                        'particular_change_id' => $this->subject->id,
+                    ]
+                );
             }
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
@@ -104,8 +118,11 @@ class ParticularApprovalProcessing extends Component
 
             // Send correction email/sms
             if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
-                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} has been approved, you will receive your payment control number shortly."]));
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                    'phone' => $this->subject->taxpayer->mobile,
+                    'message' => "
+                Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} has been approved, you will receive your payment control number shortly."
+                ]));
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
@@ -167,8 +184,11 @@ class ParticularApprovalProcessing extends Component
 
             if ($this->subject->status = MvrRegistrationStatus::REJECTED) {
                 // Send correction email/sms
-                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle particular change request for chassis number {$this->subject->chassis->chassis_number} has been rejected. Please re-submit new application."]));
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, [
+                    'phone' => $this->subject->taxpayer->mobile,
+                    'message' => "
+                Hello {$this->subject->taxpayer->fullname}, your motor vehicle particular change request for chassis number {$this->subject->chassis->chassis_number} has been rejected. Please re-submit new application."
+                ]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -181,7 +201,8 @@ class ParticularApprovalProcessing extends Component
     }
 
     protected $listeners = [
-        'approve', 'reject'
+        'approve',
+        'reject'
     ];
 
     public function confirmPopUpModal($action, $transition)
