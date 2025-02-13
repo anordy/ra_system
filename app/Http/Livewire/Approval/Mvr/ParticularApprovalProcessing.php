@@ -68,7 +68,7 @@ class ParticularApprovalProcessing extends Component
                 'chassisNo' => 'nullable|alpha_num',
                 'previousChassisNo' => 'nullable|alpha_num',
                 'bodyStyle' => 'nullable|alpha',
-                'color' => 'nullable|string',
+                'color' => 'nullable|alpha',
                 'make' => 'nullable|alpha_num',
                 'model' => 'nullable|alpha_num',
                 'engineCapacity' => 'nullable|alpha_num',
