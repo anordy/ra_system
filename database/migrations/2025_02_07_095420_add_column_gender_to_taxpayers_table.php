@@ -15,6 +15,7 @@ class AddColumnGenderToTaxpayersTable extends Migration
     {
         Schema::table('taxpayers', function (Blueprint $table) {
             $table->string('gender', 5)->nullable();
+            $table->unsignedBigInteger('country_id')->nullable()->change();
         });
     }
 

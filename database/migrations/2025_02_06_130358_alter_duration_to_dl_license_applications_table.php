@@ -14,6 +14,7 @@ class AlterDurationToDlLicenseApplicationsTable extends Migration
     public function up()
     {
         DB::statement('DROP TABLE dl_license_applications CASCADE CONSTRAINTS PURGE');
+        DB::statement("DROP SEQUENCE dl_license_applications_id_seq");
 
         Schema::create('dl_license_applications', function (Blueprint $table) {
             $table->id();

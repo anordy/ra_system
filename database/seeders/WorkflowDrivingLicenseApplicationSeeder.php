@@ -66,12 +66,12 @@ class WorkflowDrivingLicenseApplicationSeeder extends Seeder
         ];
         $transitions = [
             'application_initiated' => [
-                'from' => 'initiate',
+                'from' => 'initiator',
                 'to'   => 'applicant',
                 'condition' => '',
             ],
             'application_initiated_for_class' => [
-                'from' => 'initiate',
+                'from' => 'initiator',
                 'to'   => 'zra_officer',
                 'condition' => '',
             ],

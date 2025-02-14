@@ -42,7 +42,7 @@
         </div>
         @if ($this->checkTransition('zra_officer_review'))
             <div class="modal-footer p-2 m-0">
-                @if(!$this->subject->duplicate_type)
+                @if(!$this->subject->duplicate_type && $this->subject->type === \App\Enum\DlFeeType::DUPLICATE)
                     <button type="button" class="btn btn-danger"
                             wire:click="confirmPopUpModal('reject', 'zra_officer_reject_to_zartsa')">Reject &
                         Return

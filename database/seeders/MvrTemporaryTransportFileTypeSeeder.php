@@ -32,7 +32,7 @@ class MvrTemporaryTransportFileTypeSeeder extends Seeder
             $type['is_required'] = true;
             $type['is_approved'] = true;
             $type['is_updated'] = false;
-            MvrTemporaryTransportFileType::create($type);
+            MvrTemporaryTransportFileType::updateOrCreate(['code' => $type['code']],$type);
         }
     }
 }

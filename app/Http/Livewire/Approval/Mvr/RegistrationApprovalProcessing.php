@@ -25,6 +25,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 class RegistrationApprovalProcessing extends Component
@@ -83,10 +84,10 @@ class RegistrationApprovalProcessing extends Component
             DB::beginTransaction();
             if ($this->checkTransition('zbs_officer_review')) {
 
-                if ($this->inspectionReport === ($this->inspection->report_path ?? null)) {
-                    $inspectionReport = $this->inspectionReport;
-                } else {
+                if ($this->inspectionReport instanceof TemporaryUploadedFile) {
                     $inspectionReport = $this->inspectionReport->store('inspection_reports');
+                } else {
+                    $inspectionReport = $this->inspectionReport;
                 }
 
                 $report = MvrInspectionReport::updateOrCreate([
@@ -131,8 +132,7 @@ class RegistrationApprovalProcessing extends Component
 
             // Send correction email/sms
             if ($this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
-                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} has been approved, you will receive your payment control number shortly."]));
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} has been approved, you will receive your payment control number shortly."]));
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
@@ -175,8 +175,7 @@ class RegistrationApprovalProcessing extends Component
             DB::commit();
 
             if ($this->subject->status == MvrRegistrationStatus::CORRECTION) {
-                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} requires correction, please login to the system to perform data update."]));
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} requires correction, please login to the system to perform data update."]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());

@@ -17,7 +17,7 @@ class DesignationsSeeder extends Seeder
         $designations = ['CEO', 'Head of Finance', 'Representative'];
 
         foreach ($designations as $designation) {
-            Designation::create([
+            Designation::updateOrCreate([
                 'name' => $designation
             ]);
         }

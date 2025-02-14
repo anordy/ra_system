@@ -53,8 +53,12 @@ class LicenseApplicationsController extends Controller
         try {
             $application->status = DlApplicationStatus::STATUS_COMPLETED;
             $application->drivers_license->status = DlApplicationStatus::ACTIVE;
-            $application->previousApplication->drivers_license->status = DlApplicationStatus::INACTIVE;
-            if (!$application->previousApplication->drivers_license->save()) throw new Exception('Could not save previous license');
+
+            if ($application->previous_application_id) {
+                $application->previousApplication->drivers_license->status = DlApplicationStatus::INACTIVE;
+                if (!$application->previousApplication->drivers_license->save()) throw new Exception('Could not save previous license');
+            }
+
             if (!$application->drivers_license->save()) throw new Exception('Could not save license');
             if (!$application->save()) throw new Exception('Could not save application');
         } catch (Exception $e) {
@@ -69,7 +73,15 @@ class LicenseApplicationsController extends Controller
         $id = decrypt($id);
         $license = DlDriversLicense::query()->findOrFail($id);
 
+        $imageExists = Storage::disk('local')->exists($license->application->photo_path);
+
+        if (!$imageExists) {
+            session()->flash('error', 'Could not find the applicants photo');
+            return redirect()->route('drivers-license.applications.show', encrypt($id));
+        }
+
         $imagePath = Storage::disk('local')->get($license->application->photo_path);
+
         $imageData = base64_encode($imagePath);
         $base64Image = 'data:image/png;base64,' . $imageData;
 

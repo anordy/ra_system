@@ -17,11 +17,8 @@ class MvrRegistrationsTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-        return MvrRegistration::query()->whereIn('mvr_registrations.status', [
-            MvrRegistrationStatus::PENDING,
-            MvrRegistrationStatus::CORRECTION,
-        ])->orderByDesc('mvr_registrations.created_at');
-        
+        return MvrRegistration::whereIn('mvr_registrations.status', [MvrRegistrationStatus::PENDING, MvrRegistrationStatus::CORRECTION, MvrRegistrationStatus::STATUS_PENDING_PAYMENT])
+            ->orderByDesc('mvr_registrations.created_at');
     }
 
 	public function configure(): void
@@ -51,8 +48,8 @@ class MvrRegistrationsTable extends DataTableComponent
                 ->searchable(),
             Column::make(__("Reg Type"), "regtype.name")
                 ->searchable(),
-            Column::make(__("Plate Color"), "regtype.color.color")
-                ->searchable(),
+//            Column::make(__("Plate Color"), "regtype.color.color")
+//                ->searchable(),
             Column::make(__("Plate Size"), "platesize.name")
                 ->searchable(),
             Column::make(__("Registration Date"), "registered_at")

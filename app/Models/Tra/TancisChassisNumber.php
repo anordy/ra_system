@@ -14,43 +14,43 @@ class TancisChassisNumber extends Model
 
     protected $table = 'tancis_chassis_numbers';
 
-    public function categoryType(){
+    public function categoryTypeTra(){
         return $this->belongsTo(TraVehicleCategory::class, 'vehicle_category', 'code');
     }
 
-    public function fuelType(){
+    public function fuelTypeTra(){
         return $this->belongsTo(TraVehicleFuelType::class, 'fuel_type', 'code');
     }
 
-    public function makeType(){
+    public function makeTypeTra(){
         return $this->belongsTo(TraVehicleMake::class, 'make', 'code');
     }
 
-    public function modelType(){
+    public function modelTypeTra(){
         return $this->belongsTo(TraVehicleModelType::class, 'model_type', 'code');
     }
 
-    public function modelNumber(){
+    public function modelNumberTra(){
         return $this->belongsTo(TraVehicleModelNumber::class, 'model_number', 'code');
     }
 
-    public function colorType(){
+    public function colorTypeTra(){
         return $this->belongsTo(TraVehicleColor::class, 'vehicle_color', 'code');
     }
 
-    public function usageType(){
+    public function usageTypeTra(){
         return $this->belongsTo(TraVehicleUsageType::class, 'usage_type', 'code');
     }
 
-    public function ownerCategory(){
+    public function ownerCategoryTra(){
         return $this->belongsTo(TraVehicleOwnerCategory::class, 'owner_category', 'code');
     }
 
-    public function transmissionType(){
+    public function transmissionTypeTra(){
         return $this->belongsTo(TraVehicleTransmissionType::class, 'transmission_type', 'code');
     }
 
-    public function bodyType(){
+    public function bodyTypeTra(){
         return $this->belongsTo(TraVehicleBodyType::class, 'body_type', 'code');
     }
 }

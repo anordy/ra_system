@@ -15,6 +15,8 @@ class AddColumnGenderToKycTable extends Migration
     {
         Schema::table('kycs', function (Blueprint $table) {
             $table->string('gender', 5)->nullable();
+            $table->unsignedBigInteger('country_id')->nullable()->change();
+
         });
     }
 

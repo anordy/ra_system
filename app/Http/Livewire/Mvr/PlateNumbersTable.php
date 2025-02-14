@@ -74,8 +74,7 @@ class PlateNumbersTable extends Component
             $mvrStatusChange->save();
         }
 
-        event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $mvr->taxpayer->mobile, 'message' => "
-                Hello {$mvr->taxpayer->fullname}, your plate number for motor vehicle registration for chassis number {$mvr->chassis->chassis_number} has been printed. You may visit ZRA offices after 3 days for collection of plate number"]));
+        event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $mvr->taxpayer->mobile, 'message' => "Hello {$mvr->taxpayer->fullname}, your plate number for motor vehicle registration for chassis number {$mvr->chassis->chassis_number} has been printed. You may visit ZRA offices after 3 days for collection of plate number"]));
     }
 
     public function received($mvrId){

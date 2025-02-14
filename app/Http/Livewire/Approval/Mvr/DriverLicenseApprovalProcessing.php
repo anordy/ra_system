@@ -139,7 +139,7 @@ class DriverLicenseApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->customAlert('warning', CustomMessage::ERROR, [
+        $this->customAlert('warning', CustomMessage::ARE_YOU_SURE, [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

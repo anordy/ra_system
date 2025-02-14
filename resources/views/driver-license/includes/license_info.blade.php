@@ -114,7 +114,7 @@
     <div class="card-header">
         License Information
         <div class="card-tools">
-            @if ($application->status != \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)
+            @if ($application->status === \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)
                 <a target="_blank" class="btn btn-primary text-white"
                    href="{{ route('drivers-license.license.print', encrypt($application->drivers_license->id)) }}">
                     <i class="bi bi-printer-fill mr-1"></i> PRINT LICENSE
@@ -228,7 +228,7 @@
                         {{ $application->first_name ?? 'N/A' }} {{ $application->middle_name ?? ''}} {{ $application->last_name ?? 'N/A' }}
                     </p>
                 </div>
-                @if($application->taxpayer->tin)
+                @if(isset($application->taxpayer->tin))
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">{{ __('TIN') }}</span>
                         <p class="my-1">{{ $application->taxpayer->tin ?? 'N/A' }}</p>
@@ -246,11 +246,13 @@
                     <span class="font-weight-bold text-uppercase">{{ __('Alternative') }}</span>
                     <p class="my-1">{{ $application->taxpayer->alt_mobile ?? 'N/A' }}</p>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">{{ __('Date of birth') }}</span>
-                    <p class="my-1">{{ $application->taxpayer->date_of_birth ? Carbon\Carbon::parse($application->taxpayer->date_of_birth)->format('d-m-Y') : 'N/A' }}
-                    </p>
-                </div>
+                @if(isset($application->taxpayer->date_of_birth))
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">{{ __('Date of birth') }}</span>
+                        <p class="my-1">{{ $application->taxpayer->date_of_birth ? Carbon\Carbon::parse($application->taxpayer->date_of_birth)->format('d-m-Y') : 'N/A' }}
+                        </p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

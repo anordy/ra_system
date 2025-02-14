@@ -84,10 +84,10 @@ class AddClass extends Component
             }
 
 
-            foreach ($this->licenseInfo->application->licenseRestrictions ?? [] as $restrictionId) {
+            foreach ($this->licenseInfo->application->licenseRestrictions ?? [] as $restriction) {
                 $restriction = DlLicenseRestriction::create([
                     'dl_license_application_id' => $newApplication->id,
-                    'dl_restriction_id' => $restrictionId,
+                    'dl_restriction_id' => $restriction->dl_restriction_id,
                     'dl_license_id' => $license->id
                 ]);
 

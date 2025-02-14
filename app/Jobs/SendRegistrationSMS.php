@@ -37,8 +37,9 @@ class SendRegistrationSMS implements ShouldQueue
     {
         $sms_controller = new SMSController;
         $send_to = $this->mobile;
+        $taxpayerUrl = env('TAXPAYER_URL', 'https://portalzidras.zanrevenue.org');
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Welcome to ZRA, please use the following details to access your account, Reference no: {$this->reference_no} Password: {$this->code}, please login at https://portalzidras.zanrevenue.org";
+        $customer_message = "Welcome to ZRA, please use the following details to access your account, Reference no: {$this->reference_no} Password: {$this->code}, please login at {$taxpayerUrl}";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

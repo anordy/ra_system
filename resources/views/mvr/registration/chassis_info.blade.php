@@ -26,27 +26,27 @@
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Transmission Type</span>
-                <p class="my-1">{{ $motor_vehicle->transmissionType->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $motor_vehicle->transmissionTypeTra->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Vehicle Category</span>
-                <p class="my-1">{{ $motor_vehicle->categoryType->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $motor_vehicle->categoryTypeTra->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Fuel type</span>
-                <p class="my-1">{{ $motor_vehicle->fuelType->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $motor_vehicle->fuelTypeTra->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Make</span>
-                <p class="my-1">{{ $motor_vehicle->makeType->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $motor_vehicle->makeTypeTra->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Model Type</Span>
-                <p class="my-1">{{ $motor_vehicle->modelType->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $motor_vehicle->modelTypeTra->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Model Number</Span>
-                <p class="my-1">{{ $motor_vehicle->modelNumber->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $motor_vehicle->modelNumberTra->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase"> TANSAD number</span>
@@ -62,11 +62,11 @@
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Color</span>
-                <p class="my-1">{{ $motor_vehicle->colorType->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $motor_vehicle->colorTypeTra->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Usage Type</span>
-                <p class="my-1">{{ $motor_vehicle->usageType->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $motor_vehicle->usageTypeTra->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Purchase Day</Span>
@@ -78,7 +78,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Owner Category</Span>
-                <p class="my-1">{{ $motor_vehicle->ownerCategory->name ?? 'N/A' }}</p>
+                <p class="my-1">{{ $motor_vehicle->ownerCategoryTra->name ?? 'N/A' }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Importer Name</span>

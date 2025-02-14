@@ -57,7 +57,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
             $event->setBlocked(true);
         }
 
-        if ($owner == 'taxpayer') {
+        if ($owner != 'staff' && $owner != 'any') {
             $event->setBlocked(true);
         }
 

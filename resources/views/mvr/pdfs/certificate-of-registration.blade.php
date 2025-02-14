@@ -94,7 +94,7 @@
             position: absolute;
             top: 830px;
             left: 1350px;
-            padding-right: 30px;
+            font-size: 60px;
         }
 
         #capacity {
@@ -133,12 +133,12 @@
 <div id="reg-date">{{strtoupper(\Carbon\Carbon::parse($motor_vehicle->registered_at)->format('d/m/Y'))}}</div>
 <div id="plate">{{strtoupper($motor_vehicle->plate_number)}}</div>
 <div id="yom">{{strtoupper($motor_vehicle->chassis->vehicle_manufacture_year ?? '')}}</div>
-<div id="make">{{strtoupper($motor_vehicle->chassis->makeType->name ?? '')}}</div>
-<div id="model">{{strtoupper($motor_vehicle->chassis->modelType->name ?? '')}}</div>
+<div id="make">{{strtoupper($motor_vehicle->chassis->makeTypeTra->name ?? '')}}</div>
+<div id="model">{{strtoupper($motor_vehicle->chassis->modelTypeTra->name ?? '')}}</div>
 <div id="chassis">{{strtoupper($motor_vehicle->chassis->chassis_number ?? '')}}</div>
-<div id="style">{{strtoupper($motor_vehicle->chassis->bodyType->name ?? '')}}</div>
+<div id="style">{{strtoupper($motor_vehicle->chassis->bodyTypeTra->name ?? '')}}</div>
 <div id="engine">{{strtoupper($motor_vehicle->chassis->engine_number ?? '')}}</div>
-<div id="color">{{strtoupper($motor_vehicle->chassis->colorType->name ?? '')}}</div>
+<div id="color">{{strtoupper($motor_vehicle->chassis->colorTypeTra->name ?? '')}}</div>
 <div id="capacity">{{strtoupper($motor_vehicle->chassis->engine_capacity ?? '')}} cc</div>
 <div id="barcode">
     <img src="data:image/png;base64,' . {{ DNS1D::getBarcodePNG($motor_vehicle->registration_number, 'C39+',4,100, array(1,1,1), false)  }} . '"

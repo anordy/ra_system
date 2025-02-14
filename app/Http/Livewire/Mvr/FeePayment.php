@@ -104,7 +104,12 @@ class FeePayment extends Component
 
     public function regenerate()
     {
-        $response = $this->regenerateControlNo($this->motorVehicle->bill);
+        if (is_null($this->motorVehicle->latestBill)) {
+            $this->customAlert(GeneralConstant::ERROR, 'No bill found for this request, please try again later.');
+            return;
+        }
+
+        $response = $this->regenerateControlNo($this->motorVehicle->latestBill);
         if ($response) {
             session()->flash(GeneralConstant::SUCCESS, 'Your request was submitted, you will receive your payment information shortly.');
             return redirect(request()->header('Referer'));

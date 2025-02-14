@@ -11,12 +11,6 @@ class DlLicenseRestriction extends Model
 
     protected $table = 'dl_license_restrictions';
 
-    protected $casts = [
-        'dl_license_application_id' => 'int',
-        'dl_license_id' => 'int',
-        'dl_restriction_id' => 'int'
-    ];
-
     protected $guarded = [];
 
     public function license_application()
