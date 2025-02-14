@@ -240,7 +240,7 @@ class ReportsSeeder extends Seeder
                         'name' => 'Registration Report',
                         'has_parameter' => 1,
                         'report_type_name' => GeneralReportType::MVR,
-                        'report_url' => '/reports/ZRA/mvr/_de_registered_vehicles',
+                        'report_url' => '/reports/ZRA/Mvr/general_mvr_registration_report',
                         'parameters' => [Parameter::MVR_LOCATION, Parameter::MVR_VEHICLE_CATEGORY, Parameter::MVR_VEHICLE_REGISTRATION_TYPE, Parameter::MVR_PAYMENT_STATUS, Parameter::MVR_BLACKLIST, Parameter::MVR_CLASS, Parameter::DYNAMIC_DATE]
                     ],
                     [

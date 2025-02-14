@@ -1019,7 +1019,6 @@
                                class="dropdown-toggle">Cashbook</a>
                         </li>
                     @endcan
-
                 </ul>
             </li>
         @endcan
