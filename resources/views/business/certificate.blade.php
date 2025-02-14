@@ -166,7 +166,7 @@
             padding-left: 70px;
             padding-right: 70px;
             margin-left: 55px;
-            left: 50.5%;
+            left: 53.5%;
         }
 
         .qr-code {
