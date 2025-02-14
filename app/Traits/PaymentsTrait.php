@@ -1495,7 +1495,7 @@ trait PaymentsTrait
                 'amount' => roundOff($partialPayment->amount, $assesment->currency),
                 'currency' => $assesment->currency,
                 'gfs_code' => $taxType->gfs_code,
-                'tax_type_id' => $taxType->id
+                'tax_type_id' => $assesment->tax_type_id
             ],
         ];
 
@@ -1520,7 +1520,7 @@ trait PaymentsTrait
         $zmBill = ZmCore::createBill(
             $billableId,
             $billableType,
-            $taxType->id,
+            $assesment->tax_type_id,
             $payer_id,
             $payer_type,
             $payer_name,

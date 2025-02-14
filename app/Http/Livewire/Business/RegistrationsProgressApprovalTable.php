@@ -45,8 +45,12 @@ class RegistrationsProgressApprovalTable extends DataTableComponent
             Column::make('Business Name', 'pinstance.name')
                 ->label(fn ($row) => $row->pinstance->name ?? 'N/A')
                 ->searchable(function (Builder $query, $searchTerm) {
-                    return $query->orWhereHas('pinstance', function ($query) use ($searchTerm) {
-                        $query->whereRaw(DB::raw("LOWER(name) like '%' || LOWER('$searchTerm') || '%'"));
+                    return $query->orWhere(function ($query) use ($searchTerm) {
+                        $query->whereRaw("EXISTS (
+                               SELECT 1 FROM businesses 
+                                WHERE businesses.id = workflow_tasks.pinstance_id
+                                AND LOWER(businesses.name) LIKE '%' || LOWER(?) || '%'
+                            )", [$searchTerm]);
                     });
                 }),
             Column::make('Taxpayer Name', 'pinstance.taxpayer_name')

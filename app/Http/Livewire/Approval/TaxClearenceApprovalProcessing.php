@@ -56,8 +56,8 @@ class TaxClearenceApprovalProcessing extends Component
         if ($this->checkTransition('crdm_review')) {
 
 //                fetch latest tax clearance certificate
-            $last_sequence = Sequence::query()->select('next_id')->where('name', Sequence::TAX_CLEARANCE)->first();
-            $last_year = Sequence::query()->select('next_id')->where('name', Sequence::TAX_CLEARANCE_YEAR)->first();
+            $last_sequence = Sequence::query()->select('next_id', 'id')->where('name', Sequence::TAX_CLEARANCE)->first();
+            $last_year = Sequence::query()->select('next_id', 'id')->where('name', Sequence::TAX_CLEARANCE_YEAR)->first();
             DB::beginTransaction();
             try {
                 $cert_no = date("Y").'00001';
