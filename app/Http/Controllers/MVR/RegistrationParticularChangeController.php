@@ -41,7 +41,9 @@ class RegistrationParticularChangeController extends Controller
     {
         $id = decrypt($id);
         $change_req = MvrRegistrationParticularChange::query()->findOrFail($id);
+        
         $motorVehicle = MvrRegistration::findOrFail($change_req->current_registration_id);
+        // return $motorVehicle;
         return view('mvr.particular.show', compact('motorVehicle', 'change_req'));
     }
 

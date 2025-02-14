@@ -5,6 +5,7 @@
     </div>
 
     <div class="card-body">
+        {{-- {{dd($reg)}} --}}
         <div class="row my-2">
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Status</span>
@@ -128,11 +129,6 @@
                 @endif
             @endforeach
             </div>
-            <div class="row">
-               
-            </div>
-            
-
         </div>
     </div>
 @endif
