@@ -10,6 +10,8 @@ use App\Models\MvrOwnershipTransfer;
 use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationParticularChange;
 use App\Models\MvrRegistrationStatusChange;
+use App\Models\MvrReorderPlateNumber;
+use App\Models\MvrReorderPlateNumberFee;
 use App\Services\ZanMalipo\GepgResponse;
 use App\Traits\CustomAlert;
 use App\Traits\MvrRegistrationTrait;
@@ -46,7 +48,6 @@ class FeePayment extends Component
 
             case MvrRegistrationStatusChange::class:
                 $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
-
                 $this->fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
                     'mvr_class_id' => $this->motorVehicle->mvr_class_id,
@@ -54,6 +55,14 @@ class FeePayment extends Component
                     'mvr_plate_number_type_id' => $this->motorVehicle->mvr_plate_number_type_id
                 ])->first();
                 break;
+
+                case MvrReorderPlateNumber::class:
+                    $payload = [
+                        'quantity' => $this->motorVehicle->quantity,
+                         'is_rfid' => $this->motorVehicle->is_rfid
+                         ];
+                    $this->fee = MvrReorderPlateNumberFee::query()->where($payload)->first();
+                    break;
 
             case MvrOwnershipTransfer::class:
                 $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TRANSFER_OWNERSHIP]);
@@ -127,11 +136,11 @@ class FeePayment extends Component
                 $this->customAlert(GeneralConstant::ERROR, "Fee for the selected registration type is not configured");
                 return;
             }
-
-            switch (get_class($this->motorVehicle)) {
+            switch (get_class($this->motorVehicle)){
                 case MvrRegistration::class:
-                case MvrRegistrationStatusChange::class:
-                case MvrRegistrationParticularChange::class:
+                    case MvrRegistrationStatusChange::class:
+                        case MvrReorderPlateNumber::class:
+                            case MvrRegistrationParticularChange::class:
                     $this->generateMvrControlNumber($this->motorVehicle, $this->fee);
                     break;
 

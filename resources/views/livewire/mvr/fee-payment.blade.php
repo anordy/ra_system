@@ -1,4 +1,5 @@
 <div class="px-3">
+    {{$motorVehicle->origin}}
     @if($motorVehicle->origin === \App\Enum\MvrRegistrationStatus::STATUS_CHANGE)
         <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
             <div class="col-md-3">

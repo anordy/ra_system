@@ -714,6 +714,12 @@
                         </li>
                     @endcan
 
+                    {{-- @can("motor-vehicle-reorder-plate-number") --}}
+                    <li class="{{ request()->is("mvr/registration/reorder*") ? "active" : "" }}">
+                        <a href="{{ route("mvr.registration.reorder.index") }}">Reorder Plate Number</a>
+                    </li>
+                   {{-- @endcan --}}
+
                     @can('motor-vehicle-status-change-request')
                         <li class="{{ request()->is('mvr/registration/particular*') ? 'active' : '' }}">
                             <a href="{{ route('mvr.registration.particular.index') }}">Particular Change Request</a>
@@ -1270,6 +1276,11 @@
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Motor Vehicle Transfer
                                 Fees</a>
                         </li>
+                    @endcan
+                    @can('setting-mvr-transfer-fee-view')
+                    <li class="{{ request()->is("settings/reorder-config/*") ? "active" : "" }}">
+                        <a href="{{ route("settings.reorder-fees.index") }}">Reorder Plate Number Fee</a>
+                    </li>
                     @endcan
                     @can('setting-dl-class-view')
                         <li class="{{ request()->is('settings/mvr-generic/DlLicenseClass') ? 'active' : '' }}">

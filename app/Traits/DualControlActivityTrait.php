@@ -64,6 +64,8 @@ trait DualControlActivityTrait
                     return 'System Setting Category Configuration';
                 case DualControl::TRANSACTION_FEE:
                     return 'Transaction Fee';
+                case DualControl::REORDER_FEE:
+                        return 'Reorder Fee';
                 case DualControl::FINANCIAL_YEAR:
                     return 'Financial Year';
                 case DualControl::FINANCIAL_MONTH:

@@ -4,7 +4,7 @@ namespace App\Enum;
 
 use ReflectionClass;
 
-class MvrRegistrationStatus implements Status
+class MvrReorderStatus implements Status
 {
     const PENDING = 'PENDING';
     const INITIATED = 'Initiated';
@@ -15,8 +15,10 @@ class MvrRegistrationStatus implements Status
     const STATUS_PENDING_PAYMENT = 'FEE PAYMENT';
     const STATUS_INSPECTION = 'INSPECTION';
     const STATUS_DE_REGISTERED = 'DE REGISTERED';
-    const STATUS_RETIRED = 'RETIRED';
     const TEMPORARY_TRANSPORT = 'TEMPORARY TRANSPORT';
+    const STATUS_RETIRED = 'RETIRED';
+    const LOST = 'lost';
+    const DISTORTED = 'distorted';
     const STATUS_CHANGE = 'STATUS CHANGE';
     const REJECTED = 'REJECTED';
     const BLOCKED ='BLOCKED';
