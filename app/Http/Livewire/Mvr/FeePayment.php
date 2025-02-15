@@ -88,7 +88,7 @@ class FeePayment extends Component
 
             case MvrDeregistration::class:
                 $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
-
+            
                 $this->fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->motorVehicle->registration->mvr_registration_type_id,
                     'mvr_fee_type_id' => $this->feeType->id,

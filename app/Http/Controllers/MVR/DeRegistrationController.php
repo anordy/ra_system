@@ -38,6 +38,7 @@ class DeRegistrationController extends Controller
 
     public function file($path)
     {
+        // dd(decrypt($path));
         if ($path) {
             try {
                 return Storage::disk('local')->response(decrypt($path));

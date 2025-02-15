@@ -34,4 +34,8 @@ class MvrDeregistration extends Model
     {
         return $this->morphOne(TaxpayerLedger::class, 'source');
     }
+
+    public function attachments() {
+        return $this->hasMany(MvrDeregistrationAttachmentFile::class, 'mvr_deregistration_id');
+    }
 }

@@ -48,11 +48,11 @@ class WorkflowMvrDeRegistrationSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 2, 3],
             ],
-            'zbs_officer' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 2, 3],
-            ],
+            // 'zbs_officer' => [
+            //     'owner' => 'staff',
+            //     'operator_type' => 'role',
+            //     'operators' => [1, 2, 3],
+            // ],
             'rejected' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -100,24 +100,24 @@ class WorkflowMvrDeRegistrationSeeder extends Seeder
                 'to' => 'mvr_police_officer',
                 'condition' => '',
             ],
-            'mvr_registration_manager_review' => [
-                'from' => 'mvr_registration_manager',
-                'to' => 'zbs_officer',
-                'condition' => '',
-            ],
-            'zbs_officer_review' => [
-                'from' => 'zbs_officer',
-                'to' => 'completed',
-                'condition' => '',
-            ],
-            'zbs_officer_reject' => [
-                'from' => 'zbs_officer',
-                'to' => 'mvr_registration_manager',
-                'condition' => '',
-            ],
+            // 'zbs_officer_review' => [
+            //     'from' => 'zbs_officer',
+            //     'to' => 'completed',
+            //     'condition' => '',
+            // ],
+            // 'zbs_officer_reject' => [
+            //     'from' => 'zbs_officer',
+            //     'to' => 'mvr_registration_manager',
+            //     'condition' => '',
+            // ],
             'mvr_registration_manager_reject' => [
                 'from' => 'mvr_registration_manager',
                 'to' => 'mvr_registration_officer',
+                'condition' => '',
+            ],
+            'mvr_registration_manager_review' => [
+                'from' => 'mvr_registration_manager',
+                'to' => 'completed',
                 'condition' => '',
             ],
         ];

@@ -35,6 +35,7 @@ class DeRegistrationsController extends Controller
     }
 
     public function file($path){
+        dd('HERE');
         if (!Gate::allows('public-service-view-de-registrations')) {
             abort(403);
         }

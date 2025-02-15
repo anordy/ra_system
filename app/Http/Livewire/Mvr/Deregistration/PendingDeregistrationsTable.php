@@ -16,7 +16,10 @@ class PendingDeregistrationsTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-        return MvrDeregistration::where('mvr_deregistrations.status', MvrDeRegistrationStatus::PENDING)
+        return MvrDeregistration::where('mvr_deregistrations.status', [
+            MvrDeRegistrationStatus::PENDING,
+            MvrDeRegistrationStatus::CORRECTION
+        ])
             ->orderBy('mvr_deregistrations.created_at', 'desc');
     }
 

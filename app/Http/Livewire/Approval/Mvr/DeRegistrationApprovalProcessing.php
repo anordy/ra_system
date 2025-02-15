@@ -10,6 +10,7 @@ use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
 use App\Models\MvrDeregistration;
+use App\Models\MvrDeregistrationAttachmentFile;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\TaxType;
@@ -34,6 +35,8 @@ class DeRegistrationApprovalProcessing extends Component
     public $deregistration;
     public $reasonsForLost, $clearanceEvidence, $zicEvidence;
     public $description;
+    public $attachments = [];
+
 
     public function mount($modelName, $modelId)
     {
@@ -46,6 +49,12 @@ class DeRegistrationApprovalProcessing extends Component
         $this->zicEvidence = $this->subject->zic_evidence;
         $this->reasonsForLost = $this->subject->police_evidence;
         $this->description = $this->subject->description;
+        $this->attachments = [
+            [
+                'name' => '',
+                'file' => '',
+            ],
+        ];
     }
 
     public function approve($transition)
@@ -62,6 +71,15 @@ class DeRegistrationApprovalProcessing extends Component
                 'description.required' => 'Please enter reasons for de-registration'
             ]
         );
+
+        if ($this->checkTransition('mvr_police_officer_review')) {
+        $this->validate(
+            [
+                'attachments.*.name' => count($this->subject->attachments) > 0 ? 'nullable' : 'required|strip_tag',
+                'attachments.*.file' => count($this->subject->attachments) > 0 ? 'nullable' : 'required|mimes:pdf|max:1024|max_file_name_length:100|valid_pdf',
+            ]
+        );
+    }
 
         try {
             DB::beginTransaction();
@@ -88,6 +106,23 @@ class DeRegistrationApprovalProcessing extends Component
                 }  else {
                     $this->subject->description = $this->reasonsForLost;
                 }
+               
+
+                    foreach ($this->attachments as $attachment) {
+                        if ($attachment['file'] && $attachment['name']) {
+                            $documentPath = $attachment['file']->store("/mvr_status_change");
+    
+                            $file = MvrDeregistrationAttachmentFile::create([
+                                'mvr_deregistration_id' => $this->subject->id,
+                                'path' => $documentPath,
+                                'name' => $attachment['name'],
+                            ]);
+    
+                            if (!$file) throw new Exception('Failed to save mvr deregistration file');
+    
+                        }
+                    }
+
             }
 
 
@@ -103,17 +138,18 @@ class DeRegistrationApprovalProcessing extends Component
                 }
             }
 
-            if ($this->checkTransition('zbs_officer_review') && $transition === 'zbs_officer_review') {
+            if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
                 $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->payment_status = BillStatus::CN_GENERATING;
                 $this->subject->save();
             }
 
             $this->subject->save();
+
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             DB::commit();
 
-            if ($this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'zbs_officer_review') {
+            if ($this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
                 Hello {$this->subject->taxpayer->fullname}, your motor vehicle de-registration request for {$this->subject->registration->plate_number} has been approved, you will receive your payment control number shortly."]));
             }
@@ -136,7 +172,7 @@ class DeRegistrationApprovalProcessing extends Component
         }
 
         // Generate Control Number after MVR DR Approval
-        if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'zbs_officer_review') {
+        if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
                 $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
 
@@ -230,6 +266,20 @@ class DeRegistrationApprovalProcessing extends Component
             $this->customAlert('error', 'Failed to generate control number, please try again');
         }
     }
+
+    public function addAttachment()
+    {
+        $this->attachments[] = [
+            'name' => '',
+            'file' => '',
+        ];
+    }
+
+    public function removeAttachment($i)
+    {
+        unset($this->attachments[$i]);
+    }
+
 
     public function render()
     {

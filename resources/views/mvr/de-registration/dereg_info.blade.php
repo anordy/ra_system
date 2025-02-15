@@ -52,6 +52,19 @@
                     </div>
                 </div>
             @endif
+            @if ($reg->taxpayer_evidence)
+            <div class="col-md-3 mb-3">
+                <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
+                    <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                    <a target="_blank"
+                       href="{{ route('mvr.de-registration.file', encrypt($reg->taxpayer_evidence)) }}"
+                       class="ml-1 font-weight-bolder">
+                        Taxpayer Evidence
+                        <i class="bi bi-arrow-up-right-square ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        @endif
             @if ($reg->zic_evidence)
                 <div class="col-md-3 mb-3">
                     <div class="p-2 mb-3 d-flex rounded-sm align-items-center file-item">
