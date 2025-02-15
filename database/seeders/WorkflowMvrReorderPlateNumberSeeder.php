@@ -22,114 +22,94 @@ class WorkflowMvrReorderPlateNumberSeeder extends Seeder
         ];
         $initial_marking = 'apply';
         $supports =  ['App\Models\MvrReorderPlateNumber'];
-        $places = [
-            'apply' => [
+        $places =  [
+           'apply' => [
                 'owner' => 'taxpayer',
                 'operator_type' => 'user',
                 'operators' => [],
             ],
-            'correct_application' => [
-                'owner' => 'taxpayer',
-                'operator_type' => 'user',
-                'operators' => [],
-            ],
-            'mvr_police' => [
+            'zartsa_officer' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2, 3],
+                'operators' => [1,2,3]
             ],
-            'mvr_zartsa' => [
+            'zra_officer_distorted' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2, 3],
+                'operators' => [1,2,3]
             ],
-            'mvr_registration_officer' => [
+            'zra_officer_lost' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2, 3],
+                'operators' => [1,2,3]
             ],
-            'mvr_registration_manager' => [
+            'police_officer' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2, 3],
-            ],
-            'rejected' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [],
+                'operators' => [1,2,3]
             ],
             'completed' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [],
+                'operators' => []
+            ],
+            'rejected' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => []
             ],
         ];
         $transitions = [
-            'application_submitted_lost' => [
+            'application_submited_for_distorted' => [
                 'from' => 'apply',
-                'to' => 'mvr_police',
+                'to'   => 'zra_officer_distorted',
                 'condition' => '',
             ],
-            'application_submitted_distorted' => [
+            'application_submited_for_lost' => [
                 'from' => 'apply',
-                'to' => 'mvr_registration_officer',
+                'to'   => 'police_officer',
                 'condition' => '',
             ],
-            'application_filled_incorrect_lost' => [
-                'from' => 'mvr_police',
-                'to' => 'correct_application',
+            'application_returned_for_distorted' => [
+                'from' => 'zra_officer_distorted',
+                'to'   => 'apply',
                 'condition' => '',
             ],
-            'application_corrected_lost' => [
-                'from' => 'correct_application',
-                'to' => 'mvr_police',
+            'police_officer_reject' => [
+                'from' => 'police_officer',
+                'to'   => 'rejected',
                 'condition' => '',
             ],
-            'application_filled_incorrect_distorted' => [
-                'from' => 'mvr_registration_officer',
-                'to' => 'correct_application',
+            'police_officer_review' => [
+                'from' => 'police_officer',
+                'to'   => 'zartsa_officer',
                 'condition' => '',
             ],
-            'application_corrected_distorted' => [
-                'from' => 'correct_application',
-                'to' => 'mvr_registration_officer',
+            'zartsa_officer_reject_to_police' => [
+                'from' => 'zartsa_officer',
+                'to'   => 'police_officer',
                 'condition' => '',
             ],
-            'mvr_police_review' => [
-                'from' => 'mvr_police',
-                'to' => 'mvr_zartsa',
+            'zartsa_officer_review_to_zra' => [
+                'from' => 'zartsa_officer',
+                'to'   => 'zra_officer_lost',
                 'condition' => '',
             ],
-            'mvr_zartsa_reject' => [
-                'from' => 'mvr_zartsa',
-                'to' => 'mvr_police',
+            'zra_officer_reject_to_zartsa' => [
+                'from' => 'zra_officer_lost',
+                'to'   => 'zartsa_officer',
                 'condition' => '',
             ],
-            'mvr_zartsa_review' => [
-                'from' => 'mvr_zartsa',
-                'to' => 'mvr_registration_officer',
+            'zra_officer_review_lost' => [
+                'from' => 'zra_officer_lost',
+                'to'   => 'completed',
                 'condition' => '',
             ],
-            'mvr_registration_officer_lost_reject' => [
-                'from' => 'mvr_registration_officer',
-                'to' => 'mvr_zartsa',
+            'zra_officer_review_distorted' => [
+                'from' => 'zra_officer_distorted',
+                'to'   => 'completed',
                 'condition' => '',
-            ],
-            'mvr_registration_officer_review' => [
-                'from' => 'mvr_registration_officer',
-                'to' => 'mvr_registration_manager',
-                'condition' => '',
-            ],
-            'mvr_registration_manager_reject' => [
-                'from' => 'mvr_registration_manager',
-                'to' => 'mvr_registration_officer',
-                'condition' => '',
-            ],
-            'mvr_registration_manager_review' => [
-                'from' => 'mvr_registration_manager',
-                'to' => 'completed',
-                'condition' => '',
-            ],
+            ]
         ];
 
 
@@ -139,7 +119,7 @@ class WorkflowMvrReorderPlateNumberSeeder extends Seeder
             ],
             [
             'code' => 'MVR_REORDER_PLATE_NUMBER',
-            'summary' => 'Motor Vehicle Reorder Distorted Plate Number',
+            'summary' => 'Motor Vehicle Reorder both distorted and lost Plate Number',
             'name' => $name,
             'type' => $type,
             'initial_marking' => $initial_marking,

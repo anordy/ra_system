@@ -41,9 +41,9 @@ class MvrReorderPlateNumberTable extends DataTableComponent
                     return $row->plate_number ?? 'PENDING';
                 })
                 ->searchable(),
-            Column::make(__("Serial No"), "registration_number")
+            Column::make(__("Reason"), "replacement_reason")
                 ->format(function ($value, $row) {
-                    return $row->registration_number ?? 'N/A';
+                    return $row->replacement_reason ?? 'N/A';
                 })
                 ->searchable(),
             Column::make(__("Reg Type"), "regtype.name")

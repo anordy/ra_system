@@ -6,14 +6,9 @@ use App\Enum\BillStatus;
 use App\Enum\Currencies;
 use App\Enum\MvrRegistrationStatus;
 use App\Enum\MvrReorderStatus;
-use App\Enum\TransactionType;
 use App\Events\SendSms;
 use App\Jobs\SendCustomSMS;
-use App\Models\MvrFee;
-use App\Models\MvrFeeType;
 use App\Models\MvrPlateNumberStatus;
-use App\Models\MvrRegistrationStatusChangeFile;
-use App\Models\MvrRegistrationStatusChange;
 use App\Models\MvrReorderPlateNumberFee;
 use App\Models\MvrReorderPlateNumberFile;
 use App\Models\TaxType;
@@ -86,7 +81,7 @@ class ReorderApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('mvr_police_review')) {
+            if ($this->checkTransition('police_officer_review')) {
 
                 $lossReport = $this->lossReport;
                 if ($this->subject->loss_report != $this->lossReport && $this->lossReport) {
@@ -97,7 +92,7 @@ class ReorderApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            if ($this->checkTransition('mvr_zartsa_review')) {
+            if ($this->checkTransition('zartsa_officer_review_to_zra')) {
 
                 foreach ($this->attachments as $attachment) {
                     if ($attachment['file'] && $attachment['name']) {
@@ -125,8 +120,8 @@ class ReorderApprovalProcessing extends Component
             }
 
 
-            if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
-                $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+            if (($this->checkTransition('zra_officer_review_lost') || $this->checkTransition('zra_officer_review_distorted')) && in_array($transition, ['zra_officer_review_lost', 'zra_officer_review_distorted'])) {
+            $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
                 $this->subject->payment_status = BillStatus::CN_GENERATING;
                 if($this->subject->replacement_reason == MvrReorderStatus::LOST) {
                 $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_LOST;
@@ -142,7 +137,7 @@ class ReorderApprovalProcessing extends Component
             DB::commit();
 
             // Send correction email/sms
-            if ($this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
+            if ($this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === in_array($transition, ['zra_officer_review_lost', 'zra_officer_review_distorted'])) {
                 event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
                 Hello {$this->subject->taxpayer->fullname}, your motor vehicle registration request for chassis number {$this->subject->chassis->chassis_number} has been approved, you will receive your payment control number shortly."]));
             }
@@ -154,9 +149,9 @@ class ReorderApprovalProcessing extends Component
             $this->customAlert('error', 'Something went wrong');
             return;
         }
-
+ 
         // Generate Control Number after MVR SC Approval
-        if ($this->subject->status == MvrReorderStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
+        if ($this->subject->status == MvrReorderStatus::STATUS_PENDING_PAYMENT && in_array($transition, ['zra_officer_review_lost', 'zra_officer_review_distorted'])) {
             try {
                 $payload = [
                     'quantity' => $this->subject->quantity,
@@ -180,6 +175,7 @@ class ReorderApprovalProcessing extends Component
     }
 
     public function reject($transition) {
+
         $transition = $transition['data']['transition'];
 
         $this->validate([
