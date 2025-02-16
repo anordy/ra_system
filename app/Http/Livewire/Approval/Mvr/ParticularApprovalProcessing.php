@@ -45,6 +45,7 @@ class ParticularApprovalProcessing extends Component
             $this->engineNo = $this->subject->change->engine_number;
             $this->color = $this->subject->change->color;
             $this->chassisNo = $this->subject->change->chassis_number;
+            $this->previousChassisNo = $this->subject->change->previous_chassis_number;
             $this->bodyStyle = $this->subject->change->body_style;
             $this->make = $this->subject->change->make;
             $this->model = $this->subject->change->mode;
@@ -65,7 +66,7 @@ class ParticularApprovalProcessing extends Component
             $this->validate([
                 'engineNo' => 'nullable|alpha_num',
                 'chassisNo' => 'nullable|alpha_num',
-                'previouschassisNo' => 'nullable|alpha_num',
+                'previousChassisNo' => 'nullable|alpha_num',
                 'bodyStyle' => 'nullable|alpha',
                 'color' => 'nullable|string',
                 'make' => 'nullable|alpha_num',
@@ -95,6 +96,7 @@ class ParticularApprovalProcessing extends Component
                         'color' => $this->color,
                         'engine_number' => $this->engineNo,
                         'chassis_number' => $this->chassisNo,
+                        'previous_chassis_number' => $this->previousChassisNo,
                         'body_style' => $this->bodyStyle,
                         'make' => $this->make,
                         'model' => $this->model,
