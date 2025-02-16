@@ -11,6 +11,7 @@ use App\Jobs\SendCustomSMS;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistration;
 use App\Models\MvrRegistrationStatusChangeFile;
 use App\Models\MvrRegistrationStatusChange;
 use App\Models\TaxType;
@@ -30,6 +31,7 @@ class StatusApprovalProcessing extends Component
 
     public $modelId;
     public $modelName;
+    public $currentRegistration;
     public $comments;
     public $approvalReport;
     public $attachments = [];
@@ -39,6 +41,7 @@ class StatusApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId   = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
+        $this->currentRegistration = MvrRegistration::findOrFail($this->subject->current_registration_id);
         $this->attachments = [
             [
                 'name' => '',
@@ -95,13 +98,27 @@ class StatusApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
-                $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
-                $this->subject->payment_status = BillStatus::CN_GENERATING;
-                $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
+                $sameColor = $this->currentRegistration->regType->color->color === $this->subject->regType->color->color;
+            
+                if ($sameColor) {
+                    $this->subject->status = MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING;
+                    $this->subject->payment_status = BillStatus::NILL;
+                    $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
+
+            
+                    // TODO: PROCESS PLATE NUMBER PRINTING
+                    // $this->processRegistrationPlateNumber();
+                } else {
+                    $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
+                    $this->subject->payment_status = BillStatus::CN_GENERATING;
+                    $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
+
+                }
+            
                 $this->subject->save();
             }
+            
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
@@ -121,10 +138,13 @@ class StatusApprovalProcessing extends Component
             return;
         }
 
+        $sameColor = $this->currentRegistration->regType->color->color === $this->subject->regType->color->color;
+            
+        if (!$sameColor) {
         // Generate Control Number after MVR SC Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
-                $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
+                $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
 
                 $fee = MvrFee::query()->where([
                     'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
@@ -143,6 +163,7 @@ class StatusApprovalProcessing extends Component
                 $this->customAlert('error', 'Failed to generate control number, please try again');
             }
         }
+    }
 
     }
 

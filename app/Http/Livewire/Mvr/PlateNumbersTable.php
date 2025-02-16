@@ -179,6 +179,7 @@ class PlateNumbersTable extends Component
             ->latest()
             ->paginate(15);
 
+// dd($plateNumbers);
         return view('livewire.mvr.plate-number-table', [
             'plateNumbers' => $plateNumbers
         ]);
