@@ -21,6 +21,11 @@ class MvrSeeder extends Seeder
         $this->call(MvrClassesTableSeeder::class);
         $this->call(MvrPlateNumberColorsTableSeeder::class);
         $this->call(DesignationsSeeder::class);
-        $this->call(TraSeeder::class);
+        $this->call(WorkflowMvrDeRegistrationSeeder::class);
+        $this->call(WorkflowMvrReorderPlateNumberSeeder::class);
+        $this->call(WorkflowMvrTemporaryTransportSeeder::class);
+        $this->call(PermissionSeeder::class);
+        // $this->call(TraSeeder::class);
+
     }
 }

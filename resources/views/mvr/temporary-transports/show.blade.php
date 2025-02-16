@@ -30,6 +30,11 @@
                                 <i class="bi bi-filetype-pdf mr-1"></i>
                                 View Transport Letter
                             </a>
+                            <button class="btn btn-primary text-uppercase"
+                                    onclick="Livewire.emit('showModal','mvr.temporary-transport.mark-returned','{{ encrypt($transport->id) }}')">
+                                <i class="bi bi-calendar-date-fill mr-1"></i>
+                                Mark as Returned
+                            </button>
                         </div>
                     @endif
                 </div>
@@ -46,6 +51,16 @@
                         <span class="font-weight-bold text-uppercase">Date of Return</span>
                         <p class="my-1">{{ $transport->date_of_return->toDateString() ?? 'N/A' }}</p>
                     </div>
+                    @if($transport->extended_date)
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Extended To</span>
+                            <p class="my-1">{{ $transport->extended_date->toDateString() ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Extension Reasons</span>
+                            <p class="my-1">{{ $transport->extended_reason ?? 'N/A' }}</p>
+                        </div>
+                    @endif
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Reasons</span>
                         <p class="my-1">{{ $transport->reasons ?? 'N/A' }}</p>

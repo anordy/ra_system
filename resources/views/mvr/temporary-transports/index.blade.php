@@ -20,6 +20,10 @@
                        aria-controls="profile" aria-selected="false">Rejected</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" id="printed-link" data-toggle="tab" href="#returned" role="tab"
+                       aria-controls="profile" aria-selected="false">Returned</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" id="printed-link" data-toggle="tab" href="#correction" role="tab"
                        aria-controls="profile" aria-selected="false">Pending Correction</a>
                 </li>
@@ -33,6 +37,9 @@
                 </div>
                 <div class="tab-pane p-2" id="rejected" role="tabpanel" aria-labelledby="printed-tab">
                     <livewire:mvr.temporary-transport.temporary-transports-table :status="App\Enum\MvrTemporaryTransportStatus::REJECTED"/>
+                </div>
+                <div class="tab-pane p-2" id="returned" role="tabpanel" aria-labelledby="printed-tab">
+                    <livewire:mvr.temporary-transport.temporary-transports-table :status="App\Enum\MvrTemporaryTransportStatus::RETURNED"/>
                 </div>
                 <div class="tab-pane p-2" id="correction" role="tabpanel" aria-labelledby="printed-tab">
                     <livewire:mvr.temporary-transport.temporary-transports-table :status="App\Enum\MvrTemporaryTransportStatus::CORRECTION"/>

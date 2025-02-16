@@ -102,7 +102,7 @@
 </div>
 <div>
     <p>
-        Mamlaka ya Mapato Zanzibar, haina pingamizi na ombi lako la kusafirisha gari kwa muda kuanzia tarehe {{ $transport->date_of_travel->toFormattedDateString() }} hadi {{ $transport->date_of_return->toFormattedDateString() }}
+        Mamlaka ya Mapato Zanzibar, haina pingamizi na ombi lako la kusafirisha gari kwa muda kuanzia tarehe {{ $transport->date_of_travel->toFormattedDateString() }} hadi {{ $transport->extended_date->toFormattedDateString() ?? $transport->date_of_return->toFormattedDateString() }}
     </p>
     <p>
         Aidha, unatakiwa kumjuilisha Kamishna Mkuu mara tu gari hiyo itakaporejeshwa Zanzibar au venginevyo.

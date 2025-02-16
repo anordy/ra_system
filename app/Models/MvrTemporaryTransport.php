@@ -16,6 +16,7 @@ class MvrTemporaryTransport extends Model
     protected $casts = [
         'date_of_travel' => 'date',
         'date_of_return' => 'date',
+        'extended_date' => 'date',
         'approved_on' => 'date'
     ];
 

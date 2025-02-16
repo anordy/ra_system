@@ -49,14 +49,19 @@ class WorkflowMvrTemporaryTransportSeeder extends Seeder
                 'operators' => [],
             ],
             'completed' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
+                'owner' => 'taxpayer',
+                'operator_type' => 'user',
                 'operators' => [],
             ],
         ];
         $transitions = [
             'application_submitted' => [
                 'from' => 'apply',
+                'to' => 'mvr_registration_officer',
+                'condition' => '',
+            ],
+            'application_extended' => [
+                'from' => 'completed',
                 'to' => 'mvr_registration_officer',
                 'condition' => '',
             ],

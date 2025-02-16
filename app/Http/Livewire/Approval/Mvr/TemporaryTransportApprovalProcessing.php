@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Approval\Mvr;
 
+use App\Enum\AlertType;
+use App\Enum\CustomMessage;
 use App\Enum\MvrRegistrationStatus;
 use App\Enum\MvrTemporaryTransportStatus;
 use App\Events\SendSms;
@@ -55,8 +57,7 @@ class TemporaryTransportApprovalProcessing extends Component
             DB::commit();
 
             if ($this->checkTransition('mvr_registration_manager_review') && $transition === 'mvr_registration_manager_review') {
-                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle temporary transportation request for {$this->subject->mvr->plate_number} has been approved."]));
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "Hello {$this->subject->taxpayer->fullname}, your motor vehicle temporary transportation request for {$this->subject->mvr->plate_number} has been approved."]));
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
@@ -79,21 +80,23 @@ class TemporaryTransportApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            $this->subject->status = MvrTemporaryTransportStatus::REJECTED;
-            $this->subject->save();
+            if ($this->checkTransition('application_filled_incorrect')) {
+                $this->subject->status = MvrTemporaryTransportStatus::CORRECTION;
+                $this->subject->save();
+            }
+
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             DB::commit();
 
             if ($this->subject->status == MvrTemporaryTransportStatus::CORRECTION) {
-                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle temporary transportation request for {$this->subject->mvr->plate_number} was rejected."]));
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "Hello {$this->subject->taxpayer->fullname}, your motor vehicle temporary transportation request for {$this->subject->mvr->plate_number} was returned for correction. Please login to the system and amend your request"]));
             }
 
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $exception) {
             DB::rollBack();
             Log::error('TEMPORARY-TRANSPORT-REJECT', [$exception]);
-            $this->customAlert('error', 'Something went wrong');
+            $this->customAlert(AlertType::ERROR, CustomMessage::ERROR);
         }
 
     }
@@ -104,7 +107,7 @@ class TemporaryTransportApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert(AlertType::WARNING, CustomMessage::ARE_YOU_SURE, [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
