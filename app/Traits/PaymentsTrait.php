@@ -55,7 +55,7 @@ trait PaymentsTrait
         try {
             $billable = $bill->billable;
 
-            if (env('APP_ENV') === 'production') {
+            if (config('modulesconfig.enable_zm')) {
                 $sendBill = (new ZanMalipoInternalService)->createBill($bill);
             } else {
                 // We are local
@@ -100,7 +100,7 @@ trait PaymentsTrait
 
         try {
             $billable = $bill->billable;
-            if (env('APP_ENV') === 'production') {
+            if (config('modulesconfig.enable_zm')) {
                 $billable->payment_status = BillStatus::CN_GENERATING;
                 $billable->save();
                 (new ZanMalipoInternalService)->createBill($bill);
@@ -172,7 +172,7 @@ trait PaymentsTrait
             $billItems
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             $sendBill = (new ZanMalipoInternalService)->createBill($bill);
         } else {
             // We are local
@@ -196,7 +196,7 @@ trait PaymentsTrait
 
     public function cancelBill(ZmBill $bill, $cancellationReason)
     {
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             return (new ZanMalipoInternalService)->cancelBill($bill, $cancellationReason);
         } else {
             $bill->status = PaymentStatus::CANCELLED;
@@ -210,7 +210,7 @@ trait PaymentsTrait
         if (!($expireDate instanceof Carbon)) {
             $expireDate = Carbon::make($expireDate);
         }
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             $updateBill = (new ZanMalipoInternalService)->updateBill($bill, $expireDate->toDateTimeString());
 
             return $updateBill;
@@ -285,7 +285,7 @@ trait PaymentsTrait
             $billItems
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             $createBill = (new ZanMalipoInternalService)->createBill($bill);
         } else {
             // We are local
@@ -310,7 +310,7 @@ trait PaymentsTrait
      */
     public function sendBill($bill, $billable)
     {
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             $response = ZmCore::sendBill($bill->id);
             if ($response->status === ZmResponse::SUCCESS) {
                 session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
@@ -381,7 +381,7 @@ trait PaymentsTrait
             $billItems
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             $sendBill = (new ZanMalipoInternalService)->createBill($bill);
         } else {
             // We are local
@@ -480,7 +480,7 @@ trait PaymentsTrait
             $billItems
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             $sendBill = (new ZanMalipoInternalService)->createBill($bill);
         } else {
             // We are local
@@ -558,7 +558,7 @@ trait PaymentsTrait
             $billItems
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             $sendBill = (new ZanMalipoInternalService)->createBill($bill);
         } else {
             // We are local
@@ -582,7 +582,7 @@ trait PaymentsTrait
      */
     public function generateGeneralControlNumber($bill)
     {
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             (new ZanMalipoInternalService)->createBill($bill);
         }
     }
@@ -825,7 +825,7 @@ trait PaymentsTrait
                 $billItems
             );
 
-            if (env('APP_ENV') === 'production') {
+            if (config('modulesconfig.enable_zm')) {
                 $sendBill = (new ZanMalipoInternalService)->createBill($bill);
             } else {
                 // We are local
@@ -937,7 +937,7 @@ trait PaymentsTrait
             );
             DB::commit();
 
-            if (env('APP_ENV') === 'production') {
+            if (config('modulesconfig.enable_zm')) {
                 (new ZanMalipoInternalService)->createBill($bill);
             } else {
                 // We are local
@@ -1035,7 +1035,7 @@ trait PaymentsTrait
             $billItems
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             (new ZanMalipoInternalService)->createBill($bill);
         } else {
             // We are local
@@ -1051,7 +1051,7 @@ trait PaymentsTrait
             $expireDate = Carbon::parse($bill->expire_date)->format("d M Y H:i:s");
             $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
 
-            if (env('APP_ENV') === 'production') {
+            if (config('modulesconfig.enable_zm')) {
                 dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             }
         }
@@ -1116,7 +1116,7 @@ trait PaymentsTrait
             ]
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             (new ZanMalipoInternalService)->createBill($bill);
         } else {
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -1175,7 +1175,7 @@ trait PaymentsTrait
             ]
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             (new ZanMalipoInternalService)->createBill($bill);
         } else {
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -1234,7 +1234,7 @@ trait PaymentsTrait
             ]
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             (new ZanMalipoInternalService)->createBill($bill);
         } else {
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -1292,7 +1292,7 @@ trait PaymentsTrait
             ]
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             (new ZanMalipoInternalService)->createBill($bill);
         } else {
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -1350,7 +1350,7 @@ trait PaymentsTrait
             ]
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             (new ZanMalipoInternalService)->createBill($bill);
         } else {
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -1406,7 +1406,7 @@ trait PaymentsTrait
             ]
         );
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             (new ZanMalipoInternalService)->createBill($bill);
         } else {
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -1458,7 +1458,7 @@ trait PaymentsTrait
                 ]
             ]
         );
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             (new ZanMalipoInternalService)->createBill($bill);
         } else {
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -1537,7 +1537,7 @@ trait PaymentsTrait
         );
         DB::commit();
 
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             (new ZanMalipoInternalService)->createBill($zmBill);
         } else {
             // We are local
@@ -1596,7 +1596,7 @@ trait PaymentsTrait
                 $billItems
             );
 
-            if (env('APP_ENV') === 'production') {
+            if (config('modulesconfig.enable_zm')) {
                 $sendBill = (new ZanMalipoInternalService)->createBill($bill);
             } else {
                 // We are local
@@ -1683,7 +1683,7 @@ trait PaymentsTrait
         );
 
         DB::commit();
-        if (env('APP_ENV') === 'production') {
+        if (config('modulesconfig.enable_zm')) {
             (new ZanMalipoInternalService)->createBill($zmBill);
         } else {
             // We are local
@@ -1769,7 +1769,7 @@ trait PaymentsTrait
                 get_class(auth()->user()),
                 $billItems
             );
-            if (env('APP_ENV') === 'production') {
+            if (config('modulesconfig.enable_zm')) {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
                     session()->flash('success', 'A control number request was sent successful.');

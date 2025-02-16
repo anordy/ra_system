@@ -63,6 +63,9 @@ return [
     'wb_sms_channel' => env('WB_SMS_CHANNEL'),
 
     // SMS Provider
-    'active_sms_provider' => env('ACTIVE_SMS_PROVIDER')
+    'active_sms_provider' => env('ACTIVE_SMS_PROVIDER'),
+
+    'enable_zm' => env('ENABLE_ZM', false),
+    'enable_verification' => env('ENABLE_VERIFICATION', false),
 ]
 ?>
