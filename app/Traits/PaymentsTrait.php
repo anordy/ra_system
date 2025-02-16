@@ -85,7 +85,6 @@ trait PaymentsTrait
             }
             DB::commit();
 
-            return true;
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
@@ -119,7 +118,7 @@ trait PaymentsTrait
             $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay {$bill->currency} {$bill->amount} before {$bill->expireDate}.";
             $this->dispatch(new SendZanMalipoSMS(ZmCore::formatPhone($bill->payer_phone_number), $message));
             return true;
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
             return false;
@@ -255,7 +254,7 @@ trait PaymentsTrait
         $payer_name = $payerName;
         $payer_email = $payerEmail;
         $payer_phone = $payerMobile;
-        $location = ($leasePayment->landLease->region->name ?? '') . ', '. ($leasePayment->landLease->district->name ?? '') . ', ' . ($leasePayment->landLease->ward->name ?? '');
+        $location = ($leasePayment->landLease->region->name ?? '') . ', ' . ($leasePayment->landLease->district->name ?? '') . ', ' . ($leasePayment->landLease->ward->name ?? '');
         $description = "Payment for Land Lease with DP number {$leasePayment->landLease->dp_number} at {$location} for {$leasePayment->financialMonth->name} {$leasePayment->financialYear->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_EXACT;
         $currency = 'USD';
@@ -1708,16 +1707,18 @@ trait PaymentsTrait
                 $ledger = $item->ledger;
                 $exchangeRate = $this->getExchangeRate($item->currency);
 
-                if ($ledger->taxtype->code != TaxType::AIRPORT_SERVICE_SAFETY_FEE &&
+                if (
+                    $ledger->taxtype->code != TaxType::AIRPORT_SERVICE_SAFETY_FEE &&
                     $ledger->taxtype->code != TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE &&
-                    $ledger->taxtype->code != TaxType::VAT) {
+                    $ledger->taxtype->code != TaxType::VAT
+                ) {
                     $taxType = TaxType::findOrFail($ledger->tax_type_id);
                 } else {
                     if ($ledger->taxtype->code === TaxType::AIRPORT_SERVICE_SAFETY_FEE) {
                         $taxType = TaxType::where('code', TaxType::AIRPORT_SERVICE_CHARGE)->firstOrFail();
                     } else if ($ledger->taxtype->code === TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE) {
                         $taxType = TaxType::where('code', TaxType::SEAPORT_SERVICE_CHARGE)->firstOrFail();
-                    }  else if ($ledger->taxtype->code === TaxType::VAT) {
+                    } else if ($ledger->taxtype->code === TaxType::VAT) {
                         $businessTaxType = BusinessTaxType::select('sub_vat_id')
                             ->where('business_id', $ledger->business_id)
                             ->where('tax_type_id', $ledger->taxtype->id)

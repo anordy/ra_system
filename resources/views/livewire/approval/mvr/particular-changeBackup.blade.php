@@ -36,33 +36,38 @@
                     </div>
                 </div>
                 <div class="row">
-                    @php
-                        $fields = [
-                            'chassisNo' => 'Chassis Number',
-                            'color' => 'Color',
-                            'engineCapacity' => 'Engine Capacity (cc)',
-                            'yearOfManufacture' => 'Year of Manufacture',
-                            'make' => 'Make',
-                            'model' => 'Model',
-                            'bodyStyle' => 'Body Style',
-                            'engineNo' => 'Engine Number',
-                        ];
-                    @endphp
-                
-                    @foreach ($fields as $key => $label)
-                        @if (!empty($$key)) {{-- Check if the Livewire property has a value --}}
-                            <div class="form-group col-md-3">
-                                <label class="control-label">{{ $label }}</label>
-                                <input type="text" class="form-control" wire:model.defer="{{ $key }}" value="{{ $$key }}" disabled>
-                                @error($key)
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        @endif
-                    @endforeach
+                    <div class="form-group col-md-3">
+                        <label class="control-label">Color</label>
+                        <input type="text" class="form-control" wire:model.defer="color" disabled>
+                        @error('color')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label class="control-label">Body Style</label>
+                        <input type="text" class="form-control" wire:model.defer="bodyStyle" disabled>
+                        @error('bodyStyle')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label class="control-label">Engine Number</label>
+                        <input type="text" class="form-control" wire:model.defer="engineNo" disabled>
+                        @error('engineNo')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-lg-3">
+                        <label class="control-label">Chassis Number</label>
+                        <input type="text" class="form-control" wire:model.defer="chassisNo" disabled>
+                        @error('chassisNo')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
-                
-                
             @endif
 
             <div class="row">
