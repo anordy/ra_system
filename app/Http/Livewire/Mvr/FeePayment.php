@@ -46,21 +46,22 @@ class FeePayment extends Component
                 ])->first();
                 break;
 
-            case MvrRegistrationStatusChange::class:
-                $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
-                // dd($this->motorVehicle,MvrFee::query()->where([
-                //     'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
-                //     'mvr_class_id' => $this->motorVehicle->mvr_class_id,
-                //     'mvr_fee_type_id' => $this->feeType->id,
-                //     'mvr_plate_number_type_id' => 3
-                // ])->first());
-                $this->fee = MvrFee::query()->where([
-                    'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
-                    'mvr_class_id' => $this->motorVehicle->mvr_class_id,
-                    'mvr_fee_type_id' => $this->feeType->id,
-                    'mvr_plate_number_type_id' => 3
-                ])->first();
-                break;
+            // case MvrRegistrationStatusChange::class:
+            //     $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
+            //     dd($this->motorVehicle,MvrFee::query()->where([
+            //         'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
+            //         'mvr_class_id' => $this->motorVehicle->mvr_class_id,
+            //         'mvr_fee_type_id' => $this->feeType->id,
+            //         'mvr_plate_number_type_id' => $this->motorVehicle->mvr_plate_number_type_id
+            //     ])->first());
+            //     $this->fee = MvrFee::query()->where([
+            //         'mvr_registration_type_id' => $this->motorVehicle->mvr_registration_type_id,
+            //         'mvr_class_id' => $this->motorVehicle->mvr_class_id,
+            //         'mvr_fee_type_id' => $this->feeType->id,
+            //         'mvr_plate_number_type_id' => 3
+            //     ])->first();
+            //     dd($this->fee);
+            //     break;
 
                 case MvrReorderPlateNumber::class:
                     $payload = [

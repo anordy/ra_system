@@ -48,7 +48,6 @@ class ReorderApprovalProcessing extends Component
 
     public function approve($transition) {
         $transition = $transition['data']['transition'];
-
         $this->validate([
             'comments' => 'required|strip_tag',
         ]);
@@ -185,14 +184,20 @@ class ReorderApprovalProcessing extends Component
         try {
             DB::beginTransaction();
 
-            if ($this->checkTransition('application_rejected')) {
-                $this->subject->status = MvrRegistrationStatus::REJECTED;
+            if ($this->checkTransition('application_returned_for_distorted')) {
+                $this->subject->status = MvrReorderStatus::CORRECTION;
                 $this->subject->save();
+            }
+
+            if ($this->checkTransition('police_officer_reject')) {
+                $this->subject->status = MvrReorderStatus::REJECTED;
+                if (!$this->subject->save()) throw new Exception('Failed to save application status');
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
             DB::commit();
+
 
             if ($this->subject->status == MvrRegistrationStatus::REJECTED) {
                 // Send correction email/sms

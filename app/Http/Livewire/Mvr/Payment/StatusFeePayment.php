@@ -26,7 +26,7 @@ class StatusFeePayment extends Component
         $this->motorVehicle = $motorVehicle;
 
         if (get_class($this->motorVehicle) == MvrRegistrationStatusChange::class) {
-            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::STATUS_CHANGE]);
+            $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
         } elseif (get_class($this->motorVehicle) == MvrRegistration::class) {
             $this->feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
         } else if (get_class($this->motorVehicle) == MvrRegistrationParticularChange::class) {
