@@ -150,8 +150,7 @@ class DeRegistrationApprovalProcessing extends Component
             DB::commit();
 
             if ($this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
-                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "
-                Hello {$this->subject->taxpayer->fullname}, your motor vehicle de-registration request for {$this->subject->registration->plate_number} has been approved, you will receive your payment control number shortly."]));
+                event(new SendSms(SendCustomSMS::SERVICE, NULL, ['phone' => $this->subject->taxpayer->mobile, 'message' => "Hello {$this->subject->taxpayer->fullname}, your motor vehicle de-registration request for {$this->subject->registration->plate_number} has been approved, you will receive your payment control number shortly."]));
             }
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
