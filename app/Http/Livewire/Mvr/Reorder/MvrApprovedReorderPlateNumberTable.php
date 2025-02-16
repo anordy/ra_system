@@ -21,6 +21,7 @@ class MvrApprovedReorderPlateNumberTable extends DataTableComponent
         return MvrReorderPlateNumber::query()->whereIn('mvr_reorder_plate_number.status', [
             MvrReorderStatus::STATUS_REGISTERED,
             MvrReorderStatus::STATUS_PLATE_NUMBER_PRINTING,
+            MvrReorderStatus::APPROVED,
             MvrReorderStatus::STATUS_PENDING_PAYMENT,
         ])
             ->orderByDesc('mvr_reorder_plate_number.created_at');

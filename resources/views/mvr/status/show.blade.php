@@ -28,7 +28,7 @@
             @include('mvr.status.current_change_info', ['reg' => $motorVehicle])
             @include('mvr.status.new_change_info', ['reg' => $change_req])
             <livewire:approval.mvr.status-approval-processing modelName='App\Models\MvrRegistrationStatusChange'
-                                                      modelId="{{ encrypt($change_req->id) }}" />
+                                                      modelId="{{ encrypt($change_req->id) }}"/>
         </div>
         <div class="tab-pane fade p-3" id="approval" role="tabpanel" aria-labelledby="approval-tab">
             <livewire:approval.approval-history-table modelName='App\Models\MvrRegistrationStatusChange'
