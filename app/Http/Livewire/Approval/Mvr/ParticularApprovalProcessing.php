@@ -65,8 +65,9 @@ class ParticularApprovalProcessing extends Component
             $this->validate([
                 'engineNo' => 'nullable|alpha_num',
                 'chassisNo' => 'nullable|alpha_num',
+                'previouschassisNo' => 'nullable|alpha_num',
                 'bodyStyle' => 'nullable|alpha',
-                'color' => 'nullable|alpha',
+                'color' => 'nullable|string',
                 'make' => 'nullable|alpha_num',
                 'model' => 'nullable|alpha_num',
                 'engineCapacity' => 'nullable|alpha_num',

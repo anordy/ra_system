@@ -14,6 +14,7 @@ class AddColumnsToChassisNumberChangesTable extends Migration
     public function up()
     {
         Schema::table('chassis_number_changes', function (Blueprint $table) {
+            $table->string('previous_chassis_number')->nullable();
             $table->string('make')->nullable();
             $table->string('model')->nullable();
             $table->string('engine_capacity')->nullable();
