@@ -51,7 +51,10 @@ class MvrRegistrationTypesSeeder extends Seeder
         ];
 
         foreach ($data as $row) {
-            MvrRegistrationType::updateOrCreate($row);
+            MvrRegistrationType::updateOrCreate([
+                'mvr_registration_type_category_id' => $row['mvr_registration_type_category_id'],
+                'name' => $row['name'],
+            ], $row);
         }
     }
 }
