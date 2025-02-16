@@ -25,6 +25,7 @@
             <th>Plate Color</th>
             <th>Plate Size</th>
             <th>Registration Date</th>
+            <th>Reorder</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -42,6 +43,10 @@
                     <td>{{ $row->regtype ? $row->regtype->color->color : 'N/A' }}</td>
                     <td>{{ $row->platesize ? $row->platesize->name : 'n/a' }}</td>
                     <td>{{ $row->registered_at }}</td>
+                    <td>@if($row->reorder)
+                            {{ $row->reorder->quantity }} {{ $row->reorder->is_rfid ? 'RFID' : '' }}
+                    @endif
+                    </td>
                     <td>
                         @if($plate_number_status === \App\Models\MvrPlateNumberStatus::STATUS_GENERATED)
                             <button class="btn btn-sm btn-primary" wire:click="printed({{ $row->id }})">

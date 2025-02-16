@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\TaxpayerLedger\TaxpayerLedger;
 use App\Models\Tra\ChassisNumber;
+use App\Models\Tra\TancisChassisNumber;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +20,7 @@ class MvrReorderPlateNumber extends Model
     protected $table = 'mvr_reorder_plate_number';
 
     public function chassis(){
-        return $this->belongsTo(ChassisNumber::class, 'chassis_number_id');
+        return $this->belongsTo(TancisChassisNumber::class, 'chassis_number_id');
     }
 
     public function taxpayer(){

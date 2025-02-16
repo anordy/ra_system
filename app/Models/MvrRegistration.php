@@ -102,4 +102,8 @@ class MvrRegistration extends Model
     public function location() {
         return "{$this->region->name} {$this->district->name} {$this->ward->name} {$this->street->name}";
     }
+
+    public function reorder(){
+        return $this->hasOne(MvrReorderPlateNumber::class, 'current_registration_id')->latest();
+    }
 }
