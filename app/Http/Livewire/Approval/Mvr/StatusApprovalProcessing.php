@@ -139,7 +139,7 @@ class StatusApprovalProcessing extends Component
         }
 
         $sameColor = $this->currentRegistration->regType->color->color === $this->subject->regType->color->color;
-            
+
         if (!$sameColor) {
         // Generate Control Number after MVR SC Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
