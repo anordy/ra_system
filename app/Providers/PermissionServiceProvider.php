@@ -27,7 +27,7 @@ class PermissionServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (config('modulesconfig.enable_zm')) {
+        if (config('app.env') === 'production') {
             if (Schema::hasTable('permissions') && Schema::hasTable('sys_modules')) {
                 Permission::get()->map(function ($permission) {
                     Gate::define($permission->name, function ($user) use ($permission) {
