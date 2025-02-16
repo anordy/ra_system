@@ -14,7 +14,12 @@ class AddColumnNameToMvrColorsTable extends Migration
     public function up()
     {
         Schema::table('mvr_colors', function (Blueprint $table) {
-            $table->string('name')->nullable();
+            if (Schema::hasColumn('mvr_colors', 'name')) {
+                // The column exists
+            } else {
+                $table->string('name')->nullable();
+
+            }
         });
     }
 

@@ -171,6 +171,28 @@
     </div>
 </div>
 
-@if ($reg->registrant_tin)
-    @livewire('tra.tin-verification', ['tinNumber' => $reg->registrant_tin])
+@if(count($reg->attachments ?? []))
+    <div class="card mt-3">
+        <div class="card-header font-weight-bold bg-white">
+            {{ __('Attachments') }}
+        </div>
+        <div class="card-body">
+            <div class="row my-2">
+                @foreach($reg->attachments ?? [] as $attachment)
+                    <div class="col-md-3 pr-0">
+                        <div class="p-2 mb-0 d-flex rounded-sm align-items-center file-item">
+                            <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                            <a target="_blank"
+                               href="{{ route('mvr.files', encrypt($attachment->path)) }}"
+                               class="ml-1">
+                                {{ $attachment->name ?? 'N/A' }}
+                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
 @endif
+

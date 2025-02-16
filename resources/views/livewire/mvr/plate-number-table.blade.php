@@ -36,7 +36,7 @@
                         <td><input width="10" type="checkbox" wire:model.defer="selectedItems.{{ $row->id }}"></td>
                     @endif
                     <td>{{ $row->chassis->chassis_number }}</td>
-                    <td>{{ $row->plate_number }}</td>
+                    <td>{{ $row->plate_number }} @if($row->personalized_name) / {{ $row->personalized_name }} @endif</td>
                     <td>{{ $row->registration_number }}</td>
                     <td>{{ $row->regtype? $row->regtype->name : 'N/A' }}</td>
                     <td>{{ $row->regtype ? $row->regtype->color->color : 'N/A' }}</td>
