@@ -102,13 +102,9 @@ class StatusApprovalProcessing extends Component
                 $sameColor = $this->currentRegistration->regType->color->color === $this->subject->regType->color->color;
             
                 if ($sameColor) {
-                    $this->subject->status = MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING;
+                    $this->subject->status = MvrRegistrationStatus::STATUS_CHANGE;
                     $this->subject->payment_status = BillStatus::NILL;
                     $this->subject->mvr_plate_number_status = MvrPlateNumberStatus::STATUS_NOT_ASSIGNED;
-
-            
-                    // TODO: PROCESS PLATE NUMBER PRINTING
-                    // $this->processRegistrationPlateNumber();
                 } else {
                     $this->subject->status = MvrRegistrationStatus::STATUS_PENDING_PAYMENT;
                     $this->subject->payment_status = BillStatus::CN_GENERATING;
@@ -119,7 +115,6 @@ class StatusApprovalProcessing extends Component
                 $this->subject->save();
             }
             
-
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
             DB::commit();
@@ -141,7 +136,6 @@ class StatusApprovalProcessing extends Component
         $sameColor = $this->currentRegistration->regType->color->color === $this->subject->regType->color->color;
 
         if (!$sameColor) {
-        // Generate Control Number after MVR SC Approval
         if ($this->subject->status == MvrRegistrationStatus::STATUS_PENDING_PAYMENT && $transition === 'mvr_registration_manager_review') {
             try {
                 $feeType = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
@@ -150,7 +144,7 @@ class StatusApprovalProcessing extends Component
                     'mvr_registration_type_id' => $this->subject->mvr_registration_type_id,
                     'mvr_fee_type_id' => $feeType->id,
                     'mvr_class_id' => $this->subject->mvr_class_id,
-                    'mvr_plate_number_type_id' => $this->subject->mvr_plate_number_type_id
+                    'mvr_plate_number_type_id' => $this->currentRegistration->mvr_plate_number_type_id
                 ])->first();
 
                 if (empty($fee)) {
