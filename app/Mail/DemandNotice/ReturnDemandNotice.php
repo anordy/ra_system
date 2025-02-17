@@ -59,7 +59,7 @@ class ReturnDemandNotice extends Mailable
             $pdf->setPaper('a4', 'portrait');
             $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
-            $email = $this->markdown('emails.demand-notice.return-demand-notice')->subject("Zanzibar Revenue Authority(ZRA) Return Debt Demand Notice - " . strtoupper($tax_return->business->name));
+            $email = $this->markdown('emails.demand-notice.return-demand-notice')->subject("CRDB BANK PLC Authority(ZRA) Return Debt Demand Notice - " . strtoupper($tax_return->business->name));
             $email->attachData($pdf->output(), "{$tax_return->business->name}_demand_notice.pdf");
             return $email;
         } catch (Exception $e) {

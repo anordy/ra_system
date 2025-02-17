@@ -38,7 +38,7 @@ class SendNotificationLetterSmsToTaxPayer implements ShouldQueue
         $send_to = $this->payload['mobile']; // The mobile number of the taxpayer
         $sendToName = $this->payload['first_name']; // The first name of the taxpayer
         $source = config('modulesconfig.smsheader'); // The source of the SMS header
-        $customer_message = "Hello $sendToName, your business has been selected for a tax audit. Please note that all relevant documents must be uploaded within seven days for the audit process. Log in to ZIDRAS system to submit documents. Thank you."; // The message to be sent to the taxpayer
+        $customer_message = "Hello $sendToName, your business has been selected for a tax audit. Please note that all relevant documents must be uploaded within seven days for the audit process. Log in to CRDB system to submit documents. Thank you."; // The message to be sent to the taxpayer
         $sms_controller->sendSMS($send_to, $source, $customer_message); // Send the SMS to the taxpayer
     }
 }

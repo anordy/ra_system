@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->integer('auth_attempt')->default(0);
             $table->boolean('is_approved')->default(0);
             $table->boolean('is_updated')->default(0);
+            $table->boolean('pass_expired_on')->default(0);
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->unsignedBigInteger('level_id')->nullable();
 

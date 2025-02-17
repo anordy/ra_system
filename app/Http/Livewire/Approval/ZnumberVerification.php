@@ -196,7 +196,7 @@ class ZnumberVerification extends Component
             'parent_id' => $data['parent_id'],
             'locality_id' => $data['locality_id'],
             'vfms_tax_type' => $data['tax_type'],
-            'zidras_tax_type_id' => $taxtype->id, // Mapped with zidras tax type id
+            'crdb_tax_type_id' => $taxtype->id, // Mapped with crdb tax type id
             'tax_office' => $data['tax_office'] ?? null,
             'street' => $data['street'],
             'znumber' => $previousZno,

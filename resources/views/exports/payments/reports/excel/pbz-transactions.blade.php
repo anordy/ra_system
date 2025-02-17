@@ -3,7 +3,7 @@
     <thead>
     <tr>
         <th style="text-align:center;" colspan="7" height="70px">
-            <strong>Zanzibar Revenue Authority</strong><br>
+            <strong>CRDB BANK PLC Authority</strong><br>
             <strong>{{ $title }}</strong><br>
             <strong>Total Number of Records: {{ $records->count() }} </strong>
         </th>

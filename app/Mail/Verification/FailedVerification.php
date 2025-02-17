@@ -30,6 +30,6 @@ class FailedVerification extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.verification.failed_verification')->subject("ZRA - ZIDRAS Failed Verification");
+        return $this->markdown('emails.verification.failed_verification')->subject("ZRA - CRDB Failed Verification");
     }
 }

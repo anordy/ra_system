@@ -30,7 +30,7 @@ class MapVfmsWards extends Command
      *
      * @var string
      */
-    protected $description = 'Mapping VFMS Locality with ZIDRAS ward data';
+    protected $description = 'Mapping VFMS Locality with CRDB ward data';
 
     /**
      * Create a new command instance.

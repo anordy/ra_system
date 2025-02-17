@@ -42,7 +42,7 @@ class ChangeTaxType extends Mailable
     {
         $business_locations = $this->payload['tax_change']->business->locations;
 
-        $email = $this->markdown('emails.business.taxtypes.change')->subject("Zanzibar Revenue Authority(ZRA) Change Tax Type Request - " . strtoupper($this->payload['tax_change']->business->name));
+        $email = $this->markdown('emails.business.taxtypes.change')->subject("CRDB BANK PLC Authority(ZRA) Change Tax Type Request - " . strtoupper($this->payload['tax_change']->business->name));
 
         // $attachments is an array with file paths of attachments
         if (!empty($business_locations)) {

@@ -17,6 +17,7 @@ class CreateSystemSettingCategoriesTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('description', 4000);
+            $table->string('code', 4000);
             $table->string('is_approved')->default(0);
             $table->boolean('is_updated')->default(0);
             $table->timestamps();

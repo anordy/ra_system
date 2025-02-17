@@ -32,6 +32,6 @@ class BusinessRegistrationMail extends Mailable
     public function build()
     {
         return $this->markdown('emails.non-tax-resident.business-registration')
-            ->subject('Zanzibar Revenue Authority(ZRA) Business Registration');
+            ->subject('CRDB BANK PLC Authority(ZRA) Business Registration');
     }
 }

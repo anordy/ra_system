@@ -33,7 +33,7 @@
                             <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px">
                         </div>
                         <h5 class="bg-white text-uppercase text-center mb-4">
-                            ZIDRAS Staff Login
+                            Revenue Assurance 
                         </h5>
                         @if (session()->has('success'))
                             <div class="alert alert-success">
@@ -107,7 +107,7 @@
 
                 <div class="card-body text-center text-white">
                     ©{{ date("Y") }}
-                    <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">Zanzibar Revenue Authority</a>.
+                    <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">CRDB BBANK PLC</a>.
                     All Rights Reserved.
                 </div>
             </div>

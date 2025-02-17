@@ -31,6 +31,6 @@ class BusinessClosureApproved extends Mailable
     public function build()
     {
         return $this->markdown('emails.business.closure.approved')
-            ->subject("Zanzibar Revenue Authority(ZRA) Temporary Business Closure - " . strtoupper($this->closure->business->name));
+            ->subject("CRDB BANK PLC Authority(ZRA) Temporary Business Closure - " . strtoupper($this->closure->business->name));
     }
 }

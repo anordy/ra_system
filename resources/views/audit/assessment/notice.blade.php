@@ -89,7 +89,7 @@
     <tr>
         <td width="100%"
             style="font-size: 28px; text-transform: uppercase;text-align: center;font-family: sans-serif; letter-spacing: 14px"
-            class="bold">Zanzibar Revenue Authority
+            class="bold">CRDB BANK PLC Authority
         </td>
     </tr>
 </table>

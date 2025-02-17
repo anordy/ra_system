@@ -104,7 +104,7 @@ trait VfmsLocationTrait
         ]);
     }
 
-    private function addVfmsWardToZidras($ward, $data)
+    private function addVfmsWardToCRDB($ward, $data)
     {
         VfmsWard::updateOrCreate([
             'ward_id' => $ward->id,

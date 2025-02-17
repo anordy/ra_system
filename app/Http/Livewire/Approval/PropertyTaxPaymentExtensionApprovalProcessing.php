@@ -53,8 +53,8 @@ class PropertyTaxPaymentExtensionApprovalProcessing extends Component
             $this->email = $requestedBy->email;
             $this->mobile = $requestedBy->mobile;
         }
-        $this->approvedText = "Your property tax payment extension request was approved, for more information visit ZIDRAS portal.";
-        $this->rejectedText = "Your property tax payment extension request was rejected, for more information visit ZIDRAS portal.";
+        $this->approvedText = "Your property tax payment extension request was approved, for more information visit CRDB portal.";
+        $this->rejectedText = "Your property tax payment extension request was rejected, for more information visit CRDB portal.";
         $this->emailPayload = [
             'name' => $name,
             'email' =>   $this->email

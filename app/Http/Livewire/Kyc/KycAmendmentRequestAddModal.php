@@ -230,7 +230,7 @@ class KycAmendmentRequestAddModal extends Component
             DB::commit();
 
             if ($kyc_amendment) {
-                $message = 'We are writing to inform you that some of your ZIDRAS kyc personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                $message = 'We are writing to inform you that some of your CRDB kyc personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                 $this->sendEmailToUser($this->kyc, $message);
             }
 

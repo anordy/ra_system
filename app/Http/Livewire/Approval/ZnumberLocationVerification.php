@@ -113,7 +113,7 @@ class ZnumberLocationVerification extends Component
                             'trade_name' => $data['trade_name'] ?? $tradingName ?? $businessName,
                             'locality_id' => $unit['locality_id'],
                             'vfms_tax_type' => $unit['tax_type'],
-                            'zidras_tax_type_id' => $taxtype->id, // Mapped with zidras tax type id
+                            'crdb_tax_type_id' => $taxtype->id, // Mapped with crdb tax type id
                             'tax_office' => $unit['tax_office'] ?? null,
                             'street' => $unit['street'],
                             'znumber' => $previousZno,

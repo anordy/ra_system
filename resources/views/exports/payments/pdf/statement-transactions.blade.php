@@ -48,7 +48,7 @@
         <tr>
             <th style="text-align:center;" colspan="15">
                 <img class="header-image" src="{{ public_path() }}/images/logo.png"><br>
-                <strong>Zanzibar Revenue Authority</strong><br>
+                <strong>CRDB BANK PLC Authority</strong><br>
                 <strong>{{ $title }} </strong><br>
                 <strong>Total Records: {{ count($records) }}</strong>
             </th>

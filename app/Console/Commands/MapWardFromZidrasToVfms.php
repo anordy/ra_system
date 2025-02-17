@@ -9,14 +9,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class MapWardFromZidrasToVfms extends Command
+class MapWardFromCRDBToVfms extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'map:zidrasToVfms';
+    protected $signature = 'map:crdbToVfms';
 
     /**
      * The console command description.
@@ -44,11 +44,11 @@ class MapWardFromZidrasToVfms extends Command
      */
     public function handle()
     {
-        Log::channel('vfms')->info('Mapping ZIDRAS Wards To VFMS Locality started');
-        $this->line('Mapping ZIDRAS Wards To VFMS Locality started');
+        Log::channel('vfms')->info('Mapping CRDB Wards To VFMS Locality started');
+        $this->line('Mapping CRDB Wards To VFMS Locality started');
         $this->map();
-        $this->line('Mapping ZIDRAS Wards To VFMS Locality finished');
-        Log::channel('vfms')->info('Mapping ZIDRAS Wards To VFMS Locality finished');
+        $this->line('Mapping CRDB Wards To VFMS Locality finished');
+        Log::channel('vfms')->info('Mapping CRDB Wards To VFMS Locality finished');
     }
 
     use VfmsLocationTrait;
@@ -91,7 +91,7 @@ class MapWardFromZidrasToVfms extends Command
             Log::channel('vfms')->info('No response data after new ward entry to VFMS, please kindly report to administrator.');
             Log::channel('vfms')->info((string)$response);
 
-            $message = "This alert email concerning Mapping Vfms Locality data with ZIDRAS wards. Inspect the logs as no response after new ward created on VFMS side.";
+            $message = "This alert email concerning Mapping Vfms Locality data with CRDB wards. Inspect the logs as no response after new ward created on VFMS side.";
             $this->sendnotificationToAdmin($message);
         }
     }

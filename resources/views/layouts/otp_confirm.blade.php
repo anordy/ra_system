@@ -77,18 +77,18 @@
                                 <a href="{{ route('session.kill') }}" class="btn-link">Click here to return to login
                                     page</a>
                             </div>
-                            @if(\App\Models\SystemSetting::where('code', \App\Models\SystemSetting::ENABLE_OTP_ALTERNATIVE)->first()->value == 1)
-                                <div class="mt-1 mb-2">
+                            {{-- @if(\App\Models\SystemSetting::where('code', \App\Models\SystemSetting::ENABLE_OTP_ALTERNATIVE)->first()->value == 1) --}}
+                                {{-- <div class="mt-1 mb-2">
                                     <a href="{{ route('2fa.security-questions') }}" class="btn-link">Login using
                                         security questions</a>
                                 </div>
-                            @endif
+                            @endif --}}
                         </div>
                     </div>
                 </div>
                 <div class="text-center text-white">
                     ©{{ date("Y") }}
-                    <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">Zanzibar Revenue
+                    <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">CRDB BANK PLC
                         Authority</a>.
                     All Rights Reserved.
                 </div>

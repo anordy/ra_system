@@ -30,6 +30,6 @@ class BusinessInformationConsultantApproval extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.business.updates.business-information-consultant')->subject("Zanzibar Revenue Authority(ZRA) Consultant Appointment - " . strtoupper($this->payload['business']->name));
+        return $this->markdown('emails.business.updates.business-information-consultant')->subject("CRDB BANK PLC Authority(ZRA) Consultant Appointment - " . strtoupper($this->payload['business']->name));
     }
 }

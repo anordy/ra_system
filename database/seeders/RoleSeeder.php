@@ -18,16 +18,10 @@ class RoleSeeder extends Seeder
 
         $data = [
             ['name' => 'Administrator', 'is_approved' => 1],
-            ['name' => 'Registration Manager', 'is_approved' => 1],
-            ['name' => 'Registration Officer', 'report_to' => 2, 'is_approved' => 1],
-            ['name' => 'Compliance Manager', 'is_approved' => 1],
-            ['name' => 'Compliance Officer', 'report_to' => 4, 'is_approved' => 1],
-            ['name' => 'Directory Of TRAI', 'is_approved' => 1],
-            ['name' => 'Commissioner', 'is_approved' => 1],
-            ['name' => 'Audit Manager', 'is_approved' => 1],
-            ['name' => 'Debt Manager', 'is_approved' => 1],
-            ['name' => 'CRDM', 'is_approved' => 1],
-            ['name' => 'Land Lease Officer', 'is_approved' => 1],
+            ['name' => 'Head Of Department', 'is_approved' => 1],
+            ['name' => 'Senior Manager','report_to' => 2, 'is_approved' => 1],
+            ['name' => 'Senior Specialist', 'report_to' => 3, 'is_approved' => 1],
+            ['name' => 'Specialist', 'report_to' => 4, 'is_approved' => 1],
         ];
 
         foreach ($data as $row) {

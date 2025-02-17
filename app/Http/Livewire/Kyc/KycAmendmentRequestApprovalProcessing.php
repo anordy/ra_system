@@ -56,7 +56,7 @@ class KycAmendmentRequestApprovalProcessing extends Component
                 $kyc = KYC::findOrFail($this->kyc_id);
                 $kyc->update($kyc_details);
                 $this->subject->status = KycAmendmentRequest::APPROVED;
-                $message = 'We are writing to inform you that some of your ZIDRAS Know your Customer (kyc) information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                $message = 'We are writing to inform you that some of your CRDB Know your Customer (kyc) information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                 $this->sendEmailToUser($kyc, $message);
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
@@ -87,7 +87,7 @@ class KycAmendmentRequestApprovalProcessing extends Component
             if ($this->checkTransition('registration_manager_reject')) {
                 $this->subject->status = KycAmendmentRequest::REJECTED;
 
-                $message = 'We are writing to inform you that some of your Request for ZIDRAS kyc personal information has been rejected.';
+                $message = 'We are writing to inform you that some of your Request for CRDB kyc personal information has been rejected.';
                 $this->sendEmailToUser($kyc, $message);
             }
 

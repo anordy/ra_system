@@ -69,7 +69,7 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
             DB::commit();
 
             if ($this->subject->status = TaxpayerAmendmentRequest::APPROVED) {
-                $message = 'We are writing to inform you that some of your ZIDRAS taxpayer personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                $message = 'We are writing to inform you that some of your CRDB taxpayer personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                 $this->sendEmailToUser($taxpayer, $message);
             }
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
@@ -99,7 +99,7 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             DB::commit();
-            $message = 'We are writing to inform you that some of your Request for ZIDRAS taxpayer personal information has been rejected.';
+            $message = 'We are writing to inform you that some of your Request for CRDB taxpayer personal information has been rejected.';
             $this->sendEmailToUser($taxpayer, $message);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

@@ -32,6 +32,6 @@ class BranchRegistered extends Mailable
     public function build()
     {
         return $this->markdown('emails.branch.registered')
-            ->subject("Zanzibar Revenue Authority(ZRA) Branch Registration - " . strtoupper($this->location->name));
+            ->subject("CRDB BANK PLC Authority(ZRA) Branch Registration - " . strtoupper($this->location->name));
     }
 }

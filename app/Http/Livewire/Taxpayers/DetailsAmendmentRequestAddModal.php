@@ -164,7 +164,7 @@ class DetailsAmendmentRequestAddModal extends Component
 
             DB::commit();
 
-            $message = 'We are writing to inform you that some of your ZIDRAS taxpayer personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+            $message = 'We are writing to inform you that some of your CRDB taxpayer personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
             $state = $this->sendEmailToUser($this->taxpayer, $message);
 
             if (!$state) {

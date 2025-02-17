@@ -102,7 +102,7 @@ class TaxClearenceApprovalProcessing extends Component
 
                 $smsPayload = [
                     $this->tax_clearence->businessLocation->taxpayer->mobile,
-                    'Your approval for tax clearance certificate of your business ' . $this->tax_clearence->businessLocation->name . ' has been granted, please check your email or log in to ZIDRAS to obtain your online certificate copy.'
+                    'Your approval for tax clearance certificate of your business ' . $this->tax_clearence->businessLocation->name . ' has been granted, please check your email or log in to CRDB to obtain your online certificate copy.'
                 ];
                 event(new SendSms('tax-clearance-feedback-to-taxpayer', $smsPayload));
 

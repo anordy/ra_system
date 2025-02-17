@@ -33,7 +33,7 @@ class ClientNotification extends Mailable
      */
     public function build()
     {
-        $title = $this->user_type == 'taxpayer' ? "Update Z-Number for ". $this->business_name : "ZIDRAS - VFMS Notification";
+        $title = $this->user_type == 'taxpayer' ? "Update Z-Number for ". $this->business_name : "CRDB - VFMS Notification";
         return $this->markdown('emails.vfms.client-notification')->subject($title);
     }
 }

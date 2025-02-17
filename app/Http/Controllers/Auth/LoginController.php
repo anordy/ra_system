@@ -65,7 +65,7 @@ class LoginController extends Controller
 
         $attempts = $this->hasTooManyLoginAttempts($user);
         if ($attempts) {
-            $message = 'We have detected multiple login attempts on your account. For security purposes, we have temporarily disabled your account. If you believe this is an error, please contact ZIDRAS support immediately.';
+            $message = 'We have detected multiple login attempts on your account. For security purposes, we have temporarily disabled your account. If you believe this is an error, please contact CRDB support immediately.';
             $payload = [
                 'email' => $request['email'],
                 'message' => $message,
@@ -146,10 +146,10 @@ class LoginController extends Controller
 
     protected function hasTooManyLoginAttempts($user)
     {
-        $this->maxAttempts = SystemSetting::where('code', SystemSetting::MAXIMUM_NUMBER_OF_ATTEMPTS)->where('is_approved', DualControl::APPROVE)->value('value');
-        if ($user->auth_attempt >= $this->maxAttempts) {
-            return true;
-        }
+        // $this->maxAttempts = SystemSetting::where('code', SystemSetting::MAXIMUM_NUMBER_OF_ATTEMPTS)->where('is_approved', DualControl::APPROVE)->value('value');
+        // if ($user->auth_attempt >= $this->maxAttempts) {
+        //     return true;
+        // }
 
         return false;
     }

@@ -174,7 +174,7 @@ trait DualControlActivityTrait
                         if (array_key_exists('statusCode', $data)) {
 
                             //Send email to inform admin for proper update on both end
-                            $message = "This alert email concerning creating ZIDRAS new Ward to Vfms Locality(Wards) Records. As " . $payload['locality_name'] . " ward already exists on Vfms records.";
+                            $message = "This alert email concerning creating CRDB new Ward to Vfms Locality(Wards) Records. As " . $payload['locality_name'] . " ward already exists on Vfms records.";
                             $this->sendnotificationToAdmin($message);
 
                             $this->customAlert('warning', 'Ward already exists on Vfms records, please kindly report to administrator.');
@@ -189,7 +189,7 @@ trait DualControlActivityTrait
                         }
                     } else {
                         //Send email to inform admin for proper update on both end
-                        $message = "This alert email concerning creating ZIDRAS new Ward to Vfms Locality(Wards) Records. Inspect the logs as no response after new ward created on VFMS side.";
+                        $message = "This alert email concerning creating CRDB new Ward to Vfms Locality(Wards) Records. Inspect the logs as no response after new ward created on VFMS side.";
                         $this->sendnotificationToAdmin($message);
 
                         Log::channel('vfms')->error('No response data after new ward entry to vfms, please kindly report to administrator.');

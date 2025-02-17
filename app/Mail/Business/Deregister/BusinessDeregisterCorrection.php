@@ -32,6 +32,6 @@ class BusinessDeregisterCorrection extends Mailable
     public function build()
     {
         return $this->markdown('emails.business.deregister.correction')
-            ->subject("Zanzibar Revenue Authority(ZRA) Business De-registration - " . strtoupper($this->deregister->business->name));
+            ->subject("CRDB BANK PLC Authority(ZRA) Business De-registration - " . strtoupper($this->deregister->business->name));
     }
 }

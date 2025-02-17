@@ -30,42 +30,6 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'all settings related to login attempts, lockouts and others.',
                 'is_approved' => 1
             ],
-            [
-                'name' => 'Certificate Settings',
-                'code' => 'certificate-settings',
-                'description' => 'all settings related Certificate variables.',
-                'is_approved' => 1
-            ],
-            [
-                'name' => 'Filing Deadline',
-                'code' => 'filing-deadline',
-                'description' => 'all settings related to filing deadline',
-                'is_approved' => 1
-            ],
-            [
-                'name' => 'Business Settings',
-                'code' => 'business-settings',
-                'description' => 'all settings related to business settings',
-                'is_approved' => 1
-            ],
-            [
-                'name' => 'Filing Minimum Amount',
-                'code' => 'filing-minimum-amounts',
-                'description' => 'All settings related to filing minimum allowed amounts.',
-                'is_approved' => 1
-            ],
-            [
-                'name' => 'Property Tax Amount',
-                'code' => 'property-tax-amount',
-                'description' => 'All settings related to property tax bill amounts.',
-                'is_approved' => 1
-            ],
-            [
-                'name' => 'Other',
-                'code' => 'other',
-                'description' => 'Miscellaneous settings.',
-                'is_approved' => 1
-            ],
         ];
 
         foreach ($categories as $category) {
@@ -277,7 +241,7 @@ class SystemSettingsSeeder extends Seeder
                 'name' => 'Institution name',
                 'code' => SystemSetting::INSTITUTION_NAME,
                 'description' => 'Institution name.',
-                'value' => 'Zanzibar Revenue Authority',
+                'value' => 'CRDB BANK PLC Authority',
                 'unit' => 'string',
                 'is_approved' => 1
             ],
