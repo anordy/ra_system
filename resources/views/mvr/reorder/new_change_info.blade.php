@@ -76,6 +76,7 @@
                 <span class="font-weight-bold text-uppercase">is Order RFID?</span>
                 <p class="my-1">{{ $reg->is_rfid ? 'Yes' : 'No' }}</p>
             </div>
+            
             @if($reg->agent)
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Is Registration For Agent?</span>
@@ -95,6 +96,58 @@
                 <span class="font-weight-bold text-uppercase">Registered On</span>
                 <p class="my-1">{{ $reg->registered_at ?? 'N/A' }}</p>
             </div>
+            @if($reg->loss_report)
+                <div class="col-md-3 mb-3">
+                    <div class="p-2 mb-0 d-flex rounded-sm align-items-center file-item">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                        <a target="_blank"
+                           href="{{ route('mvr.files', encrypt($reg->loss_report)) }}"
+                           class="ml-1">
+                            {{ __('Loss Report') }}
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endif
+            @if($reg->approval_report)
+                <div class="col-md-3 mb-3">
+                    <div class="p-2 mb-0 d-flex rounded-sm align-items-center file-item">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                        <a target="_blank"
+                           href="{{ route('mvr.files', encrypt($reg->approval_report)) }}"
+                           class="ml-1">
+                            {{ __('Inspection Report') }}
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endif
+           
         </div>
     </div>
 </div>
+
+@if ($reg->attachments)
+<div class="card my-4 rounded-0">
+    <div class="card-header font-weight-bold bg-white">
+        Additional Attachments
+    </div>
+    <div class="card-body">
+        <div class="row">
+            @foreach($reg->attachments as $attachment)
+                <div class="col-md-3">
+                    <div class="file-item p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
+                        <a target="_blank"
+                           href="{{ route('assesments.waiver.files', encrypt($attachment->path)) }}"
+                           class="ml-1 font-weight-bolder">
+                            {{ $attachment->name ?? 'N/A' }}
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+@endif
