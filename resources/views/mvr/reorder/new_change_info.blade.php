@@ -139,7 +139,7 @@
                     <div class="file-item p-2 mb-3 d-flex rounded-sm align-items-center">
                         <i class="bi bi-file-earmark-pdf-fill px-2 file-icon"></i>
                         <a target="_blank"
-                           href="{{ route('assesments.waiver.files', encrypt($attachment->path)) }}"
+                           href="{{ route('mvr.files', encrypt($attachment->path)) }}"
                            class="ml-1 font-weight-bolder">
                             {{ $attachment->name ?? 'N/A' }}
                             <i class="bi bi-arrow-up-right-square ml-1"></i>
