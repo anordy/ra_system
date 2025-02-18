@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Account;
 
-use App\Traits\VerificationTrait;
+
 use Exception;
 use App\Models\User;
 use Livewire\Component;
@@ -12,7 +12,7 @@ use App\Traits\CustomAlert;
 
 class AccountDetails extends Component
 {
-    use CustomAlert, VerificationTrait;
+    use CustomAlert;
 
     public $user, $first_name, $last_name, $email, $mobile;
 

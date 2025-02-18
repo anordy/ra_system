@@ -8,7 +8,7 @@ use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\DualControlActivityTrait;
-use App\Traits\VerificationTrait;
+
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -18,7 +18,7 @@ use Livewire\Component;
 
 class EditModal extends Component
 {
-    use CustomAlert, DualControlActivityTrait, VerificationTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $app_name;
     public $app_url;

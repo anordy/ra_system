@@ -3,14 +3,14 @@
 namespace App\Http\Middleware;
 
 use App\Models\Returns\TaxReturn;
-use App\Traits\VerificationTrait;
+
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class VerifyReturn
 {
-    use VerificationTrait;
+    
 
     /**
      * @param Request $request

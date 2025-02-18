@@ -67,7 +67,7 @@ a:focus {
 #sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: #0080c1;
+    background: #02A53C;
     color: #fff;
     transition: all 0.3s;
     overflow-y: scroll;
@@ -75,7 +75,7 @@ a:focus {
 }
 
 .main-color {
-    background: #0080c1;
+    background: #02A53C;
     color: #fff;
 }
 
@@ -96,7 +96,7 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 10px;
-    background: #0080c1;
+    background: #02A53C;
 }
 
 #sidebar ul.components {
@@ -115,14 +115,14 @@ a:focus {
 }
 
 #sidebar ul li a:hover {
-    color: #0080c1;
+    color: #02A53C;
     background: #fff;
 }
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
     color: #fff;
-    background: #085b86;
+    background: #0D6D09;
 }
 
 a[data-toggle="collapse"] {
@@ -140,14 +140,14 @@ a[data-toggle="collapse"] {
 #sidebar ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #0080c1;
+    background: #02A53C;
 }
 
 #sidebar .profile {
     position: fixed;
     bottom: 0px;
     width: inherit;
-    background-color: #085b86;
+    background-color: #0D6D09;
     min-width: 250px;
     max-width: 250px;
     color: white;
@@ -155,7 +155,7 @@ a[data-toggle="collapse"] {
 }
 
 .custom-card-header {
-    color: #0080c1;
+    color: #02A53C;
 }
 
 /* ---------------------------------------------------
@@ -174,7 +174,7 @@ a[data-toggle="collapse"] {
 #content .top-navbar {
     margin-bottom: 8px !important;
     /*margin-top: 1px;*/
-    border-bottom: 2px solid #0080c1;
+    border-bottom: 2px solid #02A53C;
     box-shadow: 0 .325rem .15rem rgba(0, 0, 0, .075) !important;
 }
 
@@ -201,7 +201,7 @@ a[data-toggle="collapse"] {
 .nav-tabs .nav-link.active {
     color: #495057;
     background-color: #fff;
-    border-top: 2px solid #0080c1;
+    border-top: 2px solid #02A53C;
 }
 
 .nav-pills .nav-link.active,
@@ -378,11 +378,11 @@ a[data-toggle="collapse"] {
     color: rgba(0, 0, 0, 0.9);
     pointer-events: none;
     cursor: default;
-    background: #085b8612;
+    background: #0D6D0912;
 }
 
 .progress-bar {
-    background: #0080c1 !important;
+    background: #02A53C !important;
 }
 
 .step-active .step-indicator,
@@ -394,7 +394,7 @@ a[data-toggle="collapse"] {
 
 .step-active .step-icon,
 .step-active:hover .step-icon {
-    color: #0080c1
+    color: #02A53C
 }
 
 .step-completed .step-indicator,
@@ -455,7 +455,7 @@ LIVEWIRE TABS
 }
 
 .tabs .tab-item:hover {
-    color: #0080c1;
+    color: #02A53C;
 }
 
 .tabs .tab-item:focus,
@@ -464,7 +464,7 @@ LIVEWIRE TABS
 }
 
 .tabs .tab-item.active {
-    border-bottom: 3px solid #0080c1;
+    border-bottom: 3px solid #02A53C;
     font-weight: bold;
 }
 
@@ -485,7 +485,7 @@ LIVEWIRE TABS
     right: -8px;
     padding: 5px 10px;
     border-radius: 50%;
-    background: #0080c1;
+    background: #02A53C;
     color: white;
 }
 
@@ -498,19 +498,19 @@ LIVEWIRE TABS
 }
 
 .bg-c-blue {
-    background: linear-gradient(45deg, #03405f, #0080c1);
+    background: linear-gradient(45deg, #03405f, #02A53C);
 }
 
 .bg-c-green {
-    background: linear-gradient(45deg, #03405f, #0080c1);
+    background: linear-gradient(45deg, #03405f, #02A53C);
 }
 
 .bg-c-yellow {
-    background: linear-gradient(45deg, #03405f, #0080c1);
+    background: linear-gradient(45deg, #03405f, #02A53C);
 }
 
 .bg-c-pink {
-    background: linear-gradient(45deg, #03405f, #0080c1);
+    background: linear-gradient(45deg, #03405f, #02A53C);
 }
 
 .card {
@@ -674,7 +674,7 @@ div.table-bordered {
 }
 
 .modal-header {
-    border-bottom: 1px solid #0080c1;
+    border-bottom: 1px solid #02A53C;
     padding: 12px 22px !important;
 }
 
@@ -1068,8 +1068,8 @@ table.align-middle td, table.align-middle th {
 }
 
 .logout-link:hover {
-    background: #085b86 !important;
-    color: #0080c1 !important;
+    background: #0D6D09 !important;
+    color: #02A53C !important;
 }
 
 ul.timeline {

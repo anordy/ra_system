@@ -10,7 +10,7 @@ use App\Models\SysModule;
 use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\UserOtp;
-use App\Traits\VerificationTrait;
+
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
@@ -24,7 +24,7 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    use AuthenticatesUsers, VerificationTrait;
+    use AuthenticatesUsers;
 
     protected $maxAttempts;
     protected $decayMinutes;

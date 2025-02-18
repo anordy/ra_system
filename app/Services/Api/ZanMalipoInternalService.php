@@ -17,13 +17,13 @@ use App\Models\Returns\TaxReturn;
 use App\Models\TaxAgent;
 use App\Models\TaxAgentStatus;
 use App\Models\TaxAssessments\TaxAssessment;
-use App\Traits\VerificationTrait;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class ZanMalipoInternalService
 {
-    use VerificationTrait;
+    
 
     /**
      * Create Bill

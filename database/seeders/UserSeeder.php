@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Traits\VerificationTrait;
+
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
-    use VerificationTrait;
+    
 
     /**
      * Run the database seeds.

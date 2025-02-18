@@ -13,13 +13,15 @@
         <li class="{{ request()->is("dashboard*") ? "active" : "" }}">
             <a href="{{ route("home") }}">Home</a>
         </li>
-        
 
+        <li class="{{ request()->is("ra*") ? "active" : "" }}">
+            <a href="{{ route("ra.incedent.index") }}">Incedent</a>
+        </li>
 
         <li class="{{ request()->is('account*') ? 'active' : '' }}">
             <a href="#accountMenu" data-toggle="collapse"
                aria-expanded="{{ request()->is('account*') ? 'true' : 'false' }}"
-               class="dropdown-toggle">{{ __("Account") }}</a>
+               class="dropdown-toggle">{{ __("Settings") }}</a>
             <ul class="collapse list-unstyled {{ request()->is('account*') ? 'show' : '' }}" id="accountMenu">
                 <li class="{{ request()->is('account') ? 'active' : '' }}">
                     <a href="{{ route('account') }}">{{ __("Account Details") }}</a>

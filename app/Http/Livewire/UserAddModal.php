@@ -14,7 +14,7 @@ use App\Models\User;
 use App\Models\UserApprovalLevel;
 use App\Notifications\DatabaseNotification;
 use App\Traits\DualControlActivityTrait;
-use App\Traits\VerificationTrait;
+
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +28,7 @@ use Livewire\Component;
 class UserAddModal extends Component
 {
 
-    use CustomAlert, VerificationTrait, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $roles = [];
     public $fname;

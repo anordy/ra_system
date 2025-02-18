@@ -13,9 +13,9 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable implements PayloadInterface, Auditable
+class User extends Authenticatable implements  Auditable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasPermissions, SoftDeletes, \OwenIt\Auditing\Auditable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $table = 'users';
@@ -58,7 +58,7 @@ class User extends Authenticatable implements PayloadInterface, Auditable
 
     public function department()
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(App\Models\Department::class);
     }
 
     public function level()

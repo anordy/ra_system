@@ -7,7 +7,7 @@ use App\Models\DualControl;
 use App\Models\ReportRegister\Department;
 use App\Models\Role;
 use App\Models\User;
-use App\Traits\VerificationTrait;
+
 use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +19,7 @@ use Livewire\Component;
 class UserEditModal extends Component
 {
 
-    use CustomAlert, VerificationTrait, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $roles = [];
     public $fname;

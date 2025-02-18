@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Jobs\RepostBillSignature;
 use App\Models\ZmBill;
-use App\Traits\VerificationTrait;
+
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class SignBill
 {
-    use VerificationTrait;
+    
 
     /**
      * @param Request $request

@@ -3,14 +3,14 @@
 namespace App\Http\Middleware;
 
 use App\Models\ZmBill;
-use App\Traits\VerificationTrait;
+
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class VerifyBill
 {
-    use VerificationTrait;
+    
     /**
      * @param Request $request
      * @param Closure $next

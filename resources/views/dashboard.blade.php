@@ -3,7 +3,7 @@
 @section('title', 'Home')
 
 @section('content')
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-md-3">
             <div class="card bg-c-blue order-card">
                 <div class="card-block">
@@ -49,35 +49,8 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
-    @if (count($issues) > 0)
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <h6 class="m-2">System Issues</h6>
-
-                    <table class="table table-sm table-striped">
-                        <thead>
-                            <tr>
-                                <th># Issue</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($issues as $issue)
-                                <tr>
-                                    <th>{{ $issue['description'] }}</th>
-                                    <td><a class="btn btn-info rounded btn-sm" href="{{ route($issue['route']) }}"><i
-                                                class="bi bi-gear-wide-connected"></i> Configure</a></td>
-                                </tr>
-                            @endforeach
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    @endif
+  <p>Revenue Assurance</p>
 
 @endsection

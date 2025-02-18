@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Jobs\RepostReturnSignature;
 use App\Models\Returns\TaxReturn;
-use App\Traits\VerificationTrait;
+
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class SignReturn
 {
-    use VerificationTrait;
+    
 
     /**
      * @param Request $request
