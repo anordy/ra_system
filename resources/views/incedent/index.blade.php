@@ -8,9 +8,10 @@
         <div class="card-header">Revenue Assurance Incedent</div>
         <div class="card-tools">
             {{-- @if(approvalLevel(Auth::user()->level_id, 'Maker')) --}}
-                <button class="btn btn-success btn-sm px-3">
-                    <i class="bi bi-plus-circle-fill pr-2"></i>Create Incedent
-                </button>
+            <a class="btn btn-primary text-capitalize" href="{{ route('ra.incedent.create') }}">
+                <i class="bi bi-stop-circle mr-1"></i>
+                Create Incedent
+            </a>
             {{-- @endif --}}
         </div>
         <div class="card-body">

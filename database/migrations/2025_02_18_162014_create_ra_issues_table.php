@@ -15,8 +15,9 @@ class CreateRaIssuesTable extends Migration
     {
         Schema::create('ra_issues', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ra_incident_id');
+            $table->unsignedBigInteger('ra_incident_id');
             $table->enum('type', ['Revenue Loss', 'Overcharging']); // Identifies the type of issue
+            $table->string('currency')->nullable();
             $table->decimal('detected', 18, 2)->nullable();
             $table->decimal('prevented', 18, 2)->nullable();
             $table->decimal('recovered', 18, 2)->nullable();

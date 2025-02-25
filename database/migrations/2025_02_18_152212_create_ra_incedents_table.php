@@ -15,21 +15,22 @@ class CreateRaIncedentsTable extends Migration
     {
         Schema::create('ra_incedents', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('reference');
+            $table->String('reference');
             $table->unsignedBigInteger('bank_channel_id');
             $table->string('name');
-            $table->boolean('real_issue')->default(true);            $table->text('symptom_of_incident');
-            $table->decimal('impact_potential_revenue', 18, 2)->nullable();
-            $table->integer('impact_potential_customers')->nullable();
-            $table->string('impact_potential_system')->nullable();
+            $table->boolean('real_issue')->default(true); 
+            $table->text('symptom_of_incident');
+            $table->string('impact_revenue', 18, 2)->nullable();
+            $table->string('impact_customers')->nullable();
+            $table->string('impact_system')->nullable();
             $table->date('incident_reported_date');
             $table->string('status');
             $table->unsignedBigInteger('reported_by');
-            $table->string('problem_owner');
+            $table->unsignedBigInteger('owner_by');
             $table->text('affected_rev_stream')->comment('Affected revenue stream or system');
-            $table->text('action');
-            $table->text('root_cause_analysis');
-            $table->text('others');
+            $table->unsignedBigInteger('bank_system_id');
+            $table->text('action_taken');
+            $table->text('additional_ra')->nullable();
             $table->timestamps();
         });
     }

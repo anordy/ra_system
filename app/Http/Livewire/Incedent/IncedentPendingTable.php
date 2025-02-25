@@ -32,21 +32,24 @@ class IncedentPendingTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make(__("Source"), "source")
-                ->searchable(),
-            Column::make(__("Incedent"), "name")
-                ->searchable(),
-                Column::make(__("Real Issue"), "real_issue")
-                ->searchable(),
-            Column::make(__("Owner"), "problem_owner")
-                ->searchable(),
-            Column::make(__("Incedent Reported Date"), "incident_reported_date")
-                ->format(function ($value, $row) {
-                    if ($row->incident_reported_date) {
-                        return Carbon::create($row->incident_reported_date)->format('d M Y');
-                    }
-                    return 'N/A';
-                }),
+            Column::make(__("Bank Channel"), "channel.name")
+            ->searchable(),
+        Column::make(__("Incedent"), "name")
+            ->searchable(),
+            Column::make(__("Real Issue"), "real_issue")
+            ->searchable()
+            ->format(fn ($value) => $value ? 'Yes' : 'No'),
+        Column::make(__("Owner"), "owner.fname")
+            ->searchable(),
+            // Column::make(__("Revenue Loss"), "revenue.revenue_detected")
+            // ->searchable(),
+        Column::make(__("Incedent Reported Date"), "incident_reported_date")
+            ->format(function ($value, $row) {
+                if ($row->incident_reported_date) {
+                    return Carbon::create($row->incident_reported_date)->format('d M Y');
+                }
+                return 'N/A';
+            }),
             Column::make(__('Status'), 'status')->view('Incedent.includes.status'),
             Column::make(__('Action'), 'id')->view('incedent.includes.actions'),
         ];

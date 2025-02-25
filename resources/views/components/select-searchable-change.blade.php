@@ -8,7 +8,9 @@
     'optionNameAccessor' => 'name',
     'optionValueAccessor' => 'id',
     'mb' => 0,
-    'allowNone' => false
+    'allowNone' => false,
+    'wireModel' => null, // New prop for wire:model
+    'wireChange' => null // New prop for wire:change
 ])
 
 <div x-data="{
@@ -16,7 +18,7 @@
         search: '',
         selectedId: @entangle($name).live,
         @if($allowNone)
-            options: [{ '{{ $optionValueAccessor }}': '', '{{ $optionNameAccessor }}': 'None' }, ...@js($options)], // Prepend the 'None' option
+            options: [{ '{{ $optionValueAccessor }}': '', '{{ $optionNameAccessor }}': 'None' }, ...@js($options)],
         @else
             options: @js($options),
         @endif
@@ -32,6 +34,9 @@
             this.selectedId = option['{{ $optionValueAccessor }}'];
             this.search = '';
             this.open = false;
+            @if($wireChange)
+                $wire.{{ $wireChange }}(this.selectedId);
+            @endif
         }
     }"
      x-init="$watch('selectedId', value => open = false)"
@@ -43,10 +48,12 @@
             {{ $attributes->get('required') ? '*' : '' }}
         </label>
     @endif
-    <div  class="position-relative relative">
+
+    <div class="position-relative relative">
         <button @click="open = !open" type="button"
-                class="form-control d-flex justify-content-between @error($name) border-danger @endif">
-            <span class="block truncate text-start" x-text="selectedOption ? selectedOption['{{ $optionNameAccessor }}'] : '{{ $allowNone ? 'None' : $placeholder }}'"></span>
+                class="form-control d-flex justify-content-between @error($name) border-danger @endif"
+                {{ $wireModel ? "wire:model=$wireModel" : '' }}>
+            <span class="block truncate text-start" x-text="selectedOption ? selectedOption['{{ $optionNameAccessor }}'] : '{{ $placeholder }}'"></span>
             <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 @error($name)
                     <i class="bi bi-exclamation-circle text-danger"></i>

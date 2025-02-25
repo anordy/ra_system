@@ -70,7 +70,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group mb-3">
+                                {{-- <div class="form-group mb-3">
                                     <label class="form-label" for="captcha">Captcha</label>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
@@ -93,7 +93,7 @@
                                             {{ $message }}
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <button class="btn btn-info px-5" type="submit">Login</button>
                                 <p class="text-primary mt-1 float-right text-decoration-none"><a

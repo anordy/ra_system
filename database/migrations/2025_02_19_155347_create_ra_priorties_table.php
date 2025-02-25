@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBankingChannelsTable extends Migration
+class CreateRaPriortiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateBankingChannelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('banking_channels', function (Blueprint $table) {
+        Schema::create('ra_priorties', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateBankingChannelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('banking_channels');
+        Schema::dropIfExists('ra_priorties');
     }
 }

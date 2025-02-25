@@ -16,11 +16,13 @@ class RaIssue extends Model
 
 
     protected $fillable = [
-        'incident_id',
-        'type', 
-        'detected',
-        'prevented',
-        'recovered'
+       'ra_incident_id',
+       'type',
+       'currency',
+            'detected',
+            'prevented' ,
+            'recovered' ,
+           
     ];
 
     public function incedent()

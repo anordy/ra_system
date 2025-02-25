@@ -1,35 +1,37 @@
-<<<<<<< HEAD
-@props(['col' => 4, 'name', 'options', 'label' => '', 'accessor' => 'name', 'value' => 'id'])
-=======
-<<<<<<< HEAD
-@props(['col' => 4, 'name', 'options', 'label' => '', 'accessor' => 'name', 'value' => 'id', 'disabled' => false])
-=======
-@props(['col' => 4, 'name', 'options', 'label' => '', 'accessor' => 'name', 'value' => 'id'])
->>>>>>> 888f827d6 (merge from feature/mvr_transfer_ownership)
->>>>>>> a44bf408c (merge from feature/mvr_transfer_ownership)
+@props([
+    'col' => 4,
+    'name',
+    'options',
+    'label' => '',
+    'accessor' => 'name',
+    'value' => 'id',
+    'live' => 'false',
+    'showDefault' => 'true',
+    'placeholder' => 'Choose..',
+    'showLabel' => true,
+    'mb' => 3
+])
 
 <div class="col-md-{{ $col ? $col : '4' }} form-group">
-    <label for="{{ $name }}">
-        {{ $label ? $label : ucwords(Str::of($name)->kebab()->replace('_', ' ')) }}
-        {{ $attributes->get('required') ? '*' : '' }}
-    </label>
-<<<<<<< HEAD
-    <select {{ $attributes }} id="{{ $name }}" wire:model="{{ $name }}" class="form-control {{ $errors->has($name) ?'is-invalid' : '' }}">
-=======
-<<<<<<< HEAD
-    <select {{ $attributes }} id="{{ $name }}" wire:model="{{ $name }}" class="form-control {{ $errors->has($name) ?'is-invalid' : '' }}" @if($disabled) disabled @endif>
-=======
-    <select {{ $attributes }} id="{{ $name }}" wire:model="{{ $name }}" class="form-control {{ $errors->has($name) ?'is-invalid' : '' }}">
->>>>>>> 888f827d6 (merge from feature/mvr_transfer_ownership)
->>>>>>> a44bf408c (merge from feature/mvr_transfer_ownership)
-        <option value="">Choose...</option>
-        @foreach($options ?? [] as $option)
-            <option value="{{ $option->$value }}">{{ $option->$accessor }}</option>
+    @if($showLabel)
+        <label for="{{ $name }}" class="form-label">
+            {{ $label ? $label : ucwords(Str::of($name)->kebab()->replace('_', ' ')) }}
+            {{ $attributes->get('required') ? '*' : '' }}
+        </label>
+    @endif
+    <select {{ $attributes }} id="{{ $name }}" wire:model{{ $live == 'true' ? '.live' : '' }}="{{ $name }}"
+            class="form-control mb-{{$mb}} {{ $errors->has($name) ?'is-invalid' : '' }}">
+        @if($showDefault=='true')
+            <option value="">{{$placeholder}}</option>
+        @endif
+        @foreach($options as $option)
+            <option value="{{ encryptPayload($option->$value) }}">{{ $option->$accessor }}</option>
         @endforeach
     </select>
+
     @error($name)
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
+    <div class="invalid-feedback">
+        {{ $message }}
+    </div>
     @enderror
 </div>
