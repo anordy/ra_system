@@ -103,6 +103,18 @@
 </div>
 
 <div class="card">
+    <div class="card-header">
+        Revenue Leakage
+        <div class="card-tools">
+            {{-- @if(approvalLevel(Auth::user()->level_id, 'Maker')) --}}
+            <button class="btn btn-primary"
+                                onclick="Livewire.emit('showModal','incedent.update-revenue-modal','{{ encrypt($incedent->id) }}')">
+                            <i class="bi bi-arrow-left-right mr-1"></i>
+                            Update
+                        </button>
+            {{-- @endif --}}
+        </div>
+    </div>
     <div class="card-body">
         <table class="table table-bordered text-center">
             <thead>
