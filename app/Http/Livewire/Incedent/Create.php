@@ -63,7 +63,7 @@ class Create extends Component
 
         $this->validate([
             'name'                 => ['required', 'string', 'max:255'],
-            'isRealIssue'                 => ['required', 'boolean'],
+            'isRealIssue'                 => ['nullable', 'boolean'],
             'bankChannelId'        => ['required', 'exists:bank_channels,id'],
             'reportedBy'           => ['required', 'exists:users,id'],
             'ownerId'              => ['required', 'exists:users,id'],

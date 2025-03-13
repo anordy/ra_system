@@ -7,7 +7,7 @@
 <script src="{{ asset('js/modals.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="{{ asset('vendor/livewire-alert/livewire-alert.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 @yield('scripts')
 @stack('scripts')
