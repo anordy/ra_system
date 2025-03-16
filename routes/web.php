@@ -19,6 +19,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RaIncedentsController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Reports\GeneralReportsController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Setting\DualControlActivityController;
@@ -64,7 +65,7 @@ Route::middleware(['2fa', 'auth', 'check-qns'])->group(function () {
         Route::get('/incedent/create', [RaIncedentsController::class, 'create'])->name('incedent.create');
     });
 
-    Route::get('/reports/general', [GeneralReportsController::class, 'initial'])->name('reports.general.initial');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/account', [AccountController::class, 'show'])->name('account');
     Route::get('/account/security-questions', [AccountController::class, 'securityQuestions'])->name('account.security-questions');
 

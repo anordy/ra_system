@@ -9,6 +9,7 @@
 <script src="{{ asset('vendor/livewire-alert/livewire-alert.js') }}"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
+
 @yield('scripts')
 @stack('scripts')
 <script nonce="custom_script">

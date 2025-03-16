@@ -18,6 +18,10 @@
             <a href="{{ route("ra.incedent.index") }}">Incedent</a>
         </li>
 
+        <li class="{{ request()->is("report*") ? "active" : "" }}">
+            <a href="{{ route("reports.index") }}">Reports</a>
+        </li>
+
         <li class="{{ request()->is('account*') ? 'active' : '' }}">
             <a href="#accountMenu" data-toggle="collapse"
                aria-expanded="{{ request()->is('account*') ? 'true' : 'false' }}"

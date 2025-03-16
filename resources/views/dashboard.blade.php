@@ -3,7 +3,7 @@
 @section('title', 'Home')
 
 @section('content')
-@livewire('chart.pie-chart')
+@livewire('chart.chart')
 @endsection
 
 
