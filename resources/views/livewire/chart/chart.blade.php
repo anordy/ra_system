@@ -67,7 +67,7 @@
 
                 var options = {
                     title: channel + ' Leakages',
-                    pieHole: 0.3,
+                    pieHole: 0.4,
                     chartArea: { width: '80%', height: '80%' },
                     // legend: none
                     legend: { position: 'right' }

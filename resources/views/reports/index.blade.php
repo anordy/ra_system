@@ -5,8 +5,7 @@
 @section('content')
 <div class="card">
     <div class="card-body mt-0">
-        hello
-        {{-- @livewire('reports.business.init') --}}
+        @livewire('reports.init')
     </div>
 </div>
 @endsection
